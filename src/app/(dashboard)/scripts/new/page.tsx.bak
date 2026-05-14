@@ -1,0 +1,238 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/Button";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
+import { Input } from "@/components/ui/Input";
+import { Select } from "@/components/ui/Select";
+import { NICHES } from "@/lib/data/niches";
+
+export default function NewScriptPage() {
+  const router = useRouter();
+  const [step, setStep] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const [sourceUrl, setSourceUrl] = useState("");
+  const [targetTopic, setTargetTopic] = useState("");
+  const [sourceNiche, setSourceNiche] = useState("");
+  const [targetNiche, setTargetNiche] = useState("");
+  const [videoLength, setVideoLength] = useState("medium");
+  const [tone, setTone] = useState("educational");
+  const [ttsOptimized, setTtsOptimized] = useState(true);
+  const [error, setError] = useState("");
+  const [generatedScript, setGeneratedScript] = useState<any>(null);
+
+  const nicheOptions = NICHES.map(n => ({ value: n.id, label: n.name }));
+
+  async function handleGenerate() {
+    setIsLoading(true);
+    setError("");
+
+    try {
+      // Step 1: Extract transcript
+      const transcriptRes = await fetch("/api/transcript", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: sourceUrl }),
+      });
+      const transcriptData = await transcriptRes.json();
+      if (!transcriptRes.ok) throw new Error(transcriptData.error || "Failed to extract transcript");
+
+      // Step 2: Generate script
+      const scriptRes = await fetch("/api/scripts/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sourceTranscript: transcriptData.fullText,
+          sourceTitle: transcriptData.title,
+          sourceNiche,
+          targetTopic,
+          targetNiche,
+          videoLength,
+          tone,
+          ttsOptimized,
+        }),
+      });
+      const scriptData = await scriptRes.json();
+      if (!scriptRes.ok) throw new Error(scriptData.error || "Failed to generate script");
+
+      setGeneratedScript(scriptData);
+      setStep(3);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  return (
+    <div className="p-8 max-w-4xl mx-auto">
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold text-white">New Script</h1>
+        <p className="text-gray-400 mt-1">Paste a viral video URL and describe your topic</p>
+      </div>
+
+      {/* Progress */}
+      <div className="flex items-center gap-4 mb-8">
+        {[1, 2, 3].map(s => (
+          <div key={s} className="flex items-center gap-2">
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
+              s <= step ? "bg-violet-600 text-white" : "bg-gray-800 text-gray-400"
+            }`}>{s}</div>
+            <span className={`text-sm ${s <= step ? "text-white" : "text-gray-500"}`}>
+              {s === 1 ? "Source Video" : s === 2 ? "Your Topic" : "Generated Script"}
+            </span>
+            {s < 3 && <div className={`w-12 h-0.5 ${s < step ? "bg-violet-600" : "bg-gray-800"}`} />}
+          </div>
+        ))}
+      </div>
+
+      {error && (
+        <div className="bg-red-900/20 border border-red-500/30 rounded-lg p-4 mb-6 text-red-400 text-sm">
+          {error}
+        </div>
+      )}
+
+      {step === 1 && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Source Viral Video</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Input
+              label="YouTube URL"
+              placeholder="https://youtube.com/watch?v=..."
+              value={sourceUrl}
+              onChange={e => setSourceUrl(e.target.value)}
+              hint="Paste the URL of a viral video you want to learn from"
+            />
+            <Select
+              label="Source Niche"
+              options={[{ value: "", label: "Select niche..." }, ...nicheOptions]}
+              value={sourceNiche}
+              onChange={e => setSourceNiche(e.target.value)}
+            />
+            <div className="flex justify-end">
+              <Button onClick={() => setStep(2)} disabled={!sourceUrl || !sourceNiche}>
+                Continue
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {step === 2 && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Your Video</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Input
+              label="Your Topic"
+              placeholder="e.g., 5 money habits that will make you rich"
+              value={targetTopic}
+              onChange={e => setTargetTopic(e.target.value)}
+              hint="What do you want your video to be about?"
+            />
+            <Select
+              label="Your Niche"
+              options={[{ value: "", label: "Select niche..." }, ...nicheOptions]}
+              value={targetNiche}
+              onChange={e => setTargetNiche(e.target.value)}
+            />
+            <div className="grid grid-cols-2 gap-4">
+              <Select
+                label="Video Length"
+                options={[
+                  { value: "short", label: "Short (60-90s)" },
+                  { value: "medium", label: "Medium (5-8min)" },
+                  { value: "long", label: "Long (10-20min)" },
+                ]}
+                value={videoLength}
+                onChange={e => setVideoLength(e.target.value)}
+              />
+              <Select
+                label="Tone"
+                options={[
+                  { value: "educational", label: "Educational" },
+                  { value: "entertaining", label: "Entertaining" },
+                  { value: "storytelling", label: "Storytelling" },
+                  { value: "hype", label: "Hype / Energetic" },
+                ]}
+                value={tone}
+                onChange={e => setTone(e.target.value)}
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                id="tts"
+                checked={ttsOptimized}
+                onChange={e => setTtsOptimized(e.target.checked)}
+                className="w-4 h-4 rounded bg-gray-800 border-gray-700 text-violet-600 focus:ring-violet-500"
+              />
+              <label htmlFor="tts" className="text-sm text-gray-300">Optimize for AI voice (TTS)</label>
+            </div>
+            <div className="flex justify-between">
+              <Button variant="ghost" onClick={() => setStep(1)}>Back</Button>
+              <Button onClick={handleGenerate} isLoading={isLoading} disabled={!targetTopic || !targetNiche}>
+                {isLoading ? "Generating..." : "Generate Script"}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {step === 3 && generatedScript && (
+        <div className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>{generatedScript.title}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center gap-4 text-sm text-gray-400 mb-4">
+                <span>{generatedScript.wordCount} words</span>
+                <span>~{Math.round(generatedScript.estimatedDuration / 60)}min</span>
+              </div>
+              <div className="bg-gray-800 rounded-lg p-4 max-h-96 overflow-y-auto">
+                <pre className="text-gray-200 text-sm whitespace-pre-wrap font-sans">{generatedScript.fullScript}</pre>
+              </div>
+            </CardContent>
+          </Card>
+
+          {generatedScript.sections && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Script Breakdown</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {generatedScript.sections.map((section: any, i: number) => (
+                    <div key={i} className="bg-gray-800 rounded-lg p-4">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-xs font-medium text-violet-400 uppercase">{section.type}</span>
+                        <span className="text-xs text-gray-500">~{section.duration}s</span>
+                        {section.retentionBeat && <span className="text-xs text-yellow-400">⚡ Retention Beat</span>}
+                      </div>
+                      <p className="text-sm text-gray-300">{section.content}</p>
+                      {section.notes && <p className="text-xs text-gray-500 mt-2 italic">{section.notes}</p>}
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          <div className="flex gap-4">
+            <Button variant="secondary" onClick={() => { setStep(1); setGeneratedScript(null); }}>
+              Start Over
+            </Button>
+            <Button onClick={() => router.push("/scripts")}>
+              Save Script
+            </Button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
