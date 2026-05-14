@@ -9,9 +9,9 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-600 to-fuchsia-600 flex items-center justify-center">
-              <span className="text-white font-bold text-sm">SF</span>
+              <span className="text-white font-bold text-sm">SK</span>
             </div>
-            <span className="text-lg font-bold text-white">ScriptFactory</span>
+            <span className="text-lg font-bold text-white">Skripr</span>
           </div>
           <div className="flex items-center gap-4">
             <Link href="/sign-in" className="text-sm text-gray-400 hover:text-white transition-colors">Sign in</Link>
@@ -137,7 +137,7 @@ export default function LandingPage() {
       <section className="border-t border-gray-800 py-24">
         <div className="max-w-3xl mx-auto px-6 text-center">
           <h2 className="text-3xl font-bold text-white mb-4">Ready to Create Viral Content?</h2>
-          <p className="text-gray-400 mb-8">Join creators using ScriptFactory to reverse-engineer what works and build channels that grow.</p>
+          <p className="text-gray-400 mb-8">Join creators using Skripr to reverse-engineer what works and build channels that grow.</p>
           <Link href="/sign-up">
             <Button size="lg">Start Free Today</Button>
           </Link>
@@ -149,9 +149,9 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="w-6 h-6 rounded bg-gradient-to-br from-violet-600 to-fuchsia-600 flex items-center justify-center">
-              <span className="text-white font-bold text-xs">SF</span>
+              <span className="text-white font-bold text-xs">SK</span>
             </div>
-            <span className="text-sm text-gray-400">ScriptFactory</span>
+            <span className="text-sm text-gray-400">Skripr</span>
           </div>
           <p className="text-sm text-gray-500">Built for faceless YouTube creators.</p>
         </div>
