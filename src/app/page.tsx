@@ -1,43 +1,123 @@
 import Link from "next/link";
-import { Button } from "@/components/ui/Button";
+
 export default function LandingPage() {
 return (
-<div className="min-h-screen bg-gray-950">
-<nav className="border-b border-gray-800">
-<div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-<div className="flex items-center gap-2">
-<div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-600 to-fuchsia-600 flex items-center justify-center">
+<div className="min-h-screen bg-[#0a0a0f] text-white overflow-x-hidden">
+<div className="fixed inset-0 pointer-events-none">
+<div className="absolute top-0 left-1/4 w-96 h-96 bg-violet-600/20 rounded-full blur-[128px]" />
+<div className="absolute top-1/3 right-1/4 w-96 h-96 bg-fuchsia-600/15 rounded-full blur-[128px]" />
+<div className="absolute bottom-1/4 left-1/2 w-96 h-96 bg-indigo-600/10 rounded-full blur-[128px]" />
+</div>
+<nav className="relative z-10 border-b border-white/5">
+<div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+<div className="flex items-center gap-3">
+<div className="w-9 h-9 rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center shadow-lg shadow-violet-500/25">
 <span className="text-white font-bold text-sm">SK</span>
 </div>
-<span className="text-lg font-bold text-white">Skripr</span>
+<span className="text-xl font-bold tracking-tight">Skripr</span>
 </div>
-<div className="flex items-center gap-4">
+<div className="flex items-center gap-3">
 <Link href="/sign-in" className="text-sm text-gray-400 hover:text-white transition-colors">Sign in</Link>
-<Link href="/sign-up">
-<Button size="sm">Get Started Free</Button>
-</Link>
+<Link href="/sign-up" className="px-4 py-2 text-sm font-medium rounded-lg bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-500/25">Get Started Free</Link>
 </div>
 </div>
 </nav>
-<section className="max-w-7xl mx-auto px-6 pt-20 pb-32">
+<section className="relative z-10 max-w-7xl mx-auto px-6 pt-20 pb-32 md:pt-32 md:pb-40">
 <div className="text-center max-w-4xl mx-auto">
-<h1 className="text-5xl md:text-6xl font-bold text-white leading-tight mb-6">
-Reverse-engineer any<br />
-<span className="text-gradient">viral video</span>
+<div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-300 text-sm mb-8">
+<span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+Now in public beta — Free tier available
+</div>
+<h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-[1.05] mb-8">
+<span className="bg-gradient-to-r from-white via-gray-100 to-gray-300 bg-clip-text text-transparent">Reverse-engineer</span>
+<br />
+<span className="bg-gradient-to-r from-violet-400 via-fuchsia-400 to-pink-400 bg-clip-text text-transparent">any viral video</span>
 </h1>
-<p className="text-xl text-gray-400 mb-10 max-w-2xl mx-auto">
-Paste a YouTube URL. Our AI extracts the exact structural patterns that made it go viral and generates a new script using that proven formula.
+<p className="text-lg md:text-xl text-gray-400 mb-12 max-w-2xl mx-auto leading-relaxed">
+Paste any YouTube URL. Our AI extracts the exact structural patterns that made it go viral and generates a new optimized script using that proven formula.
 </p>
-<div className="flex items-center justify-center gap-4">
-<Link href="/sign-up">
-<Button size="lg">Start Free — 3 Scripts</Button>
+<div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
+<Link href="/sign-up" className="w-full sm:w-auto px-8 py-4 text-base font-semibold rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-xl shadow-violet-500/25 text-center">
+Start Free — 3 Scripts Included
 </Link>
+</div>
+<p className="text-sm text-gray-500">No credit card required • Cancel anytime</p>
+<div className="grid grid-cols-3 gap-8 max-w-lg mx-auto mt-20 pt-10 border-t border-white/5">
+<div>
+<div className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-violet-400 to-fuchsia-400 bg-clip-text text-transparent">10K+</div>
+<div className="text-sm text-gray-500 mt-1">Scripts Generated</div>
+</div>
+<div>
+<div className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-violet-400 to-fuchsia-400 bg-clip-text text-transparent">500+</div>
+<div className="text-sm text-gray-500 mt-1">Active Creators</div>
+</div>
+<div>
+<div className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-violet-400 to-fuchsia-400 bg-clip-text text-transparent">98%</div>
+<div className="text-sm text-gray-500 mt-1">Satisfaction</div>
+</div>
 </div>
 </div>
 </section>
-<footer className="border-t border-gray-800 py-8">
+<section className="relative z-10 border-t border-white/5 py-24 md:py-32">
+<div className="max-w-7xl mx-auto px-6">
+<div className="text-center mb-16">
+<h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4">Everything You Need to <span className="bg-gradient-to-r from-violet-400 to-fuchsia-400 bg-clip-text text-transparent">Grow</span></h2>
+<p className="text-gray-400 text-lg max-w-2xl mx-auto">Not just a script writer. A complete growth intelligence platform.</p>
+</div>
+<div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+{[
+{ title: "Viral Script Generator", desc: "Paste any YouTube URL and get a complete script using the exact structural patterns that made it go viral", gradient: "from-violet-500 to-purple-500" },
+{ title: "Niche Bend Engine", desc: "Find crossover opportunities between niches with data-driven content ideas", gradient: "from-fuchsia-500 to-pink-500" },
+{ title: "Compliance Checker", desc: "Pre-publish audit for reused content risk and metadata compliance", gradient: "from-emerald-500 to-teal-500" },
+{ title: "A/B Title Generator", desc: "Generate 10 title variations ranked by predicted CTR", gradient: "from-amber-500 to-orange-500" },
+{ title: "Metadata Bundle", desc: "Titles, descriptions, tags, thumbnail text — all optimized for YouTube", gradient: "from-cyan-500 to-blue-500" },
+{ title: "Content Remixer", desc: "Paste any viral video URL and we break down the hook, structure, and retention triggers", gradient: "from-rose-500 to-red-500" },
+].map((f, i) => (
+<div key={i} className="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-8 hover:bg-white/[0.04] transition-all">
+<div className={w-12 h-12 rounded-xl bg-gradient-to-br ${f.gradient} flex items-center justify-center mb-5}>
+<span className="text-white text-lg">✦</span>
+</div>
+<h3 className="text-lg font-semibold text-white mb-2">{f.title}</h3>
+<p className="text-gray-400 text-sm leading-relaxed">{f.desc}</p>
+</div>
+))}
+</div>
+</div>
+</section>
+<section className="relative z-10 border-t border-white/5 py-24 md:py-32">
+<div className="max-w-4xl mx-auto px-6">
+<div className="text-center mb-16">
+<h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4">Three Steps to Your <span className="bg-gradient-to-r from-violet-400 to-fuchsia-400 bg-clip-text text-transparent">Next Viral Script</span></h2>
+</div>
+<div className="space-y-8">
+{[
+{ step: "01", title: "Paste a Viral Video", desc: "Drop any YouTube URL. We extract the full transcript and analyze its viral structure." },
+{ step: "02", title: "Describe Your Topic", desc: "Tell us what your video is about. Our AI maps the viral structure onto your topic." },
+{ step: "03", title: "Get Your Script", desc: "Receive a complete script with hook options, section breakdown, and metadata bundle." },
+].map((item, i) => (
+<div key={i} className="flex gap-6 items-start">
+<div className="shrink-0 w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-500/20 to-fuchsia-500/20 border border-violet-500/20 flex items-center justify-center">
+<span className="text-lg font-bold bg-gradient-to-r from-violet-400 to-fuchsia-400 bg-clip-text text-transparent">{item.step}</span>
+</div>
+<div>
+<h3 className="text-xl font-semibold text-white mb-2">{item.title}</h3>
+<p className="text-gray-400 leading-relaxed">{item.desc}</p>
+</div>
+</div>
+))}
+</div>
+</div>
+</section>
+<section className="relative z-10 border-t border-white/5 py-24 md:py-32">
+<div className="max-w-4xl mx-auto px-6 text-center">
+<h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-6">Ready to Create <span className="bg-gradient-to-r from-violet-400 to-fuchsia-400 bg-clip-text text-transparent">Viral Content?</span></h2>
+<p className="text-gray-400 text-lg mb-10">Join creators using Skripr to reverse-engineer what works.</p>
+<Link href="/sign-up" className="inline-block px-10 py-5 text-lg font-semibold rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-xl shadow-violet-500/25">Start Free Today</Link>
+</div>
+</section>
+<footer className="relative z-10 border-t border-white/5 py-12">
 <div className="max-w-7xl mx-auto px-6 text-center">
-<p className="text-sm text-gray-500">Skripr — Built for faceless YouTube creators.</p>
+<p className="text-sm text-gray-500">Skripr — Built for YouTube creators.</p>
 </div>
 </footer>
 </div>
