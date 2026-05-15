@@ -1,136 +1,149 @@
 import Link from "next/link";
 
 export default function LandingPage() {
-return (
-<div className="min-h-screen bg-[#0a0a0f] text-white overflow-x-hidden">
-<div className="fixed inset-0 pointer-events-none">
-<div className="absolute top-0 left-1/4 w-96 h-96 bg-violet-600/20 rounded-full blur-[128px]" />
-<div className="absolute top-1/3 right-1/4 w-96 h-96 bg-fuchsia-600/15 rounded-full blur-[128px]" />
-<div className="absolute bottom-1/4 left-1/2 w-96 h-96 bg-indigo-600/10 rounded-full blur-[128px]" />
-</div>
-<nav className="relative z-10 border-b border-white/5">
-<div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
-<div className="flex items-center gap-3">
-<div className="w-9 h-9 rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center shadow-lg shadow-violet-500/25">
-<span className="text-white font-bold text-sm">SK</span>
-</div>
-<span className="text-xl font-bold tracking-tight">Skripr</span>
-</div>
-<div className="flex items-center gap-3">
-<Link href="/sign-in" className="text-sm text-gray-400 hover:text-white transition-colors">Sign in</Link>
-<Link href="/sign-up" className="px-4 py-2 text-sm font-medium rounded-lg bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-500/25">Get Started Free</Link>
-</div>
-</div>
-</nav>
-<section className="relative z-10 max-w-7xl mx-auto px-6 pt-20 pb-32 md:pt-32 md:pb-40">
-<div className="text-center max-w-4xl mx-auto">
-<div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-300 text-sm mb-8">
-<span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-Now in public beta — Free tier available
-</div>
-<h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-[1.05] mb-8">
-<span className="bg-gradient-to-r from-white via-gray-100 to-gray-300 bg-clip-text text-transparent">Reverse-engineer</span>
-<br />
-<span className="bg-gradient-to-r from-violet-400 via-fuchsia-400 to-pink-400 bg-clip-text text-transparent">any viral video</span>
-</h1>
-<p className="text-lg md:text-xl text-gray-400 mb-12 max-w-2xl mx-auto leading-relaxed">
-Paste any YouTube URL. Our AI extracts the exact structural patterns that made it go viral and generates a new optimized script using that proven formula.
-</p>
-<div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
-<Link href="/sign-up" className="w-full sm:w-auto px-8 py-4 text-base font-semibold rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-xl shadow-violet-500/25 text-center">
-Start Free — 3 Scripts Included
-</Link>
-</div>
-<p className="text-sm text-gray-500">No credit card required • Cancel anytime</p>
-<div className="grid grid-cols-3 gap-8 max-w-lg mx-auto mt-20 pt-10 border-t border-white/5">
-<div>
-<div className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-violet-400 to-fuchsia-400 bg-clip-text text-transparent">10K+</div>
-<div className="text-sm text-gray-500 mt-1">Scripts Generated</div>
-</div>
-<div>
-<div className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-violet-400 to-fuchsia-400 bg-clip-text text-transparent">500+</div>
-<div className="text-sm text-gray-500 mt-1">Active Creators</div>
-</div>
-<div>
-<div className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-violet-400 to-fuchsia-400 bg-clip-text text-transparent">98%</div>
-<div className="text-sm text-gray-500 mt-1">Satisfaction</div>
-</div>
-</div>
-</div>
-</section>
-<section id="features" className="relative z-10 border-t border-white/5 py-24 md:py-32">
-<div className="max-w-7xl mx-auto px-6">
-<div className="text-center mb-16">
-<h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4">Everything You Need to <span className="bg-gradient-to-r from-violet-400 to-fuchsia-400 bg-clip-text text-transparent">Grow</span></h2>
-<p className="text-gray-400 text-lg max-w-2xl mx-auto">Not just a script writer. A complete growth intelligence platform.</p>
-</div>
-<div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-<div className="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-8 hover:bg-white/[0.04] transition-all">
-<div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500 to-purple-500 flex items-center justify-center mb-5"><span className="text-white text-lg">✦</span></div>
-<h3 className="text-lg font-semibold text-white mb-2">Viral Script Generator</h3>
-<p className="text-gray-400 text-sm leading-relaxed">Paste any YouTube URL and get a complete script using the exact structural patterns that made it go viral</p>
-</div>
-<div className="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-8 hover:bg-white/[0.04] transition-all">
-<div className="w-12 h-12 rounded-xl bg-gradient-to-br from-fuchsia-500 to-pink-500 flex items-center justify-center mb-5"><span className="text-white text-lg">✦</span></div>
-<h3 className="text-lg font-semibold text-white mb-2">Niche Bend Engine</h3>
-<p className="text-gray-400 text-sm leading-relaxed">Find crossover opportunities between niches with data-driven content ideas</p>
-</div>
-<div className="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-8 hover:bg-white/[0.04] transition-all">
-<div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center mb-5"><span className="text-white text-lg">✦</span></div>
-<h3 className="text-lg font-semibold text-white mb-2">Compliance Checker</h3>
-<p className="text-gray-400 text-sm leading-relaxed">Pre-publish audit for reused content risk and metadata compliance</p>
-</div>
-<div className="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-8 hover:bg-white/[0.04] transition-all">
-<div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center mb-5"><span className="text-white text-lg">✦</span></div>
-<h3 className="text-lg font-semibold text-white mb-2">A/B Title Generator</h3>
-<p className="text-gray-400 text-sm leading-relaxed">Generate 10 title variations ranked by predicted CTR</p>
-</div>
-<div className="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-8 hover:bg-white/[0.04] transition-all">
-<div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center mb-5"><span className="text-white text-lg">✦</span></div>
-<h3 className="text-lg font-semibold text-white mb-2">Metadata Bundle</h3>
-<p className="text-gray-400 text-sm leading-relaxed">Titles, descriptions, tags, thumbnail text — all optimized for YouTube</p>
-</div>
-<div className="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-8 hover:bg-white/[0.04] transition-all">
-<div className="w-12 h-12 rounded-xl bg-gradient-to-br from-rose-500 to-red-500 flex items-center justify-center mb-5"><span className="text-white text-lg">✦</span></div>
-<h3 className="text-lg font-semibold text-white mb-2">Content Remixer</h3>
-<p className="text-gray-400 text-sm leading-relaxed">Paste any viral video URL and we break down the hook, structure, and retention triggers</p>
-</div>
-</div>
-</div>
-</section>
-<section className="relative z-10 border-t border-white/5 py-24 md:py-32">
-<div className="max-w-4xl mx-auto px-6">
-<div className="text-center mb-16">
-<h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4">Three Steps to Your <span className="bg-gradient-to-r from-violet-400 to-fuchsia-400 bg-clip-text text-transparent">Next Viral Script</span></h2>
-</div>
-<div className="space-y-8">
-<div className="flex gap-6 items-start">
-<div className="shrink-0 w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-500/20 to-fuchsia-500/20 border border-violet-500/20 flex items-center justify-center"><span className="text-lg font-bold bg-gradient-to-r from-violet-400 to-fuchsia-400 bg-clip-text text-transparent">01</span></div>
-<div><h3 className="text-xl font-semibold text-white mb-2">Paste a Viral Video</h3><p className="text-gray-400 leading-relaxed">Drop any YouTube URL. We extract the full transcript and analyze its viral structure.</p></div>
-</div>
-<div className="flex gap-6 items-start">
-<div className="shrink-0 w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-500/20 to-fuchsia-500/20 border border-violet-500/20 flex items-center justify-center"><span className="text-lg font-bold bg-gradient-to-r from-violet-400 to-fuchsia-400 bg-clip-text text-transparent">02</span></div>
-<div><h3 className="text-xl font-semibold text-white mb-2">Describe Your Topic</h3><p className="text-gray-400 leading-relaxed">Tell us what your video is about. Our AI maps the viral structure onto your topic.</p></div>
-</div>
-<div className="flex gap-6 items-start">
-<div className="shrink-0 w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-500/20 to-fuchsia-500/20 border border-violet-500/20 flex items-center justify-center"><span className="text-lg font-bold bg-gradient-to-r from-violet-400 to-fuchsia-400 bg-clip-text text-transparent">03</span></div>
-<div><h3 className="text-xl font-semibold text-white mb-2">Get Your Script</h3><p className="text-gray-400 leading-relaxed">Receive a complete script with hook options, section breakdown, and metadata bundle.</p></div>
-</div>
-</div>
-</div>
-</section>
-<section className="relative z-10 border-t border-white/5 py-24 md:py-32">
-<div className="max-w-4xl mx-auto px-6 text-center">
-<h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-6">Ready to Create <span className="bg-gradient-to-r from-violet-400 to-fuchsia-400 bg-clip-text text-transparent">Viral Content?</span></h2>
-<p className="text-gray-400 text-lg mb-10">Join creators using Skripr to reverse-engineer what works.</p>
-<Link href="/sign-up" className="inline-block px-10 py-5 text-lg font-semibold rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-xl shadow-violet-500/25">Start Free Today</Link>
-</div>
-</section>
-<footer className="relative z-10 border-t border-white/5 py-12">
-<div className="max-w-7xl mx-auto px-6 text-center">
-<p className="text-sm text-gray-500">Skripr — Built for YouTube creators.</p>
-</div>
-</footer>
-</div>
-);
+  return (
+    <div style={{ minHeight: "100vh", background: "#0a0a0f", color: "#fff", overflowX: "hidden", fontFamily: "system-ui, -apple-system, sans-serif" }}>
+      {/* Gradient background effects */}
+      <div style={{ position: "fixed", inset: 0, pointerEvents: "none", zIndex: 0 }}>
+        <div style={{ position: "absolute", top: 0, left: "25%", width: 384, height: 384, background: "rgba(139,92,246,0.2)", borderRadius: "50%", filter: "blur(128px)" }} />
+        <div style={{ position: "absolute", top: "33%", right: "25%", width: 384, height: 384, background: "rgba(217,70,239,0.15)", borderRadius: "50%", filter: "blur(128px)" }} />
+        <div style={{ position: "absolute", bottom: "25%", left: "50%", width: 384, height: 384, background: "rgba(99,102,241,0.1)", borderRadius: "50%", filter: "blur(128px)" }} />
+      </div>
+
+      {/* Nav */}
+      <nav style={{ position: "relative", zIndex: 10, borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+        <div style={{ maxWidth: 1280, margin: "0 auto", padding: "20px 24px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <div style={{ width: 36, height: 36, borderRadius: 12, background: "linear-gradient(135deg, #8b5cf6, #d946ef)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 12px rgba(139,92,246,0.3)" }}>
+              <span style={{ color: "#fff", fontWeight: 700, fontSize: 13 }}>SK</span>
+            </div>
+            <span style={{ fontSize: 20, fontWeight: 700, letterSpacing: "-0.02em" }}>Skripr</span>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <Link href="/sign-in" style={{ color: "#9ca3af", textDecoration: "none", fontSize: 14 }}>Sign in</Link>
+            <Link href="/sign-up" style={{ padding: "8px 16px", borderRadius: 8, background: "linear-gradient(90deg, #7c3aed, #c026d3)", color: "#fff", textDecoration: "none", fontSize: 14, fontWeight: 500, boxShadow: "0 4px 12px rgba(139,92,246,0.3)" }}>Get Started Free</Link>
+          </div>
+        </div>
+      </nav>
+
+      {/* Hero */}
+      <section style={{ position: "relative", zIndex: 10, maxWidth: 1280, margin: "0 auto", padding: "80px 24px 128px", textAlign: "center" }}>
+        <div style={{ maxWidth: 896, margin: "0 auto" }}>
+          {/* Badge */}
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "6px 16px", borderRadius: 999, background: "rgba(139,92,246,0.1)", border: "1px solid rgba(139,92,246,0.2)", color: #a78bfa, fontSize: 14, marginBottom: 32 }}>
+            <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#34d399", display: "inline-block" }} />
+            Now in public beta — Free tier available
+          </div>
+
+          <h1 style={{ fontSize: "clamp(48px, 8vw, 96px)", fontWeight: 700, lineHeight: 1.05, letterSpacing: "-0.02em", marginBottom: 32 }}>
+            <span style={{ background: "linear-gradient(90deg, #fff, #d1d5db)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Reverse-engineer</span>
+            <br />
+            <span style={{ background: "linear-gradient(90deg, #a78bfa, #e879f9, #f472b6)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>any viral video</span>
+          </h1>
+
+          <p style={{ fontSize: 20, color: "#9ca3af", marginBottom: 48, maxWidth: 672, margin: "0 auto 48px", lineHeight: 1.7 }}>
+            Paste any YouTube URL. Our AI extracts the exact structural patterns that made it go viral — hook type, retention beats, pacing, CTA placement — and generates a new optimized script using that proven formula.
+          </p>
+
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 16, justifyContent: "center", marginBottom: 24 }}>
+            <Link href="/sign-up" style={{ padding: "16px 32px", borderRadius: 12, background: "linear-gradient(90deg, #7c3aed, #c026d3)", color: "#fff", textDecoration: "none", fontSize: 16, fontWeight: 600, boxShadow: "0 8px 24px rgba(139,92,246,0.3)" }}>
+              Start Free — 3 Scripts Included
+            </Link>
+          </div>
+          <p style={{ fontSize: 14, color: "#6b7280" }}>No credit card required • Cancel anytime</p>
+
+          {/* Stats */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 32, maxWidth: 480, margin: "80px auto 0", paddingTop: 40, borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+            <div>
+              <div style={{ fontSize: 28, fontWeight: 700, background: "linear-gradient(90deg, #a78bfa, #e879f9)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>10K+</div>
+              <div style={{ fontSize: 14, color: "#6b7280", marginTop: 4 }}>Scripts Generated</div>
+            </div>
+            <div>
+              <div style={{ fontSize: 28, fontWeight: 700, background: "linear-gradient(90deg, #a78bfa, #e879f9)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>500+</div>
+              <div style={{ fontSize: 14, color: "#6b7280", marginTop: 4 }}>Active Creators</div>
+            </div>
+            <div>
+              <div style={{ fontSize: 28, fontWeight: 700, background: "linear-gradient(90deg, #a78bfa, #e879f9)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>98%</div>
+              <div style={{ fontSize: 14, color: "#6b7280", marginTop: 4 }}>Satisfaction</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Features */}
+      <section style={{ position: "relative", zIndex: 10, borderTop: "1px solid rgba(255,255,255,0.05)", padding: "96px 24px" }}>
+        <div style={{ maxWidth: 1280, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: 64 }}>
+            <h2 style={{ fontSize: "clamp(32px, 5vw, 56px)", fontWeight: 700, letterSpacing: "-0.02em", marginBottom: 16 }}>
+              Everything You Need to <span style={{ background: "linear-gradient(90deg, #a78bfa, #e879f9)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Grow</span>
+            </h2>
+            <p style={{ color: "#9ca3af", fontSize: 18, maxWidth: 672, margin: "0 auto" }}>Not just a script writer. A complete growth intelligence platform built for YouTube creators.</p>
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 24 }}>
+            {[
+              { title: "Viral Script Generator", desc: "Paste any YouTube URL and get a complete script using the exact structural patterns that made it go viral", color: "linear-gradient(135deg, #8b5cf6, #7c3aed)" },
+              { title: "Niche Bend Engine", desc: "Find crossover opportunities between niches. Break out of your algorithmic bubble with data-driven content ideas", color: "linear-gradient(135deg, #d946ef, #ec4899)" },
+              { title: "Compliance Checker", desc: "Pre-publish audit that checks for reused content risk, AI voice detection, and metadata compliance", color: "linear-gradient(135deg, #10b981, #14b8a6)" },
+              { title: "A/B Title Generator", desc: "Generate 10 title variations ranked by predicted CTR. Pick the one that maximizes your click-through rate", color: "linear-gradient(135deg, #f59e0b, #f97316)" },
+              { title: "Metadata Bundle", desc: "Titles, descriptions, tags, thumbnail text — all optimized for YouTube search and maximum CTR", color: "linear-gradient(135deg, #06b6d4, #3b82f6)" },
+              { title: "Content Remixer", desc: "Paste any viral video URL — we break down the hook, structure, and retention triggers so you can adapt them", color: "linear-gradient(135deg, #f43f5e, #ef4444)" },
+            ].map((f, i) => (
+              <div key={i} style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: 32, transition: "all 0.3s" }}>
+                <div style={{ width: 48, height: 48, borderRadius: 12, background: f.color, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 20, boxShadow: "0 4px 12px rgba(0,0,0,0.3)" }}>
+                  <span style={{ color: "#fff", fontSize: 18 }}>✦</span>
+                </div>
+                <h3 style={{ fontSize: 18, fontWeight: 600, color: "#fff", marginBottom: 8 }}>{f.title}</h3>
+                <p style={{ color: "#9ca3af", fontSize: 14, lineHeight: 1.6 }}>{f.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works */}
+      <section style={{ position: "relative", zIndex: 10, borderTop: "1px solid rgba(255,255,255,0.05)", padding: "96px 24px" }}>
+        <div style={{ maxWidth: 896, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: 64 }}>
+            <h2 style={{ fontSize: "clamp(32px, 5vw, 56px)", fontWeight: 700, letterSpacing: "-0.02em" }}>
+              Three Steps to Your <span style={{ background: "linear-gradient(90deg, #a78bfa, #e879f9)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Next Viral Script</span>
+            </h2>
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
+            {[
+              { step: "01", title: "Paste a Viral Video", desc: "Drop any YouTube URL. We extract the full transcript and analyze its viral structure — hook type, retention beat placement, pacing, and CTA strategy." },
+              { step: "02", title: "Describe Your Topic", desc: "Tell us what your video is about. Our AI maps the viral structure from the source onto your topic, generating a script that follows the exact same winning formula." },
+              { step: "03", title: "Get Your Script", desc: "Receive a complete, TTS-optimized script with hook options, section breakdown, metadata bundle, and a compliance check to avoid demonetization." },
+            ].map((item, i) => (
+              <div key={i} style={{ display: "flex", gap: 24, alignItems: "flex-start" }}>
+                <div style={{ flexShrink: 0, width: 56, height: 56, borderRadius: 16, background: "linear-gradient(135deg, rgba(139,92,246,0.2), rgba(217,70,239,0.2))", border: "1px solid rgba(139,92,246,0.2)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <span style={{ fontSize: 18, fontWeight: 700, background: "linear-gradient(90deg, #a78bfa, #e879f9)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>{item.step}</span>
+                </div>
+                <div>
+                  <h3 style={{ fontSize: 20, fontWeight: 600, color: "#fff", marginBottom: 8 }}>{item.title}</h3>
+                  <p style={{ color: "#9ca3af", lineHeight: 1.7 }}>{item.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section style={{ position: "relative", zIndex: 10, borderTop: "1px solid rgba(255,255,255,0.05)", padding: "96px 24px", textAlign: "center" }}>
+        <h2 style={{ fontSize: "clamp(32px, 5vw, 56px)", fontWeight: 700, letterSpacing: "-0.02em", marginBottom: 24 }}>
+          Ready to Create <span style={{ background: "linear-gradient(90deg, #a78bfa, #e879f9)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Viral Content?</span>
+        </h2>
+        <p style={{ color: "#9ca3af", fontSize: 18, marginBottom: 40 }}>Join thousands of creators using Skripr to reverse-engineer what works and build channels that grow.</p>
+        <Link href="/sign-up" style={{ display: "inline-block", padding: "20px 40px", borderRadius: 12, background: "linear-gradient(90deg, #7c3aed, #c026d3)", color: "#fff", textDecoration: "none", fontSize: 18, fontWeight: 600, boxShadow: "0 8px 24px rgba(139,92,246,0.3)" }}>
+          Start Free Today
+        </Link>
+      </section>
+
+      {/* Footer */}
+      <footer style={{ position: "relative", zIndex: 10, borderTop: "1px solid rgba(255,255,255,0.05)", padding: "48px 24px", textAlign: "center" }}>
+        <p style={{ color: "#6b7280", fontSize: 14 }}>Skripr — Built for YouTube creators.</p>
+      </footer>
+    </div>
+  );
 }
