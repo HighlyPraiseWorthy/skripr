@@ -6,7 +6,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "ScriptFactory — AI-Powered YouTube Script & Growth Intelligence",
+  title: "Skripr — AI-Powered YouTube Script & Growth Intelligence",
   description: "Reverse-engineer any viral video. Generate scripts that follow the exact structural patterns that make content spread.",
 };
 
@@ -16,7 +16,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
+    <ClerkProvider
+      afterSignInUrl="/dashboard"
+      afterSignUpUrl="/dashboard"
+    >
       <html lang="en" className="dark">
         <body className={`${inter.className} bg-gray-950 text-gray-100 antialiased`}>{children}</body>
       </html>
