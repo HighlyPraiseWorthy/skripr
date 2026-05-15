@@ -43,4 +43,3 @@ Paste a YouTube URL. Our AI extracts the exact structural patterns that made it 
 </div>
 );
 }
-```
