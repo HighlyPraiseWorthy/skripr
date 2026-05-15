@@ -7,7 +7,7 @@ export default function SignUpPage() {
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-2 mb-4">
             <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-violet-600 to-fuchsia-600 flex items-center justify-center">
-              <span className="text-white font-bold">SF</span>
+              <span className="text-white font-bold">SK</span>
             </div>
           </div>
           <h1 className="text-2xl font-bold text-white">Create your account</h1>
