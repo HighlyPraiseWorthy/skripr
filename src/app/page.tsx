@@ -58,29 +58,43 @@ Start Free — 3 Scripts Included
 </div>
 </div>
 </section>
-<section className="relative z-10 border-t border-white/5 py-24 md:py-32">
+<section id="features" className="relative z-10 border-t border-white/5 py-24 md:py-32">
 <div className="max-w-7xl mx-auto px-6">
 <div className="text-center mb-16">
 <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4">Everything You Need to <span className="bg-gradient-to-r from-violet-400 to-fuchsia-400 bg-clip-text text-transparent">Grow</span></h2>
 <p className="text-gray-400 text-lg max-w-2xl mx-auto">Not just a script writer. A complete growth intelligence platform.</p>
 </div>
 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-{[
-{ title: "Viral Script Generator", desc: "Paste any YouTube URL and get a complete script using the exact structural patterns that made it go viral", gradient: "from-violet-500 to-purple-500" },
-{ title: "Niche Bend Engine", desc: "Find crossover opportunities between niches with data-driven content ideas", gradient: "from-fuchsia-500 to-pink-500" },
-{ title: "Compliance Checker", desc: "Pre-publish audit for reused content risk and metadata compliance", gradient: "from-emerald-500 to-teal-500" },
-{ title: "A/B Title Generator", desc: "Generate 10 title variations ranked by predicted CTR", gradient: "from-amber-500 to-orange-500" },
-{ title: "Metadata Bundle", desc: "Titles, descriptions, tags, thumbnail text — all optimized for YouTube", gradient: "from-cyan-500 to-blue-500" },
-{ title: "Content Remixer", desc: "Paste any viral video URL and we break down the hook, structure, and retention triggers", gradient: "from-rose-500 to-red-500" },
-].map((f, i) => (
-<div key={i} className="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-8 hover:bg-white/[0.04] transition-all">
-<div className={w-12 h-12 rounded-xl bg-gradient-to-br ${f.gradient} flex items-center justify-center mb-5}>
-<span className="text-white text-lg">✦</span>
+<div className="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-8 hover:bg-white/[0.04] transition-all">
+<div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500 to-purple-500 flex items-center justify-center mb-5"><span className="text-white text-lg">✦</span></div>
+<h3 className="text-lg font-semibold text-white mb-2">Viral Script Generator</h3>
+<p className="text-gray-400 text-sm leading-relaxed">Paste any YouTube URL and get a complete script using the exact structural patterns that made it go viral</p>
 </div>
-<h3 className="text-lg font-semibold text-white mb-2">{f.title}</h3>
-<p className="text-gray-400 text-sm leading-relaxed">{f.desc}</p>
+<div className="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-8 hover:bg-white/[0.04] transition-all">
+<div className="w-12 h-12 rounded-xl bg-gradient-to-br from-fuchsia-500 to-pink-500 flex items-center justify-center mb-5"><span className="text-white text-lg">✦</span></div>
+<h3 className="text-lg font-semibold text-white mb-2">Niche Bend Engine</h3>
+<p className="text-gray-400 text-sm leading-relaxed">Find crossover opportunities between niches with data-driven content ideas</p>
 </div>
-))}
+<div className="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-8 hover:bg-white/[0.04] transition-all">
+<div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center mb-5"><span className="text-white text-lg">✦</span></div>
+<h3 className="text-lg font-semibold text-white mb-2">Compliance Checker</h3>
+<p className="text-gray-400 text-sm leading-relaxed">Pre-publish audit for reused content risk and metadata compliance</p>
+</div>
+<div className="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-8 hover:bg-white/[0.04] transition-all">
+<div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center mb-5"><span className="text-white text-lg">✦</span></div>
+<h3 className="text-lg font-semibold text-white mb-2">A/B Title Generator</h3>
+<p className="text-gray-400 text-sm leading-relaxed">Generate 10 title variations ranked by predicted CTR</p>
+</div>
+<div className="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-8 hover:bg-white/[0.04] transition-all">
+<div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center mb-5"><span className="text-white text-lg">✦</span></div>
+<h3 className="text-lg font-semibold text-white mb-2">Metadata Bundle</h3>
+<p className="text-gray-400 text-sm leading-relaxed">Titles, descriptions, tags, thumbnail text — all optimized for YouTube</p>
+</div>
+<div className="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-8 hover:bg-white/[0.04] transition-all">
+<div className="w-12 h-12 rounded-xl bg-gradient-to-br from-rose-500 to-red-500 flex items-center justify-center mb-5"><span className="text-white text-lg">✦</span></div>
+<h3 className="text-lg font-semibold text-white mb-2">Content Remixer</h3>
+<p className="text-gray-400 text-sm leading-relaxed">Paste any viral video URL and we break down the hook, structure, and retention triggers</p>
+</div>
 </div>
 </div>
 </section>
@@ -90,21 +104,18 @@ Start Free — 3 Scripts Included
 <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4">Three Steps to Your <span className="bg-gradient-to-r from-violet-400 to-fuchsia-400 bg-clip-text text-transparent">Next Viral Script</span></h2>
 </div>
 <div className="space-y-8">
-{[
-{ step: "01", title: "Paste a Viral Video", desc: "Drop any YouTube URL. We extract the full transcript and analyze its viral structure." },
-{ step: "02", title: "Describe Your Topic", desc: "Tell us what your video is about. Our AI maps the viral structure onto your topic." },
-{ step: "03", title: "Get Your Script", desc: "Receive a complete script with hook options, section breakdown, and metadata bundle." },
-].map((item, i) => (
-<div key={i} className="flex gap-6 items-start">
-<div className="shrink-0 w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-500/20 to-fuchsia-500/20 border border-violet-500/20 flex items-center justify-center">
-<span className="text-lg font-bold bg-gradient-to-r from-violet-400 to-fuchsia-400 bg-clip-text text-transparent">{item.step}</span>
+<div className="flex gap-6 items-start">
+<div className="shrink-0 w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-500/20 to-fuchsia-500/20 border border-violet-500/20 flex items-center justify-center"><span className="text-lg font-bold bg-gradient-to-r from-violet-400 to-fuchsia-400 bg-clip-text text-transparent">01</span></div>
+<div><h3 className="text-xl font-semibold text-white mb-2">Paste a Viral Video</h3><p className="text-gray-400 leading-relaxed">Drop any YouTube URL. We extract the full transcript and analyze its viral structure.</p></div>
 </div>
-<div>
-<h3 className="text-xl font-semibold text-white mb-2">{item.title}</h3>
-<p className="text-gray-400 leading-relaxed">{item.desc}</p>
+<div className="flex gap-6 items-start">
+<div className="shrink-0 w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-500/20 to-fuchsia-500/20 border border-violet-500/20 flex items-center justify-center"><span className="text-lg font-bold bg-gradient-to-r from-violet-400 to-fuchsia-400 bg-clip-text text-transparent">02</span></div>
+<div><h3 className="text-xl font-semibold text-white mb-2">Describe Your Topic</h3><p className="text-gray-400 leading-relaxed">Tell us what your video is about. Our AI maps the viral structure onto your topic.</p></div>
 </div>
+<div className="flex gap-6 items-start">
+<div className="shrink-0 w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-500/20 to-fuchsia-500/20 border border-violet-500/20 flex items-center justify-center"><span className="text-lg font-bold bg-gradient-to-r from-violet-400 to-fuchsia-400 bg-clip-text text-transparent">03</span></div>
+<div><h3 className="text-xl font-semibold text-white mb-2">Get Your Script</h3><p className="text-gray-400 leading-relaxed">Receive a complete script with hook options, section breakdown, and metadata bundle.</p></div>
 </div>
-))}
 </div>
 </div>
 </section>
