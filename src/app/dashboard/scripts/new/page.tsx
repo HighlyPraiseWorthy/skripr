@@ -148,7 +148,7 @@ export default function NewScriptPage() {
     <div className="p-6">
       <div className="max-w-3xl mx-auto">
         <Link
-          href="/scripts"
+          href="/dashboard/scripts"
           className="text-zinc-400 hover:text-white text-sm mb-4 inline-block"
         >
           &larr; Back to Scripts
