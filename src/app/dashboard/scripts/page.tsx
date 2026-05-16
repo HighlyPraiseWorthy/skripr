@@ -1,5 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
 import { createClient } from "@supabase/supabase-js";
+import { supabaseAdmin } from "@/lib/db/supabase";
 import Link from "next/link";
 import type { Script } from "@/lib/types/script";
 
@@ -24,26 +25,61 @@ export default async function ScriptsPage() {
     );
   }
 
-  const supabase = getSupabase();
-  const { data, error } = await supabase
-    .from("scripts")
-    .select("*")
-    .eq("user_id", userId)
-    .order("created_at", { ascending: false });
+  // Map Clerk userId (user_...) → profile UUID via the profiles table
+  // (requires supabase schema fix: scripts.user_id → TEXT + profiles.user_id column)
+  let scripts: Script[] = [];
+  let scriptsError: any = null;
+  try {
+    const supabase = getSupabase();
 
-  if (error) {
+    // Try to find the user's profile UUID using the profiles.user_id TEXT column
+    const { data: profileRows } = await supabaseAdmin!
+      .from("profiles")
+      .select("id")
+      .eq("user_id", userId)
+      .limit(1)
+      .maybeSingle();
+
+    if (profileRows?.id) {
+      // Use the profile UUID to look up scripts
+      const { data, error } = await supabaseAdmin!
+        .from("scripts")
+        .select("*")
+        .eq("user_id", profileRows.id)
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      scripts = data || [];
+    } else {
+      // No profile record yet — user hasn't generated any scripts
+      scripts = [];
+    }
+  } catch (e: any) {
+    scriptsError = e;
+  }
+
+  if (scriptsError?.message?.includes('uuid')) {
     return (
       <div className="p-6">
         <div className="max-w-5xl mx-auto">
-          <div className="rounded-xl bg-red-500/10 border border-red-500/20 p-4">
-            <p className="text-red-400">{error.message}</p>
+          <div className="rounded-xl bg-yellow-500/10 border border-yellow-500/20 p-4">
+            <p className="text-yellow-400">Database schema needs one-time setup.</p>
+            <p className="text-zinc-400 mt-2">Please run the following SQL in the Supabase Dashboard SQL Editor:</p>
+            <pre className="mt-2 text-sm text-zinc-300 bg-zinc-900 rounded-lg p-3 overflow-x-auto">
+{`-- scripts.user_id (uuid -> text) + profiles.user_id column
+ALTER TABLE public.scripts  ALTER COLUMN user_id TYPE text USING user_id::text;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS user_id text;
+ALTER TABLE public.usage_tracking DROP CONSTRAINT IF EXISTS usage_tracking_user_id_fkey;
+ALTER TABLE public.usage_tracking ALTER COLUMN user_id TYPE text USING user_id::text;
+CREATE INDEX IF NOT EXISTS idx_profiles_user_id    ON public.profiles(user_id);
+CREATE INDEX IF NOT EXISTS idx_scripts_user_id     ON public.scripts(user_id);
+CREATE INDEX IF NOT EXISTS idx_usage_tracking_user_id ON public.usage_tracking(user_id);`}</pre>
           </div>
         </div>
       </div>
     );
   }
 
-  const scripts: Script[] = data || [];
+
 
   function formatDate(dateStr: string) {
     return new Date(dateStr).toLocaleDateString("en-US", {
