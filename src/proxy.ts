@@ -9,9 +9,9 @@
  *      read by the oauth-callback handler in the [[...sign-in]] catch-all route
  * 3. Cache-bust comment ensures Vercel picks up every deploy
  */
-// cache-bust: timestamp 2025-05-16-v3
+// cache-bust: timestamp 2025-05-16-v4
 import { clerkMiddleware } from "@clerk/nextjs/server";
-import { redirect } from "next/navigation";
+import { NextResponse } from "next/server";
 
 export default clerkMiddleware(async (auth, req) => {
   const { userId } = await auth();
@@ -19,7 +19,7 @@ export default clerkMiddleware(async (auth, req) => {
   // Signed-in users hitting / land on /dashboard/scripts directly
   // (guard against v7.3.3 NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL OAuth redirect quirk)
   if (userId && req.nextUrl.pathname === "/") {
-    return redirect("/dashboard/scripts");
+    return NextResponse.redirect(new URL("/dashboard/scripts", req.nextUrl.toString()));
   }
 
   // Protect all dashboard routes
