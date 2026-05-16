@@ -2,7 +2,7 @@ import { auth } from "@clerk/nextjs/server";
 import { createClient } from "@supabase/supabase-js";
 import { supabaseAdmin } from "@/lib/db/supabase";
 import Link from "next/link";
-import { Script } from "@/lib/types/script";
+import type { Script } from "@/lib/types/script";
 
 /* ─── Palette ─── */
 const C = {
@@ -21,7 +21,6 @@ const C = {
   success: "#34d399",
   badgeBg: "rgba(99,102,241,0.12)",
   badgeText: "#a5b4fc",
-  emptyEmoji: "#6366f1",
 };
 
 /* ─── helpers ─── */
@@ -29,6 +28,18 @@ function getSupabase() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
   return createClient(url, key);
+}
+
+function timeAgo(dateStr: string): string {
+  if (!dateStr) return "just now";
+  const diffMs = Date.now() - new Date(dateStr).getTime();
+  if (isNaN(diffMs)) return "just now";
+  const mins = Math.floor(diffMs / 60000);
+  if (mins < 60) return `${mins}m ago`;
+  const hours = Math.floor(mins / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  return `${days}d ago`;
 }
 
 function formatDate(dateStr: string) {
@@ -39,33 +50,23 @@ function formatDate(dateStr: string) {
   });
 }
 
-function timeAgo(dateStr: string): string {
-  const diffMs = Date.now() - new Date(dateStr).getTime();
-  const mins = Math.floor(diffMs / 60000);
-  if (mins < 60) return `${mins}m ago`;
-  const hours = Math.floor(mins / 60);
-  if (hours < 24) return `${hours}h ago`;
-  const days = Math.floor(hours / 24);
-  return `${days}d ago`;
-}
-
 /* ═══════════════════════════════════════════ */
 export default async function ScriptsPage() {
   const { userId } = await auth();
   if (!userId) {
     return (
-      <div style={{ padding: 24 }}>
-        <div
-          style={{
-            maxWidth: 960,
-            margin: "0 auto",
-            borderRadius: 16,
-            background: "rgba(248,113,113,0.08)",
-            border: "1px solid rgba(248,113,113,0.2)",
-            padding: 20,
-          }}
-        >
-          <p style={{ color: "#f87171", fontSize: 14 }}>Not authenticated</p>
+      <div style={{ padding: 28, minHeight: "100vh", background: C.bg }}>
+        <div style={{ maxWidth: 960, margin: "0 auto" }}>
+          <div
+            style={{
+              borderRadius: 20,
+              background: "rgba(248,113,113,0.08)",
+              border: "1px solid rgba(248,113,113,0.2)",
+              padding: 20,
+            }}
+          >
+            <p style={{ color: "#f87171", fontSize: 14 }}>Not authenticated</p>
+          </div>
         </div>
       </div>
     );
@@ -73,6 +74,7 @@ export default async function ScriptsPage() {
 
   let scripts: Script[] = [];
   let scriptsError: any = null;
+
   try {
     const supabase = getSupabase();
     const { data: profileRows } = await supabaseAdmin!
@@ -97,51 +99,49 @@ export default async function ScriptsPage() {
 
   if (scriptsError?.message?.includes("uuid")) {
     return (
-      <div style={{ padding: 24 }}>
-        <div
-          style={{
-            maxWidth: 960,
-            margin: "0 auto",
-            borderRadius: 16,
-            background: "rgba(251,191,36,0.08)",
-            border: "1px solid rgba(251,191,36,0.2)",
-            padding: 20,
-          }}
-        >
-          <p
+      <div style={{ padding: 28, minHeight: "100vh", background: C.bg }}>
+        <div style={{ maxWidth: 960, margin: "0 auto" }}>
+          <div
             style={{
-              color: "#fbbf24",
-              fontSize: 14,
-              fontWeight: 600,
-              marginBottom: 6,
+              borderRadius: 20,
+              background: "rgba(251,191,36,0.08)",
+              border: "1px solid rgba(251,191,36,0.2)",
+              padding: 24,
             }}
           >
-            Database schema needs one-time setup.
-          </p>
-          <p style={{ color: "#64748b", fontSize: 13 }}>
-            Run the following SQL in Supabase Dashboard → SQL Editor:
-          </p>
-          <pre
-            style={{
-              marginTop: 10,
-              fontSize: 12,
-              color: "#a5b4fc",
-              background: "#0b0b17",
-              borderRadius: 12,
-              padding: 16,
-              overflowX: "auto",
-              lineHeight: 1.7,
-            }}
-          >
-{`-- scripts.user_id (uuid → text) + profiles.user_id column
-ALTER TABLE public.scripts  ALTER COLUMN user_id TYPE text USING user_id::text;
+            <p
+              style={{
+                color: "#fbbf24",
+                fontSize: 15,
+                fontWeight: 600,
+                marginBottom: 8,
+              }}
+            >
+              Database setup required
+            </p>
+            <p style={{ color: C.textDim, fontSize: 13, marginBottom: 14 }}>
+              Run this SQL once in Supabase Dashboard → SQL Editor:
+            </p>
+            <pre
+              style={{
+                fontSize: 12,
+                color: "#a5b4fc",
+                background: "#0b0b17",
+                borderRadius: 12,
+                padding: 16,
+                overflowX: "auto",
+                lineHeight: 1.7,
+              }}
+            >
+{`ALTER TABLE public.scripts  ALTER COLUMN user_id TYPE text USING user_id::text;
 ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS user_id text;
 ALTER TABLE public.usage_tracking DROP CONSTRAINT IF EXISTS usage_tracking_user_id_fkey;
 ALTER TABLE public.usage_tracking ALTER COLUMN user_id TYPE text USING user_id::text;
 CREATE INDEX IF NOT EXISTS idx_profiles_user_id    ON public.profiles(user_id);
 CREATE INDEX IF NOT EXISTS idx_scripts_user_id     ON public.scripts(user_id);
 CREATE INDEX IF NOT EXISTS idx_usage_tracking_user_id ON public.usage_tracking(user_id);`}
-          </pre>
+            </pre>
+          </div>
         </div>
       </div>
     );
@@ -153,7 +153,7 @@ CREATE INDEX IF NOT EXISTS idx_usage_tracking_user_id ON public.usage_tracking(u
 
   return (
     <div style={{ padding: 28, minHeight: "100vh", background: C.bg }}>
-      {/* Ambient glow blobs */}
+      {/* Ambient glows */}
       <div
         aria-hidden
         style={{
@@ -164,7 +164,7 @@ CREATE INDEX IF NOT EXISTS idx_usage_tracking_user_id ON public.usage_tracking(u
           height: 520,
           borderRadius: "50%",
           background:
-            "radial-gradient(circle, rgba(99,102,241,0.18) 0%, transparent 70%)",
+            "radial-gradient(circle, rgba(99,102,241,0.15) 0%, transparent 70%)",
           pointerEvents: "none",
           zIndex: 0,
         }}
@@ -179,16 +179,14 @@ CREATE INDEX IF NOT EXISTS idx_usage_tracking_user_id ON public.usage_tracking(u
           height: 560,
           borderRadius: "50%",
           background:
-            "radial-gradient(circle, rgba(124,58,237,0.12) 0%, transparent 70%)",
+            "radial-gradient(circle, rgba(124,58,237,0.10) 0%, transparent 70%)",
           pointerEvents: "none",
           zIndex: 0,
         }}
       />
 
-      <div
-        style={{ position: "relative", zIndex: 1, maxWidth: 960, margin: "0 auto" }}
-      >
-        {/* ── Header ── */}
+      <div style={{ position: "relative", zIndex: 1, maxWidth: 960, margin: "0 auto" }}>
+        {/* Header */}
         <div
           style={{
             display: "flex",
@@ -222,25 +220,15 @@ CREATE INDEX IF NOT EXISTS idx_usage_tracking_user_id ON public.usage_tracking(u
               fontWeight: 600,
               textDecoration: "none",
               boxShadow: "0 0 22px rgba(99,102,241,0.30)",
-              transition: "opacity 150ms, transform 150ms",
               cursor: "pointer",
             }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.opacity = "0.88";
-              (e.currentTarget as HTMLElement).style.transform =
-                "translateY(-1px)";
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.opacity = "1";
-              (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
-            }}
           >
-            <span style={{ fontSize: 18, lineHeight: 1 }}>✦</span>
+            <span style={{ fontSize: 18, lineHeight: 1 }}>+</span>
             New Script
           </Link>
         </div>
 
-        {/* ── Empty State ── */}
+        {/* Empty State */}
         {scripts.length === 0 ? (
           <div
             style={{
@@ -253,7 +241,7 @@ CREATE INDEX IF NOT EXISTS idx_usage_tracking_user_id ON public.usage_tracking(u
               overflow: "hidden",
             }}
           >
-            {/* Top glow line */}
+            {/* Glow line */}
             <div
               aria-hidden
               style={{
@@ -268,14 +256,13 @@ CREATE INDEX IF NOT EXISTS idx_usage_tracking_user_id ON public.usage_tracking(u
                 borderRadius: 2,
               }}
             />
-
             <div
               style={{
-                fontSize: 64,
+                fontSize: 56,
                 lineHeight: 1,
-                marginBottom: 20,
+                marginBottom: 18,
                 filter:
-                  "drop-shadow(0 0 20px rgba(99,102,241,0.35)) drop-shadow(0 0 40px rgba(99,102,241,0.15))",
+                  "drop-shadow(0 0 16px rgba(99,102,241,0.40)) drop-shadow(0 0 32px rgba(99,102,241,0.18))",
               }}
             >
               ✦
@@ -316,17 +303,7 @@ CREATE INDEX IF NOT EXISTS idx_usage_tracking_user_id ON public.usage_tracking(u
                 fontWeight: 600,
                 textDecoration: "none",
                 boxShadow: "0 0 30px rgba(99,102,241,0.35)",
-                transition: "opacity 150ms, transform 150ms",
                 cursor: "pointer",
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.opacity = "0.88";
-                (e.currentTarget as HTMLElement).style.transform =
-                  "translateY(-2px)";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.opacity = "1";
-                (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
               }}
             >
               <span style={{ fontSize: 18, lineHeight: 1 }}>✦</span>
@@ -334,33 +311,16 @@ CREATE INDEX IF NOT EXISTS idx_usage_tracking_user_id ON public.usage_tracking(u
             </Link>
           </div>
         ) : (
-          /* ── Script Cards ── */
+          /* Script Cards */
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
             {scripts.map((script) => (
               <div
                 key={script.id}
                 style={{
                   borderRadius: 16,
-                  background: C.cardBg,
+                  backgroundColor: C.cardBg,
                   border: `1px solid ${C.border}`,
                   padding: "20px 22px",
-                  transition:
-                    "background 200ms, border-color 200ms, transform 200ms, box-shadow 200ms",
-                  cursor: "default",
-                }}
-                onMouseEnter={(e) => {
-                  const el = e.currentTarget as HTMLElement;
-                  el.style.background = C.cardHover;
-                  el.style.borderColor = C.borderHover;
-                  el.style.transform = "translateY(-2px)";
-                  el.style.boxShadow = `0 8px 32px ${C.accentGlow}`;
-                }}
-                onMouseLeave={(e) => {
-                  const el = e.currentTarget as HTMLElement;
-                  el.style.background = C.cardBg;
-                  el.style.borderColor = C.border;
-                  el.style.transform = "translateY(0)";
-                  el.style.boxShadow = "none";
                 }}
               >
                 <div
@@ -371,7 +331,7 @@ CREATE INDEX IF NOT EXISTS idx_usage_tracking_user_id ON public.usage_tracking(u
                     gap: 16,
                   }}
                 >
-                  {/* Left: title + meta */}
+                  {/* Left */}
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <h3
                       style={{
@@ -382,7 +342,7 @@ CREATE INDEX IF NOT EXISTS idx_usage_tracking_user_id ON public.usage_tracking(u
                         letterSpacing: -0.2,
                         overflow: "hidden",
                         textOverflow: "ellipsis",
-                        whiteSpace: "nowrap" as const,
+                        whiteSpace: "nowrap",
                       }}
                     >
                       {script.title}
@@ -400,26 +360,28 @@ CREATE INDEX IF NOT EXISTS idx_usage_tracking_user_id ON public.usage_tracking(u
                           style={{
                             padding: "3px 10px",
                             borderRadius: 8,
-                            background: C.badgeBg,
+                            backgroundColor: C.badgeBg,
                             color: C.badgeText,
                             fontSize: 11,
                             fontWeight: 600,
                             letterSpacing: 0.3,
-                            textTransform: "uppercase" as const,
+                            textTransform: "uppercase",
                           }}
                         >
                           {script.niche}
                         </span>
                       )}
                       <span style={{ color: C.textDim, fontSize: 13 }}>
-                        {script.word_count?.toLocaleString()} words
+                        {(script.word_count || 0).toLocaleString()} words
                       </span>
                       <span style={{ color: C.textDim, fontSize: 13 }}>
                         ~{script.estimated_duration || 5} min
                       </span>
-                      <span style={{ color: C.textDim, fontSize: 13 }}>
-                        {timeAgo(script.created_at)}
-                      </span>
+                      {script.created_at && (
+                        <span style={{ color: C.textDim, fontSize: 13 }}>
+                          {timeAgo(script.created_at)}
+                        </span>
+                      )}
                     </div>
                     {script.structure_pattern && (
                       <div style={{ marginTop: 8 }}>
@@ -427,7 +389,7 @@ CREATE INDEX IF NOT EXISTS idx_usage_tracking_user_id ON public.usage_tracking(u
                           style={{
                             padding: "3px 10px",
                             borderRadius: 8,
-                            background: "rgba(99,102,241,0.10)",
+                            backgroundColor: "rgba(99,102,241,0.10)",
                             color: "#a5b4fc",
                             fontSize: 11,
                             fontWeight: 600,
@@ -439,61 +401,39 @@ CREATE INDEX IF NOT EXISTS idx_usage_tracking_user_id ON public.usage_tracking(u
                     )}
                   </div>
 
-                  {/* Right: actions */}
+                  {/* Right */}
                   <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
                     <Link
                       href={`/dashboard/scripts/${script.id}`}
                       style={{
                         padding: "7px 16px",
                         borderRadius: 10,
-                        background: "rgba(99,102,241,0.10)",
+                        backgroundColor: "rgba(99,102,241,0.10)",
                         color: C.accent,
                         fontSize: 13,
                         fontWeight: 500,
                         textDecoration: "none",
                         border: "1px solid rgba(99,102,241,0.18)",
-                        transition: "background 150ms, border-color 150ms",
-                      }}
-                      onMouseEnter={(e) => {
-                        (e.currentTarget as HTMLElement).style.background =
-                          "rgba(99,102,241,0.18)";
-                        (e.currentTarget as HTMLElement).style.borderColor =
-                          "rgba(99,102,241,0.35)";
-                      }}
-                      onMouseLeave={(e) => {
-                        (e.currentTarget as HTMLElement).style.background =
-                          "rgba(99,102,241,0.10)";
-                        (e.currentTarget as HTMLElement).style.borderColor =
-                          "rgba(99,102,241,0.18)";
                       }}
                     >
                       View
                     </Link>
-                    <form action={`/api/scripts/${script.id}/delete`} method="POST">
+                    <form
+                      action={`/api/scripts/${script.id}/delete`}
+                      method="POST"
+                      style={{ display: "inline" }}
+                    >
                       <button
                         type="submit"
                         style={{
                           padding: "7px 16px",
                           borderRadius: 10,
-                          background: "rgba(248,113,113,0.08)",
+                          backgroundColor: "rgba(248,113,113,0.08)",
                           color: C.danger,
                           fontSize: 13,
                           fontWeight: 500,
                           border: "1px solid rgba(248,113,113,0.16)",
                           cursor: "pointer",
-                          transition: "background 150ms, border-color 150ms",
-                        }}
-                        onMouseEnter={(e) => {
-                          (e.currentTarget as HTMLElement).style.background =
-                            "rgba(248,113,113,0.15)";
-                          (e.currentTarget as HTMLElement).style.borderColor =
-                            "rgba(248,113,113,0.3)";
-                        }}
-                        onMouseLeave={(e) => {
-                          (e.currentTarget as HTMLElement).style.background =
-                            "rgba(248,113,113,0.08)";
-                          (e.currentTarget as HTMLElement).style.borderColor =
-                            "rgba(248,113,113,0.16)";
                         }}
                       >
                         Delete
