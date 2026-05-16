@@ -39,7 +39,7 @@ STRIPE_AGENCY_PRICE_ID=<create product in Stripe, copy price ID>
 
 ## Gotchas
 
-- `src/middleware.ts` shows a deprecation warning about file convention — this is Clerk's setup and should NOT be renamed
+- `src/proxy.ts` replaces the deprecated `middleware.ts` convention in Next.js 16+ (Node.js runtime)
 - All `@/lib/` imports use the `@/*` path alias defined in tsconfig.json
 - Supabase admin client (supabaseAdmin) uses lazy Proxy initialization to avoid build-time errors
 - The `usage_tracking` table's RLS uses `auth.uid()` which matches the `profiles.id` UUID, not the Clerk user ID

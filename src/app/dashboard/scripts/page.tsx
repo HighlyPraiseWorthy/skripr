@@ -1,63 +1,49 @@
-"use client";
-
-import { useEffect, useState } from "react";
+import { auth } from "@clerk/nextjs/server";
+import { createClient } from "@supabase/supabase-js";
 import Link from "next/link";
-import { supabase } from "@/lib/db/supabase";
 import type { Script } from "@/lib/types/script";
 
-export default function ScriptsPage() {
-  const [scripts, setScripts] = useState<Script[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [deleting, setDeleting] = useState<string | null>(null);
+function getSupabase() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+  return createClient(url, key);
+}
 
-  useEffect(() => {
-    loadScripts();
-  }, []);
-
-  async function loadScripts() {
-    try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      if (!user) {
-        setError("Not authenticated");
-        setLoading(false);
-        return;
-      }
-
-      const { data, error: fetchError } = await supabase
-        .from("scripts")
-        .select("*")
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: false });
-
-      if (fetchError) throw fetchError;
-      setScripts(data || []);
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Failed to load scripts");
-    } finally {
-      setLoading(false);
-    }
+export default async function ScriptsPage() {
+  const { userId } = await auth();
+  if (!userId) {
+    // Proxy should prevent this, but handle gracefully
+    return (
+      <div className="p-6">
+        <div className="max-w-5xl mx-auto">
+          <div className="rounded-xl bg-red-500/10 border border-red-500/20 p-4">
+            <p className="text-red-400">Not authenticated</p>
+          </div>
+        </div>
+      </div>
+    );
   }
 
-  async function deleteScript(id: string) {
-    if (!confirm("Delete this script?")) return;
-    setDeleting(id);
-    try {
-      const { error: delError } = await supabase
-        .from("scripts")
-        .delete()
-        .eq("id", id);
-      if (delError) throw delError;
-      setScripts((prev) => prev.filter((s) => s.id !== id));
-    } catch (err: unknown) {
-      alert(err instanceof Error ? err.message : "Failed to delete");
-    } finally {
-      setDeleting(null);
-    }
+  const supabase = getSupabase();
+  const { data, error } = await supabase
+    .from("scripts")
+    .select("*")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    return (
+      <div className="p-6">
+        <div className="max-w-5xl mx-auto">
+          <div className="rounded-xl bg-red-500/10 border border-red-500/20 p-4">
+            <p className="text-red-400">{error.message}</p>
+          </div>
+        </div>
+      </div>
+    );
   }
+
+  const scripts: Script[] = data || [];
 
   function formatDate(dateStr: string) {
     return new Date(dateStr).toLocaleDateString("en-US", {
@@ -65,38 +51,6 @@ export default function ScriptsPage() {
       day: "numeric",
       year: "numeric",
     });
-  }
-
-  if (loading) {
-    return (
-      <div className="p-6">
-        <div className="max-w-5xl mx-auto">
-          <div className="flex justify-between items-center mb-6">
-            <h1 className="text-2xl font-bold text-white">My Scripts</h1>
-          </div>
-          <div className="space-y-3">
-            {[1, 2, 3].map((i) => (
-              <div
-                key={i}
-                className="h-24 rounded-xl bg-zinc-800/50 animate-pulse"
-              />
-            ))}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="p-6">
-        <div className="max-w-5xl mx-auto">
-          <div className="rounded-xl bg-red-500/10 border border-red-500/20 p-4">
-            <p className="text-red-400">{error}</p>
-          </div>
-        </div>
-      </div>
-    );
   }
 
   return (
@@ -115,9 +69,7 @@ export default function ScriptsPage() {
         {scripts.length === 0 ? (
           <div className="text-center py-16">
             <div className="text-5xl mb-4">📝</div>
-            <h2 className="text-lg font-medium text-white mb-2">
-              No scripts yet
-            </h2>
+            <h2 className="text-lg font-medium text-white mb-2">No scripts yet</h2>
             <p className="text-zinc-400 mb-6">
               Generate your first viral script to get started
             </p>
@@ -137,9 +89,7 @@ export default function ScriptsPage() {
               >
                 <div className="flex justify-between items-start">
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-white font-medium truncate">
-                      {script.title}
-                    </h3>
+                    <h3 className="text-white font-medium truncate">{script.title}</h3>
                     <div className="flex gap-3 mt-1.5 text-sm text-zinc-400">
                       {script.niche && (
                         <span className="px-2 py-0.5 bg-zinc-700/50 rounded text-xs">
@@ -165,13 +115,14 @@ export default function ScriptsPage() {
                     >
                       View
                     </Link>
-                    <button
-                      onClick={() => deleteScript(script.id)}
-                      disabled={deleting === script.id}
-                      className="px-3 py-1.5 text-sm text-red-400 hover:text-red-300 bg-zinc-700/50 hover:bg-zinc-700 rounded-lg transition-colors disabled:opacity-50"
-                    >
-                      {deleting === script.id ? "..." : "Delete"}
-                    </button>
+                    <form action={`/api/scripts/${script.id}/delete`} method="POST">
+                      <button
+                        type="submit"
+                        className="px-3 py-1.5 text-sm text-red-400 hover:text-red-300 bg-zinc-700/50 hover:bg-zinc-700 rounded-lg transition-colors"
+                      >
+                        Delete
+                      </button>
+                    </form>
                   </div>
                 </div>
               </div>

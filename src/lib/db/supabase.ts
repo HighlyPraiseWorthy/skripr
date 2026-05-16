@@ -24,6 +24,9 @@ export const supabase: SupabaseClient = new Proxy({} as SupabaseClient, {
   }
 });
 
+// Supabase client configured for Clerk user context
+// Usage: pass the authenticated Supabase client obtained via supabase.auth.getSession()
+// in a Server Component, or use supabase directly after setting the Clerk session JWT
 export const supabaseAdmin: SupabaseClient | null = new Proxy({} as SupabaseClient, {
   get(_target, prop) {
     if (_supabaseAdmin === null) _supabaseAdmin = createSupabaseAdmin();
