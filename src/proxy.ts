@@ -1,3 +1,4 @@
+// cache-bust: timestamp 2025-05-16
 import { clerkMiddleware } from "@clerk/nextjs/server";
 
 export default clerkMiddleware(async (auth, req) => {
