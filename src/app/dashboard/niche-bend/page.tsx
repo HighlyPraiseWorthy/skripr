@@ -1,11 +1,28 @@
 "use client";
 
-import { useState } from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
-import { Select } from "@/components/ui/Select";
-import { Badge } from "@/components/ui/Badge";
-import { NICHES, getAdjacentNiches, calculateBendPotential, type Niche } from "@/lib/data/niches";
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { useUser, useClerk } from "@clerk/nextjs";
+import type { Niche } from "@/lib/data/niches";
+import { NICHES, getAdjacentNiches, calculateBendPotential } from "@/lib/data/niches";
+
+const C = {
+  bg: "#0b0b17",
+  cardBg: "#12122a",
+  border: "rgba(99,102,241,0.12)",
+  borderHover: "rgba(99,102,241,0.28)",
+  accent: "#818cf8",
+  accentGlow: "rgba(129,140,248,0.18)",
+  text: "#e2e8f0",
+  textDim: "#64748b",
+  textBright: "#f1f5f9",
+  danger: "#f87171",
+  success: "#34d399",
+  badgeBg: "rgba(99,102,241,0.12)",
+  badgeText: "#a5b4fc",
+  inputBg: "#1a1a3a",
+  inputBorder: "rgba(99,102,241,0.12)",
+};
 
 interface CrossoverIdea {
   title: string;
@@ -15,14 +32,36 @@ interface CrossoverIdea {
   format: string;
 }
 
+function sectionGlow(key: string) {
+  const colors: Record<string, [string, string]> = {
+    violet: ["#6366f1", "#a855f7"],
+    pink: ["#ec4899", "#f97316"],
+    blue: ["#3b82f6", "#06b6d4"],
+    green: ["#10b981", "#84cc16"],
+  };
+  const [c1, c2] = colors[key] || colors.violet;
+  return `linear-gradient(135deg, ${c1} 0%, ${c2} 100%)`;
+}
+
 export default function NicheBendPage() {
+  const { isLoaded, isSignedIn, user } = useUser();
+  const { openSignIn } = useClerk();
+
   const [selectedNiche, setSelectedNiche] = useState("");
   const [adjacentNiches, setAdjacentNiches] = useState<Niche[]>([]);
   const [selectedAdjacent, setSelectedAdjacent] = useState("");
   const [ideas, setIdeas] = useState<CrossoverIdea[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const nicheOptions = NICHES.map(n => ({ value: n.id, label: n.name }));
+
+  useEffect(() => {
+    if (!isLoaded) return;
+    if (!isSignedIn) {
+      setError("auth");
+    }
+  }, [isLoaded, isSignedIn]);
 
   function handleNicheSelect(nicheId: string) {
     setSelectedNiche(nicheId);
@@ -34,7 +73,7 @@ export default function NicheBendPage() {
   async function generateIdeas() {
     if (!selectedNiche || !selectedAdjacent) return;
     setIsLoading(true);
-
+    setError(null);
     try {
       const res = await fetch("/api/niche-bend/ideas", {
         method: "POST",
@@ -42,9 +81,10 @@ export default function NicheBendPage() {
         body: JSON.stringify({ nicheA: selectedNiche, nicheB: selectedAdjacent }),
       });
       const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to generate ideas");
       setIdeas(data.ideas || []);
-    } catch {
-      setIdeas([]);
+    } catch (e: any) {
+      setError(e.message);
     } finally {
       setIsLoading(false);
     }
@@ -54,104 +94,361 @@ export default function NicheBendPage() {
     ? calculateBendPotential(selectedNiche, selectedAdjacent)
     : 0;
 
-  return (
-    <div className="p-8 max-w-5xl mx-auto">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-white">Niche Bend Engine</h1>
-        <p className="text-gray-400 mt-1">Find crossover opportunities between niches to break out of your algorithmic bubble</p>
+  /* ══ NOT SIGNED IN ══ */
+  if (error === "auth") {
+    return (
+      <div style={{ padding: 28, minHeight: "100vh", background: C.bg }}>
+        <div style={{ maxWidth: 720, margin: "0 auto" }}>
+          <div
+            style={{
+              borderRadius: 24,
+              background: C.cardBg,
+              border: `1px solid ${C.border}`,
+              padding: 64,
+              textAlign: "center",
+            }}
+          >
+            <p style={{ color: C.textBright, fontSize: 20, fontWeight: 700, marginBottom: 12 }}>
+              Sign in to use the Niche Bend Engine
+            </p>
+            <p style={{ color: C.textDim, fontSize: 15, marginBottom: 28 }}>
+              Discover crossover opportunities and break out of your algorithm bubble
+            </p>
+            <button
+              onClick={() => openSignIn?.()}
+              style={{
+                padding: "12px 28px",
+                borderRadius: 14,
+                background: sectionGlow("violet"),
+                color: "#fff",
+                fontSize: 15,
+                fontWeight: 600,
+                border: "none",
+                cursor: "pointer",
+                boxShadow: "0 0 22px rgba(99,102,241,0.30)",
+              }}
+            >
+              Sign In
+            </button>
+          </div>
+        </div>
       </div>
+    );
+  }
 
-      <div className="grid md:grid-cols-2 gap-6 mb-8">
-        <Card>
-          <CardHeader>
-            <CardTitle>Your Niche</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Select
-              options={[{ value: "", label: "Select your niche..." }, ...nicheOptions]}
+  /* ══ LOADING ══ */
+  if (!isLoaded) {
+    return (
+      <div style={{ padding: 28, minHeight: "100vh", background: C.bg }}>
+        <div style={{ maxWidth: 960, margin: "0 auto" }}>
+          <div
+            style={{
+              borderRadius: 20,
+              background: C.cardBg,
+              border: `1px solid ${C.border}`,
+              padding: 64,
+              textAlign: "center",
+            }}
+          >
+            <p style={{ color: C.textDim, fontSize: 15 }}>Loading…</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  /* ══ PAGE ══ */
+  return (
+    <div style={{ padding: 28, minHeight: "100vh", background: C.bg }}>
+      {/* Ambience */}
+      <div aria-hidden style={{ position: "fixed", top: -160, right: -100, width: 460, height: 460, borderRadius: "50%", background: "radial-gradient(circle, rgba(99,102,241,0.14) 0%, transparent 70%)", pointerEvents: "none", zIndex: 0 }} />
+      <div aria-hidden style={{ position: "fixed", bottom: -180, left: -120, width: 480, height: 480, borderRadius: "50%", background: "radial-gradient(circle, rgba(168,85,247,0.09) 0%, transparent 70%)", pointerEvents: "none", zIndex: 0 }} />
+
+      <div style={{ position: "relative", zIndex: 1, maxWidth: 960, margin: "0 auto" }}>
+        {/* Header */}
+        <div style={{ marginBottom: 28 }}>
+          <h1
+            style={{
+              fontSize: 26,
+              fontWeight: 700,
+              color: C.textBright,
+              letterSpacing: -0.4,
+              marginBottom: 6,
+            }}
+          >
+            Niche Bend Engine
+          </h1>
+          <p style={{ color: C.textDim, fontSize: 15, lineHeight: 1.6 }}>
+            Find crossover opportunities between niches to break out of your algorithmic bubble
+          </p>
+        </div>
+
+        {/* Two-column niche picker */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 20 }}>
+          {/* Your Niche */}
+          <div
+            style={{
+              borderRadius: 20,
+              background: C.cardBg,
+              border: `1px solid ${C.border}`,
+              padding: "22px 24px",
+            }}
+          >
+            <p
+              style={{
+                fontSize: 13,
+                fontWeight: 600,
+                color: C.accent,
+                letterSpacing: 0.4,
+                marginBottom: 10,
+              }}
+            >
+              YOUR NICHE
+            </p>
+            <select
               value={selectedNiche}
               onChange={e => handleNicheSelect(e.target.value)}
-            />
+              style={{
+                width: "100%",
+                padding: "10px 14px",
+                borderRadius: 12,
+                background: C.inputBg,
+                color: C.text,
+                fontSize: 14,
+                fontWeight: 500,
+                border: `1px solid ${C.inputBorder}`,
+                outline: "none",
+                cursor: "pointer",
+                appearance: "auto",
+              }}
+            >
+              <option value="">Select your niche…</option>
+              {nicheOptions.map(o => (
+                <option key={o.value} value={o.value}>{o.label}</option>
+              ))}
+            </select>
             {selectedNiche && (
-              <div className="mt-4 p-3 bg-gray-800 rounded-lg">
-                <p className="text-sm text-gray-300">{NICHES.find(n => n.id === selectedNiche)?.description}</p>
-                <div className="flex items-center gap-3 mt-2 text-xs text-gray-400">
+              <div
+                style={{
+                  marginTop: 14,
+                  padding: "12px 14px",
+                  borderRadius: 12,
+                  background: "rgba(99,102,241,0.06)",
+                  border: "1px solid rgba(99,102,241,0.10)",
+                }}
+              >
+                <p style={{ color: C.text, fontSize: 13, lineHeight: 1.6, marginBottom: 6 }}>
+                  {NICHES.find(n => n.id === selectedNiche)?.description}
+                </p>
+                <div style={{ display: "flex", gap: 14, fontSize: 12, color: C.textDim }}>
                   <span>Avg RPM: ${NICHES.find(n => n.id === selectedNiche)?.avgRPM}</span>
                   <span>Competition: {NICHES.find(n => n.id === selectedNiche)?.competitionLevel}</span>
                 </div>
               </div>
             )}
-          </CardContent>
-        </Card>
+          </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Bridge To</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Select
-              options={[
-                { value: "", label: "Select adjacent niche..." },
-                ...adjacentNiches.map(n => ({ value: n.id, label: n.name })),
-              ]}
+          {/* Bridge To */}
+          <div
+            style={{
+              borderRadius: 20,
+              background: C.cardBg,
+              border: `1px solid ${C.border}`,
+              padding: "22px 24px",
+            }}
+          >
+            <p
+              style={{
+                fontSize: 13,
+                fontWeight: 600,
+                color: C.accent,
+                letterSpacing: 0.4,
+                marginBottom: 10,
+              }}
+            >
+              BRIDGE TO
+            </p>
+            <select
               value={selectedAdjacent}
               onChange={e => setSelectedAdjacent(e.target.value)}
               disabled={!selectedNiche}
-            />
+              style={{
+                width: "100%",
+                padding: "10px 14px",
+                borderRadius: 12,
+                background: !selectedNiche ? "#0d0d1f" : C.inputBg,
+                color: !selectedNiche ? C.textDim : C.text,
+                fontSize: 14,
+                fontWeight: 500,
+                border: `1px solid ${C.inputBorder}`,
+                outline: "none",
+                cursor: !selectedNiche ? "not-allowed" : "pointer",
+                opacity: !selectedNiche ? 0.5 : 1,
+                appearance: "auto",
+              }}
+            >
+              <option value="">Select adjacent niche…</option>
+              {adjacentNiches.map(n => (
+                <option key={n.id} value={n.id}>{n.name}</option>
+              ))}
+            </select>
             {selectedAdjacent && (
-              <div className="mt-4 p-3 bg-gray-800 rounded-lg">
-                <p className="text-sm text-gray-300">{NICHES.find(n => n.id === selectedAdjacent)?.description}</p>
-                <div className="flex items-center gap-3 mt-2 text-xs text-gray-400">
+              <div
+                style={{
+                  marginTop: 14,
+                  padding: "12px 14px",
+                  borderRadius: 12,
+                  background: "rgba(99,102,241,0.06)",
+                  border: "1px solid rgba(99,102,241,0.10)",
+                }}
+              >
+                <p style={{ color: C.text, fontSize: 13, lineHeight: 1.6, marginBottom: 6 }}>
+                  {NICHES.find(n => n.id === selectedAdjacent)?.description}
+                </p>
+                <div style={{ display: "flex", gap: 14, fontSize: 12, color: C.textDim }}>
                   <span>Avg RPM: ${NICHES.find(n => n.id === selectedAdjacent)?.avgRPM}</span>
                   <span>Competition: {NICHES.find(n => n.id === selectedAdjacent)?.competitionLevel}</span>
                 </div>
               </div>
             )}
-          </CardContent>
-        </Card>
-      </div>
+          </div>
+        </div>
 
-      {selectedNiche && selectedAdjacent && (
-        <Card className="mb-8">
-          <CardContent>
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-lg font-semibold text-white">Bend Potential Score</h3>
-                <p className="text-sm text-gray-400">How strong is this crossover opportunity?</p>
-              </div>
-              <div className={`text-3xl font-bold ${bendPotential >= 70 ? "text-green-400" : bendPotential >= 40 ? "text-yellow-400" : "text-red-400"}`}>
-                {bendPotential}/100
-              </div>
+        {/* Score card */}
+        {selectedNiche && selectedAdjacent && (
+          <div
+            style={{
+              borderRadius: 20,
+              background: C.cardBg,
+              border: `1px solid ${C.border}`,
+              padding: "22px 26px",
+              marginBottom: 20,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 16,
+            }}
+          >
+            <div>
+              <h3 style={{ fontSize: 18, fontWeight: 700, color: C.textBright, marginBottom: 4 }}>
+                Bend Potential Score
+              </h3>
+              <p style={{ color: C.textDim, fontSize: 13 }}>How strong is this crossover opportunity?</p>
             </div>
-            <Button onClick={generateIdeas} isLoading={isLoading} className="mt-4">
-              {isLoading ? "Generating..." : "Generate Crossover Ideas"}
-            </Button>
-          </CardContent>
-        </Card>
-      )}
+            <div
+              style={{
+                fontSize: 38,
+                fontWeight: 700,
+                color: bendPotential >= 70 ? C.success : bendPotential >= 40 ? "#fbbf24" : C.danger,
+                letterSpacing: -1,
+                lineHeight: 1,
+              }}
+            >
+              {bendPotential}
+              <span style={{ fontSize: 18, fontWeight: 400, color: C.textDim }}>/100</span>
+            </div>
+          </div>
+        )}
 
-      {ideas.length > 0 && (
-        <div className="space-y-4">
-          <h2 className="text-lg font-semibold text-white">Crossover Ideas</h2>
-          {ideas.map((idea, i) => (
-            <Card key={i} variant="interactive">
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <h3 className="font-medium text-white mb-1">{idea.title}</h3>
-                  <p className="text-sm text-gray-400 mb-3">{idea.description}</p>
-                  <div className="flex items-center gap-2">
-                    <Badge variant={idea.viralPotential >= 70 ? "success" : idea.viralPotential >= 40 ? "warning" : "danger"}>
-                      Viral Potential: {idea.viralPotential}%
-                    </Badge>
-                    <Badge>{idea.format}</Badge>
+        {/* Generate button */}
+        {selectedNiche && selectedAdjacent && (
+          <div style={{ marginBottom: 28 }}>
+            <button
+              onClick={generateIdeas}
+              disabled={isLoading}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                padding: "13px 28px",
+                borderRadius: 14,
+                background: sectionGlow("violet"),
+                color: "#fff",
+                fontSize: 15,
+                fontWeight: 600,
+                border: "none",
+                cursor: isLoading ? "wait" : "pointer",
+                opacity: isLoading ? 0.7 : 1,
+                boxShadow: "0 0 22px rgba(99,102,241,0.30)",
+                transition: "opacity 150ms, transform 150ms",
+              }}
+              onMouseEnter={e => { if (!isLoading) (e.currentTarget.style.transform = "translateY(-2px)"); }}
+              onMouseLeave={e => { (e.currentTarget.style.transform = "translateY(0)"); }}
+            >
+              {isLoading ? "Generating…" : "✦ Generate Crossover Ideas"}
+            </button>
+            {error && <p style={{ color: C.danger, fontSize: 13, marginTop: 10 }}>{error}</p>}
+          </div>
+        )}
+
+        {/* Ideas list */}
+        {ideas.length > 0 && (
+          <div>
+            <h2 style={{ fontSize: 20, fontWeight: 700, color: C.textBright, marginBottom: 16, letterSpacing: -0.3 }}>
+              Crossover Ideas
+            </h2>
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              {ideas.map((idea, i) => (
+                <div
+                  key={i}
+                  style={{
+                    borderRadius: 18,
+                    background: C.cardBg,
+                    border: `1px solid ${C.border}`,
+                    padding: "20px 22px",
+                    transition: "border-color 200ms",
+                  }}
+                >
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16 }}>
+                    <div style={{ flex: 1 }}>
+                      <h3 style={{ fontSize: 16, fontWeight: 600, color: C.textBright, marginBottom: 6 }}>
+                        {idea.title}
+                      </h3>
+                      <p style={{ color: C.textDim, fontSize: 14, lineHeight: 1.6, marginBottom: 12 }}>
+                        {idea.description}
+                      </p>
+                      <div style={{ display: "flex", gap: 8 }}>
+                        <span
+                          style={{
+                            padding: "4px 10px",
+                            borderRadius: 8,
+                            background: idea.viralPotential >= 70
+                              ? "rgba(52,211,153,0.12)"
+                              : idea.viralPotential >= 40
+                                ? "rgba(251,191,36,0.12)"
+                                : "rgba(248,113,113,0.12)",
+                            color: idea.viralPotential >= 70
+                              ? C.success
+                              : idea.viralPotential >= 40
+                                ? "#fbbf24"
+                                : C.danger,
+                            fontSize: 12,
+                            fontWeight: 600,
+                          }}
+                        >
+                          Viral Potential: {idea.viralPotential}%
+                        </span>
+                        <span
+                          style={{
+                            padding: "4px 10px",
+                            borderRadius: 8,
+                            background: C.badgeBg,
+                            color: C.badgeText,
+                            fontSize: 12,
+                            fontWeight: 600,
+                          }}
+                        >
+                          {idea.format}
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <Button size="sm" variant="secondary">Generate Script</Button>
-              </div>
-            </Card>
-          ))}
-        </div>
-      )}
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

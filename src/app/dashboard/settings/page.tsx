@@ -1,10 +1,17 @@
 import { auth } from "@clerk/nextjs/server";
-import { createClient } from "@supabase/supabase-js";
 import { redirect } from "next/navigation";
 import { UserProfile } from "@clerk/nextjs";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
-import { Badge } from "@/components/ui/Badge";
+
+const C = {
+  cardBg: "#12122a",
+  border: "rgba(99,102,241,0.12)",
+  accent: "#818cf8",
+  textBright: "#f1f5f9",
+  text: "#e2e8f0",
+  textDim: "#64748b",
+  badgeBg: "rgba(99,102,241,0.12)",
+  badgeText: "#a5b4fc",
+};
 
 export const dynamic = "force-dynamic";
 
@@ -13,58 +20,108 @@ export default async function SettingsPage() {
   if (!userId) redirect("/sign-in");
 
   return (
-    <div className="p-8 max-w-3xl mx-auto">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-white">Settings</h1>
-        <p className="text-gray-400 mt-1">Manage your account and subscription</p>
-      </div>
+    <div style={{ padding: 28, minHeight: "100vh", background: "#0b0b17" }}>
+      <div aria-hidden style={{ position: "fixed", top: -160, right: -100, width: 460, height: 460, borderRadius: "50%", background: "radial-gradient(circle,rgba(99,102,241,0.14) 0%,transparent 70%)", pointerEvents: "none", zIndex: 0 }} />
+      <div aria-hidden style={{ position: "fixed", bottom: -180, left: -120, width: 480, height: 480, borderRadius: "50%", background: "radial-gradient(circle,rgba(168,85,247,0.09) 0%,transparent 70%)", pointerEvents: "none", zIndex: 0 }} />
 
-      <div className="space-y-6">
-        <Card>
-          <CardHeader><CardTitle>Subscription</CardTitle></CardHeader>
-          <CardContent>
-            <div className="flex items-center justify-between">
+      <div style={{ position: "relative", zIndex: 1, maxWidth: 760, margin: "0 auto" }}>
+        <div style={{ marginBottom: 28 }}>
+          <h1 style={{ fontSize: 26, fontWeight: 700, color: "#f1f5f9", letterSpacing: -0.4, marginBottom: 6 }}>Settings</h1>
+          <p style={{ color: "#64748b", fontSize: 15, lineHeight: 1.6 }}>Manage your account and subscription</p>
+        </div>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+          {/* Subscription */}
+          <section style={{ borderRadius: 20, background: C.cardBg, border: `1px solid ${C.border}`, padding: "22px 26px" }}>
+            <p style={{ fontSize: 13, fontWeight: 600, color: C.accent, letterSpacing: 0.4, marginBottom: 16 }}>SUBSCRIPTION</p>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
               <div>
-                <p className="text-white font-medium">Free Plan</p>
-                <p className="text-sm text-gray-400">3 scripts per month</p>
+                <p style={{ color: C.textBright, fontSize: 15, fontWeight: 600 }}>Free Plan</p>
+                <p style={{ color: C.textDim, fontSize: 13, marginTop: 4 }}>3 scripts per month</p>
               </div>
-              <Badge>ACTIVE</Badge>
+              <span style={{ padding: "5px 12px", borderRadius: 9, background: C.badgeBg, color: C.badgeText, fontSize: 11, fontWeight: 700, letterSpacing: 0.5 }}>ACTIVE</span>
             </div>
-            <div className="mt-4 pt-4 border-t border-gray-800">
-              <p className="text-sm text-gray-400 mb-3">Usage this month: 0 / 3 scripts</p>
+            <div style={{ marginTop: 16, paddingTop: 16, borderTop: `1px solid ${C.border}` }}>
+              <p style={{ color: C.textDim, fontSize: 13, marginBottom: 12 }}>Usage this month: 0 / 3 scripts</p>
               <form action="/api/stripe/create-checkout" method="POST">
                 <input type="hidden" name="priceId" value={process.env.NEXT_PUBLIC_STRIPE_PRICE_STARTER || ""} />
-                <Button type="submit" size="sm">Upgrade to Starter — $19/mo</Button>
+                <button
+                  type="submit"
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 8,
+                    padding: "10px 20px",
+                    borderRadius: 12,
+                    background: "linear-gradient(135deg,#6366f1,#7c3aed,#a855f7)",
+                    color: "#fff",
+                    fontSize: 13,
+                    fontWeight: 600,
+                    border: "none",
+                    cursor: "pointer",
+                    boxShadow: "0 0 16px rgba(99,102,241,0.28)",
+                  }}
+                >
+                  Upgrade to Starter — $19/mo
+                </button>
               </form>
             </div>
-          </CardContent>
-        </Card>
+          </section>
 
-        <Card>
-          <CardHeader><CardTitle>Billing</CardTitle></CardHeader>
-          <CardContent>
-            <p className="text-sm text-gray-400 mb-4">Manage your payment method and billing history</p>
+          {/* Billing */}
+          <section style={{ borderRadius: 20, background: C.cardBg, border: `1px solid ${C.border}`, padding: "22px 26px" }}>
+            <p style={{ fontSize: 13, fontWeight: 600, color: C.accent, letterSpacing: 0.4, marginBottom: 8 }}>BILLING</p>
+            <p style={{ color: C.textDim, fontSize: 13, marginBottom: 16 }}>Manage your payment method and billing history</p>
             <form action="/api/stripe/portal" method="POST">
-              <Button type="submit" variant="secondary" size="sm">Open Billing Portal</Button>
+              <button
+                type="submit"
+                style={{
+                  padding: "10px 20px",
+                  borderRadius: 12,
+                  background: "rgba(99,102,241,0.10)",
+                  color: C.accent,
+                  fontSize: 13,
+                  fontWeight: 500,
+                  border: "1px solid rgba(99,102,241,0.18)",
+                  cursor: "pointer",
+                }}
+              >
+                Open Billing Portal
+              </button>
             </form>
-          </CardContent>
-        </Card>
+          </section>
 
-        <Card>
-          <CardHeader><CardTitle>Account</CardTitle></CardHeader>
-          <CardContent>
-            <p className="text-sm text-gray-400 mb-4">Manage your account settings</p>
+          {/* Account (Clerk UserProfile) */}
+          <section style={{ borderRadius: 20, background: C.cardBg, border: `1px solid ${C.border}`, padding: "22px 26px" }}>
+            <p style={{ fontSize: 13, fontWeight: 600, color: C.accent, letterSpacing: 0.4, marginBottom: 8 }}>ACCOUNT</p>
+            <p style={{ color: C.textDim, fontSize: 13, marginBottom: 16 }}>Manage your account settings</p>
+            {/* Clerk's UserProfile already handles its own theme via appearance prop */}
             <UserProfile
               appearance={{
                 elements: {
-                  card: "bg-transparent shadow-none p-0",
+                  rootBox: "w-full",
+                  card: "bg-transparent shadow-none p-0 border-0",
                   navbar: "hidden",
                   pageScrollBox: "p-0",
+                  formButtonPrimary:
+                    "bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2 rounded-lg",
+                  formButtonSecondary:
+                    "bg-white/5 border border-white/10 text-white text-sm font-medium px-4 py-2 rounded-lg",
+                  formFieldInput:
+                    "w-full mt-1 px-3 py-2 bg-[#1a1a3a] border border-[rgba(99,102,241,0.12)] rounded-lg text-white text-sm focus:ring-2 focus:ring-violet-500 focus:outline-none",
+                  formFieldLabel: "text-sm font-medium text-gray-300",
+                  formFieldWarning: "text-amber-400 text-xs mt-1",
+                  formFieldError: "text-red-400 text-xs mt-1",
+                  alertText: "text-gray-300 text-sm",
+                  body: "text-gray-400 text-sm",
+                  heading: "text-white text-lg font-semibold",
+                  dividerLine: "bg-white/10",
+                  identityPreviewText: "text-white text-sm",
                 },
               }}
             />
-          </CardContent>
-        </Card>
+          </section>
+        </div>
       </div>
     </div>
   );
