@@ -212,11 +212,11 @@ export function DashboardNav() {
               }}
             >
               <svg
-                className="w-5 h-5"
+                className="w-4 h-4"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
-                style={{ flexShrink: 0 }}
+                style={{ flexShrink: 0, width: 16, height: 16 }}
               >
                 {item.icon}
               </svg>
@@ -253,11 +253,11 @@ export function DashboardNav() {
           }}
         >
           <svg
-            className="w-5 h-5"
+            className="w-4 h-4"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
-            style={{ flexShrink: 0 }}
+            style={{ flexShrink: 0, width: 16, height: 16 }}
           >
             <path
               strokeLinecap="round"
