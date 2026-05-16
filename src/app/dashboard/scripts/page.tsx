@@ -395,7 +395,9 @@ CREATE INDEX IF NOT EXISTS idx_usage_tracking_user_id ON public.usage_tracking(u
                             fontWeight: 600,
                           }}
                         >
-                          {script.structure_pattern}
+                          {script.structure_pattern && typeof script.structure_pattern === "string"
+                            ? script.structure_pattern
+                            : ""}
                         </span>
                       </div>
                     )}
