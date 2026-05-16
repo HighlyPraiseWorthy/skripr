@@ -2,37 +2,79 @@ import { auth } from "@clerk/nextjs/server";
 import { createClient } from "@supabase/supabase-js";
 import { supabaseAdmin } from "@/lib/db/supabase";
 import Link from "next/link";
-import type { Script } from "@/lib/types/script";
+import { Script } from "@/lib/types/script";
 
+/* ─── Palette ─── */
+const C = {
+  bg: "#0b0b17",
+  cardBg: "#12122a",
+  cardHover: "#1a1a3a",
+  border: "rgba(99,102,241,0.12)",
+  borderHover: "rgba(99,102,241,0.28)",
+  accent: "#818cf8",
+  accentGlow: "rgba(129,140,248,0.18)",
+  violet: "#7c3aed",
+  text: "#e2e8f0",
+  textDim: "#64748b",
+  textBright: "#f1f5f9",
+  danger: "#f87171",
+  success: "#34d399",
+  badgeBg: "rgba(99,102,241,0.12)",
+  badgeText: "#a5b4fc",
+  emptyEmoji: "#6366f1",
+};
+
+/* ─── helpers ─── */
 function getSupabase() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
   return createClient(url, key);
 }
 
+function formatDate(dateStr: string) {
+  return new Date(dateStr).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
+function timeAgo(dateStr: string): string {
+  const diffMs = Date.now() - new Date(dateStr).getTime();
+  const mins = Math.floor(diffMs / 60000);
+  if (mins < 60) return `${mins}m ago`;
+  const hours = Math.floor(mins / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  return `${days}d ago`;
+}
+
+/* ═══════════════════════════════════════════ */
 export default async function ScriptsPage() {
   const { userId } = await auth();
   if (!userId) {
-    // Proxy should prevent this, but handle gracefully
     return (
-      <div className="p-6">
-        <div className="max-w-5xl mx-auto">
-          <div className="rounded-xl bg-red-500/10 border border-red-500/20 p-4">
-            <p className="text-red-400">Not authenticated</p>
-          </div>
+      <div style={{ padding: 24 }}>
+        <div
+          style={{
+            maxWidth: 960,
+            margin: "0 auto",
+            borderRadius: 16,
+            background: "rgba(248,113,113,0.08)",
+            border: "1px solid rgba(248,113,113,0.2)",
+            padding: 20,
+          }}
+        >
+          <p style={{ color: "#f87171", fontSize: 14 }}>Not authenticated</p>
         </div>
       </div>
     );
   }
 
-  // Map Clerk userId (user_...) → profile UUID via the profiles table
-  // (requires supabase schema fix: scripts.user_id → TEXT + profiles.user_id column)
   let scripts: Script[] = [];
   let scriptsError: any = null;
   try {
     const supabase = getSupabase();
-
-    // Try to find the user's profile UUID using the profiles.user_id TEXT column
     const { data: profileRows } = await supabaseAdmin!
       .from("profiles")
       .select("id")
@@ -41,7 +83,6 @@ export default async function ScriptsPage() {
       .maybeSingle();
 
     if (profileRows?.id) {
-      // Use the profile UUID to look up scripts
       const { data, error } = await supabaseAdmin!
         .from("scripts")
         .select("*")
@@ -49,112 +90,411 @@ export default async function ScriptsPage() {
         .order("created_at", { ascending: false });
       if (error) throw error;
       scripts = data || [];
-    } else {
-      // No profile record yet — user hasn't generated any scripts
-      scripts = [];
     }
   } catch (e: any) {
     scriptsError = e;
   }
 
-  if (scriptsError?.message?.includes('uuid')) {
+  if (scriptsError?.message?.includes("uuid")) {
     return (
-      <div className="p-6">
-        <div className="max-w-5xl mx-auto">
-          <div className="rounded-xl bg-yellow-500/10 border border-yellow-500/20 p-4">
-            <p className="text-yellow-400">Database schema needs one-time setup.</p>
-            <p className="text-zinc-400 mt-2">Please run the following SQL in the Supabase Dashboard SQL Editor:</p>
-            <pre className="mt-2 text-sm text-zinc-300 bg-zinc-900 rounded-lg p-3 overflow-x-auto">
-{`-- scripts.user_id (uuid -> text) + profiles.user_id column
+      <div style={{ padding: 24 }}>
+        <div
+          style={{
+            maxWidth: 960,
+            margin: "0 auto",
+            borderRadius: 16,
+            background: "rgba(251,191,36,0.08)",
+            border: "1px solid rgba(251,191,36,0.2)",
+            padding: 20,
+          }}
+        >
+          <p
+            style={{
+              color: "#fbbf24",
+              fontSize: 14,
+              fontWeight: 600,
+              marginBottom: 6,
+            }}
+          >
+            Database schema needs one-time setup.
+          </p>
+          <p style={{ color: "#64748b", fontSize: 13 }}>
+            Run the following SQL in Supabase Dashboard → SQL Editor:
+          </p>
+          <pre
+            style={{
+              marginTop: 10,
+              fontSize: 12,
+              color: "#a5b4fc",
+              background: "#0b0b17",
+              borderRadius: 12,
+              padding: 16,
+              overflowX: "auto",
+              lineHeight: 1.7,
+            }}
+          >
+{`-- scripts.user_id (uuid → text) + profiles.user_id column
 ALTER TABLE public.scripts  ALTER COLUMN user_id TYPE text USING user_id::text;
 ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS user_id text;
 ALTER TABLE public.usage_tracking DROP CONSTRAINT IF EXISTS usage_tracking_user_id_fkey;
 ALTER TABLE public.usage_tracking ALTER COLUMN user_id TYPE text USING user_id::text;
 CREATE INDEX IF NOT EXISTS idx_profiles_user_id    ON public.profiles(user_id);
 CREATE INDEX IF NOT EXISTS idx_scripts_user_id     ON public.scripts(user_id);
-CREATE INDEX IF NOT EXISTS idx_usage_tracking_user_id ON public.usage_tracking(user_id);`}</pre>
-          </div>
+CREATE INDEX IF NOT EXISTS idx_usage_tracking_user_id ON public.usage_tracking(user_id);`}
+          </pre>
         </div>
       </div>
     );
   }
 
-
-
-  function formatDate(dateStr: string) {
-    return new Date(dateStr).toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    });
-  }
+  /* ══════════════════════════════════════════ */
+  /*                  RENDER                   */
+  /* ══════════════════════════════════════════ */
 
   return (
-    <div className="p-6">
-      <div className="max-w-5xl mx-auto">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold text-white">My Scripts</h1>
+    <div style={{ padding: 28, minHeight: "100vh", background: C.bg }}>
+      {/* Ambient glow blobs */}
+      <div
+        aria-hidden
+        style={{
+          position: "fixed",
+          top: -180,
+          right: -120,
+          width: 520,
+          height: 520,
+          borderRadius: "50%",
+          background:
+            "radial-gradient(circle, rgba(99,102,241,0.18) 0%, transparent 70%)",
+          pointerEvents: "none",
+          zIndex: 0,
+        }}
+      />
+      <div
+        aria-hidden
+        style={{
+          position: "fixed",
+          bottom: -200,
+          left: -140,
+          width: 560,
+          height: 560,
+          borderRadius: "50%",
+          background:
+            "radial-gradient(circle, rgba(124,58,237,0.12) 0%, transparent 70%)",
+          pointerEvents: "none",
+          zIndex: 0,
+        }}
+      />
+
+      <div
+        style={{ position: "relative", zIndex: 1, maxWidth: 960, margin: "0 auto" }}
+      >
+        {/* ── Header ── */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: 28,
+          }}
+        >
+          <h1
+            style={{
+              fontSize: 26,
+              fontWeight: 700,
+              color: C.textBright,
+              letterSpacing: -0.4,
+            }}
+          >
+            My Scripts
+          </h1>
           <Link
             href="/dashboard/scripts/new"
-            className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium transition-colors"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              padding: "10px 20px",
+              borderRadius: 12,
+              background:
+                "linear-gradient(135deg, #6366f1 0%, #7c3aed 50%, #a855f7 100%)",
+              color: "#fff",
+              fontSize: 14,
+              fontWeight: 600,
+              textDecoration: "none",
+              boxShadow: "0 0 22px rgba(99,102,241,0.30)",
+              transition: "opacity 150ms, transform 150ms",
+              cursor: "pointer",
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLElement).style.opacity = "0.88";
+              (e.currentTarget as HTMLElement).style.transform =
+                "translateY(-1px)";
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLElement).style.opacity = "1";
+              (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
+            }}
           >
-            + New Script
+            <span style={{ fontSize: 18, lineHeight: 1 }}>✦</span>
+            New Script
           </Link>
         </div>
 
+        {/* ── Empty State ── */}
         {scripts.length === 0 ? (
-          <div className="text-center py-16">
-            <div className="text-5xl mb-4">📝</div>
-            <h2 className="text-lg font-medium text-white mb-2">No scripts yet</h2>
-            <p className="text-zinc-400 mb-6">
+          <div
+            style={{
+              textAlign: "center",
+              padding: "72px 24px",
+              borderRadius: 24,
+              background: C.cardBg,
+              border: `1px solid ${C.border}`,
+              position: "relative",
+              overflow: "hidden",
+            }}
+          >
+            {/* Top glow line */}
+            <div
+              aria-hidden
+              style={{
+                position: "absolute",
+                top: 0,
+                left: "50%",
+                transform: "translateX(-50%)",
+                width: "60%",
+                height: 2,
+                background:
+                  "linear-gradient(90deg, transparent, #6366f1, transparent)",
+                borderRadius: 2,
+              }}
+            />
+
+            <div
+              style={{
+                fontSize: 64,
+                lineHeight: 1,
+                marginBottom: 20,
+                filter:
+                  "drop-shadow(0 0 20px rgba(99,102,241,0.35)) drop-shadow(0 0 40px rgba(99,102,241,0.15))",
+              }}
+            >
+              ✦
+            </div>
+            <h2
+              style={{
+                fontSize: 22,
+                fontWeight: 700,
+                color: C.textBright,
+                marginBottom: 8,
+                letterSpacing: -0.3,
+              }}
+            >
+              No scripts yet
+            </h2>
+            <p
+              style={{
+                color: C.textDim,
+                fontSize: 15,
+                marginBottom: 28,
+                lineHeight: 1.6,
+              }}
+            >
               Generate your first viral script to get started
             </p>
             <Link
               href="/dashboard/scripts/new"
-              className="inline-flex px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium transition-colors"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                padding: "12px 28px",
+                borderRadius: 14,
+                background:
+                  "linear-gradient(135deg, #6366f1 0%, #7c3aed 50%, #a855f7 100%)",
+                color: "#fff",
+                fontSize: 15,
+                fontWeight: 600,
+                textDecoration: "none",
+                boxShadow: "0 0 30px rgba(99,102,241,0.35)",
+                transition: "opacity 150ms, transform 150ms",
+                cursor: "pointer",
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLElement).style.opacity = "0.88";
+                (e.currentTarget as HTMLElement).style.transform =
+                  "translateY(-2px)";
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLElement).style.opacity = "1";
+                (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
+              }}
             >
+              <span style={{ fontSize: 18, lineHeight: 1 }}>✦</span>
               Generate Script
             </Link>
           </div>
         ) : (
-          <div className="space-y-3">
+          /* ── Script Cards ── */
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
             {scripts.map((script) => (
               <div
                 key={script.id}
-                className="rounded-xl bg-zinc-800/50 border border-zinc-700/50 p-4 hover:border-zinc-600/50 transition-colors"
+                style={{
+                  borderRadius: 16,
+                  background: C.cardBg,
+                  border: `1px solid ${C.border}`,
+                  padding: "20px 22px",
+                  transition:
+                    "background 200ms, border-color 200ms, transform 200ms, box-shadow 200ms",
+                  cursor: "default",
+                }}
+                onMouseEnter={(e) => {
+                  const el = e.currentTarget as HTMLElement;
+                  el.style.background = C.cardHover;
+                  el.style.borderColor = C.borderHover;
+                  el.style.transform = "translateY(-2px)";
+                  el.style.boxShadow = `0 8px 32px ${C.accentGlow}`;
+                }}
+                onMouseLeave={(e) => {
+                  const el = e.currentTarget as HTMLElement;
+                  el.style.background = C.cardBg;
+                  el.style.borderColor = C.border;
+                  el.style.transform = "translateY(0)";
+                  el.style.boxShadow = "none";
+                }}
               >
-                <div className="flex justify-between items-start">
-                  <div className="flex-1 min-w-0">
-                    <h3 className="text-white font-medium truncate">{script.title}</h3>
-                    <div className="flex gap-3 mt-1.5 text-sm text-zinc-400">
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "flex-start",
+                    gap: 16,
+                  }}
+                >
+                  {/* Left: title + meta */}
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <h3
+                      style={{
+                        fontSize: 16,
+                        fontWeight: 600,
+                        color: C.textBright,
+                        marginBottom: 8,
+                        letterSpacing: -0.2,
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap" as const,
+                      }}
+                    >
+                      {script.title}
+                    </h3>
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: 12,
+                        flexWrap: "wrap",
+                        alignItems: "center",
+                      }}
+                    >
                       {script.niche && (
-                        <span className="px-2 py-0.5 bg-zinc-700/50 rounded text-xs">
+                        <span
+                          style={{
+                            padding: "3px 10px",
+                            borderRadius: 8,
+                            background: C.badgeBg,
+                            color: C.badgeText,
+                            fontSize: 11,
+                            fontWeight: 600,
+                            letterSpacing: 0.3,
+                            textTransform: "uppercase" as const,
+                          }}
+                        >
                           {script.niche}
                         </span>
                       )}
-                      <span>{script.word_count} words</span>
-                      <span>~{script.estimated_duration}min</span>
-                      <span>{formatDate(script.created_at)}</span>
+                      <span style={{ color: C.textDim, fontSize: 13 }}>
+                        {script.word_count?.toLocaleString()} words
+                      </span>
+                      <span style={{ color: C.textDim, fontSize: 13 }}>
+                        ~{script.estimated_duration || 5} min
+                      </span>
+                      <span style={{ color: C.textDim, fontSize: 13 }}>
+                        {timeAgo(script.created_at)}
+                      </span>
                     </div>
                     {script.structure_pattern && (
-                      <div className="mt-1.5">
-                        <span className="px-2 py-0.5 bg-indigo-500/10 text-indigo-400 rounded text-xs">
+                      <div style={{ marginTop: 8 }}>
+                        <span
+                          style={{
+                            padding: "3px 10px",
+                            borderRadius: 8,
+                            background: "rgba(99,102,241,0.10)",
+                            color: "#a5b4fc",
+                            fontSize: 11,
+                            fontWeight: 600,
+                          }}
+                        >
                           {script.structure_pattern}
                         </span>
                       </div>
                     )}
                   </div>
-                  <div className="flex gap-2 ml-4">
+
+                  {/* Right: actions */}
+                  <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
                     <Link
-                      href={`/scripts/${script.id}`}
-                      className="px-3 py-1.5 text-sm text-zinc-300 hover:text-white bg-zinc-700/50 hover:bg-zinc-700 rounded-lg transition-colors"
+                      href={`/dashboard/scripts/${script.id}`}
+                      style={{
+                        padding: "7px 16px",
+                        borderRadius: 10,
+                        background: "rgba(99,102,241,0.10)",
+                        color: C.accent,
+                        fontSize: 13,
+                        fontWeight: 500,
+                        textDecoration: "none",
+                        border: "1px solid rgba(99,102,241,0.18)",
+                        transition: "background 150ms, border-color 150ms",
+                      }}
+                      onMouseEnter={(e) => {
+                        (e.currentTarget as HTMLElement).style.background =
+                          "rgba(99,102,241,0.18)";
+                        (e.currentTarget as HTMLElement).style.borderColor =
+                          "rgba(99,102,241,0.35)";
+                      }}
+                      onMouseLeave={(e) => {
+                        (e.currentTarget as HTMLElement).style.background =
+                          "rgba(99,102,241,0.10)";
+                        (e.currentTarget as HTMLElement).style.borderColor =
+                          "rgba(99,102,241,0.18)";
+                      }}
                     >
                       View
                     </Link>
                     <form action={`/api/scripts/${script.id}/delete`} method="POST">
                       <button
                         type="submit"
-                        className="px-3 py-1.5 text-sm text-red-400 hover:text-red-300 bg-zinc-700/50 hover:bg-zinc-700 rounded-lg transition-colors"
+                        style={{
+                          padding: "7px 16px",
+                          borderRadius: 10,
+                          background: "rgba(248,113,113,0.08)",
+                          color: C.danger,
+                          fontSize: 13,
+                          fontWeight: 500,
+                          border: "1px solid rgba(248,113,113,0.16)",
+                          cursor: "pointer",
+                          transition: "background 150ms, border-color 150ms",
+                        }}
+                        onMouseEnter={(e) => {
+                          (e.currentTarget as HTMLElement).style.background =
+                            "rgba(248,113,113,0.15)";
+                          (e.currentTarget as HTMLElement).style.borderColor =
+                            "rgba(248,113,113,0.3)";
+                        }}
+                        onMouseLeave={(e) => {
+                          (e.currentTarget as HTMLElement).style.background =
+                            "rgba(248,113,113,0.08)";
+                          (e.currentTarget as HTMLElement).style.borderColor =
+                            "rgba(248,113,113,0.16)";
+                        }}
                       >
                         Delete
                       </button>
