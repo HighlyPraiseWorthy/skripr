@@ -95,7 +95,7 @@ CREATE INDEX IF NOT EXISTS idx_usage_tracking_user_id ON public.usage_tracking(u
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold text-white">My Scripts</h1>
           <Link
-            href="/scripts/new"
+            href="/dashboard/scripts/new"
             className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium transition-colors"
           >
             + New Script
@@ -110,7 +110,7 @@ CREATE INDEX IF NOT EXISTS idx_usage_tracking_user_id ON public.usage_tracking(u
               Generate your first viral script to get started
             </p>
             <Link
-              href="/scripts/new"
+              href="/dashboard/scripts/new"
               className="inline-flex px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium transition-colors"
             >
               Generate Script
