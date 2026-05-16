@@ -4,22 +4,27 @@ import { auth } from "@clerk/nextjs/server";
 /**
  * Sign-In page using Clerk catch-all route [[...sign-in]].
  *
- * How the redirect works after Google OAuth:
- * 1. Clerk reads NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/dashboard/scripts at build/runtime
- *    – this is the primary redirect target.
- * 2. We also pass forceRedirectUrl="/dashboard/scripts" directly as a prop
- *    – this overrides any fallback to "/" that Clerk might apply when
- *      it detects no redirect_url in the current URL after OAuth callback.
- * 3. If either env var or prop is missing, the page falls back to "/dashboard/scripts".
+ * Google OAuth redirect flow (v7.3.3):
+ * 1. User clicks "Continue with Google" on /sign-in
+ * 2. Clerk redirects to Google OAuth
+ * 3. Google redirects back to /sign-in/oauth-callback/google/[id]
+ * 4. Clerk processes callback, creates session, sets __session cookie
+ * 5. Clerk redirects user using this priority:
+ *    a) forceRedirectUrl if passed (hardcoded string here)
+ *    b) NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL if read by proxy at runtime
+ *    c) "/" fallback
  *
- * Known issue: In v7.3.3 the env var is not always read correctly from the
- * catch-all /sign-in/[[...sign-in]] route when Google redirects back.
- * Passing forceRedirectUrl explicitly guarantees post-sign-in navigation.
+ * v7.3.3 gotcha: NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL is sometimes NOT read
+ * by the [[...sign-in]] catch-all route after a Google callback redirect,
+ * because the proxy runs before the catch-all segment is resolved. Passing
+ * forceRedirectUrl as a plain string here is the only reliable approach.
+ *
+ * ALSO: the searchParams / redirect_url path is intentionally EMPTY here.
+ * Google's OAuth callback strips the redirect_url param before Clerk sees it,
+ * making params.redirect_url always undefined after Google auth.
+ * A hardcoded forceRedirectUrl bypasses this entirely.
  */
-export default async function SignInPage({ searchParams }: { searchParams: Promise<{ redirect_url?: string }> }) {
-  const params = await searchParams;
-  const redirectTarget = params.redirect_url || "/dashboard/scripts";
-
+export default function SignInPage() {
   return (
     <div className="min-h-screen bg-gray-950 flex items-center justify-center px-4">
       <div className="w-full max-w-md">
@@ -33,16 +38,12 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
           <p className="text-gray-400 mt-2">Sign in to your Skripr</p>
         </div>
         <SignIn
-          /**
-           * forceRedirectUrl guarantees the user lands on /dashboard/scripts
-           * after any sign-in method (Google, email/password, etc.).
-           * This is a documented prop in Clerk v7.x SignIn component.
+          /*
+           * Hardcoded string literal — no dynamic computation.
+           * In v7.3.3 forceRedirectUrl is used ONCE after successful sign-in
+           * then cleared, so the user always lands on /dashboard/scripts first.
            */
-          forceRedirectUrl={redirectTarget}
-          /**
-           * fallbackRedirectUrl is used only if there is no redirect_url in the
-           * current URL path (belt-and-suspenders).
-           */
+          forceRedirectUrl="/dashboard/scripts"
           fallbackRedirectUrl="/dashboard/scripts"
           appearance={{
             elements: {
