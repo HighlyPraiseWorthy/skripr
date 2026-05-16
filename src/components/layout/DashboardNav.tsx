@@ -21,9 +21,9 @@ export function DashboardNav() {
       <div className="p-6 border-b border-gray-800">
         <Link href="/dashboard/scripts" className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-600 to-fuchsia-600 flex items-center justify-center">
-            <span className="text-white font-bold text-sm">SF</span>
+            <span className="text-white font-bold text-sm">S</span>
           </div>
-          <span className="text-lg font-bold text-white">ScriptFactory</span>
+          <span className="text-lg font-bold text-white">Skripr</span>
         </Link>
       </div>
       
