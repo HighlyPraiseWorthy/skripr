@@ -1,9 +1,12 @@
 import { auth } from "@clerk/nextjs/server";
-import { UserProfile } from "@clerk/nextjs";
+import { createClient } from "@supabase/supabase-js";
 import { redirect } from "next/navigation";
+import { UserProfile } from "@clerk/nextjs";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
+
+export const dynamic = "force-dynamic";
 
 export default async function SettingsPage() {
   const { userId } = await auth();
@@ -51,7 +54,15 @@ export default async function SettingsPage() {
           <CardHeader><CardTitle>Account</CardTitle></CardHeader>
           <CardContent>
             <p className="text-sm text-gray-400 mb-4">Manage your account settings</p>
-            <UserProfile appearance={{ elements: { card: "bg-transparent shadow-none p-0", navbar: "hidden", pageScrollBox: "p-0" } }} />
+            <UserProfile
+              appearance={{
+                elements: {
+                  card: "bg-transparent shadow-none p-0",
+                  navbar: "hidden",
+                  pageScrollBox: "p-0",
+                },
+              }}
+            />
           </CardContent>
         </Card>
       </div>
