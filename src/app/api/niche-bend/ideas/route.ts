@@ -24,7 +24,7 @@ export async function POST(req: Request) {
 
     const response = await getAnthropic().messages.create({
       model: "claude-sonnet-4-6",
-      max_tokens: 2048,
+      max_tokens: 4096,
       messages: [{
         role: "user",
         content: `Generate 10 YouTube video ideas that bridge two niches: "${nicheA}" and "${nicheB}".
