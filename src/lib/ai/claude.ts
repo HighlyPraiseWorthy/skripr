@@ -204,6 +204,8 @@ export interface GeneratedMetadata {
 }
 
 export async function generateMetadata(input: MetadataGenerationInput): Promise<GeneratedMetadata> {
+  const currentYear = new Date().getFullYear();
+
   const userPrompt = `Generate YouTube metadata for this video:
 Title: "${input.title}"
 Niche: ${input.niche}
@@ -213,18 +215,24 @@ ${input.script.slice(0, 1000)}
 """
 ${input.targetKeywords ? `Target keywords: ${input.targetKeywords.join(", ")}` : ""}
 
+Important rules:
+- Current year is ${currentYear}. If any title, tag, or text needs a year reference, use ${currentYear} unless the script itself explicitly mentions a different year — in which case use the year mentioned in the script.
+- Tags must be plain text only. Do NOT include "#" symbols, quotes, or special characters in tags.
+- The description must end with exactly 3 relevant hashtags on the final line (these hashtags ARE prefixed with "#").
+- The separate "hashtags" array should contain 10 hashtags, each prefixed with "#".
+
 Output JSON:
 {
   "titles": ["10 title options, optimized for CTR and search"],
-  "description": "Full description with timestamps, keywords, and links",
-  "tags": ["20 tags, mix of broad and niche-specific"],
+  "description": "Full YouTube description with timestamps, keywords, links, and ending with exactly 3 hashtags on the final line",
+  "tags": ["20 plain-text tags with NO # prefix, mix of broad and niche-specific"],
   "thumbnailText": ["5 thumbnail text options, max 4 words each"],
-  "hashtags": ["10 hashtags"]
+  "hashtags": ["10 hashtags, each prefixed with #"]
 }`;
 
   const response = await getAnthropic().messages.create({
     model: "claude-sonnet-4-6",
-    max_tokens: 2048,
+    max_tokens: 4096,
     system: SYSTEM_PROMPT,
     messages: [{ role: "user", content: userPrompt }],
   });
