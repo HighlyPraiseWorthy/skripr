@@ -31,54 +31,57 @@ export async function POST(req: Request) {
     if (!youtubeUrl) return NextResponse.json({ error: "YouTube URL is required" }, { status: 400 });
 
     const videoId = extractVideoId(youtubeUrl);
-    if (!videoId) return NextResponse.json({ error: "Invalid YouTube URL. Supported formats: youtube.com/watch?v=, youtu.be/, youtube.com/shorts/" }, { status: 400 });
+    if (!videoId) return NextResponse.json({ error: "Invalid YouTube URL." }, { status: 400 });
 
-    console.log("[transcript] Fetching transcript for videoId:", videoId);
+    console.log("[transcript] Fetching for videoId:", videoId);
 
     let segments: any[] = [];
 
-    // Try English first, then fall back to any available language
-    const languagesToTry = ["en", "en-US", "en-GB"];
-    let lastError: any = null;
+    // Strategy 1: try lang=en directly
+    try {
+      segments = await YoutubeTranscript.fetchTranscript(videoId, { lang: "en" });
+      console.log("[transcript] lang=en success, segments:", segments.length);
+    } catch (e1: any) {
+      console.log("[transcript] lang=en failed:", e1.message?.slice(0, 80));
 
-    for (const lang of languagesToTry) {
+      // Strategy 2: fetch default (no lang), filter for English segments
       try {
-        segments = await YoutubeTranscript.fetchTranscript(videoId, { lang });
-        if (segments && segments.length > 0) {
-          console.log(`[transcript] Success with lang=${lang}, segments:`, segments.length);
-          break;
+        const all = await YoutubeTranscript.fetchTranscript(videoId);
+        console.log("[transcript] no-lang success, segments:", all.length, "lang:", all[0]?.lang);
+
+        // If we got segments, check if they contain English-like text
+        // by checking if any segment's lang is 'en' or starts with 'en'
+        const hasEnglish = all.some((s: any) =>
+          s.lang && (s.lang === "en" || s.lang.startsWith("en-"))
+        );
+
+        if (hasEnglish) {
+          segments = all.filter((s: any) =>
+            s.lang && (s.lang === "en" || s.lang.startsWith("en-"))
+          );
+        } else {
+          // Use whatever we got — it's still a transcript even if not English
+          // We'll pass it to Claude which can work with it
+          segments = all;
         }
-      } catch (e: any) {
-        console.log(`[transcript] Failed with lang=${lang}:`, e.message);
-        lastError = e;
-      }
-    }
-
-    // If language-specific attempts failed, try without lang param
-    if (segments.length === 0) {
-      try {
-        console.log("[transcript] Trying without language param...");
-        segments = await YoutubeTranscript.fetchTranscript(videoId);
-        console.log("[transcript] Success without lang, segments:", segments.length);
-      } catch (e: any) {
-        console.error("[transcript] All attempts failed:", e.message);
-        const msg = e?.message || "";
+        console.log("[transcript] using segments:", segments.length);
+      } catch (e2: any) {
+        console.error("[transcript] all attempts failed:", e2.message);
+        const msg = e2?.message || "";
         if (msg.includes("disabled") || msg.includes("Could not get") || msg.includes("No transcripts")) {
           return NextResponse.json({
-            error: "This video does not have English captions available. Try a video with English captions enabled.",
+            error: "This video does not have captions available. Try a different video.",
           }, { status: 422 });
         }
         return NextResponse.json({
-          error: "Transcript extraction failed",
+          error: "Could not extract transcript from this video.",
           detail: msg,
         }, { status: 422 });
       }
     }
 
     if (!segments || segments.length === 0) {
-      return NextResponse.json({
-        error: "No transcript found for this video.",
-      }, { status: 422 });
+      return NextResponse.json({ error: "No transcript found for this video." }, { status: 422 });
     }
 
     const transcript = segments.map((s: any) => s.text).join(" ").replace(/\s+/g, " ").trim();
