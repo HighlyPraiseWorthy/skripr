@@ -55,7 +55,6 @@ export default function MetadataPage() {
     }
   }
 
-  /* ══ AUTH ══ */
   if (error === "auth") {
     return (
       <div style={{ padding: 28, minHeight: "100vh", background: C.bg }}>
@@ -75,7 +74,9 @@ export default function MetadataPage() {
   if (!isLoaded) {
     return (
       <div style={{ padding: 28, minHeight: "100vh", background: C.bg }}>
-        <div style={{ borderRadius: 20, background: C.cardBg, border: `1px solid ${C.border}`, padding: 64, textAlign: "center" }}><p style={{ color: C.textDim }}>Loading…</p></div>
+        <div style={{ borderRadius: 20, background: C.cardBg, border: `1px solid ${C.border}`, padding: 64, textAlign: "center" }}>
+          <p style={{ color: C.textDim }}>Loading…</p>
+        </div>
       </div>
     );
   }
@@ -91,7 +92,6 @@ export default function MetadataPage() {
           <p style={{ color: C.textDim, fontSize: 15, lineHeight: 1.6 }}>Generate titles, descriptions, tags, and thumbnail text</p>
         </div>
 
-        {/* Input Card */}
         <div style={{ borderRadius: 20, background: C.cardBg, border: `1px solid ${C.border}`, padding: "22px 26px", marginBottom: 20 }}>
           <div style={{ fontSize: 13, fontWeight: 600, color: C.accent, letterSpacing: 0.4, marginBottom: 16 }}>VIDEO INFO</div>
 
@@ -129,10 +129,8 @@ export default function MetadataPage() {
           {error && <p style={{ color: C.danger, fontSize: 13, marginTop: 10 }}>{error}</p>}
         </div>
 
-        {/* Results */}
         {metadata && (
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-            {/* Title options */}
             <div style={{ borderRadius: 18, background: C.cardBg, border: `1px solid ${C.border}`, padding: "20px 22px" }}>
               <p style={{ fontSize: 13, fontWeight: 600, color: C.accent, letterSpacing: 0.4, marginBottom: 12 }}>TITLE OPTIONS</p>
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
@@ -145,25 +143,21 @@ export default function MetadataPage() {
               </div>
             </div>
 
-            {/* Description */}
             <div style={{ borderRadius: 18, background: C.cardBg, border: `1px solid ${C.border}`, padding: "20px 22px" }}>
               <p style={{ fontSize: 13, fontWeight: 600, color: C.accent, letterSpacing: 0.4, marginBottom: 12 }}>DESCRIPTION</p>
               <pre style={{ fontSize: 13, color: C.text, lineHeight: 1.7, whiteSpace: "pre-wrap", fontFamily: "inherit", margin: 0 }}>{metadata.description}</pre>
             </div>
 
-            {/* Tags + Thumbnail */}
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
-              {/* Tags */}
               <div style={{ borderRadius: 18, background: C.cardBg, border: `1px solid ${C.border}`, padding: "20px 22px" }}>
                 <p style={{ fontSize: 13, fontWeight: 600, color: C.accent, letterSpacing: 0.4, marginBottom: 12 }}>TAGS</p>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
                   {metadata.tags?.map((tag: string, i: number) => (
-                    <span key={i} style={{ padding: "4px 10px", borderRadius: 7, background: C.badgeBg, color: C.badgeText, fontSize: 12, fontWeight: 600 }>{tag}</span>
+                    <span key={i} style={{ padding: "4px 10px", borderRadius: 7, background: C.badgeBg, color: C.badgeText, fontSize: 12, fontWeight: 600 }}>{tag}</span>
                   ))}
                 </div>
               </div>
 
-              {/* Thumbnail Text */}
               <div style={{ borderRadius: 18, background: C.cardBg, border: `1px solid ${C.border}`, padding: "20px 22px" }}>
                 <p style={{ fontSize: 13, fontWeight: 600, color: C.accent, letterSpacing: 0.4, marginBottom: 12 }}>THUMBNAIL TEXT</p>
                 <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
