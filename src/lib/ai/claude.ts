@@ -120,7 +120,6 @@ Output JSON with this exact structure:
     throw new Error("Unexpected response type from Claude");
   }
 
-  // Extract JSON from the response
   const jsonMatch = content.text.match(/\{[\s\S]*\}/);
   if (!jsonMatch) {
     throw new Error("No JSON found in Claude response");
@@ -216,18 +215,18 @@ ${input.script.slice(0, 1000)}
 ${input.targetKeywords ? `Target keywords: ${input.targetKeywords.join(", ")}` : ""}
 
 Important rules:
-- Current year is ${currentYear}. If any title, tag, or text needs a year reference, use ${currentYear} unless the script itself explicitly mentions a different year — in which case use the year mentioned in the script.
-- Tags must be plain text only. Do NOT include "#" symbols, quotes, or special characters in tags.
-- The description must end with exactly 3 relevant hashtags on the final line (these hashtags ARE prefixed with "#").
-- The separate "hashtags" array should contain 10 hashtags, each prefixed with "#".
+- Current year is ${currentYear}. Use ${currentYear} for any year references unless the script mentions a different year.
+- Tags must be plain text only — no "#" symbols, no quotes, no special characters.
+- The description must end with exactly 3 relevant hashtags on the final line.
+- The separate "hashtags" array must contain 10 hashtags, each prefixed with "#".
 
 Output JSON:
 {
   "titles": ["10 title options, optimized for CTR and search"],
-  "description": "Full YouTube description with timestamps, keywords, links, and ending with exactly 3 hashtags on the final line",
-  "tags": ["20 plain-text tags with NO # prefix, mix of broad and niche-specific"],
+  "description": "Full YouTube description with timestamps, keywords, links, ending with exactly 3 hashtags on the final line",
+  "tags": ["20 plain-text tags, NO # prefix, mix of broad and niche-specific"],
   "thumbnailText": ["5 thumbnail text options, max 4 words each"],
-  "hashtags": ["10 hashtags, each prefixed with #"]
+  "hashtags": ["10 hashtags each prefixed with #"]
 }`;
 
   const response = await getAnthropic().messages.create({
@@ -243,5 +242,10 @@ Output JSON:
   const jsonMatch = content.text.match(/\{[\s\S]*\}/);
   if (!jsonMatch) throw new Error("No JSON found");
 
-  return JSON.parse(jsonMatch[0]);
+  const metadata: GeneratedMetadata = JSON.parse(jsonMatch[0]);
+
+  // Post-process: strip any # prefixes from tags regardless of what Claude returns
+  metadata.tags = metadata.tags.map(tag => tag.replace(/^#+/, "").trim());
+
+  return metadata;
 }
