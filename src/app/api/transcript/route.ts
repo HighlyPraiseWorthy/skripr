@@ -35,27 +35,50 @@ export async function POST(req: Request) {
 
     console.log("[transcript] Fetching transcript for videoId:", videoId);
 
-    let segments;
-    try {
-      segments = await YoutubeTranscript.fetchTranscript(videoId);
-      console.log("[transcript] Success - segments count:", segments?.length);
-    } catch (transcriptError: any) {
-      const msg = transcriptError?.message || "";
-      const name = transcriptError?.name || "";
-      console.error("[transcript] Error name:", name);
-      console.error("[transcript] Error message:", msg);
-      console.error("[transcript] Full error:", JSON.stringify(transcriptError, null, 2));
+    let segments: any[] = [];
 
-      return NextResponse.json({
-        error: "Transcript extraction failed",
-        detail: msg,
-        videoId,
-      }, { status: 422 });
+    // Try English first, then fall back to any available language
+    const languagesToTry = ["en", "en-US", "en-GB"];
+    let lastError: any = null;
+
+    for (const lang of languagesToTry) {
+      try {
+        segments = await YoutubeTranscript.fetchTranscript(videoId, { lang });
+        if (segments && segments.length > 0) {
+          console.log(`[transcript] Success with lang=${lang}, segments:`, segments.length);
+          break;
+        }
+      } catch (e: any) {
+        console.log(`[transcript] Failed with lang=${lang}:`, e.message);
+        lastError = e;
+      }
+    }
+
+    // If language-specific attempts failed, try without lang param
+    if (segments.length === 0) {
+      try {
+        console.log("[transcript] Trying without language param...");
+        segments = await YoutubeTranscript.fetchTranscript(videoId);
+        console.log("[transcript] Success without lang, segments:", segments.length);
+      } catch (e: any) {
+        console.error("[transcript] All attempts failed:", e.message);
+        const msg = e?.message || "";
+        if (msg.includes("disabled") || msg.includes("Could not get") || msg.includes("No transcripts")) {
+          return NextResponse.json({
+            error: "This video does not have English captions available. Try a video with English captions enabled.",
+          }, { status: 422 });
+        }
+        return NextResponse.json({
+          error: "Transcript extraction failed",
+          detail: msg,
+        }, { status: 422 });
+      }
     }
 
     if (!segments || segments.length === 0) {
-      console.error("[transcript] Empty segments for videoId:", videoId);
-      return NextResponse.json({ error: "No transcript found for this video." }, { status: 422 });
+      return NextResponse.json({
+        error: "No transcript found for this video.",
+      }, { status: 422 });
     }
 
     const transcript = segments.map((s: any) => s.text).join(" ").replace(/\s+/g, " ").trim();
