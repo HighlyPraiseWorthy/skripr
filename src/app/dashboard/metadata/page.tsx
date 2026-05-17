@@ -158,7 +158,7 @@ export default function MetadataPage() {
                 <p style={{ fontSize: 13, fontWeight: 600, color: C.accent, letterSpacing: 0.4, marginBottom: 12 }}>TAGS</p>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
                   {metadata.tags?.map((tag: string, i: number) => (
-                    <span key={i} style={{ padding: "4px 10px", borderRadius: 7, background: C.badgeBg, color: C.badgeText, fontSize: 12, fontWeight: 600 }}>#{tag}</span>
+                    <span key={i} style={{ padding: "4px 10px", borderRadius: 7, background: C.badgeBg, color: C.badgeText, fontSize: 12, fontWeight: 600 }>{tag}</span>
                   ))}
                 </div>
               </div>
