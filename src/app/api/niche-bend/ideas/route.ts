@@ -2,6 +2,10 @@ import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { Anthropic } from "@anthropic-ai/sdk";
 
+// Allow up to 60 seconds for the Anthropic call to complete.
+// Vercel Hobby plan supports 60s when explicitly set.
+export const maxDuration = 60;
+
 let anthropicClient: Anthropic | null = null;
 function getAnthropic(): Anthropic {
   if (!anthropicClient) {
@@ -34,7 +38,8 @@ For each idea, provide:
 - Format (list, challenge, comparison, story, experiment, reaction, educational, documentary)
 - Why it works (brief reasoning)
 
-Output JSON array:
+Respond with ONLY a valid JSON array. No preamble, no explanation, no markdown code fences. Start your response with [ and end with ]. Sort by viralPotential descending.
+
 [
   {
     "title": "string",
@@ -44,21 +49,31 @@ Output JSON array:
     "format": "string",
     "reasoning": "string"
   }
-]
-
-Sort by viralPotential descending.`,
+]`,
       }],
     });
 
     const content = response.content[0];
-    if (content.type !== "text") throw new Error("Unexpected response");
+    if (content.type !== "text") {
+      return NextResponse.json({ error: "Unexpected response type from Claude" }, { status: 500 });
+    }
 
     const jsonMatch = content.text.match(/\[[\s\S]*\]/);
-    if (!jsonMatch) throw new Error("No JSON found");
+    if (!jsonMatch) {
+      console.error("No JSON array found in Claude response:", content.text);
+      return NextResponse.json({
+        error: "Could not parse ideas from response",
+        debug: content.text.slice(0, 500)
+      }, { status: 500 });
+    }
 
     const ideas = JSON.parse(jsonMatch[0]);
     return NextResponse.json({ ideas });
   } catch (error: any) {
-    return NextResponse.json({ error: error.message || "Failed to generate ideas" }, { status: 500 });
+    console.error("Niche bend ideas error:", error);
+    return NextResponse.json({
+      error: error.message || "Failed to generate ideas",
+      type: error.constructor?.name
+    }, { status: 500 });
   }
 }
