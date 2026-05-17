@@ -33,25 +33,32 @@ export async function POST(req: Request) {
     const videoId = extractVideoId(youtubeUrl);
     if (!videoId) return NextResponse.json({ error: "Invalid YouTube URL. Supported formats: youtube.com/watch?v=, youtu.be/, youtube.com/shorts/" }, { status: 400 });
 
+    console.log("[transcript] Fetching transcript for videoId:", videoId);
+
     let segments;
     try {
       segments = await YoutubeTranscript.fetchTranscript(videoId);
+      console.log("[transcript] Success - segments count:", segments?.length);
     } catch (transcriptError: any) {
       const msg = transcriptError?.message || "";
-      if (msg.includes("disabled") || msg.includes("Could not get")) {
-        return NextResponse.json({ error: "This video does not have captions/transcript available. Try a different video." }, { status: 422 });
-      }
-      if (msg.includes("private") || msg.includes("unavailable")) {
-        return NextResponse.json({ error: "This video is private or unavailable." }, { status: 422 });
-      }
-      throw transcriptError;
+      const name = transcriptError?.name || "";
+      console.error("[transcript] Error name:", name);
+      console.error("[transcript] Error message:", msg);
+      console.error("[transcript] Full error:", JSON.stringify(transcriptError, null, 2));
+
+      return NextResponse.json({
+        error: "Transcript extraction failed",
+        detail: msg,
+        videoId,
+      }, { status: 422 });
     }
 
     if (!segments || segments.length === 0) {
-      return NextResponse.json({ error: "No transcript found for this video. The video may not have captions enabled." }, { status: 422 });
+      console.error("[transcript] Empty segments for videoId:", videoId);
+      return NextResponse.json({ error: "No transcript found for this video." }, { status: 422 });
     }
 
-    const transcript = segments.map(s => s.text).join(" ").replace(/\s+/g, " ").trim();
+    const transcript = segments.map((s: any) => s.text).join(" ").replace(/\s+/g, " ").trim();
     const wordCount = transcript.split(/\s+/).length;
     const estimatedDuration = Math.round(wordCount / 150);
 
@@ -63,7 +70,7 @@ export async function POST(req: Request) {
       segmentCount: segments.length,
     });
   } catch (error: any) {
-    console.error("Transcript extraction error:", error);
+    console.error("[transcript] Unexpected error:", error);
     return NextResponse.json({ error: error.message || "Failed to extract transcript" }, { status: 500 });
   }
 }
