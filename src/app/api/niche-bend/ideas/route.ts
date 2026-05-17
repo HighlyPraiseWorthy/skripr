@@ -19,7 +19,7 @@ export async function POST(req: Request) {
     if (!nicheA || !nicheB) return NextResponse.json({ error: "Two niches required" }, { status: 400 });
 
     const response = await getAnthropic().messages.create({
-      model: "claude-sonnet-4-20250514",
+      model: "claude-sonnet-4-6",
       max_tokens: 2048,
       messages: [{
         role: "user",
