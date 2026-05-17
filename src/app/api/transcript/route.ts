@@ -1,25 +1,32 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import { YoutubeTranscript } from "youtube-transcript";
 
 export const maxDuration = 30;
 
 function extractVideoId(url: string): string | null {
-  try {
-    const patterns = [
-      /(?:youtube\.com\/watch\?v=)([^&\n?#]+)/,
-      /(?:youtu\.be\/)([^&\n?#]+)/,
-      /(?:youtube\.com\/shorts\/)([^&\n?#]+)/,
-      /(?:youtube\.com\/embed\/)([^&\n?#]+)/,
-    ];
-    for (const pattern of patterns) {
-      const match = url.match(pattern);
-      if (match) return match[1];
-    }
-    return null;
-  } catch {
-    return null;
+  const patterns = [
+    /(?:youtube\.com\/watch\?v=)([^&\n?#]+)/,
+    /(?:youtu\.be\/)([^&\n?#]+)/,
+    /(?:youtube\.com\/shorts\/)([^&\n?#]+)/,
+    /(?:youtube\.com\/embed\/)([^&\n?#]+)/,
+  ];
+  for (const pattern of patterns) {
+    const match = url.match(pattern);
+    if (match) return match[1];
   }
+  return null;
+}
+
+async function fetchCaptionTrack(trackUrl: string): Promise<string> {
+  const res = await fetch(trackUrl);
+  const xml = await res.text();
+  // Parse the XML caption format
+  const texts = xml.match(/<text[^>]*>([^<]*)<\/text>/g) || [];
+  return texts
+    .map(t => t.replace(/<[^>]+>/g, "").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&#39;/g, "'").replace(/&quot;/g, '"'))
+    .join(" ")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 export async function POST(req: Request) {
@@ -33,70 +40,99 @@ export async function POST(req: Request) {
     const videoId = extractVideoId(youtubeUrl);
     if (!videoId) return NextResponse.json({ error: "Invalid YouTube URL." }, { status: 400 });
 
-    console.log("[transcript] Fetching for videoId:", videoId);
+    const apiKey = process.env.YOUTUBE_API_KEY;
+    if (!apiKey) return NextResponse.json({ error: "YouTube API not configured." }, { status: 500 });
 
-    let segments: any[] = [];
+    console.log("[transcript] Fetching captions for videoId:", videoId);
 
-    // Strategy 1: try lang=en directly
-    try {
-      segments = await YoutubeTranscript.fetchTranscript(videoId, { lang: "en" });
-      console.log("[transcript] lang=en success, segments:", segments.length);
-    } catch (e1: any) {
-      console.log("[transcript] lang=en failed:", e1.message?.slice(0, 80));
+    // Step 1: List available caption tracks via YouTube Data API
+    const captionListUrl = `https://www.googleapis.com/youtube/v3/captions?part=snippet&videoId=${videoId}&key=${apiKey}`;
+    const captionListRes = await fetch(captionListUrl);
+    const captionList = await captionListRes.json();
 
-      // Strategy 2: fetch default (no lang), filter for English segments
+    console.log("[transcript] Caption list status:", captionListRes.status);
+    console.log("[transcript] Captions found:", captionList.items?.length || 0);
+
+    if (!captionList.items || captionList.items.length === 0) {
+      // Fall back to youtube-transcript package as backup
       try {
-        const all = await YoutubeTranscript.fetchTranscript(videoId);
-        console.log("[transcript] no-lang success, segments:", all.length, "lang:", all[0]?.lang);
-
-        // If we got segments, check if they contain English-like text
-        // by checking if any segment's lang is 'en' or starts with 'en'
-        const hasEnglish = all.some((s: any) =>
-          s.lang && (s.lang === "en" || s.lang.startsWith("en-"))
-        );
-
-        if (hasEnglish) {
-          segments = all.filter((s: any) =>
-            s.lang && (s.lang === "en" || s.lang.startsWith("en-"))
-          );
-        } else {
-          // Use whatever we got — it's still a transcript even if not English
-          // We'll pass it to Claude which can work with it
-          segments = all;
-        }
-        console.log("[transcript] using segments:", segments.length);
-      } catch (e2: any) {
-        console.error("[transcript] all attempts failed:", e2.message);
-        const msg = e2?.message || "";
-        if (msg.includes("disabled") || msg.includes("Could not get") || msg.includes("No transcripts")) {
+        const { YoutubeTranscript } = await import("youtube-transcript");
+        const segments = await YoutubeTranscript.fetchTranscript(videoId, { lang: "en" });
+        if (segments && segments.length > 0) {
+          const transcript = segments.map((s: any) => s.text).join(" ").replace(/\s+/g, " ").trim();
+          const wordCount = transcript.split(/\s+/).length;
           return NextResponse.json({
-            error: "This video does not have captions available. Try a different video.",
-          }, { status: 422 });
+            videoId,
+            transcript,
+            wordCount,
+            estimatedDuration: Math.round(wordCount / 150),
+            segmentCount: segments.length,
+          });
         }
-        return NextResponse.json({
-          error: "Could not extract transcript from this video.",
-          detail: msg,
-        }, { status: 422 });
+      } catch (e) {
+        console.log("[transcript] Fallback also failed");
       }
+      return NextResponse.json({ error: "No captions available for this video." }, { status: 422 });
     }
 
-    if (!segments || segments.length === 0) {
-      return NextResponse.json({ error: "No transcript found for this video." }, { status: 422 });
+    // Step 2: Find English caption track
+    const tracks = captionList.items;
+    const englishTrack = tracks.find((t: any) =>
+      t.snippet.language === "en" || t.snippet.language.startsWith("en-")
+    ) || tracks[0]; // fall back to first available track
+
+    console.log("[transcript] Using track:", englishTrack.snippet.language, englishTrack.snippet.trackKind);
+
+    // Step 3: Download the caption track
+    // Note: This requires OAuth for private captions, but auto-generated captions
+    // on public videos can be fetched via a known URL pattern
+    const captionDownloadUrl = `https://www.googleapis.com/youtube/v3/captions/${englishTrack.id}?tfmt=srv3&key=${apiKey}`;
+    const captionRes = await fetch(captionDownloadUrl);
+
+    if (!captionRes.ok) {
+      console.log("[transcript] Caption download failed:", captionRes.status);
+      // Try youtube-transcript as backup
+      try {
+        const { YoutubeTranscript } = await import("youtube-transcript");
+        const segments = await YoutubeTranscript.fetchTranscript(videoId, { lang: "en" });
+        if (segments && segments.length > 0) {
+          const transcript = segments.map((s: any) => s.text).join(" ").replace(/\s+/g, " ").trim();
+          const wordCount = transcript.split(/\s+/).length;
+          return NextResponse.json({
+            videoId,
+            transcript,
+            wordCount,
+            estimatedDuration: Math.round(wordCount / 150),
+            segmentCount: segments.length,
+          });
+        }
+      } catch (e) { /* ignore */ }
+      return NextResponse.json({ error: "Could not download captions. The video may have restricted captions." }, { status: 422 });
     }
 
-    const transcript = segments.map((s: any) => s.text).join(" ").replace(/\s+/g, " ").trim();
+    const captionText = await captionRes.text();
+    const transcript = captionText
+      .replace(/<[^>]+>/g, " ")
+      .replace(/&amp;/g, "&")
+      .replace(/&lt;/g, "<")
+      .replace(/&gt;/g, ">")
+      .replace(/&#39;/g, "'")
+      .replace(/&quot;/g, '"')
+      .replace(/\s+/g, " ")
+      .trim();
+
     const wordCount = transcript.split(/\s+/).length;
-    const estimatedDuration = Math.round(wordCount / 150);
 
     return NextResponse.json({
       videoId,
       transcript,
       wordCount,
-      estimatedDuration,
-      segmentCount: segments.length,
+      estimatedDuration: Math.round(wordCount / 150),
+      segmentCount: Math.ceil(wordCount / 10),
     });
+
   } catch (error: any) {
-    console.error("[transcript] Unexpected error:", error);
+    console.error("[transcript] Error:", error);
     return NextResponse.json({ error: error.message || "Failed to extract transcript" }, { status: 500 });
   }
 }
