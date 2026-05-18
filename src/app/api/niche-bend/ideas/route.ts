@@ -58,16 +58,23 @@ Respond with ONLY a valid JSON array. No preamble, no explanation, no markdown c
       return NextResponse.json({ error: "Unexpected response type from Claude" }, { status: 500 });
     }
 
-    const jsonMatch = content.text.match(/\[[\s\S]*\]/);
-    if (!jsonMatch) {
-      console.error("No JSON array found in Claude response:", content.text);
+    // Extract JSON array — Claude often wraps in code blocks or adds explanatory text
+    const codeBlock = content.text.match(/\s*```(?:json)?\s*\n([\s\S]*?)\n```/);
+    const jsonText = codeBlock ? codeBlock[1]
+      : (content.text.match(/\[[\s\S]*\]/) || [null])[0];
+    if (!jsonText) {
+      console.error("No JSON array found in Claude response (last 300):", content.text.slice(-300));
       return NextResponse.json({
         error: "Could not parse ideas from response",
         debug: content.text.slice(0, 500)
       }, { status: 500 });
     }
-
-    const ideas = JSON.parse(jsonMatch[0]);
+    let ideas: any[];
+    try { ideas = JSON.parse(jsonText); }
+    catch (e: any) {
+      console.error("JSON parse error:", e.message, "\nText (last 200):", jsonText.slice(-200));
+      return NextResponse.json({ error: "Generated response was malformed JSON — try again" }, { status: 500 });
+    }
     return NextResponse.json({ ideas });
   } catch (error: any) {
     console.error("Niche bend ideas error:", error);

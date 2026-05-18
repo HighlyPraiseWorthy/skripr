@@ -57,6 +57,37 @@ Your scripts follow these principles:
 
 Output valid JSON matching the specified schema. Be specific and actionable. No fluff.`;
 
+
+/**
+ * Safely extract JSON from a Claude text response.
+ * Claude often wraps JSON in ```json code blocks or appends
+ * explanatory text (with { } characters) before/after the JSON block.
+ */
+function extractJSON(text: string, kind: "object" | "array"): unknown {
+  // First try: pull JSON directly from a markdown code block (greedy)
+  const codeBlock = text.match(/\s*```(?:json)?\s*\n([\s\S]*?)\n```/);
+  if (codeBlock) {
+    try { return JSON.parse(codeBlock[1]); } catch { /* fall through */ }
+  }
+  // Second try: non-greedy match for the JSON structure
+  const opener  = kind === "array" ? "[" : "{";
+  const closer  = kind === "array" ? "]" : "}";
+  const escaped = opener.replace(/[\^$.*+?()[\]{}|]/g, "\\$&");
+  const escapedClose = closer.replace(/[\^$.*+?()[\]{}|]/g, "\\$&");
+  const m = text.match(new RegExp(escaped + "[\\s\\S]*?" + escapedClose));
+  if (m) {
+    try { return JSON.parse(m[0]); }
+    catch (e) {
+      throw new Error(
+        `Failed to parse JSON (kind=${kind}) — snippet: ${m[0].slice(-80)}... — ${e}`
+      );
+    }
+  }
+  throw new Error(
+    `No valid JSON${kind} found in Claude response. Text (last 300 chars): ${text.slice(-300)}`
+  );
+}
+
 export async function generateScript(input: ScriptGenerationInput): Promise<GeneratedScript> {
   const lengthGuide = {
     short: "60-90 seconds, 150-200 words",
@@ -110,7 +141,7 @@ Output JSON with this exact structure:
 
   const response = await getAnthropic().messages.create({
     model: "claude-sonnet-4-6",
-    max_tokens: 2048,
+    max_tokens: 4096,
     system: SYSTEM_PROMPT,
     messages: [{ role: "user", content: userPrompt }],
   });
@@ -120,12 +151,7 @@ Output JSON with this exact structure:
     throw new Error("Unexpected response type from Claude");
   }
 
-  const jsonMatch = content.text.match(/\{[\s\S]*\}/);
-  if (!jsonMatch) {
-    throw new Error("No JSON found in Claude response");
-  }
-
-  const script: GeneratedScript = JSON.parse(jsonMatch[0]);
+  const script = extractJSON(content.text, "object") as GeneratedScript;
   return script;
 }
 
@@ -173,18 +199,16 @@ Sort by predictedRetention descending.`;
 
   const response = await getAnthropic().messages.create({
     model: "claude-sonnet-4-6",
-    max_tokens: 2048,
+    max_tokens: 4096,
     system: SYSTEM_PROMPT,
     messages: [{ role: "user", content: userPrompt }],
   });
 
   const content = response.content[0];
   if (content.type !== "text") throw new Error("Unexpected response");
-
-  const jsonMatch = content.text.match(/\[[\s\S]*\]/);
-  if (!jsonMatch) throw new Error("No JSON array found");
-
-  return JSON.parse(jsonMatch[0]);
+  const hooks = extractJSON(content.text, "array") as GeneratedHook[];
+  if (!Array.isArray(hooks)) throw new Error("Expected an array of hooks");
+  return hooks;
 }
 
 export interface MetadataGenerationInput {
@@ -231,20 +255,16 @@ Output JSON:
 
   const response = await getAnthropic().messages.create({
     model: "claude-sonnet-4-6",
-    max_tokens: 2048,
+    max_tokens: 4096,
     system: SYSTEM_PROMPT,
     messages: [{ role: "user", content: userPrompt }],
   });
 
   const content = response.content[0];
   if (content.type !== "text") throw new Error("Unexpected response");
+  const metadata = extractJSON(content.text, "object") as GeneratedMetadata;
 
-  const jsonMatch = content.text.match(/\{[\s\S]*\}/);
-  if (!jsonMatch) throw new Error("No JSON found");
-
-  const metadata: GeneratedMetadata = JSON.parse(jsonMatch[0]);
-
-  // Post-process: strip any # prefixes from tags regardless of what Claude returns
+  // Post-process: strip any # prefixes
   metadata.tags = metadata.tags.map(tag => tag.replace(/^#+/, "").trim());
 
   return metadata;
