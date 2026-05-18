@@ -1,0 +1,19 @@
+{
+  "functions": {
+    "src/app/api/scripts/generate/route.ts": {
+      "maxDuration": 60
+    },
+    "src/app/api/hooks/generate/route.ts": {
+      "maxDuration": 60
+    },
+    "src/app/api/metadata/generate/route.ts": {
+      "maxDuration": 60
+    },
+    "src/app/api/compliance/check/route.ts": {
+      "maxDuration": 60
+    },
+    "src/app/api/niche-bend/ideas/route.ts": {
+      "maxDuration": 60
+    }
+  }
+}

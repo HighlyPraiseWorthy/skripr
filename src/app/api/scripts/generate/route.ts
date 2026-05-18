@@ -23,7 +23,7 @@ export async function POST(req: Request) {
     const truncated = truncateTranscript(transcript);
     console.log(`[generate] words: ${transcript.split(/\s+/).length} → ${truncated.split(/\s+/).length}`);
 
-    // Race against a 50s timeout to ensure we return JSON, not Vercel's HTML timeout page
+    // Race against a 58s timeout (Vercel Hobby hard cap is 60s; Claude averages 47-58s)
     const scriptPromise = generateScript({
       sourceTranscript: truncated,
       sourceTitle: sourceVideoId ? `YouTube video ${sourceVideoId}` : "Source video",
@@ -36,7 +36,7 @@ export async function POST(req: Request) {
     });
 
     const timeoutPromise = new Promise<never>((_, reject) =>
-      setTimeout(() => reject(new Error("Generation timed out — try a shorter transcript or reduce video length.")), 55000)
+      setTimeout(() => reject(new Error("Script generation timed out — Claude is slow on this request. Could you wait a moment and then try again?")), 58000)
     );
 
     const script = await Promise.race([scriptPromise, timeoutPromise]);
