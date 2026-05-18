@@ -4,7 +4,7 @@ import { generateScript } from "@/lib/ai/claude";
 
 export const maxDuration = 60;
 
-function truncateTranscript(text: string, maxWords = 600): string {
+function truncateTranscript(text: string, maxWords = 400): string {
   const words = text.trim().split(/\s+/);
   if (words.length <= maxWords) return text;
   return words.slice(0, maxWords).join(" ") + "...";
@@ -36,7 +36,7 @@ export async function POST(req: Request) {
     });
 
     const timeoutPromise = new Promise<never>((_, reject) =>
-      setTimeout(() => reject(new Error("Generation took too long. Try a shorter transcript.")), 50000)
+      setTimeout(() => reject(new Error("Generation timed out — try a shorter transcript or reduce video length.")), 55000)
     );
 
     const script = await Promise.race([scriptPromise, timeoutPromise]);
