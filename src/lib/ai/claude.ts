@@ -110,7 +110,7 @@ Output JSON with this exact structure:
 
   const response = await getAnthropic().messages.create({
     model: "claude-sonnet-4-6",
-    max_tokens: 4096,
+    max_tokens: 2048,
     system: SYSTEM_PROMPT,
     messages: [{ role: "user", content: userPrompt }],
   });
@@ -231,7 +231,7 @@ Output JSON:
 
   const response = await getAnthropic().messages.create({
     model: "claude-sonnet-4-6",
-    max_tokens: 4096,
+    max_tokens: 2048,
     system: SYSTEM_PROMPT,
     messages: [{ role: "user", content: userPrompt }],
   });
