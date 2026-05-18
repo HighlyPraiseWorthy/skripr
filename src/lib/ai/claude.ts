@@ -64,28 +64,38 @@ Output valid JSON matching the specified schema. Be specific and actionable. No 
  * explanatory text (with { } characters) before/after the JSON block.
  */
 function extractJSON(text: string, kind: "object" | "array"): unknown {
-  // First try: pull JSON directly from a markdown code block (greedy)
-  const codeBlock = text.match(/\s*```(?:json)?\s*\n([\s\S]*?)\n```/);
+  // First try: pull JSON from a markdown code block
+  const codeBlock = text.match(/```(?:json)?\s*\n([\s\S]*?)\n```/);
   if (codeBlock) {
-    try { return JSON.parse(codeBlock[1]); } catch { /* fall through */ }
+    try { return JSON.parse(codeBlock[1].trim()); } catch { /* fall through */ }
   }
-  // Second try: non-greedy match for the JSON structure
-  const opener  = kind === "array" ? "[" : "{";
-  const closer  = kind === "array" ? "]" : "}";
-  const escaped = opener.replace(/[\^$.*+?()[\]{}|]/g, "\\$&");
-  const escapedClose = closer.replace(/[\^$.*+?()[\]{}|]/g, "\\$&");
-  const m = text.match(new RegExp(escaped + "[\\s\\S]*?" + escapedClose));
-  if (m) {
-    try { return JSON.parse(m[0]); }
-    catch (e) {
-      throw new Error(
-        `Failed to parse JSON (kind=${kind}) — snippet: ${m[0].slice(-80)}... — ${e}`
-      );
+  // Second try: bracket-matching to find the outermost JSON structure
+  const opener = kind === "array" ? "[" : "{";
+  const closer = kind === "array" ? "]" : "}";
+  const start = text.indexOf(opener);
+  if (start === -1) throw new Error(`No JSON ${kind} found in Claude response`);
+  let depth = 0;
+  let inString = false;
+  let escape = false;
+  for (let i = start; i < text.length; i++) {
+    const ch = text[i];
+    if (escape) { escape = false; continue; }
+    if (ch === "\\") { escape = true; continue; }
+    if (ch === "\"" && !escape) { inString = !inString; continue; }
+    if (inString) continue;
+    if (ch === opener) depth++;
+    else if (ch === closer) {
+      depth--;
+      if (depth === 0) {
+        const candidate = text.slice(start, i + 1);
+        try { return JSON.parse(candidate); }
+        catch (e) {
+          throw new Error(`Failed to parse JSON (kind=${kind}) — snippet: ${candidate.slice(-80)}... — ${e}`);
+        }
+      }
     }
   }
-  throw new Error(
-    `No valid JSON${kind} found in Claude response. Text (last 300 chars): ${text.slice(-300)}`
-  );
+  throw new Error(`No valid JSON ${kind} found in Claude response. Text (last 300 chars): ${text.slice(-300)}`);
 }
 
 export async function generateScript(input: ScriptGenerationInput): Promise<GeneratedScript> {
