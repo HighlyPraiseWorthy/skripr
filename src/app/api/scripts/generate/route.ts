@@ -20,7 +20,7 @@ export async function POST(req: Request) {
   const { transcript, niche, topic, sourceVideoId, videoLength = "long" } = await req.json();
   if (!transcript) return NextResponse.json({ error: "Transcript is required" }, { status: 400 });
 
-  const maxWords: Record<string, number> = { short: 150, medium: 400, long: 800, ultraLong: 800 };
+  const maxWords: Record<string, number> = { short: 150, medium: 400, long: 500, ultraLong: 500 };
   const cap = maxWords[videoLength] ?? 400;
   const truncated = truncateTranscript(transcript, cap);
   console.log(`[generate] words: ${transcript.split(/\s+/).length} → ${truncated.split(/\s+/).length} | length=${videoLength}`);
