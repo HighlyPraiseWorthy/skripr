@@ -17,7 +17,8 @@ function formatDate(dateStr: string): string {
   return new Date(dateStr).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 }
 
-export default async function ScriptDetailPage({ params }: { params: { id: string } }) {
+export default async function ScriptDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const { userId } = await auth();
   if (!userId) {
     return (
@@ -38,7 +39,7 @@ export default async function ScriptDetailPage({ params }: { params: { id: strin
     const { data, error: fetchErr } = await supabaseAdmin!
       .from("scripts")
       .select("*")
-      .eq("id", params.id)
+      .eq("id", id)
       .eq("user_id", userId)
       .single();
     if (fetchErr) throw fetchErr;
