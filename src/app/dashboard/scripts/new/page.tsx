@@ -48,6 +48,7 @@ export default function NewScriptPage() {
   const [pastedTranscript, setPastedTranscript] = useState("");
   const [niche, setNiche] = useState("");
   const [topic, setTopic] = useState("");
+  const [videoLength, setVideoLength] = useState<"short" | "medium" | "long" | "ultraLong">("long");
   const [transcriptText, setTranscriptText] = useState("");
   const [generatedScript, setGeneratedScript] = useState<GeneratedScript | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -85,7 +86,7 @@ export default function NewScriptPage() {
     try {
       const res = await fetch("/api/scripts/generate", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ transcript, niche: niche || undefined, topic: topic || undefined,
+        body: JSON.stringify({ transcript, niche: niche || undefined, topic: topic || undefined, videoLength,
           sourceVideoId: youtubeUrl ? youtubeUrl.match(/[?&]v=([^&]+)/)?.[1] : undefined }),
       });
       const data = await res.json();

@@ -14,7 +14,7 @@ export interface ScriptGenerationInput {
   sourceNiche: string;
   targetTopic: string;
   targetNiche: string;
-  videoLength: "short" | "medium" | "long";
+  videoLength: "short" | "medium" | "long" | "ultraLong";
   tone: "educational" | "entertaining" | "storytelling" | "hype";
   ttsOptimized: boolean;
 }
@@ -92,7 +92,8 @@ export async function generateScript(input: ScriptGenerationInput): Promise<Gene
   const lengthGuide = {
     short: "60-90 seconds, 150-200 words",
     medium: "5-8 minutes, 700-1200 words",
-    long: "10-20 minutes, 1500-3000 words",
+    long: "10-15 minutes, 1500-2000 words",
+    ultraLong: "15-20 minutes, 2000-3000 words",
   };
 
   const userPrompt = `Source viral video:

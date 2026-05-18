@@ -17,11 +17,13 @@ export async function POST(req: Request) {
   const startTime = Date.now();
 
   try {
-    const { transcript, niche, topic, sourceVideoId } = await req.json();
-    if (!transcript) return NextResponse.json({ error: "Transcript is required" }, { status: 400 });
+  const { transcript, niche, topic, sourceVideoId, videoLength = "long" } = await req.json();
+  if (!transcript) return NextResponse.json({ error: "Transcript is required" }, { status: 400 });
 
-    const truncated = truncateTranscript(transcript);
-    console.log(`[generate] words: ${transcript.split(/\s+/).length} → ${truncated.split(/\s+/).length}`);
+  const maxWords: Record<string, number> = { short: 150, medium: 400, long: 800, ultraLong: 800 };
+  const cap = maxWords[videoLength] ?? 400;
+  const truncated = truncateTranscript(transcript, cap);
+  console.log(`[generate] words: ${transcript.split(/\s+/).length} → ${truncated.split(/\s+/).length} | length=${videoLength}`);
 
     // Race against a 58s timeout (Vercel Hobby hard cap is 60s; Claude averages 47-58s)
     const scriptPromise = generateScript({
@@ -30,7 +32,7 @@ export async function POST(req: Request) {
       sourceNiche: niche || "general",
       targetTopic: topic || "Same topic as source video",
       targetNiche: niche || "general",
-      videoLength: "medium",
+      videoLength,
       tone: "educational",
       ttsOptimized: false,
     });
