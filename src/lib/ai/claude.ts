@@ -102,8 +102,8 @@ export async function generateScript(input: ScriptGenerationInput): Promise<Gene
   const lengthGuide = {
     short: "60-90 seconds, 150-200 words",
     medium: "5-8 minutes, 700-1200 words",
-    long: "6-8 minutes, 900-1100 words",
-    ultraLong: "8-10 minutes, 1100-1400 words",
+    long: "4-5 minutes, 600-700 words",
+    ultraLong: "5-6 minutes, 700-900 words",
   };
 
   const userPrompt = `Source viral video:
@@ -152,7 +152,7 @@ Output JSON with this exact structure:
 
   const response = await getAnthropic().messages.create({
     model: "claude-sonnet-4-6",
-    max_tokens: 3200,
+    max_tokens: 4096,
     system: SYSTEM_PROMPT,
     messages: [{ role: "user", content: userPrompt }],
   });
