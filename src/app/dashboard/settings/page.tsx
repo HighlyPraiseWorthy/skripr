@@ -1,3 +1,4 @@
+import { SubscribeButton } from "@/components/SubscribeButton";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { UserProfile } from "@clerk/nextjs";
@@ -43,28 +44,23 @@ export default async function SettingsPage() {
             </div>
             <div style={{ marginTop: 16, paddingTop: 16, borderTop: `1px solid ${C.border}` }}>
               <p style={{ color: C.textDim, fontSize: 13, marginBottom: 12 }}>Usage this month: 0 / 3 scripts</p>
-              <form action="/api/stripe/create-checkout" method="POST">
-                <input type="hidden" name="priceId" value={process.env.NEXT_PUBLIC_STRIPE_PRICE_STARTER || ""} />
-                <button
-                  type="submit"
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: 8,
-                    padding: "10px 20px",
-                    borderRadius: 12,
-                    background: "linear-gradient(135deg,#6366f1,#7c3aed,#a855f7)",
-                    color: "#fff",
-                    fontSize: 13,
-                    fontWeight: 600,
-                    border: "none",
-                    cursor: "pointer",
-                    boxShadow: "0 0 16px rgba(99,102,241,0.28)",
-                  }}
-                >
-                  Upgrade to Starter — $19/mo
-                </button>
-              </form>
+              <SubscribeButton
+                priceId={process.env.NEXT_PUBLIC_STRIPE_PRICE_STARTER || ""}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 8,
+                  padding: "10px 20px",
+                  borderRadius: 12,
+                  background: "linear-gradient(135deg,#6366f1,#7c3aed,#a855f7)",
+                  color: "#fff",
+                  fontSize: 13,
+                  fontWeight: 600,
+                  border: "none",
+                  cursor: "pointer",
+                  boxShadow: "0 0 16px rgba(99,102,241,0.28)",
+                }}
+              />
             </div>
           </section>
 
