@@ -1,4 +1,4 @@
-import { SubscribeButton } from "@/components/SubscribeButton";
+import { PricingPlans } from "@/components/PricingPlans";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { UserProfile } from "@clerk/nextjs";
@@ -34,34 +34,13 @@ export default async function SettingsPage() {
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           {/* Subscription */}
           <section style={{ borderRadius: 20, background: C.cardBg, border: `1px solid ${C.border}`, padding: "22px 26px" }}>
-            <p style={{ fontSize: 13, fontWeight: 600, color: C.accent, letterSpacing: 0.4, marginBottom: 16 }}>SUBSCRIPTION</p>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-              <div>
-                <p style={{ color: C.textBright, fontSize: 15, fontWeight: 600 }}>Free Plan</p>
-                <p style={{ color: C.textDim, fontSize: 13, marginTop: 4 }}>3 scripts per month</p>
-              </div>
-              <span style={{ padding: "5px 12px", borderRadius: 9, background: C.badgeBg, color: C.badgeText, fontSize: 11, fontWeight: 700, letterSpacing: 0.5 }}>ACTIVE</span>
-            </div>
-            <div style={{ marginTop: 16, paddingTop: 16, borderTop: `1px solid ${C.border}` }}>
-              <p style={{ color: C.textDim, fontSize: 13, marginBottom: 12 }}>Usage this month: 0 / 3 scripts</p>
-              <SubscribeButton
-                priceId={process.env.NEXT_PUBLIC_STRIPE_PRICE_STARTER || ""}
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 8,
-                  padding: "10px 20px",
-                  borderRadius: 12,
-                  background: "linear-gradient(135deg,#6366f1,#7c3aed,#a855f7)",
-                  color: "#fff",
-                  fontSize: 13,
-                  fontWeight: 600,
-                  border: "none",
-                  cursor: "pointer",
-                  boxShadow: "0 0 16px rgba(99,102,241,0.28)",
-                }}
-              />
-            </div>
+            <p style={{ fontSize: 13, fontWeight: 600, color: C.accent, letterSpacing: 0.4, marginBottom: 6 }}>SUBSCRIPTION</p>
+            <p style={{ color: C.textDim, fontSize: 13, marginBottom: 20 }}>Choose the plan that fits your workflow</p>
+            <PricingPlans priceIds={{
+              starter: process.env.NEXT_PUBLIC_STRIPE_PRICE_STARTER || "",
+              pro: process.env.NEXT_PUBLIC_STRIPE_PRICE_PRO || "",
+              agency: process.env.NEXT_PUBLIC_STRIPE_PRICE_AGENCY || "",
+            }} />
           </section>
 
           {/* Billing */}
