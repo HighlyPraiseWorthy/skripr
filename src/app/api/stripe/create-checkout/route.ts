@@ -15,8 +15,8 @@ export async function POST(req: Request) {
       customer_email: undefined,
       client_reference_id: userId,
       line_items: [{ price: priceId, quantity: 1 }],
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/scripts?success=true`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/settings?canceled=true`,
+      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/scripts?success=true`,
+      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/settings?canceled=true`,
       subscription_data: { metadata: { userId } },
     });
 
