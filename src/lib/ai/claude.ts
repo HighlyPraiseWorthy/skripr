@@ -117,21 +117,19 @@ export async function generateScript(input: ScriptGenerationInput): Promise<Gene
     ultraLong: "5-6 minutes, 700-900 words",
   };
 
-  const userPrompt = `Source viral video:
-Title: "${input.sourceTitle}"
-Niche: ${input.sourceNiche}
-Transcript excerpt (first 2000 chars):
-"""
-${input.sourceTranscript.slice(0, 2000)}
-"""
+  const hasTranscript = input.sourceTranscript && input.sourceTranscript.trim().length > 10;
+
+  const sourceSection = hasTranscript
+    ? `Source viral video:\nTitle: "${input.sourceTitle}"\nNiche: ${input.sourceNiche}\nTranscript excerpt (first 2000 chars):\n"""\n${input.sourceTranscript.slice(0, 2000)}\n"""\n\nAnalyze the source video's structure (hook type, retention beats, pacing, CTA) and apply that EXACT structural pattern to the new topic.`
+    : `Write an original, highly engaging script on this topic. No source transcript — create fresh content with a strong hook, clear structure, and compelling CTA.`;
+
+  const userPrompt = `${sourceSection}
 
 Generate a NEW script about: "${input.targetTopic}"
 Target niche: ${input.targetNiche}
 Video length: ${lengthGuide[input.videoLength]}
 Tone: ${input.tone}
 TTS optimized: ${input.ttsOptimized ? "Yes — short sentences, mark pauses with [PAUSE], mark emphasis with [EMPHASIS]" : "No"}
-
-Analyze the source video's structure (hook type, retention beat placement, pacing, CTA style) and apply that EXACT structural pattern to the new topic.
 
 Output JSON with this exact structure:
 {

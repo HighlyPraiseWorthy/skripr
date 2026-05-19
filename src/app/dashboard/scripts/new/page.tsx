@@ -62,6 +62,23 @@ export default function NewScriptPage() {
     const n = params.get("niche");
     if (t) { setTopic(t); setNicheBendSource(t); }
     if (n) setNiche(n);
+    // Auto-fire generation if coming from Niche Bend
+    if (t) {
+      setStep("generating");
+      const topicVal = t;
+      const nicheVal = n || "";
+      fetch("/api/scripts/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ transcript: "", topic: topicVal, niche: nicheVal, videoLength: "long" }),
+      })
+        .then(r => r.json())
+        .then(data => {
+          if (data.error) { setError(data.error); setStep("input"); }
+          else { setGeneratedScript(data); setStep("result"); }
+        })
+        .catch(e => { setError(e.message); setStep("input"); });
+    }
   }, []);
 
   async function handleExtractOrProceed() {
