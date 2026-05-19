@@ -54,7 +54,6 @@ const navItems = [
       />
     ),
   },
-  },
   {
     href: "/dashboard/metadata",
     label: "Metadata",
