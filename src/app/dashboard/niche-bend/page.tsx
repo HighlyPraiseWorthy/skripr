@@ -442,7 +442,7 @@ export default function NicheBendPage() {
                         </span>
                       </div>
                       <a
-                        href={`/dashboard/scripts/new?topic=${encodeURIComponent(idea.title)}&niche=${encodeURIComponent(selectedNiche)}`}
+                        href={`/dashboard/scripts/new?topic=${encodeURIComponent(idea.title)}&niche=${encodeURIComponent(selectedNiche)}&adjacent=${encodeURIComponent(selectedAdjacent)}`}
                         style={{
                           display: "inline-flex", alignItems: "center", gap: 6,
                           padding: "8px 16px", borderRadius: 10, marginTop: 12,

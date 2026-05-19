@@ -60,8 +60,10 @@ export default function NewScriptPage() {
     const params = new URLSearchParams(window.location.search);
     const t = params.get("topic");
     const n = params.get("niche");
+    const adj = params.get("adjacent");
     if (t) { setTopic(t); setNicheBendSource(t); }
-    if (n) setNiche(n);
+    if (n && adj) setNiche(`${n} × ${adj}`);
+    else if (n) setNiche(n);
     // Auto-fire generation if coming from Niche Bend
     if (t) {
       setStep("generating");

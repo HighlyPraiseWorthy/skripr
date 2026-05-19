@@ -86,14 +86,15 @@ export default async function ScriptDetailPage({ params }: { params: Promise<{ i
               {(script.word_count || 0).toLocaleString()} words
             </span>
             <span style={{ padding: "3px 10px", borderRadius: 7, fontSize: 11, fontWeight: 600, background: "rgba(99,102,241,0.08)", color: C.textDim }}>
-              ~{script.estimated_duration || 0} min
+              ~{Math.round((script.estimated_duration || 0) / 60)} min
             </span>
             <span style={{ padding: "3px 10px", borderRadius: 7, fontSize: 11, fontWeight: 600, background: "rgba(99,102,241,0.08)", color: C.textDim }}>
               Created {formatDate(script.created_at)}
             </span>
           </div>
           <h1 style={{ fontSize: 24, fontWeight: 700, color: C.textBright, letterSpacing: -0.3, marginBottom: 4 }}>{script.title}</h1>
-          {script.topic && <p style={{ color: C.textDim, fontSize: 14 }}>Topic: {script.topic}</p>}
+          {script.topic && <p style={{ color: C.textDim, fontSize: 14, marginBottom: script.niche ? 2 : 0 }}>Topic: {script.topic}</p>}
+          {script.niche && <p style={{ color: "#a5b4fc", fontSize: 13, fontWeight: 500 }}>✦ Niche Bend: {script.niche}</p>}
         </div>
 
         <div style={{ borderRadius: 18, background: C.cardBg, border: `1px solid ${C.border}`, padding: "22px 28px" }}>
