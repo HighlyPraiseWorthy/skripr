@@ -76,8 +76,14 @@ export default function NewScriptPage() {
       })
         .then(r => r.json())
         .then(data => {
-          if (data.error) { setError(data.error); setStep("input"); }
-          else { setGeneratedScript(data); setStep("result"); }
+          if (data.error) {
+            if (data.limitReached) {
+              setError(data.error + " Go to Settings to subscribe.");
+            } else {
+              setError(data.error);
+            }
+            setStep("input");
+          } else { setGeneratedScript(data); setStep("result"); }
         })
         .catch(e => { setError(e.message); setStep("input"); });
     }

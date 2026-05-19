@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { generateScript } from "@/lib/ai/claude";
+import { checkScriptLimit } from "@/lib/usage";
 
 export const maxDuration = 60;
 
@@ -14,42 +15,48 @@ export async function POST(req: Request) {
   const { userId } = await auth();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  // Hard block — check limit before burning API credits
+  const { allowed, plan, used, limit } = await checkScriptLimit(userId);
+  if (!allowed) {
+    return NextResponse.json({
+      error: `Your free trial has ended (${used}/${limit} scripts used). Subscribe to keep generating.`,
+      limitReached: true,
+      plan,
+    }, { status: 403 });
+  }
+
   const startTime = Date.now();
 
   try {
-  const { transcript, niche, topic, sourceVideoId, videoLength = "long" } = await req.json();
-  // transcript is optional — if absent, generate from topic idea directly
+    const { transcript, niche, topic, sourceVideoId, videoLength = "long" } = await req.json();
 
-  const maxWords: Record<string, number> = { short: 150, medium: 400, long: 500, ultraLong: 500 };
-  const cap = maxWords[videoLength] ?? 400;
-  const truncated = truncateTranscript(transcript, cap);
-  console.log(`[generate] words: ${transcript.split(/\s+/).length} → ${truncated.split(/\s+/).length} | length=${videoLength}`);
+    const maxWords: Record<string, number> = { short: 150, medium: 400, long: 500, ultraLong: 500 };
+    const cap = maxWords[videoLength] ?? 400;
+    const truncated = truncateTranscript(transcript || "", cap);
+    console.log(`[generate] length=${videoLength}`);
 
-    // Race against a 58s timeout (Vercel Hobby hard cap is 60s; Claude averages 47-58s)
     const scriptPromise = generateScript({
       sourceTranscript: truncated,
-      sourceTitle: sourceVideoId ? `YouTube video ${sourceVideoId}` : "Source video",
-      sourceNiche: niche || "general",
-      targetTopic: topic || "Same topic as source video",
+      targetTopic: topic || "viral content",
       targetNiche: niche || "general",
-      videoLength,
-      tone: "educational",
+      sourceTitle: topic || "",
+      sourceNiche: niche || "general",
+      videoLength: videoLength as any,
+      tone: "engaging",
       ttsOptimized: false,
     });
 
-    const timeoutPromise = new Promise<never>((_, reject) =>
+    const timeoutPromise = new Promise((_, reject) =>
       setTimeout(() => reject(new Error("Script generation timed out — Claude is slow on this request. Could you wait a moment and then try again?")), 58000)
     );
 
-    const script = await Promise.race([scriptPromise, timeoutPromise]);
-    console.log(`[generate] completed in ${Date.now() - startTime}ms`);
+    const script = await Promise.race([scriptPromise, timeoutPromise]) as any;
+    const elapsed = Date.now() - startTime;
+    console.log(`[generate] done in ${elapsed}ms`);
 
     return NextResponse.json(script);
   } catch (error: any) {
-    console.error("[generate] Error after", Date.now() - startTime, "ms:", error?.message);
-    return NextResponse.json(
-      { error: error.message || "Failed to generate script" },
-      { status: 500 }
-    );
+    console.error("Script generation error:", error.message);
+    return NextResponse.json({ error: error.message || "Failed to generate script" }, { status: 500 });
   }
 }
