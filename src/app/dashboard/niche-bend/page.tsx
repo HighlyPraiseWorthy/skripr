@@ -441,6 +441,18 @@ export default function NicheBendPage() {
                           {idea.format}
                         </span>
                       </div>
+                      <a
+                        href={`/dashboard/scripts/new?topic=${encodeURIComponent(idea.title)}&niche=${encodeURIComponent(selectedNiche)}`}
+                        style={{
+                          display: "inline-flex", alignItems: "center", gap: 6,
+                          padding: "8px 16px", borderRadius: 10, marginTop: 12,
+                          background: "linear-gradient(135deg,#6366f1,#7c3aed,#a855f7)",
+                          color: "#fff", fontSize: 13, fontWeight: 600,
+                          textDecoration: "none",
+                        }}
+                      >
+                        ✦ Generate Script
+                      </a>
                     </div>
                   </div>
                 </div>
