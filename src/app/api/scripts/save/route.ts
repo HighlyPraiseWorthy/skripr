@@ -1,10 +1,21 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { supabaseAdmin } from "@/lib/db/supabase";
+import { checkScriptLimit } from "@/lib/usage";
 
 export async function POST(req: Request) {
   const { userId } = await auth();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  // Enforce plan limits
+  const { allowed, plan, used, limit } = await checkScriptLimit(userId);
+  if (!allowed) {
+    return NextResponse.json({
+      error: `You've used ${used}/${limit} scripts this month on the ${plan} plan. Upgrade to save more.`,
+      limitReached: true,
+      plan,
+    }, { status: 403 });
+  }
 
   try {
     const { title, content, niche, topic, wordCount, estimatedDuration, sourceVideoId, structurePattern } = await req.json();
