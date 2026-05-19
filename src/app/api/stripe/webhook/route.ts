@@ -17,19 +17,20 @@ export async function POST(req: Request) {
         const session = event.data.object as any;
         const userId = session.client_reference_id;
         const subscriptionId = session.subscription;
-        
+
         if (userId && subscriptionId) {
           const subscription = await stripe.subscriptions.retrieve(subscriptionId);
           const priceId = subscription.items.data[0].price.id;
           const plan = getPlanFromPriceId(priceId);
 
-          await supabaseAdmin!.from("profiles").upsert({
+          await supabaseAdmin!.from("user_profiles").upsert({
             user_id: userId,
             stripe_customer_id: session.customer,
             stripe_subscription_id: subscriptionId,
             plan: plan || "free",
             subscription_status: subscription.status,
-          });
+            updated_at: new Date().toISOString(),
+          }, { onConflict: "user_id" });
         }
         break;
       }
@@ -38,10 +39,11 @@ export async function POST(req: Request) {
       case "customer.subscription.deleted": {
         const subscription = event.data.object as any;
         const plan = getPlanFromPriceId(subscription.items.data[0].price.id);
-        
-        await supabaseAdmin!.from("profiles").update({
+
+        await supabaseAdmin!.from("user_profiles").update({
           plan: subscription.status === "active" ? (plan || "free") : "free",
           subscription_status: subscription.status,
+          updated_at: new Date().toISOString(),
         }).eq("stripe_subscription_id", subscription.id);
         break;
       }
@@ -49,6 +51,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ received: true });
   } catch (error: any) {
+    console.error("Stripe webhook error:", error.message);
     return NextResponse.json({ error: error.message }, { status: 400 });
   }
 }
