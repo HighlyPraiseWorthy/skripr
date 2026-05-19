@@ -139,7 +139,7 @@ export default function NewScriptPage() {
       const res = await fetch("/api/scripts/save", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          title: generatedScript.title, content: generatedScript.content,
+          title: generatedScript.title, content: generatedScript.fullScript || generatedScript.content,
           niche: generatedScript.niche, topic: topic || null,
           wordCount: generatedScript.wordCount, estimatedDuration: generatedScript.estimatedDuration,
           sourceVideoId: youtubeUrl ? youtubeUrl.match(/[?&]v=([^&]+)/)?.[1] : null,
@@ -282,7 +282,7 @@ export default function NewScriptPage() {
               )}
               <div style={{ maxHeight: 440, overflowY: "auto", borderRadius: 14, border: `1px solid ${C.border}` }}>
                 <div style={{ padding: 20 }}>
-                  <p style={{ fontSize: 14, color: C.textBright, lineHeight: 1.85, whiteSpace: "pre-wrap" }}>{generatedScript.content}</p>
+                  <p style={{ fontSize: 14, color: C.textBright, lineHeight: 1.85, whiteSpace: "pre-wrap" }}>{generatedScript.fullScript || generatedScript.content}</p>
                 </div>
               </div>
             </div>
