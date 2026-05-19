@@ -101,7 +101,7 @@ export default async function ScriptsPage() {
                         </span>
                       )}
                       <span style={{ color: C.textDim, fontSize: 13 }}>{(script.word_count || 0).toLocaleString()} words</span>
-                      <span style={{ color: C.textDim, fontSize: 13 }}>~{script.estimated_duration || 5} min</span>
+                      <span style={{ color: C.textDim, fontSize: 13 }}>~{Math.round((script.estimated_duration || 0) / 60) || 1} min</span>
                       {script.created_at && <span style={{ color: C.textDim, fontSize: 13 }}>{timeAgo(script.created_at)}</span>}
                     </div>
                   </div>
