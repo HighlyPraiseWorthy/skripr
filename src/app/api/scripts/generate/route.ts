@@ -42,7 +42,7 @@ export async function POST(req: Request) {
       sourceTitle: topic || "",
       sourceNiche: niche || "general",
       videoLength: videoLength as any,
-      tone: "engaging",
+      tone: "entertaining",
       ttsOptimized: false,
     });
 
