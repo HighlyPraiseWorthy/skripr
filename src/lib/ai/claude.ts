@@ -112,7 +112,7 @@ function extractJSON(text: string, kind: "object" | "array"): unknown {
 export async function generateScript(input: ScriptGenerationInput): Promise<GeneratedScript> {
   const lengthGuide = {
     short: "60-90 seconds, 150-200 words",
-    medium: "5-8 minutes, 700-1200 words",
+    medium: "2-3 minutes, 300-400 words",
     long: "4-5 minutes, 600-700 words",
     ultraLong: "5-6 minutes, 700-900 words",
   };

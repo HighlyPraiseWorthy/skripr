@@ -70,7 +70,7 @@ export default function NewScriptPage() {
       fetch("/api/scripts/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ transcript: "", topic: topicVal, niche: nicheVal, videoLength: "long" }),
+        body: JSON.stringify({ transcript: "", topic: topicVal, niche: nicheVal, videoLength: "medium" }),
       })
         .then(r => r.json())
         .then(data => {
