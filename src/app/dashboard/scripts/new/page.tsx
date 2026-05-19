@@ -149,7 +149,12 @@ export default function NewScriptPage() {
         }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Failed to save script");
+      if (!res.ok) {
+        if (data.limitReached) {
+          throw new Error(data.error + " Go to Settings → upgrade your plan.");
+        }
+        throw new Error(data.error || "Failed to save script");
+      }
       router.push("/dashboard/scripts");
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Failed to save script");
