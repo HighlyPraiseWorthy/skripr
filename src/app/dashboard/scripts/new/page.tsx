@@ -71,7 +71,10 @@ export default function NewScriptPage() {
       setTranscriptText(pastedTranscript.trim());
       await runGenerate(pastedTranscript.trim());
     } else {
-      if (!youtubeUrl.trim()) { setError("Please enter a YouTube URL."); return; }
+      if (!youtubeUrl.trim()) {
+        if (nicheBendSource) { await runGenerate(""); return; }
+        setError("Please enter a YouTube URL."); return;
+      }
       setExtracting(true);
       try {
         const res = await fetch("/api/transcript", {

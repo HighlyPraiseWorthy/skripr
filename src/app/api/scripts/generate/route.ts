@@ -18,7 +18,7 @@ export async function POST(req: Request) {
 
   try {
   const { transcript, niche, topic, sourceVideoId, videoLength = "long" } = await req.json();
-  if (!transcript) return NextResponse.json({ error: "Transcript is required" }, { status: 400 });
+  // transcript is optional — if absent, generate from topic idea directly
 
   const maxWords: Record<string, number> = { short: 150, medium: 400, long: 500, ultraLong: 500 };
   const cap = maxWords[videoLength] ?? 400;
