@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -54,6 +54,15 @@ export default function NewScriptPage() {
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [extracting, setExtracting] = useState(false);
+  const [nicheBendSource, setNicheBendSource] = useState<string | null>(null);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const t = params.get("topic");
+    const n = params.get("niche");
+    if (t) { setTopic(t); setNicheBendSource(t); }
+    if (n) setNiche(n);
+  }, []);
 
   async function handleExtractOrProceed() {
     setError(null);
