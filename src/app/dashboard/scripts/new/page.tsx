@@ -68,7 +68,7 @@ export default function NewScriptPage() {
     if (t) {
       setStep("generating");
       const topicVal = t;
-      const nicheVal = n || "";
+      const nicheVal = (n && adj) ? `${n} × ${adj}` : (n || "");
       fetch("/api/scripts/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -142,7 +142,7 @@ export default function NewScriptPage() {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           title: generatedScript.title, content: generatedScript.fullScript || generatedScript.content,
-          niche: generatedScript.niche, topic: topic || null,
+          niche: generatedScript.niche || niche, topic: topic || null,
           wordCount: generatedScript.wordCount, estimatedDuration: generatedScript.estimatedDuration,
           sourceVideoId: youtubeUrl ? youtubeUrl.match(/[?&]v=([^&]+)/)?.[1] : null,
           structurePattern: generatedScript.structurePattern,
