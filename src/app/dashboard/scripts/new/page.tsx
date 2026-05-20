@@ -318,7 +318,7 @@ export default function NewScriptPage() {
               </div>
             </div>
             <div style={{ display: "flex", gap: 12, marginTop: 16 }}>
-              {/* ─── Magnet Word Section ─── */}
+              {/* ─── Viral Magnet Section ─── */}
               {generatedScript.magnetSuggestions && generatedScript.magnetSuggestions.length > 0 && (
                 <div style={{ marginBottom: 20, borderRadius: 14, border: "1px solid rgba(99,102,241,0.20)", background: "rgba(99,102,241,0.04)", padding: "18px 20px" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
@@ -385,11 +385,11 @@ export default function NewScriptPage() {
                             color: isApplied ? "#f87171" : "#fff",
                             boxShadow: isApplied ? "none" : "0 0 16px rgba(99,102,241,0.28)",
                           }}>
-                            {isApplied ? "Remove Magnet Word" : "Apply This Word"}
+                            {isApplied ? "Remove Viral Magnet" : "Apply Viral Magnet"}
                           </button>
                         ) : (
                           <div style={{ width: "100%", padding: "9px", borderRadius: 9, fontSize: 12, fontWeight: 600, textAlign: "center", background: "rgba(99,102,241,0.06)", color: C.textDim, border: "1px solid rgba(99,102,241,0.12)" }}>
-                            🔒 Upgrade to Starter to apply Magnet Words
+                            🔒 Upgrade to Starter to unlock Viral Magnet
                           </div>
                         )}
                       </div>
@@ -399,7 +399,7 @@ export default function NewScriptPage() {
                   {/* Live title preview */}
                   {appliedMagnetTitle && (
                     <div style={{ marginTop: 12, borderRadius: 8, background: "rgba(99,102,241,0.08)", border: "1px solid rgba(99,102,241,0.20)", padding: "10px 14px" }}>
-                      <span style={{ fontSize: 11, color: C.textDim, marginRight: 6 }}>🧲 Title with Magnet Word:</span>
+                      <span style={{ fontSize: 11, color: C.textDim, marginRight: 6 }}>🧲 Viral Magnet title:</span>
                       <span style={{ fontSize: 13, fontWeight: 600, color: C.textBright }}>{appliedMagnetTitle}</span>
                     </div>
                   )}
