@@ -14,10 +14,21 @@ const grad = "linear-gradient(135deg,#6366f1,#7c3aed,#a855f7)";
 type Step = "input" | "generating" | "result";
 type InputMode = "url" | "paste";
 
+interface MagnetSuggestion {
+  word: {
+    word: string; grade: string; category: string;
+    lift_range: string; why_it_works: string;
+    example_before: string; example_after: string;
+  };
+  injectedTitle: string;
+  score: number;
+}
+
 interface GeneratedScript {
   title: string; content: string; hook: string;
   fullScript?: string; sections?: unknown[]; structurePattern?: string;
   niche?: string; wordCount: number; estimatedDuration: number;
+  magnetSuggestions?: MagnetSuggestion[];
 }
 
 function InputGroup({ label, hint, required, children, style }: {
@@ -53,6 +64,9 @@ export default function NewScriptPage() {
   const [generatedScript, setGeneratedScript] = useState<GeneratedScript | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [userPlan, setUserPlan] = useState<string>("free");
+  const [selectedMagnet, setSelectedMagnet] = useState<number | null>(null);
+  const [appliedMagnetTitle, setAppliedMagnetTitle] = useState<string | null>(null);
   const [extracting, setExtracting] = useState(false);
   const [nicheBendSource, setNicheBendSource] = useState<string | null>(null);
 
@@ -83,10 +97,14 @@ export default function NewScriptPage() {
               setError(data.error);
             }
             setStep("input");
-          } else { setGeneratedScript(data); setStep("result"); }
+          } else { setGeneratedScript(data); setAppliedMagnetTitle(null); setSelectedMagnet(null); setStep("result"); }
         })
         .catch(e => { setError(e.message); setStep("input"); });
     }
+  }, []);
+
+  useEffect(() => {
+    fetch("/api/user/plan").then(r => r.json()).then(d => setUserPlan(d.plan || "free")).catch(() => {});
   }, []);
 
   async function handleExtractOrProceed() {
@@ -147,7 +165,7 @@ export default function NewScriptPage() {
       const res = await fetch("/api/scripts/save", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          title: generatedScript.title, content: generatedScript.fullScript || generatedScript.content,
+          title: appliedMagnetTitle || generatedScript.title, content: generatedScript.fullScript || generatedScript.content,
           niche: generatedScript.niche || niche, topic: topic || null,
           wordCount: generatedScript.wordCount, estimatedDuration: generatedScript.estimatedDuration,
           sourceVideoId: youtubeUrl ? youtubeUrl.match(/[?&]v=([^&]+)/)?.[1] : null,
@@ -300,6 +318,94 @@ export default function NewScriptPage() {
               </div>
             </div>
             <div style={{ display: "flex", gap: 12, marginTop: 16 }}>
+              {/* ─── Magnet Word Section ─── */}
+              {generatedScript.magnetSuggestions && generatedScript.magnetSuggestions.length > 0 && (
+                <div style={{ marginBottom: 20, borderRadius: 14, border: "1px solid rgba(99,102,241,0.20)", background: "rgba(99,102,241,0.04)", padding: "18px 20px" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
+                    <span style={{ fontSize: 16 }}>🧲</span>
+                    <span style={{ fontSize: 13, fontWeight: 700, color: C.textBright, letterSpacing: 0.2 }}>Magnet Word</span>
+                    <span style={{ fontSize: 11, color: C.textDim, marginLeft: 4 }}>Add one word to pull more clicks</span>
+                    {userPlan === "free" && (
+                      <span style={{ marginLeft: "auto", fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 6, background: "rgba(99,102,241,0.15)", color: C.badgeText }}>STARTER+</span>
+                    )}
+                  </div>
+
+                  {/* Word selector tabs */}
+                  <div style={{ display: "flex", gap: 8, marginBottom: 14 }}>
+                    {generatedScript.magnetSuggestions.map((s, i) => {
+                      const gradeColors: Record<string, string> = { S: "#f59e0b", A: "#818cf8", B: "#34d399", C: "#64748b" };
+                      const isSelected = selectedMagnet === i;
+                      return (
+                        <button key={i} onClick={() => setSelectedMagnet(isSelected ? null : i)} style={{
+                          padding: "5px 12px", borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: "pointer",
+                          border: isSelected ? `1.5px solid ${gradeColors[s.word.grade] || C.accent}` : `1px solid rgba(99,102,241,0.18)`,
+                          background: isSelected ? "rgba(99,102,241,0.12)" : "transparent",
+                          color: isSelected ? (gradeColors[s.word.grade] || C.accent) : C.textDim,
+                          transition: "all 0.15s",
+                        }}>
+                          {s.word.word}
+                          <span style={{ marginLeft: 5, fontSize: 10, opacity: 0.8 }}>{s.word.grade}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* Expanded card */}
+                  {selectedMagnet !== null && generatedScript.magnetSuggestions[selectedMagnet] && (() => {
+                    const s = generatedScript.magnetSuggestions![selectedMagnet];
+                    const gradeColors: Record<string, string> = { S: "#f59e0b", A: "#818cf8", B: "#34d399", C: "#64748b" };
+                    const gc = gradeColors[s.word.grade] || C.accent;
+                    const isApplied = appliedMagnetTitle === s.injectedTitle;
+                    const canApply = userPlan !== "free";
+                    return (
+                      <div style={{ borderRadius: 10, background: "rgba(0,0,0,0.18)", border: `1px solid rgba(99,102,241,0.14)`, padding: "14px 16px" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+                          <span style={{ fontSize: 18, fontWeight: 800, color: gc }}>{s.word.word}</span>
+                          <span style={{ fontSize: 10, fontWeight: 700, padding: "2px 7px", borderRadius: 5, background: `${gc}22`, color: gc }}>{s.word.grade}-tier</span>
+                          <span style={{ fontSize: 11, color: C.textDim, marginLeft: 4 }}>{s.word.category}</span>
+                          <span style={{ marginLeft: "auto", fontSize: 12, fontWeight: 700, color: "#34d399" }}>{s.word.lift_range} lift</span>
+                        </div>
+                        <p style={{ fontSize: 12, color: C.textDim, lineHeight: 1.6, marginBottom: 12 }}>{s.word.why_it_works}</p>
+                        <div style={{ borderRadius: 8, background: "rgba(99,102,241,0.06)", padding: "10px 12px", marginBottom: 12, fontSize: 12 }}>
+                          <div style={{ color: C.textDim, marginBottom: 4 }}>
+                            <span style={{ opacity: 0.6 }}>Before: </span>{generatedScript.title}
+                          </div>
+                          <div style={{ color: C.textBright, fontWeight: 600 }}>
+                            <span style={{ color: gc }}>After: </span>{s.injectedTitle}
+                          </div>
+                        </div>
+                        {canApply ? (
+                          <button onClick={() => {
+                            if (isApplied) { setAppliedMagnetTitle(null); }
+                            else { setAppliedMagnetTitle(s.injectedTitle); }
+                          }} style={{
+                            width: "100%", padding: "9px", borderRadius: 9, fontSize: 13, fontWeight: 600, cursor: "pointer",
+                            border: "none", transition: "all 0.15s",
+                            background: isApplied ? "rgba(248,113,113,0.10)" : `linear-gradient(135deg,#6366f1,#7c3aed,#a855f7)`,
+                            color: isApplied ? "#f87171" : "#fff",
+                            boxShadow: isApplied ? "none" : "0 0 16px rgba(99,102,241,0.28)",
+                          }}>
+                            {isApplied ? "Remove Magnet Word" : "Apply This Word"}
+                          </button>
+                        ) : (
+                          <div style={{ width: "100%", padding: "9px", borderRadius: 9, fontSize: 12, fontWeight: 600, textAlign: "center", background: "rgba(99,102,241,0.06)", color: C.textDim, border: "1px solid rgba(99,102,241,0.12)" }}>
+                            🔒 Upgrade to Starter to apply Magnet Words
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })()}
+
+                  {/* Live title preview */}
+                  {appliedMagnetTitle && (
+                    <div style={{ marginTop: 12, borderRadius: 8, background: "rgba(99,102,241,0.08)", border: "1px solid rgba(99,102,241,0.20)", padding: "10px 14px" }}>
+                      <span style={{ fontSize: 11, color: C.textDim, marginRight: 6 }}>🧲 Title with Magnet Word:</span>
+                      <span style={{ fontSize: 13, fontWeight: 600, color: C.textBright }}>{appliedMagnetTitle}</span>
+                    </div>
+                  )}
+                </div>
+              )}
+
               <button onClick={() => setStep("input")} style={{ flex: 1, padding: "12px 20px", borderRadius: 14, background: "rgba(99,102,241,0.08)", color: C.accent, fontSize: 14, fontWeight: 500, border: "1px solid rgba(99,102,241,0.18)", cursor: "pointer" }}>
                 ← Regenerate
               </button>
