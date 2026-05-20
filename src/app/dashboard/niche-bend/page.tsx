@@ -62,6 +62,7 @@ export default function NicheBendPage() {
   const [ideas, setIdeas] = useState<CrossoverIdea[]>([]);
   const [magnetWords, setMagnetWords] = useState<MagnetWordOption[]>([]);
   const [selectedMagnetWord, setSelectedMagnetWord] = useState<string | null>(null);
+  const [magnetGradeFilter, setMagnetGradeFilter] = useState<string>("all");
   const [appliedMagnetWord, setAppliedMagnetWord] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
