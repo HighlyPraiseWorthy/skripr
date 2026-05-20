@@ -24,16 +24,21 @@ const C = {
   inputBorder: "rgba(99,102,241,0.12)",
 };
 
+interface MagnetWordOption {
+  id: string;
+  word: string;
+  grade: string;
+  lift_range: string;
+  why_it_works: string;
+  category: string;
+}
+
 interface CrossoverIdea {
   title: string;
   description: string;
   viralPotential: number;
   competitionLevel: string;
   format: string;
-  viralMagnet?: {
-    word: { word: string; grade: string; lift_range: string };
-    injectedTitle: string;
-  } | null;
 }
 
 function sectionGlow(key: string) {
@@ -55,6 +60,9 @@ export default function NicheBendPage() {
   const [adjacentNiches, setAdjacentNiches] = useState<Niche[]>([]);
   const [selectedAdjacent, setSelectedAdjacent] = useState("");
   const [ideas, setIdeas] = useState<CrossoverIdea[]>([]);
+  const [magnetWords, setMagnetWords] = useState<MagnetWordOption[]>([]);
+  const [selectedMagnetWord, setSelectedMagnetWord] = useState<string | null>(null);
+  const [appliedMagnetWord, setAppliedMagnetWord] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -67,10 +75,18 @@ export default function NicheBendPage() {
     }
   }, [isLoaded, isSignedIn]);
 
+  useEffect(() => {
+    fetch("/api/magnet-words")
+      .then(r => r.json())
+      .then(d => setMagnetWords(d.words || []))
+      .catch(() => {});
+  }, []);
+
   function handleNicheSelect(nicheId: string) {
     setSelectedNiche(nicheId);
     setSelectedAdjacent("");
     setIdeas([]);
+    setAppliedMagnetWord(null);
     setAdjacentNiches(getAdjacentNiches(nicheId));
   }
 
@@ -82,10 +98,11 @@ export default function NicheBendPage() {
       const res = await fetch("/api/niche-bend/ideas", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nicheA: selectedNiche, nicheB: selectedAdjacent }),
+        body: JSON.stringify({ nicheA: selectedNiche, nicheB: selectedAdjacent, viralMagnetWord: selectedMagnetWord || undefined }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to generate ideas");
+      setAppliedMagnetWord(selectedMagnetWord);
       setIdeas(data.ideas || []);
     } catch (e: any) {
       setError(e.message);
@@ -357,7 +374,46 @@ export default function NicheBendPage() {
         {/* Generate button */}
         {selectedNiche && selectedAdjacent && (
           <div style={{ marginBottom: 28 }}>
-            <button
+                          {/* ─── Viral Magnet Picker ─── */}
+              {magnetWords.length > 0 && (
+                <div style={{ marginBottom: 16, borderRadius: 14, border: "1px solid rgba(99,102,241,0.18)", background: "rgba(99,102,241,0.04)", padding: "16px 18px" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+                    <span style={{ fontSize: 14 }}>🧲</span>
+                    <span style={{ fontSize: 13, fontWeight: 700, color: C.textBright }}>Viral Magnet</span>
+                    <span style={{ fontSize: 11, color: C.textDim }}>Pick a word to power every title</span>
+                    {selectedMagnetWord && (
+                      <button onClick={() => setSelectedMagnetWord(null)} style={{ marginLeft: "auto", fontSize: 10, color: C.textDim, background: "none", border: "none", cursor: "pointer", padding: "2px 6px" }}>
+                        Clear
+                      </button>
+                    )}
+                  </div>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                    {magnetWords.map(mw => {
+                      const gc = mw.grade === "S" ? "#f59e0b" : mw.grade === "A" ? "#818cf8" : mw.grade === "B" ? "#34d399" : "#64748b";
+                      const isSelected = selectedMagnetWord === mw.word;
+                      return (
+                        <button key={mw.id} onClick={() => setSelectedMagnetWord(isSelected ? null : mw.word)} title={mw.why_it_works} style={{
+                          display: "flex", alignItems: "center", gap: 5,
+                          padding: "6px 12px", borderRadius: 8, cursor: "pointer",
+                          border: isSelected ? `1.5px solid ${gc}` : "1px solid rgba(99,102,241,0.18)",
+                          background: isSelected ? `${gc}18` : "transparent",
+                          transition: "all 0.15s",
+                        }}>
+                          <span style={{ fontSize: 13, fontWeight: 800, color: isSelected ? gc : C.textBright }}>{mw.word}</span>
+                          <span style={{ fontSize: 9, fontWeight: 700, padding: "1px 5px", borderRadius: 4, background: `${gc}22`, color: gc }}>{mw.grade}</span>
+                          <span style={{ fontSize: 10, color: "#34d399", fontWeight: 600 }}>{mw.lift_range}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                  {selectedMagnetWord && (
+                    <div style={{ marginTop: 10, fontSize: 11, color: C.textDim, padding: "6px 10px", borderRadius: 7, background: "rgba(99,102,241,0.06)" }}>
+                      🧲 Every title will be crafted with <span style={{ color: C.textBright, fontWeight: 700 }}>"{selectedMagnetWord}"</span> naturally woven in
+                    </div>
+                  )}
+                </div>
+              )}
+              <button
               onClick={generateIdeas}
               disabled={isLoading}
               style={{
@@ -405,15 +461,7 @@ export default function NicheBendPage() {
                 >
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16 }}>
                     <div style={{ flex: 1 }}>
-                      {idea.viralMagnet && (
-                        <div style={{ display: "inline-flex", alignItems: "center", gap: 5, marginBottom: 8, padding: "3px 10px", borderRadius: 7, background: "rgba(99,102,241,0.10)", border: "1px solid rgba(99,102,241,0.20)" }}>
-                          <span style={{ fontSize: 12 }}>🧲</span>
-                          <span style={{ fontSize: 11, fontWeight: 700, color: C.accent }}>Viral Magnet:</span>
-                          <span style={{ fontSize: 11, fontWeight: 800, color: idea.viralMagnet.word.grade === "S" ? "#f59e0b" : idea.viralMagnet.word.grade === "A" ? "#818cf8" : idea.viralMagnet.word.grade === "B" ? "#34d399" : "#64748b" }}>{idea.viralMagnet.word.word}</span>
-                          <span style={{ fontSize: 10, color: "#34d399", fontWeight: 600 }}>{idea.viralMagnet.word.lift_range}</span>
-                          <span style={{ fontSize: 10, color: C.textDim, marginLeft: 2 }}>→ {idea.viralMagnet.injectedTitle}</span>
-                        </div>
-                      )}
+
                       <h3 style={{ fontSize: 16, fontWeight: 600, color: C.textBright, marginBottom: 6 }}>
                         {idea.title}
                       </h3>
