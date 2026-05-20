@@ -444,9 +444,17 @@ export default function NicheBendPage() {
         {/* Ideas list */}
         {ideas.length > 0 && (
           <div>
-            <h2 style={{ fontSize: 20, fontWeight: 700, color: C.textBright, marginBottom: 16, letterSpacing: -0.3 }}>
+            <h2 style={{ fontSize: 20, fontWeight: 700, color: C.textBright, marginBottom: 8, letterSpacing: -0.3 }}>
               Crossover Ideas
             </h2>
+            {appliedMagnetWord && (
+              <div style={{ display: "inline-flex", alignItems: "center", gap: 6, marginBottom: 14, padding: "5px 12px", borderRadius: 8, background: "rgba(99,102,241,0.10)", border: "1px solid rgba(99,102,241,0.20)" }}>
+                <span>🧲</span>
+                <span style={{ fontSize: 12, fontWeight: 600, color: C.accent }}>Viral Magnet active:</span>
+                <span style={{ fontSize: 12, fontWeight: 800, color: C.textBright }}>"{appliedMagnetWord}"</span>
+                <span style={{ fontSize: 11, color: C.textDim }}>— woven into every title</span>
+              </div>
+            )}
             <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
               {ideas.map((idea, i) => (
                 <div
