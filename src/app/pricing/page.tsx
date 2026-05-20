@@ -13,6 +13,17 @@ const C = {
 };
 const grad = "linear-gradient(135deg,#6366f1,#7c3aed,#a855f7)";
 
+const glowRingStyle = `
+  @keyframes spin-glow {
+    0%   { transform: translateX(-50%) rotate(0deg); }
+    100% { transform: translateX(-50%) rotate(360deg); }
+  }
+  @keyframes pulse-glow {
+    0%, 100% { opacity: 0.6; }
+    50%       { opacity: 1; }
+  }
+`;
+
 const plans = [
   {
     name: "Starter", price: "$19", period: "/month",
@@ -64,6 +75,7 @@ const plans = [
 export default function PricingPage() {
   return (
     <div style={{ minHeight: "100vh", background: C.bg, color: C.text, fontFamily: "system-ui,-apple-system,sans-serif" }}>
+      <style>{glowRingStyle}</style>
       <div aria-hidden style={{ position: "fixed", top: -200, left: "50%", transform: "translateX(-50%)", width: 700, height: 400, borderRadius: "50%", background: "radial-gradient(circle,rgba(99,102,241,0.10) 0%,transparent 70%)", pointerEvents: "none", zIndex: 0 }} />
 
       <nav style={{ position: "relative", zIndex: 1, padding: "20px 40px", display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: `1px solid ${C.border}` }}>
@@ -87,6 +99,25 @@ export default function PricingPage() {
       <div style={{ position: "relative", zIndex: 1, maxWidth: 1020, margin: "0 auto", padding: "0 24px 90px", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(290px, 1fr))", gap: 18, alignItems: "start" }}>
         {plans.map((plan) => (
           <div key={plan.name} style={{ background: plan.highlight ? "#161630" : C.cardBg, border: `1px solid ${plan.highlight ? "rgba(129,140,248,0.45)" : C.border}`, borderRadius: 18, padding: "28px 24px", position: "relative", boxShadow: plan.highlight ? "0 0 48px rgba(99,102,241,0.18)" : "none" }}>
+            {plan.highlight && (
+              <>
+                {/* Spinning glow ring */}
+                <div aria-hidden style={{
+                  position: "absolute", inset: -2, borderRadius: 20,
+                  background: "conic-gradient(from 0deg, transparent 0deg, rgba(99,102,241,0.8) 60deg, rgba(168,85,247,0.9) 120deg, transparent 180deg, transparent 360deg)",
+                  animation: "spin-glow 3s linear infinite",
+                  zIndex: -1,
+                  filter: "blur(4px)",
+                }} />
+                <div aria-hidden style={{
+                  position: "absolute", inset: -1, borderRadius: 19,
+                  background: "conic-gradient(from 180deg, transparent 0deg, rgba(99,102,241,0.5) 60deg, rgba(168,85,247,0.6) 120deg, transparent 180deg, transparent 360deg)",
+                  animation: "spin-glow 3s linear infinite reverse",
+                  zIndex: -1,
+                  filter: "blur(2px)",
+                }} />
+              </>
+            )}
             {plan.badge && (
               <div style={{ position: "absolute", top: -12, left: "50%", transform: "translateX(-50%)", background: grad, color: "#fff", fontSize: 11, fontWeight: 700, letterSpacing: 0.6, padding: "3px 14px", borderRadius: 20, whiteSpace: "nowrap" as const, boxShadow: "0 0 14px rgba(99,102,241,0.40)" }}>{plan.badge}</div>
             )}
