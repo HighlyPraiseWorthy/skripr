@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { generateScript } from "@/lib/ai/claude";
 import { checkScriptLimit } from "@/lib/usage";
+import { getMagnetSuggestions } from "@/lib/magnet-word";
 
 export const maxDuration = 60;
 
@@ -54,7 +55,13 @@ export async function POST(req: Request) {
     const elapsed = Date.now() - startTime;
     console.log(`[generate] done in ${elapsed}ms`);
 
-    return NextResponse.json(script);
+    let magnetSuggestions = [];
+    try {
+      magnetSuggestions = await getMagnetSuggestions(script.title || "", niche || "general");
+    } catch (e) {
+      console.error("[magnet] suggestion error:", e);
+    }
+    return NextResponse.json({ ...script, magnetSuggestions });
   } catch (error: any) {
     console.error("Script generation error:", error.message);
     return NextResponse.json({ error: error.message || "Failed to generate script" }, { status: 500 });
