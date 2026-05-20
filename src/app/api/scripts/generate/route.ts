@@ -55,7 +55,7 @@ export async function POST(req: Request) {
     const elapsed = Date.now() - startTime;
     console.log(`[generate] done in ${elapsed}ms`);
 
-    let magnetSuggestions = [];
+    let magnetSuggestions: import("@/lib/magnet-word").MagnetSuggestion[] = [];
     try {
       magnetSuggestions = await getMagnetSuggestions(script.title || "", niche || "general");
     } catch (e) {
