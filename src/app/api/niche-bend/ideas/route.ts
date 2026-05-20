@@ -34,7 +34,7 @@ export async function POST(req: Request) {
 These should be "niche bend" ideas — videos that intentionally cross-pollinate between the two niches to break out of algorithmic bubbles.${magnetInstruction}
 
 For each idea, provide:
-- Title (catchy, clickable — must feel like something people actually want to click)
+- Title: MUST pass all three: (1) searchable keyword present, (2) emotional trigger word present (quietly/secretly/actually/everyone gets wrong/hidden/nobody mentions/cost you/revealed), (3) curiosity gap present (implies hidden answer or counterintuitive truth). NEVER start with "How to", "The best", "Complete guide", "Overview". Use openers like: "the problem nobody talks about with...", "why this stopped working", "what nobody tells you about...", "the part everyone misses"
 - Description (2-3 sentences explaining the concept)
 - Viral potential score (0-100)
 - Format (list, challenge, comparison, story, experiment, reaction, educational, documentary)

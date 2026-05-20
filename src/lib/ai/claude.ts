@@ -131,6 +131,38 @@ Video length: ${lengthGuide[input.videoLength]}
 Tone: ${input.tone}
 TTS optimized: ${input.ttsOptimized ? "Yes — short sentences, mark pauses with [PAUSE], mark emphasis with [EMPHASIS]" : "No"}
 
+TITLE RULES — the generated "title" field MUST obey all of these:
+1. NEVER start with: "How to use", "The best", "Complete guide", "Overview of", "Introduction to", "Everything you need to know", "Top 10 ways to", "Explained in"
+2. MUST contain all three layers simultaneously:
+   - Searchable: a keyword phrase the target audience actually types into YouTube
+   - Emotional trigger: a word/phrase signaling stakes, surprise, loss, urgency, or insider advantage (use: quietly · secretly · actually · really · everyone gets wrong · nobody mentions · hidden · exposed · cost you · revealed)
+   - Curiosity gap: implies a hidden answer, common mistake, or counterintuitive truth
+3. MUST fail the "generic test" — it cannot work for a different video with only the topic word swapped
+4. Express ONE idea only
+
+STRONG TITLE OPENERS (use these patterns naturally):
+"the problem nobody talks about with..."
+"what nobody tells you about..."
+"the part everyone misses about..."
+"why this stopped working — and..."
+"the truth about..."
+"what's actually going on with..."
+"why [topic] is quietly..."
+"the hidden downside of..."
+
+STRONG TITLE CLOSERS (end with tension):
+"(most people get this wrong)"
+"(and why it works)"
+"(the actual formula)"
+"(what changed completely)"
+"(no one is talking about)"
+"(the real story)"
+
+BAD TITLE → GOOD TITLE examples:
+❌ "How to Use AI for YouTube Scripts" → ✅ "why AI scripts are quietly killing your channel (and what to use instead)"
+❌ "The Best Script Generator for Creators" → ✅ "the part everyone misses when picking a script tool"
+❌ "YouTube Script Writing Explained" → ✅ "what actually makes someone click your video (most creators get this wrong)"
+
 Output JSON with this exact structure:
 {
   "title": "string",
