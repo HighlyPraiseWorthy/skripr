@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { Anthropic } from "@anthropic-ai/sdk";
+import { getMagnetSuggestions } from "@/lib/magnet-word";
 
 // Allow up to 60 seconds for the Anthropic call to complete.
 // Vercel Hobby plan supports 60s when explicitly set.
@@ -75,7 +76,17 @@ Respond with ONLY a valid JSON array. No preamble, no explanation, no markdown c
       console.error("JSON parse error:", e.message, "\nText (last 200):", jsonText.slice(-200));
       return NextResponse.json({ error: "Generated response was malformed JSON — try again" }, { status: 500 });
     }
-    return NextResponse.json({ ideas });
+    const ideasWithMagnets = await Promise.all(
+      ideas.map(async (idea: any) => {
+        try {
+          const suggestions = await getMagnetSuggestions(idea.title || "", nicheA);
+          return { ...idea, viralMagnet: suggestions[0] || null };
+        } catch {
+          return { ...idea, viralMagnet: null };
+        }
+      })
+    );
+    return NextResponse.json({ ideas: ideasWithMagnets });
   } catch (error: any) {
     console.error("Niche bend ideas error:", error);
     return NextResponse.json({
