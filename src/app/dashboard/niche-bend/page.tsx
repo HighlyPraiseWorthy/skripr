@@ -409,7 +409,7 @@ export default function NicheBendPage() {
                         <div style={{ display: "inline-flex", alignItems: "center", gap: 5, marginBottom: 8, padding: "3px 10px", borderRadius: 7, background: "rgba(99,102,241,0.10)", border: "1px solid rgba(99,102,241,0.20)" }}>
                           <span style={{ fontSize: 12 }}>🧲</span>
                           <span style={{ fontSize: 11, fontWeight: 700, color: C.accent }}>Viral Magnet:</span>
-                          <span style={{ fontSize: 11, fontWeight: 800, color: (() => ({ S: "#f59e0b", A: "#818cf8", B: "#34d399", C: "#64748b" } as Record<string,string>)()[idea.viralMagnet.word.grade] || C.accent }}>{idea.viralMagnet.word.word}</span>
+                          <span style={{ fontSize: 11, fontWeight: 800, color: idea.viralMagnet.word.grade === "S" ? "#f59e0b" : idea.viralMagnet.word.grade === "A" ? "#818cf8" : idea.viralMagnet.word.grade === "B" ? "#34d399" : "#64748b" }}>{idea.viralMagnet.word.word}</span>
                           <span style={{ fontSize: 10, color: "#34d399", fontWeight: 600 }}>{idea.viralMagnet.word.lift_range}</span>
                           <span style={{ fontSize: 10, color: C.textDim, marginLeft: 2 }}>→ {idea.viralMagnet.injectedTitle}</span>
                         </div>
