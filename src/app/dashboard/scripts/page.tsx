@@ -1,4 +1,5 @@
 import { auth } from "@clerk/nextjs/server";
+import { checkScriptLimit } from "@/lib/usage";
 import { supabaseAdmin } from "@/lib/db/supabase";
 import Link from "next/link";
 import type { Script } from "@/lib/types/script";
@@ -56,6 +57,13 @@ export default async function ScriptsPage() {
     scriptsError = e.message;
   }
 
+  const usageData = await checkScriptLimit(userId).catch(() => ({ used: 0, limit: 2, plan: "free", allowed: true }));
+  const usageUsed = usageData.used;
+  const usageLimit = usageData.limit;
+  const usagePlan = usageData.plan;
+  const usagePct = usageLimit === Infinity ? 0 : Math.min(100, Math.round((usageUsed / usageLimit) * 100));
+  const usageColor = usagePct >= 100 ? "#f87171" : usagePct >= 80 ? "#f59e0b" : "#818cf8";
+
   return (
     <div style={{ padding: 28, minHeight: "100vh", background: C.bg }}>
       <div aria-hidden style={{ position: "fixed", top: -180, right: -120, width: 520, height: 520, borderRadius: "50%", background: "radial-gradient(circle,rgba(99,102,241,0.15) 0%,transparent 70%)", pointerEvents: "none", zIndex: 0 }} />
@@ -68,6 +76,33 @@ export default async function ScriptsPage() {
             <span style={{ fontSize: 18, lineHeight: 1 }}>+</span>New Script
           </Link>
         </div>
+
+        {/* ─── Usage Bar ─── */}
+        {usageLimit !== Infinity && (
+          <div style={{ marginBottom: 24, borderRadius: 14, background: "rgba(99,102,241,0.06)", border: "1px solid rgba(99,102,241,0.12)", padding: "14px 18px" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <span style={{ fontSize: 13, fontWeight: 600, color: C.textBright }}>Scripts this month</span>
+                <span style={{ fontSize: 11, padding: "2px 8px", borderRadius: 6, background: "rgba(99,102,241,0.12)", color: C.badgeText, textTransform: "uppercase" as const, fontWeight: 700 }}>{usagePlan}</span>
+              </div>
+              <span style={{ fontSize: 13, fontWeight: 700, color: usageColor }}>{usageUsed} / {usageLimit}</span>
+            </div>
+            <div style={{ height: 6, borderRadius: 6, background: "rgba(99,102,241,0.12)", overflow: "hidden" }}>
+              <div style={{ height: "100%", width: `${usagePct}%`, borderRadius: 6, background: usageColor, transition: "width 0.4s ease" }} />
+            </div>
+            {usagePct >= 100 && (
+              <div style={{ marginTop: 10, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <span style={{ fontSize: 12, color: "#f87171" }}>Monthly limit reached</span>
+                <a href="/dashboard/settings" style={{ fontSize: 12, fontWeight: 600, color: "#818cf8", textDecoration: "none" }}>Upgrade →</a>
+              </div>
+            )}
+            {usagePct >= 80 && usagePct < 100 && (
+              <div style={{ marginTop: 8 }}>
+                <span style={{ fontSize: 12, color: "#f59e0b" }}>{usageLimit - usageUsed} script{usageLimit - usageUsed !== 1 ? "s" : ""} left this month</span>
+              </div>
+            )}
+          </div>
+        )}
 
         {scriptsError && (
           <div style={{ borderRadius: 14, background: "rgba(248,113,113,0.08)", border: "1px solid rgba(248,113,113,0.2)", padding: "14px 18px", marginBottom: 20 }}>

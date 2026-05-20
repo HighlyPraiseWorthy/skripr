@@ -65,6 +65,7 @@ export default function NewScriptPage() {
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [userPlan, setUserPlan] = useState<string>("free");
+  const [upgradeWall, setUpgradeWall] = useState(false);
   const [selectedMagnet, setSelectedMagnet] = useState<number | null>(null);
   const [appliedMagnetTitle, setAppliedMagnetTitle] = useState<string | null>(null);
   const [extracting, setExtracting] = useState(false);
@@ -92,7 +93,7 @@ export default function NewScriptPage() {
         .then(data => {
           if (data.error) {
             if (data.limitReached) {
-              setError(data.error + " Go to Settings to subscribe.");
+              setUpgradeWall(true);
             } else {
               setError(data.error);
             }
@@ -109,6 +110,7 @@ export default function NewScriptPage() {
 
   async function handleExtractOrProceed() {
     setError(null);
+    setUpgradeWall(false);
     if (inputMode === "paste") {
       if (!pastedTranscript.trim()) { setError("Please paste a transcript first."); return; }
       setTranscriptText(pastedTranscript.trim());
@@ -209,6 +211,25 @@ export default function NewScriptPage() {
         {/* ─── INPUT STEP ─── */}
         {step === "input" && (
           <div style={{ borderRadius: 18, background: C.cardBg, border: `1px solid ${C.border}`, padding: "22px 26px" }}>
+          {upgradeWall && (
+            <div style={{ marginBottom: 20, borderRadius: 16, background: "rgba(99,102,241,0.06)", border: "1px solid rgba(99,102,241,0.20)", padding: "24px 24px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
+                <span style={{ fontSize: 20 }}>🚀</span>
+                <span style={{ fontSize: 16, fontWeight: 700, color: C.textBright }}>You've used all your free scripts</span>
+              </div>
+              <p style={{ fontSize: 13, color: C.textDim, lineHeight: 1.6, marginBottom: 18 }}>
+                Free accounts include 2 scripts per month. Upgrade to Starter for 12 scripts, humanized titles, Viral Magnet, and Niche Bend access.
+              </p>
+              <div style={{ display: "flex", gap: 10 }}>
+                <a href="/dashboard/settings" style={{ flex: 1, display: "block", textAlign: "center", padding: "11px", borderRadius: 10, background: "linear-gradient(135deg,#6366f1,#7c3aed,#a855f7)", color: "#fff", fontSize: 14, fontWeight: 600, textDecoration: "none", boxShadow: "0 0 18px rgba(99,102,241,0.30)" }}>
+                  Upgrade to Starter — $19/mo
+                </a>
+                <button onClick={() => setUpgradeWall(false)} style={{ padding: "11px 16px", borderRadius: 10, background: "transparent", border: "1px solid rgba(99,102,241,0.20)", color: C.textDim, fontSize: 13, cursor: "pointer" }}>
+                  Dismiss
+                </button>
+              </div>
+            </div>
+          )}
             {/* Tab switcher */}
             <div style={{ display: "flex", gap: 4, marginBottom: 22, background: "rgba(99,102,241,0.06)", borderRadius: 12, padding: 4 }}>
               {(["url", "paste"] as InputMode[]).map(mode => (
