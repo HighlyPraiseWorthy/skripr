@@ -14,6 +14,15 @@ const grad = "linear-gradient(135deg,#6366f1,#7c3aed,#a855f7)";
 type Step = "input" | "generating" | "result";
 type InputMode = "url" | "paste";
 
+interface MagnetWordOption {
+  id: string;
+  word: string;
+  grade: string;
+  lift_range: string;
+  why_it_works: string;
+  category: string;
+}
+
 interface MagnetSuggestion {
   word: {
     word: string; grade: string; category: string;
@@ -66,6 +75,9 @@ export default function NewScriptPage() {
   const [saving, setSaving] = useState(false);
   const [userPlan, setUserPlan] = useState<string>("free");
   const [upgradeWall, setUpgradeWall] = useState(false);
+  const [magnetWords, setMagnetWords] = useState<MagnetWordOption[]>([]);
+  const [selectedViralWord, setSelectedViralWord] = useState<string | null>(null);
+  const [magnetGradeFilterScript, setMagnetGradeFilterScript] = useState<string>("all");
   const [selectedMagnet, setSelectedMagnet] = useState<number | null>(null);
   const [appliedMagnetTitle, setAppliedMagnetTitle] = useState<string | null>(null);
   const [extracting, setExtracting] = useState(false);
@@ -87,7 +99,7 @@ export default function NewScriptPage() {
       fetch("/api/scripts/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ transcript: "", topic: topicVal, niche: nicheVal, videoLength: "medium" }),
+        body: JSON.stringify({ transcript: "", topic: topicVal, niche: nicheVal, videoLength: "medium", viralMagnetWord: selectedViralWord || undefined }),
       })
         .then(r => r.json())
         .then(data => {
@@ -106,6 +118,10 @@ export default function NewScriptPage() {
 
   useEffect(() => {
     fetch("/api/user/plan").then(r => r.json()).then(d => setUserPlan(d.plan || "free")).catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    fetch("/api/magnet-words").then(r => r.json()).then(d => setMagnetWords(d.words || [])).catch(() => {});
   }, []);
 
   async function handleExtractOrProceed() {
@@ -144,7 +160,7 @@ export default function NewScriptPage() {
       const res = await fetch("/api/scripts/generate", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ transcript, niche: niche || undefined, topic: topic || undefined, videoLength,
-          sourceVideoId: youtubeUrl ? youtubeUrl.match(/[?&]v=([^&]+)/)?.[1] : undefined }),
+          sourceVideoId: youtubeUrl ? youtubeUrl.match(/[?&]v=([^&]+)/)?.[1] : undefined, viralMagnetWord: selectedViralWord || undefined }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to generate script");
@@ -288,6 +304,73 @@ export default function NewScriptPage() {
                 onFocus={e => e.currentTarget.style.borderColor = "rgba(99,102,241,0.35)"}
                 onBlur={e => e.currentTarget.style.borderColor = C.border} />
             </InputGroup>
+
+            {/* ─── Viral Magnet Picker (pre-gen) ─── */}
+            {magnetWords.length > 0 && (
+              <div style={{ marginBottom: 16, borderRadius: 14, border: "1px solid rgba(99,102,241,0.18)", background: "rgba(99,102,241,0.04)", padding: "14px 16px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+                  <span style={{ fontSize: 14 }}>🧲</span>
+                  <span style={{ fontSize: 13, fontWeight: 700, color: C.textBright }}>Viral Magnet</span>
+                  <span style={{ fontSize: 11, color: C.textDim }}>Pick a word to bake into the title</span>
+                  {selectedViralWord && (
+                    <button onClick={() => setSelectedViralWord(null)} style={{ marginLeft: "auto", fontSize: 10, color: C.textDim, background: "none", border: "none", cursor: "pointer" }}>
+                      Clear
+                    </button>
+                  )}
+                  {userPlan === "free" && (
+                    <span style={{ marginLeft: selectedViralWord ? 4 : "auto", fontSize: 10, fontWeight: 700, padding: "2px 7px", borderRadius: 5, background: "rgba(99,102,241,0.12)", color: C.badgeText }}>STARTER+</span>
+                  )}
+                </div>
+                {/* Grade filter tabs */}
+                <div style={{ display: "flex", gap: 5, marginBottom: 8 }}>
+                  {["all", "S", "A", "B", "C"].map(g => {
+                    const gColors: Record<string, string> = { all: "#818cf8", S: "#f59e0b", A: "#818cf8", B: "#34d399", C: "#64748b" };
+                    const isActive = magnetGradeFilterScript === g;
+                    const gc = gColors[g] || "#818cf8";
+                    return (
+                      <button key={g} onClick={() => setMagnetGradeFilterScript(g)} style={{
+                        padding: "2px 8px", borderRadius: 5, fontSize: 10, fontWeight: 700, cursor: "pointer",
+                        border: isActive ? `1.5px solid ${gc}` : "1px solid rgba(99,102,241,0.16)",
+                        background: isActive ? `${gc}18` : "transparent",
+                        color: isActive ? gc : C.textDim, transition: "all 0.1s",
+                      }}>
+                        {g === "all" ? "All" : `${g}-tier`}
+                      </button>
+                    );
+                  })}
+                  <span style={{ marginLeft: "auto", fontSize: 10, color: C.textDim, alignSelf: "center" }}>
+                    {magnetWords.filter(w => magnetGradeFilterScript === "all" || w.grade === magnetGradeFilterScript).length} words
+                  </span>
+                </div>
+                {/* Word grid — scrollable */}
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 6, maxHeight: 120, overflowY: "auto" }}>
+                  {magnetWords
+                    .filter(mw => magnetGradeFilterScript === "all" || mw.grade === magnetGradeFilterScript)
+                    .map(mw => {
+                      const gc = mw.grade === "S" ? "#f59e0b" : mw.grade === "A" ? "#818cf8" : mw.grade === "B" ? "#34d399" : "#64748b";
+                      const isSelected = selectedViralWord === mw.word;
+                      const canSelect = userPlan !== "free";
+                      return (
+                        <button key={mw.id} onClick={() => canSelect && setSelectedViralWord(isSelected ? null : mw.word)} title={canSelect ? mw.why_it_works : "Upgrade to Starter to use Viral Magnet"} style={{
+                          display: "flex", alignItems: "center", gap: 4,
+                          padding: "4px 9px", borderRadius: 6, cursor: canSelect ? "pointer" : "default",
+                          border: isSelected ? `1.5px solid ${gc}` : "1px solid rgba(99,102,241,0.14)",
+                          background: isSelected ? `${gc}18` : "rgba(0,0,0,0.08)",
+                          opacity: canSelect ? 1 : 0.5, transition: "all 0.12s",
+                        }}>
+                          <span style={{ fontSize: 11, fontWeight: 700, color: isSelected ? gc : C.textBright }}>{mw.word}</span>
+                          <span style={{ fontSize: 8, fontWeight: 700, padding: "1px 3px", borderRadius: 3, background: `${gc}22`, color: gc }}>{mw.grade}</span>
+                        </button>
+                      );
+                    })}
+                </div>
+                {selectedViralWord && (
+                  <div style={{ marginTop: 8, fontSize: 11, color: C.textDim, padding: "5px 9px", borderRadius: 6, background: "rgba(99,102,241,0.06)" }}>
+                    🧲 <span style={{ color: C.textBright, fontWeight: 600 }}>"{selectedViralWord}"</span> will be woven into the title by Claude
+                  </div>
+                )}
+              </div>
+            )}
 
             <button onClick={handleExtractOrProceed} disabled={!canProceed || extracting}
               style={{

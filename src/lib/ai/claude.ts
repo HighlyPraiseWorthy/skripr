@@ -17,6 +17,7 @@ export interface ScriptGenerationInput {
   videoLength: "short" | "medium" | "long" | "ultraLong";
   tone: "educational" | "entertaining" | "storytelling" | "hype";
   ttsOptimized: boolean;
+  viralMagnetWord?: string;
 }
 
 export interface GeneratedScript {
@@ -120,12 +121,27 @@ export async function generateScript(input: ScriptGenerationInput): Promise<Gene
   const hasTranscript = input.sourceTranscript && input.sourceTranscript.trim().length > 10;
 
   const sourceSection = hasTranscript
-    ? `Source viral video:\nTitle: "${input.sourceTitle}"\nNiche: ${input.sourceNiche}\nTranscript excerpt (first 2000 chars):\n"""\n${input.sourceTranscript.slice(0, 2000)}\n"""\n\nAnalyze the source video's structure (hook type, retention beats, pacing, CTA) and apply that EXACT structural pattern to the new topic.`
+    ? `REFERENCE TRANSCRIPT TO REVERSE-ENGINEER:
+Title: "${input.sourceTitle}"
+Niche: ${input.sourceNiche}
+Full transcript:
+"""
+${input.sourceTranscript}
+"""
+
+STRUCTURAL REQUIREMENTS — you MUST mirror the reference transcript exactly:
+1. Hook style: use the same type of opening (question/story/stat/controversy) and same energy
+2. Argument flow: follow the same sequence of ideas — problem → insight → proof → solution → CTA
+3. Pacing: match the timing of reveals — where the reference drops the key insight, you drop yours
+4. Retention beats: keep the same number of pattern interrupts and reframes in the same positions
+5. Tone and voice: match the conversational register (casual/authoritative/storytelling)
+6. CTA style: mirror how the reference closes and asks for the subscribe/action
+The content adapts to the new topic — the structure is preserved.`
     : `Write an original, highly engaging script on this topic. No source transcript — create fresh content with a strong hook, clear structure, and compelling CTA.`;
 
   const userPrompt = `${sourceSection}
 
-Generate a NEW script about: "${input.targetTopic}"
+${hasTranscript ? "Recreate the reference structure above for this new topic:" : "Generate a highly engaging original script about:"} "${input.targetTopic}"
 Target niche: ${input.targetNiche}
 Video length: ${lengthGuide[input.videoLength]}
 Tone: ${input.tone}
@@ -162,6 +178,8 @@ BAD TITLE → GOOD TITLE examples:
 ❌ "How to Use AI for YouTube Scripts" → ✅ "why AI scripts are quietly killing your channel (and what to use instead)"
 ❌ "The Best Script Generator for Creators" → ✅ "the part everyone misses when picking a script tool"
 ❌ "YouTube Script Writing Explained" → ✅ "what actually makes someone click your video (most creators get this wrong)"
+${input.viralMagnetWord ? `
+VIRAL MAGNET REQUIREMENT: The title field MUST naturally incorporate the word "${input.viralMagnetWord}". Weave it in where it creates maximum curiosity or urgency — not forced, but inevitable.` : ""}
 
 Output JSON with this exact structure:
 {

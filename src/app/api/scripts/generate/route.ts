@@ -29,9 +29,9 @@ export async function POST(req: Request) {
   const startTime = Date.now();
 
   try {
-    const { transcript, niche, topic, sourceVideoId, videoLength = "long" } = await req.json();
+    const { transcript, niche, topic, sourceVideoId, videoLength = "long", viralMagnetWord } = await req.json();
 
-    const maxWords: Record<string, number> = { short: 150, medium: 400, long: 500, ultraLong: 500 };
+    const maxWords: Record<string, number> = { short: 300, medium: 600, long: 800, ultraLong: 800 };
     const cap = maxWords[videoLength] ?? 400;
     const truncated = truncateTranscript(transcript || "", cap);
     console.log(`[generate] length=${videoLength}`);
@@ -45,6 +45,7 @@ export async function POST(req: Request) {
       videoLength: videoLength as any,
       tone: "entertaining",
       ttsOptimized: false,
+      viralMagnetWord: viralMagnetWord || undefined,
     });
 
     const timeoutPromise = new Promise((_, reject) =>
