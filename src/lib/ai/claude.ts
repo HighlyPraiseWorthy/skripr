@@ -185,6 +185,20 @@ BAD TITLE → GOOD TITLE examples:
 ${input.viralMagnetWord ? `
 VIRAL MAGNET REQUIREMENT: The title field MUST naturally incorporate the word "${input.viralMagnetWord}". Weave it in where it creates maximum curiosity or urgency — not forced, but inevitable.` : ""}
 
+HOOK RULES — the "hook" field MUST use one of these 8 proven patterns. Pick the one that fits the topic best:
+1. Question — Surface a pain or curiosity directly: "Have you ever wondered why [X] never works?" / "What would you do if [scenario]?"
+2. Stat/Number — Lead with a surprising data point: "73% of creators who [X] will [bad outcome] within [timeframe]."
+3. Story — Drop into a scene with no setup: "Three years ago I [specific situation]..." — present tense, immediate.
+4. Myth-bust — Challenge the dominant belief: "Every guide about [topic] tells you [X]. Here's why that's backwards."
+5. Bold claim — State a counterintuitive result first: "This one [thing] is responsible for [outsized outcome] — and almost nobody uses it."
+6. Direct address — Speak to a specific person in a specific moment: "If you've ever [relatable struggle], stop what you're doing."
+7. Teaser — Promise a specific, concrete payoff: "By the end of this you'll know the exact [thing] that [specific result]."
+8. Pattern interrupt — Subvert expectations immediately: "Most videos about [topic] start with [common approach]. We're skipping all of that."
+
+HOOK ANTI-PATTERNS — NEVER start the hook with any of these:
+❌ "What if I told you..." ❌ "In this video..." ❌ "Today we're going to..." ❌ "Welcome back..." ❌ "Hey guys..." ❌ "In today's video..."
+The hook must feel like the video is ALREADY IN PROGRESS — no preamble, no host intro, straight to the tension.
+
 Output JSON with this exact structure:
 {
   "title": "string",

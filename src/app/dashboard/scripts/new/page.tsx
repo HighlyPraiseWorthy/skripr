@@ -78,6 +78,8 @@ export default function NewScriptPage() {
   const [magnetWords, setMagnetWords] = useState<MagnetWordOption[]>([]);
   const [selectedViralWord, setSelectedViralWord] = useState<string | null>(null);
   const [magnetGradeFilterScript, setMagnetGradeFilterScript] = useState<string>("all");
+  const [transcriptWordCount, setTranscriptWordCount] = useState<number | null>(null);
+  const [transcriptSource, setTranscriptSource] = useState<"auto" | "paste" | null>(null);
   const [selectedMagnet, setSelectedMagnet] = useState<number | null>(null);
   const [appliedMagnetTitle, setAppliedMagnetTitle] = useState<string | null>(null);
   const [extracting, setExtracting] = useState(false);
@@ -130,6 +132,8 @@ export default function NewScriptPage() {
     if (inputMode === "paste") {
       if (!pastedTranscript.trim()) { setError("Please paste a transcript first."); return; }
       setTranscriptText(pastedTranscript.trim());
+      setTranscriptWordCount(pastedTranscript.trim().split(/\s+/).filter(Boolean).length);
+      setTranscriptSource("paste");
       await runGenerate(pastedTranscript.trim());
     } else {
       if (!youtubeUrl.trim()) {
@@ -145,6 +149,8 @@ export default function NewScriptPage() {
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || "Failed to extract transcript");
         setTranscriptText(data.transcript);
+        setTranscriptWordCount(data.transcript.trim().split(/\s+/).filter(Boolean).length);
+        setTranscriptSource("auto");
         await runGenerate(data.transcript);
       } catch (err: unknown) {
         setError(err instanceof Error ? err.message : "Failed to extract transcript");
@@ -304,6 +310,21 @@ export default function NewScriptPage() {
                 onFocus={e => e.currentTarget.style.borderColor = "rgba(99,102,241,0.35)"}
                 onBlur={e => e.currentTarget.style.borderColor = C.border} />
             </InputGroup>
+
+            {/* ─── Source Confidence Badge ─── */}
+            {transcriptWordCount !== null && transcriptSource !== null && (
+              <div style={{ marginBottom: 12, display: "flex", alignItems: "center", gap: 8, padding: "7px 12px", borderRadius: 8, background: transcriptSource === "paste" ? "rgba(52,211,153,0.08)" : "rgba(251,191,36,0.08)", border: `1px solid ${transcriptSource === "paste" ? "rgba(52,211,153,0.25)" : "rgba(251,191,36,0.25)"}` }}>
+                <span style={{ fontSize: 13 }}>{transcriptSource === "paste" ? "✓" : "⚡"}</span>
+                <span style={{ fontSize: 11, fontWeight: 700, color: transcriptSource === "paste" ? "#34d399" : "#fbbf24" }}>
+                  {transcriptSource === "paste" ? "Manual transcript" : "Auto-extracted"}
+                </span>
+                <span style={{ fontSize: 11, color: C.textDim }}>·</span>
+                <span style={{ fontSize: 11, color: C.textDim }}>{transcriptWordCount.toLocaleString()} words</span>
+                {transcriptSource === "auto" && transcriptWordCount < 200 && (
+                  <span style={{ fontSize: 10, color: "#f87171", marginLeft: 4 }}>⚠ Short — consider pasting manually</span>
+                )}
+              </div>
+            )}
 
             {/* ─── Viral Magnet Picker (pre-gen) ─── */}
             {magnetWords.length > 0 && (
