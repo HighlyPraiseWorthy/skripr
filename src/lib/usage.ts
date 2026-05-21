@@ -2,14 +2,20 @@ import { supabaseAdmin } from "@/lib/db/supabase";
 import { PLAN_LIMITS, PlanId } from "@/lib/stripe/config";
 
 export async function getUserPlan(userId: string): Promise<PlanId> {
+  // Admin bypass
+  const adminIds = (process.env.ADMIN_USER_IDS || "").split(",").filter(Boolean);
+  if (adminIds.includes(userId)) return "agency";
+
   if (!supabaseAdmin) return "free";
   const { data } = await supabaseAdmin
     .from("user_profiles")
     .select("plan, subscription_status")
     .eq("user_id", userId)
     .single();
-  if (!data || data.subscription_status !== "active") return "free";
-  return (data.plan as PlanId) || "free";
+  if (!data) return "free";
+  // Honor active Stripe subscriptions
+  if (data.subscription_status === "active") return (data.plan as PlanId) || "free";
+  return "free";
 }
 
 export async function getScriptsThisMonth(userId: string): Promise<number> {
