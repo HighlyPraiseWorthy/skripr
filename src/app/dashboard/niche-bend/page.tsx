@@ -388,25 +388,48 @@ export default function NicheBendPage() {
                       </button>
                     )}
                   </div>
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-                    {magnetWords.map(mw => {
+                  {/* Grade filter tabs */}
+                <div style={{ display: "flex", gap: 6, marginBottom: 10 }}>
+                  {["all", "S", "A", "B", "C"].map(g => {
+                    const gColors: Record<string, string> = { all: "#818cf8", S: "#f59e0b", A: "#818cf8", B: "#34d399", C: "#64748b" };
+                    const isActive = magnetGradeFilter === g;
+                    const gc = gColors[g] || "#818cf8";
+                    return (
+                      <button key={g} onClick={() => setMagnetGradeFilter(g)} style={{
+                        padding: "3px 10px", borderRadius: 6, fontSize: 11, fontWeight: 700, cursor: "pointer",
+                        border: isActive ? `1.5px solid ${gc}` : "1px solid rgba(99,102,241,0.18)",
+                        background: isActive ? `${gc}18` : "transparent",
+                        color: isActive ? gc : C.textDim, transition: "all 0.12s",
+                      }}>
+                        {g === "all" ? "All" : `${g}-tier`}
+                      </button>
+                    );
+                  })}
+                  <span style={{ marginLeft: "auto", fontSize: 11, color: C.textDim, alignSelf: "center" }}>
+                    {magnetWords.filter(w => magnetGradeFilter === "all" || w.grade === magnetGradeFilter).length} words
+                  </span>
+                </div>
+                {/* Word grid — scrollable */}
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 7, maxHeight: 160, overflowY: "auto", paddingRight: 4 }}>
+                  {magnetWords
+                    .filter(mw => magnetGradeFilter === "all" || mw.grade === magnetGradeFilter)
+                    .map(mw => {
                       const gc = mw.grade === "S" ? "#f59e0b" : mw.grade === "A" ? "#818cf8" : mw.grade === "B" ? "#34d399" : "#64748b";
                       const isSelected = selectedMagnetWord === mw.word;
                       return (
                         <button key={mw.id} onClick={() => setSelectedMagnetWord(isSelected ? null : mw.word)} title={mw.why_it_works} style={{
                           display: "flex", alignItems: "center", gap: 5,
-                          padding: "6px 12px", borderRadius: 8, cursor: "pointer",
-                          border: isSelected ? `1.5px solid ${gc}` : "1px solid rgba(99,102,241,0.18)",
-                          background: isSelected ? `${gc}18` : "transparent",
-                          transition: "all 0.15s",
+                          padding: "5px 10px", borderRadius: 7, cursor: "pointer",
+                          border: isSelected ? `1.5px solid ${gc}` : "1px solid rgba(99,102,241,0.16)",
+                          background: isSelected ? `${gc}18` : "rgba(0,0,0,0.10)",
+                          transition: "all 0.12s",
                         }}>
-                          <span style={{ fontSize: 13, fontWeight: 800, color: isSelected ? gc : C.textBright }}>{mw.word}</span>
-                          <span style={{ fontSize: 9, fontWeight: 700, padding: "1px 5px", borderRadius: 4, background: `${gc}22`, color: gc }}>{mw.grade}</span>
-                          <span style={{ fontSize: 10, color: "#34d399", fontWeight: 600 }}>{mw.lift_range}</span>
+                          <span style={{ fontSize: 12, fontWeight: 700, color: isSelected ? gc : C.textBright }}>{mw.word}</span>
+                          <span style={{ fontSize: 9, fontWeight: 700, padding: "1px 4px", borderRadius: 3, background: `${gc}22`, color: gc }}>{mw.grade}</span>
                         </button>
                       );
                     })}
-                  </div>
+                </div>
                   {selectedMagnetWord && (
                     <div style={{ marginTop: 10, fontSize: 11, color: C.textDim, padding: "6px 10px", borderRadius: 7, background: "rgba(99,102,241,0.06)" }}>
                       🧲 Every title will be crafted with <span style={{ color: C.textBright, fontWeight: 700 }}>"{selectedMagnetWord}"</span> naturally woven in
