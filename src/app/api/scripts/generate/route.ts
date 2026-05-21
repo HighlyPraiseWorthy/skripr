@@ -38,7 +38,7 @@ export async function POST(req: Request) {
 
     const scriptPromise = generateScript({
       sourceTranscript: truncated,
-      targetTopic: topic || "viral content",
+      targetTopic: topic || "",
       targetNiche: niche || "general",
       sourceTitle: topic || "",
       sourceNiche: niche || "general",

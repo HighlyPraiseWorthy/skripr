@@ -141,7 +141,11 @@ The content adapts to the new topic — the structure is preserved.`
 
   const userPrompt = `${sourceSection}
 
-${hasTranscript ? "Recreate the reference structure above for this new topic:" : "Generate a highly engaging original script about:"} "${input.targetTopic}"
+${hasTranscript
+  ? (input.targetTopic
+    ? `Recreate the reference structure above, adapted for this new topic: "${input.targetTopic}"`
+    : `Recreate this reference script faithfully — same topic, same niche, same key arguments. Improve only the hook strength, title, section structure, and retention beats. Do NOT change what the video is about.`)
+  : `Generate a highly engaging original script about: "${input.targetTopic || "the requested topic"}"`}
 Target niche: ${input.targetNiche}
 Video length: ${lengthGuide[input.videoLength]}
 Tone: ${input.tone}
