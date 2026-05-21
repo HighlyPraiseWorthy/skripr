@@ -24,7 +24,14 @@ export async function getScriptsThisMonth(userId: string): Promise<number> {
   return count || 0;
 }
 
+const ADMIN_USER_IDS = (process.env.ADMIN_USER_IDS || "").split(",").filter(Boolean);
+
 export async function checkScriptLimit(userId: string): Promise<{ allowed: boolean; plan: PlanId; used: number; limit: number }> {
+  // Admin bypass — unlimited scripts for admin accounts
+  if (ADMIN_USER_IDS.includes(userId)) {
+    return { allowed: true, plan: "agency" as PlanId, used: 0, limit: Infinity };
+  }
+
   const plan = await getUserPlan(userId);
   const limit = PLAN_LIMITS[plan].scriptsPerMonth;
   if (limit === Infinity) return { allowed: true, plan, used: 0, limit };
