@@ -445,6 +445,12 @@ export default function NicheBendPage() {
             </button>
           </div>
 
+          {bendTab === "niches" && (
+            <p style={{ color: C.textDim, fontSize: 12, marginBottom: 12, lineHeight: 1.6 }}>
+              Select both niches above, then generate ideas that cross-pollinate between them to break out of your algorithmic bubble.
+            </p>
+          )}
+
           {selectedNiche && bendTab === "video" && (
             <div style={{ marginBottom: 8 }}>
               <p style={{ color: C.textDim, fontSize: 12, marginBottom: 12, lineHeight: 1.6 }}>
@@ -513,84 +519,7 @@ export default function NicheBendPage() {
             </div>
           )}
 
-          {selectedNiche && selectedAdjacent && bendTab === "niches" && (
-            <div style={{ marginBottom: 8 }}>
-              <div style={{ display: "flex", gap: 14, marginBottom: 8 }}>
-                {/* Your Niche picker */}
-                <div style={{ flex: 1 }}>
-                  <p style={{ fontSize: 11, fontWeight: 600, color: C.accent, letterSpacing: 0.4, marginBottom: 8, marginLeft: 2 }}>
-                    YOUR NICHE
-                  </p>
-                  <select
-                    value={selectedNiche}
-                    onChange={e => handleNicheSelect(e.target.value)}
-                    style={{
-                      width: "100%", padding: "10px 14px", borderRadius: 12,
-                      background: C.inputBg, color: C.text, fontSize: 14, fontWeight: 500,
-                      border: `1px solid ${C.inputBorder}`, outline: "none",
-                      cursor: "pointer", appearance: "auto",
-                    }}
-                  >
-                    <option value="">Select…</option>
-                    {nicheOptions.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
-                  </select>
-                  {selectedNiche && (
-                    <div style={{ marginTop: 10, padding: "10px 13px", borderRadius: 10, background: "rgba(99,102,241,0.06)", border: "1px solid rgba(99,102,241,0.10)", fontSize: 12, color: C.textDim, lineHeight: 1.5 }}>
-                      {NICHES.find(n => n.id === selectedNiche)?.description}
-                      <div style={{ display: "flex", gap: 12, marginTop: 5, fontSize: 11, color: C.textDim }}>
-                        <span>Avg RPM: {NICHES.find(n => n.id === selectedNiche)?.avgRPM}</span>
-                        <span>Comp: {NICHES.find(n => n.id === selectedNiche)?.competitionLevel}</span>
-                      </div>
-                    </div>
-                  )}
-                </div>
 
-                {/* Bridge To picker */}
-                <div style={{ flex: 1 }}>
-                  <p style={{ fontSize: 11, fontWeight: 600, color: C.accent, letterSpacing: 0.4, marginBottom: 8, marginLeft: 2 }}>
-                    BRIDGE TO
-                  </p>
-                  <select
-                    value={selectedAdjacent}
-                    onChange={e => setSelectedAdjacent(e.target.value)}
-                    disabled={!selectedNiche}
-                    style={{
-                      width: "100%", padding: "10px 14px", borderRadius: 12,
-                      background: !selectedNiche ? "#0d0d1f" : C.inputBg,
-                      color: !selectedNiche ? C.textDim : C.text,
-                      fontSize: 14, fontWeight: 500,
-                      border: `1px solid ${C.inputBorder}`,
-                      outline: "none", cursor: !selectedNiche ? "not-allowed" : "pointer",
-                      opacity: !selectedNiche ? 0.5 : 1, appearance: "auto",
-                    }}
-                  >
-                    <option value="">Select adjacent…</option>
-                    {adjacentNiches.map(n => <option key={n.id} value={n.id}>{n.name}</option>)}
-                  </select>
-                  {selectedAdjacent && (
-                    <div style={{ marginTop: 10, padding: "10px 13px", borderRadius: 10, background: "rgba(99,102,241,0.06)", border: "1px solid rgba(99,102,241,0.10)", fontSize: 12, color: C.textDim, lineHeight: 1.5 }}>
-                      {NICHES.find(n => n.id === selectedAdjacent)?.description}
-                      <div style={{ display: "flex", gap: 12, marginTop: 5, fontSize: 11, color: C.textDim }}>
-                        <span>Avg RPM: {NICHES.find(n => n.id === selectedAdjacent)?.avgRPM}</span>
-                        <span>Comp: {NICHES.find(n => n.id === selectedAdjacent)?.competitionLevel}</span>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {selectedNiche && selectedAdjacent && bendTab === "niches" && (
-            <div style={{ marginBottom: 12 }}>
-              <h3 style={{ fontSize: 18, fontWeight: 700, color: C.textBright, marginBottom: 4 }}>Bend Potential Score</h3>
-              <p style={{ color: C.textDim, fontSize: 13 }}>How strong is this crossover opportunity?</p>
-              <div style={{ fontSize: 38, fontWeight: 700, color: bendPotential >= 70 ? C.success : bendPotential >= 40 ? "#fbbf24" : C.danger, letterSpacing: -1, lineHeight: 1 }}>
-                {bendPotential}
-                <span style={{ fontSize: 18, fontWeight: 400, color: C.textDim }}>/100</span>
-              </div>
-            </div>
-          )}
 
           {/* ── Viral Magnet (shared) ─────────────────── */}
           {magnetWords.length > 0 && (
