@@ -409,112 +409,112 @@ export default function NicheBendPage() {
           </div>
         )}
 
-        {/* ══ Two-Mode Niche Bend Tabs ══ */}
-        {selectedNiche && selectedAdjacent && (
-          <div style={{ marginBottom: 24 }}>
-            {/* ── Tab Buttons ────────────────────────── */}
-            <div style={{ display: "flex", gap: 6, marginBottom: 18 }}>
-              <button
-                onClick={() => setBendTab("video")}
-                style={{
-                  display: "inline-flex", alignItems: "center", gap: 6,
-                  padding: "8px 16px", borderRadius: 10, cursor: "pointer",
-                  background: bendTab === "video" ? "rgba(99,102,241,0.15)" : "rgba(99,102,241,0.06)",
-                  border: `1px solid ${bendTab === "video" ? "rgba(99,102,241,0.40)" : C.border}`,
-                  color: bendTab === "video" ? C.textBright : C.textDim,
-                  fontSize: 13, fontWeight: bendTab === "video" ? 700 : 500,
-                  transition: "all 0.15s",
-                }}
-              >
-                <span style={{ fontSize: 15, lineHeight: 1 }}>🎬</span>
-                Competitor Video
-              </button>
-              <button
-                onClick={() => setBendTab("niches")}
-                style={{
-                  display: "inline-flex", alignItems: "center", gap: 6,
-                  padding: "8px 16px", borderRadius: 10, cursor: "pointer",
-                  background: bendTab === "niches" ? "rgba(99,102,241,0.15)" : "rgba(99,102,241,0.06)",
-                  border: `1px solid ${bendTab === "niches" ? "rgba(99,102,241,0.40)" : C.border}`,
-                  color: bendTab === "niches" ? C.textBright : C.textDim,
-                  fontSize: 13, fontWeight: bendTab === "niches" ? 700 : 500,
-                  transition: "all 0.15s",
-                }}
-              >
-                <span style={{ fontSize: 15, lineHeight: 1 }}>🔀</span>
-                Pick Two Niches
-              </button>
-            </div>
+        /* ══ Two-Mode Niche Bend Tabs ══ */
+        <div style={{ marginBottom: 24 }}>
+          {/* ── Tab Buttons ───────────────────────────────────── */}  
+          <div style={{ display: "flex", gap: 6, marginBottom: 18 }}>
+            <button
+              onClick={() => setBendTab("video")}
+              style={{
+                display: "inline-flex", alignItems: "center", gap: 6,
+                padding: "8px 16px", borderRadius: 10, cursor: "pointer",
+                background: bendTab === "video" ? "rgba(99,102,241,0.15)" : "rgba(99,102,241,0.06)",
+                border: `1px solid ${bendTab === "video" ? "rgba(99,102,241,0.40)" : C.border}`,
+                color: bendTab === "video" ? C.textBright : C.textDim,
+                fontSize: 13, fontWeight: bendTab === "video" ? 700 : 500,
+                transition: "all 0.15s",
+              }}
+            >
+              <span style={{ fontSize: 15, lineHeight: 1 }}>🎬</span>
+              Competitor Video
+            </button>
+            <button
+              onClick={() => setBendTab("niches")}
+              style={{
+                display: "inline-flex", alignItems: "center", gap: 6,
+                padding: "8px 16px", borderRadius: 10, cursor: "pointer",
+                background: bendTab === "niches" ? "rgba(99,102,241,0.15)" : "rgba(99,102,241,0.06)",
+                border: `1px solid ${bendTab === "niches" ? "rgba(99,102,241,0.40)" : C.border}`,
+                color: bendTab === "niches" ? C.textBright : C.textDim,
+                fontSize: 13, fontWeight: bendTab === "niches" ? 700 : 500,
+                transition: "all 0.15s",
+              }}
+            >
+              <span style={{ fontSize: 15, lineHeight: 1 }}>🔀</span>
+              Pick Two Niches
+            </button>
+          </div>
 
-            {bendTab === "video" && (
-              <div style={{ marginBottom: 8 }}>
-                <p style={{ color: C.textDim, fontSize: 12, marginBottom: 12, lineHeight: 1.6 }}>
-                  Paste a viral competitor video URL. Skripr extracts the transcript,
-                  reverse-engineers the hook/structure/pacing, and transplants that exact
-                  framework into your niche.
-                </p>
+          {selectedNiche && bendTab === "video" && (
+            <div style={{ marginBottom: 8 }}>
+              <p style={{ color: C.textDim, fontSize: 12, marginBottom: 12, lineHeight: 1.6 }}>
+                Paste a viral competitor video URL. Skripr extracts the transcript,
+                reverse-engineers the hook/structure/pacing, and transplants that exact
+                framework into your niche.
+              </p>
 
-                <div style={{ display: "flex", gap: 10, alignItems: "stretch" }}>
-                  <input
-                    type="url"
-                    value={sourceVideoUrl}
-                    onChange={e => setSourceVideoUrl(e.target.value)}
-                    placeholder="https://youtube.com/watch?v=..."
-                    disabled={sourceExtracting}
-                    style={{
-                      flex: 1, padding: "10px 14px", borderRadius: 10,
-                      background: C.inputBg, color: C.text, fontSize: 13, fontWeight: 500,
-                      border: `1px solid ${C.inputBorder}`, outline: "none",
-                      opacity: sourceExtracting ? 0.6 : 1,
-                    }}
-                  />
-                  <button
-                    onClick={extractSourceTranscript}
-                    disabled={sourceExtracting || !sourceVideoUrl}
-                    style={{
-                      padding: "10px 18px", borderRadius: 10,
-                      cursor: sourceExtracting || !sourceVideoUrl ? "not-allowed" : "pointer",
-                      background: sourceExtracting ? C.border : sectionGlow("blue"),
-                      color: "#fff", fontSize: 13, fontWeight: 600,
-                      border: "none",
-                      opacity: sourceExtracting || !sourceVideoUrl ? 0.5 : 1,
-                      whiteSpace: "nowrap", transition: "opacity 150ms",
-                    }}
-                  >
-                    {sourceExtracting ? "Extracting…" : "Extract Transcript"}
-                  </button>
-                </div>
-
-                {sourceVideoTitle && (
-                  <div style={{
-                    marginTop: 12, padding: "10px 14px", borderRadius: 10,
-                    background: "rgba(16,185,129,0.08)",
-                    border: "1px solid rgba(16,185,129,0.20)",
-                    fontSize: 13, color: C.textBright,
-                  }}>
-                    ✓ <span style={{ fontWeight: 700 }}>Source locked:</span> "{sourceVideoTitle}"
-                    {sourceVideoTranscript && (
-                      <span style={{ color: C.textDim, marginLeft: 8 }}>
-                        · {Math.max(1, Math.floor((sourceVideoTranscript.match(/\s/g) || []).length))} words
-                      </span>
-                    )}
-                  </div>
-                )}
-
-                {sourceError && (
-                  <div style={{
-                    marginTop: 10, padding: "8px 12px", borderRadius: 8,
-                    background: "rgba(248,113,113,0.08)",
-                    border: "1px solid rgba(248,113,113,0.20)",
-                    fontSize: 12, color: C.danger,
-                  }}>
-                    ⚠ {sourceError}
-                  </div>
-                )}
+              <div style={{ display: "flex", gap: 10, alignItems: "stretch" }}>
+                <input
+                  type="url"
+                  value={sourceVideoUrl}
+                  onChange={e => setSourceVideoUrl(e.target.value)}
+                  placeholder="https://youtube.com/watch?v=..."
+                  disabled={sourceExtracting}
+                  style={{
+                    flex: 1, padding: "10px 14px", borderRadius: 10,
+                    background: C.inputBg, color: C.text, fontSize: 13, fontWeight: 500,
+                    border: `1px solid ${C.inputBorder}`, outline: "none",
+                    opacity: sourceExtracting ? 0.6 : 1,
+                  }}
+                />
+                <button
+                  onClick={extractSourceTranscript}
+                  disabled={sourceExtracting || !sourceVideoUrl}
+                  style={{
+                    padding: "10px 18px", borderRadius: 10,
+                    cursor: sourceExtracting || !sourceVideoUrl ? "not-allowed" : "pointer",
+                    background: sourceExtracting ? C.border : sectionGlow("blue"),
+                    color: "#fff", fontSize: 13, fontWeight: 600,
+                    border: "none",
+                    opacity: sourceExtracting || !sourceVideoUrl ? 0.5 : 1,
+                    whiteSpace: "nowrap", transition: "opacity 150ms",
+                  }}
+                >
+                  {sourceExtracting ? "Extracting…" : "Extract Transcript"}
+                </button>
               </div>
-            )}
 
-            {bendTab === "niches" && (
+              {sourceVideoTitle && (
+                <div style={{
+                  marginTop: 12, padding: "10px 14px", borderRadius: 10,
+                  background: "rgba(16,185,129,0.08)",
+                  border: "1px solid rgba(16,185,129,0.20)",
+                  fontSize: 13, color: C.textBright,
+                }}>
+                  ✓ <span style={{ fontWeight: 700 }}>Source locked:</span> "{sourceVideoTitle}"
+                  {sourceVideoTranscript && (
+                    <span style={{ color: C.textDim, marginLeft: 8 }}>
+                      · {Math.max(1, Math.floor((sourceVideoTranscript.match(/\s/g) || []).length))} words
+                    </span>
+                  )}
+                </div>
+              )}
+
+              {sourceError && (
+                <div style={{
+                  marginTop: 10, padding: "8px 12px", borderRadius: 8,
+                  background: "rgba(248,113,113,0.08)",
+                  border: "1px solid rgba(248,113,113,0.20)",
+                  fontSize: 12, color: C.danger,
+                }}>
+                  ⚠ {sourceError}
+                </div>
+              )}
+            </div>
+          )}
+
+          {selectedNiche && selectedAdjacent && bendTab === "niches" && (
+            <div style={{ marginBottom: 8 }}>
               <div style={{ display: "flex", gap: 14, marginBottom: 8 }}>
                 {/* Your Niche picker */}
                 <div style={{ flex: 1 }}>
@@ -578,105 +578,107 @@ export default function NicheBendPage() {
                   )}
                 </div>
               </div>
-            )}
-            {selectedNiche && selectedAdjacent && bendTab === "niches" && (
-              <div style={{ marginBottom: 12 }}>
-                <h3 style={{ fontSize: 18, fontWeight: 700, color: C.textBright, marginBottom: 4 }}>Bend Potential Score</h3>
-                <p style={{ color: C.textDim, fontSize: 13 }}>How strong is this crossover opportunity?</p>
-                <div style={{ fontSize: 38, fontWeight: 700, color: bendPotential >= 70 ? C.success : bendPotential >= 40 ? "#fbbf24" : C.danger, letterSpacing: -1, lineHeight: 1 }}>
-                  {bendPotential}
-                  <span style={{ fontSize: 18, fontWeight: 400, color: C.textDim }}>/100</span>
-                </div>
-              </div>
-            )}
+            </div>
+          )}
 
-            {/* ── Viral Magnet (shared) ─────────────────── */}
-            {magnetWords.length > 0 && (
-              <div style={{ marginBottom: 16, borderRadius: 14, border: "1px solid rgba(99,102,241,0.18)", background: "rgba(99,102,241,0.04)", padding: "16px 18px" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
-                  <span style={{ fontSize: 14 }}>🧲</span>
-                  <span style={{ fontSize: 13, fontWeight: 700, color: C.textBright }}>Viral Magnet</span>
-                  <span style={{ fontSize: 11, color: C.textDim }}>Pick a word to power every title</span>
-                  {selectedMagnetWord && (
-                    <button onClick={() => setSelectedMagnetWord(null)} style={{ marginLeft: "auto", fontSize: 10, color: C.textDim, background: "none", border: "none", cursor: "pointer", padding: "2px 6px" }}>Clear</button>
-                  )}
-                </div>
-                <div style={{ display: "flex", gap: 6, marginBottom: 10 }}>
-                  {["all", "S", "A", "B", "C"].map(g => {
-                    const gColors: Record<string, string> = { all: "#818cf8", S: "#f59e0b", A: "#818cf8", B: "#34d399", C: "#64748b" };
-                    const isActive = magnetGradeFilter === g;
-                    const gc = gColors[g] || "#818cf8";
+          {selectedNiche && selectedAdjacent && bendTab === "niches" && (
+            <div style={{ marginBottom: 12 }}>
+              <h3 style={{ fontSize: 18, fontWeight: 700, color: C.textBright, marginBottom: 4 }}>Bend Potential Score</h3>
+              <p style={{ color: C.textDim, fontSize: 13 }}>How strong is this crossover opportunity?</p>
+              <div style={{ fontSize: 38, fontWeight: 700, color: bendPotential >= 70 ? C.success : bendPotential >= 40 ? "#fbbf24" : C.danger, letterSpacing: -1, lineHeight: 1 }}>
+                {bendPotential}
+                <span style={{ fontSize: 18, fontWeight: 400, color: C.textDim }}>/100</span>
+              </div>
+            </div>
+          )}
+
+          {/* ── Viral Magnet (shared) ─────────────────── */}
+          {magnetWords.length > 0 && (
+            <div style={{ marginBottom: 16, borderRadius: 14, border: "1px solid rgba(99,102,241,0.18)", background: "rgba(99,102,241,0.04)", padding: "16px 18px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+                <span style={{ fontSize: 14 }}>🧲</span>
+                <span style={{ fontSize: 13, fontWeight: 700, color: C.textBright }}>Viral Magnet</span>
+                <span style={{ fontSize: 11, color: C.textDim }}>Pick a word to power every title</span>
+                {selectedMagnetWord && (
+                  <button onClick={() => setSelectedMagnetWord(null)} style={{ marginLeft: "auto", fontSize: 10, color: C.textDim, background: "none", border: "none", cursor: "pointer", padding: "2px 6px" }}>Clear</button>
+                )}
+              </div>
+              <div style={{ display: "flex", gap: 6, marginBottom: 10 }}>
+                {["all", "S", "A", "B", "C"].map(g => {
+                  const gColors: Record<string, string> = { all: "#818cf8", S: "#f59e0b", A: "#818cf8", B: "#34d399", C: "#64748b" };
+                  const isActive = magnetGradeFilter === g;
+                  const gc = gColors[g] || "#818cf8";
+                  return (
+                    <button key={g} onClick={() => setMagnetGradeFilter(g)} style={{
+                      padding: "3px 10px", borderRadius: 6, fontSize: 11, fontWeight: 700, cursor: "pointer",
+                      border: isActive ? `1.5px solid ${gc}` : "1px solid rgba(99,102,241,0.18)",
+                      background: isActive ? `${gc}18` : "transparent",
+                      color: isActive ? gc : C.textDim, transition: "all 0.12s",
+                    }}>{g === "all" ? "All" : `${g}-tier`}</button>
+                  );
+                })}
+                <span style={{ marginLeft: "auto", fontSize: 11, color: C.textDim, alignSelf: "center" }}>
+                  {magnetWords.filter(w => magnetGradeFilter === "all" || w.grade === magnetGradeFilter).length} words
+                </span>
+              </div>
+              <div style={{ position: "relative" }}>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 7, maxHeight: 160, overflowY: "auto", paddingRight: 4, filter: userPlan === "free" ? "blur(3px)" : "none", pointerEvents: userPlan === "free" ? "none" : "auto", userSelect: userPlan === "free" ? "none" : "auto" }}>
+                  {magnetWords.filter(mw => magnetGradeFilter === "all" || mw.grade === magnetGradeFilter).map(mw => {
+                    const gc = mw.grade === "S" ? "#f59e0b" : mw.grade === "A" ? "#818cf8" : mw.grade === "B" ? "#34d399" : "#64748b";
+                    const isSel = selectedMagnetWord === mw.word;
                     return (
-                      <button key={g} onClick={() => setMagnetGradeFilter(g)} style={{
-                        padding: "3px 10px", borderRadius: 6, fontSize: 11, fontWeight: 700, cursor: "pointer",
-                        border: isActive ? `1.5px solid ${gc}` : "1px solid rgba(99,102,241,0.18)",
-                        background: isActive ? `${gc}18` : "transparent",
-                        color: isActive ? gc : C.textDim, transition: "all 0.12s",
-                      }}>{g === "all" ? "All" : `${g}-tier`}</button>
+                      <button key={mw.id} onClick={() => setSelectedMagnetWord(isSel ? null : mw.word)} title={mw.why_it_works} style={{
+                        display: "flex", alignItems: "center", gap: 5,
+                        padding: "5px 10px", borderRadius: 7, cursor: "pointer",
+                        border: isSel ? `1.5px solid ${gc}` : "1px solid rgba(99,102,241,0.16)",
+                        background: isSel ? `${gc}18` : "rgba(0,0,0,0.10)",
+                        transition: "all 0.12s",
+                      }}>
+                        <span style={{ fontSize: 12, fontWeight: 700, color: isSel ? gc : C.textBright }}>{mw.word}</span>
+                        <span style={{ fontSize: 9, fontWeight: 700, padding: "1px 4px", borderRadius: 3, background: `${gc}22`, color: gc }}>{mw.grade}</span>
+                      </button>
                     );
                   })}
-                  <span style={{ marginLeft: "auto", fontSize: 11, color: C.textDim, alignSelf: "center" }}>
-                    {magnetWords.filter(w => magnetGradeFilter === "all" || w.grade === magnetGradeFilter).length} words
-                  </span>
                 </div>
-                <div style={{ position: "relative" }}>
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: 7, maxHeight: 160, overflowY: "auto", paddingRight: 4, filter: userPlan === "free" ? "blur(3px)" : "none", pointerEvents: userPlan === "free" ? "none" : "auto", userSelect: userPlan === "free" ? "none" : "auto" }}>
-                    {magnetWords.filter(mw => magnetGradeFilter === "all" || mw.grade === magnetGradeFilter).map(mw => {
-                      const gc = mw.grade === "S" ? "#f59e0b" : mw.grade === "A" ? "#818cf8" : mw.grade === "B" ? "#34d399" : "#64748b";
-                      const isSel = selectedMagnetWord === mw.word;
-                      return (
-                        <button key={mw.id} onClick={() => setSelectedMagnetWord(isSel ? null : mw.word)} title={mw.why_it_works} style={{
-                          display: "flex", alignItems: "center", gap: 5,
-                          padding: "5px 10px", borderRadius: 7, cursor: "pointer",
-                          border: isSel ? `1.5px solid ${gc}` : "1px solid rgba(99,102,241,0.16)",
-                          background: isSel ? `${gc}18` : "rgba(0,0,0,0.10)",
-                          transition: "all 0.12s",
-                        }}>
-                          <span style={{ fontSize: 12, fontWeight: 700, color: isSel ? gc : C.textBright }}>{mw.word}</span>
-                          <span style={{ fontSize: 9, fontWeight: 700, padding: "1px 4px", borderRadius: 3, background: `${gc}22`, color: gc }}>{mw.grade}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                  {userPlan === "free" && (
-                    <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 6, borderRadius: 8, background: "rgba(10,10,20,0.60)", backdropFilter: "blur(1px)" }}>
-                      <span style={{ fontSize: 15 }}>🔒</span>
-                      <span style={{ fontSize: 12, fontWeight: 700, color: C.textBright }}>Starter+ feature</span>
-                      <span style={{ fontSize: 11, color: C.textDim }}>Upgrade to use Viral Magnet</span>
-                      <a href="/pricing" style={{ marginTop: 4, fontSize: 11, fontWeight: 700, padding: "5px 14px", borderRadius: 7, background: "linear-gradient(135deg,#6366f1,#818cf8)", color: "#fff", textDecoration: "none" }}>Upgrade →</a>
-                    </div>
-                  )}
-                </div>
-                {selectedMagnetWord && (
-                  <div style={{ marginTop: 10, fontSize: 11, color: C.textDim, padding: "6px 10px", borderRadius: 7, background: "rgba(99,102,241,0.06)" }}>
-                    🧲 Every title will be crafted with <span style={{ color: C.textBright, fontWeight: 700 }}>"{selectedMagnetWord}"</span> naturally woven in
+                {userPlan === "free" && (
+                  <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 6, borderRadius: 8, background: "rgba(10,10,20,0.60)", backdropFilter: "blur(1px)" }}>
+                    <span style={{ fontSize: 15 }}>🔒</span>
+                    <span style={{ fontSize: 12, fontWeight: 700, color: C.textBright }}>Starter+ feature</span>
+                    <span style={{ fontSize: 11, color: C.textDim }}>Upgrade to use Viral Magnet</span>
+                    <a href="/pricing" style={{ marginTop: 4, fontSize: 11, fontWeight: 700, padding: "5px 14px", borderRadius: 7, background: "linear-gradient(135deg,#6366f1,#818cf8)", color: "#fff", textDecoration: "none" }}>Upgrade →</a>
                   </div>
                 )}
               </div>
-            )}
+              {selectedMagnetWord && (
+                <div style={{ marginTop: 10, fontSize: 11, color: C.textDim, padding: "6px 10px", borderRadius: 7, background: "rgba(99,102,241,0.06)" }}>
+                  🧲 Every title will be crafted with <span style={{ color: C.textBright, fontWeight: 700 }}>"{selectedMagnetWord}"</span> naturally woven in
+                </div>
+              )}
+            </div>
+          )}
 
-            {/* ── Generate button ──────────────────────── */}
-            <button
-              onClick={generateIdeas}
-              disabled={isLoading}
-              style={{
-                display: "inline-flex", alignItems: "center", gap: 8,
-                padding: "13px 28px", borderRadius: 14,
-                background: sectionGlow("violet"), color: "#fff",
-                fontSize: 15, fontWeight: 600, border: "none",
-                cursor: isLoading ? "wait" : "pointer",
-                opacity: isLoading ? 0.7 : 1,
-                boxShadow: "0 0 22px rgba(99,102,241,0.30)",
-                transition: "opacity 150ms, transform 150ms",
-              }}
-              onMouseEnter={e => { if (!isLoading) (e.currentTarget.style.transform = "translateY(-2px)"); }}
-              onMouseLeave={e => { (e.currentTarget.style.transform = "translateY(0)"); }}
-            >
-              {isLoading ? "Generating…" : "✦ Generate Crossover Ideas"}
-            </button>
-            {error && <p style={{ color: C.danger, fontSize: 13, marginTop: 10 }}>{error}</p>}
-          </div>
-        )}
+          {/* ── Generate button ──────────────────────── */}
+          <button
+            onClick={generateIdeas}
+            disabled={isLoading}
+            style={{
+              display: "inline-flex", alignItems: "center", gap: 8,
+              padding: "13px 28px", borderRadius: 14,
+              background: sectionGlow("violet"), color: "#fff",
+              fontSize: 15, fontWeight: 600, border: "none",
+              cursor: isLoading ? "wait" : "pointer",
+              opacity: isLoading ? 0.7 : 1,
+              boxShadow: "0 0 22px rgba(99,102,241,0.30)",
+              transition: "opacity 150ms, transform 150ms",
+            }}
+            onMouseEnter={e => { if (!isLoading) (e.currentTarget.style.transform = "translateY(-2px)"); }}
+            onMouseLeave={e => { (e.currentTarget.style.transform = "translateY(0)"); }}
+          >
+            {isLoading ? "Generating…" : "✦ Generate Crossover Ideas"}
+          </button>
+          {error && <p style={{ color: C.danger, fontSize: 13, marginTop: 10 }}>{error}</p>}
+        </div>
+        {/* Ideas list */}
         {/* Ideas list */}
         {ideas.length > 0 && (
           <div>
