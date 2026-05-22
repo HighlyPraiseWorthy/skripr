@@ -71,6 +71,7 @@ export default function NicheBendPage() {
   const [sourceVideoTitle, setSourceVideoTitle] = useState("");
   const [sourceExtracting, setSourceExtracting] = useState(false);
   const [sourceExtracted, setSourceExtracted] = useState(false);
+  const [sourceError, setSourceError] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const nicheOptions = NICHES.map(n => ({ value: n.id, label: n.name }));
@@ -99,6 +100,31 @@ export default function NicheBendPage() {
     setIdeas([]);
     setAppliedMagnetWord(null);
     setAdjacentNiches(getAdjacentNiches(nicheId));
+  }
+
+  async function extractSourceTranscript() {
+    if (!sourceVideoUrl) return;
+    setSourceExtracting(true);
+    setSourceError(null);
+    setSourceVideoTranscript("");
+    setSourceVideoTitle("");
+    setSourceExtracted(false);
+    try {
+      const res = await fetch("/api/transcript", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ youtubeUrl: sourceVideoUrl }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to extract transcript");
+      setSourceVideoTranscript(data.transcript || "");
+      setSourceVideoTitle(data.title || "");
+      setSourceExtracted(true);
+    } catch (e: any) {
+      setSourceError(e.message || "Failed to extract transcript. Try pasting manually.");
+    } finally {
+      setSourceExtracting(false);
+    }
   }
 
   async function generateIdeas() {
@@ -379,6 +405,94 @@ export default function NicheBendPage() {
               {bendPotential}
               <span style={{ fontSize: 18, fontWeight: 400, color: C.textDim }}>/100</span>
             </div>
+          </div>
+        )}
+
+        {/* Source Video — reverse-engineer a competitor */}
+        {selectedNiche && selectedAdjacent && (
+          <div style={{ marginBottom: 20 }}>
+            <button
+              onClick={() => setSourceExtracted(!sourceExtracted)}
+              style={{
+                display: "inline-flex", alignItems: "center", gap: 6,
+                padding: "7px 14px", borderRadius: 10, cursor: "pointer",
+                background: "rgba(99,102,241,0.08)",
+                border: `1px solid ${C.border}`,
+                color: C.accent, fontSize: 13, fontWeight: 600,
+                marginBottom: sourceExtracted ? 10 : 0,
+                transition: "all 0.15s",
+              }}
+            >
+              <span style={{ fontSize: 16, lineHeight: 1 }}>🎬</span>
+              {sourceExtracted ? "Change Source Video" : "Reverse-Engineer a Competitor Video"}
+            </button>
+
+            {sourceExtracted && (
+              <div style={{
+                borderRadius: 16, background: C.cardBg,
+                border: `1px solid ${C.border}`, padding: "18px 20px",
+              }}>
+                <p style={{ color: C.textDim, fontSize: 12, marginBottom: 10 }}>
+                  Paste a viral video from your target niche. Skripr will extract the transcript,
+                  reverse-engineer its hook/structure/pacing, and use that exact framework to
+                  generate your bend ideas.
+                </p>
+
+                <div style={{ display: "flex", gap: 10, alignItems: "stretch" }}>
+                  <input
+                    type="url"
+                    value={sourceVideoUrl}
+                    onChange={e => setSourceVideoUrl(e.target.value)}
+                    placeholder="https://youtube.com/watch?v=..."
+                    disabled={sourceExtracting}
+                    style={{
+                      flex: 1, padding: "10px 14px", borderRadius: 10,
+                      background: C.inputBg, color: C.text, fontSize: 13, fontWeight: 500,
+                      border: `1px solid ${C.inputBorder}`, outline: "none",
+                      opacity: sourceExtracting ? 0.6 : 1,
+                    }}
+                  />
+                  <button
+                    onClick={extractSourceTranscript}
+                    disabled={sourceExtracting || !sourceVideoUrl}
+                    style={{
+                      padding: "10px 18px", borderRadius: 10, cursor: sourceExtracting || !sourceVideoUrl ? "not-allowed" : "pointer",
+                      background: sourceExtracting ? C.border : sectionGlow("blue"),
+                      color: "#fff", fontSize: 13, fontWeight: 600,
+                      border: "none", opacity: sourceExtracting || !sourceVideoUrl ? 0.5 : 1,
+                      whiteSpace: "nowrap", transition: "opacity 150ms",
+                    }}
+                  >
+                    {sourceExtracting ? "Extracting…" : "Extract Transcript"}
+                  </button>
+                </div>
+
+                {sourceVideoTitle && (
+                  <div style={{
+                    marginTop: 12, padding: "10px 14px", borderRadius: 10,
+                    background: "rgba(16,185,129,0.08)", border: "1px solid rgba(16,185,129,0.20)",
+                    fontSize: 13, color: C.textBright,
+                  }}>
+                    ✓ <span style={{ fontWeight: 700 }}>Source locked:</span> "{sourceVideoTitle}"
+                    {sourceVideoTranscript && (
+                      <span style={{ color: C.textDim, marginLeft: 8 }}>
+                        · {sourceVideoTranscript.split(/\s+/).length} words extracted
+                      </span>
+                    )}
+                  </div>
+                )}
+
+                {sourceError && (
+                  <div style={{
+                    marginTop: 10, padding: "8px 12px", borderRadius: 8,
+                    background: "rgba(248,113,113,0.08)", border: "1px solid rgba(248,113,113,0.20)",
+                    fontSize: 12, color: C.danger,
+                  }}>
+                    ⚠ {sourceError}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         )}
 
