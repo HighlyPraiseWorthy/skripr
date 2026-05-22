@@ -66,6 +66,11 @@ export default function NicheBendPage() {
   const [magnetGradeFilter, setMagnetGradeFilter] = useState<string>("all");
   const [appliedMagnetWord, setAppliedMagnetWord] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [sourceVideoUrl, setSourceVideoUrl] = useState("");
+  const [sourceVideoTranscript, setSourceVideoTranscript] = useState("");
+  const [sourceVideoTitle, setSourceVideoTitle] = useState("");
+  const [sourceExtracting, setSourceExtracting] = useState(false);
+  const [sourceExtracted, setSourceExtracted] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const nicheOptions = NICHES.map(n => ({ value: n.id, label: n.name }));
@@ -104,7 +109,7 @@ export default function NicheBendPage() {
       const res = await fetch("/api/niche-bend/ideas", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nicheA: selectedNiche, nicheB: selectedAdjacent, viralMagnetWord: selectedMagnetWord || undefined }),
+        body: JSON.stringify({ nicheA: selectedNiche, nicheB: selectedAdjacent, viralMagnetWord: selectedMagnetWord || undefined, sourceVideoTranscript: sourceVideoTranscript || undefined, sourceVideoTitle: sourceVideoTitle || undefined }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to generate ideas");
