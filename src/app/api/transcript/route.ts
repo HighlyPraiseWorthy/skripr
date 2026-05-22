@@ -34,7 +34,20 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Transcript service not configured." }, { status: 500 });
     }
 
-    console.log("[transcript] Fetching via Supadata for videoId:", videoId);
+    // Fetch video title in parallel (no API key needed)
+    let title = "Unknown Title";
+    try {
+      const embedRes = await fetch(
+        `https://noembed.com/embed?url=https://www.youtube.com/watch?v=${videoId}`,
+        { signal: AbortSignal.timeout(5000) }
+      );
+      const embedData = await embedRes.json().catch(() => ({}));
+      if (embedData.title) title = embedData.title;
+    } catch {
+      // noembed is best-effort — don't block transcript on title fetch failure
+    }
+
+    console.log("[transcript] Fetching via Supadata for videoId:", videoId, "title:", title);
 
     const res = await fetch(
       `https://api.supadata.ai/v1/youtube/transcript?videoId=${videoId}&text=true`,
@@ -80,6 +93,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({
       videoId,
+      title,
       transcript,
       wordCount,
       estimatedDuration: Math.round(wordCount / 150),
