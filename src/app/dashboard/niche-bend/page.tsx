@@ -409,38 +409,40 @@ export default function NicheBendPage() {
           </div>
         )}
 
-        /* ══ Two-Mode Niche Bend Tabs ══ */
+        {/* ══ Two-Mode Niche Bend Tabs ══ */}
         <div style={{ marginBottom: 24 }}>
           {/* ── Tab Buttons ───────────────────────────────────── */}  
-          <div style={{ display: "flex", gap: 6, marginBottom: 18 }}>
+          <div style={{ display: "flex", gap: 4, marginBottom: 18, background: "rgba(99,102,241,0.06)", borderRadius: 14, padding: 4, width: "fit-content" }}>
             <button
               onClick={() => setBendTab("video")}
               style={{
-                display: "inline-flex", alignItems: "center", gap: 6,
-                padding: "8px 16px", borderRadius: 10, cursor: "pointer",
-                background: bendTab === "video" ? "rgba(99,102,241,0.15)" : "rgba(99,102,241,0.06)",
-                border: `1px solid ${bendTab === "video" ? "rgba(99,102,241,0.40)" : C.border}`,
-                color: bendTab === "video" ? C.textBright : C.textDim,
+                display: "inline-flex", alignItems: "center", gap: 7,
+                padding: "9px 20px", borderRadius: 10, cursor: "pointer",
+                background: bendTab === "video" ? "linear-gradient(135deg,#6366f1,#818cf8)" : "transparent",
+                border: "none",
+                color: bendTab === "video" ? "#fff" : C.textDim,
                 fontSize: 13, fontWeight: bendTab === "video" ? 700 : 500,
                 transition: "all 0.15s",
+                boxShadow: bendTab === "video" ? "0 2px 12px rgba(99,102,241,0.35)" : "none",
               }}
             >
-              <span style={{ fontSize: 15, lineHeight: 1 }}>🎬</span>
+              <span style={{ fontSize: 14, lineHeight: 1 }}>🎬</span>
               Competitor Video
             </button>
             <button
               onClick={() => setBendTab("niches")}
               style={{
-                display: "inline-flex", alignItems: "center", gap: 6,
-                padding: "8px 16px", borderRadius: 10, cursor: "pointer",
-                background: bendTab === "niches" ? "rgba(99,102,241,0.15)" : "rgba(99,102,241,0.06)",
-                border: `1px solid ${bendTab === "niches" ? "rgba(99,102,241,0.40)" : C.border}`,
-                color: bendTab === "niches" ? C.textBright : C.textDim,
+                display: "inline-flex", alignItems: "center", gap: 7,
+                padding: "9px 20px", borderRadius: 10, cursor: "pointer",
+                background: bendTab === "niches" ? "linear-gradient(135deg,#6366f1,#818cf8)" : "transparent",
+                border: "none",
+                color: bendTab === "niches" ? "#fff" : C.textDim,
                 fontSize: 13, fontWeight: bendTab === "niches" ? 700 : 500,
                 transition: "all 0.15s",
+                boxShadow: bendTab === "niches" ? "0 2px 12px rgba(99,102,241,0.35)" : "none",
               }}
             >
-              <span style={{ fontSize: 15, lineHeight: 1 }}>🔀</span>
+              <span style={{ fontSize: 14, lineHeight: 1 }}>🔀</span>
               Pick Two Niches
             </button>
           </div>
