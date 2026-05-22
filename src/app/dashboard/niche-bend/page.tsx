@@ -108,7 +108,8 @@ export default function NicheBendPage() {
   }
 
   async function generateIdeas() {
-    if (!selectedNiche || !selectedAdjacent) return;
+    if (bendTab === "niches" && (!selectedNiche || !selectedAdjacent)) return;
+    if (bendTab === "video" && !sourceVideoTranscript) return;
     setIsLoading(true);
     setError(null);
     try {
