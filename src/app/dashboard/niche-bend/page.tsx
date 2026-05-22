@@ -98,8 +98,26 @@ export default function NicheBendPage() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to extract transcript");
-      setSourceVideoTranscript(data.transcript || "");
+      const transcript = data.transcript || "";
+      setSourceVideoTranscript(transcript);
       setSourceVideoTitle(data.title || "");
+
+      // Auto-detect niche from transcript
+      if (transcript) {
+        try {
+          const nicheRes = await fetch("/api/detect-niche", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ text: transcript }),
+          });
+          const nicheData = await nicheRes.json();
+          if (nicheData.nicheId) {
+            handleNicheSelect(nicheData.nicheId);
+          }
+        } catch {
+          // non-fatal — user can pick niche manually
+        }
+      }
     } catch (e: any) {
       setSourceError(e.message || "Failed to extract transcript. Try pasting manually.");
     } finally {
