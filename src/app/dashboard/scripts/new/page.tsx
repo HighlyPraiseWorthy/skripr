@@ -363,27 +363,36 @@ export default function NewScriptPage() {
                     {magnetWords.filter(w => magnetGradeFilterScript === "all" || w.grade === magnetGradeFilterScript).length} words
                   </span>
                 </div>
-                {/* Word grid — scrollable */}
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 6, maxHeight: 120, overflowY: "auto" }}>
-                  {magnetWords
-                    .filter(mw => magnetGradeFilterScript === "all" || mw.grade === magnetGradeFilterScript)
-                    .map(mw => {
-                      const gc = mw.grade === "S" ? "#f59e0b" : mw.grade === "A" ? "#818cf8" : mw.grade === "B" ? "#34d399" : "#64748b";
-                      const isSelected = selectedViralWord === mw.word;
-                      const canSelect = userPlan !== "free";
-                      return (
-                        <button key={mw.id} onClick={() => canSelect && setSelectedViralWord(isSelected ? null : mw.word)} title={canSelect ? mw.why_it_works : "Upgrade to Starter to use Viral Magnet"} style={{
-                          display: "flex", alignItems: "center", gap: 4,
-                          padding: "4px 9px", borderRadius: 6, cursor: canSelect ? "pointer" : "default",
-                          border: isSelected ? `1.5px solid ${gc}` : "1px solid rgba(99,102,241,0.14)",
-                          background: isSelected ? `${gc}18` : "rgba(0,0,0,0.08)",
-                          opacity: canSelect ? 1 : 0.5, transition: "all 0.12s",
-                        }}>
-                          <span style={{ fontSize: 11, fontWeight: 700, color: isSelected ? gc : C.textBright }}>{mw.word}</span>
-                          <span style={{ fontSize: 8, fontWeight: 700, padding: "1px 3px", borderRadius: 3, background: `${gc}22`, color: gc }}>{mw.grade}</span>
-                        </button>
-                      );
-                    })}
+                {/* Word grid — scrollable, gated for free users */}
+                <div style={{ position: "relative" }}>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 6, maxHeight: 120, overflowY: "auto", filter: userPlan === "free" ? "blur(3px)" : "none", pointerEvents: userPlan === "free" ? "none" : "auto", userSelect: userPlan === "free" ? "none" : "auto" }}>
+                    {magnetWords
+                      .filter(mw => magnetGradeFilterScript === "all" || mw.grade === magnetGradeFilterScript)
+                      .map(mw => {
+                        const gc = mw.grade === "S" ? "#f59e0b" : mw.grade === "A" ? "#818cf8" : mw.grade === "B" ? "#34d399" : "#64748b";
+                        const isSelected = selectedViralWord === mw.word;
+                        return (
+                          <button key={mw.id} onClick={() => setSelectedViralWord(isSelected ? null : mw.word)} title={mw.why_it_works} style={{
+                            display: "flex", alignItems: "center", gap: 4,
+                            padding: "4px 9px", borderRadius: 6, cursor: "pointer",
+                            border: isSelected ? `1.5px solid ${gc}` : "1px solid rgba(99,102,241,0.14)",
+                            background: isSelected ? `${gc}18` : "rgba(0,0,0,0.08)",
+                            transition: "all 0.12s",
+                          }}>
+                            <span style={{ fontSize: 11, fontWeight: 700, color: isSelected ? gc : C.textBright }}>{mw.word}</span>
+                            <span style={{ fontSize: 8, fontWeight: 700, padding: "1px 3px", borderRadius: 3, background: `${gc}22`, color: gc }}>{mw.grade}</span>
+                          </button>
+                        );
+                      })}
+                  </div>
+                  {userPlan === "free" && (
+                    <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 5, borderRadius: 8, background: "rgba(10,10,20,0.60)", backdropFilter: "blur(1px)" }}>
+                      <span style={{ fontSize: 14 }}>🔒</span>
+                      <span style={{ fontSize: 11, fontWeight: 700, color: C.textBright }}>Starter+ feature</span>
+                      <span style={{ fontSize: 10, color: C.textDim }}>Upgrade to use Viral Magnet</span>
+                      <a href="/pricing" style={{ marginTop: 3, fontSize: 10, fontWeight: 700, padding: "4px 12px", borderRadius: 6, background: "linear-gradient(135deg,#6366f1,#818cf8)", color: "#fff", textDecoration: "none" }}>Upgrade →</a>
+                    </div>
+                  )}
                 </div>
                 {selectedViralWord && (
                   <div style={{ marginTop: 8, fontSize: 11, color: C.textDim, padding: "5px 9px", borderRadius: 6, background: "rgba(99,102,241,0.06)" }}>
