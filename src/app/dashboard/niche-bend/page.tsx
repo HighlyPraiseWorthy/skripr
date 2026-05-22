@@ -170,19 +170,18 @@ export default function NicheBendPage() {
         {/* ── Main Tab Card (mirrors Scripts page) ── */}
         <div style={{ borderRadius: 20, background: C.cardBg, border: `1px solid ${C.border}`, overflow: "hidden", marginBottom: 24 }}>
           {/* Tab bar */}
-          <div style={{ display: "flex", borderBottom: `1px solid ${C.border}`, padding: "12px 24px 0", gap: 4 }}>
+          <div style={{ display: "flex", borderBottom: `1px solid ${C.border}` }}>
             <button
               onClick={() => setBendTab("video")}
               style={{
-                display: "inline-flex", alignItems: "center", gap: 8,
-                padding: "10px 22px", borderRadius: "10px 10px 0 0", cursor: "pointer",
-                background: bendTab === "video" ? sectionGlow("violet") : "transparent",
+                flex: 1, display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8,
+                padding: "14px 22px", cursor: "pointer",
+                background: bendTab === "video" ? sectionGlow("violet") : "rgba(99,102,241,0.04)",
                 border: "none",
+                borderBottom: bendTab === "video" ? "2px solid transparent" : `2px solid ${C.border}`,
                 color: bendTab === "video" ? "#fff" : C.textDim,
                 fontSize: 14, fontWeight: bendTab === "video" ? 700 : 500,
                 transition: "all 0.15s",
-                boxShadow: bendTab === "video" ? "0 2px 16px rgba(99,102,241,0.30)" : "none",
-                marginBottom: bendTab === "video" ? -1 : 0,
               }}
             >
               🎬 Competitor Video
@@ -190,15 +189,14 @@ export default function NicheBendPage() {
             <button
               onClick={() => setBendTab("niches")}
               style={{
-                display: "inline-flex", alignItems: "center", gap: 8,
-                padding: "10px 22px", borderRadius: "10px 10px 0 0", cursor: "pointer",
-                background: bendTab === "niches" ? sectionGlow("violet") : "transparent",
+                flex: 1, display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8,
+                padding: "14px 22px", cursor: "pointer",
+                background: bendTab === "niches" ? sectionGlow("violet") : "rgba(99,102,241,0.04)",
                 border: "none",
+                borderBottom: bendTab === "niches" ? "2px solid transparent" : `2px solid ${C.border}`,
                 color: bendTab === "niches" ? "#fff" : C.textDim,
                 fontSize: 14, fontWeight: bendTab === "niches" ? 700 : 500,
                 transition: "all 0.15s",
-                boxShadow: bendTab === "niches" ? "0 2px 16px rgba(99,102,241,0.30)" : "none",
-                marginBottom: bendTab === "niches" ? -1 : 0,
               }}
             >
               🔀 Niche Bend Engine
@@ -208,8 +206,8 @@ export default function NicheBendPage() {
           {/* Tab content */}
           <div style={{ padding: "24px 24px 28px" }}>
 
-            {/* ── Niche pickers (shared, inside both tabs) ── */}
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 18 }}>
+            {/* ── Niche pickers — only in Niche Bend Engine tab ── */}
+            {bendTab === "niches" && <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 18 }}>
               <div>
                 <p style={{ fontSize: 12, fontWeight: 600, color: C.accent, letterSpacing: 0.4, marginBottom: 8 }}>YOUR NICHE</p>
                 <select
@@ -251,10 +249,10 @@ export default function NicheBendPage() {
                   </div>
                 )}
               </div>
-            </div>
+            </div>}
 
-            {/* Bend Potential Score (shown when both selected) */}
-            {selectedNiche && selectedAdjacent && (
+            {/* Bend Potential Score — only in Niche Bend Engine tab */}
+            {bendTab === "niches" && selectedNiche && selectedAdjacent && (
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 18px", borderRadius: 14, background: "rgba(99,102,241,0.06)", border: "1px solid rgba(99,102,241,0.10)", marginBottom: 20 }}>
                 <div>
                   <p style={{ fontSize: 14, fontWeight: 700, color: C.textBright, marginBottom: 2 }}>Bend Potential Score</p>
@@ -367,8 +365,8 @@ export default function NicheBendPage() {
             {/* ── Generate button ── */}
             <button
               onClick={generateIdeas}
-              disabled={isLoading || !selectedNiche || !selectedAdjacent}
-              style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "13px 28px", borderRadius: 14, background: sectionGlow("violet"), color: "#fff", fontSize: 15, fontWeight: 600, border: "none", cursor: isLoading || !selectedNiche || !selectedAdjacent ? "not-allowed" : "pointer", opacity: isLoading || !selectedNiche || !selectedAdjacent ? 0.6 : 1, boxShadow: "0 0 22px rgba(99,102,241,0.30)", transition: "opacity 150ms, transform 150ms" }}
+              disabled={isLoading || (bendTab === "niches" ? (!selectedNiche || !selectedAdjacent) : !sourceVideoTranscript)}
+              style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "13px 28px", borderRadius: 14, background: sectionGlow("violet"), color: "#fff", fontSize: 15, fontWeight: 600, border: "none", cursor: isLoading || (bendTab === "niches" ? (!selectedNiche || !selectedAdjacent) : !sourceVideoTranscript) ? "not-allowed" : "pointer", opacity: isLoading || (bendTab === "niches" ? (!selectedNiche || !selectedAdjacent) : !sourceVideoTranscript) ? 0.6 : 1, boxShadow: "0 0 22px rgba(99,102,241,0.30)", transition: "opacity 150ms, transform 150ms" }}
               onMouseEnter={e => { if (!isLoading) e.currentTarget.style.transform = "translateY(-2px)"; }}
               onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; }}
             >

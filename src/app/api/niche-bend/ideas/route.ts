@@ -18,7 +18,7 @@ export async function POST(req: Request) {
 
   try {
     const { nicheA, nicheB, viralMagnetWord, sourceVideoTranscript, sourceVideoTitle } = await req.json();
-    if (!nicheA || !nicheB) return NextResponse.json({ error: "Two niches required" }, { status: 400 });
+    if (!nicheA && !nicheB && !sourceVideoTranscript) return NextResponse.json({ error: "Either two niches or a source video transcript is required" }, { status: 400 });
 
     const magnetInstruction = viralMagnetWord
       ? `\n\nVIRAL MAGNET REQUIREMENT: Every single title MUST naturally incorporate the word "${viralMagnetWord}". Weave it in so it feels organic and compelling — not forced. Position it where it creates the most curiosity or urgency in the title.`
