@@ -409,6 +409,7 @@ export default function NicheBendPage() {
                       <span style={{ padding: "4px 10px", borderRadius: 8, background: C.badgeBg, color: C.badgeText, fontSize: 12, fontWeight: 600 }}>{idea.format}</span>
                     </div>
                     
+                    <a
                       href={`/dashboard/scripts/new?topic=${encodeURIComponent(idea.title)}&niche=${encodeURIComponent(selectedNiche)}&adjacent=${encodeURIComponent(selectedAdjacent)}`}
                       style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "8px 16px", borderRadius: 10, background: "linear-gradient(135deg,#6366f1,#7c3aed,#a855f7)", color: "#fff", fontSize: 13, fontWeight: 600, textDecoration: "none" }}
                     >
