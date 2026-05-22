@@ -207,8 +207,8 @@ export default function NicheBendPage() {
           {/* Tab content */}
           <div style={{ padding: "24px 24px 28px" }}>
 
-            {/* ── Niche pickers — only in Niche Bend Engine tab ── */}
-            {bendTab === "niches" && <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 18 }}>
+            {/* ── Niche pickers (shared) ── */}
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 18 }}>
               <div>
                 <p style={{ fontSize: 12, fontWeight: 600, color: C.accent, letterSpacing: 0.4, marginBottom: 8 }}>YOUR NICHE</p>
                 <select
@@ -250,7 +250,7 @@ export default function NicheBendPage() {
                   </div>
                 )}
               </div>
-            </div>}
+            </div>
 
             {/* Bend Potential Score — only in Niche Bend Engine tab */}
             {bendTab === "niches" && selectedNiche && selectedAdjacent && (
