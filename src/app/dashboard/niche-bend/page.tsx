@@ -62,12 +62,17 @@ export default function NicheBendPage() {
   const [ideas, setIdeas] = useState<CrossoverIdea[]>([]);
   const [magnetWords, setMagnetWords] = useState<MagnetWordOption[]>([]);
   const [selectedMagnetWord, setSelectedMagnetWord] = useState<string | null>(null);
+  const [userPlan, setUserPlan] = useState<string>("free");
   const [magnetGradeFilter, setMagnetGradeFilter] = useState<string>("all");
   const [appliedMagnetWord, setAppliedMagnetWord] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const nicheOptions = NICHES.map(n => ({ value: n.id, label: n.name }));
+
+  useEffect(() => {
+    fetch("/api/user/plan").then(r => r.json()).then(d => setUserPlan(d.plan || "free")).catch(() => {});
+  }, []);
 
   useEffect(() => {
     if (!isLoaded) return;
