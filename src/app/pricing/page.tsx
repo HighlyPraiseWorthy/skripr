@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useState } from "react";
 
 const C = {
   bg: "#0b0b17",
@@ -17,6 +20,7 @@ const grad = "linear-gradient(135deg,#6366f1,#7c3aed,#a855f7)";
 const plans = [
   {
     name: "Starter", price: "$19", period: "/mo",
+    planName: "starter",
     description: "For creators just getting started with scripting.",
     highlight: false, badge: null, cta: "Get Starter",
     features: [
@@ -30,6 +34,7 @@ const plans = [
   },
   {
     name: "Pro", price: "$39", period: "/mo",
+    planName: "pro",
     description: "For serious creators publishing consistently.",
     highlight: true, badge: "Most Popular", cta: "Get Pro",
     features: [
@@ -43,6 +48,7 @@ const plans = [
   },
   {
     name: "Agency", price: "$99", period: "/mo",
+    planName: "agency",
     description: "For teams and agencies running multiple channels.",
     highlight: false, badge: null, cta: "Get Agency",
     features: [
@@ -63,7 +69,7 @@ const css = `
   }
 `;
 
-function CardInner({ plan, C, grad }: { plan: any; C: any; grad: string }) {
+function CardInner({ plan, C, grad, onCheckout }: { plan: any; C: any; grad: string; onCheckout: (planName: string) => void }) {
   return (
     <>
       <div style={{ marginBottom: 22 }}>
@@ -74,7 +80,9 @@ function CardInner({ plan, C, grad }: { plan: any; C: any; grad: string }) {
           <span style={{ fontSize: 13, color: C.textDim }}>{plan.period}</span>
         </div>
       </div>
-      <Link href="/sign-up" style={{ display: "block", textAlign: "center" as const, padding: "11px", borderRadius: 10, textDecoration: "none", fontSize: 14, fontWeight: 600, marginBottom: 24, background: plan.highlight ? grad : "transparent", border: plan.highlight ? "none" : "1px solid rgba(99,102,241,0.22)", color: plan.highlight ? "#fff" : C.accent, boxShadow: plan.highlight ? "0 0 20px rgba(99,102,241,0.28)" : "none" }}>{plan.cta}</Link>
+      <button onClick={() => onCheckout(plan.planName)}  style={{ width: "100%", display: "block", textAlign: "center" as const, padding: "11px", borderRadius: 10, border: plan.highlight ? "none" : "1px solid rgba(99,102,241,0.22)", background: plan.highlight ? grad : "transparent", color: plan.highlight ? "#fff" : C.accent, fontSize: 14, fontWeight: 600, cursor: "pointer", transition: "all 0.15s", boxShadow: plan.highlight ? "0 0 20px rgba(99,102,241,0.28)" : "none" }}>
+        {plan.cta}
+      </button>
       <div style={{ height: 1, background: C.border, marginBottom: 20 }} />
       <div style={{ display: "flex", flexDirection: "column" as const, gap: 11 }}>
         {plan.features.map((f: any, i: number) => (
@@ -89,6 +97,38 @@ function CardInner({ plan, C, grad }: { plan: any; C: any; grad: string }) {
 }
 
 export default function PricingPage() {
+  const [isLoading, setIsLoading] = useState(false);
+  const [stripePrices, setStripePrices] = useState<Record<string, string>>({
+    starter: "", pro: "", agency: "",
+  });
+
+  // Fetch server-side price IDs once on mount
+  if (typeof window !== "undefined") {
+    (async () => {
+      try {
+        const res = await fetch("/api/stripe/prices");
+        if (res.ok) setStripePrices(await res.json());
+      } catch { /* silent — button shows "Get Plan" falls back gracefully */ }
+    })();
+  }
+
+  async function handleCheckout(planName: string) {
+    setIsLoading(true);
+    try {
+      const res = await fetch("/api/stripe/create-checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ priceId: stripePrices[planName] }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to start checkout");
+      window.location.href = data.url;
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Checkout failed. Please try again.";
+      alert(msg);
+      setIsLoading(false);
+    }
+  }
   return (
     <div style={{ minHeight: "100vh", background: C.bg, color: C.text, fontFamily: "system-ui,-apple-system,sans-serif" }}>
       <style>{css}</style>
@@ -117,7 +157,7 @@ export default function PricingPage() {
           if (!plan.highlight) {
             return (
               <div key={plan.name} style={{ background: C.cardBg, border: `1px solid ${C.border}`, borderRadius: 18, padding: "28px 24px" }}>
-                <CardInner plan={plan} C={C} grad={grad} />
+                <CardInner plan={plan} C={C} grad={grad} onCheckout={handleCheckout} />
               </div>
             );
           }
@@ -144,7 +184,7 @@ export default function PricingPage() {
 
                 {/* Inner card — sits on top of the spinning layer */}
                 <div style={{ position: "relative", background: C.cardBgHighlight, borderRadius: 18, padding: "28px 24px", boxShadow: "0 0 40px rgba(99,102,241,0.15)" }}>
-                  <CardInner plan={plan} C={C} grad={grad} />
+                  <CardInner plan={plan} C={C} grad={grad} onCheckout={handleCheckout} />
                 </div>
               </div>
             </div>

@@ -23,6 +23,9 @@ export const STRIPE_PRICES = {
   agency: process.env.STRIPE_PRICE_AGENCY || "",
 } as const;
 
+// ---- startup: log which price IDs are active (dev + live audit) -----
+console.log("[stripe-config] STRIPE_PRICES:", JSON.stringify(STRIPE_PRICES));
+
 export type PlanId = "free" | "starter" | "pro" | "agency";
 
 export const PLAN_LIMITS: Record<PlanId, { scriptsPerMonth: number; nicheBends: number; complianceChecks: number; teamSeats: number }> = {

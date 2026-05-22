@@ -37,9 +37,9 @@ export default async function SettingsPage() {
             <p style={{ fontSize: 13, fontWeight: 600, color: C.accent, letterSpacing: 0.4, marginBottom: 6 }}>SUBSCRIPTION</p>
             <p style={{ color: C.textDim, fontSize: 13, marginBottom: 20 }}>Choose the plan that fits your workflow</p>
             <PricingPlans priceIds={{
-              starter: process.env.NEXT_PUBLIC_STRIPE_PRICE_STARTER || "",
-              pro: process.env.NEXT_PUBLIC_STRIPE_PRICE_PRO || "",
-              agency: process.env.NEXT_PUBLIC_STRIPE_PRICE_AGENCY || "",
+              starter: process.env.STRIPE_PRICE_STARTER || "",
+              pro: process.env.STRIPE_PRICE_PRO || "",
+              agency: process.env.STRIPE_PRICE_AGENCY || "",
             }} />
           </section>
 
