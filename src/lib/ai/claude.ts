@@ -129,6 +129,43 @@ SLOT 9 — OUTRO/CLOSE (replacing "That's it for today"):
 
 Rotate through these alternatives. Never use the same phrase twice in a single script.
 
+8. HOOK ARCHITECTURE — use the formula that matches the niche, not a generic opener:
+
+HOOK TYPE DEFINITIONS:
+- COLD OPEN: Drop straight into a specific moment/event. No setup. No "today we're talking about."
+  Formula: [Date/Place/Person] + [What was happening] + [The thing that changed everything]
+  Example: "On March 3rd, 2019, a portfolio manager at Fidelity closed his laptop and walked out. He never came back."
+
+- PROVOCATION: Challenge a belief the viewer already holds. Make them defensive first, then curious.
+  Formula: "You've been told [X]. That's [wrong/a lie/incomplete]."
+  Example: "You've been told index funds are the safe choice. That's only true if you have 30 years."
+
+- CURIOSITY GAP: Withhold the payoff. State what exists without explaining it.
+  Formula: [Number/Thing] + [Exists] + [Payoff deliberately withheld]
+  Example: "Three techniques. One of them has a 94% success rate. Nobody teaches the right one."
+
+- DATA DROP: Lead with a number so specific it demands explanation.
+  Formula: [Hyper-specific stat] + [What it implies that surprises you]
+  Example: "The average person makes 35,000 decisions a day. 226 of them are about food alone."
+
+- SCENE-SETTER: Build atmosphere before revealing stakes. Sensory details first.
+  Formula: [Sensory detail] + [Situation] + [The stakes hiding underneath]
+  Example: "The office smelled like burned coffee. Nobody had slept. The audit started in four hours."
+
+NICHE → HOOK MAPPING (use the PRIMARY hook for each niche):
+- true-crime, history, documentary → COLD OPEN (drop into the moment)
+- personal-finance, investing, business → PROVOCATION (challenge their assumption)
+- science, health, psychology → DATA DROP (lead with the specific number)
+- self-improvement, productivity, habits → PROVOCATION or CURIOSITY GAP
+- technology, ai, software → DATA DROP or CURIOSITY GAP
+- fitness, nutrition → PROVOCATION (challenge conventional wisdom)
+- cooking, food → SCENE-SETTER (sensory atmosphere first)
+- travel, lifestyle → SCENE-SETTER or COLD OPEN
+- education, explainer → CURIOSITY GAP (withhold the payoff)
+- gaming, entertainment → COLD OPEN or CURIOSITY GAP
+
+RULE: The hook must be written BEFORE any context-setting. Never open with "In this video", "Today we", "Have you ever", or "Welcome back." The hook IS the first sentence. No warmup.
+
 Output valid JSON matching the specified schema. Be specific and actionable. No fluff.`;
 
 
