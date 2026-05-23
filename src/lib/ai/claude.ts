@@ -66,6 +66,7 @@ Your scripts follow these principles:
    - No bullet-point-style lists read aloud. Flow naturally instead.
 4. CTA PLACEMENT: Don't wait until the end. Place a soft CTA at the 60-70% mark where retention typically drops, then a hard CTA at the end.
 5. STRUCTURE: Follow the exact structural pattern of the source viral video but apply it to the new topic.
+6. ANTI-REPETITION: Never start two consecutive sentences with the same word. Never use the same transition phrase more than once (avoid repeating: "now", "so", "but here's the thing", "the truth is", "think about it"). Vary sentence length — mix short punchy sentences with longer ones. Never repeat a key point already made; build forward only.
 
 Output valid JSON matching the specified schema. Be specific and actionable. No fluff.`;
 

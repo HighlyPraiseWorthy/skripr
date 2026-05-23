@@ -17,7 +17,7 @@ export async function POST(req: Request) {
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
-    const { nicheA, nicheB, viralMagnetWord, sourceVideoTranscript, sourceVideoTitle } = await req.json();
+    const { nicheA, nicheB, viralMagnetWord, sourceVideoTranscript, sourceVideoTitle, previousTitles } = await req.json();
     if (!nicheA && !nicheB && !sourceVideoTranscript) return NextResponse.json({ error: "Either two niches or a source video transcript is required" }, { status: 400 });
 
     const magnetInstruction = viralMagnetWord
@@ -61,6 +61,9 @@ export async function POST(req: Request) {
 
     const prompt = [
       sourceSection,
+      previousTitles && previousTitles.length > 0
+        ? `\nAVOID REPETITION: Do NOT generate ideas similar to these already-seen titles:\n${previousTitles.map((t: string, i: number) => `${i + 1}. ${t}`).join("\n")}\nEvery idea must be meaningfully different in angle, hook type, and subject matter.`
+        : "",
       magnetInstruction,
       ``,
       `For each idea, provide:`,
