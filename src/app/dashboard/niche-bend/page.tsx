@@ -140,6 +140,7 @@ export default function NicheBendPage() {
           viralMagnetWord: selectedMagnetWord || undefined,
           sourceVideoTranscript: bendTab === "video" ? (sourceVideoTranscript || undefined) : undefined,
           sourceVideoTitle: bendTab === "video" ? (sourceVideoTitle || undefined) : undefined,
+          previousTitles: ideas.length > 0 ? ideas.map(i => i.title) : undefined,
         }),
       });
       const data = await res.json();
