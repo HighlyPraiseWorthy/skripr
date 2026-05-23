@@ -304,7 +304,7 @@ export default function NewScriptPage() {
                 )}
               </div>
             ) : null
-            )}
+            }
 
             <InputGroup label="Niche (optional)" hint="e.g. fitness, tech, science" style={{ marginTop: 16 }}>
               <input type="text" value={niche} onChange={e => setNiche(e.target.value)}
