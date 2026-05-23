@@ -132,7 +132,11 @@ export default function NewScriptPage() {
   async function handleExtractOrProceed() {
     setError(null);
     setUpgradeWall(false);
-    if (inputMode === "paste") {
+    if (inputMode === "topic") {
+      if (!topic.trim()) { setError("Please enter a topic first."); return; }
+      await runGenerate("");
+      return;
+    } else if (inputMode === "paste") {
       if (!pastedTranscript.trim()) { setError("Please paste a transcript first."); return; }
       setTranscriptText(pastedTranscript.trim());
       setTranscriptWordCount(pastedTranscript.trim().split(/\s+/).filter(Boolean).length);
@@ -284,7 +288,8 @@ export default function NewScriptPage() {
                   </p>
                 </div>
               </div>
-            ) : (
+            ) : inputMode === "paste" ? (
+              inputMode === "paste" ? (
               <div>
                 <InputGroup label="Paste Transcript" hint='On YouTube: click "⋯" below the video → "Show transcript" → copy all text' required>
                   <textarea value={pastedTranscript} onChange={e => setPastedTranscript(e.target.value)}
@@ -298,6 +303,9 @@ export default function NewScriptPage() {
                   </p>
                 )}
               </div>
+            )
+              ) : null
+             : null
             )}
 
             <InputGroup label="Niche (optional)" hint="e.g. fitness, tech, science" style={{ marginTop: 16 }}>
@@ -307,7 +315,7 @@ export default function NewScriptPage() {
                 onBlur={e => e.currentTarget.style.borderColor = C.border} />
             </InputGroup>
 
-            <InputGroup label="Topic (optional)" hint="What should the script be about?" style={{ marginTop: 16 }}>
+            <InputGroup label={inputMode === "topic" ? "Topic *" : "Topic (optional)"} hint={inputMode === "topic" ? "Required — what should your script be about?" : "What should the script be about?"} style={{ marginTop: 16 }}>
               <input type="text" value={topic} onChange={e => setTopic(e.target.value)}
                 placeholder="e.g., morning routine, product review" style={inputStyle}
                 onFocus={e => e.currentTarget.style.borderColor = "rgba(99,102,241,0.35)"}
