@@ -308,10 +308,13 @@ export default function NewScriptPage() {
             {inputMode === "topic" ? (<>
               {/* ── Topic FIRST with red asterisk ── */}
               <div style={{ marginTop: 0 }}>
-                <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: C.textDim, marginBottom: 6, letterSpacing: 0.2 }}>
-                  Topic <span style={{ color: "#ef4444" }}>*</span>
-                  <span style={{ fontSize: 11, fontWeight: 400, color: "#64748b", marginLeft: 6 }}>Required — what should your script be about?</span>
-                </label>
+                <div style={{ marginBottom: 8 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+                    <span style={{ fontSize: 14, fontWeight: 700, color: C.textBright, letterSpacing: 0.1 }}>Topic</span>
+                    <span style={{ fontSize: 10, fontWeight: 700, color: "#ef4444", background: "rgba(239,68,68,0.12)", border: "1px solid rgba(239,68,68,0.25)", padding: "2px 7px", borderRadius: 5, letterSpacing: 0.4 }}>REQUIRED</span>
+                  </div>
+                  <p style={{ fontSize: 12, color: C.textDim, margin: 0, lineHeight: 1.4 }}>What should your script be about? Be specific — the more focused the topic, the better the script.</p>
+                </div>
                 <input type="text" value={topic} onChange={e => setTopic(e.target.value)}
                   placeholder="e.g., morning routine, product review" style={inputStyle}
                   onFocus={e => e.currentTarget.style.borderColor = "rgba(99,102,241,0.35)"}
