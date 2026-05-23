@@ -84,6 +84,8 @@ export default function NewScriptPage() {
   const [appliedMagnetTitle, setAppliedMagnetTitle] = useState<string | null>(null);
   const [extracting, setExtracting] = useState(false);
   const [nicheBendSource, setNicheBendSource] = useState<string | null>(null);
+  const [hookRewriteCount, setHookRewriteCount] = useState(0);
+  const [rewritingHook, setRewritingHook] = useState(false);
   const [angle, setAngle] = useState("");
   const [suggestingAngles, setSuggestingAngles] = useState(false);
   const [angleSuggestions, setAngleSuggestions] = useState<string[]>([]);
@@ -115,7 +117,7 @@ export default function NewScriptPage() {
               setError(data.error);
             }
             setStep("input");
-          } else { setGeneratedScript(data); setAppliedMagnetTitle(null); setSelectedMagnet(null); setStep("result"); }
+          } else { setGeneratedScript(data); setAppliedMagnetTitle(null); setSelectedMagnet(null); setHookRewriteCount(0); setStep("result"); }
         })
         .catch(e => { setError(e.message); setStep("input"); });
     }
@@ -182,7 +184,7 @@ export default function NewScriptPage() {
         structurePattern: data.sections?.length ? `${data.sections.length}-section` : undefined,
         niche: data.niche || niche, wordCount: data.wordCount, estimatedDuration: data.estimatedDuration,
       });
-      setStep("result");
+      setHookRewriteCount(0); setStep("result");
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Failed to generate script");
       setStep("input");
@@ -587,8 +589,47 @@ export default function NewScriptPage() {
               <h2 style={{ fontSize: 21, fontWeight: 700, color: C.textBright, letterSpacing: -0.3, marginBottom: 16 }}>{generatedScript.title}</h2>
               {generatedScript.hook && (
                 <div style={{ borderRadius: 14, padding: "14px 16px", marginBottom: 16, background: "rgba(99,102,241,0.08)", border: "1px solid rgba(99,102,241,0.16)" }}>
-                  <p style={{ fontSize: 11, fontWeight: 700, color: C.accent, letterSpacing: 0.5, marginBottom: 5 }}>HOOK</p>
-                  <p style={{ fontSize: 14, color: C.textBright, lineHeight: 1.6 }}>{generatedScript.hook}</p>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
+                    <p style={{ fontSize: 11, fontWeight: 700, color: C.accent, letterSpacing: 0.5, margin: 0 }}>HOOK</p>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <span style={{ fontSize: 10, color: hookRewriteCount >= 3 ? "#f87171" : C.textDim, fontWeight: 500 }}>
+                        {3 - hookRewriteCount} rewrite{3 - hookRewriteCount !== 1 ? "s" : ""} left
+                      </span>
+                      <button
+                        onClick={async () => {
+                          if (hookRewriteCount >= 3 || rewritingHook) return;
+                          setRewritingHook(true);
+                          try {
+                            const res = await fetch("/api/rewrite-hook", {
+                              method: "POST",
+                              headers: { "Content-Type": "application/json" },
+                              body: JSON.stringify({ hook: generatedScript.hook, topic, niche }),
+                            });
+                            const data = await res.json();
+                            if (data.hook) {
+                              setGeneratedScript(prev => prev ? { ...prev, hook: data.hook } : null);
+                              setHookRewriteCount(n => n + 1);
+                            }
+                          } catch {}
+                          setRewritingHook(false);
+                        }}
+                        disabled={hookRewriteCount >= 3 || rewritingHook}
+                        style={{
+                          display: "inline-flex", alignItems: "center", gap: 5,
+                          padding: "4px 12px", borderRadius: 7, fontSize: 11, fontWeight: 600,
+                          cursor: hookRewriteCount >= 3 ? "not-allowed" : rewritingHook ? "wait" : "pointer",
+                          background: hookRewriteCount >= 3 ? "transparent" : "rgba(99,102,241,0.14)",
+                          border: `1px solid ${hookRewriteCount >= 3 ? "rgba(99,102,241,0.10)" : "rgba(99,102,241,0.35)"}`,
+                          color: hookRewriteCount >= 3 ? C.textDim : "#818cf8",
+                          opacity: hookRewriteCount >= 3 ? 0.45 : rewritingHook ? 0.7 : 1,
+                          transition: "all 150ms",
+                        }}
+                      >
+                        {rewritingHook ? "⟳ Rewriting…" : hookRewriteCount >= 3 ? "Limit reached" : "↺ Rewrite Hook"}
+                      </button>
+                    </div>
+                  </div>
+                  <p style={{ fontSize: 14, color: C.textBright, lineHeight: 1.6, margin: 0 }}>{generatedScript.hook}</p>
                 </div>
               )}
               <div style={{ maxHeight: 440, overflowY: "auto", borderRadius: 14, border: `1px solid ${C.border}` }}>
