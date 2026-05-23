@@ -29,7 +29,7 @@ export async function POST(req: Request) {
   const startTime = Date.now();
 
   try {
-    const { transcript, niche, topic, sourceVideoId, videoLength = "long", viralMagnetWord } = await req.json();
+    const { transcript, niche, topic, sourceVideoId, videoLength = "long", viralMagnetWord, angle } = await req.json();
 
     const maxWords: Record<string, number> = { short: 200, medium: 400, long: 500, ultraLong: 600 };
     const cap = maxWords[videoLength] ?? 400;

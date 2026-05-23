@@ -84,6 +84,7 @@ export default function NewScriptPage() {
   const [appliedMagnetTitle, setAppliedMagnetTitle] = useState<string | null>(null);
   const [extracting, setExtracting] = useState(false);
   const [nicheBendSource, setNicheBendSource] = useState<string | null>(null);
+  const [angle, setAngle] = useState("");
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -101,7 +102,7 @@ export default function NewScriptPage() {
       fetch("/api/scripts/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ transcript: "", topic: topicVal, niche: nicheVal, videoLength: "medium", viralMagnetWord: selectedViralWord || undefined }),
+        body: JSON.stringify({ transcript: "", topic: topicVal, niche: nicheVal, videoLength: "medium", viralMagnetWord: selectedViralWord || undefined, angle: undefined }),
       })
         .then(r => r.json())
         .then(data => {
@@ -166,7 +167,7 @@ export default function NewScriptPage() {
       const res = await fetch("/api/scripts/generate", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ transcript, niche: niche || undefined, topic: topic || undefined, videoLength,
-          sourceVideoId: youtubeUrl ? youtubeUrl.match(/[?&]v=([^&]+)/)?.[1] : undefined, viralMagnetWord: selectedViralWord || undefined }),
+          sourceVideoId: youtubeUrl ? youtubeUrl.match(/[?&]v=([^&]+)/)?.[1] : undefined, viralMagnetWord: selectedViralWord || undefined, angle: angle || undefined }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to generate script");
@@ -309,6 +310,33 @@ export default function NewScriptPage() {
                 placeholder="e.g., morning routine, product review" style={inputStyle}
                 onFocus={e => e.currentTarget.style.borderColor = "rgba(99,102,241,0.35)"}
                 onBlur={e => e.currentTarget.style.borderColor = C.border} />
+              {/* ── Angle Field ── */}
+              <div style={{ marginTop: 16 }}>
+                <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, fontWeight: 600, color: "rgba(129,140,248,0.9)", letterSpacing: 0.3, marginBottom: 7 }}>
+                  <span>🎯</span> YOUR ANGLE
+                  <span style={{ fontSize: 11, fontWeight: 400, color: "#64748b", marginLeft: 4 }}>— the counterintuitive truth that drives the script (optional but powerful)</span>
+                </label>
+                <textarea
+                  value={angle}
+                  onChange={e => setAngle(e.target.value)}
+                  placeholder="e.g. It's not the caffeine — it's the cortisol timing. Most people drink coffee during the worst 90-minute window of their day and it silently wrecks their focus."
+                  rows={3}
+                  style={{
+                    width: "100%", padding: "10px 14px", borderRadius: 12,
+                    background: "#1a1a3a", color: "#e2e8f0", fontSize: 13,
+                    border: "1px solid rgba(99,102,241,0.15)", outline: "none",
+                    resize: "vertical", lineHeight: 1.6, fontFamily: "inherit",
+                    boxSizing: "border-box",
+                  }}
+                  onFocus={e => e.currentTarget.style.borderColor = "rgba(99,102,241,0.45)"}
+                  onBlur={e => e.currentTarget.style.borderColor = "rgba(99,102,241,0.15)"}
+                />
+                {angle && (
+                  <p style={{ fontSize: 11, color: "#34d399", marginTop: 5 }}>
+                    ✓ Angle locked — Claude will build the entire script around this perspective
+                  </p>
+                )}
+              </div>
             </InputGroup>
 
             {/* ─── Source Confidence Badge ─── */}

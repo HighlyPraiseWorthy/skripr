@@ -18,6 +18,7 @@ export interface ScriptGenerationInput {
   tone: "educational" | "entertaining" | "storytelling" | "hype";
   ttsOptimized: boolean;
   viralMagnetWord?: string;
+  angle?: string;
 }
 
 export interface GeneratedScript {
@@ -244,7 +245,7 @@ ${hasTranscript
   ? (input.targetTopic
     ? `Recreate the reference structure above, adapted for this new topic: "${input.targetTopic}"`
     : `Recreate this reference script faithfully — same topic, same niche, same key arguments. Improve only the hook strength, title, section structure, and retention beats. Do NOT change what the video is about.`)
-  : `Generate a highly engaging original script about: "${input.targetTopic || "the requested topic"}"`}
+  : `Generate a highly engaging original script about: "${input.targetTopic || "the requested topic"}"`}${input.angle ? `\n\nCREATOR ANGLE (most important — build the entire script around this):\n"${input.angle}"\nDo NOT write a generic overview. Use this angle as the spine. Every section must prove, demonstrate, or build toward this specific perspective.` : ""}
 Target niche: ${input.targetNiche}
 Video length: ${lengthGuide[input.videoLength]}
 Tone: ${input.tone}
