@@ -12,7 +12,7 @@ const C = {
 const grad = "linear-gradient(135deg,#6366f1,#7c3aed,#a855f7)";
 
 type Step = "input" | "generating" | "result";
-type InputMode = "url" | "paste";
+type InputMode = "url" | "paste" | "topic";
 
 interface MagnetWordOption {
   id: string;
@@ -85,6 +85,8 @@ export default function NewScriptPage() {
   const [extracting, setExtracting] = useState(false);
   const [nicheBendSource, setNicheBendSource] = useState<string | null>(null);
   const [angle, setAngle] = useState("");
+  const [suggestingAngles, setSuggestingAngles] = useState(false);
+  const [angleSuggestions, setAngleSuggestions] = useState<string[]>([]);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -212,7 +214,7 @@ export default function NewScriptPage() {
     }
   }
 
-  const canProceed = inputMode === "url" ? youtubeUrl.trim().length > 0 : pastedTranscript.trim().length > 50;
+  const canProceed = inputMode === "url" ? youtubeUrl.trim().length > 0 : inputMode === "paste" ? pastedTranscript.trim().length > 50 : topic.trim().length > 3;
 
   return (
     <div style={{ padding: 28, minHeight: "100vh", background: C.bg }}>
@@ -255,14 +257,14 @@ export default function NewScriptPage() {
           )}
             {/* Tab switcher */}
             <div style={{ display: "flex", gap: 4, marginBottom: 22, background: "rgba(99,102,241,0.06)", borderRadius: 12, padding: 4 }}>
-              {(["url", "paste"] as InputMode[]).map(mode => (
+              {(["url", "paste", "topic"] as InputMode[]).map(mode => (
                 <button key={mode} onClick={() => setInputMode(mode)} style={{
                   flex: 1, padding: "8px 16px", borderRadius: 9, fontSize: 13, fontWeight: 600,
                   border: "none", cursor: "pointer", transition: "all 0.15s",
                   background: inputMode === mode ? grad : "transparent",
                   color: inputMode === mode ? "#fff" : C.textDim,
                 }}>
-                  {mode === "url" ? "🔗  YouTube URL" : "📋  Paste Transcript"}
+                  {mode === "url" ? "🔗  YouTube URL" : mode === "paste" ? "📋  Paste Transcript" : "✍️  Topic Only"}
                 </button>
               ))}
             </div>
@@ -337,6 +339,60 @@ export default function NewScriptPage() {
                   </p>
                 )}
               </div>
+
+              {/* ── Suggest Angles button (topic mode only) ── */}
+              {inputMode === "topic" && topic.trim().length > 3 && (
+                <div style={{ marginTop: 14 }}>
+                  <button
+                    onClick={async () => {
+                      setSuggestingAngles(true);
+                      setAngleSuggestions([]);
+                      try {
+                        const res = await fetch("/api/suggest-angles", {
+                          method: "POST",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify({ topic, niche }),
+                        });
+                        const data = await res.json();
+                        if (data.angles) setAngleSuggestions(data.angles);
+                      } catch {}
+                      setSuggestingAngles(false);
+                    }}
+                    disabled={suggestingAngles}
+                    style={{
+                      display: "inline-flex", alignItems: "center", gap: 7,
+                      padding: "8px 16px", borderRadius: 10, cursor: suggestingAngles ? "wait" : "pointer",
+                      background: "rgba(99,102,241,0.10)", border: "1px solid rgba(99,102,241,0.25)",
+                      color: "#818cf8", fontSize: 13, fontWeight: 600,
+                      opacity: suggestingAngles ? 0.6 : 1, transition: "opacity 150ms",
+                    }}
+                  >
+                    <span>{suggestingAngles ? "⟳" : "✦"}</span>
+                    {suggestingAngles ? "Suggesting angles…" : "Suggest Angles for me"}
+                  </button>
+                  {angleSuggestions.length > 0 && (
+                    <div style={{ marginTop: 12, display: "flex", flexDirection: "column", gap: 8 }}>
+                      <p style={{ fontSize: 11, color: "#64748b", marginBottom: 2 }}>Pick one — or edit it above:</p>
+                      {angleSuggestions.map((s, i) => (
+                        <button
+                          key={i}
+                          onClick={() => setAngle(s)}
+                          style={{
+                            textAlign: "left", padding: "10px 14px", borderRadius: 10, cursor: "pointer",
+                            background: angle === s ? "rgba(99,102,241,0.14)" : "rgba(99,102,241,0.05)",
+                            border: `1px solid ${angle === s ? "rgba(99,102,241,0.40)" : "rgba(99,102,241,0.15)"}`,
+                            color: angle === s ? "#e2e8f0" : "#94a3b8",
+                            fontSize: 13, lineHeight: 1.5, transition: "all 0.12s",
+                          }}
+                        >
+                          {angle === s && <span style={{ color: "#34d399", marginRight: 6 }}>✓</span>}
+                          {s}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
             </InputGroup>
 
             {/* ─── Source Confidence Badge ─── */}
