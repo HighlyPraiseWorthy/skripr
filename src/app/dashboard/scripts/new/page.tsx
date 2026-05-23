@@ -289,7 +289,6 @@ export default function NewScriptPage() {
                 </div>
               </div>
             ) : inputMode === "paste" ? (
-              inputMode === "paste" ? (
               <div>
                 <InputGroup label="Paste Transcript" hint='On YouTube: click "⋯" below the video → "Show transcript" → copy all text' required>
                   <textarea value={pastedTranscript} onChange={e => setPastedTranscript(e.target.value)}
