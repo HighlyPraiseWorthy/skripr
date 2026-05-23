@@ -46,6 +46,7 @@ export async function POST(req: Request) {
       tone: "entertaining",
       ttsOptimized: false,
       viralMagnetWord: viralMagnetWord || undefined,
+      angle: angle || undefined,
     });
 
     const timeoutPromise = new Promise((_, reject) =>
