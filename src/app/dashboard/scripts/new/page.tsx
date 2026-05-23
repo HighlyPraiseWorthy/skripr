@@ -303,9 +303,7 @@ export default function NewScriptPage() {
                   </p>
                 )}
               </div>
-            )
-              ) : null
-             : null
+            ) : null
             )}
 
             <InputGroup label="Niche (optional)" hint="e.g. fitness, tech, science" style={{ marginTop: 16 }}>
