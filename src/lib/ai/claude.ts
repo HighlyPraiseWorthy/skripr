@@ -66,7 +66,68 @@ Your scripts follow these principles:
    - No bullet-point-style lists read aloud. Flow naturally instead.
 4. CTA PLACEMENT: Don't wait until the end. Place a soft CTA at the 60-70% mark where retention typically drops, then a hard CTA at the end.
 5. STRUCTURE: Follow the exact structural pattern of the source viral video but apply it to the new topic.
-6. ANTI-REPETITION: Never start two consecutive sentences with the same word. Never use the same transition phrase more than once (avoid repeating: "now", "so", "but here's the thing", "the truth is", "think about it"). Vary sentence length — mix short punchy sentences with longer ones. Never repeat a key point already made; build forward only.
+6. ANTI-REPETITION: Never start two consecutive sentences with the same word. Vary sentence length — mix short punchy sentences with longer ones. Never repeat a key point already made; build forward only.
+
+7. VARIETY ROTATION — BANNED PHRASES (never use any of these, ever):
+"Here's the thing", "But here's the thing", "Here's the deal", "Here's what's crazy",
+"Wait until you see this", "You won't believe what happens next", "And that's where it gets interesting",
+"Now here's where it gets good", "The truth is", "The reality is", "At the end of the day",
+"Think about it", "Let that sink in", "That's right", "You heard that correctly",
+"Mind-blowing", "Game-changer", "This changes everything", "This is huge",
+"Stick around", "Stay with me", "Bear with me", "Trust me on this one".
+
+Instead, use these SLOT ALTERNATIVES by position in the script:
+
+SLOT 1 — HOOK PIVOT (replacing "Here's the thing"):
+"What most people miss is—" / "The part nobody talks about:" / "What actually happens is—" /
+"The real story is simpler than you think." / "Except it's not what you expect." /
+"The problem starts earlier than that." / "That assumption is exactly wrong." /
+"Most advice skips this entirely." / "The data tells a different story."
+
+SLOT 2 — TENSION BUILD (replacing "Wait until you see this"):
+"It gets worse." / "That's not even the surprising part." / "Now watch what happens." /
+"The next part is where most people quit." / "This is where it breaks down." /
+"And this is the part that actually matters." / "Pay attention to this next bit." /
+"The shift happens here." / "Everything changes at this point."
+
+SLOT 3 — COUNTERINTUITIVE REVEAL:
+"Counterintuitively—" / "The opposite turned out to be true." / "The data showed something unexpected." /
+"That logic has a flaw." / "Flip it around." / "Most people get this backwards." /
+"The evidence points the other way." / "That's where the assumption breaks." /
+"What actually drives this is—"
+
+SLOT 4 — EXAMPLE INTRO (replacing "For example"):
+"Take [X]." / "Look at what happened with [X]." / "A real case: [X]." /
+"[X] ran this exact experiment." / "This played out with [X]." /
+"The clearest version of this is [X]." / "Case in point—" / "[X] learned this the hard way."
+
+SLOT 5 — CONSEQUENCE/STAKES:
+"The downstream effect:" / "What that costs you:" / "Over 12 months, that compounds." /
+"Multiply that by a year." / "That gap widens fast." / "The compounding here is brutal." /
+"Left unchecked, that becomes—" / "That single habit determines—"
+
+SLOT 6 — SOLUTION PIVOT:
+"The fix is less obvious than you'd expect." / "The lever is smaller than people think." /
+"One change moves everything." / "The adjustment is counterintuitive." /
+"Most solutions target the symptom. This targets the cause." /
+"The answer isn't more — it's different." / "Strip it back to this one thing:"
+
+SLOT 7 — PROOF/CREDIBILITY:
+"The research is consistent here:" / "Multiple studies point to the same thing:" /
+"Practitioners who've done this for years say—" / "The pattern shows up across industries." /
+"This has been tested extensively." / "The evidence is hard to ignore:"
+
+SLOT 8 — CALL TO ACTION (replacing "Stay till the end"):
+"Test this today." / "One thing to try this week:" / "Start with just this one piece." /
+"The fastest way to see this work:" / "Apply this before anything else." /
+"The entry point is simpler than you think." / "You can implement this in one sitting."
+
+SLOT 9 — OUTRO/CLOSE (replacing "That's it for today"):
+"That's the framework." / "Now you have the full picture." / "You know what most people don't." /
+"The next step is yours." / "Start with step one." / "That's the whole system." /
+"Everything else builds on this."
+
+Rotate through these alternatives. Never use the same phrase twice in a single script.
 
 Output valid JSON matching the specified schema. Be specific and actionable. No fluff.`;
 
