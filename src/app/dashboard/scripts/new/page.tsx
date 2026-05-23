@@ -305,19 +305,77 @@ export default function NewScriptPage() {
             ) : null
             }
 
-            <InputGroup label="Niche (optional)" hint="e.g. fitness, tech, science" style={{ marginTop: 16 }}>
-              <input type="text" value={niche} onChange={e => setNiche(e.target.value)}
-                placeholder="e.g., fitness, tech, cooking" style={inputStyle}
-                onFocus={e => e.currentTarget.style.borderColor = "rgba(99,102,241,0.35)"}
-                onBlur={e => e.currentTarget.style.borderColor = C.border} />
-            </InputGroup>
+            {inputMode === "topic" ? (<>
+              {/* ── Topic FIRST with red asterisk ── */}
+              <div style={{ marginTop: 0 }}>
+                <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: C.textDim, marginBottom: 6, letterSpacing: 0.2 }}>
+                  Topic <span style={{ color: "#ef4444" }}>*</span>
+                  <span style={{ fontSize: 11, fontWeight: 400, color: "#64748b", marginLeft: 6 }}>Required — what should your script be about?</span>
+                </label>
+                <input type="text" value={topic} onChange={e => setTopic(e.target.value)}
+                  placeholder="e.g., morning routine, product review" style={inputStyle}
+                  onFocus={e => e.currentTarget.style.borderColor = "rgba(99,102,241,0.35)"}
+                  onBlur={e => e.currentTarget.style.borderColor = C.border} />
+              </div>
 
-            <InputGroup label={inputMode === "topic" ? "Topic *" : "Topic (optional)"} hint={inputMode === "topic" ? "Required — what should your script be about?" : "What should the script be about?"} style={{ marginTop: 16 }}>
-              <input type="text" value={topic} onChange={e => setTopic(e.target.value)}
-                placeholder="e.g., morning routine, product review" style={inputStyle}
-                onFocus={e => e.currentTarget.style.borderColor = "rgba(99,102,241,0.35)"}
-                onBlur={e => e.currentTarget.style.borderColor = C.border} />
-              {/* ── Angle Field ── */}
+              {/* ── Suggest Angles — between topic and angle ── */}
+              {topic.trim().length > 3 && (
+                <div style={{ marginTop: 14 }}>
+                  <button
+                    onClick={async () => {
+                      setSuggestingAngles(true);
+                      setAngleSuggestions([]);
+                      try {
+                        const res = await fetch("/api/suggest-angles", {
+                          method: "POST",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify({ topic, niche }),
+                        });
+                        const data = await res.json();
+                        if (data.angles) setAngleSuggestions(data.angles);
+                      } catch {}
+                      setSuggestingAngles(false);
+                    }}
+                    disabled={suggestingAngles}
+                    style={{
+                      display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                      width: "100%", padding: "12px 20px", borderRadius: 12,
+                      cursor: suggestingAngles ? "wait" : "pointer",
+                      background: suggestingAngles ? "rgba(99,102,241,0.10)" : "linear-gradient(135deg,rgba(99,102,241,0.18),rgba(168,85,247,0.18))",
+                      border: "1px solid rgba(99,102,241,0.45)",
+                      color: "#a78bfa", fontSize: 14, fontWeight: 700,
+                      opacity: suggestingAngles ? 0.7 : 1, transition: "all 150ms",
+                      boxShadow: suggestingAngles ? "none" : "0 0 20px rgba(99,102,241,0.18)",
+                    }}
+                  >
+                    <span style={{ fontSize: 16 }}>{suggestingAngles ? "⟳" : "✦"}</span>
+                    {suggestingAngles ? "Finding angles…" : "✦ Suggest Angles for me"}
+                  </button>
+                  {angleSuggestions.length > 0 && (
+                    <div style={{ marginTop: 12, display: "flex", flexDirection: "column", gap: 8 }}>
+                      <p style={{ fontSize: 11, color: "#64748b", marginBottom: 2 }}>Pick one — or edit it below:</p>
+                      {angleSuggestions.map((s, i) => (
+                        <button
+                          key={i}
+                          onClick={() => setAngle(s)}
+                          style={{
+                            textAlign: "left", padding: "10px 14px", borderRadius: 10, cursor: "pointer",
+                            background: angle === s ? "rgba(99,102,241,0.14)" : "rgba(99,102,241,0.05)",
+                            border: `1px solid ${angle === s ? "rgba(99,102,241,0.40)" : "rgba(99,102,241,0.15)"}`,
+                            color: angle === s ? "#e2e8f0" : "#94a3b8",
+                            fontSize: 13, lineHeight: 1.5, transition: "all 0.12s",
+                          }}
+                        >
+                          {angle === s && <span style={{ color: "#34d399", marginRight: 6 }}>✓</span>}
+                          {s}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* ── YOUR ANGLE ── */}
               <div style={{ marginTop: 16 }}>
                 <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, fontWeight: 600, color: "rgba(129,140,248,0.9)", letterSpacing: 0.3, marginBottom: 7 }}>
                   <span>🎯</span> YOUR ANGLE
@@ -345,61 +403,57 @@ export default function NewScriptPage() {
                 )}
               </div>
 
-              {/* ── Suggest Angles button (topic mode only) ── */}
-              {inputMode === "topic" && topic.trim().length > 3 && (
-                <div style={{ marginTop: 14 }}>
-                  <button
-                    onClick={async () => {
-                      setSuggestingAngles(true);
-                      setAngleSuggestions([]);
-                      try {
-                        const res = await fetch("/api/suggest-angles", {
-                          method: "POST",
-                          headers: { "Content-Type": "application/json" },
-                          body: JSON.stringify({ topic, niche }),
-                        });
-                        const data = await res.json();
-                        if (data.angles) setAngleSuggestions(data.angles);
-                      } catch {}
-                      setSuggestingAngles(false);
-                    }}
-                    disabled={suggestingAngles}
+              {/* ── Niche BELOW angle in topic mode ── */}
+              <InputGroup label="Niche (optional)" hint="e.g. fitness, tech, science" style={{ marginTop: 16 }}>
+                <input type="text" value={niche} onChange={e => setNiche(e.target.value)}
+                  placeholder="e.g., fitness, tech, cooking" style={inputStyle}
+                  onFocus={e => e.currentTarget.style.borderColor = "rgba(99,102,241,0.35)"}
+                  onBlur={e => e.currentTarget.style.borderColor = C.border} />
+              </InputGroup>
+            </>) : (<>
+              {/* ── Niche first in url/paste mode ── */}
+              <InputGroup label="Niche (optional)" hint="e.g. fitness, tech, science" style={{ marginTop: 16 }}>
+                <input type="text" value={niche} onChange={e => setNiche(e.target.value)}
+                  placeholder="e.g., fitness, tech, cooking" style={inputStyle}
+                  onFocus={e => e.currentTarget.style.borderColor = "rgba(99,102,241,0.35)"}
+                  onBlur={e => e.currentTarget.style.borderColor = C.border} />
+              </InputGroup>
+
+              {/* ── Topic optional in url/paste mode ── */}
+              <InputGroup label="Topic (optional)" hint="What should the script be about?" style={{ marginTop: 16 }}>
+                <input type="text" value={topic} onChange={e => setTopic(e.target.value)}
+                  placeholder="e.g., morning routine, product review" style={inputStyle}
+                  onFocus={e => e.currentTarget.style.borderColor = "rgba(99,102,241,0.35)"}
+                  onBlur={e => e.currentTarget.style.borderColor = C.border} />
+                {/* ── Angle Field ── */}
+                <div style={{ marginTop: 16 }}>
+                  <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, fontWeight: 600, color: "rgba(129,140,248,0.9)", letterSpacing: 0.3, marginBottom: 7 }}>
+                    <span>🎯</span> YOUR ANGLE
+                    <span style={{ fontSize: 11, fontWeight: 400, color: "#64748b", marginLeft: 4 }}>— the counterintuitive truth that drives the script (optional but powerful)</span>
+                  </label>
+                  <textarea
+                    value={angle}
+                    onChange={e => setAngle(e.target.value)}
+                    placeholder="e.g. It's not the caffeine — it's the cortisol timing. Most people drink coffee during the worst 90-minute window of their day and it silently wrecks their focus."
+                    rows={3}
                     style={{
-                      display: "inline-flex", alignItems: "center", gap: 7,
-                      padding: "8px 16px", borderRadius: 10, cursor: suggestingAngles ? "wait" : "pointer",
-                      background: "rgba(99,102,241,0.10)", border: "1px solid rgba(99,102,241,0.25)",
-                      color: "#818cf8", fontSize: 13, fontWeight: 600,
-                      opacity: suggestingAngles ? 0.6 : 1, transition: "opacity 150ms",
+                      width: "100%", padding: "10px 14px", borderRadius: 12,
+                      background: "#1a1a3a", color: "#e2e8f0", fontSize: 13,
+                      border: "1px solid rgba(99,102,241,0.15)", outline: "none",
+                      resize: "vertical", lineHeight: 1.6, fontFamily: "inherit",
+                      boxSizing: "border-box",
                     }}
-                  >
-                    <span>{suggestingAngles ? "⟳" : "✦"}</span>
-                    {suggestingAngles ? "Suggesting angles…" : "Suggest Angles for me"}
-                  </button>
-                  {angleSuggestions.length > 0 && (
-                    <div style={{ marginTop: 12, display: "flex", flexDirection: "column", gap: 8 }}>
-                      <p style={{ fontSize: 11, color: "#64748b", marginBottom: 2 }}>Pick one — or edit it above:</p>
-                      {angleSuggestions.map((s, i) => (
-                        <button
-                          key={i}
-                          onClick={() => setAngle(s)}
-                          style={{
-                            textAlign: "left", padding: "10px 14px", borderRadius: 10, cursor: "pointer",
-                            background: angle === s ? "rgba(99,102,241,0.14)" : "rgba(99,102,241,0.05)",
-                            border: `1px solid ${angle === s ? "rgba(99,102,241,0.40)" : "rgba(99,102,241,0.15)"}`,
-                            color: angle === s ? "#e2e8f0" : "#94a3b8",
-                            fontSize: 13, lineHeight: 1.5, transition: "all 0.12s",
-                          }}
-                        >
-                          {angle === s && <span style={{ color: "#34d399", marginRight: 6 }}>✓</span>}
-                          {s}
-                        </button>
-                      ))}
-                    </div>
+                    onFocus={e => e.currentTarget.style.borderColor = "rgba(99,102,241,0.45)"}
+                    onBlur={e => e.currentTarget.style.borderColor = "rgba(99,102,241,0.15)"}
+                  />
+                  {angle && (
+                    <p style={{ fontSize: 11, color: "#34d399", marginTop: 5 }}>
+                      ✓ Angle locked — Claude will build the entire script around this perspective
+                    </p>
                   )}
                 </div>
-              )}
-            </InputGroup>
-
+              </InputGroup>
+            </>)}
             {/* ─── Source Confidence Badge ─── */}
             {transcriptWordCount !== null && transcriptSource !== null && (
               <div style={{ marginBottom: 12, display: "flex", alignItems: "center", gap: 8, padding: "7px 12px", borderRadius: 8, background: transcriptSource === "paste" ? "rgba(52,211,153,0.08)" : "rgba(251,191,36,0.08)", border: `1px solid ${transcriptSource === "paste" ? "rgba(52,211,153,0.25)" : "rgba(251,191,36,0.25)"}` }}>
