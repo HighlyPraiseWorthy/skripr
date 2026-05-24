@@ -95,7 +95,7 @@ export async function POST(req: Request) {
 
     const rawContent = response.content[0];
     if (rawContent.type !== "text") {
-      return NextResponse.json({ error: "Unexpected response type from Claude" }, { status: 500 });
+      return NextResponse.json({ error: "Unexpected response from our AI" }, { status: 500 });
     }
 
     const codeBlock = rawContent.text.match(/\s*\`\`\`(?:json)?\s*\n([\s\S]*?)\n\`\`\`/);

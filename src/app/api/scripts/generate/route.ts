@@ -50,7 +50,7 @@ export async function POST(req: Request) {
     });
 
     const timeoutPromise = new Promise((_, reject) =>
-      setTimeout(() => reject(new Error("Script generation timed out — Claude is slow on this request. Could you wait a moment and then try again?")), 58000)
+      setTimeout(() => reject(new Error("Script generation timed out — our AI is taking longer than expected. Could you wait a moment and then try again?")), 58000)
     );
 
     const script = await Promise.race([scriptPromise, timeoutPromise]) as any;
