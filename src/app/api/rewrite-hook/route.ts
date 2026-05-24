@@ -39,7 +39,8 @@ Respond with ONLY the new hook text. No quotes, no explanation.`,
 
     const raw = response.content[0];
     if (raw.type !== "text") return NextResponse.json({ error: "Bad response" }, { status: 500 });
-    return NextResponse.json({ hook: raw.text.trim() });
+    const cleanHook = raw.text.trim().replace(/—/g, ", ").replace(/\s,\s/g, ", ");
+    return NextResponse.json({ hook: cleanHook });
   } catch (error: any) {
     return NextResponse.json({ error: error.message || "Failed" }, { status: 500 });
   }

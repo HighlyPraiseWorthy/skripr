@@ -55,6 +55,15 @@ export async function POST(req: Request) {
 
     const script = await Promise.race([scriptPromise, timeoutPromise]) as any;
     const elapsed = Date.now() - startTime;
+    // Hard strip em dashes — belt-and-suspenders over the prompt instruction
+    const stripDash = (s: any) => typeof s === "string" ? s.replace(/—/g, ", ").replace(/\s,\s/g, ", ") : s;
+    if (script.hook) script.hook = stripDash(script.hook);
+    if (script.title) script.title = stripDash(script.title);
+    if (script.fullScript) script.fullScript = stripDash(script.fullScript);
+    if (script.cta) script.cta = stripDash(script.cta);
+    if (Array.isArray(script.sections)) script.sections = script.sections.map((s: any) => ({
+      ...s, title: stripDash(s.title), content: stripDash(s.content),
+    }));
     console.log(`[generate] done in ${elapsed}ms`);
 
     let magnetSuggestions: import("@/lib/magnet-word").MagnetSuggestion[] = [];
