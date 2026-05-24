@@ -609,9 +609,13 @@ export default function NewScriptPage() {
                             if (data.hook) {
                               setGeneratedScript(prev => {
                                 if (!prev) return null;
-                                const updatedContent = prev.content && prev.hook
-                                  ? prev.content.replace(prev.hook, data.hook)
-                                  : prev.content;
+                                let updatedContent = prev.content;
+                                if (prev.content && prev.hook) {
+                                  const idx = prev.content.indexOf(prev.hook);
+                                  if (idx >= 0) {
+                                    updatedContent = prev.content.slice(0, idx) + data.hook + prev.content.slice(idx + prev.hook.length);
+                                  }
+                                }
                                 return { ...prev, hook: data.hook, content: updatedContent };
                               });
                               setHookRewriteCount(n => n + 1);

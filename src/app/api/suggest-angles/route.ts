@@ -44,7 +44,8 @@ Respond with ONLY a JSON array of 4 strings. No preamble, no markdown.
     if (!match) return NextResponse.json({ error: "Could not parse angles" }, { status: 500 });
 
     const angles: string[] = JSON.parse(match[0]);
-    return NextResponse.json({ angles });
+    const cleanAngles = angles.map((a: string) => a.replace(/—/g, ", ").replace(/\s,\s/g, ", "));
+    return NextResponse.json({ angles: cleanAngles });
   } catch (error: any) {
     return NextResponse.json({ error: error.message || "Failed to suggest angles" }, { status: 500 });
   }
