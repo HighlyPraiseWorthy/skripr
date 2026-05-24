@@ -32,7 +32,7 @@ export const PLAN_LIMITS: Record<PlanId, { scriptsPerMonth: number; nicheBends: 
   free: { scriptsPerMonth: 2, nicheBends: 0, complianceChecks: 0, teamSeats: 1 },
   starter: { scriptsPerMonth: 12, nicheBends: 5, complianceChecks: 0, teamSeats: 1 },
   pro: { scriptsPerMonth: 25, nicheBends: Infinity, complianceChecks: 20, teamSeats: 1 },
-  agency: { scriptsPerMonth: Infinity, nicheBends: Infinity, complianceChecks: 100, teamSeats: 5 },
+  agency: { scriptsPerMonth: 150, nicheBends: 150, complianceChecks: 100, teamSeats: 5 },
 };
 
 export function getPlanFromPriceId(priceId: string): PlanId | null {
