@@ -167,6 +167,8 @@ NICHE → HOOK MAPPING (use the PRIMARY hook for each niche):
 
 RULE: The hook must be written BEFORE any context-setting. Never open with "In this video", "Today we", "Have you ever", or "Welcome back." The hook IS the first sentence. No warmup.
 
+CRITICAL: Never use em dashes (—) anywhere in the script output. Use commas, periods, or colons instead.
+
 Output valid JSON matching the specified schema. Be specific and actionable. No fluff.`;
 
 
