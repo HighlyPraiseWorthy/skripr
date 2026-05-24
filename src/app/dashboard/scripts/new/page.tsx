@@ -607,7 +607,13 @@ export default function NewScriptPage() {
                             });
                             const data = await res.json();
                             if (data.hook) {
-                              setGeneratedScript(prev => prev ? { ...prev, hook: data.hook } : null);
+                              setGeneratedScript(prev => {
+                                if (!prev) return null;
+                                const updatedContent = prev.content && prev.hook
+                                  ? prev.content.replace(prev.hook, data.hook)
+                                  : prev.content;
+                                return { ...prev, hook: data.hook, content: updatedContent };
+                              });
                               setHookRewriteCount(n => n + 1);
                             }
                           } catch {}
