@@ -31,7 +31,7 @@ const PLANS = [
     name: "Agency",
     price: "$99",
     priceEnv: "NEXT_PUBLIC_STRIPE_PRICE_AGENCY",
-    features: ["Unlimited scripts", "Unlimited saved scripts", "Unlimited Niche Bends", "Unlimited Compliance Checks", "5 team seats"],
+    features: ["150 scripts/month", "Unlimited saved scripts", "150 Niche Bends/month", "Unlimited Compliance Checks", "5 team seats"],
     highlight: false,
   },
 ];

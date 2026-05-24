@@ -52,9 +52,9 @@ const plans = [
     description: "For teams and agencies running multiple channels.",
     highlight: false, badge: null, cta: "Get Agency",
     features: [
-      { text: "Unlimited scripts", ok: true },
+      { text: "150 scripts/month", ok: true },
       { text: "Unlimited saved scripts", ok: true },
-      { text: "Unlimited Niche Bends", ok: true },
+      { text: "150 Niche Bends/month", ok: true },
       { text: "Unlimited Compliance Checks", ok: true },
       { text: "Priority generation", ok: true },
       { text: "5 team seats", ok: true },

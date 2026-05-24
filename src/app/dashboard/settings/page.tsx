@@ -19,6 +19,7 @@ export const dynamic = "force-dynamic";
 export default async function SettingsPage() {
   const { userId } = await auth();
   if (!userId) redirect("/sign-in");
+  const isAdmin = (process.env.ADMIN_USER_IDS || "").split(",").filter(Boolean).includes(userId);
 
   return (
     <div style={{ padding: 28, minHeight: "100vh", background: "#0b0b17" }}>
@@ -27,8 +28,13 @@ export default async function SettingsPage() {
 
       <div style={{ position: "relative", zIndex: 1, maxWidth: 760, margin: "0 auto" }}>
         <div style={{ marginBottom: 28 }}>
-          <h1 style={{ fontSize: 26, fontWeight: 700, color: "#f1f5f9", letterSpacing: -0.4, marginBottom: 6 }}>Settings</h1>
-          <p style={{ color: "#64748b", fontSize: 15, lineHeight: 1.6 }}>Manage your account and subscription</p>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6 }}>
+            <h1 style={{ fontSize: 26, fontWeight: 700, color: "#f1f5f9", letterSpacing: -0.4, margin: 0 }}>Settings</h1>
+            {isAdmin && (
+              <span style={{ fontSize: 10, fontWeight: 700, color: "#34d399", background: "rgba(52,211,153,0.12)", border: "1px solid rgba(52,211,153,0.30)", padding: "3px 8px", borderRadius: 6, letterSpacing: 0.5 }}>⚡ ADMIN</span>
+            )}
+          </div>
+          <p style={{ color: "#64748b", fontSize: 15, lineHeight: 1.6 }}>Manage your account and subscription{isAdmin ? " · Unlimited access active" : ""}</p>
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
