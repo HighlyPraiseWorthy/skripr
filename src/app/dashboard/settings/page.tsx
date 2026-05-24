@@ -1,4 +1,5 @@
 import { PricingPlans } from "@/components/PricingPlans";
+import { checkScriptLimit } from "@/lib/usage";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { UserProfile } from "@clerk/nextjs";
@@ -20,6 +21,7 @@ export default async function SettingsPage() {
   const { userId } = await auth();
   if (!userId) redirect("/sign-in");
   const isAdmin = (process.env.ADMIN_USER_IDS || "").split(",").filter(Boolean).includes(userId);
+  const { plan: currentPlan } = await checkScriptLimit(userId!);
 
   return (
     <div style={{ padding: 28, minHeight: "100vh", background: "#0b0b17" }}>
@@ -46,7 +48,7 @@ export default async function SettingsPage() {
               starter: process.env.STRIPE_PRICE_STARTER || "",
               pro: process.env.STRIPE_PRICE_PRO || "",
               agency: process.env.STRIPE_PRICE_AGENCY || "",
-            }} />
+            }} currentPlan={currentPlan} />
           </section>
 
           {/* Billing */}

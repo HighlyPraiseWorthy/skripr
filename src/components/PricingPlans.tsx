@@ -36,10 +36,12 @@ const PLANS = [
   },
 ];
 
-export function PricingPlans({ priceIds }: {
+export function PricingPlans({ priceIds, currentPlan }: {
   priceIds: { starter: string; pro: string; agency: string };
+  currentPlan?: string;
 }) {
   const [loading, setLoading] = useState<string | null>(null);
+  const planKeyMap: Record<string, string> = { Starter: "starter", Pro: "pro", Agency: "agency" };
 
   const priceMap: Record<string, string> = {
     Starter: priceIds.starter,
@@ -72,16 +74,28 @@ export function PricingPlans({ priceIds }: {
           key={plan.name}
           style={{
             borderRadius: 18,
-            background: plan.highlight ? "rgba(99,102,241,0.08)" : C.bg,
-            border: `1px solid ${plan.highlight ? "rgba(99,102,241,0.35)" : C.border}`,
+            background: currentPlan && planKeyMap[plan.name] === currentPlan ? "rgba(52,211,153,0.06)" : plan.highlight ? "rgba(99,102,241,0.08)" : C.bg,
+            border: `1px solid ${currentPlan && planKeyMap[plan.name] === currentPlan ? "rgba(52,211,153,0.35)" : plan.highlight ? "rgba(99,102,241,0.35)" : C.border}`,
             padding: "24px 20px",
             display: "flex",
             flexDirection: "column",
             gap: 16,
             position: "relative",
+            opacity: currentPlan && planKeyMap[plan.name] !== currentPlan ? 0.45 : 1,
+            transition: "opacity 200ms",
           }}
         >
-          {plan.badge && (
+          {currentPlan && planKeyMap[plan.name] === currentPlan && (
+            <div style={{
+              position: "absolute", top: -11, left: "50%", transform: "translateX(-50%)",
+              background: "linear-gradient(135deg,#059669,#34d399)",
+              borderRadius: 20, padding: "3px 12px",
+              fontSize: 11, fontWeight: 700, color: "#fff", whiteSpace: "nowrap",
+            }}>
+              ✓ Current Plan
+            </div>
+          )}
+          {(!currentPlan || planKeyMap[plan.name] !== currentPlan) && plan.badge && (
             <div style={{
               position: "absolute", top: -11, left: "50%", transform: "translateX(-50%)",
               background: "linear-gradient(135deg,#6366f1,#a855f7)",
@@ -109,24 +123,26 @@ export function PricingPlans({ priceIds }: {
           </ul>
 
           <button
-            onClick={() => handleSubscribe(plan.name)}
-            disabled={loading === plan.name}
+            onClick={() => currentPlan && planKeyMap[plan.name] === currentPlan ? undefined : handleSubscribe(plan.name)}
+            disabled={loading === plan.name || (!!currentPlan && planKeyMap[plan.name] === currentPlan)}
             style={{
               width: "100%",
               padding: "10px 0",
               borderRadius: 12,
-              background: plan.highlight
+              background: currentPlan && planKeyMap[plan.name] === currentPlan
+                ? "rgba(52,211,153,0.12)"
+                : plan.highlight
                 ? "linear-gradient(135deg,#6366f1,#7c3aed,#a855f7)"
                 : "rgba(99,102,241,0.10)",
-              color: plan.highlight ? "#fff" : C.accent,
-              border: plan.highlight ? "none" : `1px solid rgba(99,102,241,0.20)`,
+              color: currentPlan && planKeyMap[plan.name] === currentPlan ? "#34d399" : plan.highlight ? "#fff" : C.accent,
+              border: currentPlan && planKeyMap[plan.name] === currentPlan ? "1px solid rgba(52,211,153,0.25)" : plan.highlight ? "none" : `1px solid rgba(99,102,241,0.20)`,
               fontSize: 13,
               fontWeight: 600,
-              cursor: loading ? "wait" : "pointer",
+              cursor: currentPlan && planKeyMap[plan.name] === currentPlan ? "default" : loading ? "wait" : "pointer",
               opacity: loading && loading !== plan.name ? 0.5 : 1,
             }}
           >
-            {loading === plan.name ? "Redirecting…" : `Get ${plan.name}`}
+            {loading === plan.name ? "Redirecting…" : currentPlan && planKeyMap[plan.name] === currentPlan ? "✓ Current Plan" : `Get ${plan.name}`}
           </button>
         </div>
       ))}
