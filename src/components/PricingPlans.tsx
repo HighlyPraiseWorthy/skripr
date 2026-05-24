@@ -81,7 +81,7 @@ export function PricingPlans({ priceIds, currentPlan }: {
             flexDirection: "column",
             gap: 16,
             position: "relative",
-            opacity: currentPlan && planKeyMap[plan.name] !== currentPlan ? 0.45 : 1,
+            opacity: currentPlan && planKeyMap[plan.name] === currentPlan ? 0.45 : 1,
             transition: "opacity 200ms",
           }}
         >
