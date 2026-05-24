@@ -610,10 +610,15 @@ export default function NewScriptPage() {
                               setGeneratedScript(prev => {
                                 if (!prev) return null;
                                 let updatedContent = prev.content;
-                                if (prev.content && prev.hook) {
-                                  const idx = prev.content.indexOf(prev.hook);
-                                  if (idx >= 0) {
-                                    updatedContent = prev.content.slice(0, idx) + data.hook + prev.content.slice(idx + prev.hook.length);
+                                if (updatedContent) {
+                                  const firstBreak = updatedContent.indexOf("\n\n");
+                                  if (firstBreak > 0) {
+                                    updatedContent = data.hook + "\n\n" + updatedContent.slice(firstBreak + 2);
+                                  } else {
+                                    const singleBreak = updatedContent.indexOf("\n");
+                                    updatedContent = singleBreak > 0
+                                      ? data.hook + "\n" + updatedContent.slice(singleBreak + 1)
+                                      : data.hook;
                                   }
                                 }
                                 return { ...prev, hook: data.hook, content: updatedContent };
