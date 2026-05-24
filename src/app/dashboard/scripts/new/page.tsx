@@ -403,7 +403,7 @@ export default function NewScriptPage() {
                 />
                 {angle && (
                   <p style={{ fontSize: 11, color: "#34d399", marginTop: 5 }}>
-                    ✓ Angle locked — Claude will build the entire script around this perspective
+                    ✓ Angle locked — our AI will build the entire script around this perspective
                   </p>
                 )}
               </div>
@@ -453,7 +453,7 @@ export default function NewScriptPage() {
                   />
                   {angle && (
                     <p style={{ fontSize: 11, color: "#34d399", marginTop: 5 }}>
-                      ✓ Angle locked — Claude will build the entire script around this perspective
+                      ✓ Angle locked — our AI will build the entire script around this perspective
                     </p>
                   )}
                 </div>
@@ -544,7 +544,7 @@ export default function NewScriptPage() {
                 </div>
                 {selectedViralWord && (
                   <div style={{ marginTop: 8, fontSize: 11, color: C.textDim, padding: "5px 9px", borderRadius: 6, background: "rgba(99,102,241,0.06)" }}>
-                    🧲 <span style={{ color: C.textBright, fontWeight: 600 }}>"{selectedViralWord}"</span> will be woven into the title by Claude
+                    🧲 <span style={{ color: C.textBright, fontWeight: 600 }}>"{selectedViralWord}"</span> will be woven into the title by our AI
                   </div>
                 )}
               </div>
