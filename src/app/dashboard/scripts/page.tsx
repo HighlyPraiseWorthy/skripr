@@ -3,6 +3,7 @@ import { checkScriptLimit } from "@/lib/usage";
 import { supabaseAdmin } from "@/lib/db/supabase";
 import Link from "next/link";
 import type { Script } from "@/lib/types/script";
+import { EmptyStateGuide } from "@/components/EmptyStateGuide";
 
 const C = {
   bg: "#0b0b17",
@@ -111,15 +112,7 @@ export default async function ScriptsPage() {
         )}
 
         {scripts.length === 0 ? (
-          <div style={{ textAlign: "center", padding: "72px 24px", borderRadius: 24, background: C.cardBg, border: `1px solid ${C.border}`, position: "relative", overflow: "hidden" }}>
-            <div aria-hidden style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: "60%", height: 2, background: "linear-gradient(90deg,transparent,#6366f1,transparent)", borderRadius: 2 }} />
-            <div style={{ fontSize: 56, lineHeight: 1, marginBottom: 18, filter: "drop-shadow(0 0 16px rgba(99,102,241,0.40)) drop-shadow(0 0 32px rgba(99,102,241,0.18))" }}>✦</div>
-            <h2 style={{ fontSize: 22, fontWeight: 700, color: C.textBright, marginBottom: 8, letterSpacing: -0.3 }}>No scripts yet</h2>
-            <p style={{ color: C.textDim, fontSize: 15, marginBottom: 28, lineHeight: 1.6 }}>Generate your first viral script to get started</p>
-            <Link href="/dashboard/scripts/new" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 28px", borderRadius: 14, background: "linear-gradient(135deg,#6366f1 0%,#7c3aed 50%,#a855f7 100%)", color: "#fff", fontSize: 15, fontWeight: 600, textDecoration: "none", boxShadow: "0 0 30px rgba(99,102,241,0.35)" }}>
-              <span style={{ fontSize: 18, lineHeight: 1 }}>✦</span>Generate Script
-            </Link>
-          </div>
+          <EmptyStateGuide />
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
             {scripts.map((script) => (
