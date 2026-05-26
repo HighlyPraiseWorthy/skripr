@@ -192,40 +192,7 @@ const lessons = [
       </div>
     ),
   },
-  {
-    title: "TTS Optimization: Making AI Voice Sound Human",
-    category: "Production",
-    level: "Beginner",
-    duration: "7 min",
-    emoji: "🎙️",
-    summary: "AI voice narration sounds robotic because scripts are written for reading, not speaking. Fix the script, fix the voice.",
-    content: (
-      <div>
-        <Section title="Why AI voices sound unnatural">
-          <p style={{ fontSize: 13, color: C.text, lineHeight: 1.7 }}>Text-to-speech engines read punctuation literally. An em dash creates an awkward pause. A long sentence with multiple clauses runs together with no natural breath. Complex words get mispronounced. The script is the problem — not the TTS engine.</p>
-        </Section>
-        <Section title="Rules for TTS-optimized writing">
-          <Bullet items={[
-            "Short sentences — ideally under 15 words. Long sentences lose pacing. Period.",
-            "No em dashes (—) — they create unnatural pauses in most TTS engines. Use commas or periods instead.",
-            "Spell out numbers — 'forty-seven' reads better than '47' in most engines",
-            "Avoid abbreviations — TTS may read 'Dr.' as 'drive' or 'doctor' unpredictably. Write out the full word.",
-            "Use ellipses sparingly (...) — they add drama but can sound stilted if overused",
-            "Read it aloud before submitting — if you stumble, the TTS will too",
-            "Contractions sound more natural — 'it's' not 'it is', 'you'll' not 'you will'",
-          ]} />
-        </Section>
-        <Section title="Matching script to TTS tool">
-          <Bullet items={[
-            "ElevenLabs — handles complex sentences well, most forgiving engine. Still benefits from short sentences.",
-            "Murf / Speechify — stricter on punctuation. Em dashes and semicolons cause noticeable artifacts.",
-            "Play.ht — good with conversational writing. Struggles with academic or formal phrasing.",
-          ]} />
-        </Section>
-        <Tip>Skripr strips all em dashes from generated scripts server-side (replacing with commas or periods) and writes in short, punchy sentences by default. Every script is TTS-ready out of the box. The system prompt explicitly bans robotic phrasing patterns.</Tip>
-      </div>
-    ),
-  },
+
   {
     title: "Angles: The Counterintuitive Take That Makes Scripts Stick",
     category: "Script Writing",
