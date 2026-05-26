@@ -410,7 +410,7 @@ export default function EducatePage() {
         </div>
 
         <div style={{ marginTop: 32, padding: "20px 24px", borderRadius: 16, background: "rgba(99,102,241,0.06)", border: "1px solid rgba(99,102,241,0.14)", textAlign: "center" }}>
-          <p style={{ fontSize: 13, color: C.textDim, margin: 0 }}>More lessons coming soon — covering thumbnail design, monetization strategy, and advanced channel growth. <span style={{ color: C.accent }}>Ideas? Email hello@skripr.com</span></p>
+          <p style={{ fontSize: 13, color: C.textDim, margin: 0 }}>More lessons coming soon — covering thumbnail design, monetization strategy, and advanced channel growth. <span style={{ color: C.accent }}>Ideas? Email skripr.app@gmail.com</span></p>
         </div>
       </div>
     </div>
