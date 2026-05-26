@@ -52,6 +52,7 @@ export default function NicheBendPage() {
   const [magnetWords, setMagnetWords] = useState<MagnetWordOption[]>([]);
   const [selectedMagnetWord, setSelectedMagnetWord] = useState<string | null>(null);
   const [userPlan, setUserPlan] = useState<string>("free");
+  const [planLoaded, setPlanLoaded] = useState(false);
   const [magnetGradeFilter, setMagnetGradeFilter] = useState<string>("all");
   const [appliedMagnetWord, setAppliedMagnetWord] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -68,7 +69,7 @@ export default function NicheBendPage() {
   const nicheOptions = NICHES.map(n => ({ value: n.id, label: n.name }));
 
   useEffect(() => {
-    fetch("/api/user/plan").then(r => r.json()).then(d => setUserPlan(d.plan || "free")).catch(() => {});
+    fetch("/api/user/plan").then(r => r.json()).then(d => { setUserPlan(d.plan || "free"); setPlanLoaded(true); }).catch(() => { setPlanLoaded(true); });
     fetch("/api/magnet-words").then(r => r.json()).then(d => setMagnetWords(d.words || [])).catch(() => {});
   }, []);
 
@@ -171,6 +172,68 @@ export default function NicheBendPage() {
   if (!isLoaded) return (
     <div style={{ padding: 28, minHeight: "100vh", background: C.bg, display: "flex", alignItems: "center", justifyContent: "center" }}>
       <p style={{ color: C.textDim, fontSize: 15 }}>Loading…</p>
+    </div>
+  );
+
+  /* ══ PLAN GATE — free users ══ */
+  if (planLoaded && userPlan === "free") return (
+    <div style={{ padding: 28, minHeight: "100vh", background: C.bg }}>
+      <div aria-hidden style={{ position: "fixed", top: -160, right: -100, width: 460, height: 460, borderRadius: "50%", background: "radial-gradient(circle,rgba(99,102,241,0.14) 0%,transparent 70%)", pointerEvents: "none", zIndex: 0 }} />
+      <div aria-hidden style={{ position: "fixed", bottom: -180, left: -120, width: 480, height: 480, borderRadius: "50%", background: "radial-gradient(circle,rgba(168,85,247,0.09) 0%,transparent 70%)", pointerEvents: "none", zIndex: 0 }} />
+      <div style={{ position: "relative", zIndex: 1, maxWidth: 640, margin: "0 auto" }}>
+        <div style={{ marginBottom: 28 }}>
+          <h1 style={{ fontSize: 26, fontWeight: 700, color: "#f1f5f9", letterSpacing: -0.4, marginBottom: 6 }}>Niche Bend Engine</h1>
+          <p style={{ color: "#64748b", fontSize: 15, lineHeight: 1.6 }}>Find crossover opportunities between niches to break out of your algorithmic bubble</p>
+        </div>
+        <div style={{ borderRadius: 22, background: "#12122a", border: "1px solid rgba(99,102,241,0.20)", overflow: "hidden" }}>
+          {/* Blurred preview */}
+          <div style={{ position: "relative" }}>
+            <div style={{ padding: "28px 28px 20px", filter: "blur(4px)", pointerEvents: "none", userSelect: "none", opacity: 0.5 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 16 }}>
+                <div style={{ padding: "10px 14px", borderRadius: 12, background: "#1a1a3a", border: "1px solid rgba(99,102,241,0.12)", fontSize: 14, color: "#64748b" }}>Select your niche…</div>
+                <div style={{ padding: "10px 14px", borderRadius: 12, background: "#1a1a3a", border: "1px solid rgba(99,102,241,0.12)", fontSize: 14, color: "#64748b" }}>Select adjacent niche…</div>
+              </div>
+              <div style={{ padding: "12px 16px", borderRadius: 12, background: "rgba(99,102,241,0.06)", border: "1px solid rgba(99,102,241,0.10)", marginBottom: 16 }}>
+                <div style={{ fontSize: 13, color: "#818cf8", fontWeight: 600 }}>Bend Potential Score &nbsp; 84/100</div>
+              </div>
+              <div style={{ padding: "10px 14px", borderRadius: 10, background: "#1a1a3a", border: "1px solid rgba(99,102,241,0.12)", fontSize: 13, color: "#64748b", marginBottom: 16 }}>https://youtube.com/watch?v=...</div>
+            </div>
+            {/* Lock overlay */}
+            <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 8, background: "rgba(10,10,20,0.55)", backdropFilter: "blur(2px)" }}>
+              <div style={{ fontSize: 36, lineHeight: 1 }}>🔒</div>
+              <p style={{ fontSize: 18, fontWeight: 700, color: "#f1f5f9", margin: 0 }}>Starter plan required</p>
+              <p style={{ fontSize: 13, color: "#64748b", margin: 0, textAlign: "center", maxWidth: 320, lineHeight: 1.5 }}>Niche Bend is available on Starter and above. Free plan includes script generation only.</p>
+            </div>
+          </div>
+
+          {/* What you unlock */}
+          <div style={{ padding: "20px 28px 28px", borderTop: "1px solid rgba(99,102,241,0.12)" }}>
+            <p style={{ fontSize: 11, fontWeight: 700, color: "#818cf8", letterSpacing: 0.8, textTransform: "uppercase", marginBottom: 14 }}>What you unlock with Starter</p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 24 }}>
+              {[
+                ["🔀", "Niche Bend Engine", "Generate 10 crossover ideas between any two niches — tap adjacent recommendation graphs"],
+                ["🎬", "Competitor Video Analysis", "Paste any YouTube URL — Skripr reverse-engineers the hook, structure, and pacing then transplants it into your niche"],
+                ["📊", "Bend Potential Score", "See exactly how strong a crossover opportunity is before you spend time on it"],
+                ["🧲", "Viral Magnet Words", "Apply trending power words to every generated title automatically"],
+              ].map(([emoji, title, desc], i) => (
+                <div key={i} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
+                  <div style={{ flexShrink: 0, width: 36, height: 36, borderRadius: 9, background: "rgba(99,102,241,0.10)", border: "1px solid rgba(99,102,241,0.18)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16 }}>{emoji}</div>
+                  <div>
+                    <p style={{ fontSize: 13, fontWeight: 600, color: "#f1f5f9", margin: "0 0 2px" }}>{title}</p>
+                    <p style={{ fontSize: 12, color: "#64748b", margin: 0, lineHeight: 1.5 }}>{desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
+              <a href="/dashboard/settings" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 28px", borderRadius: 14, background: "linear-gradient(135deg,#6366f1 0%,#7c3aed 50%,#a855f7 100%)", color: "#fff", fontSize: 14, fontWeight: 600, textDecoration: "none", boxShadow: "0 0 24px rgba(99,102,241,0.30)" }}>
+                ✦ Upgrade to Starter — $19/mo
+              </a>
+              <span style={{ fontSize: 12, color: "#64748b" }}>5 Niche Bends/month · 12 scripts · cancel anytime</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 
