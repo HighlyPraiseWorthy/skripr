@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skripr — Top Banner Mockup (Original Colours)</title>
+<style>
+  :root {
+    /* ════ Skripr brand colours (from page.tsx) ════ */
+    --s-violet:         #8b5cf6;
+    --s-pink:           #d946ef;
+    --s-accent:         #7c3aed;
+    --s-violet-tint:    rgba(139,92,246,0.10);
+    --s-violet-border:  rgba(139,92,246,0.20);
+    --s-violet-glow:    rgba(139,92,246,0.25);
+    --s-bg:             #0a0a0f;
+    --s-text:           #e2e8f0;
+    --s-text-dim:       #6b7280;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--s-bg);
+    color: var(--s-text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+    font-size: 15px;
+    overflow-x: hidden;
+  }
+
+  /* ── Full-width top banner ── */
+  .top-banner {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    padding: 10px 0;
+    background: linear-gradient(90deg, #1c1040 0%, #251050 40%, #2a1470 100%);
+    border-bottom: 2px solid var(--s-violet-tint);
+    z-index: 200;
+    text-align: center;
+  }
+
+  /* ── Sticky shadow on scroll ── */
+  .top-banner-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+
+  /* ── Badge pill ── */
+  .banner-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 5px 14px;
+    border-radius: 9999px;
+    background: var(--s-violet-tint);
+    border: 1px solid var(--s-violet-border);
+    color: var(--s-violet);
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+
+  .banner-badge-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #34d399;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 0%,100%{ opacity:1; transform:scale(1);} 50%{ opacity:.5; transform:scale(.85);} }
+
+  /* ── CTA pill inside banner ── */
+  .banner-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 16px;
+    border-radius: 9999px;
+    background: linear-gradient(90deg, var(--s-violet), var(--s-pink));
+    color: #fff;
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: box-shadow 0.2s;
+    box-shadow: 0 0 12px rgba(139,92,246,0.30);
+  }
+  .banner-cta:hover {
+    box-shadow: 0 0 22px rgba(139,92,246,0.55);
+  }
+
+  /* ── Close button ── */
+  .banner-close {
+    position: absolute;
+    right: 18px;
+    background: none;
+    border: none;
+    color: var(--s-text-dim);
+    font-size: 1.1rem;
+    cursor: pointer;
+    opacity: .6;
+    transition: opacity 0.15s;
+  }
+  .banner-close:hover { opacity: 1; }
+
+  /* ── Spacer so nav doesn't cover content when banner sticks ── */
+  .nav-spacer { height: 0; }
+
+  /* ── Demo page content (nav + hero copy so you can see it in context) ── */
+  .nav {
+    background: rgba(10,10,15,0.90);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    position: sticky; top: 0; z-index: 100;
+  }
+  .nav-in {
+    max-width: 1100px; margin: 0 auto;
+    padding: 14px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-logo { display: flex; align-items: center; gap: 10px; }
+  .logo-box {
+    width: 34px; height: 34px; border-radius: 10px;
+    background: linear-gradient(135deg, var(--s-violet), var(--s-pink));
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 12px rgba(139,92,246,0.30);
+  }
+  .logo-box span { color: #fff; font-weight: 700; font-size: 12px; }
+  .logo-text { font-size: 18px; font-weight: 700; }
+  .nav-links { display: flex; align-items: center; gap: 12px; }
+  .nav-link { font-size: 13.5px; color: var(--s-text-dim); }
+  .nav-link:hover { color: var(--s-text); }
+  .btn-nav {
+    padding: 8px 18px; font-size: 13.5px; font-weight: 500;
+    border-radius: 8px;
+    background: linear-gradient(90deg, var(--s-accent), var(--s-pink));
+    color: #fff; cursor: pointer;
+    box-shadow: 0 4px 12px rgba(139,92,246,0.28);
+  }
+
+  /* ── Hero placeholder ── */
+  .hero {
+    max-width: 720px; margin: 0 auto;
+    padding: 64px 24px 80px;
+    text-align: center;
+  }
+  .hero h1 { font-size: clamp(36px,7vw,88px); font-weight: 700; line-height: 1.06; letter-spacing: -0.03em; margin-bottom: 20px; }
+  .grad-purple { background: linear-gradient(90deg, var(--s-violet), var(--s-pink)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .hero-p { font-size: 16px; color: var(--s-text-dim); line-height: 1.65; margin-bottom: 32px; }
+  .btn-demo { display: inline-block; padding: 14px 30px; border-radius: 11px; background: linear-gradient(90deg, var(--s-accent), var(--s-pink)); color:#fff; font-weight:600; font-size:15px; box-shadow:0 8px 22px rgba(139,92,246,0.28); }
+
+  /* ── Separator line under hero ── */
+  .hero-rule { border-top: 1px solid rgba(255,255,255,0.05); max-width: 720px; margin: 0 auto 0; }
+
+  /* ── Annotation strip ── */
+  .annotations { border-top: 1px solid var(--s-violet-border); background: rgba(139,92,246,0.04); }
+  .annot-title { text-align:center; font-family:'JetBrains Mono',monospace; font-size:0.75rem; font-weight:700; color:var(--s-violet); text-transform:uppercase; letter-spacing:0.12em; padding:40px 24px 10px; }
+  .annot-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:14px; padding:0 24px 30px; }
+  .annot-item {
+    background: rgba(139,92,246,0.06);
+    border: 1px solid var(--s-violet-border);
+    border-radius: 11px;
+    padding: 16px 18px;
+  }
+  .annot-item h4 { font-size:13px; font-weight:700; color:var(--s-violet); margin-bottom:6px; }
+  .annot-item p  { font-size:12.5px; color:var(--s-text-dim); line-height:1.6; }
+  .annot-item code { font-size:11.5px; color:var(--s-pink); display:block; margin-top:8px; font-family:'JetBrains Mono',monospace; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     STICKY TOP BANNER
+══════════════════════════════════════════════ -->
+<div class="top-banner">
+  <div class="top-banner-inner">
+    <!-- badge left -->
+    <div style="display:flex; align-items:center; gap:8px;">
+      <div class="banner-badge">
+        <span class="banner-badge-dot"></span>
+        2 free scripts — no card required
+      </div>
+    </div>
+
+    <!-- offer copy -->
+    <p style="font-size:13px; font-weight:500; color:#fff;">
+      Start creating AI-optimised YouTube scripts today — <em>on us</em>
+    </p>
+
+    <!-- CTA pill (right) -->
+    <div class="banner-cta" style="cursor:pointer;">
+      ✦   Claim 2 Free Scripts
+    </div>
+
+    <!-- close -->
+    <button class="banner-close">✕</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     NAV *stays behind the banner* —
+     The nav has its own background so it
+     doesn't let content bleed through.
+══════════════════════════════════════════════ -->
+<nav class="nav">
+  <div class="nav-in">
+    <div class="nav-logo">
+      <div class="logo-box"><span>SK</span></div>
+      <span class="logo-text">Skripr</span>
+    </div>
+    <div class="nav-links">
+      <a href="#" class="nav-link">Pricing</a>
+      <a href="#" class="nav-link">Sign in</a>
+      <a href="#" class="btn-nav">Get Started Free</a>
+    </div>
+  </div>
+  <p style="position:absolute; bottom:2px; right:18px; font-size:10px; color:#444; font-family:monospace;">(nav sits here, below banner)</p>
+</nav>
+
+
+<!-- ══════════════════════════════════════════════
+     HERO — just enough content so you see it in context
+══════════════════════════════════════════════ -->
+<div class="hero">
+  <h1>Reverse-engineer<br><span class="grad-purple">any viral video</span></h1>
+  <p class="hero-p">
+    Paste any YouTube URL. Our AI extracts the exact structural patterns — hook, retention beats, pacing, CTA — and generates a script using that proven formula.
+  </p>
+  <a href="#" class="btn-demo">Start Free — 2 Scripts Included</a>
+</div>
+<div class="hero-rule"></div>
+
+
+<!-- ══════════════════════════════════════════════
+     ANNOTATION TABLE
+══════════════════════════════════════════════ -->
+<section class="annotations">
+  <p class="annot-title">Banner Design Tokens — Skripr Brand Colours</p>
+  <div class="annot-grid">
+
+    <div class="annot-item">
+      <h4>Full-width container</h4>
+      <p>Fills 100% of viewport width. Sits above every other layer (z-index 200).</p>
+      <code>z-index: 200; width: 100%;</code>
+    </div>
+
+    <div class="annot-item">
+      <h4>Background gradient</h4>
+      <p>A deep indigo-to-indigo gradient on a ~50 px tall strip. Faint violet glow border links it to the rest of the page.</p>
+      <code>background: linear-gradient(90deg, #1c1040, #251050)</code>
+      <code style="color:var(--s-violet)">border-bottom: 2px solid rgba(139,92,246,.15)</code>
+    </div>
+
+    <div class="annot-item">
+      <h4>Badge pill</h4>
+      <p>Tinted background with violet border + violet text. Pulsing green dot signals "live / active".</p>
+      <code>background: rgba(139,92,246,.10)</code>
+      <code>border: 1px solid rgba(139,92,246,.20)</code>
+      <code>color: #a78bfa</code>
+      <code>border-radius: 9999px</code>
+    </div>
+
+    <div class="annot-item">
+      <h4>CTA pill inside banner</h4>
+      <p>Full Skripr gradient — solid violet-to-pink — white text, glowing shadow. This is the conversion element.</p>
+      <code style="color:var(--s-pink)">background: linear-gradient(90deg, #7c3aed, #d946ef)</code>
+      <code>box-shadow: 0 0 14px rgba(139,92,246,.35)</code>
+    </div>
+
+    <div class="annot-item">
+      <h4>Accent text</h4>
+      <p>Bold white — slightly louder than body copy — makes the offer linereadable in one scan.</p>
+      <code>color: #fff; font-weight: 500;</code>
+    </div>
+
+    <div class="annot-item">
+      <h4>Close ✕ button</h4>
+      <p>Hover opacity transition. Tiny hit area. Not calling attention — just there if needed.</p>
+      <code>opacity: .6 → 1 on hover</code>
+      <code>position: absolute; right: 18px</code>
+    </div>
+
+    <div class="annot-item">
+      <h4>Height &amp; padding</h4>
+      <p>Banner height scales naturally with content. No fixed px height. Inner padding 10px vertical so it doesn't dominate.</p>
+      <code>padding: 10px 0;</code>
+    </div>
+
+    <div class="annot-item">
+      <h4>Nav below banner</h4>
+      <p>Nav has its own semi-transparent background + blur, so scrolling content doesn't ghost through it when the banner closes.</p>
+      <code>background: rgba(10,10,15,.90)</code>
+      <code>backdrop-filter: blur(14px)</code>
+    </div>
+
+    <div class="annot-item">
+      <h4>Spacer strategy</h4>
+      <p>When banner is visible, nav presses down naturally. When dismissed, nav slides up to top — no hardcoded margin needed.</p>
+      <code>position: sticky; top: 0;</code>
+      <code>(banner height auto-sets the offset)</code>
+    </div>
+
+  </div>
+</section>
+
+<!-- Sizing note -->
+<div style="max-width:720px; margin:28px auto 60px; padding:0 24px;">
+  <p style="font-size:13px; color:var(--s-text-dim); line-height:1.7; font-style:italic;">
+    Your actual page content — hero copy, features etc. — stays as-is from <code>page.tsx</code> (the hero section above is the live copy stretched slim just so you can read through it). To apply this to the real site, add the <code>&lt;div class="top-banner"&gt;</code> block as the very first child inside page.tsx's outer <code>&lt;div&gt;</code>, before the glow effects and nav. Toggle visibility with state so it dismisses cleanly.
+  </p>
+</div>
+
+</body>
+</html>

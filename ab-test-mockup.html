@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skripr — A/B Banner Test Mockup</title>
+<style>
+  /* ════════════════════════════════════════════════
+     SKRIPR BRAND TOKENS
+  ════════════════════════════════════════════════ */
+  :root {
+    --s-violet:      #8b5cf6;
+    --s-pink:        #d946ef;
+    --s-accent:      #7c3aed;
+    --s-violet-tint:  rgba(139,92,246,0.10);
+    --s-violet-tint2: rgba(139,92,246,0.06);
+    --s-violet-border:rgba(139,92,246,0.20);
+    --s-violet-glow:  rgba(139,92,246,0.30);
+    --s-bg:          #0a0a0f;
+    --s-card:        #12122a;
+    --s-text:        #e2e8f0;
+    --s-text-dim:    #6b7280;
+    --f-accent:      #C41E3A;   /* Fyre red — used in variant B */
+    --f-accent-hi:   #D62B47;
+    --f-banner-bg:   #1a0a0f;
+    --f-green:       #22c55e;
+    --f-border:      rgba(255,255,255,0.06);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--s-bg);
+    color: var(--s-text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+    font-size: 15px;
+    overflow-x: hidden;
+  }
+
+  /* ════ A/B TEST SWITCHER ════ */
+  #ab-switcher {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 9999;
+    background: var(--s-card);
+    border: 1px solid var(--s-violet-border);
+    border-radius: 16px;
+    padding: 16px 20px;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.40);
+    font-family: 'JetBrains Mono', monospace;
+    backdrop-filter: blur(20px);
+    min-width: 300px;
+  }
+  #ab-switcher h4 {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--s-violet);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  #ab-switcher .switcher-desc {
+    font-size: 12px;
+    color: var(--s-text-dim);
+    line-height: 1.6;
+    margin-bottom: 12px;
+  }
+  .variant-btns {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .variant-btn {
+    flex: 1;
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.15s;
+  }
+  .variant-btn.active-v {
+    border-color: currentColor;
+    box-shadow: 0 0 10px currentColor;
+  }
+  .variant-btn:not(.active-v) {
+    opacity: 0.55;
+  }
+  #btn-var-a {
+    background: linear-gradient(90deg, var(--s-violet), var(--s-pink));
+    color: #fff;
+    box-shadow: 0 4px 12px var(--s-violet-glow);
+  }
+  #btn-var-b {
+    background: var(--f-accent);
+    color: #000;
+    box-shadow: 0 4px 12px rgba(196,30,58,0.40);
+  }
+  .log-output {
+    background: rgba(0,0,0,0.35);
+    border-radius: 8px;
+    padding: 8px 10px;
+    max-height: 120px;
+    overflow-y: auto;
+    font-size: 11px;
+    color: var(--s-text-dim);
+    line-height: 1.6;
+  }
+  .log-event {
+    display: flex;
+    gap: 8px;
+    padding: 2px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+  }
+  .log-event:last-child { border-bottom: none; }
+  .log-time { color: var(--s-violet); min-width: 62px; }
+  .log-var { font-weight: 700; min-width: 36px; }
+  .log-var.b { color: var(--f-accent); }
+
+  /* ════ SHARED PAGE SHELL ════ */
+  .top-banner {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    padding: 10px 0;
+    z-index: 200;
+    text-align: center;
+    /* ── variant-specific overrides applied inline ── */
+  }
+  .top-banner-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .banner-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 5px 14px;
+    border-radius: 9999px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    /* ── variant overrides inline ── */
+  }
+  .banner-badge-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--f-green);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 0%,100%{ opacity:1; transform:scale(1);} 50%{ opacity:.5; transform:scale(.85);} }
+  .banner-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 16px;
+    border-radius: 9999px;
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: box-shadow 0.2s, background 0.2s;
+    /* ── variant overrides inline ── */
+  }
+  .banner-copy {
+    font-size: 12.5px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+  }
+  .banner-close {
+    position: absolute;
+    right: 18px;
+    background: none;
+    border: none;
+    font-size: 1.1rem;
+    cursor: pointer;
+    opacity: .6;
+    transition: opacity 0.15s;
+  }
+  .banner-close:hover { opacity: 1; }
+
+  /* ── Variant A (control) styles ── */
+  .variant-a .top-banner {
+    background: linear-gradient(90deg, #1c1040 0%, #251050 40%, #2a1470 100%);
+    border-bottom: 2px solid var(--s-violet-tint);
+  }
+  .variant-a .banner-badge {
+    background: var(--s-violet-tint);
+    border: 1px solid var(--s-violet-border);
+    color: var(--s-violet);
+  }
+  .variant-a .banner-cta {
+    background: linear-gradient(90deg, var(--s-accent), var(--s-pink));
+    color: #fff;
+    box-shadow: 0 0 12px var(--s-violet-glow);
+  }
+  .variant-a .banner-cta:hover {
+    box-shadow: 0 0 22px var(--s-violet-glow);
+  }
+  .variant-a .banner-copy { color: #fff; }
+  .variant-a .banner-close { color: var(--s-text-dim); }
+
+  /* ── Variant B (treatment) styles ── */
+  .variant-b .top-banner {
+    background: #1a0a0f;
+    border-bottom: 2px solid var(--f-accent);
+  }
+  .variant-b .banner-badge {
+    background: var(--s-card);
+    border: 1px solid var(--f-border);
+    color: var(--f-accent);
+  }
+  .variant-b .banner-cta {
+    background: var(--f-accent);
+    color: #000;
+    box-shadow: 0 0 14px rgba(196,30,58,0.40);
+  }
+  .variant-b .banner-cta:hover {
+    background: var(--f-accent-hi);
+    box-shadow: 0 0 22px rgba(196,30,58,0.55);
+  }
+  .variant-b .banner-copy { color: #fff; }
+  .variant-b .banner-close { color: var(--s-text-dim); }
+
+  /* ── Nav styles shared ── */
+  .nav {
+    background: rgba(10,10,15,0.90);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    position: sticky; top: 0; z-index: 100;
+  }
+  .nav-in {
+    max-width: 1100px; margin: 0 auto;
+    padding: 14px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-logo { display: flex; align-items: center; gap: 10px; }
+  .logo-box {
+    width: 34px; height: 34px; border-radius: 10px;
+    background: linear-gradient(135deg, var(--s-violet), var(--s-pink));
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 12px var(--s-violet-glow);
+  }
+  .logo-box .variant-b-logo {
+    background: var(--f-accent);
+    box-shadow: 0 4px 12px rgba(196,30,58,0.40);
+  }
+  .logo-box span { color: #fff; font-weight: 700; font-size: 12px; }
+  .logo-text { font-size: 18px; font-weight: 700; }
+  .nav-links { display: flex; align-items: center; gap: 12px; }
+  .nav-link { font-size: 13.5px; color: var(--s-text-dim); }
+  .nav-link:hover { color: var(--s-text); }
+  .btn-nav {
+    padding: 8px 18px; font-size: 13.5px; font-weight: 500;
+    border-radius: 8px;
+    background: linear-gradient(90deg, var(--s-accent), var(--s-pink));
+    color: #fff;
+    box-shadow: 0 4px 12px var(--s-violet-glow);
+  }
+  .btn-nav-variant-b {
+    background: var(--f-accent);
+    color: #000;
+    box-shadow: 0 4px 12px rgba(196,30,58,0.40);
+  }
+
+  /* ── Hero ── */
+  .hero {
+    max-width: 720px; margin: 0 auto;
+    padding: 64px 24px 80px;
+    text-align: center;
+  }
+  .hero h1 {
+    font-size: clamp(36px, 7vw, 88px);
+    font-weight: 700; line-height: 1.06;
+    letter-spacing: -0.03em; margin-bottom: 20px;
+  }
+  .grad-purple {
+    background: linear-gradient(90deg, var(--s-violet), var(--s-pink));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero-p {
+    font-size: 16px; color: var(--s-text-dim);
+    line-height: 1.65; margin-bottom: 32px;
+  }
+  .btn-demo {
+    display: inline-block; padding: 14px 30px;
+    border-radius: 11px;
+    background: linear-gradient(90deg, var(--s-accent), var(--s-pink));
+    color: #fff; font-weight: 600; font-size: 15px;
+    box-shadow: 0 8px 22px var(--s-violet-glow);
+    cursor: pointer;
+  }
+  .btn-demo.b {
+    background: var(--f-accent);
+    color: #000;
+    box-shadow: 0 8px 22px rgba(196,30,58,0.38);
+  }
+
+  /* ── Section label ── */
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem; font-weight: 700;
+    color: var(--s-violet); text-transform: uppercase;
+    letter-spacing: 0.14em;
+    text-align: center;
+    padding: 40px 24px 16px;
+  }
+
+  /* ── Comparison grid ── */
+  .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 0 24px 60px;
+  }
+  .compare-card {
+    background: var(--s-card);
+    border: 1px solid var(--s-violet-border);
+    border-radius: 16px;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .compare-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 4px;
+  }
+  .compare-card.variant-a-card::before {
+    background: linear-gradient(90deg, var(--s-violet), var(--s-pink));
+  }
+  .compare-card.variant-b-card::before {
+    background: var(--f-accent);
+  }
+  .compare-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem; font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 4px 10px;
+    border-radius: 6px;
+    display: inline-block;
+    margin-bottom: 16px;
+  }
+  .variant-a-card .compare-label { background: var(--s-violet-tint); color: var(--s-violet); }
+  .variant-b-card .compare-label { background: rgba(196,30,58,0.15); color: var(--f-accent); }
+
+  .compare-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    font-size: 13px;
+  }
+  .compare-row:last-child { border-bottom: none; }
+  .compare-key { color: var(--s-text-dim); }
+  .compare-val { font-weight: 600; font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+  .color-swatch {
+    display: inline-block;
+    width: 14px; height: 14px;
+    border-radius: 4px;
+    vertical-align: middle;
+    margin-right: 6px;
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+</style>
+</head>
+<body class="variant-a" id="page-body">
+
+<!-- ════════════════════════ A/B TEST SWITCHER ════════════════════════ -->
+<div id="ab-switcher">
+  <h4>
+    <!-- lab icon -->
+    <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M9 3L5 6.99h3V14c0 1.1.9 2 2 2h5v-2H7V6.99h2l4-4zm6 0v3h2l4 4-4 4h-2v8h-3v-8H2V6.99l4-4z" opacity=".3"/>
+      <path d="M15 15V3H9v12l-4 4h14"/>
+    </svg>
+    A/B Test — Banner Colour
+  </h4>
+  <p class="switcher-desc">
+    Test whether violet or red banner gets more sign-ups. Picking a variant on the mockup simulates what that visitor would have seen.
+  </p>
+  <div class="variant-btns">
+    <button class="variant-btn active-v" id="btn-var-a" onclick="setVariant('a')">Variant A<br><small>Violet</small></button>
+    <button class="variant-btn" id="btn-var-b" onclick="setVariant('b')">Variant B<br><small>Red</small></button>
+  </div>
+  <div class="log-output" id="log-output">
+    <div class="log-event"><span class="log-time" id="log-time">--:--</span> Initializing A/B test...</div>
+  </div>
+</div>
+
+<!-- ════════════════════════ BANNER ════════════════════════ -->
+<div class="top-banner" id="top-banner">
+  <div class="top-banner-inner">
+    <div style="display:flex; align-items:center; gap:8px;">
+      <div class="banner-badge" id="banner-badge">
+        <span class="banner-badge-dot"></span>
+        2 scripts free — no card required
+      </div>
+    </div>
+    <p class="banner-copy" id="banner-copy">
+      Start creating AI-powered YouTube scripts today — <em>on us</em>
+    </p>
+    <!-- data-variant="" tracks which variant this user got -->
+    <div class="banner-cta" id="banner-cta" data-variant="" onclick="trackEvent('banner-cta-click')" style="cursor:pointer;">
+      ✦ &nbsp;Claim 2 Free Scripts
+    </div>
+    <button class="banner-close" onclick="dismissBanner()">✕</button>
+  </div>
+</div>
+
+<!-- ════════════════════════ NAV ════════════════════════ -->
+<nav class="nav">
+  <div class="nav-in">
+    <div class="nav-logo">
+      <div class="logo-box" id="logo-box"><span>SK</span></div>
+      <span class="logo-text">Skripr</span>
+    </div>
+    <div class="nav-links">
+      <a href="#" class="nav-link">Pricing</a>
+      <a href="#" class="nav-link">Sign in</a>
+    </div>
+    <a href="#" class="btn-nav" id="nav-cta" onclick="trackEvent('nav-cta-click')">Get Started Free</a>
+  </div>
+</nav>
+
+<!-- ════════════════════════ HERO ════════════════════════ -->
+<div class="hero">
+  <h1>Reverse-engineer<br><span class="grad-purple">any viral video</span></h1>
+  <p class="hero-p">
+    Paste any YouTube URL. Our AI extracts the exact structural patterns that made it go viral — hook, retention beats, pacing, CTA — and generates a script using that proven formula.
+  </p>
+  <a href="#" class="btn-demo" id="hero-cta" onclick="trackEvent('hero-cta-click')">Start Free — 2 Scripts Included</a>
+  <p style="font-size:12px; color:var(--s-text-dim); margin-top:12px;">No credit card required &nbsp;·&nbsp; Cancel anytime</p>
+</div>
+<div style="border-top:1px solid rgba(255,255,255,0.05); max-width:720px; margin:0 auto;"></div>
+
+<!-- ════════════════════════ A/B TEST EXPLANATION ════════════════════════ -->
+<div class="section-label">A/B Test — What's Being Tested</div>
+<div style="max-width:820px; margin:0 auto; padding:0 6px 20px; font-size:13.5px; color:var(--s-text-dim); line-height:1.75;">
+  <p style="margin-bottom:16px;">
+    Use the switcher in the bottom-right corner to toggle between Variant A (control — current Skripr violet) and Variant B (treatment — Fyre red).
+    Click the banner CTA, nav CTA, or hero CTA to fire a <code style="color:var(--s-violet)">trackEvent()</code> call.
+    All clicks are logged to the console in the switcher panel.
+  </p>
+</div>
+
+<!-- ════════════════════════ SIDE-BY-SIDE COMPARISON ════════════════════════ -->
+<p class="section-label">Design Token Comparison</p>
+<div class="compare-grid">
+
+  <!-- ── Variant A ── -->
+  <div class="compare-card variant-a-card">
+    <span class="compare-label">Variant A — Current Skripr (Control)</span>
+    <div class="compare-row"><span class="compare-key">Banner bg</span><span class="compare-val">#1c1040 → #251050</span></div>
+    <div class="compare-row"><span class="compare-key">Banner underline bar</span><span class="compare-val">rgba(139,92,246,0.15)</span></div>
+    <div class="compare-row"><span class="compare-key">Badge bg</span><span class="compare-val"><span class="color-swatch" style="background:rgba(139,92,246,.15)"></span>rgba(139,92,246,.15)</span></div>
+    <div class="compare-row"><span class="compare-key">Badge text</span><span class="compare-val"><span class="color-swatch" style="background:#a78bfa"></span>#a78bfa violet</span></div>
+    <div class="compare-row"><span class="compare-key">CTA pill bg</span><span class="compare-val"><span class="color-swatch" style="background:linear-gradient(90deg,#7c3aed,#d946ef)"></span>gradient violet→pink</span></div>
+    <div class="compare-row"><span class="compare-key">CTA text</span><span class="compare-val">#fff — white</span></div>
+    <div class="compare-row"><span class="compare-key">CTA hover glow</span><span class="compare-val">0 0 22px rgba(139,92,246,0.55)</span></div>
+    <div class="compare-row"><span class="compare-key">Badge dot</span><span class="compare-val"><span class="color-swatch" style="background:#34d399"></span>#34d399 green</span></div>
+    <div class="compare-row"><span class="compare-key">Nav logo</span><span class="compare-val">gradient violet→pink</span></div>
+    <div class="compare-row"><span class="compare-key">Nav "Get Started"</span><span class="compare-val">gradient violet→pink</span></div>
+    <div class="compare-row"><span class="compare-key">Psychological signal</span><span class="compare-val">creativity · trust · calm</span></div>
+    <div class="compare-row"><span class="compare-key">Urgency trigger</span><span class="compare-val">⬛ low</span></div>
+  </div>
+
+  <!-- ── Variant B ── -->
+  <div class="compare-card variant-b-card">
+    <span class="compare-label">Variant B — Fyre Red (Treatment)</span>
+    <div class="compare-row"><span class="compare-key">Banner bg</span><span class="compare-val"><span class="color-swatch" style="background:#1a0a0f"></span>#1a0a0f</span></div>
+    <div class="compare-row"><span class="compare-key">Banner underline bar</span><span class="compare-val"><span class="color-swatch" style="background:#C41E3A"></span>2px solid #C41E3A</span></div>
+    <div class="compare-row"><span class="compare-key">Badge bg</span><span class="compare-val"><span class="color-swatch" style="background:#141414"></span>#141414 (card)</span></div>
+    <div class="compare-row"><span class="compare-key">Badge text</span><span class="compare-val"><span class="color-swatch" style="background:#C41E3A"></span>#C41E3A red · mono</span></div>
+    <div class="compare-row"><span class="compare-key">CTA pill bg</span><span class="compare-val"><span class="color-swatch" style="background:#C41E3A"></span>solid #C41E3A</span></div>
+    <div class="compare-row"><span class="compare-key">CTA text</span><span class="compare-val">#000 — black on red</span></div>
+    <div class="compare-row"><span class="compare-key">CTA hover glow</span><span class="compare-val">0 0 22px rgba(196,30,58,0.55)</span></div>
+    <div class="compare-row"><span class="compare-key">Badge dot</span><span class="compare-val"><span class="color-swatch" style="background:#22c55e"></span>#22c55e green</span></div>
+    <div class="compare-row"><span class="compare-key">Nav logo</span><span class="compare-val">solid #C41E3A</span></div>
+    <div class="compare-row"><span class="compare-key">Nav "Get Started"</span><span class="compare-val">solid #C41E3A</span></div>
+    <div class="compare-row"><span class="compare-key">Psychological signal</span><span class="compare-val">urgency · premium · bold</span></div>
+    <div class="compare-row"><span class="compare-key">Urgency trigger</span><span class="compare-val">🟥 high</span></div>
+  </div>
+</div>
+
+<!-- ════════════════════════ CODE SNIPPET TO INTEGRATE ════════════════════════ -->
+<div style="max-width:820px; margin:0 auto; padding:0 24px 60px;">
+  <p class="section-label">Integration — what the code looks like</p>
+  <pre style="background:rgba(0,0,0,0.35); border:1px solid var(--s-violet-border); border-radius:12px; padding:20px; overflow-x:auto; font-size:13px; line-height:1.8; color:var(--s-text-2); font-family:'JetBrains Mono',monospace;"><code><span style="color:var(--s-violet)">// In page.tsx — cookie-based A/B split</span>
+<span style="color:#22c55e">const</span> <span style="color:#fff">bannerVariant</span> <span style="color:#f59e0b">=</span> <span style="color:var(--s-pink)">cookies</span><span style="color:#fff">()</span><span style="color:#f59e0b">.</span><span style="color:#fff">get</span><span style="color:#f59e0b">(</span><span style="color:#FBBF24">'banner_v'</span><span style="color:#f59e0b">)</span><span style="color:#f59e0b">?.</span><span style="color:#fff">value</span>   <span style="color:var(--s-violet)">// 'a' | 'b'</span>
+
+<span style="color:#22c55e">if</span> <span style="color:#f59e0b">(</span><span style="color:#fff">bannerVariant</span> <span style="color:#f59e0b">===</span> <span style="color:#FBBF24">'b'</span><span style="color:#f59e0b">)</span> <span style="color:#f59e0b">{</span>
+  <span style="color:var(--s-violet)">// Fyre red banner</span>
+  <span style="color:var(--s-violet)">&lt;TopBanner</span>
+  <span style="color:var(--s-violet)">  variant</span><span style="color:#f59e0b">=</span><span style="color:#22c55e">"fyre"</span>
+  <span style="color:var(--s-violet)">  headline</span><span style="color:#f59e0b">=</span><span style="color:#FBBF24">"2 scripts free — no card required"</span>
+  <span style="color:var(--s-violet)">  cta</span><span style="color:#f59e0b">=</span><span style="color:#FBBF24">"Claim 2 Free Scripts"</span>
+  <span style="color:var(--s-violet)">/&gt;</span>
+<span style="color:#f59e0b">}</span> <span style="color:#22c55e">else</span> <span style="color:#f59e0b">{</span>
+  <span style="color:var(--s-violet)">// Current Skripr violet banner</span>
+  <span style="color:var(--s-violet)">&lt;TopBanner</span>
+  <span style="color:var(--s-violet)">  variant</span><span style="color:#f59e0b">=</span><span style="color:#22c55e">"skripr"</span>
+  <span style="color:var(--s-violet)">  headline</span><span style="color:#f59e0b">=</span><span style="color:#FBBF24">"2 scripts free — no card required"</span>
+  <span style="color:var(--s-violet)">  cta</span><span style="color:#f59e0b">=</span><span style="color:#FBBF24">"Claim 2 Free Scripts"</span>
+  <span style="color:var(--s-violet)">/&gt;</span>
+<span style="color:#f59e0b">}</span>
+
+<span style="color:var(--s-violet)">// Track conversion (send to Mixpanel / PostHog / Supabase)</span>
+<span style="color:var(--s-violet)">track</span><span style="color:#f59e0b">(</span><span style="color:#FBBF24">'banner_cta_clicked'</span><span style="color:#f59e0b">,</span> <span style="color:#f59e0b">{</span> <span style="color:#fff">variant</span><span style="color:#f59e0b">:</span> <span style="color:#fff">bannerVariant</span> <span style="color:#f59e0b">}</span><span style="color:#f59e0b">)</span></code></pre>
+</div>
+
+<script>
+  /* ═══════════════════════════════════════════════════════════════
+     A/B TEST LOGIC
+     ─────────────────────────────────────────────────────────────
+     In production this runs with a real A/B test provider
+     (PostHog, Mixpanel, or a simple Supabase nvariant_events table).
+     Here it's a demo — the switcher lets you manually flip
+     between variants and see the tracking events fire.
+  ═══════════════════════════════════════════════════════════════ */ 
+    
+  let currentVariant = 'a';   // default — matches 50/50 server-side cookie logic
+
+  function setVariant(v) {
+    currentVariant = v;
+
+    // Toggle body class
+    document.getElementById('page-body').className = v === 'b'
+      ? 'variant-b'
+      : 'variant-a';
+
+    // Toggle nav logo
+    const logoBox = document.getElementById('logo-box');
+    logoBox.className = 'logo-box' + (v === 'b' ? ' variant-b-logo' : '');
+
+    // Toggle active button
+    document.getElementById('btn-var-a').classList.toggle('active-v', v === 'a');
+    document.getElementById('btn-var-b').classList.toggle('active-v', v === 'b');
+
+    // Update banner CTA data-variant for analytics tag
+    document.getElementById('banner-cta').dataset.variant = v;
+
+    // Log the serve
+    logEvent('BANNER_SERVED', v.toUpperCase(), `variant="${v}" — banner rendered`);
+  }
+
+  function trackEvent(eventName, detail) {
+    const variant = document.getElementById('banner-cta').dataset.variant || currentVariant;
+    const msg = detail || '';
+    logEvent(eventName.toUpperCase(), variant.toUpperCase(), msg);
+
+    /* production: send to analytics provider
+    const payload = { variant, event: eventName, ts: Date.now(), url: window.location.pathname };
+    fetch('/api/analytics', { method:'POST', body: JSON.stringify(payload) }); */
+  }
+
+  function logEvent(type, variant, detail) {
+    const now = new Date();
+    const ts = String(now.getMinutes()).padStart(2,'0') + ':' + String(now.getSeconds()).padStart(2,'0');
+    const el = document.getElementById('log-output');
+    const row = `<div class="log-event">
+      <span class="log-time">${ts}</span>
+      <span class="log-var ${variant === 'B' ? 'b' : ''}">[${variant}]</span>
+      <span>${type} ${detail}</span>
+    </div>`;
+    el.insertAdjacentHTML('afterbegin', row);
+    // limit log height
+    while (el.children.length > 12) el.lastElementChild.remove();
+  }
+
+  function dismissBanner() {
+    const banner = document.getElementById('top-banner');
+    banner.style.transition = 'opacity 0.3s, max-height 0.3s';
+    banner.style.opacity = '0';
+    banner.style.maxHeight = '0';
+    banner.style.padding = '0';
+    banner.style.overflow = 'hidden';
+    setTimeout(() => banner.style.display = 'none', 400);
+    logEvent('BANNER_DISMISSED', currentVariant.toUpperCase(), 'user clicked ✕');
+  }
+
+  // Init: simulate server-side cookie split on load
+  window.addEventListener('DOMContentLoaded', () => {
+    const serverVariant = Math.random() < 0.5 ? 'a' : 'b';
+    setVariant(serverVariant);
+    logEvent('COOKIE_READ', serverVariant.toUpperCase(), `cookies.get('banner_v') = "${serverVariant}"`);
+  });
+</script>
+
+</body>
+</html>
