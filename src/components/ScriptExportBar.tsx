@@ -176,7 +176,7 @@ export function ScriptExportBar({
         }}>
           <span style={{ fontSize: 12, color: "#34d399", fontWeight: 600 }}>Script copied — open your TTS tool:</span>
           {TTS_TOOLS.map((t) => (
-            
+            <a
               key={t.name}
               href={t.url}
               target="_blank"
