@@ -39,3 +39,14 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+EOF
+ab-test-mockup.html
+banner-fyre.html
+banner-mockup.html
+calliope-overlay.html
+colour-scheme-study.html
+fix_nb2.py
+fix_nb_clean.py
+fix_niche_bend.py
+fyre-overlay.html
+skripr-colour-mockup.html
