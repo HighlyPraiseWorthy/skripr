@@ -256,37 +256,41 @@ Video length: ${lengthGuide[input.videoLength]}
 Tone: ${input.tone}
 TTS optimized: ${input.ttsOptimized ? "Yes — short sentences, mark pauses with [PAUSE], mark emphasis with [EMPHASIS]" : "No"}
 
-TITLE RULES — the generated "title" field MUST obey all of these:
-1. NEVER start with: "How to use", "The best", "Complete guide", "Overview of", "Introduction to", "Everything you need to know", "Top 10 ways to", "Explained in"
-2. MUST contain all three layers simultaneously:
-   - Searchable: a keyword phrase the target audience actually types into YouTube
-   - Emotional trigger: a word/phrase signaling stakes, surprise, loss, urgency, or insider advantage (use: quietly · secretly · actually · really · everyone gets wrong · nobody mentions · hidden · exposed · cost you · revealed)
-   - Curiosity gap: implies a hidden answer, common mistake, or counterintuitive truth
-3. MUST fail the "generic test" — it cannot work for a different video with only the topic word swapped
-4. Express ONE idea only
+TITLE RULES — the generated "title" field MUST follow these viral patterns. Study these real titles that got 3M–10M+ views:
 
-STRONG TITLE OPENERS (use these patterns naturally):
-"the problem nobody talks about with..."
-"what nobody tells you about..."
-"the part everyone misses about..."
-"why this stopped working — and..."
-"the truth about..."
-"what's actually going on with..."
-"why [topic] is quietly..."
-"the hidden downside of..."
+PATTERN 1 — BOLD DECLARATION (2–6 words, strong verb or adjective):
+"AI Slop Is Destroying The Internet" · "Pregnancy is Insane" · "Alcohol is AMAZING" · "Trees Are So Weird" · "GERMANY IS OVER"
+→ Subject + strong verb/adjective. Short. Makes a claim. One word carries all the weight.
 
-STRONG TITLE CLOSERS (end with tension):
-"(most people get this wrong)"
-"(and why it works)"
-"(the actual formula)"
-"(what changed completely)"
-"(no one is talking about)"
-"(the real story)"
+PATTERN 2 — "ACTUALLY" (challenges what viewer already believes):
+"Ozzy Osbourne Is Actually the GREATEST Frontman Ever" · "The Uncomfortable Truth About Ozempic"
+→ "Actually" signals the viewer has been wrong. Instantly creates tension.
 
-BAD TITLE → GOOD TITLE examples:
-❌ "How to Use AI for YouTube Scripts" → ✅ "why AI scripts are quietly killing your channel (and what to use instead)"
-❌ "The Best Script Generator for Creators" → ✅ "the part everyone misses when picking a script tool"
-❌ "YouTube Script Writing Explained" → ✅ "what actually makes someone click your video (most creators get this wrong)"
+PATTERN 3 — DIRECT ADDRESS (You / Your / We):
+"You're More Stressed Than Ever - Let's Change That" · "You Need To Quit Weed." · "We Found a Loophole to Survive the End of the Universe"
+→ Names their specific situation. Full stop = conviction. "We" = community discovery.
+
+PATTERN 4 — SUPERLATIVE + STAKES:
+"This Is the Scariest Place in The Universe" · "The Dumbest Animal Alive" · "Can Humanity Stop A Planet-Killing Asteroid?"
+→ THE (not A). Civilization-scale or deeply personal stakes.
+
+PATTERN 5 — TWO UNEXPECTED THINGS COLLIDING:
+"How Nuclear Flies Protect You from Flesh-Eating Parasites" · "Let's Kill You a Billion Times to Make You Immortal"
+→ Bizarre juxtaposition forces a click.
+
+HARD RULES:
+- Under 65 characters
+- ONE strong emotional word (Insane, Scariest, Actually, Destroying, Worst, Hidden, Dead, Real, Weird, Truth, Wrong)
+- NEVER start with: "How to use", "The best", "Complete guide", "Top 10", "Everything you need to know"
+- No listicles. No colons splitting two weak halves.
+- Must directly reflect the script content — no misleading clickbait
+- Must fail the "generic test" — cannot work for a different video with only the topic swapped
+- Sound like a human said it out loud
+
+BAD → GOOD examples:
+❌ "How to Use AI for YouTube Scripts" → ✅ "AI Scripts Are Actually Destroying Channels"
+❌ "The Best Script Generator for Creators" → ✅ "Why Your Scripts Stop Working (Most Creators Miss This)"
+❌ "YouTube Script Writing Explained" → ✅ "The Real Reason Nobody Watches Your Videos"
 ${input.viralMagnetWord ? `
 VIRAL MAGNET REQUIREMENT: The title field MUST naturally incorporate the word "${input.viralMagnetWord}". Weave it in where it creates maximum curiosity or urgency — not forced, but inevitable.` : ""}
 
