@@ -29,6 +29,22 @@ export function ScriptList({ scripts }: { scripts: Script[] }) {
   const [search, setSearch] = useState("");
   const [filterNiche, setFilterNiche] = useState("all");
   const [sortBy, setSortBy] = useState<"newest" | "oldest" | "words">("newest");
+  const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState<string | null>(null);
+  const [scriptList, setScriptList] = useState(scripts);
+
+  async function handleDelete(id: string) {
+    setDeleting(id);
+    try {
+      const res = await fetch(`/api/scripts/${id}`, { method: "DELETE" });
+      if (res.ok) {
+        setScriptList(prev => prev.filter(s => s.id !== id));
+      }
+    } finally {
+      setDeleting(null);
+      setConfirmDelete(null);
+    }
+  }
 
   const niches = useMemo(() => {
     const set = new Set(scripts.map(s => s.niche).filter(Boolean) as string[]);
@@ -36,7 +52,7 @@ export function ScriptList({ scripts }: { scripts: Script[] }) {
   }, [scripts]);
 
   const filtered = useMemo(() => {
-    return scripts
+    return scriptList
       .filter(s => {
         const matchSearch = !search || s.title.toLowerCase().includes(search.toLowerCase());
         const matchNiche = filterNiche === "all" || s.niche === filterNiche;
@@ -47,7 +63,7 @@ export function ScriptList({ scripts }: { scripts: Script[] }) {
         if (sortBy === "oldest") return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
         return (b.word_count || 0) - (a.word_count || 0);
       });
-  }, [scripts, search, filterNiche, sortBy]);
+  }, [scriptList, search, filterNiche, sortBy]);
 
   const inputStyle = {
     background: C.inputBg,
@@ -94,7 +110,7 @@ export function ScriptList({ scripts }: { scripts: Script[] }) {
       {/* ── Results count ── */}
       {(search || filterNiche !== "all") && (
         <p style={{ fontSize: 12, color: C.textDim, marginBottom: 12 }}>
-          {filtered.length} of {scripts.length} scripts
+          {filtered.length} of {scriptList.length} scripts
           {search && <span> matching "{search}"</span>}
           {filterNiche !== "all" && <span> in {filterNiche}</span>}
           <button
