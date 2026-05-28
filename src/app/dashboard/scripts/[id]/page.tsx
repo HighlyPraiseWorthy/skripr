@@ -76,6 +76,7 @@ export default async function ScriptDetailPage({ params }: { params: Promise<{ i
           <span style={{ fontSize: 14 }}>←</span> Back to Scripts
         </Link>
 
+        {/* ── Metadata card ── */}
         <div style={{ borderRadius: 18, background: C.cardBg, border: `1px solid ${C.border}`, padding: "24px 28px", marginBottom: 14 }}>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 14 }}>
             {script.niche && (
@@ -98,6 +99,7 @@ export default async function ScriptDetailPage({ params }: { params: Promise<{ i
           {script.niche && <p style={{ color: "#a5b4fc", fontSize: 13, fontWeight: 500 }}>✦ Niche Bend: {script.niche}</p>}
         </div>
 
+        {/* ── Script editor card ── */}
         <div style={{ borderRadius: 18, background: C.cardBg, border: `1px solid ${C.border}`, padding: "22px 28px" }}>
           <ScriptEditor
             scriptId={script.id}
@@ -107,5 +109,6 @@ export default async function ScriptDetailPage({ params }: { params: Promise<{ i
           />
         </div>
       </div>
-    );
-  }
+    </div>
+  );
+}
