@@ -1,3 +1,17 @@
+export interface ScriptVersion {
+  content: string;
+  savedAt: string;
+  label: string;
+  wordCount: number;
+}
+
+export interface ScriptVersion {
+  content: string;
+  savedAt: string;
+  label: string;
+  wordCount: number;
+}
+
 export interface Script {
   id: string;
   user_id: string;
@@ -15,4 +29,5 @@ export interface Script {
   status: string | null;
   created_at: string;
   updated_at: string;
+  versions?: ScriptVersion[];
 }

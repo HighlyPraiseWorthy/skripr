@@ -2,7 +2,7 @@ import { auth } from "@clerk/nextjs/server";
 import { supabaseAdmin } from "@/lib/db/supabase";
 import Link from "next/link";
 import type { Script } from "@/lib/types/script";
-import { ScriptExportBar } from "@/components/ScriptExportBar";
+import { ScriptEditor } from "@/components/ScriptEditor";
 
 const C = {
   bg: "#0b0b17",
@@ -99,14 +99,12 @@ export default async function ScriptDetailPage({ params }: { params: Promise<{ i
         </div>
 
         <div style={{ borderRadius: 18, background: C.cardBg, border: `1px solid ${C.border}`, padding: "22px 28px" }}>
-          <ScriptExportBar title={script.title} content={script.content || ""} />
-          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
-            <span style={{ fontSize: 12, fontWeight: 700, color: "#818cf8", letterSpacing: 0.5, textTransform: "uppercase" }}>SCRIPT</span>
-            <div style={{ flex: 1, height: 1, background: C.border }} />
-          </div>
-          <p style={{ fontSize: 15, color: C.textBright, lineHeight: 1.9, whiteSpace: "pre-wrap" }}>
-            {script.content}
-          </p>
+          <ScriptEditor
+            scriptId={script.id}
+            initialContent={script.content || ""}
+            initialVersions={(script.versions as any) || []}
+            title={script.title}
+          />
         </div>
       </div>
     </div>
