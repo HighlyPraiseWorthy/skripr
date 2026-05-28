@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
+import { Suspense } from "react";
+import { PostHogProvider, PostHogPageView } from "@/components/PostHogProvider";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -18,7 +20,12 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en" className="dark">
-        <body className={`${inter.className} bg-gray-950 text-gray-100 antialiased`}>{children}</body>
+        <body className={`${inter.className} bg-gray-950 text-gray-100 antialiased`}>
+          <PostHogProvider>
+            <Suspense fallback={null}><PostHogPageView /></Suspense>
+            {children}
+          </PostHogProvider>
+        </body>
       </html>
     </ClerkProvider>
   );

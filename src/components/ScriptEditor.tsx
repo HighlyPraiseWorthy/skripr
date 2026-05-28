@@ -1,5 +1,4 @@
 "use client";
-
 import { useState } from "react";
 import { ScriptExportBar } from "@/components/ScriptExportBar";
 
@@ -49,7 +48,14 @@ export function ScriptEditor({
   const [showHistory, setShowHistory] = useState(false);
   const [versions, setVersions] = useState<ScriptVersion[]>(initialVersions);
 
+  // Title generator state
+  const [showTitles, setShowTitles] = useState(false);
+  const [titles, setTitles] = useState<string[] | null>(null);
+  const [generatingTitles, setGeneratingTitles] = useState(false);
+  const [copiedTitle, setCopiedTitle] = useState<number | null>(null);
+
   const wordCount = content.trim().split(/\s+/).filter(Boolean).length;
+  const isDirty = content !== savedContent;
 
   async function handleSave() {
     setSaving(true);
@@ -86,16 +92,48 @@ export function ScriptEditor({
     setShowHistory(false);
   }
 
-  const isDirty = content !== savedContent;
+  async function handleGenerateTitles() {
+    if (generatingTitles) return;
+    setGeneratingTitles(true);
+    setShowTitles(true);
+    setTitles(null);
+    setCopiedTitle(null);
+    try {
+      const res = await fetch(`/api/scripts/${scriptId}/titles`, { method: "POST" });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      setTitles(data.titles || []);
+    } catch {
+      setTitles([]);
+    } finally {
+      setGeneratingTitles(false);
+    }
+  }
+
+  function copyTitle(t: string, i: number) {
+    navigator.clipboard.writeText(t).then(() => {
+      setCopiedTitle(i);
+      setTimeout(() => setCopiedTitle(null), 2000);
+    });
+  }
 
   return (
     <div>
       <ScriptExportBar title={title} content={content} />
 
       {/* ── SCRIPT header row ── */}
-      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16, flexWrap: "wrap" }}>
         <span style={{ fontSize: 12, fontWeight: 700, color: "#818cf8", letterSpacing: 0.5, textTransform: "uppercase" }}>SCRIPT</span>
         <div style={{ flex: 1, height: 1, background: C.border }} />
+
+        {/* Titles button */}
+        <button
+          onClick={handleGenerateTitles}
+          disabled={generatingTitles}
+          style={{ fontSize: 11, color: showTitles ? "#f472b6" : C.textDim, background: showTitles ? "rgba(244,114,182,0.08)" : "none", border: showTitles ? "1px solid rgba(244,114,182,0.22)" : "1px solid rgba(99,102,241,0.16)", borderRadius: 6, padding: "3px 9px", cursor: generatingTitles ? "wait" : "pointer", fontWeight: 600 }}
+        >
+          {generatingTitles ? "✨ Generating…" : "✨ Titles"}
+        </button>
 
         {/* Version history toggle */}
         {versions.length > 0 && (
@@ -134,6 +172,47 @@ export function ScriptEditor({
         )}
       </div>
 
+      {/* ── Title generator panel ── */}
+      {showTitles && (
+        <div style={{ borderRadius: 12, background: "rgba(244,114,182,0.04)", border: "1px solid rgba(244,114,182,0.18)", padding: "14px 16px", marginBottom: 16 }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+            <p style={{ fontSize: 11, fontWeight: 700, color: "#f472b6", letterSpacing: 0.6, textTransform: "uppercase", margin: 0 }}>✨ Title Variations</p>
+            <button onClick={() => setShowTitles(false)} style={{ fontSize: 13, color: C.textDim, background: "none", border: "none", cursor: "pointer", lineHeight: 1 }}>✕</button>
+          </div>
+          {generatingTitles && (
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              {[1,2,3,4,5].map(i => (
+                <div key={i} style={{ height: 38, borderRadius: 8, background: "rgba(244,114,182,0.06)", border: "1px solid rgba(244,114,182,0.10)", opacity: 0.5 + i * 0.1 }} />
+              ))}
+            </div>
+          )}
+          {!generatingTitles && titles && titles.length === 0 && (
+            <p style={{ fontSize: 13, color: C.textDim, margin: 0 }}>Could not generate titles. Try again.</p>
+          )}
+          {!generatingTitles && titles && titles.length > 0 && (
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              {titles.map((t, i) => (
+                <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", borderRadius: 8, background: C.cardBg, border: `1px solid ${C.border}` }}>
+                  <p style={{ flex: 1, fontSize: 13, fontWeight: 600, color: C.textBright, margin: 0, lineHeight: 1.4 }}>{t}</p>
+                  <button
+                    onClick={() => copyTitle(t, i)}
+                    style={{ flexShrink: 0, fontSize: 11, fontWeight: 600, color: copiedTitle === i ? "#34d399" : C.accent, background: copiedTitle === i ? "rgba(52,211,153,0.10)" : "rgba(99,102,241,0.10)", border: copiedTitle === i ? "1px solid rgba(52,211,153,0.20)" : "1px solid rgba(99,102,241,0.20)", borderRadius: 6, padding: "3px 10px", cursor: "pointer", whiteSpace: "nowrap" }}
+                  >
+                    {copiedTitle === i ? "✓ Copied" : "Copy"}
+                  </button>
+                </div>
+              ))}
+              <button
+                onClick={handleGenerateTitles}
+                style={{ marginTop: 4, fontSize: 11, color: "#f472b6", background: "none", border: "1px solid rgba(244,114,182,0.18)", borderRadius: 6, padding: "5px 12px", cursor: "pointer", fontWeight: 600, alignSelf: "flex-start" }}
+              >
+                ↻ Regenerate
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+
       {/* ── Version history panel ── */}
       {showHistory && versions.length > 0 && (
         <div style={{ borderRadius: 12, background: "rgba(99,102,241,0.04)", border: "1px solid rgba(99,102,241,0.14)", padding: "14px 16px", marginBottom: 16 }}>
@@ -155,7 +234,7 @@ export function ScriptEditor({
               </div>
             ))}
           </div>
-          <p style={{ fontSize: 11, color: C.textDim, marginTop: 10, margin: "10px 0 0" }}>Restoring loads the version into the editor — hit Save to make it current.</p>
+          <p style={{ fontSize: 11, color: C.textDim, margin: "10px 0 0" }}>Restoring loads the version into the editor — hit Save to make it current.</p>
         </div>
       )}
 
@@ -192,7 +271,7 @@ export function ScriptEditor({
 
       {isEditing && (
         <p style={{ fontSize: 11, color: C.textDim, marginTop: 8 }}>
-          {wordCount.toLocaleString()} words — editing. Previous version will be saved to history on save.
+          {wordCount.toLocaleString()} words — editing. Previous version saved to history on save.
         </p>
       )}
     </div>

@@ -4,6 +4,7 @@ import { supabaseAdmin } from "@/lib/db/supabase";
 import Link from "next/link";
 import type { Script } from "@/lib/types/script";
 import { EmptyStateGuide } from "@/components/EmptyStateGuide";
+import { ScriptList } from "@/components/ScriptList";
 
 const C = {
   bg: "#0b0b17",
@@ -27,6 +28,12 @@ function timeAgo(dateStr: string): string {
   const hours = Math.floor(mins / 60);
   if (hours < 24) return `${hours}h ago`;
   return `${Math.floor(hours / 24)}d ago`;
+}
+
+function getResetDate(): string {
+  const now = new Date();
+  const next = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+  return next.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
 
 export default async function ScriptsPage() {
@@ -86,7 +93,10 @@ export default async function ScriptsPage() {
                 <span style={{ fontSize: 13, fontWeight: 600, color: C.textBright }}>Scripts this month</span>
                 <span style={{ fontSize: 11, padding: "2px 8px", borderRadius: 6, background: "rgba(99,102,241,0.12)", color: C.badgeText, textTransform: "uppercase" as const, fontWeight: 700 }}>{usagePlan}</span>
               </div>
-              <span style={{ fontSize: 13, fontWeight: 700, color: usageColor }}>{usageUsed} / {usageLimit}</span>
+              <div style={{ textAlign: "right" }}>
+                <span style={{ fontSize: 13, fontWeight: 700, color: usageColor }}>{usageUsed} / {usageLimit}</span>
+                <div style={{ fontSize: 11, color: C.textDim, marginTop: 2 }}>Resets {getResetDate()}</div>
+              </div>
             </div>
             <div style={{ height: 6, borderRadius: 6, background: "rgba(99,102,241,0.12)", overflow: "hidden" }}>
               <div style={{ height: "100%", width: `${usagePct}%`, borderRadius: 6, background: usageColor, transition: "width 0.4s ease" }} />
@@ -114,34 +124,7 @@ export default async function ScriptsPage() {
         {scripts.length === 0 ? (
           <EmptyStateGuide />
         ) : (
-          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-            {scripts.map((script) => (
-              <div key={script.id} style={{ borderRadius: 16, backgroundColor: C.cardBg, border: `1px solid ${C.border}`, padding: "20px 22px" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16 }}>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <h3 style={{ fontSize: 16, fontWeight: 600, color: C.textBright, marginBottom: 8, letterSpacing: -0.2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                      {script.title}
-                    </h3>
-                    <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
-                      {script.niche && (
-                        <span style={{ padding: "3px 10px", borderRadius: 8, backgroundColor: C.badgeBg, color: C.badgeText, fontSize: 11, fontWeight: 600, letterSpacing: 0.3, textTransform: "uppercase" }}>
-                          {script.niche}
-                        </span>
-                      )}
-                      <span style={{ color: C.textDim, fontSize: 13 }}>{(script.word_count || 0).toLocaleString()} words</span>
-                      <span style={{ color: C.textDim, fontSize: 13 }}>~{Math.round((script.estimated_duration || 0) / 60) || 1} min</span>
-                      {script.created_at && <span style={{ color: C.textDim, fontSize: 13 }}>{timeAgo(script.created_at)}</span>}
-                    </div>
-                  </div>
-                  <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
-                    <Link href={`/dashboard/scripts/${script.id}`} style={{ padding: "7px 16px", borderRadius: 10, backgroundColor: "rgba(99,102,241,0.10)", color: C.accent, fontSize: 13, fontWeight: 500, textDecoration: "none", border: "1px solid rgba(99,102,241,0.18)" }}>
-                      View
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+          <ScriptList scripts={scripts} />
         )}
       </div>
     </div>
