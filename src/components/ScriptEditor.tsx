@@ -53,6 +53,7 @@ export function ScriptEditor({
   const [titles, setTitles] = useState<string[] | null>(null);
   const [generatingTitles, setGeneratingTitles] = useState(false);
   const [copiedTitle, setCopiedTitle] = useState<number | null>(null);
+  const [titleError, setTitleError] = useState<string | null>(null);
 
   const wordCount = content.trim().split(/\s+/).filter(Boolean).length;
   const isDirty = content !== savedContent;
@@ -101,10 +102,12 @@ export function ScriptEditor({
     try {
       const res = await fetch(`/api/scripts/${scriptId}/titles`, { method: "POST" });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
+      if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
       setTitles(data.titles || []);
-    } catch {
+      setTitleError(null);
+    } catch (e: any) {
       setTitles([]);
+      setTitleError(e.message || "Unknown error");
     } finally {
       setGeneratingTitles(false);
     }
@@ -187,7 +190,10 @@ export function ScriptEditor({
             </div>
           )}
           {!generatingTitles && titles && titles.length === 0 && (
-            <p style={{ fontSize: 13, color: C.textDim, margin: 0 }}>Could not generate titles. Try again.</p>
+            <div>
+              <p style={{ fontSize: 13, color: "#f87171", margin: "0 0 6px" }}>Could not generate titles.</p>
+              {titleError && <p style={{ fontSize: 11, color: C.textDim, margin: 0, fontFamily: "monospace" }}>{titleError}</p>}
+            </div>
           )}
           {!generatingTitles && titles && titles.length > 0 && (
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>

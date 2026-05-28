@@ -30,7 +30,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   const preview = (script.content || "").slice(0, 1800);
 
   const message = await getAnthropic().messages.create({
-    model: "claude-sonnet-4-20250514",
+    model: "claude-sonnet-4-6",
     max_tokens: 600,
     messages: [{
       role: "user",
