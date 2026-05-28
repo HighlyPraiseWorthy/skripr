@@ -107,6 +107,5 @@ export default async function ScriptDetailPage({ params }: { params: Promise<{ i
           />
         </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
