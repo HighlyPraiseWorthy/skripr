@@ -7,11 +7,26 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
   const { userId } = await auth();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  let content: string;
+  let body: { content?: string; title?: string };
   try {
-    ({ content } = await req.json());
+    body = await req.json();
   } catch {
     return NextResponse.json({ error: "Invalid request" }, { status: 400 });
+  }
+
+  const { content, title } = body;
+
+  // Title-only update (fast path — no versioning needed)
+  if (title && !content) {
+    if (typeof title !== "string" || title.trim().length === 0)
+      return NextResponse.json({ error: "Invalid title" }, { status: 400 });
+    const { error: titleErr } = await supabaseAdmin!
+      .from("scripts")
+      .update({ title: title.trim() })
+      .eq("id", id)
+      .eq("user_id", userId);
+    if (titleErr) return NextResponse.json({ error: titleErr.message }, { status: 500 });
+    return NextResponse.json({ ok: true, title: title.trim() });
   }
 
   if (!content || typeof content !== "string")
@@ -39,9 +54,12 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
   const updatedVersions = [...versions, snapshot];
   const wordCount = content.trim().split(/\s+/).filter(Boolean).length;
 
+  const updatePayload: Record<string, unknown> = { content, word_count: wordCount, versions: updatedVersions };
+  if (title && typeof title === "string" && title.trim()) updatePayload.title = title.trim();
+
   const { error: updateErr } = await supabaseAdmin!
     .from("scripts")
-    .update({ content, word_count: wordCount, versions: updatedVersions })
+    .update(updatePayload)
     .eq("id", id)
     .eq("user_id", userId);
 

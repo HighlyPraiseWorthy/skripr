@@ -53,6 +53,8 @@ export function ScriptEditor({
   const [titles, setTitles] = useState<string[] | null>(null);
   const [generatingTitles, setGeneratingTitles] = useState(false);
   const [copiedTitle, setCopiedTitle] = useState<number | null>(null);
+  const [usedTitle, setUsedTitle] = useState<number | null>(null);
+  const [currentTitle, setCurrentTitle] = useState(title);
   const [titleError, setTitleError] = useState<string | null>(null);
 
   const wordCount = content.trim().split(/\s+/).filter(Boolean).length;
@@ -120,9 +122,26 @@ export function ScriptEditor({
     });
   }
 
+  async function useTitle(t: string, i: number) {
+    setUsedTitle(i);
+    try {
+      const res = await fetch(`/api/scripts/${scriptId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title: t }),
+      });
+      if (res.ok) {
+        setCurrentTitle(t);
+        setTimeout(() => setUsedTitle(null), 2500);
+      }
+    } catch {
+      setUsedTitle(null);
+    }
+  }
+
   return (
     <div>
-      <ScriptExportBar title={title} content={content} />
+      <ScriptExportBar title={currentTitle} content={content} />
 
       {/* ── SCRIPT header row ── */}
       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16, flexWrap: "wrap" }}>
@@ -200,12 +219,20 @@ export function ScriptEditor({
               {titles.map((t, i) => (
                 <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", borderRadius: 8, background: C.cardBg, border: `1px solid ${C.border}` }}>
                   <p style={{ flex: 1, fontSize: 13, fontWeight: 600, color: C.textBright, margin: 0, lineHeight: 1.4 }}>{t}</p>
-                  <button
-                    onClick={() => copyTitle(t, i)}
-                    style={{ flexShrink: 0, fontSize: 11, fontWeight: 600, color: copiedTitle === i ? "#34d399" : C.accent, background: copiedTitle === i ? "rgba(52,211,153,0.10)" : "rgba(99,102,241,0.10)", border: copiedTitle === i ? "1px solid rgba(52,211,153,0.20)" : "1px solid rgba(99,102,241,0.20)", borderRadius: 6, padding: "3px 10px", cursor: "pointer", whiteSpace: "nowrap" }}
-                  >
-                    {copiedTitle === i ? "✓ Copied" : "Copy"}
-                  </button>
+                  <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
+                    <button
+                      onClick={() => copyTitle(t, i)}
+                      style={{ fontSize: 11, fontWeight: 600, color: copiedTitle === i ? "#34d399" : C.accent, background: copiedTitle === i ? "rgba(52,211,153,0.10)" : "rgba(99,102,241,0.10)", border: copiedTitle === i ? "1px solid rgba(52,211,153,0.20)" : "1px solid rgba(99,102,241,0.20)", borderRadius: 6, padding: "3px 10px", cursor: "pointer", whiteSpace: "nowrap" }}
+                    >
+                      {copiedTitle === i ? "✓ Copied" : "Copy"}
+                    </button>
+                    <button
+                      onClick={() => useTitle(t, i)}
+                      style={{ fontSize: 11, fontWeight: 600, color: usedTitle === i ? "#34d399" : "#f472b6", background: usedTitle === i ? "rgba(52,211,153,0.10)" : "rgba(244,114,182,0.08)", border: usedTitle === i ? "1px solid rgba(52,211,153,0.20)" : "1px solid rgba(244,114,182,0.22)", borderRadius: 6, padding: "3px 10px", cursor: "pointer", whiteSpace: "nowrap" }}
+                    >
+                      {usedTitle === i ? "✓ Set" : "Use"}
+                    </button>
+                  </div>
                 </div>
               ))}
               <button
