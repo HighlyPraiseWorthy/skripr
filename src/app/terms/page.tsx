@@ -28,7 +28,7 @@ export default function TermsPage() {
         {[
           {
             title: "1. Acceptance of Terms",
-            body: "By accessing or using Skripr ("Service"), you agree to be bound by these Terms of Service. If you do not agree, do not use the Service. We reserve the right to update these terms at any time. Continued use of the Service after changes constitutes acceptance.",
+            body: "By accessing or using Skripr (the Service), you agree to be bound by these Terms of Service. If you do not agree, do not use the Service. We reserve the right to update these terms at any time. Continued use of the Service after changes constitutes acceptance.",
           },
           {
             title: "2. Description of Service",
@@ -60,7 +60,7 @@ export default function TermsPage() {
           },
           {
             title: "9. Limitation of Liability",
-            body: "Skripr is provided "as is" without warranties of any kind. To the maximum extent permitted by law, we are not liable for any indirect, incidental, or consequential damages arising from your use of the Service. Our total liability shall not exceed the amount you paid in the 3 months preceding the claim.",
+            body: "Skripr is provided as-is without warranties of any kind. To the maximum extent permitted by law, we are not liable for any indirect, incidental, or consequential damages arising from your use of the Service. Our total liability shall not exceed the amount you paid in the 3 months preceding the claim.",
           },
           {
             title: "10. Termination",
