@@ -744,9 +744,12 @@ export default function NewScriptPage() {
                 </div>
               )}
 
-              <button onClick={() => runGenerate(lastUsedTranscript)} style={{ flex: 1, padding: "12px 20px", borderRadius: 14, background: "rgba(99,102,241,0.08)", color: C.accent, fontSize: 14, fontWeight: 500, border: "1px solid rgba(99,102,241,0.18)", cursor: "pointer" }}>
-                ↻ Regenerate
-              </button>
+              <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 4 }}>
+                <button onClick={() => runGenerate(lastUsedTranscript)} style={{ width: "100%", padding: "12px 20px", borderRadius: 14, background: "rgba(99,102,241,0.08)", color: C.accent, fontSize: 14, fontWeight: 500, border: "1px solid rgba(99,102,241,0.18)", cursor: "pointer" }}>
+                  ↻ Regenerate
+                </button>
+                <span style={{ fontSize: 11, color: "#64748b", textAlign: "center" }}>Uses 1 credit</span>
+              </div>
               <button onClick={saveScript} disabled={saving} style={{ flex: 2, padding: "12px 20px", borderRadius: 14, background: grad, color: "#fff", fontSize: 14, fontWeight: 600, border: "none", cursor: saving ? "wait" : "pointer", opacity: saving ? 0.6 : 1, boxShadow: "0 0 22px rgba(99,102,241,0.30)", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
                 {saving ? "Saving…" : "✦ Save Script"}
               </button>
