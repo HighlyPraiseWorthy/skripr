@@ -78,6 +78,7 @@ export default function NewScriptPage() {
   const [magnetWords, setMagnetWords] = useState<MagnetWordOption[]>([]);
   const [selectedViralWord, setSelectedViralWord] = useState<string | null>(null);
   const [magnetGradeFilterScript, setMagnetGradeFilterScript] = useState<string>("all");
+  const [lastUsedTranscript, setLastUsedTranscript] = useState<string>("");
   const [transcriptWordCount, setTranscriptWordCount] = useState<number | null>(null);
   const [transcriptSource, setTranscriptSource] = useState<"auto" | "paste" | null>(null);
   const [selectedMagnet, setSelectedMagnet] = useState<number | null>(null);
@@ -170,6 +171,7 @@ export default function NewScriptPage() {
   }
 
   async function runGenerate(transcript: string) {
+    setLastUsedTranscript(transcript);
     setStep("generating");
     try {
       const res = await fetch("/api/scripts/generate", {
@@ -742,8 +744,8 @@ export default function NewScriptPage() {
                 </div>
               )}
 
-              <button onClick={() => setStep("input")} style={{ flex: 1, padding: "12px 20px", borderRadius: 14, background: "rgba(99,102,241,0.08)", color: C.accent, fontSize: 14, fontWeight: 500, border: "1px solid rgba(99,102,241,0.18)", cursor: "pointer" }}>
-                ← Regenerate
+              <button onClick={() => runGenerate(lastUsedTranscript)} style={{ flex: 1, padding: "12px 20px", borderRadius: 14, background: "rgba(99,102,241,0.08)", color: C.accent, fontSize: 14, fontWeight: 500, border: "1px solid rgba(99,102,241,0.18)", cursor: "pointer" }}>
+                ↻ Regenerate
               </button>
               <button onClick={saveScript} disabled={saving} style={{ flex: 2, padding: "12px 20px", borderRadius: 14, background: grad, color: "#fff", fontSize: 14, fontWeight: 600, border: "none", cursor: saving ? "wait" : "pointer", opacity: saving ? 0.6 : 1, boxShadow: "0 0 22px rgba(99,102,241,0.30)", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
                 {saving ? "Saving…" : "✦ Save Script"}
