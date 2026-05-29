@@ -149,13 +149,38 @@ export function ScriptList({ scripts }: { scripts: Script[] }) {
                   {script.created_at && <span style={{ color: C.textDim, fontSize: 13 }}>{timeAgo(script.created_at)}</span>}
                 </div>
               </div>
-              <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
+              <div style={{ display: "flex", gap: 8, flexShrink: 0, alignItems: "center" }}>
                 <Link
                   href={`/dashboard/scripts/${script.id}`}
                   style={{ padding: "7px 16px", borderRadius: 10, backgroundColor: "rgba(99,102,241,0.10)", color: C.accent, fontSize: 13, fontWeight: 500, textDecoration: "none", border: "1px solid rgba(99,102,241,0.18)" }}
                 >
                   View
                 </Link>
+                {confirmDelete === script.id ? (
+                  <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+                    <span style={{ fontSize: 11, color: "#f87171" }}>Delete?</span>
+                    <button
+                      onClick={() => handleDelete(script.id)}
+                      disabled={deleting === script.id}
+                      style={{ fontSize: 11, fontWeight: 700, color: "#fff", background: "#dc2626", border: "none", borderRadius: 6, padding: "4px 10px", cursor: "pointer" }}
+                    >
+                      {deleting === script.id ? "…" : "Yes"}
+                    </button>
+                    <button
+                      onClick={() => setConfirmDelete(null)}
+                      style={{ fontSize: 11, color: C.textDim, background: "none", border: `1px solid ${C.border}`, borderRadius: 6, padding: "4px 8px", cursor: "pointer" }}
+                    >
+                      No
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => setConfirmDelete(script.id)}
+                    style={{ fontSize: 11, color: "#64748b", background: "none", border: "1px solid rgba(248,113,113,0.20)", borderRadius: 6, padding: "4px 9px", cursor: "pointer" }}
+                  >
+                    🗑
+                  </button>
+                )}
               </div>
             </div>
           </div>
