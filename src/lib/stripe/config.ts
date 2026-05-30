@@ -29,10 +29,10 @@ console.log("[stripe-config] STRIPE_PRICES:", JSON.stringify(STRIPE_PRICES));
 export type PlanId = "free" | "starter" | "pro" | "agency";
 
 export const PLAN_LIMITS: Record<PlanId, { scriptsPerMonth: number; nicheBends: number; complianceChecks: number; teamSeats: number }> = {
-  free: { scriptsPerMonth: 2, nicheBends: 0, complianceChecks: 0, teamSeats: 1 },
-  starter: { scriptsPerMonth: 12, nicheBends: 5, complianceChecks: 0, teamSeats: 1 },
-  pro: { scriptsPerMonth: 25, nicheBends: Infinity, complianceChecks: 20, teamSeats: 1 },
-  agency: { scriptsPerMonth: 150, nicheBends: 150, complianceChecks: 100, teamSeats: 5 },
+  free:    { scriptsPerMonth: 2,   nicheBends: 0,        complianceChecks: 0,   teamSeats: 1 },
+  starter: { scriptsPerMonth: 20,  nicheBends: Infinity, complianceChecks: 0,   teamSeats: 1 },
+  pro:     { scriptsPerMonth: 50,  nicheBends: Infinity, complianceChecks: 20,  teamSeats: 1 },
+  agency:  { scriptsPerMonth: 200, nicheBends: Infinity, complianceChecks: 100, teamSeats: 5 },
 };
 
 export function getPlanFromPriceId(priceId: string): PlanId | null {

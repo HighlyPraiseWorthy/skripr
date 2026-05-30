@@ -252,7 +252,7 @@ export default function NewScriptPage() {
                 <span style={{ fontSize: 16, fontWeight: 700, color: C.textBright }}>You've used all your free scripts</span>
               </div>
               <p style={{ fontSize: 13, color: C.textDim, lineHeight: 1.6, marginBottom: 18 }}>
-                Free accounts include 2 scripts per month. Upgrade to Starter for 12 scripts, humanized titles, Viral Magnet, and Niche Bend access.
+                Free accounts include 2 scripts per month. Upgrade to Starter for 20 scripts, Niche Bend Engine, Viral Magnet, and Title Generator.
               </p>
               <div style={{ display: "flex", gap: 10 }}>
                 <a href="/dashboard/settings" style={{ flex: 1, display: "block", textAlign: "center", padding: "11px", borderRadius: 10, background: "linear-gradient(135deg,#6366f1,#7c3aed,#a855f7)", color: "#fff", fontSize: 14, fontWeight: 600, textDecoration: "none", boxShadow: "0 0 18px rgba(99,102,241,0.30)" }}>
