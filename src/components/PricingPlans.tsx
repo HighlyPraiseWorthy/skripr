@@ -23,7 +23,7 @@ const PLANS = [
     name: "Pro",
     price: "$39",
     priceEnv: "NEXT_PUBLIC_STRIPE_PRICE_PRO",
-    features: ["50 scripts / month", "Niche Bend Engine included", "Title Generator (unlimited)", "Compliance Checker (20/mo)"],
+    features: ["50 scripts / month", "Niche Bend Engine included", "Title Generator (unlimited)", "Viral Magnet & Hook Rewrite", "Compliance Checker (20/mo)"],
     highlight: true,
     badge: "Most Popular",
   },
@@ -31,7 +31,7 @@ const PLANS = [
     name: "Agency",
     price: "$99",
     priceEnv: "NEXT_PUBLIC_STRIPE_PRICE_AGENCY",
-    features: ["200 scripts / month", "Niche Bend Engine included", "Title Generator (unlimited)", "Compliance Checker (100/mo)", "5 team seats"],
+    features: ["200 scripts / month", "Niche Bend Engine included", "Title Generator (unlimited)", "Viral Magnet & Hook Rewrite", "Compliance Checker (100/mo)", "5 team seats"],
     highlight: false,
   },
 ];
