@@ -43,6 +43,10 @@ const navItems = [
     ),
   },
   {
+    href: "/dashboard/viral-remixer",
+    label: "Viral Remixer",
+  },
+  {
     href: "/dashboard/compliance",
     label: "Compliance",
     icon: (
