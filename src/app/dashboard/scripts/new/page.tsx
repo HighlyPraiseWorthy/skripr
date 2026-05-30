@@ -87,6 +87,7 @@ export default function NewScriptPage() {
   const [nicheBendSource, setNicheBendSource] = useState<string | null>(null);
   const [hookRewriteCount, setHookRewriteCount] = useState(0);
   const [rewritingHook, setRewritingHook] = useState(false);
+  const [pendingHook, setPendingHook] = useState<string | null>(null);
   const [angle, setAngle] = useState("");
   const [suggestingAngles, setSuggestingAngles] = useState(false);
   const [angleSuggestions, setAngleSuggestions] = useState<string[]>([]);
@@ -609,22 +610,7 @@ export default function NewScriptPage() {
                             });
                             const data = await res.json();
                             if (data.hook) {
-                              setGeneratedScript(prev => {
-                                if (!prev) return null;
-                                let updatedContent = prev.content;
-                                if (updatedContent) {
-                                  const firstBreak = updatedContent.indexOf("\n\n");
-                                  if (firstBreak > 0) {
-                                    updatedContent = data.hook + "\n\n" + updatedContent.slice(firstBreak + 2);
-                                  } else {
-                                    const singleBreak = updatedContent.indexOf("\n");
-                                    updatedContent = singleBreak > 0
-                                      ? data.hook + "\n" + updatedContent.slice(singleBreak + 1)
-                                      : data.hook;
-                                  }
-                                }
-                                return { ...prev, hook: data.hook, content: updatedContent };
-                              });
+                              setPendingHook(data.hook);
                               setHookRewriteCount(n => n + 1);
                             }
                           } catch {}
@@ -647,6 +633,44 @@ export default function NewScriptPage() {
                     </div>
                   </div>
                   <p style={{ fontSize: 14, color: C.textBright, lineHeight: 1.6, margin: 0 }}>{generatedScript.hook}</p>
+                  {pendingHook && (
+                    <div style={{ marginTop: 12, padding: "12px 14px", borderRadius: 10, background: "rgba(99,102,241,0.10)", border: "1px solid rgba(99,102,241,0.28)" }}>
+                      <p style={{ fontSize: 11, fontWeight: 700, color: "#a5b4fc", margin: "0 0 6px 0", letterSpacing: 0.4 }}>✨ NEW HOOK — confirm to apply:</p>
+                      <p style={{ fontSize: 14, color: C.textBright, lineHeight: 1.6, margin: "0 0 12px 0" }}>{pendingHook}</p>
+                      <div style={{ display: "flex", gap: 8 }}>
+                        <button
+                          onClick={() => {
+                            setGeneratedScript(prev => {
+                              if (!prev) return null;
+                              const applyHook = (text: string | undefined) => {
+                                if (!text) return text;
+                                const firstBreak = text.indexOf("\n\n");
+                                if (firstBreak > 0) return pendingHook + "\n\n" + text.slice(firstBreak + 2);
+                                const singleBreak = text.indexOf("\n");
+                                return singleBreak > 0 ? pendingHook + "\n" + text.slice(singleBreak + 1) : pendingHook;
+                              };
+                              return {
+                                ...prev,
+                                hook: pendingHook,
+                                content: applyHook(prev.content) ?? prev.content,
+                                fullScript: prev.fullScript ? applyHook(prev.fullScript) : prev.fullScript,
+                              };
+                            });
+                            setPendingHook(null);
+                          }}
+                          style={{ padding: "6px 16px", borderRadius: 8, fontSize: 12, fontWeight: 700, background: "#6366f1", color: "#fff", border: "none", cursor: "pointer" }}
+                        >
+                          ✓ Use this hook
+                        </button>
+                        <button
+                          onClick={() => setPendingHook(null)}
+                          style={{ padding: "6px 14px", borderRadius: 8, fontSize: 12, fontWeight: 600, background: "none", color: C.textDim, border: `1px solid ${C.border}`, cursor: "pointer" }}
+                        >
+                          ✗ Discard
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
               <div style={{ maxHeight: 440, overflowY: "auto", borderRadius: 14, border: `1px solid ${C.border}` }}>
