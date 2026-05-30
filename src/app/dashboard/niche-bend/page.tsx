@@ -229,7 +229,7 @@ export default function NicheBendPage() {
               <a href="/dashboard/settings" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 28px", borderRadius: 14, background: "linear-gradient(135deg,#6366f1 0%,#7c3aed 50%,#a855f7 100%)", color: "#fff", fontSize: 14, fontWeight: 600, textDecoration: "none", boxShadow: "0 0 24px rgba(99,102,241,0.30)" }}>
                 ✦ Upgrade to Starter — $19/mo
               </a>
-              <span style={{ fontSize: 12, color: "#64748b" }}>5 Niche Bends/month · 12 scripts · cancel anytime</span>
+              <span style={{ fontSize: 12, color: "#64748b" }}>Niche Bend included · 20 scripts · cancel anytime</span>
             </div>
           </div>
         </div>
