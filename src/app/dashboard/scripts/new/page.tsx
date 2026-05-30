@@ -88,6 +88,7 @@ export default function NewScriptPage() {
   const [hookRewriteCount, setHookRewriteCount] = useState(0);
   const [rewritingHook, setRewritingHook] = useState(false);
   const [pendingHook, setPendingHook] = useState<string | null>(null);
+  const [viralFramework, setViralFramework] = useState<{remixFramework: string; hookType: string; titleFormula: string} | null>(null);
   const [angle, setAngle] = useState("");
   const [suggestingAngles, setSuggestingAngles] = useState(false);
   const [angleSuggestions, setAngleSuggestions] = useState<string[]>([]);
@@ -100,6 +101,10 @@ export default function NewScriptPage() {
     if (t) { setTopic(t); setNicheBendSource(t); }
     if (n && adj) setNiche(`${n} × ${adj}`);
     else if (n) setNiche(n);
+    const rfParam = params.get("remixFramework");
+    const htParam = params.get("hookType");
+    const tfParam = params.get("titleFormula");
+    if (rfParam) setViralFramework({ remixFramework: rfParam, hookType: htParam || "", titleFormula: tfParam || "" });
     // Auto-fire generation if coming from Niche Bend
     if (t) {
       setStep("generating");
@@ -108,7 +113,7 @@ export default function NewScriptPage() {
       fetch("/api/scripts/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ transcript: "", topic: topicVal, niche: nicheVal, videoLength: "medium", viralMagnetWord: selectedViralWord || undefined, angle: undefined }),
+        body: JSON.stringify({ transcript: "", topic: topicVal, niche: nicheVal, videoLength: "medium", viralMagnetWord: selectedViralWord || undefined, angle: undefined, remixFramework: rfParam || undefined, hookType: htParam || undefined, titleFormula: tfParam || undefined }),
       })
         .then(r => r.json())
         .then(data => {
@@ -178,7 +183,7 @@ export default function NewScriptPage() {
       const res = await fetch("/api/scripts/generate", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ transcript, niche: niche || undefined, topic: topic || undefined, videoLength,
-          sourceVideoId: youtubeUrl ? youtubeUrl.match(/[?&]v=([^&]+)/)?.[1] : undefined, viralMagnetWord: selectedViralWord || undefined, angle: angle || undefined }),
+          sourceVideoId: youtubeUrl ? youtubeUrl.match(/[?&]v=([^&]+)/)?.[1] : undefined, viralMagnetWord: selectedViralWord || undefined, angle: angle || undefined, remixFramework: viralFramework?.remixFramework || undefined, hookType: viralFramework?.hookType || undefined, titleFormula: viralFramework?.titleFormula || undefined }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to generate script");

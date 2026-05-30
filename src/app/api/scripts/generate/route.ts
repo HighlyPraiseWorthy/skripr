@@ -29,7 +29,17 @@ export async function POST(req: Request) {
   const startTime = Date.now();
 
   try {
-    const { transcript, niche, topic, sourceVideoId, videoLength = "long", viralMagnetWord, angle } = await req.json();
+    const { transcript, niche, topic, sourceVideoId, videoLength = "long", viralMagnetWord, angle, remixFramework, hookType, titleFormula } = await req.json();
+
+    // Build enhanced angle from Viral Remixer framework
+    let enhancedAngle: string | undefined = angle || undefined;
+    if (remixFramework || hookType || titleFormula) {
+      const parts: string[] = [];
+      if (hookType) parts.push(`Open with a ${hookType} hook`);
+      if (titleFormula) parts.push(`Title formula: ${titleFormula}`);
+      if (remixFramework) parts.push(`Viral framework: ${remixFramework}`);
+      enhancedAngle = parts.join(". ") + (angle ? `. ${angle}` : "");
+    }
 
     const maxWords: Record<string, number> = { short: 200, medium: 400, long: 500, ultraLong: 600 };
     const cap = maxWords[videoLength] ?? 400;
@@ -46,7 +56,7 @@ export async function POST(req: Request) {
       tone: "entertaining",
       ttsOptimized: false,
       viralMagnetWord: viralMagnetWord || undefined,
-      angle: angle || undefined,
+      angle: enhancedAngle || undefined,
     });
 
     const timeoutPromise = new Promise((_, reject) =>
