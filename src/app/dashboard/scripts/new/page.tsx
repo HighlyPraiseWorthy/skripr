@@ -89,6 +89,10 @@ export default function NewScriptPage() {
   const [rewritingHook, setRewritingHook] = useState(false);
   const [pendingHook, setPendingHook] = useState<string | null>(null);
   const [viralFramework, setViralFramework] = useState<{remixFramework: string; hookType: string; titleFormula: string; selectedTitle?: string} | null>(null);
+  const [savedFormulas, setSavedFormulas] = useState<{id: string; formula: string; hookType: string; psychology: string; savedAt: string}[]>([]);
+  const [showSavedFormulas, setShowSavedFormulas] = useState(false);
+  const [savedFormulas, setSavedFormulas] = useState<{id: string; formula: string; hookType: string; psychology: string; savedAt: string}[]>([]);
+  const [showSavedFormulas, setShowSavedFormulas] = useState(false);
   const [angle, setAngle] = useState("");
   const [suggestingAngles, setSuggestingAngles] = useState(false);
   const [angleSuggestions, setAngleSuggestions] = useState<string[]>([]);
@@ -104,6 +108,14 @@ export default function NewScriptPage() {
     const rfParam = params.get("remixFramework");
     const htParam = params.get("hookType");
     const tfParam = params.get("titleFormula");
+    try {
+      const sf = JSON.parse(localStorage.getItem("skripr_saved_formulas") || "[]");
+      setSavedFormulas(sf);
+    } catch {}
+    try {
+      const sf = JSON.parse(localStorage.getItem("skripr_saved_formulas") || "[]");
+      setSavedFormulas(sf);
+    } catch {}
     const stParam = params.get("selectedTitle");
     if (rfParam) setViralFramework({ remixFramework: rfParam, hookType: htParam || "", titleFormula: tfParam || "", selectedTitle: stParam || "" });
     // Auto-fire generation if coming from Niche Bend
@@ -236,6 +248,72 @@ export default function NewScriptPage() {
       <div aria-hidden style={{ position: "fixed", top: -160, right: -100, width: 460, height: 460, borderRadius: "50%", background: "radial-gradient(circle,rgba(99,102,241,0.14) 0%,transparent 70%)", pointerEvents: "none", zIndex: 0 }} />
 
       <div style={{ position: "relative", zIndex: 1, maxWidth: 760, margin: "0 auto" }}>
+        {savedFormulas.length > 0 && !viralFramework && (
+          <div style={{ marginBottom: 16 }}>
+            <button
+              onClick={() => setShowSavedFormulas(v => !v)}
+              style={{ width: "100%", padding: "10px 14px", borderRadius: 10, background: "rgba(99,102,241,0.07)", border: "1px solid rgba(99,102,241,0.2)", color: "#a5b4fc", fontSize: 12, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "space-between" }}
+            >
+              <span>📋 Saved Formulas ({savedFormulas.length})</span>
+              <span style={{ fontSize: 10 }}>{showSavedFormulas ? "▲ hide" : "▼ show"}</span>
+            </button>
+            {showSavedFormulas && (
+              <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 6 }}>
+                {savedFormulas.map(f => (
+                  <div key={f.id} style={{ padding: "10px 14px", borderRadius: 9, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(99,102,241,0.15)", display: "flex", alignItems: "center", gap: 12 }}>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontSize: 12, color: "#a5b4fc", fontFamily: "monospace", fontWeight: 600, marginBottom: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{f.formula}</div>
+                      <div style={{ fontSize: 11, color: "#64748b" }}>{f.hookType} hook · {f.psychology?.slice(0, 60)}{f.psychology?.length > 60 ? "…" : ""}</div>
+                    </div>
+                    <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
+                      <button
+                        onClick={() => { setViralFramework({ remixFramework: "", hookType: f.hookType, titleFormula: f.formula, selectedTitle: "" }); setShowSavedFormulas(false); }}
+                        style={{ fontSize: 11, fontWeight: 600, padding: "4px 10px", borderRadius: 6, background: "rgba(99,102,241,0.15)", border: "1px solid rgba(99,102,241,0.3)", color: "#a5b4fc", cursor: "pointer" }}
+                      >Use</button>
+                      <button
+                        onClick={() => { const updated = savedFormulas.filter(x => x.id !== f.id); setSavedFormulas(updated); localStorage.setItem("skripr_saved_formulas", JSON.stringify(updated)); }}
+                        style={{ fontSize: 11, fontWeight: 600, padding: "4px 8px", borderRadius: 6, background: "none", border: "1px solid rgba(239,68,68,0.25)", color: "#ef4444", cursor: "pointer" }}
+                      >✕</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+        {savedFormulas.length > 0 && !viralFramework && (
+          <div style={{ marginBottom: 16 }}>
+            <button
+              onClick={() => setShowSavedFormulas(v => !v)}
+              style={{ width: "100%", padding: "10px 14px", borderRadius: 10, background: "rgba(99,102,241,0.07)", border: "1px solid rgba(99,102,241,0.2)", color: "#a5b4fc", fontSize: 12, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "space-between" }}
+            >
+              <span>📋 Saved Formulas ({savedFormulas.length})</span>
+              <span style={{ fontSize: 10 }}>{showSavedFormulas ? "▲ hide" : "▼ show"}</span>
+            </button>
+            {showSavedFormulas && (
+              <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 6 }}>
+                {savedFormulas.map(f => (
+                  <div key={f.id} style={{ padding: "10px 14px", borderRadius: 9, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(99,102,241,0.15)", display: "flex", alignItems: "center", gap: 12 }}>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontSize: 12, color: "#a5b4fc", fontFamily: "monospace", fontWeight: 600, marginBottom: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{f.formula}</div>
+                      <div style={{ fontSize: 11, color: "#64748b" }}>{f.hookType} hook · {f.psychology?.slice(0, 60)}{f.psychology?.length > 60 ? "…" : ""}</div>
+                    </div>
+                    <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
+                      <button
+                        onClick={() => { setViralFramework({ remixFramework: "", hookType: f.hookType, titleFormula: f.formula, selectedTitle: "" }); setShowSavedFormulas(false); }}
+                        style={{ fontSize: 11, fontWeight: 600, padding: "4px 10px", borderRadius: 6, background: "rgba(99,102,241,0.15)", border: "1px solid rgba(99,102,241,0.3)", color: "#a5b4fc", cursor: "pointer" }}
+                      >Use</button>
+                      <button
+                        onClick={() => { const updated = savedFormulas.filter(x => x.id !== f.id); setSavedFormulas(updated); localStorage.setItem("skripr_saved_formulas", JSON.stringify(updated)); }}
+                        style={{ fontSize: 11, fontWeight: 600, padding: "4px 8px", borderRadius: 6, background: "none", border: "1px solid rgba(239,68,68,0.25)", color: "#ef4444", cursor: "pointer" }}
+                      >✕</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
         {viralFramework && (
           <div style={{ marginBottom: 20, padding: "12px 16px", borderRadius: 12, background: "rgba(99,102,241,0.12)", border: "1px solid rgba(99,102,241,0.3)", display: "flex", alignItems: "flex-start", gap: 12 }}>
             <span style={{ fontSize: 18 }}>🔥</span>
