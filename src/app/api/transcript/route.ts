@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
+import { getTranscript, extractVideoId as extractVidId } from "@/lib/youtube-transcript";
 
 export const maxDuration = 30;
 
@@ -30,8 +31,18 @@ export async function POST(req: Request) {
 
     const apiKey = process.env.SUPADATA_API_KEY;
     if (!apiKey) {
-      console.error("[transcript] SUPADATA_API_KEY not set");
-      return NextResponse.json({ error: "Transcript service not configured." }, { status: 500 });
+      console.log("[transcript] No SUPADATA_API_KEY — using direct fallback method");
+      try {
+        const fallbackText = await getTranscript(videoId);
+        const wordCount = fallbackText.split(/\s+/).length;
+        console.log("[transcript] Direct method success — words:", wordCount);
+        return NextResponse.json({
+          videoId, title, transcript: fallbackText, wordCount,
+          estimatedDuration: Math.round(wordCount / 150),
+        });
+      } catch (e: any) {
+        return NextResponse.json({ error: e?.message || "No transcript available." }, { status: 422 });
+      }
     }
 
     // Fetch video title in parallel (no API key needed)
@@ -59,6 +70,22 @@ export async function POST(req: Request) {
     if (!res.ok) {
       const errBody = await res.text().catch(() => "");
       console.error("[transcript] Supadata error body:", errBody);
+      console.log("[transcript] Supadata failed — falling back to direct method");
+
+      // Fallback: use robust ytInitialPlayerResponse method
+      try {
+        const fallbackText = await getTranscript(videoId);
+        if (fallbackText.trim()) {
+          const wordCount = fallbackText.split(/\s+/).length;
+          console.log("[transcript] Fallback success — words:", wordCount);
+          return NextResponse.json({
+            videoId, title, transcript: fallbackText, wordCount,
+            estimatedDuration: Math.round(wordCount / 150),
+          });
+        }
+      } catch (fbErr: any) {
+        console.error("[transcript] Fallback also failed:", fbErr?.message);
+      }
 
       if (res.status === 404) {
         return NextResponse.json({
