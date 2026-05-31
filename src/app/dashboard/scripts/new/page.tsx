@@ -235,6 +235,19 @@ export default function NewScriptPage() {
       <div aria-hidden style={{ position: "fixed", top: -160, right: -100, width: 460, height: 460, borderRadius: "50%", background: "radial-gradient(circle,rgba(99,102,241,0.14) 0%,transparent 70%)", pointerEvents: "none", zIndex: 0 }} />
 
       <div style={{ position: "relative", zIndex: 1, maxWidth: 760, margin: "0 auto" }}>
+        {viralFramework && (
+          <div style={{ marginBottom: 20, padding: "12px 16px", borderRadius: 12, background: "rgba(99,102,241,0.12)", border: "1px solid rgba(99,102,241,0.3)", display: "flex", alignItems: "flex-start", gap: 12 }}>
+            <span style={{ fontSize: 18 }}>🔥</span>
+            <div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: "#a5b4fc", marginBottom: 3 }}>Viral framework loaded</div>
+              <div style={{ fontSize: 12, color: "#94a3b8", lineHeight: 1.5 }}>
+                Hook: <span style={{ color: "#e2e8f0" }}>{viralFramework.hookType}</span>
+                {viralFramework.titleFormula && <> · Formula: <span style={{ color: "#e2e8f0" }}>{viralFramework.titleFormula}</span></>}
+              </div>
+              <div style={{ fontSize: 12, color: "#94a3b8", marginTop: 4 }}>Fill in your topic and niche below, then click <strong style={{ color: "#a5b4fc" }}>Generate Script</strong>.</div>
+            </div>
+          </div>
+        )}
         <Link href="/dashboard/scripts" style={{ color: C.accent, fontSize: 13, fontWeight: 500, textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 4, marginBottom: 20 }}>
           <span style={{ fontSize: 14 }}>←</span> Back to Scripts
         </Link>
