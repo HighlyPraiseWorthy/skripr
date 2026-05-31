@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import { getTranscript, extractVideoId as extractVidId } from "@/lib/youtube-transcript";
+import { getTranscript } from "@/lib/youtube-transcript";
 
 export const maxDuration = 30;
 
@@ -18,6 +18,18 @@ function extractVideoId(url: string): string | null {
   return null;
 }
 
+async function fetchTitle(videoId: string): Promise<string> {
+  try {
+    const res = await fetch(
+      `https://noembed.com/embed?url=https://www.youtube.com/watch?v=${videoId}`,
+      { signal: AbortSignal.timeout(5000) }
+    );
+    const d = await res.json().catch(() => ({}));
+    if (d.title) return d.title;
+  } catch {}
+  return "Unknown Title";
+}
+
 export async function POST(req: Request) {
   const { userId } = await auth();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -30,101 +42,55 @@ export async function POST(req: Request) {
     if (!videoId) return NextResponse.json({ error: "Invalid YouTube URL." }, { status: 400 });
 
     const apiKey = process.env.SUPADATA_API_KEY;
+
+    // ── No API key: use robust direct method ──────────────────────────────
     if (!apiKey) {
-      console.log("[transcript] No SUPADATA_API_KEY — using direct fallback method");
+      console.log("[transcript] No SUPADATA_API_KEY — using direct method");
+      const [title, transcript] = await Promise.all([
+        fetchTitle(videoId),
+        getTranscript(videoId),
+      ]);
+      const wordCount = transcript.split(/\s+/).length;
+      console.log("[transcript] Direct method success — words:", wordCount);
+      return NextResponse.json({ videoId, title, transcript, wordCount, estimatedDuration: Math.round(wordCount / 150) });
+    }
+
+    // ── Primary: Supadata ─────────────────────────────────────────────────
+    const [title, supaRes] = await Promise.all([
+      fetchTitle(videoId),
+      fetch(`https://api.supadata.ai/v1/youtube/transcript?videoId=${videoId}&text=true`, {
+        headers: { "x-api-key": apiKey },
+      }),
+    ]);
+
+    console.log("[transcript] Supadata status:", supaRes.status);
+
+    if (!supaRes.ok) {
+      console.log("[transcript] Supadata failed — falling back to direct method");
       try {
         const fallbackText = await getTranscript(videoId);
         const wordCount = fallbackText.split(/\s+/).length;
-        console.log("[transcript] Direct method success — words:", wordCount);
-        return NextResponse.json({
-          videoId, title, transcript: fallbackText, wordCount,
-          estimatedDuration: Math.round(wordCount / 150),
-        });
-      } catch (e: any) {
-        return NextResponse.json({ error: e?.message || "No transcript available." }, { status: 422 });
-      }
-    }
-
-    // Fetch video title in parallel (no API key needed)
-    let title = "Unknown Title";
-    try {
-      const embedRes = await fetch(
-        `https://noembed.com/embed?url=https://www.youtube.com/watch?v=${videoId}`,
-        { signal: AbortSignal.timeout(5000) }
-      );
-      const embedData = await embedRes.json().catch(() => ({}));
-      if (embedData.title) title = embedData.title;
-    } catch {
-      // noembed is best-effort — don't block transcript on title fetch failure
-    }
-
-    console.log("[transcript] Fetching via Supadata for videoId:", videoId, "title:", title);
-
-    const res = await fetch(
-      `https://api.supadata.ai/v1/youtube/transcript?videoId=${videoId}&text=true`,
-      { headers: { "x-api-key": apiKey } }
-    );
-
-    console.log("[transcript] Supadata status:", res.status);
-
-    if (!res.ok) {
-      const errBody = await res.text().catch(() => "");
-      console.error("[transcript] Supadata error body:", errBody);
-      console.log("[transcript] Supadata failed — falling back to direct method");
-
-      // Fallback: use robust ytInitialPlayerResponse method
-      try {
-        const fallbackText = await getTranscript(videoId);
-        if (fallbackText.trim()) {
-          const wordCount = fallbackText.split(/\s+/).length;
-          console.log("[transcript] Fallback success — words:", wordCount);
-          return NextResponse.json({
-            videoId, title, transcript: fallbackText, wordCount,
-            estimatedDuration: Math.round(wordCount / 150),
-          });
-        }
+        console.log("[transcript] Fallback success — words:", wordCount);
+        return NextResponse.json({ videoId, title, transcript: fallbackText, wordCount, estimatedDuration: Math.round(wordCount / 150) });
       } catch (fbErr: any) {
         console.error("[transcript] Fallback also failed:", fbErr?.message);
       }
-
-      if (res.status === 404) {
-        return NextResponse.json({
-          error: "No transcript found. This video may not have captions. Try pasting manually."
-        }, { status: 422 });
-      }
-      if (res.status === 402) {
-        return NextResponse.json({
-          error: "Transcript service limit reached. Try again later."
-        }, { status: 503 });
-      }
-      return NextResponse.json({
-        error: "Could not extract transcript. Try pasting manually."
-      }, { status: 422 });
+      if (supaRes.status === 404) return NextResponse.json({ error: "No transcript found. This video may not have captions. Try pasting manually." }, { status: 422 });
+      if (supaRes.status === 402) return NextResponse.json({ error: "Transcript service limit reached. Try again later." }, { status: 503 });
+      return NextResponse.json({ error: "Could not extract transcript. Try pasting manually." }, { status: 422 });
     }
 
-    const data = await res.json();
-    const rawTranscript: string = typeof data === "string"
-      ? data
-      : data.content ?? data.transcript ?? data.text ?? "";
+    const data = await supaRes.json();
+    const rawTranscript: string = typeof data === "string" ? data : data.content ?? data.transcript ?? data.text ?? "";
 
     if (!rawTranscript.trim()) {
-      return NextResponse.json({
-        error: "Empty transcript returned. Try pasting manually."
-      }, { status: 422 });
+      return NextResponse.json({ error: "Empty transcript returned. Try pasting manually." }, { status: 422 });
     }
 
     const transcript = rawTranscript.replace(/\s+/g, " ").trim();
     const wordCount = transcript.split(/\s+/).length;
-
-    console.log("[transcript] Success — words:", wordCount);
-
-    return NextResponse.json({
-      videoId,
-      title,
-      transcript,
-      wordCount,
-      estimatedDuration: Math.round(wordCount / 150),
-    });
+    console.log("[transcript] Supadata success — words:", wordCount);
+    return NextResponse.json({ videoId, title, transcript, wordCount, estimatedDuration: Math.round(wordCount / 150) });
 
   } catch (error: any) {
     console.error("[transcript] Unexpected error:", error);
