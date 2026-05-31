@@ -88,7 +88,7 @@ export default function NewScriptPage() {
   const [hookRewriteCount, setHookRewriteCount] = useState(0);
   const [rewritingHook, setRewritingHook] = useState(false);
   const [pendingHook, setPendingHook] = useState<string | null>(null);
-  const [viralFramework, setViralFramework] = useState<{remixFramework: string; hookType: string; titleFormula: string} | null>(null);
+  const [viralFramework, setViralFramework] = useState<{remixFramework: string; hookType: string; titleFormula: string; selectedTitle?: string} | null>(null);
   const [angle, setAngle] = useState("");
   const [suggestingAngles, setSuggestingAngles] = useState(false);
   const [angleSuggestions, setAngleSuggestions] = useState<string[]>([]);
@@ -104,7 +104,8 @@ export default function NewScriptPage() {
     const rfParam = params.get("remixFramework");
     const htParam = params.get("hookType");
     const tfParam = params.get("titleFormula");
-    if (rfParam) setViralFramework({ remixFramework: rfParam, hookType: htParam || "", titleFormula: tfParam || "" });
+    const stParam = params.get("selectedTitle");
+    if (rfParam) setViralFramework({ remixFramework: rfParam, hookType: htParam || "", titleFormula: tfParam || "", selectedTitle: stParam || "" });
     // Auto-fire generation if coming from Niche Bend
     if (t) {
       setStep("generating");
@@ -183,7 +184,7 @@ export default function NewScriptPage() {
       const res = await fetch("/api/scripts/generate", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ transcript, niche: niche || undefined, topic: topic || undefined, videoLength,
-          sourceVideoId: youtubeUrl ? youtubeUrl.match(/[?&]v=([^&]+)/)?.[1] : undefined, viralMagnetWord: selectedViralWord || undefined, angle: angle || undefined, remixFramework: viralFramework?.remixFramework || undefined, hookType: viralFramework?.hookType || undefined, titleFormula: viralFramework?.titleFormula || undefined }),
+          sourceVideoId: youtubeUrl ? youtubeUrl.match(/[?&]v=([^&]+)/)?.[1] : undefined, viralMagnetWord: selectedViralWord || undefined, angle: angle || undefined, remixFramework: viralFramework?.remixFramework || undefined, hookType: viralFramework?.hookType || undefined, titleFormula: viralFramework?.selectedTitle || viralFramework?.titleFormula || undefined }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to generate script");
@@ -244,6 +245,11 @@ export default function NewScriptPage() {
                 Hook: <span style={{ color: "#e2e8f0" }}>{viralFramework.hookType}</span>
                 {viralFramework.titleFormula && <> · Formula: <span style={{ color: "#e2e8f0" }}>{viralFramework.titleFormula}</span></>}
               </div>
+              {viralFramework.selectedTitle && (
+                <div style={{ fontSize: 12, color: "#94a3b8", marginTop: 4 }}>
+                  Title: <span style={{ color: "#a5b4fc", fontWeight: 600 }}>{viralFramework.selectedTitle}</span>
+                </div>
+              )}
               <div style={{ fontSize: 12, color: "#94a3b8", marginTop: 4 }}>Fill in your topic and niche below, then click <strong style={{ color: "#a5b4fc" }}>Generate Script</strong>.</div>
             </div>
           </div>

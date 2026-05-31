@@ -20,12 +20,13 @@ interface Analysis {
   hookAnalysis: { hook: string; hookType: string; whyItWorks: string };
   structure: { timestamp: string; section: string; description: string; purpose: string }[];
   retentionTriggers: { trigger: string; example: string; timestamp: string }[];
-  titleFormula: { formula: string; psychology: string; remixExample: string };
+  titleFormula: { formula: string; psychology: string; remixExamples: string[] };
   remixFramework: string;
 }
 
 export default function ViralRemixerPage() {
   const [url, setUrl] = useState("");
+  const [selectedRemix, setSelectedRemix] = useState<number>(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<Analysis | null>(null);
@@ -55,6 +56,7 @@ export default function ViralRemixerPage() {
       remixFramework: result.remixFramework,
       hookType: result.hookAnalysis.hookType,
       titleFormula: result.titleFormula.formula,
+      selectedTitle: result.titleFormula.remixExamples?.[selectedRemix] ?? "",
     });
     window.location.href = `/dashboard/scripts/new?${params.toString()}`;
   }
@@ -180,8 +182,27 @@ export default function ViralRemixerPage() {
                 <div style={{ fontSize: 12, color: C.accentDim, fontFamily: "monospace", fontWeight: 600, lineHeight: 1.6 }}>{result.titleFormula.formula}</div>
               </div>
               <div style={{ fontSize: 12, color: C.textDim, lineHeight: 1.6, marginBottom: 8 }}>{result.titleFormula.psychology}</div>
-              <div style={{ fontSize: 11, color: C.textDim, borderTop: `1px solid ${C.border}`, paddingTop: 8 }}>
-                <span style={{ color: C.accentDim, fontWeight: 600 }}>Remix: </span>{result.titleFormula.remixExample}
+              <div style={{ borderTop: `1px solid ${C.border}`, paddingTop: 10 }}>
+                <div style={{ fontSize: 10, fontWeight: 700, color: C.accentDim, letterSpacing: 0.6, marginBottom: 8 }}>PICK YOUR REMIX TITLE</div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                  {(result.titleFormula.remixExamples ?? []).map((title, i) => (
+                    <div
+                      key={i}
+                      onClick={() => setSelectedRemix(i)}
+                      style={{
+                        padding: "8px 12px", borderRadius: 8, cursor: "pointer", fontSize: 12,
+                        border: `1px solid ${selectedRemix === i ? "rgba(99,102,241,0.6)" : C.border}`,
+                        background: selectedRemix === i ? "rgba(99,102,241,0.14)" : "rgba(255,255,255,0.03)",
+                        color: selectedRemix === i ? "#e2e8f0" : C.textDim,
+                        transition: "all 0.15s",
+                        display: "flex", alignItems: "center", gap: 8,
+                      }}
+                    >
+                      <span style={{ fontSize: 10, fontWeight: 700, color: selectedRemix === i ? "#a5b4fc" : C.textDim, flexShrink: 0 }}>{i + 1}</span>
+                      {title}
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>

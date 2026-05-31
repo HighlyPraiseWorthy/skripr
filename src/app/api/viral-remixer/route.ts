@@ -74,7 +74,7 @@ Return ONLY valid JSON, no markdown fences, with this exact shape:
   "titleFormula": {
     "formula": "The reusable template e.g. I [did X] In [time] With [constraint] (Full Breakdown)",
     "psychology": "One sentence on why this title formula converts clicks",
-    "remixExample": "Apply the same formula to a different niche topic"
+    "remixExamples": ["Title option 1 applying formula to a different niche", "Title option 2 different angle same formula", "Title option 3 different angle same formula", "Title option 4 different angle same formula"]
   },
   "remixFramework": "3 sentence summary: how to replicate this video's success for any topic in any niche"
 }`,
