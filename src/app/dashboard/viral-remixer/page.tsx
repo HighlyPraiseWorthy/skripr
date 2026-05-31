@@ -27,8 +27,6 @@ interface Analysis {
 export default function ViralRemixerPage() {
   const [url, setUrl] = useState("");
   const [selectedRemix, setSelectedRemix] = useState<number>(0);
-  const [topicInput, setTopicInput] = useState("");
-  const [nicheInput, setNicheInput] = useState("");
   const [formulaSaved, setFormulaSaved] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -61,9 +59,19 @@ export default function ViralRemixerPage() {
       titleFormula: result.titleFormula.formula,
       selectedTitle: result.titleFormula.remixExamples?.[selectedRemix] ?? "",
     });
-    if (topicInput.trim()) params.set("topic", topicInput.trim());
-    if (nicheInput.trim()) params.set("niche", nicheInput.trim());
     window.location.href = `/dashboard/scripts/new?${params.toString()}`;
+  }
+
+  function handleSaveFormula() {
+    if (!result) return;
+    const formulas = JSON.parse(localStorage.getItem("skripr_saved_formulas") || "[]");
+    const already = formulas.some((f: any) => f.formula === result.titleFormula.formula);
+    if (!already) {
+      formulas.unshift({ id: Date.now().toString(), formula: result.titleFormula.formula, hookType: result.hookAnalysis.hookType, psychology: result.titleFormula.psychology, remixFramework: result.remixFramework, savedAt: new Date().toISOString() });
+      localStorage.setItem("skripr_saved_formulas", JSON.stringify(formulas.slice(0, 20)));
+    }
+    setFormulaSaved(true);
+    setTimeout(() => setFormulaSaved(false), 2000);
   }
 
   return (
@@ -182,24 +190,7 @@ export default function ViralRemixerPage() {
 
             {/* Title formula */}
             <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 14, padding: 18 }}>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
-                <div style={{ fontSize: 10, fontWeight: 700, color: C.accentDim, letterSpacing: 0.6 }}>📋 TITLE FORMULA</div>
-                <button
-                  onClick={() => {
-                    const formulas = JSON.parse(localStorage.getItem("skripr_saved_formulas") || "[]");
-                    const already = formulas.some((f: any) => f.formula === result.titleFormula.formula);
-                    if (!already) {
-                      formulas.unshift({ id: Date.now().toString(), formula: result.titleFormula.formula, hookType: result.hookAnalysis.hookType, psychology: result.titleFormula.psychology, savedAt: new Date().toISOString() });
-                      localStorage.setItem("skripr_saved_formulas", JSON.stringify(formulas.slice(0, 20)));
-                    }
-                    setFormulaSaved(true);
-                    setTimeout(() => setFormulaSaved(false), 2000);
-                  }}
-                  style={{ fontSize: 11, fontWeight: 600, color: formulaSaved ? "#34d399" : C.accentDim, background: "none", border: `1px solid ${formulaSaved ? "rgba(52,211,153,0.4)" : "rgba(99,102,241,0.3)"}`, borderRadius: 6, padding: "3px 10px", cursor: "pointer", transition: "all 0.2s" }}
-                >
-                  {formulaSaved ? "✓ Saved!" : "💾 Save formula"}
-                </button>
-              </div>
+              <div style={{ fontSize: 10, fontWeight: 700, color: C.accentDim, letterSpacing: 0.6, marginBottom: 12 }}>📋 TITLE FORMULA</div>
               <div style={{ background: "rgba(99,102,241,0.08)", border: `1px solid rgba(99,102,241,0.18)`, borderRadius: 8, padding: "10px 12px", marginBottom: 10 }}>
                 <div style={{ fontSize: 12, color: C.accentDim, fontFamily: "monospace", fontWeight: 600, lineHeight: 1.6 }}>{result.titleFormula.formula}</div>
               </div>
@@ -232,27 +223,21 @@ export default function ViralRemixerPage() {
           {/* Framework summary + CTA */}
           <div style={{ background: "rgba(99,102,241,0.06)", border: `1px solid rgba(99,102,241,0.20)`, borderRadius: 14, padding: "18px 22px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16 }}>
             <div style={{ fontSize: 13, fontWeight: 600, color: C.textBright, marginBottom: 4 }}>Script this framework for your niche</div>
-            <div style={{ fontSize: 12, color: C.textDim, lineHeight: 1.6, marginBottom: 14 }}>{result.remixFramework}</div>
-            <div style={{ display: "flex", gap: 10, marginBottom: 10 }}>
-              <input
-                value={topicInput}
-                onChange={e => setTopicInput(e.target.value)}
-                placeholder="Your topic (e.g. personal finance)"
-                style={{ flex: 1, padding: "9px 12px", borderRadius: 8, border: `1px solid ${C.border}`, background: "rgba(255,255,255,0.05)", color: C.textBright, fontSize: 12, outline: "none" }}
-              />
-              <input
-                value={nicheInput}
-                onChange={e => setNicheInput(e.target.value)}
-                placeholder="Your niche (e.g. millennials with debt)"
-                style={{ flex: 1, padding: "9px 12px", borderRadius: 8, border: `1px solid ${C.border}`, background: "rgba(255,255,255,0.05)", color: C.textBright, fontSize: 12, outline: "none" }}
-              />
+            <div style={{ fontSize: 12, color: C.textDim, lineHeight: 1.6, marginBottom: 16 }}>{result.remixFramework}</div>
+            <div style={{ display: "flex", gap: 10 }}>
+              <button
+                onClick={handleSaveFormula}
+                style={{ flex: 1, height: 42, background: formulaSaved ? "rgba(52,211,153,0.12)" : "rgba(99,102,241,0.10)", border: `1px solid ${formulaSaved ? "rgba(52,211,153,0.4)" : "rgba(99,102,241,0.3)"}`, color: formulaSaved ? "#34d399" : "#a5b4fc", borderRadius: 10, fontSize: 13, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6, transition: "all 0.2s" }}
+              >
+                {formulaSaved ? "✓ Saved!" : "💾 Save Formula"}
+              </button>
+              <button
+                onClick={handleUseFramework}
+                style={{ flex: 1, height: 42, background: C.accent, color: "#fff", border: "none", borderRadius: 10, fontSize: 13, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}
+              >
+                ↗ Generate Script
+              </button>
             </div>
-            <button
-              onClick={handleUseFramework}
-              style={{ width: "100%", height: 42, background: C.accent, color: "#fff", border: "none", borderRadius: 10, fontSize: 13, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}
-            >
-              ↗ {topicInput.trim() ? `Generate "${topicInput.trim()}" script` : "Generate script with this framework"}
-            </button>
           </div>
         </>
       )}

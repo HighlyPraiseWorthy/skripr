@@ -47,6 +47,10 @@ const navItems = [
     label: "Viral Remixer",
   },
   {
+    href: "/dashboard/formulas",
+    label: "Formula Library",
+  },
+  {
     href: "/dashboard/compliance",
     label: "Compliance",
     icon: (
