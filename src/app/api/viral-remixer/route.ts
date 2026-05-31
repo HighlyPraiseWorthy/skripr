@@ -44,7 +44,7 @@ export async function POST(req: Request) {
 
     const msg = await client.messages.create({
       model: "claude-sonnet-4-6",
-      max_tokens: 1200,
+      max_tokens: 3000,
       messages: [{
         role: "user",
         content: `You are a YouTube strategy expert. Analyze this video and extract the exact framework that made it perform.
