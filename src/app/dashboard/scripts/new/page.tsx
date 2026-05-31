@@ -91,8 +91,6 @@ export default function NewScriptPage() {
   const [viralFramework, setViralFramework] = useState<{remixFramework: string; hookType: string; titleFormula: string; selectedTitle?: string} | null>(null);
   const [savedFormulas, setSavedFormulas] = useState<{id: string; formula: string; hookType: string; psychology: string; savedAt: string}[]>([]);
   const [showSavedFormulas, setShowSavedFormulas] = useState(false);
-  const [savedFormulas, setSavedFormulas] = useState<{id: string; formula: string; hookType: string; psychology: string; savedAt: string}[]>([]);
-  const [showSavedFormulas, setShowSavedFormulas] = useState(false);
   const [angle, setAngle] = useState("");
   const [suggestingAngles, setSuggestingAngles] = useState(false);
   const [angleSuggestions, setAngleSuggestions] = useState<string[]>([]);
