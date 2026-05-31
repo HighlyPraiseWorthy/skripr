@@ -12,9 +12,30 @@ export async function POST(req: Request) {
     const videoId = extractVideoId(url);
     if (!videoId) return NextResponse.json({ error: "Invalid YouTube URL" }, { status: 400 });
 
+    // Fetch metadata and transcript
+    // Transcript: use Supadata (handles YouTube IP blocks from Vercel) then fallback
+    const supaKey = process.env.SUPADATA_API_KEY;
+    async function fetchTranscriptRobust(id: string): Promise<string> {
+      if (supaKey) {
+        try {
+          const r = await fetch(
+            `https://api.supadata.ai/v1/youtube/transcript?videoId=${id}&text=true`,
+            { headers: { "x-api-key": supaKey } }
+          );
+          if (r.ok) {
+            const d = await r.json();
+            const t = typeof d === "string" ? d : (d.content ?? d.transcript ?? d.text ?? "");
+            if (t.trim()) return t;
+          }
+        } catch {}
+      }
+      // Fallback: direct ytInitialPlayerResponse method
+      return getTranscript(id).catch(() => "");
+    }
+
     const [meta, transcript] = await Promise.all([
       getVideoMeta(videoId),
-      getTranscript(videoId).catch(() => ""),
+      fetchTranscriptRobust(videoId),
     ]);
 
     if (!transcript) {
