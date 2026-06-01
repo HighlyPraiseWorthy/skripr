@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { extractVideoId, getTranscript, getVideoMeta } from "@/lib/youtube-transcript";
 
+export const maxDuration = 60;
+
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 export async function POST(req: Request) {
@@ -18,19 +20,34 @@ export async function POST(req: Request) {
     async function fetchTranscriptRobust(id: string): Promise<string> {
       if (supaKey) {
         try {
+          console.log("[viral-remixer] Fetching transcript via Supadata for:", id);
           const r = await fetch(
             `https://api.supadata.ai/v1/youtube/transcript?videoId=${id}&text=true`,
-            { headers: { "x-api-key": supaKey } }
+            { headers: { "x-api-key": supaKey }, signal: AbortSignal.timeout(15000) }
           );
+          console.log("[viral-remixer] Supadata status:", r.status);
           if (r.ok) {
             const d = await r.json();
             const t = typeof d === "string" ? d : (d.content ?? d.transcript ?? d.text ?? "");
+            console.log("[viral-remixer] Supadata transcript length:", t.length);
             if (t.trim()) return t;
+            console.warn("[viral-remixer] Supadata returned ok but empty transcript");
+          } else {
+            const errBody = await r.text().catch(() => "");
+            console.error("[viral-remixer] Supadata error:", r.status, errBody.slice(0, 200));
           }
-        } catch {}
+        } catch (e: any) {
+          console.error("[viral-remixer] Supadata fetch threw:", e?.message);
+        }
+      } else {
+        console.warn("[viral-remixer] No SUPADATA_API_KEY — skipping Supadata");
       }
       // Fallback: direct ytInitialPlayerResponse method
-      return getTranscript(id).catch(() => "");
+      console.log("[viral-remixer] Trying direct fallback for:", id);
+      return getTranscript(id).catch((e) => {
+        console.error("[viral-remixer] Fallback also failed:", e?.message);
+        return "";
+      });
     }
 
     const [meta, transcript] = await Promise.all([
