@@ -27,7 +27,6 @@ interface Analysis {
 export default function ViralRemixerPage() {
   const [url, setUrl] = useState("");
   const [selectedRemix, setSelectedRemix] = useState<number>(0);
-  const [formulaSaved, setFormulaSaved] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<Analysis | null>(null);
@@ -53,23 +52,20 @@ export default function ViralRemixerPage() {
 
   function handleUseFramework() {
     if (!result) return;
-    const params = new URLSearchParams({
+    const brief = {
+      hookAnalysis: result.hookAnalysis,
+      structure: result.structure,
+      retentionTriggers: result.retentionTriggers,
+      titleFormula: result.titleFormula,
       remixFramework: result.remixFramework,
-      hookType: result.hookAnalysis.hookType,
-      titleFormula: result.titleFormula.formula,
       selectedTitle: result.titleFormula.remixExamples?.[selectedRemix] ?? "",
-    });
-    window.location.href = `/dashboard/scripts/new?${params.toString()}`;
+      videoTitle: result.title,
+      channelTitle: result.channelTitle,
+    };
+    sessionStorage.setItem("skripr_viral_brief", JSON.stringify(brief));
+    window.location.href = "/dashboard/scripts/viral-brief";
   }
 
-  function handleSaveFormula() {
-    if (!result) return;
-    const formulas = JSON.parse(localStorage.getItem("skripr_saved_formulas") || "[]");
-    const already = formulas.some((f: any) => f.formula === result.titleFormula.formula);
-    if (!already) {
-      formulas.unshift({ id: Date.now().toString(), formula: result.titleFormula.formula, hookType: result.hookAnalysis.hookType, psychology: result.titleFormula.psychology, remixFramework: result.remixFramework, savedAt: new Date().toISOString() });
-      localStorage.setItem("skripr_saved_formulas", JSON.stringify(formulas.slice(0, 20)));
-    }
     setFormulaSaved(true);
     setTimeout(() => setFormulaSaved(false), 2000);
   }
@@ -224,39 +220,22 @@ export default function ViralRemixerPage() {
           <div style={{ background: "rgba(99,102,241,0.06)", border: `1px solid rgba(99,102,241,0.20)`, borderRadius: 14, padding: "18px 22px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16 }}>
             <div style={{ fontSize: 13, fontWeight: 600, color: C.textBright, marginBottom: 4 }}>Script this framework for your niche</div>
             <div style={{ fontSize: 12, color: C.textDim, lineHeight: 1.6, marginBottom: 16 }}>{result.remixFramework}</div>
-            <div style={{ display: "flex", gap: 10 }}>
-              <button
-                onClick={handleSaveFormula}
-                style={{
-                  flex: 1, height: 46,
-                  background: formulaSaved ? "rgba(52,211,153,0.10)" : "rgba(99,102,241,0.08)",
-                  border: `1.5px solid ${formulaSaved ? "rgba(52,211,153,0.45)" : "rgba(99,102,241,0.25)"}`,
-                  color: formulaSaved ? "#34d399" : "#a5b4fc",
-                  borderRadius: 12, fontSize: 13, fontWeight: 600, cursor: "pointer",
-                  display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
-                  transition: "all 0.2s", letterSpacing: 0.1,
-                  backdropFilter: "blur(4px)",
-                }}
-              >
-                <span style={{ fontSize: 15 }}>{formulaSaved ? "✓" : "💾"}</span>
-                {formulaSaved ? "Saved!" : "Save Formula"}
-              </button>
-              <button
-                onClick={handleUseFramework}
-                style={{
-                  flex: 1, height: 46,
-                  background: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
-                  color: "#fff", border: "none", borderRadius: 12,
-                  fontSize: 13, fontWeight: 700, cursor: "pointer",
-                  display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
-                  letterSpacing: 0.2,
-                  boxShadow: "0 4px 20px rgba(99,102,241,0.35), 0 1px 0 rgba(255,255,255,0.12) inset",
-                }}
-              >
-                <span style={{ fontSize: 15 }}>✦</span>
-                Generate Script
-              </button>
-            </div>
+            <button
+              onClick={handleUseFramework}
+              style={{
+                width: "100%", height: 50,
+                background: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
+                color: "#fff", border: "none", borderRadius: 12,
+                fontSize: 14, fontWeight: 700, cursor: "pointer",
+                display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                letterSpacing: 0.2,
+                boxShadow: "0 4px 24px rgba(99,102,241,0.4), 0 1px 0 rgba(255,255,255,0.12) inset",
+              }}
+            >
+              <span style={{ fontSize: 16 }}>✦</span>
+              Choose Your Angle &amp; Build Script
+              <span style={{ fontSize: 14, opacity: 0.8 }}>→</span>
+            </button>
           </div>
         </>
       )}

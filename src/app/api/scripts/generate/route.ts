@@ -29,15 +29,24 @@ export async function POST(req: Request) {
   const startTime = Date.now();
 
   try {
-    const { transcript, niche, topic, sourceVideoId, videoLength = "long", viralMagnetWord, angle, remixFramework, hookType, titleFormula } = await req.json();
+    const { transcript, niche, topic, sourceVideoId, videoLength = "long", viralMagnetWord, angle, remixFramework, hookType, titleFormula, hookScript, contentStructure, retentionTriggers } = await req.json();
 
     // Build enhanced angle from Viral Remixer framework
     let enhancedAngle: string | undefined = angle || undefined;
-    if (remixFramework || hookType || titleFormula) {
+    if (remixFramework || hookType || titleFormula || hookScript || contentStructure || retentionTriggers) {
       const parts: string[] = [];
       if (hookType) parts.push(`Open with a ${hookType} hook`);
+      if (hookScript) parts.push(`Hook style to mirror (adapt, don't copy): "${String(hookScript).slice(0, 200)}"`);
       if (titleFormula) parts.push(`Title formula: ${titleFormula}`);
       if (remixFramework) parts.push(`Viral framework: ${remixFramework}`);
+      if (contentStructure && Array.isArray(contentStructure) && contentStructure.length > 0) {
+        const sections = (contentStructure as any[]).map((s: any) => s.section || "").filter(Boolean);
+        if (sections.length) parts.push(`Content structure to follow: ${sections.join(" → ")}`);
+      }
+      if (retentionTriggers && Array.isArray(retentionTriggers) && retentionTriggers.length > 0) {
+        const triggers = (retentionTriggers as any[]).map((t: any) => t.trigger || "").filter(Boolean);
+        if (triggers.length) parts.push(`Retention mechanics to include: ${triggers.join(", ")}`);
+      }
       enhancedAngle = parts.join(". ") + (angle ? `. ${angle}` : "");
     }
 
