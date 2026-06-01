@@ -33,6 +33,8 @@ export default function ViralBriefPage() {
   const [script, setScript] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const [savedId, setSavedId] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     try {
@@ -88,6 +90,30 @@ export default function ViralBriefPage() {
     if (body) parts.push(body);
     navigator.clipboard.writeText(parts.join("\n\n"));
     setCopied(true); setTimeout(() => setCopied(false), 2000);
+  }
+
+  async function handleSave() {
+    if (!script || saving || savedId) return;
+    setSaving(true);
+    try {
+      const t = script.title || selectedAngle?.titleSuggestion || "Untitled Script";
+      const h = script.hook || "";
+      const b = script.script || script.fullScript || script.body || script.content || "";
+      const content = [h, b].filter(Boolean).join("\n\n");
+      const wordCount = content.split(/\s+/).filter(Boolean).length;
+      const res = await fetch("/api/scripts/save", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title: t, content, niche: selectedAngle?.audience || "", topic: selectedAngle?.angle || "", wordCount }),
+      });
+      const data = await res.json();
+      if (data.error) throw new Error(data.error);
+      setSavedId(data.id);
+    } catch (e: any) {
+      setError(e?.message || "Failed to save");
+      setTimeout(() => setError(null), 3000);
+    } finally {
+      setSaving(false);
+    }
   }
 
   if (phase === "loading") return (
@@ -153,17 +179,27 @@ export default function ViralBriefPage() {
               <div style={{ fontSize: 13, color: "#cbd5e1", lineHeight: 1.9, whiteSpace: "pre-wrap", maxHeight: 520, overflowY: "auto" }}>{body}</div>
             </div>
           )}
-          <div style={{ display: "flex", gap: 10 }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            {!savedId ? (
+              <button onClick={handleSave} disabled={saving}
+                style={{ width: "100%", height: 48, borderRadius: 12, background: saving ? "rgba(99,102,241,0.08)" : "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)", color: saving ? C.accentDim : "#fff", border: saving ? "1px solid rgba(99,102,241,0.2)" : "none", fontSize: 14, fontWeight: 700, cursor: saving ? "wait" : "pointer", opacity: saving ? 0.7 : 1, boxShadow: saving ? "none" : "0 4px 20px rgba(99,102,241,0.35)", transition: "all 0.2s", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+                {saving ? "Saving..." : "✦ Save Script"}
+              </button>
+            ) : (
+              <div style={{ display: "flex", gap: 10 }}>
+                <div style={{ flex: 1, height: 46, display: "flex", alignItems: "center", justifyContent: "center", borderRadius: 10, background: "rgba(52,211,153,0.10)", border: "1px solid rgba(52,211,153,0.3)", color: C.green, fontSize: 13, fontWeight: 700, gap: 6 }}>
+                  ✓ Script saved
+                </div>
+                <a href={"/dashboard/scripts/" + savedId}
+                  style={{ flex: 1, height: 46, display: "flex", alignItems: "center", justifyContent: "center", borderRadius: 10, background: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)", color: "#fff", fontSize: 13, fontWeight: 700, textDecoration: "none", boxShadow: "0 4px 16px rgba(99,102,241,0.3)" }}>
+                  Open in editor →
+                </a>
+              </div>
+            )}
             <a href="/dashboard/viral-remixer"
-              style={{ flex: 1, height: 42, display: "flex", alignItems: "center", justifyContent: "center", borderRadius: 10, background: "rgba(99,102,241,0.08)", border: "1px solid rgba(99,102,241,0.2)", color: C.accentDim, fontSize: 13, fontWeight: 600, textDecoration: "none" }}>
+              style={{ width: "100%", height: 40, display: "flex", alignItems: "center", justifyContent: "center", borderRadius: 10, background: "rgba(99,102,241,0.06)", border: "1px solid rgba(99,102,241,0.15)", color: C.textDim, fontSize: 12, fontWeight: 600, textDecoration: "none" }}>
               Analyze another video
             </a>
-            {script.id && (
-              <a href={"/dashboard/scripts/" + script.id}
-                style={{ flex: 1, height: 42, display: "flex", alignItems: "center", justifyContent: "center", borderRadius: 10, background: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)", color: "#fff", fontSize: 13, fontWeight: 700, textDecoration: "none", boxShadow: "0 4px 16px rgba(99,102,241,0.3)" }}>
-                Open full editor →
-              </a>
-            )}
           </div>
         </div>
       </div>
