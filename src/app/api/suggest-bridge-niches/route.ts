@@ -29,7 +29,7 @@ Framework signals: ${framework.slice(0, 150)}
 
 STEP 1 — Detect source niche: Based on the video title, channel name, and framework keywords, determine exactly what content niche this creator is in (e.g. "health & weight loss", "personal finance", "gaming", "psychology", "fitness", "true crime", "technology", "cooking").
 
-STEP 2 — Find bridge niches that are COMPLETELY DIFFERENT from that detected niche. If health/medicine → pick from: gaming, finance, crime, philosophy, science, history, technology. If finance → pick from: gaming, psychology, history, crime, tech, sports. Do NOT suggest anything adjacent to the detected source niche.
+STEP 2 — Find bridge niches that are COMPLETELY DIFFERENT from that detected niche. Choose from the FULL range of YouTube communities: gaming, true crime, personal finance, philosophy, history, technology, cooking, travel, fitness, sports, relationships, self-improvement, science, comedy, anime, cars, DIY, parenting, fashion, music, real estate, entrepreneurship, military, space, wildlife, language learning, career advice. Pick the 5 that would create the most surprising and compelling cross-community blend. Prioritize variety — never pick 2 niches from the same broad category. Do NOT suggest anything from the same category as the detected source niche.
 
 Find 5 BRIDGE SUB-NICHES from COMPLETELY DIFFERENT content categories than this video.
 
