@@ -16,11 +16,43 @@ export async function POST(req: Request) {
 
     const msg = await client.messages.create({
       model: "claude-haiku-4-5-20251001",
-      max_tokens: 900,
-      system: "You output ONLY valid JSON arrays. No prose, no markdown. Start with [ and end with ].",
+      max_tokens: 1000,
+      system: `You output ONLY valid JSON arrays. No prose, no markdown. Start with [ and end with ].
+Each object must have EXACTLY these keys: "name", "parentNiche", "hook", "algorithmNote", "titlePreview".`,
       messages: [{
         role: "user",
-        content: `A creator made a video in their niche and wants to blend it with a bridge sub-niche to break out of the algorithmic bubble.\n\nVIDEO: "${(videoTitle || "Unknown").slice(0, 120)}"\nCHANNEL: ${channelTitle || "Unknown"}\nHOOK TYPE: ${hookType}\nTITLE FORMULA: ${formula}\nFRAMEWORK: ${framework}\n\nSuggest 5 bridge sub-niches to blend with this content. CRITICAL RULES:\n- Return SPECIFIC SUB-NICHES, not broad categories\n  e.g. "Financial Anxiety" not "Finance", "Speedrunning" not "Gaming", "Stoicism" not "Philosophy"\n- Sub-niches must have dedicated YouTube search communities\n- The blend must feel natural, not forced\n- For each, generate a titlePreview using EXACTLY the title formula above applied to the blend\n\n[`,
+        content: `A YouTube creator made a video about: "${(videoTitle || "Unknown").slice(0, 120)}"
+Channel: ${channelTitle || "Unknown"}
+Hook type: ${hookType}
+Title formula: ${formula}
+
+Find 5 BRIDGE SUB-NICHES from COMPLETELY DIFFERENT content categories than this video.
+
+CRITICAL RULE: Bridge niches must NOT be from the same niche as the source video.
+
+EXAMPLES OF WRONG (too similar):
+- Ozempic/health video → "Metabolic Health", "Fitness Supplements", "Workout Routines" ✗
+- Finance video → "Investing", "Stock Market", "Crypto" ✗
+- Psychology video → "Mental Wellness", "Therapy Tips", "Mindfulness" ✗
+
+EXAMPLES OF RIGHT (true bridge — completely different community):
+- Ozempic/health video → "True Crime Psychology" [True Crime], "Financial Anxiety" [Personal Finance], "Biohacking" [Technology], "Dark Psychology" [Psychology], "FIRE Movement" [Finance] ✓
+- Finance video → "Speedrunning" [Gaming], "Stoicism" [Philosophy], "True Crime" [Crime], "Neuroscience" [Science] ✓
+
+SUB-NICHES must be SPECIFIC, not broad categories:
+- NOT "Gaming" → YES "Speedrunning" or "Indie Game Dev"
+- NOT "Psychology" → YES "Dark Psychology" or "Cognitive Biases"
+- NOT "Finance" → YES "Financial Anxiety" or "FIRE Movement"
+- NOT "Science" → YES "Neuroscience" or "Quantum Physics"
+
+For each bridge sub-niche return EXACTLY these JSON fields:
+- "name": specific sub-niche name (2-4 words, e.g. "Dark Psychology")
+- "parentNiche": broader category (e.g. "True Crime", "Gaming", "Personal Finance")
+- "hook": one sentence on how BOTH audiences connect with this blend
+- "algorithmNote": why YouTube recommends this to BOTH communities simultaneously
+- "titlePreview": apply EXACTLY this formula "${formula}" to the blended topic
+
+[`,
       }, {
         role: "assistant",
         content: "[",
@@ -29,13 +61,13 @@ export async function POST(req: Request) {
 
     const raw = "[" + (msg.content[0].type === "text" ? msg.content[0].text : "");
     const parsed = JSON.parse(raw.replace(/```json|```/g, "").trim());
-    // Ensure fields: name, parentNiche, hook, algorithmNote, titlePreview
+    // Strict field mapping — system prompt enforces exact keys
     const niches = parsed.map((n: any) => ({
-      name: n.name || n.subNiche || n.niche || "Unknown",
-      parentNiche: n.parentNiche || n.parent || n.category || "",
-      hook: n.hook || n.blend || n.why || "",
-      algorithmNote: n.algorithmNote || n.algorithm || n.searchNote || "",
-      titlePreview: n.titlePreview || n.title || n.titleSuggestion || "",
+      name: n.name || "Unknown",
+      parentNiche: n.parentNiche || "",
+      hook: n.hook || "",
+      algorithmNote: n.algorithmNote || "",
+      titlePreview: n.titlePreview || "",
     }));
     return NextResponse.json({ niches });
   } catch (e: any) {
