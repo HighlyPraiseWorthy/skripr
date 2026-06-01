@@ -73,7 +73,6 @@ export default function ViralRemixerPage() {
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6 }}>
           <span style={{ fontSize: 22 }}>🔥</span>
           <h1 style={{ fontSize: 22, fontWeight: 700, color: C.textBright, letterSpacing: -0.3 }}>Viral Remixer</h1>
-          <span style={{ fontSize: 10, fontWeight: 700, background: "rgba(52,211,153,0.10)", color: C.green, border: `1px solid rgba(52,211,153,0.20)`, padding: "2px 8px", borderRadius: 6 }}>FREE</span>
         </div>
         <p style={{ fontSize: 14, color: C.textDim, maxWidth: 520, lineHeight: 1.6 }}>
           Paste any YouTube URL. Get the hook type, content structure, and retention triggers that made it go viral — then script it for your own niche.

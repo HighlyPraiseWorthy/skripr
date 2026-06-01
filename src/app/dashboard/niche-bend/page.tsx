@@ -60,7 +60,6 @@ export default function NicheBendPage() {
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
             <span style={{ fontSize: 24 }}>↬</span>
             <h1 style={{ fontSize: 22, fontWeight: 700, color: C.textBright, letterSpacing: -0.3 }}>Niche Bend</h1>
-            <span style={{ fontSize: 10, fontWeight: 700, background: "rgba(99,102,241,0.12)", color: C.accentDim, border: "1px solid rgba(99,102,241,0.25)", padding: "2px 8px", borderRadius: 6 }}>BETA</span>
           </div>
           <p style={{ fontSize: 13, color: C.textDim, maxWidth: 500, lineHeight: 1.6 }}>
             Paste a video from your niche. We’ll find bridge sub-niches that blend with your content
