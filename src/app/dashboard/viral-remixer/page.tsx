@@ -227,15 +227,34 @@ export default function ViralRemixerPage() {
             <div style={{ display: "flex", gap: 10 }}>
               <button
                 onClick={handleSaveFormula}
-                style={{ flex: 1, height: 42, background: formulaSaved ? "rgba(52,211,153,0.12)" : "rgba(99,102,241,0.10)", border: `1px solid ${formulaSaved ? "rgba(52,211,153,0.4)" : "rgba(99,102,241,0.3)"}`, color: formulaSaved ? "#34d399" : "#a5b4fc", borderRadius: 10, fontSize: 13, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6, transition: "all 0.2s" }}
+                style={{
+                  flex: 1, height: 46,
+                  background: formulaSaved ? "rgba(52,211,153,0.10)" : "rgba(99,102,241,0.08)",
+                  border: `1.5px solid ${formulaSaved ? "rgba(52,211,153,0.45)" : "rgba(99,102,241,0.25)"}`,
+                  color: formulaSaved ? "#34d399" : "#a5b4fc",
+                  borderRadius: 12, fontSize: 13, fontWeight: 600, cursor: "pointer",
+                  display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
+                  transition: "all 0.2s", letterSpacing: 0.1,
+                  backdropFilter: "blur(4px)",
+                }}
               >
-                {formulaSaved ? "✓ Saved!" : "💾 Save Formula"}
+                <span style={{ fontSize: 15 }}>{formulaSaved ? "✓" : "💾"}</span>
+                {formulaSaved ? "Saved!" : "Save Formula"}
               </button>
               <button
                 onClick={handleUseFramework}
-                style={{ flex: 1, height: 42, background: C.accent, color: "#fff", border: "none", borderRadius: 10, fontSize: 13, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}
+                style={{
+                  flex: 1, height: 46,
+                  background: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
+                  color: "#fff", border: "none", borderRadius: 12,
+                  fontSize: 13, fontWeight: 700, cursor: "pointer",
+                  display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
+                  letterSpacing: 0.2,
+                  boxShadow: "0 4px 20px rgba(99,102,241,0.35), 0 1px 0 rgba(255,255,255,0.12) inset",
+                }}
               >
-                ↗ Generate Script
+                <span style={{ fontSize: 15 }}>✦</span>
+                Generate Script
               </button>
             </div>
           </div>
