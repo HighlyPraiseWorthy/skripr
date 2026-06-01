@@ -66,10 +66,6 @@ export default function ViralRemixerPage() {
     window.location.href = "/dashboard/scripts/viral-brief";
   }
 
-    setFormulaSaved(true);
-    setTimeout(() => setFormulaSaved(false), 2000);
-  }
-
   return (
     <div style={{ minHeight: "100vh", background: C.bg, padding: "32px 40px", fontFamily: "system-ui, sans-serif" }}>
       {/* Header */}
