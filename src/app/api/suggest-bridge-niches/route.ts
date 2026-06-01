@@ -25,6 +25,11 @@ Each object must have EXACTLY these keys: "name", "parentNiche", "hook", "algori
 Channel: ${channelTitle || "Unknown"}
 Hook type: ${hookType}
 Title formula: ${formula}
+Framework signals: ${framework.slice(0, 150)}
+
+STEP 1 — Detect source niche: Based on the video title, channel name, and framework keywords, determine exactly what content niche this creator is in (e.g. "health & weight loss", "personal finance", "gaming", "psychology", "fitness", "true crime", "technology", "cooking").
+
+STEP 2 — Find bridge niches that are COMPLETELY DIFFERENT from that detected niche. If health/medicine → pick from: gaming, finance, crime, philosophy, science, history, technology. If finance → pick from: gaming, psychology, history, crime, tech, sports. Do NOT suggest anything adjacent to the detected source niche.
 
 Find 5 BRIDGE SUB-NICHES from COMPLETELY DIFFERENT content categories than this video.
 
