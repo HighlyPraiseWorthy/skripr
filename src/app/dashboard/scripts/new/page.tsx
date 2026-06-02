@@ -237,10 +237,6 @@ export default function NewScriptPage() {
       <div aria-hidden style={{ position: "fixed", top: -160, right: -100, width: 460, height: 460, borderRadius: "50%", background: "radial-gradient(circle,rgba(99,102,241,0.14) 0%,transparent 70%)", pointerEvents: "none", zIndex: 0 }} />
 
       <div style={{ position: "relative", zIndex: 1, maxWidth: 760, margin: "0 auto" }}>
-          </div>
-        )}
-          </div>
-        )}
         {viralFramework && (
           <div style={{ marginBottom: 20, padding: "12px 16px", borderRadius: 12, background: "rgba(99,102,241,0.12)", border: "1px solid rgba(99,102,241,0.3)", display: "flex", alignItems: "flex-start", gap: 12 }}>
             <span style={{ fontSize: 18 }}>🔥</span>
