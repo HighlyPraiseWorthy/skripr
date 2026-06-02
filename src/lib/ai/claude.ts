@@ -15,6 +15,7 @@ export interface ScriptGenerationInput {
   targetTopic: string;
   targetNiche: string;
   videoLength: "short" | "medium" | "long" | "ultraLong";
+  targetMinutes?: number;
   tone: "educational" | "entertaining" | "storytelling" | "hype";
   ttsOptimized: boolean;
   viralMagnetWord?: string;
@@ -216,6 +217,7 @@ function extractJSON(text: string, kind: "object" | "array"): unknown {
 }
 
 export async function generateScript(input: ScriptGenerationInput): Promise<GeneratedScript> {
+  const targetWords = input.targetMinutes ? Math.round(input.targetMinutes * 130) : null;
   const lengthGuide = {
     short: "60-90 seconds, 150-200 words",
     medium: "2-3 minutes, 300-400 words",

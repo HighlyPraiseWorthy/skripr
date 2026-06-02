@@ -68,7 +68,8 @@ export default function NewScriptPage() {
   const [pastedTranscript, setPastedTranscript] = useState("");
   const [niche, setNiche] = useState("");
   const [topic, setTopic] = useState("");
-  const [videoLength, setVideoLength] = useState<"short" | "medium" | "long" | "ultraLong">("long");
+  const [videoMinutes, setVideoMinutes] = useState<number>(15);
+  const [extraSeconds, setExtraSeconds] = useState<number>(26);
   const [transcriptText, setTranscriptText] = useState("");
   const [generatedScript, setGeneratedScript] = useState<GeneratedScript | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -115,7 +116,7 @@ export default function NewScriptPage() {
       fetch("/api/scripts/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ transcript: "", topic: topicVal, niche: nicheVal, videoLength: "medium", viralMagnetWord: selectedViralWord || undefined, angle: undefined, remixFramework: rfParam || undefined, hookType: htParam || undefined, titleFormula: tfParam || undefined }),
+        body: JSON.stringify({ transcript: "", topic: topicVal, niche: nicheVal, videoLength: videoMinutes >= 14 ? "long" : "medium", targetMinutes: videoMinutes, viralMagnetWord: selectedViralWord || undefined, angle: undefined, remixFramework: rfParam || undefined, hookType: htParam || undefined, titleFormula: tfParam || undefined }),
       })
         .then(r => r.json())
         .then(data => {
@@ -184,7 +185,7 @@ export default function NewScriptPage() {
     try {
       const res = await fetch("/api/scripts/generate", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ transcript, niche: niche || undefined, topic: topic || undefined, videoLength,
+        body: JSON.stringify({ transcript, niche: niche || undefined, topic: topic || undefined, videoLength: videoMinutes >= 14 ? "long" : "medium", targetMinutes: videoMinutes,
           sourceVideoId: youtubeUrl ? youtubeUrl.match(/[?&]v=([^&]+)/)?.[1] : undefined, viralMagnetWord: selectedViralWord || undefined, angle: angle || undefined, remixFramework: viralFramework?.remixFramework || undefined, hookType: viralFramework?.hookType || undefined, titleFormula: viralFramework?.selectedTitle || viralFramework?.titleFormula || undefined }),
       });
       const data = await res.json();
@@ -578,6 +579,23 @@ export default function NewScriptPage() {
               </div>
             )}
 
+            {/* Video length slider — all modes */}
+            <div style={{ marginTop: 20, padding: "14px 16px", borderRadius: 12, background: "rgba(99,102,241,0.04)", border: "1px solid rgba(99,102,241,0.12)" }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
+                <span style={{ fontSize: 11, fontWeight: 700, color: "#64748b", letterSpacing: 0.5 }}>VIDEO LENGTH</span>
+                <span style={{ fontSize: 13, fontWeight: 700, color: "#a5b4fc" }}>~{videoMinutes}:{String(extraSeconds).padStart(2, "0")} on YouTube</span>
+              </div>
+              <input
+                type="range" min={10} max={20} step={1}
+                value={videoMinutes}
+                onChange={e => { setVideoMinutes(Number(e.target.value)); setExtraSeconds(20 + Math.floor(Math.random() * 30)); }}
+                style={{ width: "100%", accentColor: "#6366f1", cursor: "pointer", height: 4 }}
+              />
+              <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10, color: "#475569", marginTop: 6 }}>
+                <span>10 min</span><span>12 min</span><span>15 min</span><span>18 min</span><span>20 min</span>
+              </div>
+            </div>
+
             {/* Hook type picker — topic mode */}
             {inputMode === "topic" && (
               <div style={{ marginTop: 20 }}>
@@ -618,7 +636,7 @@ export default function NewScriptPage() {
             {inputMode === "topic" && topic.trim() && (
               <button
                 onClick={() => {
-                  const brief = { topic: topic.trim(), niche: niche.trim(), videoLength, hookTypeFilter: selectedHookType || null, angles: [] };
+                  const brief = { topic: topic.trim(), niche: niche.trim(), videoLength: videoMinutes >= 14 ? "long" : "medium", targetMinutes: videoMinutes, hookTypeFilter: selectedHookType || null, angles: [] };
                   sessionStorage.setItem("skripr_script_brief", JSON.stringify(brief));
                   window.location.href = "/dashboard/scripts/script-brief";
                 }}

@@ -29,7 +29,7 @@ export async function POST(req: Request) {
   const startTime = Date.now();
 
   try {
-    const { transcript, niche, topic, sourceVideoId, videoLength = "long", viralMagnetWord, angle, remixFramework, hookType, titleFormula, hookScript, contentStructure, retentionTriggers } = await req.json();
+    const { transcript, niche, topic, sourceVideoId, videoLength = "long", targetMinutes, viralMagnetWord, angle, remixFramework, hookType, titleFormula, hookScript, contentStructure, retentionTriggers } = await req.json();
 
     // Build enhanced angle from Viral Remixer framework
     let enhancedAngle: string | undefined = angle || undefined;
@@ -51,7 +51,7 @@ export async function POST(req: Request) {
     }
 
     const maxWords: Record<string, number> = { short: 200, medium: 400, long: 500, ultraLong: 600 };
-    const cap = maxWords[videoLength] ?? 400;
+    const cap = targetMinutes ? Math.round(targetMinutes * 130 / 10) : (maxWords[videoLength] ?? 400);
     const truncated = truncateTranscript(transcript || "", cap);
     console.log(`[generate] length=${videoLength}`);
 
@@ -62,6 +62,7 @@ export async function POST(req: Request) {
       sourceTitle: topic || "",
       sourceNiche: niche || "general",
       videoLength: videoLength as any,
+      targetMinutes: targetMinutes ?? undefined,
       tone: "entertaining",
       ttsOptimized: false,
       viralMagnetWord: viralMagnetWord || undefined,
