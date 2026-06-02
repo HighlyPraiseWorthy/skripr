@@ -112,7 +112,7 @@ export default function NicheBendBriefPage() {
       const res = await fetch("/api/scripts/generate", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          transcript: "", topic: angle.angle, niche: angle.audience, videoLength: "medium",
+          transcript: "", topic: angle.angle, niche: angle.audience, videoLength: (brief as any).targetMinutes >= 14 ? "long" : "medium", targetMinutes: (brief as any).targetMinutes ?? 15,
           hookType: brief.hookAnalysis.hookType, hookScript: brief.hookAnalysis.hook,
           titleFormula: angle.titleSuggestion, remixFramework: brief.remixFramework,
           contentStructure: brief.structure, retentionTriggers: brief.retentionTriggers,

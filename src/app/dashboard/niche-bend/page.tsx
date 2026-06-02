@@ -22,6 +22,8 @@ export default function NicheBendPage() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [videoMinutes, setVideoMinutes] = useState<number>(15);
+  const [extraSeconds, setExtraSeconds] = useState<number>(26);
 
   async function handleAnalyze() {
     if (!url.trim()) return;
@@ -48,6 +50,7 @@ export default function NicheBendPage() {
       remixFramework: result.remixFramework,
       videoTitle: result.title,
       channelTitle: result.channelTitle,
+      targetMinutes: videoMinutes,
     };
     sessionStorage.setItem("skripr_niche_bend_brief", JSON.stringify(brief));
     window.location.href = "/dashboard/scripts/niche-bend-brief";
@@ -116,6 +119,23 @@ export default function NicheBendPage() {
               )}
             </div>
 
+
+            {/* Video length slider */}
+            <div style={{ marginBottom: 16, padding: "14px 16px", borderRadius: 12, background: "rgba(99,102,241,0.04)", border: "1px solid rgba(99,102,241,0.12)" }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
+                <span style={{ fontSize: 11, fontWeight: 700, color: "#64748b", letterSpacing: 0.5 }}>VIDEO LENGTH</span>
+                <span style={{ fontSize: 13, fontWeight: 700, color: "#a5b4fc" }}>~{videoMinutes}:{String(extraSeconds).padStart(2, "0")} on YouTube</span>
+              </div>
+              <input
+                type="range" min={10} max={20} step={1}
+                value={videoMinutes}
+                onChange={e => { setVideoMinutes(Number(e.target.value)); setExtraSeconds(20 + Math.floor(Math.random() * 30)); }}
+                style={{ width: "100%", accentColor: "#6366f1", cursor: "pointer" }}
+              />
+              <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10, color: "#475569", marginTop: 6 }}>
+                <span>10 min</span><span>12 min</span><span>15 min</span><span>18 min</span><span>20 min</span>
+              </div>
+            </div>
             <button onClick={handleFindBridgeNiches}
               style={{ width: "100%", height: 52, borderRadius: 12, background: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)", color: "#fff", border: "none", fontSize: 15, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 10, boxShadow: "0 4px 24px rgba(99,102,241,0.4)" }}>
               <span style={{ fontSize: 18 }}>↬</span>
