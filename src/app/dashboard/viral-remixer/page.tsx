@@ -218,8 +218,6 @@ export default function ViralRemixerPage() {
           <div style={{ background: "rgba(99,102,241,0.06)", border: `1px solid rgba(99,102,241,0.20)`, borderRadius: 14, padding: "18px 22px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16 }}>
             <div style={{ fontSize: 13, fontWeight: 600, color: C.textBright, marginBottom: 4 }}>Script this framework for your niche</div>
             <div style={{ fontSize: 12, color: C.textDim, lineHeight: 1.6, marginBottom: 16 }}>{result.remixFramework}</div>
-            <button
-
               {/* Video length slider */}
               <div style={{ marginBottom: 16, padding: "14px 16px", borderRadius: 12, background: "rgba(99,102,241,0.04)", border: "1px solid rgba(99,102,241,0.12)" }}>
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
