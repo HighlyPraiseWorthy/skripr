@@ -63,7 +63,7 @@ const inputStyle = {
 export default function NewScriptPage() {
   const router = useRouter();
   const [step, setStep] = useState<Step>("input");
-  const [inputMode, setInputMode] = useState<InputMode>("url");
+  const [inputMode, setInputMode] = useState<InputMode>("topic");
   const [youtubeUrl, setYoutubeUrl] = useState("");
   const [pastedTranscript, setPastedTranscript] = useState("");
   const [niche, setNiche] = useState("");
