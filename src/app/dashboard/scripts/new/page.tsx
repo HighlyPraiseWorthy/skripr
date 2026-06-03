@@ -102,10 +102,10 @@ export default function NewScriptPage() {
       if (!saved) return;
       const s = JSON.parse(saved);
       if (s.inputMode) setInputMode(s.inputMode);
-      if (s.url) setUrl(s.url);
+      if (s.youtubeUrl) setYoutubeUrl(s.youtubeUrl);
       if (s.topic) setTopic(s.topic);
       if (s.niche) setNiche(s.niche);
-      if (s.transcript) setTranscript(s.transcript);
+      if (s.pastedTranscript) setPastedTranscript(s.pastedTranscript);
       if (s.videoMinutes) setVideoMinutes(s.videoMinutes);
       if (s.extraSeconds) setExtraSeconds(s.extraSeconds);
       if (s.selectedHookType !== undefined) setSelectedHookType(s.selectedHookType);
@@ -115,11 +115,11 @@ export default function NewScriptPage() {
   useEffect(() => {
     try {
       localStorage.setItem("skripr_sg_state", JSON.stringify({
-        inputMode, url, topic, niche, transcript,
+        inputMode, youtubeUrl, topic, niche, pastedTranscript,
         videoMinutes, extraSeconds, selectedHookType,
       }));
     } catch {}
-  }, [inputMode, url, topic, niche, transcript, videoMinutes, extraSeconds, selectedHookType]);
+  }, [inputMode, youtubeUrl, topic, niche, pastedTranscript, videoMinutes, extraSeconds, selectedHookType]);
 
 
   useEffect(() => {

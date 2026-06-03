@@ -31,6 +31,9 @@ export default function ViralRemixerPage() {
   const [videoMinutes, setVideoMinutes] = useState<number>(15);
   const [extraSeconds, setExtraSeconds] = useState<number>(26);
 
+  const [error, setError] = useState<string | null>(null);
+  const [result, setResult] = useState<Analysis | null>(null);
+
   // ── Persist state across navigation ───────────────────────────────────────
   useEffect(() => {
     try {
@@ -52,9 +55,6 @@ export default function ViralRemixerPage() {
       }));
     } catch {}
   }, [url, result, selectedRemix, videoMinutes, extraSeconds]);
-
-  const [error, setError] = useState<string | null>(null);
-  const [result, setResult] = useState<Analysis | null>(null);
 
   async function handleAnalyze() {
     if (!url.trim()) return;
