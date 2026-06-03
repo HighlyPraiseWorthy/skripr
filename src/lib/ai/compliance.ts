@@ -1,3 +1,7 @@
+import Anthropic from "@anthropic-ai/sdk";
+
+const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+
 export interface ComplianceCheck {
   id: string;
   name: string;
@@ -16,156 +20,107 @@ export interface ComplianceReport {
   timestamp: string;
 }
 
-/**
- * Run compliance checks on a script before publishing.
- * This is a simplified version. Production would integrate with
- * YouTube's APIs and more sophisticated detection models.
- */
 export async function runComplianceCheck(
   script: string,
   title: string,
   niche: string
 ): Promise<ComplianceReport> {
-  const checks: ComplianceCheck[] = [];
+  const prompt = `You are a YouTube content policy expert. Analyze this script against YouTube's actual enforcement policies and return a detailed compliance report.
 
-  // 1. Content uniqueness check
-  const uniquenessScore = checkContentUniqueness(script);
-  checks.push({
-    id: "content-uniqueness",
-    name: "Content Uniqueness",
-    description: "Checks if your content is sufficiently original",
-    status: uniquenessScore > 70 ? "pass" : uniquenessScore > 40 ? "warn" : "fail",
-    score: uniquenessScore,
-    details: uniquenessScore > 70 ? "Content appears original" : "Some phrases may overlap with existing content",
-    suggestions: uniquenessScore > 70 ? [] : [
-      "Rewrite sections that sound generic or commonly used",
-      "Add personal anecdotes or unique perspectives",
-      "Use specific examples instead of general statements",
-    ],
+TITLE: "${title}"
+NICHE: "${niche || "general"}"
+SCRIPT:
+${script.slice(0, 3500)}
+
+Analyze the script across exactly these 6 policy dimensions:
+
+1. ADVERTISER-FRIENDLY CONTENT (id: "advertiser-friendly")
+YouTube's AFCG demonetizes content for:
+- Strong profanity (especially in the first 30 seconds or title)
+- Violence, injury, or graphic descriptions
+- Sexual content or strong innuendo
+- Drugs, tobacco, alcohol promoted positively
+- Controversial social/political topics handled carelessly
+- Shocking or disturbing content without clear educational framing
+Score 0-100: 90-100 = fully monetizable, 70-89 = limited ads, below 70 = likely demonetized (yellow/red dollar sign)
+
+2. COMMUNITY GUIDELINES RISK (id: "community-guidelines")
+Content that gets videos removed:
+- Hate speech targeting race, religion, gender, sexual orientation, disability
+- Harassment, bullying, or targeted humiliation
+- Promoting real-world violence or dangerous activities
+- Encouraging self-harm or suicide
+- Violent threats against specific people or groups
+- Spam patterns or coordinated deception
+Score 0-100: 100 = fully safe, below 50 = real removal risk
+
+3. SENSITIVE TOPIC FLAGS (id: "sensitive-topics")
+Topics that reduce distribution even without removal:
+- Unverified medical/health claims ("cures", "reverses disease", specific dosages)
+- Financial advice presented as guaranteed ("you will make money")
+- Political or electoral content
+- Conspiracy theory language or misinformation signals
+- Religious controversy
+Score 0-100: 100 = no flags, 60-80 = distribution reduced, below 60 = significant suppression likely
+
+4. MISLEADING CONTENT (id: "misleading-content")
+YouTube penalizes content that deceives viewers:
+- Title promises something the script doesn't deliver
+- Fake statistics or made-up facts presented as real
+- Sensational claims without any evidence
+- Clickbait framing designed to mislead rather than inform
+- Deceptive setups (pretending something fake is real)
+Score 0-100: 100 = fully honest, below 60 = misleading content flag risk
+
+5. ENGAGEMENT INTEGRITY (id: "engagement-integrity")
+YouTube's authenticity policies prohibit:
+- Engagement bait: "comment YES if you agree", "type DONE when finished"
+- Like/subscribe begging in the first 30 seconds
+- Artificial urgency: "watch before YouTube deletes this", "they don't want you to see this"
+- Subscriber milestone manipulation ("help me reach 10k!")
+- View manipulation tactics
+Score 0-100: 100 = authentic, below 70 = engagement bait violation risk
+
+6. OVERALL MONETIZATION RISK (id: "monetization-risk")
+Holistic assessment: would this video realistically get the yellow dollar sign?
+- Does any single issue above trigger automated review?
+- Would advertisers run ads against this content?
+- Is the niche itself restricted (gambling, firearms, controversial news)?
+- Does the content qualify for YouTube Premium revenue?
+Score 0-100: 90-100 = strong monetization, 70-89 = some ads, 50-69 = limited, below 50 = likely no monetization
+
+Return ONLY valid JSON with no markdown fences or explanation:
+{
+  "overallScore": <weighted average, monetization-risk counts double>,
+  "riskLevel": "<low if score>=80, medium if 60-79, high if 40-59, critical if below 40>",
+  "summary": "<2-3 sentences: honest overall verdict, biggest specific risk found, and the one most important fix>",
+  "checks": [
+    {
+      "id": "<exact id from above>",
+      "name": "<human name>",
+      "description": "<one line what this checks>",
+      "status": "<pass if score>=80, warn if 55-79, fail if below 55>",
+      "score": <0-100>,
+      "details": "<SPECIFIC: quote or reference the actual content in this script that triggered the score — do not write generic advice here, write what you actually found>",
+      "suggestions": ["<specific actionable fix referencing the actual script content>", "<another specific fix>"]
+    }
+  ]
+}
+
+CRITICAL: In details and suggestions, be specific to THIS script. Quote phrases. Name the exact issue. Generic advice ("avoid profanity") is useless — tell them which line and how to rewrite it.`;
+
+  const msg = await client.messages.create({
+    model: "claude-sonnet-4-6",
+    max_tokens: 2000,
+    messages: [{ role: "user", content: prompt }],
   });
 
-  // 2. AI voice risk
-  const aiRiskScore = checkAIVoiceRisk(script);
-  checks.push({
-    id: "ai-voice-risk",
-    name: "AI Voice Detection Risk",
-    description: "Estimates risk of being flagged for AI-generated voice",
-    status: aiRiskScore < 30 ? "pass" : aiRiskScore < 60 ? "warn" : "fail",
-    score: 100 - aiRiskScore,
-    details: aiRiskScore < 30 ? "Low risk of AI voice detection" : "Script patterns may trigger AI voice detection",
-    suggestions: aiRiskScore < 30 ? [] : [
-      "Add more conversational fillers and natural speech patterns",
-      "Vary sentence length more dramatically",
-      "Include rhetorical questions and direct audience address",
-      "Add personal opinions and subjective statements",
-    ],
-  });
-
-  // 3. Metadata compliance
-  const metadataScore = checkMetadataCompliance(title, niche);
-  checks.push({
-    id: "metadata-compliance",
-    name: "Metadata Compliance",
-    description: "Checks title and metadata for policy compliance",
-    status: metadataScore > 80 ? "pass" : metadataScore > 50 ? "warn" : "fail",
-    score: metadataScore,
-    details: metadataScore > 80 ? "Metadata looks clean" : "Some metadata elements may need adjustment",
-    suggestions: metadataScore > 80 ? [] : [
-      "Avoid clickbait that doesn't deliver on the promise",
-      "Ensure title accurately represents the content",
-      "Remove any misleading claims or exaggerations",
-    ],
-  });
-
-  // 4. Visual originality guidance
-  checks.push({
-    id: "visual-originality",
-    name: "Visual Originality Guidance",
-    description: "Guidance on making your visuals more original",
-    status: "pass",
-    score: 75,
-    details: "Visual originality depends on your specific footage and images",
-    suggestions: [
-      "Use original footage when possible instead of stock",
-      "Add custom graphics, text overlays, and animations",
-      "Create unique thumbnail designs that stand out",
-      "Use consistent branding elements across videos",
-    ],
-  });
-
-  const overallScore = Math.round(checks.reduce((sum, c) => sum + c.score, 0) / checks.length);
-  const riskLevel = overallScore > 75 ? "low" : overallScore > 50 ? "medium" : overallScore > 25 ? "high" : "critical";
+  const raw = msg.content[0].type === "text" ? msg.content[0].text : "";
+  const clean = raw.replace(/^```json\s*|^```\s*|```\s*$/gm, "").trim();
+  const data = JSON.parse(clean);
 
   return {
-    overallScore,
-    riskLevel,
-    checks,
-    summary: `Compliance score: ${overallScore}/100. Risk level: ${riskLevel}. ${checks.filter(c => c.status === "fail").length} issues need attention.`,
+    ...data,
     timestamp: new Date().toISOString(),
   };
-}
-
-function checkContentUniqueness(script: string): number {
-  // Simplified heuristic: check for generic phrases
-  const genericPhrases = [
-    "in today's video", "without further ado", "let's dive in",
-    "before we begin", "as you can see", "it's worth noting",
-    "first and foremost", "at the end of the day", "the bottom line",
-  ];
-  
-  const lowerScript = script.toLowerCase();
-  let genericCount = 0;
-  for (const phrase of genericPhrases) {
-    if (lowerScript.includes(phrase)) genericCount++;
-  }
-  
-  // More generic phrases = lower uniqueness
-  const penalty = genericCount * 8;
-  return Math.max(10, 95 - penalty);
-}
-
-function checkAIVoiceRisk(script: string): number {
-  // Heuristic: AI-generated scripts tend to have uniform sentence structure
-  const sentences = script.split(/[.!?]+/).filter(s => s.trim().length > 0);
-  const lengths = sentences.map(s => s.trim().split(/\s+/).length);
-  
-  if (lengths.length < 3) return 50;
-  
-  const avg = lengths.reduce((a, b) => a + b, 0) / lengths.length;
-  const variance = lengths.reduce((sum, l) => sum + Math.pow(l - avg, 2), 0) / lengths.length;
-  const stdDev = Math.sqrt(variance);
-  
-  // Low variance in sentence length = more AI-like
-  const uniformityScore = Math.max(0, 100 - stdDev * 10);
-  
-  // Check for AI-typical phrases
-  const aiPhrases = ["it's important to note", "in conclusion", "furthermore", "moreover", "additionally"];
-  let aiPhraseCount = 0;
-  const lowerScript = script.toLowerCase();
-  for (const phrase of aiPhrases) {
-    if (lowerScript.includes(phrase)) aiPhraseCount++;
-  }
-  
-  return Math.min(100, uniformityScore + aiPhraseCount * 10);
-}
-
-function checkMetadataCompliance(title: string, niche: string): number {
-  let score = 90;
-  
-  // Penalize all-caps words
-  const capsWords = title.match(/\b[A-Z]{3,}\b/g);
-  if (capsWords && capsWords.length > 2) score -= 15;
-  
-  // Penalize excessive punctuation
-  if ((title.match(/!/g) || []).length > 1) score -= 10;
-  if ((title.match(/\?/g) || []).length > 2) score -= 5;
-  
-  // Penalize clickbait patterns
-  const clickbait = ["you won't believe", "shocking", "mind blown", "this changed everything", "gone wrong", "gone sexual"];
-  const lowerTitle = title.toLowerCase();
-  for (const phrase of clickbait) {
-    if (lowerTitle.includes(phrase)) score -= 15;
-  }
-  
-  return Math.max(10, score);
 }
