@@ -6,10 +6,9 @@
       <stop offset="100%" stop-color="#a855f7"/>
     </linearGradient>
   </defs>
-  <!-- Purple gradient background -->
   <rect width="32" height="32" rx="6" fill="url(#g)"/>
-  <!-- Angular S: upper lobe (pointed top, extends right, diagonal bottom) -->
-  <polygon points="16,3 25,8 25,16 7,17 7,8" fill="white"/>
-  <!-- Angular S: lower lobe (pointed bottom, extends left, diagonal top) -->
-  <polygon points="16,29 7,24 7,16 25,15 25,24" fill="white"/>
+  <!-- Angular S: upper lobe -->
+  <polygon points="16,3 25,8 25,16 7,17 7,8" fill="white" stroke="black" stroke-width="1" stroke-linejoin="round"/>
+  <!-- Angular S: lower lobe -->
+  <polygon points="16,29 7,24 7,16 25,15 25,24" fill="white" stroke="black" stroke-width="1" stroke-linejoin="round"/>
 </svg>
