@@ -428,28 +428,72 @@ export interface GeneratedMetadata {
 export async function generateMetadata(input: MetadataGenerationInput): Promise<GeneratedMetadata> {
   const currentYear = new Date().getFullYear();
 
-  const userPrompt = `Generate YouTube metadata for this video:
+  const userPrompt = `You are a YouTube SEO and algorithm expert. Generate metadata that optimizes for all three YouTube discovery surfaces: Search, Browse (home feed), and Suggested Videos.
+
+VIDEO INFO:
 Title: "${input.title}"
 Niche: ${input.niche}
-Script excerpt (first 1000 chars):
+Script (first 1200 chars):
 """
-${input.script.slice(0, 1000)}
+${input.script.slice(0, 1200)}
 """
 ${input.targetKeywords ? `Target keywords: ${input.targetKeywords.join(", ")}` : ""}
+Current year: ${currentYear}
 
-Important rules:
-- Current year is ${currentYear}. Use ${currentYear} for any year references unless the script mentions a different year.
-- Tags must be plain text only — no "#" symbols, no quotes, no special characters.
-- The description must end with exactly 3 relevant hashtags on the final line.
-- The separate "hashtags" array must contain 10 hashtags, each prefixed with "#".
+━━━ TITLES (generate exactly 10) ━━━
+The three YouTube discovery surfaces need different title strategies:
 
-Output JSON:
+SEARCH titles (first 4) — These surface when users type queries into YouTube search.
+Rules: Primary keyword in the first 5 words. Under 60 characters. Informational framing.
+Example pattern: "How to [keyword] in [timeframe]" or "[Keyword]: [specific benefit]"
+
+BROWSE titles (next 4) — These surface on home feeds and recommendations.
+Rules: Lead with emotion, curiosity, or a specific number. No keyword stuffing. 
+Create an open loop the viewer must click to close. 7-10 words.
+Example pattern: "I [did X] for [N days] and [surprising result]" or "The [thing] nobody tells you about [topic]"
+
+HYBRID titles (last 2) — Work for both surfaces.
+Rules: Primary keyword present but framed as a curiosity gap or personal result.
+
+━━━ DESCRIPTION ━━━
+The first 2-3 sentences appear ABOVE the fold (before Show More) and are indexed most heavily by YouTube search. Front-load the primary keyword naturally.
+
+Structure:
+- Sentence 1: Hook + primary keyword (what this video is about, make it compelling)
+- Sentence 2-3: Secondary keywords + what viewer will learn/get
+- [blank line]
+- Timestamps (if applicable): 0:00 Intro, etc.
+- [blank line]
+- 2-3 related resource links or channel info
+- [blank line]
+- End with exactly 3 relevant hashtags on the final line
+
+━━━ TAGS (exactly 20, plain text, NO # prefix) ━━━
+Tags determine which "topic cluster" YouTube places your video in — affecting Suggested Videos placement alongside similar content.
+
+Tag strategy:
+- Tags 1-3: Exact match primary keyword and its closest variations (these are your anchor tags)
+- Tags 4-10: Long-tail phrases (3-5 words) that viewers actually search — be specific
+- Tags 11-16: Niche category terms that major channels in this space would use (cluster-matching tags)
+- Tags 17-20: Broad discovery terms that expand reach beyond the core audience
+
+━━━ THUMBNAIL TEXT (exactly 5 options, max 4 words each) ━━━
+Thumbnail text drives CTR on Browse and Suggested. Each option should:
+- Create an open loop or strong emotion
+- Work WITHOUT seeing the video
+- Be specific over generic (numbers beat adjectives)
+
+━━━ HASHTAGS (exactly 10, each prefixed with #) ━━━
+Mix: 3 niche-specific, 4 topic-specific, 3 broad discovery
+
+━━━ OUTPUT FORMAT ━━━
+Return ONLY valid JSON, no markdown fences:
 {
-  "titles": ["10 title options, optimized for CTR and search"],
-  "description": "Full YouTube description with timestamps, keywords, links, ending with exactly 3 hashtags on the final line",
-  "tags": ["20 plain-text tags, NO # prefix, mix of broad and niche-specific"],
-  "thumbnailText": ["5 thumbnail text options, max 4 words each"],
-  "hashtags": ["10 hashtags each prefixed with #"]
+  "titles": ["SEARCH: [title]", "SEARCH: [title]", "SEARCH: [title]", "SEARCH: [title]", "BROWSE: [title]", "BROWSE: [title]", "BROWSE: [title]", "BROWSE: [title]", "HYBRID: [title]", "HYBRID: [title]"],
+  "description": "Full description following the structure above",
+  "tags": ["exact match keyword", "keyword variation", "keyword 2", "long tail phrase 1", "long tail phrase 2", "long tail phrase 3", "long tail phrase 4", "long tail phrase 5", "long tail phrase 6", "long tail phrase 7", "niche category 1", "niche category 2", "niche category 3", "niche category 4", "niche category 5", "niche category 6", "broad term 1", "broad term 2", "broad term 3", "broad term 4"],
+  "thumbnailText": ["OPTION 1", "OPTION 2", "OPTION 3", "OPTION 4", "OPTION 5"],
+  "hashtags": ["#tag1", "#tag2", "#tag3", "#tag4", "#tag5", "#tag6", "#tag7", "#tag8", "#tag9", "#tag10"]
 }`;
 
   const response = await getAnthropic().messages.create({
