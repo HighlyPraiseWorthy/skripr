@@ -214,27 +214,28 @@ export default function ViralRemixerPage() {
             </div>
           </div>
 
+          {/* Video length */}
+          <div style={{ marginBottom: 20, padding: "18px 20px", borderRadius: 14, background: "rgba(99,102,241,0.04)", border: "1px solid rgba(99,102,241,0.12)" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+              <span style={{ fontSize: 12, fontWeight: 700, color: "#94a3b8", letterSpacing: 0.5, textTransform: "uppercase" }}>Video Length</span>
+              <span style={{ fontSize: 15, fontWeight: 700, color: "#a5b4fc" }}>~{videoMinutes}:{String(extraSeconds).padStart(2, "0")} on YouTube</span>
+            </div>
+            <input
+              type="range" min={10} max={20} step={1}
+              value={videoMinutes}
+              onChange={e => { setVideoMinutes(Number(e.target.value)); setExtraSeconds(20 + Math.floor(Math.random() * 30)); }}
+              style={{ width: "100%", accentColor: "#6366f1", cursor: "pointer" }}
+            />
+            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10, color: "#475569", marginTop: 8 }}>
+              <span>10 min</span><span>12 min</span><span>15 min</span><span>18 min</span><span>20 min</span>
+            </div>
+          </div>
+
           {/* Framework summary + CTA */}
-          <div style={{ background: "rgba(99,102,241,0.06)", border: `1px solid rgba(99,102,241,0.20)`, borderRadius: 14, padding: "18px 22px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16 }}>
-            <div style={{ fontSize: 13, fontWeight: 600, color: C.textBright, marginBottom: 4 }}>Script this framework for your niche</div>
-            <div style={{ fontSize: 12, color: C.textDim, lineHeight: 1.6, marginBottom: 16 }}>{result.remixFramework}</div>
-              {/* Video length slider */}
-              <div style={{ marginBottom: 16, padding: "14px 16px", borderRadius: 12, background: "rgba(99,102,241,0.04)", border: "1px solid rgba(99,102,241,0.12)" }}>
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
-                  <span style={{ fontSize: 11, fontWeight: 700, color: "#64748b", letterSpacing: 0.5 }}>VIDEO LENGTH</span>
-                  <span style={{ fontSize: 13, fontWeight: 700, color: "#a5b4fc" }}>~{videoMinutes}:{String(extraSeconds).padStart(2, "0")} on YouTube</span>
-                </div>
-                <input
-                  type="range" min={10} max={20} step={1}
-                  value={videoMinutes}
-                  onChange={e => { setVideoMinutes(Number(e.target.value)); setExtraSeconds(20 + Math.floor(Math.random() * 30)); }}
-                  style={{ width: "100%", accentColor: "#6366f1", cursor: "pointer" }}
-                />
-                <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10, color: "#475569", marginTop: 6 }}>
-                  <span>10 min</span><span>12 min</span><span>15 min</span><span>18 min</span><span>20 min</span>
-                </div>
-              </div>
-              <button
+          <div style={{ background: "rgba(99,102,241,0.06)", border: `1px solid rgba(99,102,241,0.20)`, borderRadius: 14, padding: "20px 22px" }}>
+            <div style={{ fontSize: 13, fontWeight: 600, color: C.textBright, marginBottom: 6 }}>Script this framework for your niche</div>
+            <div style={{ fontSize: 12, color: C.textDim, lineHeight: 1.6, marginBottom: 18 }}>{result.remixFramework}</div>
+            <button
               onClick={handleUseFramework}
               style={{
                 width: "100%", height: 50,
