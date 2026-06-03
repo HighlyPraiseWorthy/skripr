@@ -45,17 +45,6 @@ const navItems: {
     ),
   },
   {
-    href: "/dashboard/scripts",
-    label: "My Scripts",
-    isActive: (p) =>
-      p === "/dashboard/scripts" ||
-      (p.startsWith("/dashboard/scripts/") && !isScriptGen(p)),
-    icon: (
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
-        d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
-    ),
-  },
-  {
     href: "/dashboard/niche-bend",
     label: "Niche Bend",
     isActive: (p) => p.startsWith("/dashboard/niche-bend"),
@@ -71,6 +60,17 @@ const navItems: {
     icon: (
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
         d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
+    ),
+  },
+  {
+    href: "/dashboard/scripts",
+    label: "My Scripts",
+    isActive: (p) =>
+      p === "/dashboard/scripts" ||
+      (p.startsWith("/dashboard/scripts/") && !isScriptGen(p)),
+    icon: (
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
+        d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
     ),
   },
   {
