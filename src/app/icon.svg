@@ -7,8 +7,10 @@
     </linearGradient>
   </defs>
   <rect width="32" height="32" rx="6" fill="url(#g)"/>
-  <!-- Angular S: upper lobe -->
-  <polygon points="16,3 25,8 25,16 7,17 7,8" fill="white" stroke="black" stroke-width="1" stroke-linejoin="round"/>
-  <!-- Angular S: lower lobe -->
-  <polygon points="16,29 7,24 7,16 25,15 25,24" fill="white" stroke="black" stroke-width="1" stroke-linejoin="round"/>
+  <!-- Upper lobe: pointed top, extends right, diagonal cuts to lower-left -->
+  <polygon points="16,3 26,8 26,15 6,18 6,8"
+    fill="white" stroke="black" stroke-width="1" stroke-linejoin="round"/>
+  <!-- Lower lobe: pointed bottom, extends left, diagonal cuts to upper-right -->
+  <polygon points="16,29 6,24 6,15 26,18 26,24"
+    fill="white" stroke="black" stroke-width="1" stroke-linejoin="round"/>
 </svg>
