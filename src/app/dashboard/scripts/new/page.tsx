@@ -109,6 +109,8 @@ export default function NewScriptPage() {
       if (s.videoMinutes) setVideoMinutes(s.videoMinutes);
       if (s.extraSeconds) setExtraSeconds(s.extraSeconds);
       if (s.selectedHookType !== undefined) setSelectedHookType(s.selectedHookType);
+      if (s.magnetWords?.length) setMagnetWords(s.magnetWords);
+      if (s.step && s.step !== "generating") setStep(s.step);
     } catch {}
   }, []);
 
@@ -117,9 +119,11 @@ export default function NewScriptPage() {
       localStorage.setItem("skripr_sg_state", JSON.stringify({
         inputMode, youtubeUrl, topic, niche, pastedTranscript,
         videoMinutes, extraSeconds, selectedHookType,
+        magnetWords,
+        step: step === "generating" ? "input" : step,
       }));
     } catch {}
-  }, [inputMode, youtubeUrl, topic, niche, pastedTranscript, videoMinutes, extraSeconds, selectedHookType]);
+  }, [inputMode, youtubeUrl, topic, niche, pastedTranscript, videoMinutes, extraSeconds, selectedHookType, magnetWords, step]);
 
 
   useEffect(() => {
