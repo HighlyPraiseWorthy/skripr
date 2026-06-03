@@ -26,6 +26,7 @@ export default function MetadataPage() {
   const [title, setTitle] = useState("");
   const [niche, setNiche] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [copiedTitle, setCopiedTitle] = useState<string | null>(null);
   const [metadata, setMetadata] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -133,14 +134,43 @@ export default function MetadataPage() {
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             <div style={{ borderRadius: 18, background: C.cardBg, border: `1px solid ${C.border}`, padding: "20px 22px" }}>
               <p style={{ fontSize: 13, fontWeight: 600, color: C.accent, letterSpacing: 0.4, marginBottom: 12 }}>TITLE OPTIONS</p>
-              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                {metadata.titles?.map((t: string, i: number) => (
-                  <div key={i} style={{ padding: "10px 14px", borderRadius: 10, background: "#1a1a3a" }}>
-                    <span style={{ fontSize: 12, color: C.textDim, marginRight: 10, fontWeight: 600 }}>{i + 1}.</span>
-                    <span style={{ fontSize: 14, color: C.textBright, fontWeight: 500 }}>{t}</span>
-                  </div>
-                ))}
-              </div>
+              {(() => {
+                const parse = (t: string) => {
+                  const m = t.match(/^(SEARCH|BROWSE|HYBRID):\s*(.+)$/);
+                  return m ? { type: m[1], text: m[2] } : { type: "SEARCH", text: t };
+                };
+                const parsed = (metadata.titles || []).map(parse);
+                const sections = [
+                  { type: "SEARCH", label: "Search", color: "#6366f1", desc: "Keyword-first — surfaces when viewers search YouTube" },
+                  { type: "BROWSE", label: "Browse", color: "#8b5cf6", desc: "Hook-first — surfaces on home feed and recommendations" },
+                  { type: "HYBRID", label: "Hybrid", color: "#10b981", desc: "Works for both Search and Browse surfaces" },
+                ];
+                return sections.map(section => {
+                  const titles = parsed.filter(p => p.type === section.type);
+                  if (!titles.length) return null;
+                  return (
+                    <div key={section.type} style={{ marginBottom: 18 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8, paddingBottom: 6, borderBottom: `1px solid ${section.color}22` }}>
+                        <span style={{ fontSize: 11, fontWeight: 700, color: section.color, letterSpacing: 0.8, textTransform: "uppercase" }}>{section.label}</span>
+                        <span style={{ fontSize: 11, color: C.textDim }}>{section.desc}</span>
+                      </div>
+                      <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                        {titles.map((t, i) => (
+                          <div key={i} style={{ padding: "10px 14px", borderRadius: 10, background: "#1a1a3a", border: `1px solid ${section.color}1a`, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
+                            <span style={{ fontSize: 14, color: C.textBright, fontWeight: 500, flex: 1, lineHeight: 1.4 }}>{t.text}</span>
+                            <button
+                              onClick={() => { navigator.clipboard.writeText(t.text).catch(() => {}); setCopiedTitle(t.text); setTimeout(() => setCopiedTitle(null), 2000); }}
+                              style={{ flexShrink: 0, padding: "4px 10px", borderRadius: 7, fontSize: 11, fontWeight: 600, cursor: "pointer", background: copiedTitle === t.text ? "rgba(16,185,129,0.12)" : `${section.color}18`, border: `1px solid ${copiedTitle === t.text ? "rgba(16,185,129,0.35)" : section.color + "35"}`, color: copiedTitle === t.text ? "#10b981" : section.color, transition: "all 0.12s", whiteSpace: "nowrap" }}
+                            >
+                              {copiedTitle === t.text ? "✓ Copied" : "Copy"}
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                });
+              })()}
             </div>
 
             <div style={{ borderRadius: 18, background: C.cardBg, border: `1px solid ${C.border}`, padding: "20px 22px" }}>
