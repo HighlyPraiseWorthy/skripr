@@ -139,7 +139,7 @@ export default function MetadataPage() {
                   const m = t.match(/^(SEARCH|BROWSE|HYBRID):\s*(.+)$/);
                   return m ? { type: m[1], text: m[2] } : { type: "SEARCH", text: t };
                 };
-                const parsed = (metadata.titles || []).map(parse);
+                const parsed: {type: string; text: string}[] = (metadata.titles || []).map(parse);
                 const sections = [
                   { type: "SEARCH", label: "Search", color: "#6366f1", desc: "Keyword-first — surfaces when viewers search YouTube" },
                   { type: "BROWSE", label: "Browse", color: "#8b5cf6", desc: "Hook-first — surfaces on home feed and recommendations" },
