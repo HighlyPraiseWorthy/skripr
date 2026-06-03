@@ -140,6 +140,28 @@ export default function MetadataPage() {
           {error && <p style={{ color: C.danger, fontSize: 13, marginTop: 10 }}>{error}</p>}
         </div>
 
+        {savedTitles.length > 0 && (
+          <div style={{ borderRadius: 18, background: C.cardBg, border: "1px solid rgba(16,185,129,0.22)", padding: "20px 22px", marginBottom: 0 }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <span style={{ fontSize: 13, fontWeight: 700, color: "#10b981", letterSpacing: 0.3 }}>★ Saved for A/B Testing</span>
+                <span style={{ fontSize: 11, color: C.textDim }}>{savedTitles.length} title{savedTitles.length !== 1 ? "s" : ""}</span>
+              </div>
+              <button onClick={() => setSavedTitles([])} style={{ fontSize: 11, color: C.textDim, cursor: "pointer", background: "none", border: "none", padding: 0 }}>Clear all</button>
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 6, marginBottom: 14 }}>
+              {savedTitles.map((t: string, i: number) => (
+                <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, padding: "9px 12px", borderRadius: 10, background: "#1a1a3a", border: "1px solid rgba(16,185,129,0.15)" }}>
+                  <span style={{ flex: 1, fontSize: 14, color: C.textBright, fontWeight: 500 }}>{t}</span>
+                  <button onClick={() => { navigator.clipboard.writeText(t).catch(() => {}); setCopiedTitle(t); setTimeout(() => setCopiedTitle(null), 2000); }} style={{ padding: "4px 10px", borderRadius: 7, fontSize: 11, fontWeight: 600, cursor: "pointer", background: copiedTitle === t ? "rgba(16,185,129,0.12)" : "rgba(16,185,129,0.08)", border: `1px solid ${copiedTitle === t ? "rgba(16,185,129,0.4)" : "rgba(16,185,129,0.2)"}`, color: "#10b981", transition: "all 0.12s", whiteSpace: "nowrap" }}>{copiedTitle === t ? "✓ Copied" : "Copy"}</button>
+                  <button onClick={() => setSavedTitles(prev => prev.filter(x => x !== t))} style={{ padding: "4px 8px", borderRadius: 7, fontSize: 11, cursor: "pointer", background: "rgba(248,113,113,0.08)", border: "1px solid rgba(248,113,113,0.2)", color: "#f87171" }}>✕</button>
+                </div>
+              ))}
+            </div>
+            <p style={{ fontSize: 11, color: C.textDim, margin: 0, lineHeight: 1.6 }}>Upload your video → use one title → check CTR after 48hrs → swap to another if CTR is below 4%</p>
+          </div>
+        )}
+
         {metadata && (
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             <div style={{ borderRadius: 18, background: C.cardBg, border: `1px solid ${C.border}`, padding: "20px 22px" }}>
@@ -191,28 +213,6 @@ export default function MetadataPage() {
                 });
               })()}
             </div>
-
-            {savedTitles.length > 0 && (
-              <div style={{ borderRadius: 18, background: C.cardBg, border: "1px solid rgba(16,185,129,0.22)", padding: "20px 22px" }}>
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                    <span style={{ fontSize: 13, fontWeight: 700, color: "#10b981", letterSpacing: 0.3 }}>★ Saved for A/B Testing</span>
-                    <span style={{ fontSize: 11, color: C.textDim }}>{savedTitles.length} title{savedTitles.length !== 1 ? "s" : ""}</span>
-                  </div>
-                  <button onClick={() => setSavedTitles([])} style={{ fontSize: 11, color: C.textDim, cursor: "pointer", background: "none", border: "none", padding: 0 }}>Clear all</button>
-                </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: 6, marginBottom: 14 }}>
-                  {savedTitles.map((t: string, i: number) => (
-                    <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, padding: "9px 12px", borderRadius: 10, background: "#1a1a3a", border: "1px solid rgba(16,185,129,0.15)" }}>
-                      <span style={{ flex: 1, fontSize: 14, color: C.textBright, fontWeight: 500 }}>{t}</span>
-                      <button onClick={() => { navigator.clipboard.writeText(t).catch(() => {}); setCopiedTitle(t); setTimeout(() => setCopiedTitle(null), 2000); }} style={{ padding: "4px 10px", borderRadius: 7, fontSize: 11, fontWeight: 600, cursor: "pointer", background: copiedTitle === t ? "rgba(16,185,129,0.12)" : "rgba(16,185,129,0.08)", border: `1px solid ${copiedTitle === t ? "rgba(16,185,129,0.4)" : "rgba(16,185,129,0.2)"}`, color: "#10b981", transition: "all 0.12s", whiteSpace: "nowrap" }}>{copiedTitle === t ? "✓ Copied" : "Copy"}</button>
-                      <button onClick={() => setSavedTitles(prev => prev.filter(x => x !== t))} style={{ padding: "4px 8px", borderRadius: 7, fontSize: 11, cursor: "pointer", background: "rgba(248,113,113,0.08)", border: "1px solid rgba(248,113,113,0.2)", color: "#f87171" }}>✕</button>
-                    </div>
-                  ))}
-                </div>
-                <p style={{ fontSize: 11, color: C.textDim, margin: 0, lineHeight: 1.6 }}>Upload your video → use one title → check CTR after 48hrs → swap to another if CTR is below 4%</p>
-              </div>
-            )}
 
             <div style={{ borderRadius: 18, background: C.cardBg, border: `1px solid ${C.border}`, padding: "20px 22px" }}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
