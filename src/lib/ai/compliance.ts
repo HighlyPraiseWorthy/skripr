@@ -107,7 +107,11 @@ Return ONLY valid JSON with no markdown fences or explanation:
   ]
 }
 
-CRITICAL: In details and suggestions, be specific to THIS script. Quote phrases. Name the exact issue. Generic advice ("avoid profanity") is useless — tell them which line and how to rewrite it.`;
+CRITICAL RULES:
+1. Be specific to THIS script. Reference actual phrases by paraphrasing them (do NOT use double-quote characters inside JSON string values — this breaks JSON parsing). Describe the problematic content without quoting it verbatim.
+2. All string values must be on a single line — no literal newlines inside JSON strings.
+3. Generic advice is useless — tell them the exact issue and how to fix it.
+4. Do not use the characters " or \ inside any string value.`;
 
   const msg = await client.messages.create({
     model: "claude-sonnet-4-6",
@@ -116,8 +120,30 @@ CRITICAL: In details and suggestions, be specific to THIS script. Quote phrases.
   });
 
   const raw = msg.content[0].type === "text" ? msg.content[0].text : "";
-  const clean = raw.replace(/^```json\s*|^```\s*|```\s*$/gm, "").trim();
-  const data = JSON.parse(clean);
+
+  // Robust JSON extraction
+  let data: any;
+  try {
+    const clean = raw.replace(/^```json\s*|^```\s*|```\s*$/gm, "").trim();
+    // Extract just the JSON object between first { and last }
+    const start = clean.indexOf("{");
+    const end = clean.lastIndexOf("}");
+    if (start === -1 || end === -1) throw new Error("No JSON object found");
+    const jsonStr = clean.slice(start, end + 1);
+    data = JSON.parse(jsonStr);
+  } catch (parseErr) {
+    // Fallback: sanitize then re-parse
+    const fallback = raw
+      .replace(/^```json\s*|^```\s*|```\s*$/gm, "")
+      .replace(/\r?\n/g, " ")
+      .replace(/\t/g, " ")
+      .replace(/[\x00-\x1F\x7F]/g, " ")
+      .trim();
+    const start = fallback.indexOf("{");
+    const end = fallback.lastIndexOf("}");
+    if (start === -1 || end === -1) throw new Error("Cannot extract JSON from response");
+    data = JSON.parse(fallback.slice(start, end + 1));
+  }
 
   return {
     ...data,
