@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const C = {
   bg: "#0a0a0f", card: "#13131a", cardHover: "#1a1a24",
@@ -24,6 +24,28 @@ export default function NicheBendPage() {
   const [error, setError] = useState<string | null>(null);
   const [videoMinutes, setVideoMinutes] = useState<number>(15);
   const [extraSeconds, setExtraSeconds] = useState<number>(26);
+
+  // ── Persist state across navigation ───────────────────────────────────────
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("skripr_nb_state");
+      if (!saved) return;
+      const s = JSON.parse(saved);
+      if (s.url) setUrl(s.url);
+      if (s.result) setResult(s.result);
+      if (s.videoMinutes) setVideoMinutes(s.videoMinutes);
+      if (s.extraSeconds) setExtraSeconds(s.extraSeconds);
+    } catch {}
+  }, []);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("skripr_nb_state", JSON.stringify({
+        url, result, videoMinutes, extraSeconds,
+      }));
+    } catch {}
+  }, [url, result, videoMinutes, extraSeconds]);
+
 
   async function handleAnalyze() {
     if (!url.trim()) return;

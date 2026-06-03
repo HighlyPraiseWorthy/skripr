@@ -95,6 +95,33 @@ export default function NewScriptPage() {
   const [angleSuggestions, setAngleSuggestions] = useState<string[]>([]);
   const [selectedHookType, setSelectedHookType] = useState<string | null>(null);
 
+  // ── Persist state across navigation ───────────────────────────────────────
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("skripr_sg_state");
+      if (!saved) return;
+      const s = JSON.parse(saved);
+      if (s.inputMode) setInputMode(s.inputMode);
+      if (s.url) setUrl(s.url);
+      if (s.topic) setTopic(s.topic);
+      if (s.niche) setNiche(s.niche);
+      if (s.transcript) setTranscript(s.transcript);
+      if (s.videoMinutes) setVideoMinutes(s.videoMinutes);
+      if (s.extraSeconds) setExtraSeconds(s.extraSeconds);
+      if (s.selectedHookType !== undefined) setSelectedHookType(s.selectedHookType);
+    } catch {}
+  }, []);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("skripr_sg_state", JSON.stringify({
+        inputMode, url, topic, niche, transcript,
+        videoMinutes, extraSeconds, selectedHookType,
+      }));
+    } catch {}
+  }, [inputMode, url, topic, niche, transcript, videoMinutes, extraSeconds, selectedHookType]);
+
+
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const t = params.get("topic");

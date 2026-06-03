@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const C = {
   bg: "#0d0d1f",
@@ -30,6 +30,29 @@ export default function ViralRemixerPage() {
   const [loading, setLoading] = useState(false);
   const [videoMinutes, setVideoMinutes] = useState<number>(15);
   const [extraSeconds, setExtraSeconds] = useState<number>(26);
+
+  // ── Persist state across navigation ───────────────────────────────────────
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("skripr_vr_state");
+      if (!saved) return;
+      const s = JSON.parse(saved);
+      if (s.url) setUrl(s.url);
+      if (s.result) setResult(s.result);
+      if (s.selectedRemix !== undefined) setSelectedRemix(s.selectedRemix);
+      if (s.videoMinutes) setVideoMinutes(s.videoMinutes);
+      if (s.extraSeconds) setExtraSeconds(s.extraSeconds);
+    } catch {}
+  }, []);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("skripr_vr_state", JSON.stringify({
+        url, result, selectedRemix, videoMinutes, extraSeconds,
+      }));
+    } catch {}
+  }, [url, result, selectedRemix, videoMinutes, extraSeconds]);
+
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<Analysis | null>(null);
 
