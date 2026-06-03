@@ -17,10 +17,39 @@ const C = {
   violet: "#8b5cf6",
 };
 
-const navItems = [
+// Script-gen sub-routes — used to distinguish "Scripts" tab vs "My Scripts" tab
+const SCRIPT_GEN_PREFIXES = [
+  "/dashboard/scripts/new",
+  "/dashboard/scripts/script-brief",
+  "/dashboard/scripts/viral-brief",
+  "/dashboard/scripts/niche-bend-brief",
+];
+
+function isScriptGen(pathname: string): boolean {
+  return SCRIPT_GEN_PREFIXES.some((p) => pathname.startsWith(p));
+}
+
+const navItems: {
+  href: string;
+  label: string;
+  isActive: (p: string) => boolean;
+  icon: React.ReactNode;
+}[] = [
+  {
+    href: "/dashboard/scripts/new",
+    label: "Scripts",
+    isActive: (p) => isScriptGen(p),
+    icon: (
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
+        d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+    ),
+  },
   {
     href: "/dashboard/scripts",
     label: "My Scripts",
+    isActive: (p) =>
+      p === "/dashboard/scripts" ||
+      (p.startsWith("/dashboard/scripts/") && !isScriptGen(p)),
     icon: (
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
         d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
@@ -29,6 +58,7 @@ const navItems = [
   {
     href: "/dashboard/niche-bend",
     label: "Niche Bend",
+    isActive: (p) => p.startsWith("/dashboard/niche-bend"),
     icon: (
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
         d="M13 10V3L4 14h7v7l9-11h-7z" />
@@ -37,6 +67,7 @@ const navItems = [
   {
     href: "/dashboard/viral-remixer",
     label: "Viral Remixer",
+    isActive: (p) => p.startsWith("/dashboard/viral-remixer"),
     icon: (
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
         d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
@@ -45,6 +76,7 @@ const navItems = [
   {
     href: "/dashboard/compliance",
     label: "Compliance",
+    isActive: (p) => p.startsWith("/dashboard/compliance"),
     icon: (
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
         d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
@@ -53,6 +85,7 @@ const navItems = [
   {
     href: "/dashboard/metadata",
     label: "Metadata",
+    isActive: (p) => p.startsWith("/dashboard/metadata"),
     icon: (
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
         d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
@@ -61,6 +94,7 @@ const navItems = [
   {
     href: "/dashboard/educate",
     label: "Learn",
+    isActive: (p) => p.startsWith("/dashboard/educate"),
     icon: (
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
         d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
@@ -86,12 +120,12 @@ const navItemInactive: React.CSSProperties = { ...navLinkBase, color: C.sub };
 type UsageData = { used: number; limit: number; plan: string; limitReached: boolean; isAdmin: boolean };
 
 export function DashboardNav() {
-  const pathname = usePathname();
+  const pathname = usePathname() ?? "";
   const [usage, setUsage] = useState<UsageData | null>(null);
 
   useEffect(() => {
     fetch("/api/user/usage").then(r => r.json()).then(setUsage).catch(() => {});
-  }, [pathname]); // refetch on nav to catch updates
+  }, [pathname]);
 
   const remaining = usage ? Math.max(0, usage.limit - usage.used) : null;
   const pct = usage ? Math.min(100, (usage.used / usage.limit) * 100) : 0;
@@ -106,7 +140,7 @@ export function DashboardNav() {
 
       {/* ── Logo ── */}
       <div style={{ padding: "20px 20px 14px" }}>
-        <Link href="/dashboard/scripts"
+        <Link href="/dashboard/scripts/new"
           style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
           <div style={{
             width: 34, height: 34, borderRadius: 10, flexShrink: 0,
@@ -122,12 +156,9 @@ export function DashboardNav() {
       {/* ── Usage indicator ── */}
       <div style={{ padding: "0 20px 14px", borderBottom: `1px solid ${C.border}` }}>
         {!usage ? (
-          /* skeleton while loading */
           <div style={{ height: 3, borderRadius: 3, background: "rgba(255,255,255,0.05)" }} />
         ) : usage.isAdmin ? (
-          <div style={{ fontSize: 11, fontWeight: 600, color: "#7c3aed", letterSpacing: 0.3 }}>
-            ∞ Unlimited
-          </div>
+          <div style={{ fontSize: 11, fontWeight: 600, color: "#7c3aed", letterSpacing: 0.3 }}>∞ Unlimited</div>
         ) : (
           <>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
@@ -139,10 +170,7 @@ export function DashboardNav() {
               </span>
             </div>
             <div style={{ height: 3, borderRadius: 3, background: "rgba(255,255,255,0.06)", overflow: "hidden" }}>
-              <div style={{
-                height: "100%", borderRadius: 3, background: barColor,
-                width: `${pct}%`, transition: "width 0.4s ease",
-              }} />
+              <div style={{ height: "100%", borderRadius: 3, background: barColor, width: `${pct}%`, transition: "width 0.4s ease" }} />
             </div>
             <div style={{ fontSize: 10, color: C.sub, marginTop: 5 }}>
               {usage.used} of {usage.limit} used · resets {getResetDate()}
@@ -154,18 +182,18 @@ export function DashboardNav() {
       {/* ── Nav items ── */}
       <div style={{ flex: 1, padding: "10px 12px", display: "flex", flexDirection: "column", gap: 2 }}>
         {navItems.map((item) => {
-          const isActive = pathname?.startsWith(item.href);
+          const active = item.isActive(pathname);
           return (
             <Link key={item.href} href={item.href}
-              style={isActive ? navItemActive : navItemInactive}
+              style={active ? navItemActive : navItemInactive}
               onMouseEnter={(e) => {
-                if (!isActive) {
+                if (!active) {
                   (e.currentTarget as HTMLElement).style.background = C.hoverBg;
                   (e.currentTarget as HTMLElement).style.color = C.text;
                 }
               }}
               onMouseLeave={(e) => {
-                if (!isActive) {
+                if (!active) {
                   (e.currentTarget as HTMLElement).style.background = "transparent";
                   (e.currentTarget as HTMLElement).style.color = C.sub;
                 }
