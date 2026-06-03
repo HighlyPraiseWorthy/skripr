@@ -804,10 +804,27 @@ export default function NewScriptPage() {
                   )}
                 </div>
               )}
-              <div style={{ maxHeight: 440, overflowY: "auto", borderRadius: 14, border: `1px solid ${C.border}` }}>
-                <div style={{ padding: 20 }}>
-                  <p style={{ fontSize: 14, color: C.textBright, lineHeight: 1.85, whiteSpace: "pre-wrap" }}>{generatedScript.fullScript || generatedScript.content}</p>
-                </div>
+              <div style={{ borderRadius: 14, border: `1px solid ${C.border}`, overflow: "hidden" }}>
+                {(generatedScript.fullScript || generatedScript.content || "")
+                  .split(/\n\n+/)
+                  .map(b => b.trim()).filter(Boolean)
+                  .map((block, idx, arr) => {
+                    const isHdr = /^\[.+\]$/.test(block) || (/^[A-Z][A-Z\s\-:\/]{2,}$/.test(block) && block.length <= 40);
+                    const text = block.replace(/^\[|\]$/g, "").trim();
+                    return (
+                      <div key={idx} style={{
+                        padding: isHdr ? "10px 22px 8px" : "16px 22px",
+                        borderBottom: idx < arr.length - 1 ? "1px solid rgba(255,255,255,0.05)" : "none",
+                        background: isHdr ? "rgba(99,102,241,0.07)" : "transparent",
+                      }}>
+                        {isHdr
+                          ? <span style={{ fontSize: 10, fontWeight: 700, color: "#818cf8", letterSpacing: 1, textTransform: "uppercase" }}>{text}</span>
+                          : <p style={{ fontSize: 14, color: C.textBright, lineHeight: 1.85, margin: 0 }}>{text}</p>
+                        }
+                      </div>
+                    );
+                  })
+                }
               </div>
             </div>
             <div style={{ display: "flex", gap: 12, marginTop: 16 }}>
