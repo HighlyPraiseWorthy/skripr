@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
+import { auth } from "@clerk/nextjs/server";
 import { extractVideoId, getTranscript, getVideoMeta } from "@/lib/youtube-transcript";
+import { checkScriptLimit } from "@/lib/usage";
+import { supabaseAdmin } from "@/lib/db/supabase";
 
 export const maxDuration = 60;
 
@@ -8,6 +11,30 @@ const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 export async function POST(req: Request) {
   try {
+    const { userId } = await auth();
+    if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+    // Paywall — counts against 2 scripts/month. Free users get 1 remixer use.
+    const { allowed, plan, used, limit } = await checkScriptLimit(userId);
+    if (!allowed) {
+      return NextResponse.json(
+        { error: `Script limit reached (${used}/${limit}). Upgrade to keep remixing at skripr.vercel.app/dashboard/settings` },
+        { status: 403 }
+      );
+    }
+
+    const { userId } = await auth();
+    if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+    // Paywall — counts against 2 scripts/month. Free users get 1 remixer use.
+    const { allowed, plan, used, limit } = await checkScriptLimit(userId);
+    if (!allowed) {
+      return NextResponse.json(
+        { error: `Script limit reached (${used}/${limit}). Upgrade to keep remixing at skripr.vercel.app/dashboard/settings` },
+        { status: 403 }
+      );
+    }
+
     const { url } = await req.json();
     if (!url) return NextResponse.json({ error: "URL required" }, { status: 400 });
 
