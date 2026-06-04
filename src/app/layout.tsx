@@ -8,7 +8,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Skripr — AI-Powered YouTube Script & Growth Intelligence",
+  title: "Skripr | AI YouTube Script Generator",
   description: "Reverse-engineer any viral video. Generate scripts that follow the exact structural patterns that make content spread.",
 };
 
