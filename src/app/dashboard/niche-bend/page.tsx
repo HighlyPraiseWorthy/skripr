@@ -22,11 +22,13 @@ export default function NicheBendPage() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [plan, setPlan] = useState<string | null>(null);
   const [videoMinutes, setVideoMinutes] = useState<number>(15);
   const [extraSeconds, setExtraSeconds] = useState<number>(26);
 
   // ── Persist state across navigation ───────────────────────────────────────
   useEffect(() => {
+    fetch("/api/user/plan").then(r=>r.json()).then(d=>setPlan(d.plan||"free")).catch(()=>setPlan("free"));
     try {
       const saved = localStorage.getItem("skripr_nb_state");
       if (!saved) return;
@@ -77,6 +79,20 @@ export default function NicheBendPage() {
     sessionStorage.setItem("skripr_niche_bend_brief", JSON.stringify(brief));
     window.location.href = "/dashboard/scripts/niche-bend-brief";
   }
+
+  if (plan === "free") {
+    return (
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "70vh", padding: "40px 20px" }}>
+        <div style={{ background: "#13131a", border: "1px solid rgba(99,102,241,0.35)", borderRadius: 18, padding: "44px 48px", maxWidth: 440, textAlign: "center" }}>
+          <div style={{ fontSize: 38, marginBottom: 16 }}>🔒</div>
+          <h2 style={{ color: "#f1f5f9", fontSize: 22, fontWeight: 700, margin: "0 0 12px" }}>Starter Plan Required</h2>
+          <p style={{ color: "#64748b", fontSize: 14, lineHeight: 1.7, margin: "0 0 28px" }}>Niche Bend is available on Starter and above. Upgrade to analyze any YouTube video and extract hook formulas, retention triggers, and bridge niche opportunities.</p>
+          <a href="/dashboard/settings" style={{ display: "inline-block", background: "linear-gradient(135deg,#6366f1,#7c3aed)", color: "white", padding: "13px 32px", borderRadius: 10, textDecoration: "none", fontWeight: 700, fontSize: 14 }}>Upgrade to Starter →</a>
+        </div>
+      </div>
+    );
+  }
+
 
   return (
     <div style={{ minHeight: "100vh", background: C.bg, padding: "32px 40px", fontFamily: "system-ui, sans-serif" }}>

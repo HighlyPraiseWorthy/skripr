@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
+import { getUserPlan } from "@/lib/usage";
 import { Anthropic } from "@anthropic-ai/sdk";
 import { checkScriptLimit } from "@/lib/usage";
 
@@ -16,6 +17,14 @@ function getAnthropic(): Anthropic {
 export async function POST(req: Request) {
   const { userId } = await auth();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const plan = await getUserPlan(userId);
+  if (plan === "free") {
+    return NextResponse.json(
+      { error: "Niche Bend requires a Starter plan or above. Upgrade at skripr.vercel.app/dashboard/settings" },
+      { status: 403 }
+    );
+  }
 
   const { plan } = await checkScriptLimit(userId).catch(() => ({ plan: "free" } as any));
   if (plan === "free") return NextResponse.json({ error: "Niche Bend requires a Starter plan or above. Upgrade at skripr.vercel.app/dashboard/settings" }, { status: 403 });
