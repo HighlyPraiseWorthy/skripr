@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { getUserPlan } from "@/lib/usage";
-import { getUserPlan } from "@/lib/usage";
 import Anthropic from "@anthropic-ai/sdk";
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
@@ -19,14 +18,6 @@ export async function POST(req: Request) {
     );
   }
 
-  // Locked — Starter plan or above required
-  const plan = await getUserPlan(userId);
-  if (plan === "free") {
-    return NextResponse.json(
-      { error: "Viral Magnet Titles requires a Starter plan or above. Upgrade at skripr.vercel.app/dashboard/settings" },
-      { status: 403 }
-    );
-  }
 
   const { title, script, magnetWords } = await req.json();
   if (!title?.trim() || !magnetWords?.length) {

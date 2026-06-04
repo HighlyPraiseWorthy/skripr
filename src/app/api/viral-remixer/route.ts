@@ -23,17 +23,6 @@ export async function POST(req: Request) {
       );
     }
 
-    const { userId } = await auth();
-    if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
-    // Paywall — counts against 2 scripts/month. Free users get 1 remixer use.
-    const { allowed, plan, used, limit } = await checkScriptLimit(userId);
-    if (!allowed) {
-      return NextResponse.json(
-        { error: `Script limit reached (${used}/${limit}). Upgrade to keep remixing at skripr.vercel.app/dashboard/settings` },
-        { status: 403 }
-      );
-    }
 
     const { url } = await req.json();
     if (!url) return NextResponse.json({ error: "URL required" }, { status: 400 });
