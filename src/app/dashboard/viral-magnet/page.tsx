@@ -272,17 +272,6 @@ export default function ViralMagnetPage() {
 }
 
 function SectionDivider({ label, color }: { label: string; color: string }) {
-  return (
-    <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
-      <div style={{ height: 1, flex: 1, background: "rgba(99,102,241,0.13)" }} />
-      <span style={{ fontSize: 10, fontWeight: 700, color, letterSpacing: 1, textTransform: "uppercase", whiteSpace: "nowrap" }}>{label}</span>
-      <div style={{ height: 1, flex: 1, background: "rgba(99,102,241,0.13)" }} />
-    </div>
-  );
-}
-
-function TitleCard({ t, copied, onCopy }: { t: TitleResult; copied: string | null; onCopy: (s: string) => void }) {
-  const isCopied = copied === t.title;
   if (plan === "free") {
     return (
       <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "70vh", padding: "40px 20px" }}>
@@ -297,6 +286,17 @@ function TitleCard({ t, copied, onCopy }: { t: TitleResult; copied: string | nul
   }
 
 
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
+      <div style={{ height: 1, flex: 1, background: "rgba(99,102,241,0.13)" }} />
+      <span style={{ fontSize: 10, fontWeight: 700, color, letterSpacing: 1, textTransform: "uppercase", whiteSpace: "nowrap" }}>{label}</span>
+      <div style={{ height: 1, flex: 1, background: "rgba(99,102,241,0.13)" }} />
+    </div>
+  );
+}
+
+function TitleCard({ t, copied, onCopy }: { t: TitleResult; copied: string | null; onCopy: (s: string) => void }) {
+  const isCopied = copied === t.title;
   return (
     <div style={{ borderRadius: 14, background: "#12122a", border: "1px solid rgba(99,102,241,0.13)", padding: "14px 18px", display: "flex", alignItems: "flex-start", gap: 12 }}>
       <div style={{ flex: 1 }}>
