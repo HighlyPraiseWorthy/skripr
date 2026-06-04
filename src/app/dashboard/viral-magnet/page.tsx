@@ -89,6 +89,20 @@ export default function ViralMagnetPage() {
   const newFormula  = result?.titles.filter(t => t.type === "new-formula") || [];
   const canGenerate = !loading && title.trim().length > 0 && selectedWords.length > 0;
 
+  if (plan === "free") {
+    return (
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "70vh", padding: "40px 20px" }}>
+        <div style={{ background: "#12122a", border: "1px solid rgba(99,102,241,0.35)", borderRadius: 18, padding: "44px 48px", maxWidth: 440, textAlign: "center" }}>
+          <div style={{ fontSize: 38, marginBottom: 16 }}>🔒</div>
+          <h2 style={{ color: "#f1f5f9", fontSize: 22, fontWeight: 700, margin: "0 0 12px" }}>Starter Plan Required</h2>
+          <p style={{ color: "#64748b", fontSize: 14, lineHeight: 1.7, margin: "0 0 28px" }}>Viral Magnet Titles is available on Starter and above. Unlock word-tier analysis, S/A/B/C grade breakdowns, and AI title generation.</p>
+          <a href="/dashboard/settings" style={{ display: "inline-block", background: "linear-gradient(135deg,#6366f1,#7c3aed)", color: "white", padding: "13px 32px", borderRadius: 10, textDecoration: "none", fontWeight: 700, fontSize: 14 }}>Upgrade to Starter →</a>
+        </div>
+      </div>
+    );
+  }
+
+
   return (
     <div style={{ minHeight: "100vh", background: C.bg, padding: 28 }}>
       <div style={{ maxWidth: 760, margin: "0 auto" }}>
@@ -272,18 +286,7 @@ export default function ViralMagnetPage() {
 }
 
 function SectionDivider({ label, color }: { label: string; color: string }) {
-  if (plan === "free") {
-    return (
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "70vh", padding: "40px 20px" }}>
-        <div style={{ background: "#12122a", border: "1px solid rgba(99,102,241,0.35)", borderRadius: 18, padding: "44px 48px", maxWidth: 440, textAlign: "center" }}>
-          <div style={{ fontSize: 38, marginBottom: 16 }}>🔒</div>
-          <h2 style={{ color: "#f1f5f9", fontSize: 22, fontWeight: 700, margin: "0 0 12px" }}>Starter Plan Required</h2>
-          <p style={{ color: "#64748b", fontSize: 14, lineHeight: 1.7, margin: "0 0 28px" }}>Viral Magnet Titles is available on Starter and above. Unlock word-tier analysis, S/A/B/C grade breakdowns, and AI title generation.</p>
-          <a href="/dashboard/settings" style={{ display: "inline-block", background: "linear-gradient(135deg,#6366f1,#7c3aed)", color: "white", padding: "13px 32px", borderRadius: 10, textDecoration: "none", fontWeight: 700, fontSize: 14 }}>Upgrade to Starter →</a>
-        </div>
-      </div>
-    );
-  }
+
 
 
   return (
