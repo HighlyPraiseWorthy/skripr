@@ -35,9 +35,11 @@ export default function ViralMagnetPage() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<GenerateResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [plan, setPlan] = useState<string | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
 
   useEffect(() => {
+    fetch("/api/user/plan").then(r=>r.json()).then(d=>setPlan(d.plan||"free")).catch(()=>setPlan("free"));
     fetch("/api/magnet-words").then(r => r.json()).then(d => setWords(d.words || [])).catch(() => {});
     try {
       const saved = localStorage.getItem("skripr_vm_state");
@@ -281,6 +283,20 @@ function SectionDivider({ label, color }: { label: string; color: string }) {
 
 function TitleCard({ t, copied, onCopy }: { t: TitleResult; copied: string | null; onCopy: (s: string) => void }) {
   const isCopied = copied === t.title;
+  if (plan === "free") {
+    return (
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "70vh", padding: "40px 20px" }}>
+        <div style={{ background: "#12122a", border: "1px solid rgba(99,102,241,0.35)", borderRadius: 18, padding: "44px 48px", maxWidth: 440, textAlign: "center" }}>
+          <div style={{ fontSize: 38, marginBottom: 16 }}>🔒</div>
+          <h2 style={{ color: "#f1f5f9", fontSize: 22, fontWeight: 700, margin: "0 0 12px" }}>Starter Plan Required</h2>
+          <p style={{ color: "#64748b", fontSize: 14, lineHeight: 1.7, margin: "0 0 28px" }}>Viral Magnet Titles is available on Starter and above. Unlock word-tier analysis, S/A/B/C grade breakdowns, and AI title generation.</p>
+          <a href="/dashboard/settings" style={{ display: "inline-block", background: "linear-gradient(135deg,#6366f1,#7c3aed)", color: "white", padding: "13px 32px", borderRadius: 10, textDecoration: "none", fontWeight: 700, fontSize: 14 }}>Upgrade to Starter →</a>
+        </div>
+      </div>
+    );
+  }
+
+
   return (
     <div style={{ borderRadius: 14, background: "#12122a", border: "1px solid rgba(99,102,241,0.13)", padding: "14px 18px", display: "flex", alignItems: "flex-start", gap: 12 }}>
       <div style={{ flex: 1 }}>

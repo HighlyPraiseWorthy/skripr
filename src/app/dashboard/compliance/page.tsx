@@ -28,12 +28,14 @@ export default function CompliancePage() {
   const [isLoading, setIsLoading] = useState(false);
   const [report, setReport] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
+  const [plan, setPlan] = useState<string | null>(null);
 
   const nicheOptions = NICHES.map(n => ({ value: n.id, label: n.name }));
 
   useEffect(() => {
     if (!isLoaded) return;
     if (!isSignedIn) setError("auth");
+    fetch("/api/user/plan").then(r=>r.json()).then(d=>setPlan(d.plan||"free")).catch(()=>setPlan("free"));
   }, [isLoaded, isSignedIn]);
 
   async function handleCheck() {
@@ -87,6 +89,20 @@ export default function CompliancePage() {
       </div>
     );
   }
+
+  if (plan === "free") {
+    return (
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "70vh", padding: "40px 20px" }}>
+        <div style={{ background: "#12122a", border: "1px solid rgba(99,102,241,0.35)", borderRadius: 18, padding: "44px 48px", maxWidth: 440, textAlign: "center" }}>
+          <div style={{ fontSize: 38, marginBottom: 16 }}>🔒</div>
+          <h2 style={{ color: "#f1f5f9", fontSize: 22, fontWeight: 700, margin: "0 0 12px" }}>Starter Plan Required</h2>
+          <p style={{ color: "#64748b", fontSize: 14, lineHeight: 1.7, margin: "0 0 28px" }}>Compliance Checker is available on Starter and above. Upgrade to scan your scripts for demonetization risk across 6 YouTube policy dimensions.</p>
+          <a href="/dashboard/settings" style={{ display: "inline-block", background: "linear-gradient(135deg,#6366f1,#7c3aed)", color: "white", padding: "13px 32px", borderRadius: 10, textDecoration: "none", fontWeight: 700, fontSize: 14 }}>Upgrade to Starter →</a>
+        </div>
+      </div>
+    );
+  }
+
 
   return (
     <div style={{ padding: 28, minHeight: "100vh", background: C.bg }}>
