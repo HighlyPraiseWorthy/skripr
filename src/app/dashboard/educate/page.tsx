@@ -305,6 +305,159 @@ const lessons = [
       </div>
     ),
   },
+  {
+    title: "Viral Magnet Titles: How to Pick Words That Drive Clicks",
+    category: "Titles",
+    level: "Intermediate",
+    duration: "6 min",
+    emoji: "✨",
+    summary: "The title is decided before the video is made. Magnet words are the specific vocabulary that signals this video is worth clicking.",
+    content: (
+      <div>
+        <Section title="What is a magnet word?">
+          <p style={{ fontSize: 13, color: C.text, lineHeight: 1.7 }}>A magnet word is a high-emotional-trigger word that YouTube data shows correlates with above-average click-through rates in a specific niche. They are not random — they are the vocabulary that top-performing creators consistently use because viewers respond to them instinctively.</p>
+        </Section>
+        <Section title="The S/A/B/C tier system">
+          <Bullet items={[
+            "S-Tier — The highest-impact words in your niche. These appear in viral titles consistently across top channels. Use sparingly — one per title maximum.",
+            "A-Tier — Strong performers. Good for reinforcing your hook or adding urgency without oversaturation.",
+            "B-Tier — Solid supporting words. Work best in combination with an S or A-tier word to build context.",
+            "C-Tier — Functional words. They do not spike CTR on their own but they complete the sentence without diluting it.",
+          ]} />
+        </Section>
+        <Section title="How to build a title using Skripr's Viral Magnet tool">
+          <Bullet items={[
+            "Enter your video topic and optionally paste your script for better word suggestions",
+            "Browse the word grid — words are grouped by tier and color-coded by impact level",
+            "Select up to 3 magnet words that feel natural together — the tool generates 8 title options",
+            "You get 3 same-formula variations and 5 new formula titles so you can see how the words behave in different structures",
+            "Copy the title that fits your script best — come back and try alternatives if CTR underperforms",
+          ]} />
+        </Section>
+        <Section title="Common mistakes with title words">
+          <Bullet items={[
+            "Stacking S-tier words — triggers spam filters and looks desperate to the algorithm",
+            "Using tier words that do not match the video tone — a calm educational video with an aggressive title creates viewer distrust",
+            "Ignoring niche context — a word that is S-tier in fitness is B-tier at best in finance",
+          ]} />
+        </Section>
+        <Tip>Use Viral Magnet before you script, not after. The title should inform how you frame the hook and the angle — not be retrofitted to a script you already wrote.</Tip>
+      </div>
+    ),
+  },
+  {
+    title: "Metadata Strategy: How YouTube Decides Who Sees Your Video",
+    category: "Growth",
+    level: "Intermediate",
+    duration: "7 min",
+    emoji: "📊",
+    summary: "Your title, tags, and description do not just describe your video — they determine which surface YouTube places it on and who it recommends it to.",
+    content: (
+      <div>
+        <Section title="The three YouTube discovery surfaces">
+          <Bullet items={[
+            "Search — Viewer types a query. Best served by keyword-first titles under 60 characters with the primary keyword in the first 5 words.",
+            "Browse (Home Feed) — Viewer is scrolling their homepage. Best served by hook-first titles that create curiosity or emotional tension — no keyword stuffing required.",
+            "Suggested Videos — Viewer finishes a video and sees yours recommended. Driven by topic cluster matching between your tags and the tags used by channels your target viewer already watches.",
+          ]} />
+        </Section>
+        <Section title="Why most creators optimize for only one surface">
+          <p style={{ fontSize: 13, color: C.text, lineHeight: 1.7 }}>Most YouTube SEO advice is about search optimization. That advice is not wrong — but it ignores the fact that 70%+ of most channels' views come from Browse and Suggested, not search. Skripr generates Search, Browse, and Hybrid titles separately so you can match the title type to how you plan to grow.</p>
+        </Section>
+        <Section title="The tag cluster strategy">
+          <Bullet items={[
+            "Anchor tags (1-3) — Exact match of your primary keyword and its closest variations. These tell YouTube what your video is about.",
+            "Long-tail tags (4-10) — 3-5 word phrases that real viewers type into search. Be specific: how to lose weight fast, not just weight loss.",
+            "Cluster-match tags (11-16) — The terminology that major channels in your niche use consistently. These place your video in the same recommendation cluster as those channels so when viewers finish their videos, yours appears next.",
+            "Broad discovery tags (17-20) — Wider terms that expand reach beyond your core audience to adjacent viewers.",
+          ]} />
+        </Section>
+        <Section title="The description above the fold">
+          <p style={{ fontSize: 13, color: C.text, lineHeight: 1.7 }}>The first 2-3 sentences of your description appear before the Show More cutoff and are the text YouTube crawls most heavily for search indexing. Front-load your primary keyword naturally in the first sentence. This is also the only text visible in Google search snippets when your video ranks there.</p>
+        </Section>
+        <Tip>Use Search titles when targeting a specific query. Use Browse titles when relying on subscriber feed and homepage recommendations. Use Hybrid when your video could perform on both — common for evergreen topics with broad appeal.</Tip>
+      </div>
+    ),
+  },
+  {
+    title: "A/B Testing Titles: How to Find the Winner Without Guessing",
+    category: "Titles",
+    level: "Intermediate",
+    duration: "5 min",
+    emoji: "⚡",
+    summary: "Most creators publish a title and forget it. The ones who grow fastest treat the title as a variable — and keep testing until the data shows them a winner.",
+    content: (
+      <div>
+        <Section title="What you are actually testing">
+          <p style={{ fontSize: 13, color: C.text, lineHeight: 1.7 }}>A/B testing a YouTube title means publishing with Title A, measuring CTR over 48 hours, then swapping to Title B if performance is below benchmark. YouTube does not reset view history when you change a title — but it does serve the new title to new viewers, so you get a clean test on fresh impressions.</p>
+        </Section>
+        <Section title="CTR benchmarks to know">
+          <Bullet items={[
+            "Below 2% — Poor. The title or thumbnail is not connecting. Swap both.",
+            "2-4% — Below average. The title is probably fine but not compelling. Test a stronger angle.",
+            "4-6% — Average. You are getting clicks but there is room to improve. Try a Browse-optimized title.",
+            "6-10% — Good. Keep this title and focus on retention instead of CTR.",
+            "10%+ — Exceptional. Your hook is working. Double down on similar title structures.",
+          ]} />
+        </Section>
+        <Section title="The 48-hour rule">
+          <p style={{ fontSize: 13, color: C.text, lineHeight: 1.7 }}>Wait at least 48 hours before evaluating CTR. Videos often spike in the first 24 hours from your subscriber feed — this audience is predisposed to click because they already follow you. The 48-hour mark captures Browse and Suggested traffic, which is colder and more representative of how the title performs with strangers.</p>
+        </Section>
+        <Section title="How to use Skripr's A/B Titles feature">
+          <Bullet items={[
+            "Generate metadata in the Metadata Generator — you get 4 Search, 4 Browse, and 2 Hybrid titles",
+            "Star any titles you want to save — they appear in the A/B Titles section in the sidebar",
+            "Pick one title for upload — use it for 48 hours and check CTR in YouTube Studio Analytics",
+            "If CTR is below 4%, copy the next title from your A/B Titles list and paste it into YouTube Studio",
+            "Repeat until you find the title that reaches 6%+ CTR — then leave it alone",
+          ]} />
+        </Section>
+        <Tip>Never A/B test thumbnail and title at the same time. Change one variable at a time. If both change simultaneously, you will not know which drove the CTR improvement.</Tip>
+      </div>
+    ),
+  },
+  {
+    title: "Viral Remixer: Borrow the Format, Not the Content",
+    category: "Growth",
+    level: "Intermediate",
+    duration: "5 min",
+    emoji: "🔁",
+    summary: "The best YouTube formats are infinitely remixable. A video that went viral in one niche contains a structural blueprint you can transplant directly into yours.",
+    content: (
+      <div>
+        <Section title="What makes a format remixable?">
+          <p style={{ fontSize: 13, color: C.text, lineHeight: 1.7 }}>A format is the structural skeleton of a video — the sequence of emotional beats, reveal timing, pacing, and hook type — stripped of its content. A 30-day challenge format is remixable. The specific challenge is just content. The structure is what drives retention, and that structure works regardless of topic.</p>
+        </Section>
+        <Section title="How to use the Viral Remixer">
+          <Bullet items={[
+            "Paste a URL of a video that performed well — either in your niche or a completely different one",
+            "Skripr extracts the transcript, identifies the hook type, structural pattern, and pacing",
+            "Select how aggressively to remix — subtle keeps the original flow, aggressive transplants the format into a new angle",
+            "Get a remixed script where the structure mirrors the viral video but the content is entirely yours",
+            "Use this as a starting point — the hook, open loop placement, and re-hook timing are already battle-tested",
+          ]} />
+        </Section>
+        <Section title="What to remix vs what to avoid">
+          <Bullet items={[
+            "Remix: hook type and opening tension setup",
+            "Remix: where the re-hook appears relative to total video length",
+            "Remix: open loop placement and escalation pattern",
+            "Remix: callback structure at the end",
+            "Do NOT copy: specific facts, stories, or examples — that is plagiarism",
+            "Do NOT remix: elements that only work because of a specific creator's face or personal brand",
+          ]} />
+        </Section>
+        <Section title="Best sources to remix from">
+          <Bullet items={[
+            "Channels in a completely different niche with 2M+ views on the video — they have proven the format works at scale",
+            "Videos that are 2-4 years old in your niche — the format is proven but the content is outdated and can be refreshed",
+            "Viral explainer videos — the structure of problem, failed attempts, counterintuitive solution, and proof translates to almost any topic",
+          ]} />
+        </Section>
+        <Tip>The best remixing targets are videos that outperformed their channel average by 3x or more. That spike means the format — not just the topic — drove the performance.</Tip>
+      </div>
+    ),
+  },
 ];
 
 export default function EducatePage() {
