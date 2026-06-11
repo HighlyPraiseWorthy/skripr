@@ -4,6 +4,8 @@ import { auth } from "@clerk/nextjs/server";
 import { extractVideoId, getTranscript, getVideoMeta } from "@/lib/youtube-transcript";
 import { checkScriptLimit } from "@/lib/usage";
 import { supabaseAdmin } from "@/lib/db/supabase";
+import { NICHES } from "@/lib/data/niches";
+import { saveViralFramework, fetchSourceViews, normalizeNiche } from "@/lib/viral-frameworks";
 
 export const maxDuration = 60;
 
@@ -109,13 +111,30 @@ Return ONLY valid JSON, no markdown fences, with this exact shape:
     "psychology": "One sentence on why this title formula converts clicks",
     "remixExamples": ["Title option 1 applying formula to a different niche", "Title option 2 different angle same formula", "Title option 3 different angle same formula", "Title option 4 different angle same formula"]
   },
-  "remixFramework": "3 sentence summary: how to replicate this video's success for any topic in any niche"
+  "remixFramework": "3 sentence summary: how to replicate this video's success for any topic in any niche",
+  "niche": "Exactly one id from this list that best fits the video: ${NICHES.map(n => n.id).join(", ")}"
 }`,
       }],
     });
 
     const raw = msg.content[0].type === "text" ? msg.content[0].text : "";
     const analysis = JSON.parse(raw.replace(/```json|```/g, "").trim());
+
+    // Collective learning layer: capture this framework so script generation
+    // can use it as a few-shot example for the niche. Never blocks the response.
+    await saveViralFramework({
+      video_id: videoId,
+      video_title: meta.title || null,
+      niche: normalizeNiche(analysis.niche),
+      hook_type: analysis.hookAnalysis?.hookType ?? null,
+      hook_text: analysis.hookAnalysis?.hook ?? null,
+      why_it_works: analysis.hookAnalysis?.whyItWorks ?? null,
+      structure: analysis.structure ?? null,
+      retention_triggers: analysis.retentionTriggers ?? null,
+      title_formula: analysis.titleFormula ?? null,
+      remix_framework: analysis.remixFramework ?? null,
+      source_views: await fetchSourceViews(videoId),
+    }).catch(() => {});
 
     return NextResponse.json({ videoId, ...meta, ...analysis });
   } catch (e: any) {

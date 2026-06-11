@@ -20,6 +20,7 @@ export interface ScriptGenerationInput {
   ttsOptimized: boolean;
   viralMagnetWord?: string;
   angle?: string;
+  nicheFrameworks?: string;
 }
 
 export interface GeneratedScript {
@@ -342,6 +343,11 @@ CRITICAL LENGTH REQUIREMENT — scripts shorter than ${targetWords} words are FA
 - A viewer asked for a ${input.targetMinutes}-minute video. Delivering 8 minutes of content is a broken promise.` : ""}
 Tone: ${input.tone}
 Voiceover delivery: plain spoken prose only — no [PAUSE], [EMPHASIS], or any bracketed markers. Every word must be speakable.
+${input.nicheFrameworks ? `
+PROVEN VIRAL FRAMEWORKS FROM THIS NICHE — extracted from real high-performing videos in this exact niche. Model this script's structure, pacing, hook placement, and retention mechanics on these patterns. Adapt the MECHANICS to the new topic; never copy the content or wording:
+
+${input.nicheFrameworks}
+` : ""}
 
 TITLE RULES — the generated "title" field MUST follow these viral patterns. Study these real titles that got 3M–10M+ views:
 

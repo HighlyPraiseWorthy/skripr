@@ -5,6 +5,7 @@ import { checkScriptLimit, incrementGenerationCount, refundGenerationCount } fro
 import { getMagnetSuggestions } from "@/lib/magnet-word";
 import { supabaseAdmin } from "@/lib/db/supabase";
 import { joinHookBody } from "@/lib/script-text";
+import { getNicheFrameworksBlock } from "@/lib/viral-frameworks";
 
 export const maxDuration = 300;
 
@@ -75,6 +76,10 @@ export async function POST(req: Request) {
     const truncated = truncateTranscript(transcript || "", cap);
     console.log(`[generate] length=${videoLength} minutes=${targetMinutes ?? "-"} plan=${plan}`);
 
+    // Collective learning layer: real viral frameworks from this niche,
+    // captured by Viral Remixer usage. Time-boxed; null when none match.
+    const nicheFrameworks = await getNicheFrameworksBlock(niche).catch(() => null);
+
     const scriptPromise = generateScript({
       sourceTranscript: truncated,
       targetTopic: topic || "",
@@ -87,6 +92,7 @@ export async function POST(req: Request) {
       ttsOptimized: false,
       viralMagnetWord: magnetWord,
       angle: enhancedAngle || undefined,
+      nicheFrameworks: nicheFrameworks || undefined,
     });
 
     const timeoutPromise = new Promise((_, reject) =>
