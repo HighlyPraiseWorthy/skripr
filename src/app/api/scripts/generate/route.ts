@@ -106,6 +106,28 @@ export async function POST(req: Request) {
     for (const k of ["hook", "title", "fullScript", "script", "body", "content", "cta"]) {
       if (script[k]) script[k] = cleanText(script[k]);
     }
+    // Reflow wall-of-text paragraphs into teleprompter-style short paragraphs:
+    // the model sometimes writes a whole content segment as one giant paragraph
+    const reflow = (s: any) => {
+      if (typeof s !== "string") return s;
+      return s.split(/\n\n+/).map((p: string) => {
+        if (p.length < 400) return p;
+        const sents = p.match(/[^.!?]+[.!?]+["')\]]*\s*/g) || [p];
+        const chunks: string[] = [];
+        let cur = "";
+        let n = 0;
+        for (const sent of sents) {
+          cur += sent;
+          n++;
+          if (n >= 3 || cur.length > 300) { chunks.push(cur.trim()); cur = ""; n = 0; }
+        }
+        if (cur.trim()) chunks.push(cur.trim());
+        return chunks.join("\n\n");
+      }).join("\n\n");
+    };
+    for (const k of ["fullScript", "script", "body", "content", "hook"]) {
+      if (script[k]) script[k] = reflow(script[k]);
+    }
     if (Array.isArray(script.sections)) script.sections = script.sections.map((s: any) => ({
       ...s, title: cleanText(s.title), content: cleanText(s.content),
     }));

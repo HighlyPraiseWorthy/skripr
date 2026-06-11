@@ -172,6 +172,8 @@ NICHE → HOOK MAPPING (use the PRIMARY hook for each niche):
 
 RULE: The hook must be written BEFORE any context-setting. Never open with "In this video", "Today we", "Have you ever", or "Welcome back." The hook IS the first sentence. No warmup.
 
+9. SCRIPT FORMATTING (critical): Format the fullScript like a teleprompter script. Short paragraphs of 1 to 3 sentences, separated by blank lines. Single-sentence paragraphs are encouraged for emphasis and dramatic beats. Never write a paragraph longer than 4 sentences — a wall of text is a failure. A content segment is NOT one paragraph: every segment must be broken into multiple short paragraphs.
+
 CRITICAL: Never use em dashes (—) anywhere in the script output. Use commas, periods, or colons instead.
 
 Output valid JSON matching the specified schema. Be specific and actionable. No fluff.`;
@@ -237,7 +239,7 @@ async function extendScriptToLength(fullScript: string, targetWords: number, top
     model: "claude-sonnet-4-6",
     max_tokens: 8000,
     system: "You are extending a YouTube script mid-production. Match the existing voice, pacing, sentence rhythm, and TTS style exactly. Never repeat a point already made. Never fabricate statistics, named studies, or quotes. Output ONLY the new segments as plain text — no preamble, no JSON, no headers, no conclusion.",
-    messages: [{ role: "user", content: `Topic: ${topic}\nNiche: ${niche}\n\nScript so far (conclusion removed):\n\n${body}\n\nThis script is ${words} words; the final target is ${targetWords} words. Write approximately ${Math.min(needed, 1500)} words of NEW body segments that will be inserted before the conclusion. Each segment must open with a re-hook (open loop, pattern interrupt, or raised stakes) and go deep: concrete examples, story beats, specific detail. Do NOT write any conclusion, callback, or wrap-up. Do NOT repeat existing content.` }],
+    messages: [{ role: "user", content: `Topic: ${topic}\nNiche: ${niche}\n\nScript so far (conclusion removed):\n\n${body}\n\nThis script is ${words} words; the final target is ${targetWords} words. Write approximately ${Math.min(needed, 1500)} words of NEW body segments that will be inserted before the conclusion. Each segment must open with a re-hook (open loop, pattern interrupt, or raised stakes) and go deep: concrete examples, story beats, specific detail. Format teleprompter-style: short paragraphs of 1-3 sentences separated by blank lines, never one large paragraph. Do NOT write any conclusion, callback, or wrap-up. Do NOT repeat existing content.` }],
   });
   const c = response.content[0];
   if (c.type !== "text" || !c.text.trim()) return fullScript;
@@ -336,6 +338,7 @@ CRITICAL LENGTH REQUIREMENT — scripts shorter than ${targetWords} words are FA
 - Open every segment with a re-hook: an open loop, a pattern interrupt, or raised stakes.
 - Inside every segment, go deep before moving on: one concrete example, one story beat, AND one piece of evidence or specific detail. Never compress or summarize a point you can expand.
 - Do NOT begin any conclusion, callback, or wrap-up until the cumulative word count has reached ${targetWords} words.
+- A segment is NOT one paragraph. Break every segment into short paragraphs of 1-3 sentences separated by blank lines, teleprompter-style. Never output a paragraph longer than 4 sentences.
 - A viewer asked for a ${input.targetMinutes}-minute video. Delivering 8 minutes of content is a broken promise.` : ""}
 Tone: ${input.tone}
 Voiceover delivery: plain spoken prose only — no [PAUSE], [EMPHASIS], or any bracketed markers. Every word must be speakable.
