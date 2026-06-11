@@ -117,6 +117,8 @@ Return ONLY valid JSON, no markdown fences, with this exact shape:
   "niche": "Exactly one id from this list that best fits the video: ${NICHES.map(n => n.id).join(", ")}"
 }
 
+RETENTION TRIGGERS REQUIREMENT — "retentionTriggers" must contain 6 to 9 distinct entries covering the ENTIRE runtime (early, middle, AND late timestamps). Vary the types: open loops, pattern interrupts, stakes escalation, callbacks, curiosity gaps, personal implication, subverted expectations. Each needs a real quote or moment from the transcript.
+
 REMIX TITLES REQUIREMENT — "remixTitles" must contain EXACTLY 10 entries:
 - Entries 1-5 ("scope": "close"): topics ADJACENT to this video's subject — same broad subject area, different specific angle (e.g. MONEY → banks, debt, taxes, gold, inflation).
 - Entries 6-10 ("scope": "wide"): the SAME title formula applied to COMPLETELY DIFFERENT niches far from this video's subject (e.g. MONEY → social media, diets, sleep, video games, marriage). Use the formula as-is — do not bolt on extra subtitle clauses the formula doesn't have.
