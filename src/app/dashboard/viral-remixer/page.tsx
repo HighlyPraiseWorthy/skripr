@@ -237,29 +237,33 @@ export default function ViralRemixerPage() {
                         {groupLabel && (
                           <div style={{ fontSize: 10, fontWeight: 700, color: C.textDim, letterSpacing: 0.6, margin: i === 0 ? "0 0 6px" : "12px 0 6px" }}>{groupLabel}</div>
                         )}
+                        {/* Compact row; only the selected title expands to show its detail */}
                         <div
                           onClick={() => setSelectedRemix(i)}
                           style={{
-                            padding: "10px 12px", borderRadius: 8, cursor: "pointer",
+                            padding: selectedRemix === i ? "10px 12px" : "7px 12px", borderRadius: 8, cursor: "pointer",
                             border: `1px solid ${selectedRemix === i ? "rgba(77,184,255,0.50)" : C.border}`,
                             background: selectedRemix === i ? "rgba(77,184,255,0.12)" : "rgba(255,255,255,0.03)",
                             transition: "all 0.15s",
                           }}
                         >
-                          <div style={{ display: "flex", alignItems: "flex-start", gap: 8 }}>
-                            <span style={{ fontSize: 10, fontWeight: 700, color: selectedRemix === i ? "#7ed8ff" : C.textDim, flexShrink: 0, marginTop: 3 }}>{i + 1}</span>
-                            <div style={{ minWidth: 0 }}>
-                              <div style={{ fontSize: 14, fontWeight: 600, color: selectedRemix === i ? "#e8edf5" : C.textDim, lineHeight: 1.4 }}>{opt.title}</div>
+                          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                            <span style={{ fontSize: 10, fontWeight: 700, color: selectedRemix === i ? "#7ed8ff" : C.textDim, flexShrink: 0 }}>{i + 1}</span>
+                            <div style={{ fontSize: 13.5, fontWeight: 600, color: selectedRemix === i ? "#e8edf5" : C.textDim, lineHeight: 1.4, whiteSpace: selectedRemix === i ? "normal" : "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{opt.title}</div>
+                            <span style={{ marginLeft: "auto", fontSize: 10, color: C.textDim, flexShrink: 0, transform: selectedRemix === i ? "rotate(90deg)" : "none", transition: "transform 0.15s" }}>›</span>
+                          </div>
+                          {selectedRemix === i && (opt.description || opt.audience) && (
+                            <div style={{ marginTop: 8, paddingLeft: 18, borderLeft: "2px solid rgba(77,184,255,0.25)", marginLeft: 3 }}>
                               {opt.description && (
-                                <div style={{ fontSize: 12, color: C.textDim, lineHeight: 1.5, marginTop: 4 }}>{opt.description}</div>
+                                <div style={{ fontSize: 12, color: "#b9cfe0", lineHeight: 1.55 }}>{opt.description}</div>
                               )}
                               {opt.audience && (
-                                <div style={{ fontSize: 11, color: selectedRemix === i ? "#7ed8ff" : "rgba(122,155,181,0.75)", lineHeight: 1.5, marginTop: 4 }}>
+                                <div style={{ fontSize: 11, color: "#7ed8ff", lineHeight: 1.55, marginTop: 5 }}>
                                   <span style={{ fontWeight: 700, letterSpacing: 0.4 }}>AUDIENCE:</span> {opt.audience}
                                 </div>
                               )}
                             </div>
-                          </div>
+                          )}
                         </div>
                       </div>
                     );

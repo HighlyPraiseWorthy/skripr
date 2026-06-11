@@ -245,6 +245,32 @@ export default function ViralBriefPage() {
           <div style={{ padding: "12px 16px", borderRadius: 10, background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.25)", color: "#fca5a5", fontSize: 13, marginBottom: 16 }}>{error}</div>
         )}
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          {/* The remix title the user picked — always the first selectable option */}
+          {brief?.selectedTitle && (
+            <div
+              onClick={() => handlePickAngle({
+                angle: brief.selectedTitle,
+                description: brief.selectedTitleDescription || "Build the script exactly as this remix title promises.",
+                audience: brief.selectedTitleAudience || "",
+                titleSuggestion: brief.selectedTitle,
+              })}
+              style={{ background: "rgba(77,184,255,0.07)", border: "1px solid rgba(77,184,255,0.45)", borderRadius: 14, padding: "18px 20px", cursor: "pointer", transition: "all 0.15s", display: "flex", alignItems: "flex-start", gap: 16 }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "rgba(77,184,255,0.12)"; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "rgba(77,184,255,0.07)"; }}>
+              <div style={{ width: 32, height: 32, borderRadius: 8, background: "rgba(77,184,255,0.2)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, fontSize: 15, color: "#9de4ff" }}>★</div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontSize: 10, fontWeight: 700, color: "#7ed8ff", letterSpacing: 0.6, marginBottom: 5 }}>YOUR PICK — THE TITLE YOU CHOSE</div>
+                <div style={{ fontSize: 15, fontWeight: 700, color: C.textBright, marginBottom: 4, lineHeight: 1.3 }}>{brief.selectedTitle}</div>
+                {brief.selectedTitleDescription && (
+                  <div style={{ fontSize: 12, color: C.textDim, lineHeight: 1.5, marginBottom: 8 }}>{brief.selectedTitleDescription}</div>
+                )}
+                {brief.selectedTitleAudience && (
+                  <div style={{ fontSize: 11, color: C.textDim }}><span style={{ color: "#7a9bb5" }}>Audience: </span>{brief.selectedTitleAudience}</div>
+                )}
+              </div>
+              <div style={{ flexShrink: 0, width: 32, height: 32, borderRadius: 8, background: "linear-gradient(135deg, #0e6499 0%, #1a8fd1 100%)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, color: "#fff", boxShadow: "0 2px 8px rgba(99,102,241,0.3)" }}>→</div>
+            </div>
+          )}
           {angles.map((a, i) => (
             <div key={i} onClick={() => handlePickAngle(a)}
               style={{ background: C.card, border: "1px solid " + C.border, borderRadius: 14, padding: "18px 20px", cursor: "pointer", transition: "all 0.15s", display: "flex", alignItems: "flex-start", gap: 16 }}
