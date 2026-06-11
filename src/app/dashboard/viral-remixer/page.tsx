@@ -20,8 +20,16 @@ interface Analysis {
   hookAnalysis: { hook: string; hookType: string; whyItWorks: string };
   structure: { timestamp: string; section: string; description: string; purpose: string }[];
   retentionTriggers: { trigger: string; example: string; timestamp: string }[];
-  titleFormula: { formula: string; psychology: string; remixExamples: string[] };
+  titleFormula: { formula: string; psychology: string; remixExamples?: string[]; remixTitles?: RemixTitle[] };
   remixFramework: string;
+}
+
+type RemixTitle = { title: string; description?: string; audience?: string; scope?: string };
+
+// Normalize old (string[]) and new (rich object) shapes so cached results keep working
+function getRemixOptions(tf: Analysis["titleFormula"]): RemixTitle[] {
+  if (tf.remixTitles?.length) return tf.remixTitles;
+  return (tf.remixExamples ?? []).map((t) => ({ title: t }));
 }
 
 export default function ViralRemixerPage() {
@@ -83,7 +91,9 @@ export default function ViralRemixerPage() {
       retentionTriggers: result.retentionTriggers,
       titleFormula: result.titleFormula,
       remixFramework: result.remixFramework,
-      selectedTitle: result.titleFormula.remixExamples?.[selectedRemix] ?? "",
+      selectedTitle: getRemixOptions(result.titleFormula)[selectedRemix]?.title ?? "",
+      selectedTitleDescription: getRemixOptions(result.titleFormula)[selectedRemix]?.description ?? "",
+      selectedTitleAudience: getRemixOptions(result.titleFormula)[selectedRemix]?.audience ?? "",
       videoTitle: result.title,
       channelTitle: result.channelTitle,
       targetMinutes: videoMinutes,
@@ -215,23 +225,45 @@ export default function ViralRemixerPage() {
               <div style={{ borderTop: `1px solid ${C.border}`, paddingTop: 10 }}>
                 <div style={{ fontSize: 10, fontWeight: 700, color: C.accentDim, letterSpacing: 0.6, marginBottom: 8 }}>PICK YOUR REMIX TITLE</div>
                 <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                  {(result.titleFormula.remixExamples ?? []).map((title, i) => (
-                    <div
-                      key={i}
-                      onClick={() => setSelectedRemix(i)}
-                      style={{
-                        padding: "8px 12px", borderRadius: 8, cursor: "pointer", fontSize: 14,
-                        border: `1px solid ${selectedRemix === i ? "rgba(77,184,255,0.50)" : C.border}`,
-                        background: selectedRemix === i ? "rgba(77,184,255,0.12)" : "rgba(255,255,255,0.03)",
-                        color: selectedRemix === i ? "#e8edf5" : C.textDim,
-                        transition: "all 0.15s",
-                        display: "flex", alignItems: "center", gap: 8,
-                      }}
-                    >
-                      <span style={{ fontSize: 10, fontWeight: 700, color: selectedRemix === i ? "#7ed8ff" : C.textDim, flexShrink: 0 }}>{i + 1}</span>
-                      {title}
-                    </div>
-                  ))}
+                  {getRemixOptions(result.titleFormula).map((opt, i, all) => {
+                    const wideStart = all.findIndex(o => o.scope === "wide");
+                    const groupLabel = i === 0 && all.some(o => o.scope)
+                      ? "SAME LANE — adjacent to this video's topic"
+                      : i === wideStart && wideStart > 0
+                        ? "NEW NICHE — same formula, different worlds"
+                        : null;
+                    return (
+                      <div key={i}>
+                        {groupLabel && (
+                          <div style={{ fontSize: 10, fontWeight: 700, color: C.textDim, letterSpacing: 0.6, margin: i === 0 ? "0 0 6px" : "12px 0 6px" }}>{groupLabel}</div>
+                        )}
+                        <div
+                          onClick={() => setSelectedRemix(i)}
+                          style={{
+                            padding: "10px 12px", borderRadius: 8, cursor: "pointer",
+                            border: `1px solid ${selectedRemix === i ? "rgba(77,184,255,0.50)" : C.border}`,
+                            background: selectedRemix === i ? "rgba(77,184,255,0.12)" : "rgba(255,255,255,0.03)",
+                            transition: "all 0.15s",
+                          }}
+                        >
+                          <div style={{ display: "flex", alignItems: "flex-start", gap: 8 }}>
+                            <span style={{ fontSize: 10, fontWeight: 700, color: selectedRemix === i ? "#7ed8ff" : C.textDim, flexShrink: 0, marginTop: 3 }}>{i + 1}</span>
+                            <div style={{ minWidth: 0 }}>
+                              <div style={{ fontSize: 14, fontWeight: 600, color: selectedRemix === i ? "#e8edf5" : C.textDim, lineHeight: 1.4 }}>{opt.title}</div>
+                              {opt.description && (
+                                <div style={{ fontSize: 12, color: C.textDim, lineHeight: 1.5, marginTop: 4 }}>{opt.description}</div>
+                              )}
+                              {opt.audience && (
+                                <div style={{ fontSize: 11, color: selectedRemix === i ? "#7ed8ff" : "rgba(122,155,181,0.75)", lineHeight: 1.5, marginTop: 4 }}>
+                                  <span style={{ fontWeight: 700, letterSpacing: 0.4 }}>AUDIENCE:</span> {opt.audience}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             </div>

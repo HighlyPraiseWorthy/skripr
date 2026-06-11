@@ -16,8 +16,8 @@ type Brief = {
   hookAnalysis: { hook: string; hookType: string; whyItWorks: string };
   structure: { timestamp: string; section: string; description: string; purpose: string }[];
   retentionTriggers: { trigger: string; example: string; timestamp: string }[];
-  titleFormula: { formula: string; psychology: string; remixExamples: string[] };
-  remixFramework: string; selectedTitle: string; videoTitle: string; channelTitle: string;
+  titleFormula: { formula: string; psychology: string; remixExamples?: string[] };
+  remixFramework: string; selectedTitle: string; selectedTitleDescription?: string; selectedTitleAudience?: string; videoTitle: string; channelTitle: string;
 };
 
 const Spinner = () => (
@@ -52,7 +52,7 @@ export default function ViralBriefPage() {
     try {
       const res = await fetch("/api/suggest-viral-angles", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ hookType: b.hookAnalysis.hookType, hookAnalysis: b.hookAnalysis, remixFramework: b.remixFramework, selectedTitle: b.selectedTitle, titleFormula: b.titleFormula, videoTitle: b.videoTitle }),
+        body: JSON.stringify({ hookType: b.hookAnalysis.hookType, hookAnalysis: b.hookAnalysis, remixFramework: b.remixFramework, selectedTitle: b.selectedTitle, selectedTitleDescription: b.selectedTitleDescription, selectedTitleAudience: b.selectedTitleAudience, titleFormula: b.titleFormula, videoTitle: b.videoTitle }),
       });
       const data = await res.json();
       if (data.error) throw new Error(data.error);

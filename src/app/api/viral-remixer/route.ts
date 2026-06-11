@@ -7,7 +7,7 @@ import { supabaseAdmin } from "@/lib/db/supabase";
 import { NICHES } from "@/lib/data/niches";
 import { saveViralFramework, fetchSourceViews, normalizeNiche } from "@/lib/viral-frameworks";
 
-export const maxDuration = 60;
+export const maxDuration = 120;
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
@@ -79,7 +79,7 @@ export async function POST(req: Request) {
 
     const msg = await client.messages.create({
       model: "claude-sonnet-4-6",
-      max_tokens: 3000,
+      max_tokens: 5000,
       messages: [{
         role: "user",
         content: `You are a YouTube strategy expert. Analyze this video and extract the exact framework that made it perform.
@@ -109,16 +109,28 @@ Return ONLY valid JSON, no markdown fences, with this exact shape:
   "titleFormula": {
     "formula": "The reusable template e.g. I [did X] In [time] With [constraint] (Full Breakdown)",
     "psychology": "One sentence on why this title formula converts clicks",
-    "remixExamples": ["Title option 1 applying formula to a different niche", "Title option 2 different angle same formula", "Title option 3 different angle same formula", "Title option 4 different angle same formula"]
+    "remixTitles": [
+      { "title": "Full title using the formula", "description": "One sentence: what this video would actually cover and why it hooks", "audience": "Who specifically clicks this", "scope": "close" }
+    ]
   },
   "remixFramework": "3 sentence summary: how to replicate this video's success for any topic in any niche",
   "niche": "Exactly one id from this list that best fits the video: ${NICHES.map(n => n.id).join(", ")}"
-}`,
+}
+
+REMIX TITLES REQUIREMENT — "remixTitles" must contain EXACTLY 10 entries:
+- Entries 1-5 ("scope": "close"): topics ADJACENT to this video's subject — same broad subject area, different specific angle (e.g. MONEY → banks, debt, taxes, gold, inflation).
+- Entries 6-10 ("scope": "wide"): the SAME title formula applied to COMPLETELY DIFFERENT niches far from this video's subject (e.g. MONEY → social media, diets, sleep, video games, marriage). Use the formula as-is — do not bolt on extra subtitle clauses the formula doesn't have.
+- Every entry needs a sharp one-sentence "description" of what that video would cover, and a specific "audience" (who clicks and why), not generic demographics.`,
       }],
     });
 
     const raw = msg.content[0].type === "text" ? msg.content[0].text : "";
     const analysis = JSON.parse(raw.replace(/```json|```/g, "").trim());
+
+    // Backward compat: older consumers read titleFormula.remixExamples (string[])
+    if (analysis.titleFormula?.remixTitles && !analysis.titleFormula.remixExamples) {
+      analysis.titleFormula.remixExamples = analysis.titleFormula.remixTitles.map((t: any) => t.title);
+    }
 
     // Collective learning layer: capture this framework so script generation
     // can use it as a few-shot example for the niche. Never blocks the response.
