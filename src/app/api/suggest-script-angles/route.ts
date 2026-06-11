@@ -10,7 +10,7 @@ export async function POST(req: Request) {
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
-    const { topic, niche, videoLength = "medium", hookTypeFilter } = await req.json();
+    const { topic, niche, videoLength = "medium", hookTypeFilter, viralMagnetWord } = await req.json();
     if (!topic) return NextResponse.json({ error: "Topic is required" }, { status: 400 });
 
     const msg = await client.messages.create({
@@ -23,7 +23,7 @@ Each object must have EXACTLY these keys: "hookType", "hookPremise", "titleSugge
         content: `A YouTube creator wants to make a video about: "${topic.slice(0, 120)}"
 Niche: ${niche || "general"}
 Length: ${videoLength}
-
+${viralMagnetWord ? `\nVIRAL MAGNET WORD: Every "titleSuggestion" MUST naturally include the word "${viralMagnetWord}" — weave it where it creates maximum curiosity or urgency, never forced. Work it into the "hookPremise" too when it fits naturally.\n` : ""}
 ${hookTypeFilter
   ? `Generate 5 DIFFERENT ANGLES for this topic, ALL using the "${hookTypeFilter}" hook type. Each should take a different specific approach within that hook type.`
   : `Generate 5 completely different hook angles. Each must use a DIFFERENT psychological hook:

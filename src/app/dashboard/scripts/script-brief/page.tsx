@@ -56,7 +56,7 @@ export default function ScriptBriefPage() {
     try {
       const res = await fetch("/api/suggest-script-angles", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ topic: b.topic, niche: b.niche, videoLength: b.videoLength, hookTypeFilter: b.hookTypeFilter || null }),
+        body: JSON.stringify({ topic: b.topic, niche: b.niche, videoLength: b.videoLength, hookTypeFilter: b.hookTypeFilter || null, viralMagnetWord: (b as any).viralMagnetWord || null }),
       });
       const data = await res.json();
       if (data.error) throw new Error(data.error);
