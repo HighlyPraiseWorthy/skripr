@@ -9,8 +9,11 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Skripr | AI YouTube Script Generator",
-  description: "Reverse-engineer any viral video. Generate scripts that follow the exact structural patterns that make content spread.",
-};
+  description: "Reverse-engineer any viral YouTube video into a ready-to-record script in 60 seconds.",
+  icons: {
+    icon: "/favicon.svg",
+  },
+}
 
 export default function RootLayout({
   children,
@@ -20,7 +23,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en" className="dark">
-        <body className={`${inter.className} bg-gray-950 text-gray-100 antialiased`}>
+        <body className={`bg-gray-950 text-gray-100 antialiased`}>
           <PostHogProvider>
             <Suspense fallback={null}><PostHogPageView /></Suspense>
             {children}

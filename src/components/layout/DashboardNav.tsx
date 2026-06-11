@@ -5,16 +5,17 @@ import { usePathname } from "next/navigation";
 import { UserButton } from "@clerk/nextjs";
 import { useState, useEffect } from "react";
 
+// ─── Cold Chrome palette — matches landing page ────────────────────────────
 const C = {
-  bg: "#111113",
-  border: "#27272a",
-  text: "#f4f4f5",
-  muted: "#a1a1aa",
-  sub: "#71717a",
-  hoverBg: "rgba(255,255,255,0.06)",
-  activeBg: "rgba(139,92,246,0.15)",
-  activeBorder: "rgba(139,92,246,0.25)",
-  violet: "#8b5cf6",
+  bg:           "#080c12",   // was #111113
+  border:       "#1a2840",   // was #27272a — slightly bluer
+  text:         "#e8edf5",   // was #f4f4f5
+  muted:        "#8aa4bf",   // was #a1a1aa
+  sub:          "#4a6a8a",   // was #71717a
+  hoverBg:      "rgba(77,184,255,0.06)",   // was rgba white
+  activeBg:     "rgba(77,184,255,0.12)",   // was violet
+  activeBorder: "rgba(77,184,255,0.25)",   // was violet
+  accent:       "#4db8ff",   // was #8b5cf6 violet → Cold Chrome blue
 };
 
 // Script-gen sub-routes — used to distinguish "Scripts" tab vs "My Scripts" tab
@@ -122,18 +123,20 @@ const navItems: {
 
 const navLinkBase: React.CSSProperties = {
   display: "flex", alignItems: "center", gap: 10,
-  padding: "8px 12px", borderRadius: 10, fontSize: 14, fontWeight: 500,
+  padding: "8px 12px", borderRadius: 8, fontSize: 13, fontWeight: 500,
   transition: "background 120ms ease, color 120ms ease",
   cursor: "pointer", textDecoration: "none",
+  letterSpacing: "0.01em",
 };
 
 const navItemActive: React.CSSProperties = {
-  ...navLinkBase, color: C.text, background: C.activeBg,
+  ...navLinkBase,
+  color: C.accent,
+  background: C.activeBg,
   border: `1px solid ${C.activeBorder}`,
-  boxShadow: "inset 0 0 0 1px rgba(139,92,246,0.12)",
 };
 
-const navItemInactive: React.CSSProperties = { ...navLinkBase, color: C.sub };
+const navItemInactive: React.CSSProperties = { ...navLinkBase, color: C.sub, border: "1px solid transparent" };
 
 type UsageData = { used: number; limit: number; plan: string; limitReached: boolean; isAdmin: boolean };
 
@@ -147,50 +150,66 @@ export function DashboardNav() {
 
   const remaining = usage ? Math.max(0, usage.limit - usage.used) : null;
   const pct = usage ? Math.min(100, (usage.used / usage.limit) * 100) : 0;
-  const barColor = pct >= 100 ? "#f87171" : pct >= 70 ? "#fb923c" : "#6366f1";
+  const barColor = pct >= 100 ? "#f87171" : pct >= 70 ? "#fb923c" : C.accent;
   const textColor = usage?.limitReached ? "#f87171" : pct >= 70 ? "#fb923c" : C.sub;
 
   return (
     <nav style={{
-      width: 260, minHeight: "100vh", display: "flex", flexDirection: "column",
+      width: 252, minHeight: "100vh", display: "flex", flexDirection: "column",
       background: C.bg, borderRight: `1px solid ${C.border}`,
+      fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
     }}>
 
       {/* ── Logo ── */}
       <div style={{ padding: "20px 20px 14px" }}>
         <Link href="/dashboard/scripts/new"
           style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
+          {/* Cold Chrome S mark — matches favicon */}
           <div style={{
-            width: 34, height: 34, borderRadius: 10, flexShrink: 0,
-            background: "linear-gradient(135deg, #7c3aed 0%, #a855f7 55%, #ec4899 100%)",
+            width: 32, height: 32, borderRadius: 7, flexShrink: 0,
+            background: "#080c12",
+            border: `1px solid ${C.border}`,
             display: "flex", alignItems: "center", justifyContent: "center",
+            position: "relative",
+            overflow: "hidden",
           }}>
-            <span style={{ color: "#fff", fontWeight: 700, fontSize: 15, lineHeight: 1, letterSpacing: -0.5 }}>S</span>
+            {/* Subtle accent glow behind S */}
+            <div style={{
+              position: "absolute", inset: 0,
+              background: "radial-gradient(circle at 50% 50%, rgba(77,184,255,0.15) 0%, transparent 70%)",
+            }} />
+            <span style={{
+              color: C.accent, fontWeight: 700, fontSize: 16,
+              lineHeight: 1, letterSpacing: -0.5, position: "relative", zIndex: 1,
+            }}>S</span>
           </div>
-          <span style={{ fontSize: 18, fontWeight: 700, color: C.text, letterSpacing: -0.3 }}>Skripr</span>
+          <span style={{
+            fontSize: 17, fontWeight: 700, color: C.text,
+            letterSpacing: "0.15em", textTransform: "uppercase",
+          }}>SKRIP<span style={{ fontWeight: 200, color: C.accent }}>R</span></span>
         </Link>
       </div>
 
       {/* ── Usage indicator ── */}
       <div style={{ padding: "0 20px 14px", borderBottom: `1px solid ${C.border}` }}>
         {!usage ? (
-          <div style={{ height: 3, borderRadius: 3, background: "rgba(255,255,255,0.05)" }} />
+          <div style={{ height: 2, borderRadius: 2, background: C.border }} />
         ) : usage.isAdmin ? (
-          <div style={{ fontSize: 11, fontWeight: 600, color: "#7c3aed", letterSpacing: 0.3 }}>∞ Unlimited</div>
+          <div style={{ fontSize: 10, fontWeight: 600, color: C.accent, letterSpacing: "0.1em", textTransform: "uppercase" }}>∞ Unlimited</div>
         ) : (
           <>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
-              <span style={{ fontSize: 10, fontWeight: 700, color: C.sub, letterSpacing: 0.5, textTransform: "uppercase" }}>
+              <span style={{ fontSize: 9, fontWeight: 600, color: C.sub, letterSpacing: "0.1em", textTransform: "uppercase" }}>
                 Scripts / month
               </span>
-              <span style={{ fontSize: 11, fontWeight: 700, color: textColor }}>
+              <span style={{ fontSize: 10, fontWeight: 600, color: textColor }}>
                 {usage.limitReached ? "Limit reached" : `${remaining} left`}
               </span>
             </div>
-            <div style={{ height: 3, borderRadius: 3, background: "rgba(255,255,255,0.06)", overflow: "hidden" }}>
-              <div style={{ height: "100%", borderRadius: 3, background: barColor, width: `${pct}%`, transition: "width 0.4s ease" }} />
+            <div style={{ height: 2, borderRadius: 2, background: C.border, overflow: "hidden" }}>
+              <div style={{ height: "100%", borderRadius: 2, background: barColor, width: `${pct}%`, transition: "width 0.4s ease" }} />
             </div>
-            <div style={{ fontSize: 10, color: C.sub, marginTop: 5 }}>
+            <div style={{ fontSize: 9, color: C.sub, marginTop: 5, letterSpacing: "0.02em" }}>
               {usage.used} of {usage.limit} used · resets {getResetDate()}
             </div>
           </>
@@ -198,7 +217,7 @@ export function DashboardNav() {
       </div>
 
       {/* ── Nav items ── */}
-      <div style={{ flex: 1, padding: "10px 12px", display: "flex", flexDirection: "column", gap: 2 }}>
+      <div style={{ flex: 1, padding: "10px 12px", display: "flex", flexDirection: "column", gap: 1 }}>
         {navItems.map((item) => {
           const active = item.isActive(pathname);
           return (
@@ -218,7 +237,7 @@ export function DashboardNav() {
               }}
             >
               <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                style={{ flexShrink: 0, width: 16, height: 16 }}>
+                style={{ flexShrink: 0, width: 15, height: 15 }}>
                 {item.icon}
               </svg>
               <span>{item.label}</span>
@@ -228,9 +247,9 @@ export function DashboardNav() {
       </div>
 
       {/* ── Footer ── */}
-      <div style={{ padding: "12px 12px", borderTop: `1px solid ${C.border}`, display: "flex", flexDirection: "column", gap: 4 }}>
+      <div style={{ padding: "12px 12px", borderTop: `1px solid ${C.border}`, display: "flex", flexDirection: "column", gap: 2 }}>
         <Link href="/dashboard/settings"
-          style={{ ...navLinkBase, color: C.sub, marginBottom: 4 }}
+          style={{ ...navLinkBase, color: C.sub, border: "1px solid transparent" }}
           onMouseEnter={(e) => {
             (e.currentTarget as HTMLElement).style.background = C.hoverBg;
             (e.currentTarget as HTMLElement).style.color = C.text;
@@ -240,7 +259,7 @@ export function DashboardNav() {
             (e.currentTarget as HTMLElement).style.color = C.sub;
           }}
         >
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ flexShrink: 0, width: 16, height: 16 }}>
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ flexShrink: 0, width: 15, height: 15 }}>
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
               d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
@@ -249,16 +268,16 @@ export function DashboardNav() {
           <span>Settings</span>
         </Link>
 
-        <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", borderRadius: 10 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", borderRadius: 8 }}>
           <UserButton appearance={{
             elements: {
-              userButtonAvatarBox: { width: 28, height: 28, borderRadius: 8 },
-              userButtonTrigger: { width: 28, height: 28, borderRadius: 8 },
-              userButtonPopoverCard: { borderRadius: 12 },
-              userButtonText: { color: "#71717a" },
+              userButtonAvatarBox: { width: 26, height: 26, borderRadius: 6 },
+              userButtonTrigger: { width: 26, height: 26, borderRadius: 6 },
+              userButtonPopoverCard: { borderRadius: 10, background: "#080c12", border: "1px solid #1a2840" },
+              userButtonText: { color: "#4a6a8a" },
             },
           }} />
-          <span style={{ fontSize: 14, fontWeight: 500, color: C.sub }}>Account</span>
+          <span style={{ fontSize: 13, fontWeight: 500, color: C.sub }}>Account</span>
         </div>
       </div>
     </nav>

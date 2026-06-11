@@ -10,12 +10,12 @@ interface ScriptVersion {
 }
 
 const C = {
-  accent: "#818cf8",
-  textDim: "#64748b",
-  textBright: "#f1f5f9",
-  text: "#e2e8f0",
-  border: "rgba(99,102,241,0.12)",
-  cardBg: "#12122a",
+  accent: "#4db8ff",
+  textDim: "#7a9bb5",
+  textBright: "#e8edf5",
+  text: "#e8edf5",
+  border: "rgba(77,184,255,0.11)",
+  cardBg: "#0d1520",
 };
 
 function timeAgo(iso: string): string {
@@ -145,14 +145,14 @@ export function ScriptEditor({
 
       {/* ── SCRIPT header row ── */}
       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16, flexWrap: "wrap" }}>
-        <span style={{ fontSize: 12, fontWeight: 700, color: "#818cf8", letterSpacing: 0.5, textTransform: "uppercase" }}>SCRIPT</span>
+        <span style={{ fontSize: 14, fontWeight: 700, color: "#4db8ff", letterSpacing: 0.5, textTransform: "uppercase" }}>SCRIPT</span>
         <div style={{ flex: 1, height: 1, background: C.border }} />
 
         {/* Titles button */}
         <button
           onClick={handleGenerateTitles}
           disabled={generatingTitles}
-          style={{ fontSize: 11, color: showTitles ? "#f472b6" : C.textDim, background: showTitles ? "rgba(244,114,182,0.08)" : "none", border: showTitles ? "1px solid rgba(244,114,182,0.22)" : "1px solid rgba(99,102,241,0.16)", borderRadius: 6, padding: "3px 9px", cursor: generatingTitles ? "wait" : "pointer", fontWeight: 600 }}
+          style={{ fontSize: 13, color: showTitles ? "#f472b6" : C.textDim, background: showTitles ? "rgba(244,114,182,0.08)" : "none", border: showTitles ? "1px solid rgba(244,114,182,0.22)" : "1px solid rgba(77,184,255,0.14)", borderRadius: 6, padding: "3px 9px", cursor: generatingTitles ? "wait" : "pointer", fontWeight: 600 }}
         >
           {generatingTitles ? "✨ Generating…" : "✨ Titles"}
         </button>
@@ -161,7 +161,7 @@ export function ScriptEditor({
         {versions.length > 0 && (
           <button
             onClick={() => setShowHistory(v => !v)}
-            style={{ fontSize: 11, color: showHistory ? C.accent : C.textDim, background: showHistory ? "rgba(99,102,241,0.10)" : "none", border: showHistory ? "1px solid rgba(99,102,241,0.20)" : "none", borderRadius: 6, padding: "3px 9px", cursor: "pointer", fontWeight: 600 }}
+            style={{ fontSize: 13, color: showHistory ? C.accent : C.textDim, background: showHistory ? "rgba(77,184,255,0.09)" : "none", border: showHistory ? "1px solid rgba(77,184,255,0.18)" : "none", borderRadius: 6, padding: "3px 9px", cursor: "pointer", fontWeight: 600 }}
           >
             🕐 {versions.length} version{versions.length !== 1 ? "s" : ""}
           </button>
@@ -171,7 +171,7 @@ export function ScriptEditor({
         {!isEditing ? (
           <button
             onClick={() => setIsEditing(true)}
-            style={{ fontSize: 11, color: C.textDim, background: "none", border: "1px solid rgba(99,102,241,0.16)", borderRadius: 6, padding: "3px 9px", cursor: "pointer", fontWeight: 600 }}
+            style={{ fontSize: 13, color: C.textDim, background: "none", border: "1px solid rgba(77,184,255,0.14)", borderRadius: 6, padding: "3px 9px", cursor: "pointer", fontWeight: 600 }}
           >
             ✏️ Edit
           </button>
@@ -179,14 +179,14 @@ export function ScriptEditor({
           <div style={{ display: "flex", gap: 6 }}>
             <button
               onClick={handleCancel}
-              style={{ fontSize: 11, color: C.textDim, background: "none", border: "1px solid rgba(99,102,241,0.16)", borderRadius: 6, padding: "3px 9px", cursor: "pointer" }}
+              style={{ fontSize: 13, color: C.textDim, background: "none", border: "1px solid rgba(77,184,255,0.14)", borderRadius: 6, padding: "3px 9px", cursor: "pointer" }}
             >
               Cancel
             </button>
             <button
               onClick={handleSave}
               disabled={saving || !isDirty}
-              style={{ fontSize: 11, fontWeight: 700, color: saveSuccess ? "#34d399" : "#fff", background: saveSuccess ? "rgba(52,211,153,0.15)" : saving ? "rgba(99,102,241,0.4)" : "linear-gradient(135deg,#6366f1,#a855f7)", border: "none", borderRadius: 6, padding: "3px 12px", cursor: saving || !isDirty ? "not-allowed" : "pointer", opacity: !isDirty && !saveSuccess ? 0.5 : 1 }}
+              style={{ fontSize: 13, fontWeight: 700, color: saveSuccess ? "#34d399" : "#fff", background: saveSuccess ? "rgba(52,211,153,0.15)" : saving ? "rgba(99,102,241,0.4)" : "linear-gradient(135deg,#0e6499,#4db8ff)", border: "none", borderRadius: 6, padding: "3px 12px", cursor: saving || !isDirty ? "not-allowed" : "pointer", opacity: !isDirty && !saveSuccess ? 0.5 : 1 }}
             >
               {saveSuccess ? "✓ Saved" : saving ? "Saving…" : "💾 Save"}
             </button>
@@ -198,8 +198,8 @@ export function ScriptEditor({
       {showTitles && (
         <div style={{ borderRadius: 12, background: "rgba(244,114,182,0.04)", border: "1px solid rgba(244,114,182,0.18)", padding: "14px 16px", marginBottom: 16 }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
-            <p style={{ fontSize: 11, fontWeight: 700, color: "#f472b6", letterSpacing: 0.6, textTransform: "uppercase", margin: 0 }}>✨ Title Variations</p>
-            <button onClick={() => setShowTitles(false)} style={{ fontSize: 13, color: C.textDim, background: "none", border: "none", cursor: "pointer", lineHeight: 1 }}>✕</button>
+            <p style={{ fontSize: 13, fontWeight: 700, color: "#f472b6", letterSpacing: 0.6, textTransform: "uppercase", margin: 0 }}>✨ Title Variations</p>
+            <button onClick={() => setShowTitles(false)} style={{ fontSize: 15, color: C.textDim, background: "none", border: "none", cursor: "pointer", lineHeight: 1 }}>✕</button>
           </div>
           {generatingTitles && (
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
@@ -210,25 +210,25 @@ export function ScriptEditor({
           )}
           {!generatingTitles && titles && titles.length === 0 && (
             <div>
-              <p style={{ fontSize: 13, color: "#f87171", margin: "0 0 6px" }}>Could not generate titles.</p>
-              {titleError && <p style={{ fontSize: 11, color: C.textDim, margin: 0, fontFamily: "monospace" }}>{titleError}</p>}
+              <p style={{ fontSize: 15, color: "#f87171", margin: "0 0 6px" }}>Could not generate titles.</p>
+              {titleError && <p style={{ fontSize: 13, color: C.textDim, margin: 0, fontFamily: "monospace" }}>{titleError}</p>}
             </div>
           )}
           {!generatingTitles && titles && titles.length > 0 && (
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               {titles.map((t, i) => (
                 <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", borderRadius: 8, background: C.cardBg, border: `1px solid ${C.border}` }}>
-                  <p style={{ flex: 1, fontSize: 13, fontWeight: 600, color: C.textBright, margin: 0, lineHeight: 1.4 }}>{t}</p>
+                  <p style={{ flex: 1, fontSize: 15, fontWeight: 600, color: C.textBright, margin: 0, lineHeight: 1.4 }}>{t}</p>
                   <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
                     <button
                       onClick={() => copyTitle(t, i)}
-                      style={{ fontSize: 11, fontWeight: 600, color: copiedTitle === i ? "#34d399" : C.accent, background: copiedTitle === i ? "rgba(52,211,153,0.10)" : "rgba(99,102,241,0.10)", border: copiedTitle === i ? "1px solid rgba(52,211,153,0.20)" : "1px solid rgba(99,102,241,0.20)", borderRadius: 6, padding: "3px 10px", cursor: "pointer", whiteSpace: "nowrap" }}
+                      style={{ fontSize: 13, fontWeight: 600, color: copiedTitle === i ? "#34d399" : C.accent, background: copiedTitle === i ? "rgba(52,211,153,0.10)" : "rgba(77,184,255,0.09)", border: copiedTitle === i ? "1px solid rgba(52,211,153,0.20)" : "1px solid rgba(77,184,255,0.18)", borderRadius: 6, padding: "3px 10px", cursor: "pointer", whiteSpace: "nowrap" }}
                     >
                       {copiedTitle === i ? "✓ Copied" : "Copy"}
                     </button>
                     <button
                       onClick={() => useTitle(t, i)}
-                      style={{ fontSize: 11, fontWeight: 600, color: usedTitle === i ? "#34d399" : "#f472b6", background: usedTitle === i ? "rgba(52,211,153,0.10)" : "rgba(244,114,182,0.08)", border: usedTitle === i ? "1px solid rgba(52,211,153,0.20)" : "1px solid rgba(244,114,182,0.22)", borderRadius: 6, padding: "3px 10px", cursor: "pointer", whiteSpace: "nowrap" }}
+                      style={{ fontSize: 13, fontWeight: 600, color: usedTitle === i ? "#34d399" : "#f472b6", background: usedTitle === i ? "rgba(52,211,153,0.10)" : "rgba(244,114,182,0.08)", border: usedTitle === i ? "1px solid rgba(52,211,153,0.20)" : "1px solid rgba(244,114,182,0.22)", borderRadius: 6, padding: "3px 10px", cursor: "pointer", whiteSpace: "nowrap" }}
                     >
                       {usedTitle === i ? "✓ Set" : "Use"}
                     </button>
@@ -237,7 +237,7 @@ export function ScriptEditor({
               ))}
               <button
                 onClick={handleGenerateTitles}
-                style={{ marginTop: 4, fontSize: 11, color: "#f472b6", background: "none", border: "1px solid rgba(244,114,182,0.18)", borderRadius: 6, padding: "5px 12px", cursor: "pointer", fontWeight: 600, alignSelf: "flex-start" }}
+                style={{ marginTop: 4, fontSize: 13, color: "#f472b6", background: "none", border: "1px solid rgba(244,114,182,0.18)", borderRadius: 6, padding: "5px 12px", cursor: "pointer", fontWeight: 600, alignSelf: "flex-start" }}
               >
                 ↻ Regenerate
               </button>
@@ -248,31 +248,31 @@ export function ScriptEditor({
 
       {/* ── Version history panel ── */}
       {showHistory && versions.length > 0 && (
-        <div style={{ borderRadius: 12, background: "rgba(99,102,241,0.04)", border: "1px solid rgba(99,102,241,0.14)", padding: "14px 16px", marginBottom: 16 }}>
-          <p style={{ fontSize: 11, fontWeight: 700, color: C.accent, letterSpacing: 0.6, textTransform: "uppercase", marginBottom: 12 }}>Version History</p>
+        <div style={{ borderRadius: 12, background: "rgba(77,184,255,0.04)", border: "1px solid rgba(77,184,255,0.12)", padding: "14px 16px", marginBottom: 16 }}>
+          <p style={{ fontSize: 13, fontWeight: 700, color: C.accent, letterSpacing: 0.6, textTransform: "uppercase", marginBottom: 12 }}>Version History</p>
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
             {[...versions].reverse().map((v, i) => (
               <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 12px", borderRadius: 8, background: C.cardBg, border: `1px solid ${C.border}` }}>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <span style={{ fontSize: 12, fontWeight: 600, color: C.textBright }}>{v.label}</span>
-                  <span style={{ fontSize: 11, color: C.textDim, marginLeft: 8 }}>{timeAgo(v.savedAt)}</span>
-                  <span style={{ fontSize: 11, color: C.textDim, marginLeft: 8 }}>{v.wordCount.toLocaleString()} words</span>
+                  <span style={{ fontSize: 14, fontWeight: 600, color: C.textBright }}>{v.label}</span>
+                  <span style={{ fontSize: 13, color: C.textDim, marginLeft: 8 }}>{timeAgo(v.savedAt)}</span>
+                  <span style={{ fontSize: 13, color: C.textDim, marginLeft: 8 }}>{v.wordCount.toLocaleString()} words</span>
                 </div>
                 <button
                   onClick={() => handleRestore(v)}
-                  style={{ fontSize: 11, fontWeight: 600, color: C.accent, background: "rgba(99,102,241,0.10)", border: "1px solid rgba(99,102,241,0.20)", borderRadius: 6, padding: "3px 10px", cursor: "pointer", whiteSpace: "nowrap" }}
+                  style={{ fontSize: 13, fontWeight: 600, color: C.accent, background: "rgba(77,184,255,0.09)", border: "1px solid rgba(77,184,255,0.18)", borderRadius: 6, padding: "3px 10px", cursor: "pointer", whiteSpace: "nowrap" }}
                 >
                   Restore
                 </button>
               </div>
             ))}
           </div>
-          <p style={{ fontSize: 11, color: C.textDim, margin: "10px 0 0" }}>Restoring loads the version into the editor — hit Save to make it current.</p>
+          <p style={{ fontSize: 13, color: C.textDim, margin: "10px 0 0" }}>Restoring loads the version into the editor — hit Save to make it current.</p>
         </div>
       )}
 
       {saveError && (
-        <p style={{ fontSize: 12, color: "#f87171", marginBottom: 12 }}>{saveError}</p>
+        <p style={{ fontSize: 14, color: "#f87171", marginBottom: 12 }}>{saveError}</p>
       )}
 
       {/* ── Content area ── */}
@@ -283,11 +283,11 @@ export function ScriptEditor({
           style={{
             width: "100%",
             minHeight: 480,
-            fontSize: 15,
+            fontSize: 16,
             color: C.textBright,
             lineHeight: 1.9,
-            background: "#0f0f20",
-            border: "1px solid rgba(99,102,241,0.25)",
+            background: "#060d18",
+            border: "1px solid rgba(77,184,255,0.22)",
             borderRadius: 12,
             padding: "16px 18px",
             resize: "vertical",
@@ -297,13 +297,13 @@ export function ScriptEditor({
           }}
         />
       ) : (
-        <p style={{ fontSize: 15, color: C.textBright, lineHeight: 1.9, whiteSpace: "pre-wrap", margin: 0 }}>
+        <p style={{ fontSize: 16, color: C.textBright, lineHeight: 1.9, whiteSpace: "pre-wrap", margin: 0 }}>
           {content}
         </p>
       )}
 
       {isEditing && (
-        <p style={{ fontSize: 11, color: C.textDim, marginTop: 8 }}>
+        <p style={{ fontSize: 13, color: C.textDim, marginTop: 8 }}>
           {wordCount.toLocaleString()} words — editing. Previous version saved to history on save.
         </p>
       )}

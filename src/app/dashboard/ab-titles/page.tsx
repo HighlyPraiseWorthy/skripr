@@ -5,13 +5,13 @@ import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
 
 const C = {
-  bg: "#0b0b17",
-  cardBg: "#12122a",
-  border: "rgba(99,102,241,0.12)",
-  accent: "#818cf8",
-  text: "#e2e8f0",
-  textDim: "#64748b",
-  textBright: "#f1f5f9",
+  bg: "#080c12",
+  cardBg: "#0d1520",
+  border: "rgba(77,184,255,0.11)",
+  accent: "#4db8ff",
+  text: "#e8edf5",
+  textDim: "#7a9bb5",
+  textBright: "#e8edf5",
   success: "#10b981",
   danger: "#f87171",
 };
@@ -50,13 +50,13 @@ export default function ABTitlesPage() {
           {savedTitles.length > 0 && (
             <button
               onClick={() => setSavedTitles([])}
-              style={{ fontSize: 12, color: C.textDim, cursor: "pointer", background: "none", border: "none", padding: 0 }}
+              style={{ fontSize: 14, color: C.textDim, cursor: "pointer", background: "none", border: "none", padding: 0 }}
             >
               Clear all
             </button>
           )}
         </div>
-        <p style={{ fontSize: 14, color: C.textDim, margin: 0 }}>
+        <p style={{ fontSize: 16, color: C.textDim, margin: 0 }}>
           Titles you starred in the Metadata Generator. Use one at a time, check CTR after 48 hours, then swap.
         </p>
       </div>
@@ -65,13 +65,13 @@ export default function ABTitlesPage() {
         /* Empty state */
         <div style={{ borderRadius: 18, background: C.cardBg, border: `1px solid ${C.border}`, padding: "48px 24px", textAlign: "center" }}>
           <div style={{ fontSize: 36, marginBottom: 14 }}>☆</div>
-          <p style={{ fontSize: 15, fontWeight: 600, color: C.textBright, marginBottom: 8 }}>No saved titles yet</p>
-          <p style={{ fontSize: 13, color: C.textDim, marginBottom: 24, lineHeight: 1.6 }}>
+          <p style={{ fontSize: 16, fontWeight: 600, color: C.textBright, marginBottom: 8 }}>No saved titles yet</p>
+          <p style={{ fontSize: 15, color: C.textDim, marginBottom: 24, lineHeight: 1.6 }}>
             Go to Metadata Generator, generate titles for your video,<br />and click the ☆ star on any title to save it here.
           </p>
           <Link
             href="/dashboard/metadata"
-            style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "10px 22px", borderRadius: 12, background: "linear-gradient(135deg,#6366f1,#7c3aed)", color: "#fff", fontSize: 14, fontWeight: 600, textDecoration: "none" }}
+            style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "10px 22px", borderRadius: 12, background: "linear-gradient(135deg,#0e6499,#1a8fd1)", color: "#fff", fontSize: 16, fontWeight: 600, textDecoration: "none" }}
           >
             Open Metadata Generator
           </Link>
@@ -80,10 +80,10 @@ export default function ABTitlesPage() {
         <>
           {/* A/B strategy tip */}
           <div style={{ borderRadius: 14, background: "rgba(16,185,129,0.06)", border: "1px solid rgba(16,185,129,0.18)", padding: "14px 18px", marginBottom: 20, display: "flex", gap: 12, alignItems: "flex-start" }}>
-            <span style={{ fontSize: 16, marginTop: 1 }}>💡</span>
+            <span style={{ fontSize: 17, marginTop: 1 }}>💡</span>
             <div>
-              <p style={{ fontSize: 12, fontWeight: 700, color: C.success, margin: "0 0 4px 0", letterSpacing: 0.3, textTransform: "uppercase" }}>A/B Testing Workflow</p>
-              <p style={{ fontSize: 12, color: C.textDim, margin: 0, lineHeight: 1.6 }}>
+              <p style={{ fontSize: 14, fontWeight: 700, color: C.success, margin: "0 0 4px 0", letterSpacing: 0.3, textTransform: "uppercase" }}>A/B Testing Workflow</p>
+              <p style={{ fontSize: 14, color: C.textDim, margin: 0, lineHeight: 1.6 }}>
                 Pick one title → upload video → wait 48 hours → check CTR in YouTube Studio.<br />
                 If CTR is below 4%, swap to the next title. Repeat until you find the winner.
               </p>
@@ -97,18 +97,18 @@ export default function ABTitlesPage() {
                 key={i}
                 style={{ borderRadius: 14, background: C.cardBg, border: `1px solid ${C.border}`, padding: "14px 16px", display: "flex", alignItems: "center", gap: 12 }}
               >
-                <span style={{ fontSize: 13, fontWeight: 600, color: C.textDim, minWidth: 20 }}>{i + 1}</span>
-                <span style={{ flex: 1, fontSize: 14, color: C.textBright, fontWeight: 500, lineHeight: 1.4 }}>{t}</span>
+                <span style={{ fontSize: 15, fontWeight: 600, color: C.textDim, minWidth: 20 }}>{i + 1}</span>
+                <span style={{ flex: 1, fontSize: 16, color: C.textBright, fontWeight: 500, lineHeight: 1.4 }}>{t}</span>
                 <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
                   <button
                     onClick={() => copyTitle(t)}
-                    style={{ padding: "6px 14px", borderRadius: 8, fontSize: 12, fontWeight: 600, cursor: "pointer", background: copiedTitle === t ? "rgba(16,185,129,0.12)" : "rgba(99,102,241,0.10)", border: `1px solid ${copiedTitle === t ? "rgba(16,185,129,0.35)" : "rgba(99,102,241,0.25)"}`, color: copiedTitle === t ? C.success : C.accent, transition: "all 0.12s", whiteSpace: "nowrap" }}
+                    style={{ padding: "6px 14px", borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: "pointer", background: copiedTitle === t ? "rgba(16,185,129,0.12)" : "rgba(77,184,255,0.09)", border: `1px solid ${copiedTitle === t ? "rgba(16,185,129,0.35)" : "rgba(77,184,255,0.22)"}`, color: copiedTitle === t ? C.success : C.accent, transition: "all 0.12s", whiteSpace: "nowrap" }}
                   >
                     {copiedTitle === t ? "✓ Copied" : "Copy"}
                   </button>
                   <button
                     onClick={() => removeTitle(t)}
-                    style={{ padding: "6px 10px", borderRadius: 8, fontSize: 12, cursor: "pointer", background: "rgba(248,113,113,0.08)", border: "1px solid rgba(248,113,113,0.2)", color: C.danger }}
+                    style={{ padding: "6px 10px", borderRadius: 8, fontSize: 14, cursor: "pointer", background: "rgba(248,113,113,0.08)", border: "1px solid rgba(248,113,113,0.2)", color: C.danger }}
                   >
                     ✕
                   </button>
@@ -121,7 +121,7 @@ export default function ABTitlesPage() {
           <div style={{ marginTop: 20, textAlign: "center" }}>
             <Link
               href="/dashboard/metadata"
-              style={{ fontSize: 13, color: C.textDim, textDecoration: "none" }}
+              style={{ fontSize: 15, color: C.textDim, textDecoration: "none" }}
             >
               ☆ Add more titles from Metadata Generator
             </Link>

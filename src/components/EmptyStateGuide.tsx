@@ -4,13 +4,13 @@ import Link from "next/link";
 import { useState } from "react";
 
 const C = {
-  bg: "#0b0b17",
-  cardBg: "#12122a",
-  border: "rgba(99,102,241,0.12)",
-  accent: "#818cf8",
-  textDim: "#64748b",
-  textBright: "#f1f5f9",
-  text: "#e2e8f0",
+  bg: "#080c12",
+  cardBg: "#0d1520",
+  border: "rgba(77,184,255,0.11)",
+  accent: "#4db8ff",
+  textDim: "#7a9bb5",
+  textBright: "#e8edf5",
+  text: "#e8edf5",
 };
 
 const SAMPLE_SCRIPT = {
@@ -53,16 +53,16 @@ export function EmptyStateGuide() {
 
       {/* ── Welcome Hero ── */}
       <div style={{ textAlign: "center", marginBottom: 40 }}>
-        <div style={{ fontSize: 48, marginBottom: 14, filter: "drop-shadow(0 0 20px rgba(99,102,241,0.5))" }}>✦</div>
+        <div style={{ fontSize: 48, marginBottom: 14, filter: "drop-shadow(0 0 20px rgba(77,184,255,0.4))" }}>✦</div>
         <h2 style={{ fontSize: 26, fontWeight: 700, color: C.textBright, letterSpacing: -0.4, marginBottom: 10 }}>
           Welcome to Skripr
         </h2>
-        <p style={{ fontSize: 15, color: C.textDim, lineHeight: 1.7, maxWidth: 480, margin: "0 auto 24px" }}>
+        <p style={{ fontSize: 16, color: C.textDim, lineHeight: 1.7, maxWidth: 480, margin: "0 auto 24px" }}>
           Generate full YouTube scripts optimised for retention, hooks, and the algorithm — in under 30 seconds.
         </p>
         <div style={{ display: "flex", justifyContent: "center", gap: 10, flexWrap: "wrap" }}>
           {VALUE_PROPS.map((v, i) => (
-            <div key={i} style={{ display: "flex", alignItems: "center", gap: 7, padding: "7px 14px", borderRadius: 20, background: "rgba(99,102,241,0.08)", border: "1px solid rgba(99,102,241,0.16)", fontSize: 13, color: C.text }}>
+            <div key={i} style={{ display: "flex", alignItems: "center", gap: 7, padding: "7px 14px", borderRadius: 20, background: "rgba(77,184,255,0.07)", border: "1px solid rgba(77,184,255,0.14)", fontSize: 15, color: C.text }}>
               <span>{v.emoji}</span><span>{v.text}</span>
             </div>
           ))}
@@ -70,19 +70,19 @@ export function EmptyStateGuide() {
       </div>
 
       {/* ── Sample Script ── */}
-      <div style={{ borderRadius: 18, background: C.cardBg, border: "1px solid rgba(99,102,241,0.22)", marginBottom: 28, overflow: "hidden" }}>
-        <div style={{ padding: "16px 20px", borderBottom: scriptOpen ? "1px solid rgba(99,102,241,0.12)" : "none" }}>
+      <div style={{ borderRadius: 18, background: C.cardBg, border: "1px solid rgba(77,184,255,0.20)", marginBottom: 28, overflow: "hidden" }}>
+        <div style={{ padding: "16px 20px", borderBottom: scriptOpen ? "1px solid rgba(77,184,255,0.11)" : "none" }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 5 }}>
                 <span style={{ fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 5, background: "rgba(52,211,153,0.12)", color: "#34d399", letterSpacing: 0.4 }}>EXAMPLE OUTPUT</span>
                 <span style={{ fontSize: 10, color: C.textDim }}>{SAMPLE_SCRIPT.niche} · {SAMPLE_SCRIPT.words} words · {SAMPLE_SCRIPT.duration}</span>
               </div>
-              <h3 style={{ fontSize: 14, fontWeight: 600, color: C.textBright, margin: 0, lineHeight: 1.4 }}>{SAMPLE_SCRIPT.title}</h3>
+              <h3 style={{ fontSize: 16, fontWeight: 600, color: C.textBright, margin: 0, lineHeight: 1.4 }}>{SAMPLE_SCRIPT.title}</h3>
             </div>
             <button
               onClick={() => setScriptOpen(v => !v)}
-              style={{ flexShrink: 0, padding: "7px 14px", borderRadius: 9, background: "rgba(99,102,241,0.10)", border: "1px solid rgba(99,102,241,0.20)", color: "#818cf8", fontSize: 12, fontWeight: 600, cursor: "pointer" }}
+              style={{ flexShrink: 0, padding: "7px 14px", borderRadius: 9, background: "rgba(77,184,255,0.09)", border: "1px solid rgba(77,184,255,0.18)", color: "#4db8ff", fontSize: 14, fontWeight: 600, cursor: "pointer" }}
             >
               {scriptOpen ? "Hide ↑" : "Read sample ↓"}
             </button>
@@ -91,11 +91,11 @@ export function EmptyStateGuide() {
 
         {scriptOpen && (
           <div style={{ padding: "20px 22px" }}>
-            <p style={{ fontSize: 14, color: C.text, lineHeight: 1.9, whiteSpace: "pre-wrap", margin: 0 }}>
+            <p style={{ fontSize: 16, color: C.text, lineHeight: 1.9, whiteSpace: "pre-wrap", margin: 0 }}>
               {SAMPLE_SCRIPT.content}
             </p>
-            <div style={{ marginTop: 16, padding: "10px 14px", borderRadius: 10, background: "rgba(99,102,241,0.07)", border: "1px solid rgba(99,102,241,0.15)" }}>
-              <p style={{ fontSize: 12, color: "#a5b4fc", margin: 0, lineHeight: 1.6 }}>
+            <div style={{ marginTop: 16, padding: "10px 14px", borderRadius: 10, background: "rgba(77,184,255,0.06)", border: "1px solid rgba(77,184,255,0.13)" }}>
+              <p style={{ fontSize: 14, color: "#7ed8ff", margin: 0, lineHeight: 1.6 }}>
                 💡 Notice: stat hook in the first sentence, re-hook after the tension reveal, two open loops planted before the payoff. This is the structure Skripr builds into every script automatically.
               </p>
             </div>
@@ -105,19 +105,19 @@ export function EmptyStateGuide() {
 
       {/* ── 3-Step Guide ── */}
       <div style={{ borderRadius: 18, background: C.cardBg, border: `1px solid ${C.border}`, padding: "22px 22px", marginBottom: 28 }}>
-        <p style={{ fontSize: 11, fontWeight: 700, color: "#818cf8", letterSpacing: 0.8, textTransform: "uppercase", marginBottom: 18 }}>How it works</p>
+        <p style={{ fontSize: 13, fontWeight: 700, color: "#4db8ff", letterSpacing: 0.8, textTransform: "uppercase", marginBottom: 18 }}>How it works</p>
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           {STEPS.map((s, i) => (
             <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 14 }}>
-              <div style={{ flexShrink: 0, width: 38, height: 38, borderRadius: 10, background: "rgba(99,102,241,0.10)", border: "1px solid rgba(99,102,241,0.20)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18 }}>
+              <div style={{ flexShrink: 0, width: 38, height: 38, borderRadius: 10, background: "rgba(77,184,255,0.09)", border: "1px solid rgba(77,184,255,0.18)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18 }}>
                 {s.emoji}
               </div>
               <div>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 3 }}>
-                  <span style={{ fontSize: 11, fontWeight: 700, color: "#818cf8" }}>STEP {i + 1}</span>
-                  <span style={{ fontSize: 14, fontWeight: 600, color: C.textBright }}>{s.label}</span>
+                  <span style={{ fontSize: 13, fontWeight: 700, color: "#4db8ff" }}>STEP {i + 1}</span>
+                  <span style={{ fontSize: 16, fontWeight: 600, color: C.textBright }}>{s.label}</span>
                 </div>
-                <p style={{ fontSize: 13, color: C.textDim, margin: 0, lineHeight: 1.5 }}>{s.desc}</p>
+                <p style={{ fontSize: 15, color: C.textDim, margin: 0, lineHeight: 1.5 }}>{s.desc}</p>
               </div>
             </div>
           ))}
@@ -128,11 +128,11 @@ export function EmptyStateGuide() {
       <div style={{ textAlign: "center" }}>
         <Link
           href="/dashboard/scripts/new"
-          style={{ display: "inline-flex", alignItems: "center", gap: 9, padding: "13px 32px", borderRadius: 14, background: "linear-gradient(135deg,#6366f1 0%,#7c3aed 50%,#a855f7 100%)", color: "#fff", fontSize: 15, fontWeight: 600, textDecoration: "none", boxShadow: "0 0 32px rgba(99,102,241,0.35)" }}
+          style={{ display: "inline-flex", alignItems: "center", gap: 9, padding: "13px 32px", borderRadius: 14, background: "linear-gradient(135deg,#0e6499 0%,#1a8fd1 50%,#4db8ff 100%)", color: "#fff", fontSize: 16, fontWeight: 600, textDecoration: "none", boxShadow: "0 0 32px rgba(77,184,255,0.30)" }}
         >
           <span style={{ fontSize: 18 }}>✦</span> Generate Your First Script
         </Link>
-        <p style={{ fontSize: 12, color: C.textDim, marginTop: 10 }}>Free plan includes 2 scripts — no credit card required</p>
+        <p style={{ fontSize: 14, color: C.textDim, marginTop: 10 }}>Free plan includes 2 scripts — no credit card required</p>
       </div>
 
     </div>

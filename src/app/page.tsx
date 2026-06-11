@@ -46,10 +46,10 @@ const T = {
   bg:     "#080c12",
   bg2:    "#060a0f",
   bg3:    "#0a0f18",
-  border: "#0e1623",
+  border: "#1a2840",
   text:   "#e8edf5",
-  muted:  "#2e4058",
-  dim:    "#1e2d42",
+  muted:  "#a8c0d6",
+  dim:    "#6a8aaa",
   accent: "#4db8ff",
   purple: "#7c6fff",
   green:  "#00d4a0",
@@ -89,6 +89,28 @@ function Check({ color = T.green }: { color?: string }) {
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 export default function LandingPage() {
+  const handleCheckout = async (priceKey: "starter" | "pro" | "agency") => {
+    const priceIds: Record<string, string> = {
+      starter: process.env.NEXT_PUBLIC_STRIPE_PRICE_STARTER || "",
+      pro:     process.env.NEXT_PUBLIC_STRIPE_PRICE_PRO     || "",
+      agency:  process.env.NEXT_PUBLIC_STRIPE_PRICE_AGENCY  || "",
+    };
+    const priceId = priceIds[priceKey];
+    if (!priceId) { window.location.href = "/sign-up"; return; }
+    try {
+      const res = await fetch("/api/stripe/create-checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ priceId }),
+      });
+      const data = await res.json();
+      if (data.url) window.location.href = data.url;
+      else window.location.href = "/sign-up";
+    } catch {
+      window.location.href = "/sign-up";
+    }
+  };
+
   return (
     <div style={{ background: T.bg, color: T.text, fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif", minHeight: "100vh", overflowX: "hidden" }}>
 
@@ -118,13 +140,25 @@ export default function LandingPage() {
         @keyframes blink { 0%,100% { opacity:1 } 50% { opacity:0 } }
         @keyframes pulse-dot { 0%,100% { opacity:0.4; transform:scale(1) } 50% { opacity:1; transform:scale(1.15) } }
         @keyframes fadein { from { opacity:0; transform:translateY(16px) } to { opacity:1; transform:none } }
+        @keyframes star-pulse-1 { 0%,100%{opacity:0.15;transform:scale(1)} 50%{opacity:0.55;transform:scale(1.3)} }
+        @keyframes star-pulse-2 { 0%,100%{opacity:0.08;transform:scale(1)} 50%{opacity:0.4;transform:scale(1.4)} }
+        @keyframes star-pulse-3 { 0%,100%{opacity:0.2;transform:scale(1)} 60%{opacity:0.6;transform:scale(1.2)} }
+        .hn-star {
+          position:fixed; border-radius:50%; pointer-events:none; z-index:0;
+          background: radial-gradient(circle, #9ce4ff 0%, #4db8ff 40%, transparent 70%);
+        }
+        .hn-star-s1 { width:2px; height:2px; animation: star-pulse-1 4.2s ease-in-out infinite; }
+        .hn-star-s2 { width:3px; height:3px; animation: star-pulse-2 5.8s ease-in-out infinite; }
+        .hn-star-s3 { width:2px; height:2px; animation: star-pulse-3 3.6s ease-in-out infinite; }
+        .hn-star-m  { width:4px; height:4px; animation: star-pulse-1 7.1s ease-in-out infinite; background: radial-gradient(circle, #ffffff 0%, #9ce4ff 30%, #4db8ff 60%, transparent 80%); }
+        @keyframes spin-border { 0% { transform: translate(-50%,-50%) rotate(0deg); } 100% { transform: translate(-50%,-50%) rotate(360deg); } }
 
         .hn-nav-link { font-size:12px; font-weight:400; letter-spacing:0.08em; color:${T.dim}; text-decoration:none; transition:color .15s; }
         .hn-nav-link:hover { color:${T.accent}; }
         .hn-ghost:hover { color:${T.accent} !important; border-color:${T.accent}44 !important; }
-        .hn-feat-row { display:grid; grid-template-columns:80px 1fr 1fr; border-bottom:1px solid ${T.border}; }
+        .hn-feat-row { display:grid; grid-template-columns:80px 1fr 1fr; border-bottom:1px solid ${T.border}; align-items:stretch; }
         .hn-feat-row:last-child { border-bottom:none; }
-        .hn-feat-artifact { background:${T.bg2}; border-left:1px solid ${T.border}; padding:28px 24px; }
+        .hn-feat-artifact { background:${T.bg2}; border-left:1px solid ${T.border}; padding:28px 24px; display:flex; flex-direction:column; justify-content:flex-start; }
         .hn-hook-item { display:flex; align-items:flex-start; gap:10px; padding:10px 14px; border-bottom:1px solid ${T.border}; }
         .hn-hook-item:last-child { border-bottom:none; }
         .hn-comp-row { display:flex; justify-content:space-between; padding:8px 16px; border-bottom:1px solid ${T.border}; font-size:11px; }
@@ -138,6 +172,47 @@ export default function LandingPage() {
         .hn-word { padding:5px 11px; font-size:11px; font-weight:500; border:1px solid; letter-spacing:.02em; }
         .hn-price-featured { background:${T.bg2} !important; outline:1px solid ${T.accent}44; }
       `}</style>
+
+      {/* ── STARS ── */}
+      {[
+        { cls:"hn-star hn-star-s1", top:"8%",   left:"7%",   delay:"0s"    },
+        { cls:"hn-star hn-star-s2", top:"12%",  left:"23%",  delay:"1.2s"  },
+        { cls:"hn-star hn-star-s3", top:"6%",   left:"41%",  delay:"0.7s"  },
+        { cls:"hn-star hn-star-m",  top:"15%",  left:"58%",  delay:"2.1s"  },
+        { cls:"hn-star hn-star-s1", top:"9%",   left:"74%",  delay:"0.4s"  },
+        { cls:"hn-star hn-star-s3", top:"7%",   left:"88%",  delay:"1.8s"  },
+        { cls:"hn-star hn-star-s2", top:"22%",  left:"4%",   delay:"3.0s"  },
+        { cls:"hn-star hn-star-s1", top:"31%",  left:"15%",  delay:"0.9s"  },
+        { cls:"hn-star hn-star-m",  top:"28%",  left:"33%",  delay:"2.5s"  },
+        { cls:"hn-star hn-star-s3", top:"35%",  left:"51%",  delay:"1.5s"  },
+        { cls:"hn-star hn-star-s2", top:"26%",  left:"67%",  delay:"0.3s"  },
+        { cls:"hn-star hn-star-s1", top:"33%",  left:"82%",  delay:"3.4s"  },
+        { cls:"hn-star hn-star-s3", top:"38%",  left:"93%",  delay:"1.1s"  },
+        { cls:"hn-star hn-star-m",  top:"48%",  left:"9%",   delay:"2.8s"  },
+        { cls:"hn-star hn-star-s1", top:"52%",  left:"28%",  delay:"0.6s"  },
+        { cls:"hn-star hn-star-s2", top:"45%",  left:"46%",  delay:"1.9s"  },
+        { cls:"hn-star hn-star-s3", top:"55%",  left:"63%",  delay:"0.2s"  },
+        { cls:"hn-star hn-star-s1", top:"49%",  left:"79%",  delay:"3.7s"  },
+        { cls:"hn-star hn-star-m",  top:"44%",  left:"91%",  delay:"1.4s"  },
+        { cls:"hn-star hn-star-s2", top:"62%",  left:"3%",   delay:"2.2s"  },
+        { cls:"hn-star hn-star-s3", top:"68%",  left:"19%",  delay:"0.8s"  },
+        { cls:"hn-star hn-star-s1", top:"65%",  left:"37%",  delay:"3.1s"  },
+        { cls:"hn-star hn-star-m",  top:"72%",  left:"54%",  delay:"1.6s"  },
+        { cls:"hn-star hn-star-s2", top:"60%",  left:"70%",  delay:"0.5s"  },
+        { cls:"hn-star hn-star-s3", top:"75%",  left:"85%",  delay:"2.9s"  },
+        { cls:"hn-star hn-star-s1", top:"80%",  left:"11%",  delay:"1.3s"  },
+        { cls:"hn-star hn-star-m",  top:"85%",  left:"30%",  delay:"3.5s"  },
+        { cls:"hn-star hn-star-s2", top:"82%",  left:"48%",  delay:"0.1s"  },
+        { cls:"hn-star hn-star-s3", top:"88%",  left:"66%",  delay:"2.4s"  },
+        { cls:"hn-star hn-star-s1", top:"91%",  left:"83%",  delay:"1.0s"  },
+        { cls:"hn-star hn-star-m",  top:"95%",  left:"96%",  delay:"3.2s"  },
+        { cls:"hn-star hn-star-s2", top:"94%",  left:"42%",  delay:"0.7s"  },
+        { cls:"hn-star hn-star-s3", top:"17%",  left:"97%",  delay:"2.0s"  },
+        { cls:"hn-star hn-star-s1", top:"57%",  left:"55%",  delay:"1.7s"  },
+        { cls:"hn-star hn-star-m",  top:"3%",   left:"52%",  delay:"3.9s"  },
+      ].map(({ cls, top, left, delay }, i) => (
+        <div key={i} className={cls} style={{ top, left, animationDelay: delay }} />
+      ))}
 
       {/* ── NAV ── */}
       <nav style={{
@@ -164,15 +239,15 @@ export default function LandingPage() {
 
       {/* ── HERO ── */}
       <div style={{ paddingTop: 56 }}>
-        <div style={{ padding: "80px 48px 0", maxWidth: 760, animation: "fadein .6s ease both" }}>
-          <div style={{ fontSize: 52, fontWeight: 700, lineHeight: 1.0, letterSpacing: "-1.5px", color: T.text, marginBottom: 20 }}>
-            Script any video.<br />
-            <span style={{ fontWeight: 200, color: T.accent }}>Algorithmically.</span>
+        <div style={{ padding: "80px 48px 0", width: "100%", display: "flex", flexDirection: "column" as const, alignItems: "center" as const, animation: "fadein .6s ease both" }}>
+          <div style={{ fontSize: 72, fontWeight: 700, lineHeight: 0.95, letterSpacing: "-2.5px", color: T.text, marginBottom: 20, textAlign: "center" as const }}>
+            Your next viral video<br />
+            <span style={{ fontWeight: 200, color: T.accent }}>starts with someone else's.</span>
           </div>
-          <p style={{ fontSize: 16, fontWeight: 300, lineHeight: 1.65, color: T.muted, maxWidth: 560, marginBottom: 36 }}>
-            Paste a YouTube URL. Skripr reverse-engineers the transcript, rebuilds the structure as a ready-to-record script, generates ranked hooks, injects Viral Magnet words, and delivers complete metadata — in under 60 seconds.
+          <p style={{ fontSize: 18, fontWeight: 300, lineHeight: 1.6, color: T.muted, maxWidth: 640, marginBottom: 40, textAlign: "center" as const }}>
+            Paste any YouTube URL. Skripr extracts the structure of a viral video, rebuilds it as a ready-to-record script in your niche, generates ranked hooks, injects Viral Magnet words, and delivers full metadata — in 60 seconds.
           </p>
-          <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 20 }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center" as const, gap: 14, marginBottom: 20 }}>
             <Link href="/sign-up" style={{
               background: T.accent, color: T.bg,
               fontSize: 12, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase" as const,
@@ -185,54 +260,162 @@ export default function LandingPage() {
               transition: "color .15s, border-color .15s",
             }}>How it works ↓</a>
           </div>
-          <div style={{ display: "flex", gap: 24, paddingBottom: 56 }}>
+          <div style={{ display: "flex", gap: 24, paddingBottom: 56, justifyContent: "center" as const }}>
             {["No credit card required", "Results in 60s", "Built for YouTubers"].map(t => (
-              <span key={t} style={{ fontSize: 11, color: T.dim, letterSpacing: "0.04em" }}>{t}</span>
+              <span key={t} style={{ fontSize: 13, color: T.dim, letterSpacing: "0.03em" }}>{t}</span>
             ))}
           </div>
         </div>
 
-        {/* ── DEMO WINDOW ── */}
-        <div style={{ margin: "0 48px", border: `1px solid ${T.border}`, background: T.bg2 }}>
+              {/* ── LIVE TICKER ── */}
+      <div style={{ overflow: "hidden", padding: "48px 0", background: T.bg, borderBottom: `1px solid ${T.border}` }}>
+        <style>{`
+          @keyframes scroll-left  { 0% { transform: translateX(0) } 100% { transform: translateX(-50%) } }
+          @keyframes scroll-right { 0% { transform: translateX(-50%) } 100% { transform: translateX(0) } }
+          .ticker-left  { animation: scroll-left  40s linear infinite; display: flex; gap: 14px; width: max-content; }
+          .ticker-right { animation: scroll-right 50s linear infinite; display: flex; gap: 14px; width: max-content; }
+          .ticker-left:hover, .ticker-right:hover { animation-play-state: paused; }
+        `}</style>
+
+        {/* Row 1 — Script output cards, scroll left */}
+        <div style={{ overflow: "hidden", marginBottom: 14 }}>
+          <div className="ticker-left">
+            {[
+              { niche: "True Crime", title: "The $47M Fraud the Media Refused to Cover", hook: "In 2019, a company stole from 200,000 people and only 3 journalists noticed.", grade: "S", word: "Uncovered" },
+              { niche: "Finance", title: "The Savings Rate That's Quietly Shrinking You", hook: "The number on your statement isn't your real balance. Here's the math they skip.", grade: "A", word: "Overlooked" },
+              { niche: "Psychology", title: "The Habit Loop That Rewired My Brain in 11 Days", hook: "I didn't quit social media. I replaced the reward. That's the piece nobody teaches.", grade: "S", word: "Reframed" },
+              { niche: "History", title: "The Decision That Built Modern America", hook: "One overlooked vote in 1947 changed how 330 million people live today.", grade: "A", word: "Shelved" },
+              { niche: "Self Improvement", title: "Stop Optimizing. Start Deciding.", hook: "Productivity culture wrecked me. Then I found the one shift that worked.", grade: "B", word: "Neglected" },
+              { niche: "Gaming", title: "The Pattern Behind Every Viral Game Launch", hook: "Steam's recommendation engine isn't random. I mapped it out.", grade: "S", word: "Decoded" },
+              { niche: "Motivation", title: "You're Not Tired. You're Running the Wrong System.", hook: "Most motivation advice targets effort. That's not the real bottleneck.", grade: "A", word: "Misjudged" },
+              { niche: "Health", title: "The Sleep Study That Rewrote 40 Years of Research", hook: "A 2021 paper in a medical journal flipped everything we thought we understood.", grade: "S", word: "Rewritten" },
+            ].concat([
+              { niche: "True Crime", title: "The $47M Fraud the Media Refused to Cover", hook: "In 2019, a company stole from 200,000 people and only 3 journalists noticed.", grade: "S", word: "Uncovered" },
+              { niche: "Finance", title: "The Savings Rate That's Quietly Shrinking You", hook: "The number on your statement isn't your real balance. Here's the math they skip.", grade: "A", word: "Overlooked" },
+              { niche: "Psychology", title: "The Habit Loop That Rewired My Brain in 11 Days", hook: "I didn't quit social media. I replaced the reward. That's the piece nobody teaches.", grade: "S", word: "Reframed" },
+              { niche: "History", title: "The Decision That Built Modern America", hook: "One overlooked vote in 1947 changed how 330 million people live today.", grade: "A", word: "Shelved" },
+              { niche: "Self Improvement", title: "Stop Optimizing. Start Deciding.", hook: "Productivity culture wrecked me. Then I found the one shift that worked.", grade: "B", word: "Neglected" },
+              { niche: "Gaming", title: "The Pattern Behind Every Viral Game Launch", hook: "Steam's recommendation engine isn't random. I mapped it out.", grade: "S", word: "Decoded" },
+              { niche: "Motivation", title: "You're Not Tired. You're Running the Wrong System.", hook: "Most motivation advice targets effort. That's not the real bottleneck.", grade: "A", word: "Misjudged" },
+              { niche: "Health", title: "The Sleep Study That Rewrote 40 Years of Research", hook: "A 2021 paper in a medical journal flipped everything we thought we understood.", grade: "S", word: "Rewritten" },
+            ]).map((card, i) => {
+              const gc: Record<string,string> = { S:"#f59e0b", A:"#4db8ff", B:"#34d399" };
+              return (
+                <div key={i} style={{ flexShrink: 0, width: 300, borderRadius: 14, background: T.bg2, border: `1px solid ${T.border}`, padding: "16px 18px" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+                    <span style={{ fontSize: 9, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: T.bg, background: T.accent, padding: "2px 7px", borderRadius: 4 }}>{card.niche}</span>
+                    <span style={{ marginLeft: "auto", fontSize: 10, fontWeight: 700, color: gc[card.grade], background: `${gc[card.grade]}18`, padding: "2px 7px", borderRadius: 4 }}>🧲 {card.word} · {card.grade}</span>
+                  </div>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: T.text, lineHeight: 1.35, marginBottom: 8 }}>{card.title}</div>
+                  <div style={{ fontSize: 11, color: T.muted, lineHeight: 1.6, fontStyle: "italic" }}>"{card.hook}"</div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Row 2 — Viral Magnet word pills + CTR stats, scroll right */}
+        <div style={{ overflow: "hidden" }}>
+          <div className="ticker-right">
+            {[
+              { word: "Uncovered",   grade: "S", lift: "+418%", cat: "Revelation" },
+              { word: "Reframed",    grade: "S", lift: "+382%", cat: "Contrast" },
+              { word: "Decoded",     grade: "S", lift: "+401%", cat: "Discovery" },
+              { word: "Overlooked",  grade: "A", lift: "+212%", cat: "Exclusivity" },
+              { word: "Neglected",   grade: "A", lift: "+185%", cat: "Problem" },
+              { word: "Rewritten",   grade: "S", lift: "+366%", cat: "Stakes" },
+              { word: "Misjudged",   grade: "A", lift: "+193%", cat: "Contrast" },
+              { word: "Shelved",      grade: "A", lift: "+220%", cat: "Intrigue" },
+              { word: "Suppressed",  grade: "A", lift: "+205%", cat: "Controversy" },
+              { word: "Underused",   grade: "B", lift: "+91%",  cat: "Opportunity" },
+              { word: "Overdue",     grade: "B", lift: "+79%",  cat: "Relief" },
+              { word: "Rediscovered",grade: "A", lift: "+238%", cat: "Emotion" },
+              { word: "Sidelined",   grade: "B", lift: "+108%", cat: "Stakes" },
+              { word: "Dismissed",   grade: "A", lift: "+198%", cat: "Intensity" },
+              { word: "Unpublished", grade: "A", lift: "+168%", cat: "Exclusivity" },
+              { word: "Derailed",    grade: "A", lift: "+177%", cat: "Stakes" },
+              { word: "Unverified",  grade: "A", lift: "+158%", cat: "Intrigue" },
+              { word: "Restricted",  grade: "A", lift: "+207%", cat: "Risk" },
+              { word: "Reassessed",  grade: "B", lift: "+76%",  cat: "Authenticity" },
+              { word: "Concealed",   grade: "B", lift: "+86%",  cat: "Intrigue" },
+            ].concat([
+              { word: "Uncovered",   grade: "S", lift: "+418%", cat: "Revelation" },
+              { word: "Reframed",    grade: "S", lift: "+382%", cat: "Contrast" },
+              { word: "Decoded",     grade: "S", lift: "+401%", cat: "Discovery" },
+              { word: "Overlooked",  grade: "A", lift: "+212%", cat: "Exclusivity" },
+              { word: "Neglected",   grade: "A", lift: "+185%", cat: "Problem" },
+              { word: "Rewritten",   grade: "S", lift: "+366%", cat: "Stakes" },
+              { word: "Misjudged",   grade: "A", lift: "+193%", cat: "Contrast" },
+              { word: "Shelved",      grade: "A", lift: "+220%", cat: "Intrigue" },
+              { word: "Suppressed",  grade: "A", lift: "+205%", cat: "Controversy" },
+              { word: "Underused",   grade: "B", lift: "+91%",  cat: "Opportunity" },
+              { word: "Overdue",     grade: "B", lift: "+79%",  cat: "Relief" },
+              { word: "Rediscovered",grade: "A", lift: "+238%", cat: "Emotion" },
+              { word: "Sidelined",   grade: "B", lift: "+108%", cat: "Stakes" },
+              { word: "Dismissed",   grade: "A", lift: "+198%", cat: "Intensity" },
+              { word: "Unpublished", grade: "A", lift: "+168%", cat: "Exclusivity" },
+              { word: "Derailed",    grade: "A", lift: "+177%", cat: "Stakes" },
+              { word: "Unverified",  grade: "A", lift: "+158%", cat: "Intrigue" },
+              { word: "Restricted",  grade: "A", lift: "+207%", cat: "Risk" },
+              { word: "Reassessed",  grade: "B", lift: "+76%",  cat: "Authenticity" },
+              { word: "Concealed",   grade: "B", lift: "+86%",  cat: "Intrigue" },
+            ]).map((w, i) => {
+              const gc: Record<string,string> = { S:"#f59e0b", A:"#4db8ff", B:"#34d399" };
+              const c = gc[w.grade] || T.accent;
+              return (
+                <div key={i} style={{ flexShrink: 0, display: "flex", alignItems: "center", gap: 10, padding: "10px 16px", borderRadius: 40, background: T.bg2, border: `1px solid ${T.border}` }}>
+                  <span style={{ fontSize: 13, fontWeight: 700, color: c }}>{w.word}</span>
+                  <span style={{ fontSize: 9, fontWeight: 700, color: T.bg, background: c, padding: "1px 5px", borderRadius: 3 }}>{w.grade}</span>
+                  <span style={{ fontSize: 11, color: T.muted }}>{w.cat}</span>
+                  <span style={{ fontSize: 11, fontWeight: 700, color: c, marginLeft: 4 }}>{w.lift} CTR</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* ── DEMO WINDOW ── */}
+        <div style={{ margin: "0 auto", maxWidth: 860, border: `1px solid ${T.border}`, background: T.bg2 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 7, padding: "10px 14px", borderBottom: `1px solid ${T.border}`, background: T.bg }}>
             {["#2a3040","#2a3040","#2a3040"].map((c, i) => (
               <div key={i} style={{ width: 8, height: 8, borderRadius: "50%", background: c }} />
             ))}
-            <span style={{ fontSize: 10, color: T.dim, letterSpacing: "0.05em", fontFamily: "monospace", marginLeft: 6 }}>
+            <span style={{ fontSize: 12, color: T.dim, letterSpacing: "0.05em", fontFamily: "monospace", marginLeft: 6 }}>
               skripr.vercel.app/dashboard/scripts/new
             </span>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "200px 1fr", minHeight: 200 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "220px 1fr", minHeight: 240 }}>
             <div style={{ borderRight: `1px solid ${T.border}`, padding: 16, display: "flex", flexDirection: "column" as const, gap: 10 }}>
               {[
-                ["YouTube URL", "youtube.com/watch?v=dQw4w9...", true],
+                ["YouTube URL", "youtube.com/watch?v=ZpAFB3uRnME", true],
                 ["Niche", "Personal Finance", false],
                 ["Length", "8 minutes", false],
               ].map(([lbl, val, isUrl]) => (
                 <div key={lbl as string}>
-                  <div style={{ fontSize: 9, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase" as const, color: T.dim, marginBottom: 3 }}>{lbl}</div>
+                  <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase" as const, color: T.dim, marginBottom: 4 }}>{lbl}</div>
                   <div style={{ fontSize: isUrl ? 10 : 11, color: isUrl ? T.accent : T.muted, padding: "7px 8px", border: `1px solid ${T.border}`, background: T.bg, lineHeight: 1.3, wordBreak: "break-all" as const }}>{val}</div>
                 </div>
               ))}
-              <button style={{ background: T.accent, color: T.bg, fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" as const, padding: 9, border: "none", cursor: "pointer", marginTop: 2 }}>
+              <button style={{ background: T.accent, color: T.bg, fontSize: 12, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase" as const, padding: 11, border: "none", cursor: "pointer", marginTop: 4 }}>
                 ⚡ Generate
               </button>
-              <div style={{ display: "inline-flex", alignItems: "center", gap: 4, background: `${T.accent}0c`, border: `1px solid ${T.accent}22`, fontSize: 9, fontWeight: 600, color: T.accent, padding: "3px 7px", letterSpacing: ".04em", marginTop: 4 }}>
-                Viral Magnet: "Untold" · S · +420%
+              <div style={{ display: "inline-flex", alignItems: "center", gap: 4, background: `${T.accent}0c`, border: `1px solid ${T.accent}22`, fontSize: 11, fontWeight: 600, color: T.accent, padding: "5px 9px", letterSpacing: ".04em", marginTop: 6 }}>
+                Viral Magnet: "Changed" · A · +188%
               </div>
             </div>
             <div style={{ padding: "16px 20px" }}>
-              <div style={{ fontSize: 13, fontWeight: 600, letterSpacing: "-0.2px", color: T.text, marginBottom: 7, lineHeight: 1.3 }}>
-                The Untold Money Mistake That's Silently Draining Your Savings
+              <div style={{ fontSize: 15, fontWeight: 600, letterSpacing: "-0.3px", color: T.text, marginBottom: 9, lineHeight: 1.3 }}>
+                How I Manage My Money — The 6-Account System That Changed Everything
               </div>
-              <div style={{ fontSize: 11, color: T.accent, fontStyle: "italic", marginBottom: 9 }}>
-                "What if everything you know about saving is designed to fail?"
+              <div style={{ fontSize: 13, color: T.accent, fontStyle: "italic", marginBottom: 11 }}>
+                "Most people manage their money wrong — and I'll show you the exact system I use instead."
               </div>
-              <div style={{ fontSize: 11, color: T.muted, lineHeight: 1.7, fontWeight: 300 }}>
-                Let me show you something that took me 3 years to figure out — hiding in plain sight in your bank account right now.
+              <div style={{ fontSize: 13, color: T.muted, lineHeight: 1.7, fontWeight: 300 }}>
+                I used to be terrible with money. Then I stumbled on a system so simple it felt almost too obvious — and it completely changed how I handle every dollar I make.
                 <span style={{ display: "inline-block", width: 1.5, height: 11, background: T.accent, marginLeft: 2, verticalAlign: "middle", animation: "blink 1s infinite" }} />
                 <br /><br />
-                The problem isn't discipline. It's the invisible architecture of how your money is structured — and the system benefits when you don't see it.
+                It's not about earning more. It's about where the money goes the moment it hits your account. Here's the exact 6-account setup I use...
               </div>
             </div>
           </div>
@@ -244,8 +427,8 @@ export default function LandingPage() {
             Works for creators in
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 20, flexWrap: "wrap" as const }}>
-            {["Finance","Tech","Fitness","Business","Lifestyle","Gaming","Education","Travel"].map((n, i, arr) => (
-              <span key={n} style={{ fontSize: 11, color: T.dim, letterSpacing: "0.04em" }}>
+            {["True Crime","Psychology","Storytelling","History","Lifestyle","Gaming","Finance","Self Improvement","Motivation","Health"].map((n, i, arr) => (
+              <span key={n} style={{ fontSize: 13, color: T.dim, letterSpacing: "0.03em" }}>
                 {n}{i < arr.length - 1 && <span style={{ marginLeft: 20, color: T.border }}>·</span>}
               </span>
             ))}
@@ -300,7 +483,7 @@ export default function LandingPage() {
           { n: "10", sup: "×", label: "Faster than manual research" },
           { n: "2",  sup: "",  label: "Free scripts on signup" },
         ].map(({ n, sup, label }) => (
-          <div key={label} style={{ background: T.bg, padding: "28px 24px" }}>
+          <div key={label} style={{ background: T.bg, padding: "28px 24px", textAlign: "center" as const }}>
             <div style={{ fontSize: 34, fontWeight: 700, letterSpacing: "-1.5px", color: T.accent, lineHeight: 1 }}>
               {n}<sup style={{ fontSize: 18, fontWeight: 200, verticalAlign: "top", marginTop: 4, display: "inline-block" }}>{sup}</sup>
             </div>
@@ -318,14 +501,14 @@ export default function LandingPage() {
           <div style={{ padding: "32px 24px" }}>
             <SectionLabel>Script Generator</SectionLabel>
             <div style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.5px", color: T.text, marginBottom: 10, lineHeight: 1.1 }}>Any URL.<br />Full script.</div>
-            <div style={{ fontSize: 12, fontWeight: 300, color: T.muted, lineHeight: 1.65 }}>
+            <div style={{ fontSize: 14, fontWeight: 400, color: T.dim, lineHeight: 1.7 }}>
               Paste a YouTube URL. Skripr pulls the transcript, analyzes the narrative structure, and rebuilds it as a fully formatted, ready-to-record script adapted to your niche and target length.
             </div>
             <FeatTag color={T.green}>All plans</FeatTag>
           </div>
           <div className="hn-feat-artifact">
             <TermLine type="comment"># Extracting transcript</TermLine>
-            <TermLine type="out">→ youtube.com/watch?v=dQw4w9WgXcQ</TermLine>
+            <TermLine type="out">→ youtube.com/watch?v=ZpAFB3uRnME</TermLine>
             <TermLine type="check">✓ 2,335 words extracted</TermLine>
             <TermLine type="check">✓ Structure analyzed</TermLine>
             <TermLine type="check">✓ Niche matched: Finance</TermLine>
@@ -343,7 +526,7 @@ export default function LandingPage() {
           <div style={{ padding: "32px 24px" }}>
             <SectionLabel>Viral Magnet</SectionLabel>
             <div style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.5px", color: T.text, marginBottom: 10, lineHeight: 1.1 }}>Stop guessing<br />titles.</div>
-            <div style={{ fontSize: 12, fontWeight: 300, color: T.muted, lineHeight: 1.65 }}>
+            <div style={{ fontSize: 14, fontWeight: 400, color: T.dim, lineHeight: 1.7 }}>
               Power words graded by click psychology and YouTube search behavior. Each word shows a predicted CTR lift. Pick one — it auto-injects into your title and script hook.
             </div>
             <FeatTag>Starter+</FeatTag>
@@ -354,7 +537,7 @@ export default function LandingPage() {
               <div style={{ fontSize: 9, fontWeight: 500, letterSpacing: "0.12em", textTransform: "uppercase" as const, color: T.dim, marginBottom: 12 }}>
                 Finance niche · power words
               </div>
-              <div style={{ display: "flex", flexWrap: "wrap" as const, gap: 6, filter: "blur(3.5px)", userSelect: "none" as const, pointerEvents: "none" as const }}>
+              <div style={{ display: "flex", flexWrap: "wrap" as const, gap: 6, filter: "none", userSelect: "none" as const }}>
                 {DECOY_WORDS.map(({ word, grade, lift, color }) => (
                   <span key={word} className="hn-word" style={{ background: `${color}0a`, borderColor: `${color}33`, color }}>
                     {word} <span style={{ fontSize: 8, fontWeight: 600, opacity: 0.6, marginLeft: 2 }}>{grade} {lift}</span>
@@ -362,22 +545,7 @@ export default function LandingPage() {
                 ))}
               </div>
             </div>
-            <div style={{
-              position: "absolute", inset: 0,
-              display: "flex", flexDirection: "column" as const, alignItems: "center", justifyContent: "center",
-              gap: 8, background: "rgba(6,10,15,0.88)", textAlign: "center" as const, padding: 24,
-            }}>
-              <div style={{ fontSize: 22, lineHeight: 1 }}>🔒</div>
-              <div style={{ fontSize: 13, fontWeight: 600, color: T.text, letterSpacing: "-0.1px" }}>Starter+ feature</div>
-              <div style={{ fontSize: 11, fontWeight: 300, color: T.muted, maxWidth: 200, lineHeight: 1.55 }}>
-                Upgrade to unlock Viral Magnet words and CTR predictions
-              </div>
-              <Link href="/pricing" style={{
-                marginTop: 6, background: T.accent, color: T.bg,
-                fontSize: 10, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase" as const,
-                padding: "9px 20px", textDecoration: "none",
-              }}>Upgrade to Starter →</Link>
-            </div>
+
           </div>
         </div>
 
@@ -387,7 +555,7 @@ export default function LandingPage() {
           <div style={{ padding: "32px 24px" }}>
             <SectionLabel>Viral Remixer</SectionLabel>
             <div style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.5px", color: T.text, marginBottom: 10, lineHeight: 1.1 }}>Any viral video.<br />Your version.</div>
-            <div style={{ fontSize: 12, fontWeight: 300, color: T.muted, lineHeight: 1.65 }}>
+            <div style={{ fontSize: 14, fontWeight: 400, color: T.dim, lineHeight: 1.7 }}>
               Takes any high-performing video concept and rebuilds it from scratch in your voice, your niche, your style. Same structural DNA — entirely original output.
             </div>
             <FeatTag>Starter+</FeatTag>
@@ -405,13 +573,39 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {/* 04 — Hook Engine */}
+        {/* 04 — Niche Bend */}
         <div className="hn-feat-row">
           <div style={{ fontSize: 11, fontWeight: 400, letterSpacing: "0.1em", color: T.dim, padding: "32px 24px", borderRight: `1px solid ${T.border}` }}>04</div>
           <div style={{ padding: "32px 24px" }}>
+            <SectionLabel>Niche Bend</SectionLabel>
+            <div style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.5px", color: T.text, marginBottom: 10, lineHeight: 1.1 }}>Any video.<br />10 new angles.</div>
+            <div style={{ fontSize: 14, fontWeight: 400, color: T.dim, lineHeight: 1.7 }}>
+              Take any viral video and cross-pollinate it into niches your competitors haven't touched. Viral Magnet injection built in — every angle pre-optimized for CTR.
+            </div>
+            <FeatTag>Starter+</FeatTag>
+          </div>
+          <div className="hn-feat-artifact">
+            <TermLine type="comment"># Finance video → bending to 5 niches</TermLine>
+            <TermLine type="out">→ Fitness: "The Untold Reason Your Progress Stalled"</TermLine>
+            <TermLine type="out">→ Tech: "Silently Draining Your Startup Budget"</TermLine>
+            <TermLine type="out">→ Business: "The Brutal Truth About Why Agencies Fail"</TermLine>
+            <TermLine type="out">→ Parenting: "Money Mistakes Parents Make Without Knowing"</TermLine>
+            <TermLine type="out">→ Gaming: "Shocking Economy Tricks Top Players Never Share"</TermLine>
+            <br />
+            <TermLine type="check">✓ Viral Magnet injected on all 10</TermLine>
+          </div>
+        </div>
+
+      </div>
+
+      {/* ── PRICING ── */}
+        {/* 05 — Hook Engine */}
+        <div className="hn-feat-row">
+          <div style={{ fontSize: 11, fontWeight: 400, letterSpacing: "0.1em", color: T.dim, padding: "32px 24px", borderRight: `1px solid ${T.border}` }}>05</div>
+          <div style={{ padding: "32px 24px" }}>
             <SectionLabel>Hook Engine</SectionLabel>
             <div style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.5px", color: T.text, marginBottom: 10, lineHeight: 1.1 }}>10 hooks.<br />Ranked.</div>
-            <div style={{ fontSize: 12, fontWeight: 300, color: T.muted, lineHeight: 1.65 }}>
+            <div style={{ fontSize: 14, fontWeight: 400, color: T.dim, lineHeight: 1.7 }}>
               Every script gets 10 opening hooks across different psychological patterns — curiosity loops, controversy openers, pattern interrupts, stat shocks. Each scored for predicted audience retention.
             </div>
             <FeatTag color={T.green}>All plans</FeatTag>
@@ -428,13 +622,13 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {/* 05 — A/B Titles */}
+        {/* 06 — A/B Titles */}
         <div className="hn-feat-row">
-          <div style={{ fontSize: 11, fontWeight: 400, letterSpacing: "0.1em", color: T.dim, padding: "32px 24px", borderRight: `1px solid ${T.border}` }}>05</div>
+          <div style={{ fontSize: 11, fontWeight: 400, letterSpacing: "0.1em", color: T.dim, padding: "32px 24px", borderRight: `1px solid ${T.border}` }}>06</div>
           <div style={{ padding: "32px 24px" }}>
             <SectionLabel>A/B Titles</SectionLabel>
             <div style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.5px", color: T.text, marginBottom: 10, lineHeight: 1.1 }}>Test before<br />you publish.</div>
-            <div style={{ fontSize: 12, fontWeight: 300, color: T.muted, lineHeight: 1.65 }}>
+            <div style={{ fontSize: 14, fontWeight: 400, color: T.dim, lineHeight: 1.7 }}>
               Generate multiple title variants for every script — each one testing a different angle, emotion, or Viral Magnet word. Know which one to lead with before you upload.
             </div>
             <FeatTag color={T.green}>All plans</FeatTag>
@@ -452,13 +646,13 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {/* 06 — Metadata Suite */}
+        {/* 07 — Metadata Suite */}
         <div className="hn-feat-row">
-          <div style={{ fontSize: 11, fontWeight: 400, letterSpacing: "0.1em", color: T.dim, padding: "32px 24px", borderRight: `1px solid ${T.border}` }}>06</div>
+          <div style={{ fontSize: 11, fontWeight: 400, letterSpacing: "0.1em", color: T.dim, padding: "32px 24px", borderRight: `1px solid ${T.border}` }}>07</div>
           <div style={{ padding: "32px 24px" }}>
             <SectionLabel>Metadata Suite</SectionLabel>
             <div style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.5px", color: T.text, marginBottom: 10, lineHeight: 1.1 }}>Titles, tags,<br />descriptions.</div>
-            <div style={{ fontSize: 12, fontWeight: 300, color: T.muted, lineHeight: 1.65 }}>
+            <div style={{ fontSize: 14, fontWeight: 400, color: T.dim, lineHeight: 1.7 }}>
               SEO-optimized titles, YouTube descriptions, and a full 30-tag set — generated from your script content. Never leave search discovery value on the table before you publish.
             </div>
             <FeatTag color={T.green}>All plans</FeatTag>
@@ -476,13 +670,13 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {/* 07 — Compliance Checker */}
+        {/* 08 — Compliance Checker */}
         <div className="hn-feat-row">
-          <div style={{ fontSize: 11, fontWeight: 400, letterSpacing: "0.1em", color: T.dim, padding: "32px 24px", borderRight: `1px solid ${T.border}` }}>07</div>
+          <div style={{ fontSize: 11, fontWeight: 400, letterSpacing: "0.1em", color: T.dim, padding: "32px 24px", borderRight: `1px solid ${T.border}` }}>08</div>
           <div style={{ padding: "32px 24px" }}>
             <SectionLabel>Compliance Checker</SectionLabel>
             <div style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.5px", color: T.text, marginBottom: 10, lineHeight: 1.1 }}>Score before<br />you record.</div>
-            <div style={{ fontSize: 12, fontWeight: 300, color: T.muted, lineHeight: 1.65 }}>
+            <div style={{ fontSize: 14, fontWeight: 400, color: T.dim, lineHeight: 1.7 }}>
               Run your script through YouTube's advertiser-friendliness guidelines before you hit record. Get a score, a category breakdown, and rewrite suggestions — not after demonetization.
             </div>
             <FeatTag color={T.green}>All plans</FeatTag>
@@ -511,38 +705,12 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {/* 08 — Niche Bend */}
-        <div className="hn-feat-row">
-          <div style={{ fontSize: 11, fontWeight: 400, letterSpacing: "0.1em", color: T.dim, padding: "32px 24px", borderRight: `1px solid ${T.border}` }}>08</div>
-          <div style={{ padding: "32px 24px" }}>
-            <SectionLabel>Niche Bend</SectionLabel>
-            <div style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.5px", color: T.text, marginBottom: 10, lineHeight: 1.1 }}>Any video.<br />10 new angles.</div>
-            <div style={{ fontSize: 12, fontWeight: 300, color: T.muted, lineHeight: 1.65 }}>
-              Take any viral video and cross-pollinate it into niches your competitors haven't touched. Viral Magnet injection built in — every angle pre-optimized for CTR.
-            </div>
-            <FeatTag>Starter+</FeatTag>
-          </div>
-          <div className="hn-feat-artifact">
-            <TermLine type="comment"># Finance video → bending to 5 niches</TermLine>
-            <TermLine type="out">→ Fitness: "The Untold Reason Your Progress Stalled"</TermLine>
-            <TermLine type="out">→ Tech: "Silently Draining Your Startup Budget"</TermLine>
-            <TermLine type="out">→ Business: "The Brutal Truth About Why Agencies Fail"</TermLine>
-            <TermLine type="out">→ Parenting: "Money Mistakes Parents Make Without Knowing"</TermLine>
-            <TermLine type="out">→ Gaming: "Shocking Economy Tricks Top Players Never Share"</TermLine>
-            <br />
-            <TermLine type="check">✓ Viral Magnet injected on all 10</TermLine>
-          </div>
-        </div>
-
-      </div>
-
-      {/* ── PRICING ── */}
-      <div id="pricing" style={{ padding: "72px 48px" }}>
-        <SectionLabel>Pricing</SectionLabel>
-        <div style={{ fontSize: 32, fontWeight: 700, letterSpacing: "-1px", color: T.text, lineHeight: 1.05, marginBottom: 10 }}>
+      <div id="pricing" style={{ padding: "72px 48px", maxWidth: 1100, margin: "0 auto" }}>
+        <div style={{ textAlign: "center" }}><SectionLabel>Pricing</SectionLabel></div>
+        <div style={{ fontSize: 32, fontWeight: 700, letterSpacing: "-1px", color: T.text, lineHeight: 1.05, marginBottom: 10, textAlign: "center" as const }}>
           Simple. No surprises.
         </div>
-        <div style={{ fontSize: 14, fontWeight: 300, color: T.muted, maxWidth: 420, lineHeight: 1.6, marginBottom: 48 }}>
+        <div style={{ fontSize: 14, fontWeight: 300, color: T.muted, maxWidth: 420, lineHeight: 1.6, marginBottom: 48, textAlign: "center", margin: "0 auto 48px" }}>
           Start with 2 free scripts. No card required.
         </div>
 
@@ -562,47 +730,59 @@ export default function LandingPage() {
                 <Check /> {f}
               </div>
             ))}
-            <Link href="/pricing" className="hn-price-btn" style={{
+            <button onClick={() => handleCheckout("starter")} className="hn-price-btn" style={{
               display: "block", width: "100%", marginTop: 24, padding: 10,
-              fontSize: 11, fontWeight: 400, letterSpacing: "0.08em", textTransform: "uppercase" as const,
-              textDecoration: "none", textAlign: "center" as const,
+              fontSize: 11, fontWeight: 400, letterSpacing: "0.08em", textTransform: "uppercase",
+              textAlign: "center", cursor: "pointer",
               background: "transparent", color: T.muted, border: `1px solid ${T.border}`,
-            }}>Get Starter</Link>
+            }}>Get Starter</button>
           </div>
 
           {/* Pro — featured */}
-          <div className="hn-price-card hn-price-featured">
-            <div style={{ fontSize: 9, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase" as const, color: T.bg, background: T.accent, padding: "3px 8px", display: "inline-block", marginBottom: 12 }}>
-              Most Popular
-            </div>
-            <div style={{ fontSize: 10, fontWeight: 500, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: T.dim, marginBottom: 16 }}>Pro</div>
-            <div style={{ display: "flex", alignItems: "baseline", gap: 2, marginBottom: 4 }}>
-              <span style={{ fontSize: 36, fontWeight: 700, letterSpacing: "-2px", color: T.text, lineHeight: 1 }}>$39</span>
-              <span style={{ fontSize: 12, color: T.dim, fontWeight: 300 }}>/mo</span>
-            </div>
-            <div style={{ fontSize: 11, color: T.dim, marginBottom: 20 }}>50 scripts / month</div>
-            <div style={{ height: 1, background: T.border, margin: "16px 0" }} />
-            {[
-              "50 scripts / month",
-              "Niche Bend Engine",
-              "Viral Remixer",
-              "Viral Magnet Titles",
-              "Metadata & A/B Testing",
-              "Compliance Checker (20/mo)",
-              "Priority generation",
-            ].map(f => (
-              <div key={f} style={{ fontSize: 12, color: T.muted, padding: "4px 0", display: "flex", alignItems: "center", gap: 8, fontWeight: 300 }}>
-                <Check /> {f}
+          <div style={{ position: "relative", padding: "2px", background: T.bg2, overflow: "hidden" }}>
+            {/* Spinning beam — oversized rotating div behind card */}
+            <div style={{
+              position: "absolute",
+              top: "50%", left: "50%",
+              width: "350%", height: "350%",
+              transform: "translate(-50%, -50%)",
+              background: `conic-gradient(from 0deg, transparent 0deg, transparent 158deg, #1a6aaa 163deg, #4db8ff 168deg, #9ce4ff 172deg, #4db8ff 176deg, #1a6aaa 181deg, transparent 186deg, transparent 360deg)`,
+              animation: "spin-border 2.5s linear infinite",
+              zIndex: 0,
+            }} />
+            {/* Card content sits on top */}
+            <div className="hn-price-card" style={{ position: "relative", zIndex: 1, background: T.bg2 }}>
+              <div style={{ fontSize: 9, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase" as const, color: T.bg, background: T.accent, padding: "3px 8px", display: "inline-block", marginBottom: 12 }}>
+                Most Popular
               </div>
-            ))}
-            <Link href="/pricing" className="hn-price-btn" style={{
-              display: "block", width: "100%", marginTop: 24, padding: 10,
-              fontSize: 11, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase" as const,
-              textDecoration: "none", textAlign: "center" as const,
-              background: T.accent, color: T.bg, border: "none",
-            }}>Get Pro →</Link>
+              <div style={{ fontSize: 10, fontWeight: 500, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: T.dim, marginBottom: 16 }}>Pro</div>
+              <div style={{ display: "flex", alignItems: "baseline", gap: 2, marginBottom: 4 }}>
+                <span style={{ fontSize: 36, fontWeight: 700, letterSpacing: "-2px", color: T.text, lineHeight: 1 }}>$39</span>
+                <span style={{ fontSize: 12, color: T.dim, fontWeight: 300 }}>/mo</span>
+              </div>
+              <div style={{ fontSize: 11, color: T.dim, marginBottom: 20 }}>50 scripts / month</div>
+              <div style={{ height: 1, background: T.border, margin: "16px 0" }} />
+              {[
+                "50 scripts / month",
+                "Niche Bend Engine",
+                "Viral Remixer",
+                "Viral Magnet Titles",
+                "Metadata & A/B Testing",
+                "Compliance Checker (20/mo)",
+                "Priority generation",
+              ].map(f => (
+                <div key={f} style={{ fontSize: 12, color: T.muted, padding: "4px 0", display: "flex", alignItems: "center", gap: 8, fontWeight: 300 }}>
+                  <Check /> {f}
+                </div>
+              ))}
+              <button onClick={() => handleCheckout("pro")} className="hn-price-btn" style={{
+                display: "block", width: "100%", marginTop: 24, padding: 10,
+                fontSize: 11, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase",
+                textAlign: "center", cursor: "pointer",
+                background: T.accent, color: T.bg, border: "none",
+              }}>Get Pro →</button>
+            </div>
           </div>
-
           {/* Agency */}
           <div className="hn-price-card">
             <div style={{ fontSize: 10, fontWeight: 500, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: T.dim, marginBottom: 16 }}>Agency</div>
@@ -626,19 +806,19 @@ export default function LandingPage() {
                 <Check /> {f}
               </div>
             ))}
-            <Link href="/pricing" className="hn-price-btn" style={{
+            <button onClick={() => handleCheckout("agency")} className="hn-price-btn" style={{
               display: "block", width: "100%", marginTop: 24, padding: 10,
-              fontSize: 11, fontWeight: 400, letterSpacing: "0.08em", textTransform: "uppercase" as const,
-              textDecoration: "none", textAlign: "center" as const,
+              fontSize: 11, fontWeight: 400, letterSpacing: "0.08em", textTransform: "uppercase",
+              textAlign: "center", cursor: "pointer",
               background: "transparent", color: T.muted, border: `1px solid ${T.border}`,
-            }}>Get Agency</Link>
+            }}>Get Agency</button>
           </div>
 
         </div>
 
         <div style={{ marginTop: 20, fontSize: 11, color: T.dim, textAlign: "center" as const }}>
           Questions?{" "}
-          <a href="mailto:hello@skripr.com" style={{ color: T.accent, textDecoration: "none" }}>hello@skripr.com</a>
+          <a href="mailto:skripr.app@gmail.com" style={{ color: T.accent, textDecoration: "none" }}>skripr.app@gmail.com</a>
         </div>
       </div>
 

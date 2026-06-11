@@ -4,14 +4,14 @@ import { useState, useMemo } from "react";
 import type { Script } from "@/lib/types/script";
 
 const C = {
-  cardBg: "#12122a",
-  border: "rgba(99,102,241,0.12)",
-  accent: "#818cf8",
-  textDim: "#64748b",
-  textBright: "#f1f5f9",
-  badgeBg: "rgba(99,102,241,0.12)",
-  badgeText: "#a5b4fc",
-  inputBg: "#1a1a3a",
+  cardBg: "#0d1520",
+  border: "rgba(77,184,255,0.11)",
+  accent: "#4db8ff",
+  textDim: "#7a9bb5",
+  textBright: "#e8edf5",
+  badgeBg: "rgba(77,184,255,0.11)",
+  badgeText: "#7ed8ff",
+  inputBg: "#0a1220",
 };
 
 function timeAgo(dateStr: string): string {
@@ -70,7 +70,7 @@ export function ScriptList({ scripts }: { scripts: Script[] }) {
     border: `1px solid ${C.border}`,
     borderRadius: 10,
     color: C.textBright,
-    fontSize: 13,
+    fontSize: 15,
     padding: "8px 12px",
     outline: "none",
   } as const;
@@ -109,13 +109,13 @@ export function ScriptList({ scripts }: { scripts: Script[] }) {
 
       {/* ── Results count ── */}
       {(search || filterNiche !== "all") && (
-        <p style={{ fontSize: 12, color: C.textDim, marginBottom: 12 }}>
+        <p style={{ fontSize: 14, color: C.textDim, marginBottom: 12 }}>
           {filtered.length} of {scriptList.length} scripts
           {search && <span> matching "{search}"</span>}
           {filterNiche !== "all" && <span> in {filterNiche}</span>}
           <button
             onClick={() => { setSearch(""); setFilterNiche("all"); }}
-            style={{ marginLeft: 8, fontSize: 11, color: C.accent, background: "none", border: "none", cursor: "pointer" }}
+            style={{ marginLeft: 8, fontSize: 13, color: C.accent, background: "none", border: "none", cursor: "pointer" }}
           >
             Clear ✕
           </button>
@@ -125,7 +125,7 @@ export function ScriptList({ scripts }: { scripts: Script[] }) {
       {/* ── Empty search state ── */}
       {filtered.length === 0 && (
         <div style={{ textAlign: "center", padding: "40px 24px", borderRadius: 14, background: C.cardBg, border: `1px solid ${C.border}` }}>
-          <p style={{ color: C.textDim, fontSize: 14, margin: 0 }}>No scripts match your search.</p>
+          <p style={{ color: C.textDim, fontSize: 16, margin: 0 }}>No scripts match your search.</p>
         </div>
       )}
 
@@ -135,40 +135,40 @@ export function ScriptList({ scripts }: { scripts: Script[] }) {
           <div key={script.id} style={{ borderRadius: 16, backgroundColor: C.cardBg, border: `1px solid ${C.border}`, padding: "20px 22px" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16 }}>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <h3 style={{ fontSize: 16, fontWeight: 600, color: C.textBright, marginBottom: 8, letterSpacing: -0.2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                <h3 style={{ fontSize: 17, fontWeight: 600, color: "#e8edf5", marginBottom: 8, letterSpacing: -0.2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                   {script.title}
                 </h3>
                 <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
                   {script.niche && (
-                    <span style={{ padding: "3px 10px", borderRadius: 8, backgroundColor: C.badgeBg, color: C.badgeText, fontSize: 11, fontWeight: 600, letterSpacing: 0.3, textTransform: "uppercase" }}>
+                    <span style={{ padding: "3px 10px", borderRadius: 8, backgroundColor: C.badgeBg, color: C.badgeText, fontSize: 13, fontWeight: 600, letterSpacing: 0.3, textTransform: "uppercase" }}>
                       {script.niche}
                     </span>
                   )}
-                  <span style={{ color: C.textDim, fontSize: 13 }}>{(script.word_count || 0).toLocaleString()} words</span>
-                  <span style={{ color: C.textDim, fontSize: 13 }}>~{Math.round((script.estimated_duration || 0) / 60) || 1} min</span>
-                  {script.created_at && <span style={{ color: C.textDim, fontSize: 13 }}>{timeAgo(script.created_at)}</span>}
+                  <span style={{ color: "#8abadc", fontSize: 15 }}>{(script.word_count || 0).toLocaleString()} words</span>
+                  <span style={{ color: "#8abadc", fontSize: 15 }}>~{Math.round((script.estimated_duration || 0) / 60) || 1} min</span>
+                  {script.created_at && <span style={{ color: "#8abadc", fontSize: 15 }}>{timeAgo(script.created_at)}</span>}
                 </div>
               </div>
               <div style={{ display: "flex", gap: 8, flexShrink: 0, alignItems: "center" }}>
                 <Link
                   href={`/dashboard/scripts/${script.id}`}
-                  style={{ padding: "7px 16px", borderRadius: 10, backgroundColor: "rgba(99,102,241,0.10)", color: C.accent, fontSize: 13, fontWeight: 500, textDecoration: "none", border: "1px solid rgba(99,102,241,0.18)" }}
+                  style={{ padding: "7px 16px", borderRadius: 10, backgroundColor: "rgba(77,184,255,0.09)", color: C.accent, fontSize: 15, fontWeight: 500, textDecoration: "none", border: "1px solid rgba(77,184,255,0.16)" }}
                 >
                   View
                 </Link>
                 {confirmDelete === script.id ? (
                   <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
-                    <span style={{ fontSize: 11, color: "#f87171" }}>Delete?</span>
+                    <span style={{ fontSize: 13, color: "#f87171" }}>Delete?</span>
                     <button
                       onClick={() => handleDelete(script.id)}
                       disabled={deleting === script.id}
-                      style={{ fontSize: 11, fontWeight: 700, color: "#fff", background: "#dc2626", border: "none", borderRadius: 6, padding: "4px 10px", cursor: "pointer" }}
+                      style={{ fontSize: 13, fontWeight: 700, color: "#fff", background: "#dc2626", border: "none", borderRadius: 6, padding: "4px 10px", cursor: "pointer" }}
                     >
                       {deleting === script.id ? "…" : "Yes"}
                     </button>
                     <button
                       onClick={() => setConfirmDelete(null)}
-                      style={{ fontSize: 11, color: C.textDim, background: "none", border: `1px solid ${C.border}`, borderRadius: 6, padding: "4px 8px", cursor: "pointer" }}
+                      style={{ fontSize: 13, color: C.textDim, background: "none", border: `1px solid ${C.border}`, borderRadius: 6, padding: "4px 8px", cursor: "pointer" }}
                     >
                       No
                     </button>
@@ -176,7 +176,7 @@ export function ScriptList({ scripts }: { scripts: Script[] }) {
                 ) : (
                   <button
                     onClick={() => setConfirmDelete(script.id)}
-                    style={{ fontSize: 11, color: "#64748b", background: "none", border: "1px solid rgba(248,113,113,0.20)", borderRadius: 6, padding: "4px 9px", cursor: "pointer" }}
+                    style={{ fontSize: 13, color: "#7a9bb5", background: "none", border: "1px solid rgba(248,113,113,0.20)", borderRadius: 6, padding: "4px 9px", cursor: "pointer" }}
                   >
                     🗑
                   </button>

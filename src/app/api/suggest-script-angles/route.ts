@@ -3,7 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 import Anthropic from "@anthropic-ai/sdk";
 
 const client = new Anthropic();
-export const maxDuration = 30;
+export const maxDuration = 120;
 
 export async function POST(req: Request) {
   const { userId } = await auth();

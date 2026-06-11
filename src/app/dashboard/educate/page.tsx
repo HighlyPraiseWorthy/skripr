@@ -3,15 +3,15 @@
 import { useState } from "react";
 
 const C = {
-  bg: "#0b0b17",
-  cardBg: "#12122a",
-  cardOpen: "#161630",
-  border: "rgba(99,102,241,0.12)",
-  borderOpen: "rgba(99,102,241,0.30)",
-  accent: "#818cf8",
-  text: "#e2e8f0",
-  textDim: "#64748b",
-  textBright: "#f1f5f9",
+  bg: "#080c12",
+  cardBg: "#0d1520",
+  cardOpen: "#0f1a28",
+  border: "rgba(77,184,255,0.11)",
+  borderOpen: "rgba(77,184,255,0.26)",
+  accent: "#4db8ff",
+  text: "#e8edf5",
+  textDim: "#7a9bb5",
+  textBright: "#e8edf5",
 };
 
 const levelColor = (level: string) =>
@@ -24,7 +24,7 @@ const levelColor = (level: string) =>
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div style={{ marginBottom: 20 }}>
-      <p style={{ fontSize: 11, fontWeight: 700, color: C.accent, letterSpacing: 0.6, marginBottom: 8, textTransform: "uppercase" }}>{title}</p>
+      <p style={{ fontSize: 13, fontWeight: 700, color: C.accent, letterSpacing: 0.6, marginBottom: 8, textTransform: "uppercase" }}>{title}</p>
       {children}
     </div>
   );
@@ -32,8 +32,8 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 
 function Tip({ children }: { children: React.ReactNode }) {
   return (
-    <div style={{ background: "rgba(99,102,241,0.08)", border: "1px solid rgba(99,102,241,0.18)", borderRadius: 10, padding: "10px 14px", marginTop: 10 }}>
-      <p style={{ fontSize: 13, color: "#a5b4fc", lineHeight: 1.6, margin: 0 }}>💡 <strong>Skripr tip:</strong> {children}</p>
+    <div style={{ background: "rgba(77,184,255,0.07)", border: "1px solid rgba(77,184,255,0.16)", borderRadius: 10, padding: "10px 14px", marginTop: 10 }}>
+      <p style={{ fontSize: 15, color: "#7ed8ff", lineHeight: 1.6, margin: 0 }}>💡 <strong>Skripr tip:</strong> {children}</p>
     </div>
   );
 }
@@ -43,8 +43,8 @@ function Bullet({ items }: { items: string[] }) {
     <div style={{ display: "flex", flexDirection: "column", gap: 6, marginTop: 6 }}>
       {items.map((item, i) => (
         <div key={i} style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
-          <span style={{ color: "#34d399", marginTop: 2, flexShrink: 0, fontSize: 12 }}>✓</span>
-          <p style={{ fontSize: 13, color: C.text, lineHeight: 1.6, margin: 0 }}>{item}</p>
+          <span style={{ color: "#34d399", marginTop: 2, flexShrink: 0, fontSize: 14 }}>✓</span>
+          <p style={{ fontSize: 15, color: C.text, lineHeight: 1.6, margin: 0 }}>{item}</p>
         </div>
       ))}
     </div>
@@ -62,7 +62,7 @@ const lessons = [
     content: (
       <div>
         <Section title="Why hooks make or break your channel">
-          <p style={{ fontSize: 13, color: C.text, lineHeight: 1.7 }}>YouTube's algorithm measures drop-off at the 0-30 second mark. If viewers leave early, your video gets buried. If they stay, you get pushed to more feeds. The hook is the single highest-leverage moment in your entire script.</p>
+          <p style={{ fontSize: 15, color: C.text, lineHeight: 1.7 }}>YouTube's algorithm measures drop-off at the 0-30 second mark. If viewers leave early, your video gets buried. If they stay, you get pushed to more feeds. The hook is the single highest-leverage moment in your entire script.</p>
         </Section>
         <Section title="The 8 proven hook patterns">
           <Bullet items={[
@@ -107,10 +107,10 @@ const lessons = [
           ]} />
         </Section>
         <Section title="The 0:30 retention cliff">
-          <p style={{ fontSize: 13, color: C.text, lineHeight: 1.7 }}>YouTube Analytics shows a consistent drop-off at exactly 30 seconds across almost every channel. This is when casual viewers decide if the video is worth their time. A Re-hook at this exact moment — a new angle, a pivot, a surprising reveal — resets their decision. Most creators ignore this moment. It's your biggest competitive advantage.</p>
+          <p style={{ fontSize: 15, color: C.text, lineHeight: 1.7 }}>YouTube Analytics shows a consistent drop-off at exactly 30 seconds across almost every channel. This is when casual viewers decide if the video is worth their time. A Re-hook at this exact moment — a new angle, a pivot, a surprising reveal — resets their decision. Most creators ignore this moment. It's your biggest competitive advantage.</p>
         </Section>
         <Section title="Open loops: what they are and why they work">
-          <p style={{ fontSize: 13, color: C.text, lineHeight: 1.7 }}>An open loop is an unanswered question. The human brain is wired to seek closure — it's called the Zeigarnik effect. When you say "I'll tell you exactly why in a moment" or "the reason will surprise you — but first", you create a mild tension the viewer needs resolved. The key is escalation: your second open loop must feel more urgent than your first, or viewers sense the pattern and stop caring.</p>
+          <p style={{ fontSize: 15, color: C.text, lineHeight: 1.7 }}>An open loop is an unanswered question. The human brain is wired to seek closure — it's called the Zeigarnik effect. When you say "I'll tell you exactly why in a moment" or "the reason will surprise you — but first", you create a mild tension the viewer needs resolved. The key is escalation: your second open loop must feel more urgent than your first, or viewers sense the pattern and stop caring.</p>
         </Section>
         <Tip>Skripr embeds these three mechanics (0:30 re-hook, escalating open loops, callback threading) into every script it generates. You don't have to think about placement — it's handled at the prompt level.</Tip>
       </div>
@@ -126,7 +126,7 @@ const lessons = [
     content: (
       <div>
         <Section title="What is niche bending?">
-          <p style={{ fontSize: 13, color: C.text, lineHeight: 1.7 }}>Niche bending is taking a concept, format, or hook pattern that performs well in one niche and transplanting it into another. A true-crime cold open applied to a personal finance video. A cooking challenge format applied to coding tutorials. The crossover creates novelty — and novelty gets clicks.</p>
+          <p style={{ fontSize: 15, color: C.text, lineHeight: 1.7 }}>Niche bending is taking a concept, format, or hook pattern that performs well in one niche and transplanting it into another. A true-crime cold open applied to a personal finance video. A cooking challenge format applied to coding tutorials. The crossover creates novelty — and novelty gets clicks.</p>
         </Section>
         <Section title="Why it works for the algorithm">
           <Bullet items={[
@@ -167,7 +167,7 @@ const lessons = [
     content: (
       <div>
         <Section title="How YouTube's content moderation works">
-          <p style={{ fontSize: 13, color: C.text, lineHeight: 1.7 }}>YouTube uses automated scanning on every upload — audio, video, and metadata. It flags content before human review even begins. Most demonetization happens automatically within minutes of upload, often before your video gains any traction. Flagged content shows a yellow dollar icon (limited ads) instead of green (full monetization).</p>
+          <p style={{ fontSize: 15, color: C.text, lineHeight: 1.7 }}>YouTube uses automated scanning on every upload — audio, video, and metadata. It flags content before human review even begins. Most demonetization happens automatically within minutes of upload, often before your video gains any traction. Flagged content shows a yellow dollar icon (limited ads) instead of green (full monetization).</p>
         </Section>
         <Section title="What gets flagged most often">
           <Bullet items={[
@@ -203,7 +203,7 @@ const lessons = [
     content: (
       <div>
         <Section title="What is an angle?">
-          <p style={{ fontSize: 13, color: C.text, lineHeight: 1.7 }}>An angle is the specific counterintuitive truth your video argues. Not the topic — the stance. Topic: 'morning routines'. Angle: 'Morning routines are a productivity trap designed by people who don't have jobs.' Same topic, completely different video. The angle is what your script defends from beginning to end.</p>
+          <p style={{ fontSize: 15, color: C.text, lineHeight: 1.7 }}>An angle is the specific counterintuitive truth your video argues. Not the topic — the stance. Topic: 'morning routines'. Angle: 'Morning routines are a productivity trap designed by people who don't have jobs.' Same topic, completely different video. The angle is what your script defends from beginning to end.</p>
         </Section>
         <Section title="What makes a strong angle">
           <Bullet items={[
@@ -244,16 +244,16 @@ const lessons = [
     content: (
       <div>
         <Section title="Why retention is the most important metric">
-          <p style={{ fontSize: 13, color: C.text, lineHeight: 1.7 }}>YouTube's ranking algorithm is primarily driven by watch time and retention rate. A video that 10,000 people watch for 80% of its length beats a video that 100,000 people watch for 10%. High retention tells YouTube the content is valuable — and YouTube rewards it with distribution. The goal isn't views, it's minutes watched.</p>
+          <p style={{ fontSize: 15, color: C.text, lineHeight: 1.7 }}>YouTube's ranking algorithm is primarily driven by watch time and retention rate. A video that 10,000 people watch for 80% of its length beats a video that 100,000 people watch for 10%. High retention tells YouTube the content is valuable — and YouTube rewards it with distribution. The goal isn't views, it's minutes watched.</p>
         </Section>
         <Section title="Mechanic 1: The 0:30 Re-Hook">
-          <p style={{ fontSize: 13, color: C.text, lineHeight: 1.7 }}>The 30-second mark is the single biggest drop-off point across YouTube. This is when casual viewers decide your video isn't worth their time. Placing a hard re-hook exactly here — a new tension, a pivot, a 'but here's what nobody mentions' moment — resets the viewer's decision to stay. This is mandatory in every Skripr-generated script.</p>
+          <p style={{ fontSize: 15, color: C.text, lineHeight: 1.7 }}>The 30-second mark is the single biggest drop-off point across YouTube. This is when casual viewers decide your video isn't worth their time. Placing a hard re-hook exactly here — a new tension, a pivot, a 'but here's what nobody mentions' moment — resets the viewer's decision to stay. This is mandatory in every Skripr-generated script.</p>
         </Section>
         <Section title="Mechanic 2: Escalating Open Loops">
-          <p style={{ fontSize: 13, color: C.text, lineHeight: 1.7 }}>Open loops exploit the Zeigarnik effect — the brain's compulsion to seek closure on unfinished questions. Plant your first open loop at the 1/3 mark of the video. Plant a second, more urgent open loop at the 2/3 mark. The second must feel higher-stakes than the first — not just 'another question' but 'the stakes just got higher'. Viewers feel it would be a mistake to leave before the resolution.</p>
+          <p style={{ fontSize: 15, color: C.text, lineHeight: 1.7 }}>Open loops exploit the Zeigarnik effect — the brain's compulsion to seek closure on unfinished questions. Plant your first open loop at the 1/3 mark of the video. Plant a second, more urgent open loop at the 2/3 mark. The second must feel higher-stakes than the first — not just 'another question' but 'the stakes just got higher'. Viewers feel it would be a mistake to leave before the resolution.</p>
         </Section>
         <Section title="Mechanic 3: Callback Threading">
-          <p style={{ fontSize: 13, color: C.text, lineHeight: 1.7 }}>In the first 20% of your script, plant a detail that seems throwaway — a specific name, a number, an odd aside. In the final 20%, return to it and pay it off. The callback creates the 'I can't believe that came back' moment. It makes the video feel designed, not improvised. This drives shares more than any other structural technique — viewers want to show others the moment they didn't see coming.</p>
+          <p style={{ fontSize: 15, color: C.text, lineHeight: 1.7 }}>In the first 20% of your script, plant a detail that seems throwaway — a specific name, a number, an odd aside. In the final 20%, return to it and pay it off. The callback creates the 'I can't believe that came back' moment. It makes the video feel designed, not improvised. This drives shares more than any other structural technique — viewers want to show others the moment they didn't see coming.</p>
         </Section>
         <Tip>All three mechanics are baked into Skripr's SYSTEM_PROMPT. You don't need to write 'insert open loop here' — the AI places them structurally. Your job is to review and make sure the callback setup in the first section actually pays off in the last one.</Tip>
       </div>
@@ -276,7 +276,7 @@ const lessons = [
           ]} />
         </Section>
         <Section title="Step 2 — Lock your angle (optional but powerful)">
-          <p style={{ fontSize: 13, color: C.text, lineHeight: 1.7 }}>In Topic Only mode, click 'Suggest Angles for me' and pick a counterintuitive take. This single step is the difference between a generic script and one that feels like it has a clear point of view. Without an angle, the script covers the topic. With one, it argues a position — and that's what viewers share.</p>
+          <p style={{ fontSize: 15, color: C.text, lineHeight: 1.7 }}>In Topic Only mode, click 'Suggest Angles for me' and pick a counterintuitive take. This single step is the difference between a generic script and one that feels like it has a clear point of view. Without an angle, the script covers the topic. With one, it argues a position — and that's what viewers share.</p>
         </Section>
         <Section title="Step 3 — Set your niche and video length">
           <Bullet items={[
@@ -315,7 +315,7 @@ const lessons = [
     content: (
       <div>
         <Section title="What is a magnet word?">
-          <p style={{ fontSize: 13, color: C.text, lineHeight: 1.7 }}>A magnet word is a high-emotional-trigger word that YouTube data shows correlates with above-average click-through rates in a specific niche. They are not random — they are the vocabulary that top-performing creators consistently use because viewers respond to them instinctively.</p>
+          <p style={{ fontSize: 15, color: C.text, lineHeight: 1.7 }}>A magnet word is a high-emotional-trigger word that YouTube data shows correlates with above-average click-through rates in a specific niche. They are not random — they are the vocabulary that top-performing creators consistently use because viewers respond to them instinctively.</p>
         </Section>
         <Section title="The S/A/B/C tier system">
           <Bullet items={[
@@ -362,7 +362,7 @@ const lessons = [
           ]} />
         </Section>
         <Section title="Why most creators optimize for only one surface">
-          <p style={{ fontSize: 13, color: C.text, lineHeight: 1.7 }}>Most YouTube SEO advice is about search optimization. That advice is not wrong — but it ignores the fact that 70%+ of most channels' views come from Browse and Suggested, not search. Skripr generates Search, Browse, and Hybrid titles separately so you can match the title type to how you plan to grow.</p>
+          <p style={{ fontSize: 15, color: C.text, lineHeight: 1.7 }}>Most YouTube SEO advice is about search optimization. That advice is not wrong — but it ignores the fact that 70%+ of most channels' views come from Browse and Suggested, not search. Skripr generates Search, Browse, and Hybrid titles separately so you can match the title type to how you plan to grow.</p>
         </Section>
         <Section title="The tag cluster strategy">
           <Bullet items={[
@@ -373,7 +373,7 @@ const lessons = [
           ]} />
         </Section>
         <Section title="The description above the fold">
-          <p style={{ fontSize: 13, color: C.text, lineHeight: 1.7 }}>The first 2-3 sentences of your description appear before the Show More cutoff and are the text YouTube crawls most heavily for search indexing. Front-load your primary keyword naturally in the first sentence. This is also the only text visible in Google search snippets when your video ranks there.</p>
+          <p style={{ fontSize: 15, color: C.text, lineHeight: 1.7 }}>The first 2-3 sentences of your description appear before the Show More cutoff and are the text YouTube crawls most heavily for search indexing. Front-load your primary keyword naturally in the first sentence. This is also the only text visible in Google search snippets when your video ranks there.</p>
         </Section>
         <Tip>Use Search titles when targeting a specific query. Use Browse titles when relying on subscriber feed and homepage recommendations. Use Hybrid when your video could perform on both — common for evergreen topics with broad appeal.</Tip>
       </div>
@@ -389,7 +389,7 @@ const lessons = [
     content: (
       <div>
         <Section title="What you are actually testing">
-          <p style={{ fontSize: 13, color: C.text, lineHeight: 1.7 }}>A/B testing a YouTube title means publishing with Title A, measuring CTR over 48 hours, then swapping to Title B if performance is below benchmark. YouTube does not reset view history when you change a title — but it does serve the new title to new viewers, so you get a clean test on fresh impressions.</p>
+          <p style={{ fontSize: 15, color: C.text, lineHeight: 1.7 }}>A/B testing a YouTube title means publishing with Title A, measuring CTR over 48 hours, then swapping to Title B if performance is below benchmark. YouTube does not reset view history when you change a title — but it does serve the new title to new viewers, so you get a clean test on fresh impressions.</p>
         </Section>
         <Section title="CTR benchmarks to know">
           <Bullet items={[
@@ -401,7 +401,7 @@ const lessons = [
           ]} />
         </Section>
         <Section title="The 48-hour rule">
-          <p style={{ fontSize: 13, color: C.text, lineHeight: 1.7 }}>Wait at least 48 hours before evaluating CTR. Videos often spike in the first 24 hours from your subscriber feed — this audience is predisposed to click because they already follow you. The 48-hour mark captures Browse and Suggested traffic, which is colder and more representative of how the title performs with strangers.</p>
+          <p style={{ fontSize: 15, color: C.text, lineHeight: 1.7 }}>Wait at least 48 hours before evaluating CTR. Videos often spike in the first 24 hours from your subscriber feed — this audience is predisposed to click because they already follow you. The 48-hour mark captures Browse and Suggested traffic, which is colder and more representative of how the title performs with strangers.</p>
         </Section>
         <Section title="How to use Skripr's A/B Titles feature">
           <Bullet items={[
@@ -426,7 +426,7 @@ const lessons = [
     content: (
       <div>
         <Section title="What makes a format remixable?">
-          <p style={{ fontSize: 13, color: C.text, lineHeight: 1.7 }}>A format is the structural skeleton of a video — the sequence of emotional beats, reveal timing, pacing, and hook type — stripped of its content. A 30-day challenge format is remixable. The specific challenge is just content. The structure is what drives retention, and that structure works regardless of topic.</p>
+          <p style={{ fontSize: 15, color: C.text, lineHeight: 1.7 }}>A format is the structural skeleton of a video — the sequence of emotional beats, reveal timing, pacing, and hook type — stripped of its content. A 30-day challenge format is remixable. The specific challenge is just content. The structure is what drives retention, and that structure works regardless of topic.</p>
         </Section>
         <Section title="How to use the Viral Remixer">
           <Bullet items={[
@@ -465,13 +465,13 @@ export default function EducatePage() {
 
   return (
     <div style={{ padding: 28, minHeight: "100vh", background: C.bg }}>
-      <div aria-hidden style={{ position: "fixed", top: -160, right: -100, width: 460, height: 460, borderRadius: "50%", background: "radial-gradient(circle,rgba(99,102,241,0.14) 0%,transparent 70%)", pointerEvents: "none", zIndex: 0 }} />
-      <div aria-hidden style={{ position: "fixed", bottom: -180, left: -120, width: 480, height: 480, borderRadius: "50%", background: "radial-gradient(circle,rgba(168,85,247,0.09) 0%,transparent 70%)", pointerEvents: "none", zIndex: 0 }} />
+      <div aria-hidden style={{ position: "fixed", top: -160, right: -100, width: 460, height: 460, borderRadius: "50%", background: "radial-gradient(circle,rgba(77,184,255,0.12) 0%,transparent 70%)", pointerEvents: "none", zIndex: 0 }} />
+      <div aria-hidden style={{ position: "fixed", bottom: -180, left: -120, width: 480, height: 480, borderRadius: "50%", background: "radial-gradient(circle,rgba(77,184,255,0.06) 0%,transparent 70%)", pointerEvents: "none", zIndex: 0 }} />
 
       <div style={{ position: "relative", zIndex: 1, maxWidth: 860, margin: "0 auto" }}>
         <div style={{ marginBottom: 28 }}>
           <h1 style={{ fontSize: 26, fontWeight: 700, color: C.textBright, letterSpacing: -0.4, marginBottom: 6 }}>Learn</h1>
-          <p style={{ color: C.textDim, fontSize: 15, lineHeight: 1.6 }}>Everything you need to grow a faceless YouTube channel with Skripr</p>
+          <p style={{ color: C.textDim, fontSize: 16, lineHeight: 1.6 }}>Everything you need to grow a faceless YouTube channel with Skripr</p>
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
@@ -508,11 +508,11 @@ export default function EducatePage() {
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4, flexWrap: "wrap" }}>
                       <span style={{ padding: "2px 9px", borderRadius: 6, fontSize: 10, fontWeight: 700, background: lc.bg, color: lc.color, letterSpacing: 0.3 }}>{lesson.level}</span>
-                      <span style={{ fontSize: 11, color: C.textDim, background: "rgba(99,102,241,0.08)", padding: "2px 8px", borderRadius: 6 }}>{lesson.category}</span>
-                      <span style={{ fontSize: 11, color: C.textDim }}>{lesson.duration} read</span>
+                      <span style={{ fontSize: 13, color: C.textDim, background: "rgba(77,184,255,0.07)", padding: "2px 8px", borderRadius: 6 }}>{lesson.category}</span>
+                      <span style={{ fontSize: 13, color: C.textDim }}>{lesson.duration} read</span>
                     </div>
-                    <h3 style={{ fontSize: 15, fontWeight: 600, color: C.textBright, margin: 0, lineHeight: 1.4 }}>{lesson.title}</h3>
-                    {!isOpen && <p style={{ fontSize: 13, color: C.textDim, margin: "4px 0 0", lineHeight: 1.5 }}>{lesson.summary}</p>}
+                    <h3 style={{ fontSize: 16, fontWeight: 600, color: C.textBright, margin: 0, lineHeight: 1.4 }}>{lesson.title}</h3>
+                    {!isOpen && <p style={{ fontSize: 15, color: C.textDim, margin: "4px 0 0", lineHeight: 1.5 }}>{lesson.summary}</p>}
                   </div>
                   <span style={{ fontSize: 18, color: C.accent, flexShrink: 0, transition: "transform 200ms", transform: isOpen ? "rotate(180deg)" : "rotate(0deg)" }}>⌄</span>
                 </button>
@@ -520,7 +520,7 @@ export default function EducatePage() {
                 {/* Content — shown when open */}
                 {isOpen && (
                   <div style={{ padding: "0 22px 22px", borderTop: `1px solid ${C.border}`, paddingTop: 20 }}>
-                    <p style={{ fontSize: 14, color: "#a5b4fc", marginBottom: 20, lineHeight: 1.6, fontStyle: "italic" }}>{lesson.summary}</p>
+                    <p style={{ fontSize: 16, color: "#7ed8ff", marginBottom: 20, lineHeight: 1.6, fontStyle: "italic" }}>{lesson.summary}</p>
                     {lesson.content}
                   </div>
                 )}
@@ -529,8 +529,8 @@ export default function EducatePage() {
           })}
         </div>
 
-        <div style={{ marginTop: 32, padding: "20px 24px", borderRadius: 16, background: "rgba(99,102,241,0.06)", border: "1px solid rgba(99,102,241,0.14)", textAlign: "center" }}>
-          <p style={{ fontSize: 13, color: C.textDim, margin: 0 }}>More lessons coming soon — covering thumbnail design, monetization strategy, and advanced channel growth. <span style={{ color: C.accent }}>Ideas? Email skripr.app@gmail.com</span></p>
+        <div style={{ marginTop: 32, padding: "20px 24px", borderRadius: 16, background: "rgba(77,184,255,0.05)", border: "1px solid rgba(77,184,255,0.12)", textAlign: "center" }}>
+          <p style={{ fontSize: 15, color: C.textDim, margin: 0 }}>More lessons coming soon — covering thumbnail design, monetization strategy, and advanced channel growth. <span style={{ color: C.accent }}>Ideas? Email skripr.app@gmail.com</span></p>
         </div>
       </div>
     </div>

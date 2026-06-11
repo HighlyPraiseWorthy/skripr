@@ -9,15 +9,16 @@ export async function POST(req: Request) {
 
   try {
     // Get customer from Supabase
-    const { data } = await supabaseAdmin!.from("profiles").select("stripe_customer_id").eq("user_id", userId).single();
+    const { data } = await supabaseAdmin!.from("user_profiles").select("stripe_customer_id").eq("user_id", userId).single();
     
+    // No subscription — redirect to pricing page
     if (!data?.stripe_customer_id) {
-      return NextResponse.json({ error: "No subscription found" }, { status: 400 });
+      return NextResponse.json({ redirect: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/settings?upgrade=true` });
     }
 
     const session = await stripe.billingPortal.sessions.create({
       customer: data.stripe_customer_id,
-      return_url: `${process.env.NEXT_PUBLIC_APP_URL}/settings`,
+      return_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/settings`,
     });
 
     return NextResponse.json({ url: session.url });

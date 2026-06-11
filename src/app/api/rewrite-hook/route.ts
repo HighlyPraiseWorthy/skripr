@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { Anthropic } from "@anthropic-ai/sdk";
 
+export const maxDuration = 120;
+
 let client: Anthropic | null = null;
 function getAnthropic() {
   if (!client) client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY || "placeholder" });

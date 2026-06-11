@@ -3,6 +3,8 @@ import { auth } from "@clerk/nextjs/server";
 import { getUserPlan } from "@/lib/usage";
 import Anthropic from "@anthropic-ai/sdk";
 
+export const maxDuration = 120;
+
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 export async function POST(req: Request) {

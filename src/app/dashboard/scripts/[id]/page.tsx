@@ -5,13 +5,13 @@ import type { Script } from "@/lib/types/script";
 import { ScriptEditor } from "@/components/ScriptEditor";
 
 const C = {
-  bg: "#0b0b17",
-  cardBg: "#12122a",
-  border: "rgba(99,102,241,0.12)",
-  accent: "#818cf8",
-  text: "#e2e8f0",
-  textDim: "#64748b",
-  textBright: "#f1f5f9",
+  bg: "#080c12",
+  cardBg: "#0d1520",
+  border: "rgba(77,184,255,0.11)",
+  accent: "#4db8ff",
+  text: "#e8edf5",
+  textDim: "#7a9bb5",
+  textBright: "#e8edf5",
 };
 
 function formatDate(dateStr: string): string {
@@ -57,7 +57,7 @@ export default async function ScriptDetailPage({ params }: { params: Promise<{ i
             <p style={{ color: C.textDim, fontSize: 15, marginBottom: 20 }}>
               {error ? `Error: ${error}` : "Script not found or you don't have access."}
             </p>
-            <Link href="/dashboard/scripts" style={{ color: "#fff", fontSize: 14, fontWeight: 600, padding: "10px 24px", borderRadius: 12, background: "linear-gradient(135deg,#6366f1,#7c3aed,#a855f7)", textDecoration: "none", boxShadow: "0 0 22px rgba(99,102,241,0.30)", display: "inline-block" }}>
+            <Link href="/dashboard/scripts" style={{ color: "#fff", fontSize: 14, fontWeight: 600, padding: "10px 24px", borderRadius: 12, background: "linear-gradient(135deg,#0e6499,#1a8fd1,#4db8ff)", textDecoration: "none", boxShadow: "0 0 22px rgba(77,184,255,0.26)", display: "inline-block" }}>
               ← Back to Scripts
             </Link>
           </div>
@@ -68,8 +68,8 @@ export default async function ScriptDetailPage({ params }: { params: Promise<{ i
 
   return (
     <div style={{ padding: 28, minHeight: "100vh", background: C.bg }}>
-      <div aria-hidden style={{ position: "fixed", top: -160, right: -100, width: 460, height: 460, borderRadius: "50%", background: "radial-gradient(circle,rgba(99,102,241,0.14) 0%,transparent 70%)", pointerEvents: "none", zIndex: 0 }} />
-      <div aria-hidden style={{ position: "fixed", bottom: -180, left: -120, width: 480, height: 480, borderRadius: "50%", background: "radial-gradient(circle,rgba(168,85,247,0.09) 0%,transparent 70%)", pointerEvents: "none", zIndex: 0 }} />
+      <div aria-hidden style={{ position: "fixed", top: -160, right: -100, width: 460, height: 460, borderRadius: "50%", background: "radial-gradient(circle,rgba(77,184,255,0.12) 0%,transparent 70%)", pointerEvents: "none", zIndex: 0 }} />
+      <div aria-hidden style={{ position: "fixed", bottom: -180, left: -120, width: 480, height: 480, borderRadius: "50%", background: "radial-gradient(circle,rgba(77,184,255,0.06) 0%,transparent 70%)", pointerEvents: "none", zIndex: 0 }} />
 
       <div style={{ position: "relative", zIndex: 1, maxWidth: 920, margin: "0 auto" }}>
         <Link href="/dashboard/scripts" style={{ color: C.accent, fontSize: 13, fontWeight: 500, textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 4, marginBottom: 20 }}>
@@ -80,23 +80,23 @@ export default async function ScriptDetailPage({ params }: { params: Promise<{ i
         <div style={{ borderRadius: 18, background: C.cardBg, border: `1px solid ${C.border}`, padding: "24px 28px", marginBottom: 14 }}>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 14 }}>
             {script.niche && (
-              <span style={{ padding: "3px 10px", borderRadius: 7, fontSize: 11, fontWeight: 600, background: "rgba(99,102,241,0.12)", color: "#a5b4fc", letterSpacing: 0.3, textTransform: "uppercase" }}>
+              <span style={{ padding: "3px 10px", borderRadius: 7, fontSize: 11, fontWeight: 600, background: "rgba(77,184,255,0.11)", color: "#7ed8ff", letterSpacing: 0.3, textTransform: "uppercase" }}>
                 {script.niche}
               </span>
             )}
-            <span style={{ padding: "3px 10px", borderRadius: 7, fontSize: 11, fontWeight: 600, background: "rgba(99,102,241,0.08)", color: C.textDim }}>
+            <span style={{ padding: "3px 10px", borderRadius: 7, fontSize: 11, fontWeight: 600, background: "rgba(77,184,255,0.07)", color: C.textDim }}>
               {(script.word_count || 0).toLocaleString()} words
             </span>
-            <span style={{ padding: "3px 10px", borderRadius: 7, fontSize: 11, fontWeight: 600, background: "rgba(99,102,241,0.08)", color: C.textDim }}>
+            <span style={{ padding: "3px 10px", borderRadius: 7, fontSize: 11, fontWeight: 600, background: "rgba(77,184,255,0.07)", color: C.textDim }}>
               ~{Math.round((script.estimated_duration || 0) / 60)} min
             </span>
-            <span style={{ padding: "3px 10px", borderRadius: 7, fontSize: 11, fontWeight: 600, background: "rgba(99,102,241,0.08)", color: C.textDim }}>
+            <span style={{ padding: "3px 10px", borderRadius: 7, fontSize: 11, fontWeight: 600, background: "rgba(77,184,255,0.07)", color: C.textDim }}>
               Created {formatDate(script.created_at)}
             </span>
           </div>
           <h1 style={{ fontSize: 24, fontWeight: 700, color: C.textBright, letterSpacing: -0.3, marginBottom: 4 }}>{script.title}</h1>
           {script.topic && <p style={{ color: C.textDim, fontSize: 14, marginBottom: script.niche ? 2 : 0 }}>Topic: {script.topic}</p>}
-          {script.niche && <p style={{ color: "#a5b4fc", fontSize: 13, fontWeight: 500 }}>✦ Niche Bend: {script.niche}</p>}
+          {script.niche && <p style={{ color: "#7ed8ff", fontSize: 13, fontWeight: 500 }}>✦ Niche Bend: {script.niche}</p>}
         </div>
 
         {/* ── Script editor card ── */}

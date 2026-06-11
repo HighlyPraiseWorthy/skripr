@@ -2,10 +2,10 @@
 import { useState, useEffect } from "react";
 
 const C = {
-  bg: "#0a0a0f", card: "#13131a", cardHover: "#1a1a24",
-  border: "rgba(255,255,255,0.07)", borderAccent: "rgba(99,102,241,0.35)",
-  accent: "#6366f1", accentDim: "#818cf8", textBright: "#f1f5f9",
-  textDim: "#64748b", green: "#34d399",
+  bg: "#080c12", card: "#0d1520", cardHover: "#111d2e",
+  border: "rgba(255,255,255,0.07)", borderAccent: "rgba(77,184,255,0.30)",
+  accent: "#1a8fd1", accentDim: "#4db8ff", textBright: "#e8edf5",
+  textDim: "#7a9bb5", green: "#34d399",
 };
 
 type AnalysisResult = {
@@ -83,11 +83,11 @@ export default function NicheBendPage() {
   if (plan === "free") {
     return (
       <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "70vh", padding: "40px 20px" }}>
-        <div style={{ background: "#13131a", border: "1px solid rgba(99,102,241,0.35)", borderRadius: 18, padding: "44px 48px", maxWidth: 440, textAlign: "center" }}>
+        <div style={{ background: "#0d1520", border: "1px solid rgba(77,184,255,0.30)", borderRadius: 18, padding: "44px 48px", maxWidth: 440, textAlign: "center" }}>
           <div style={{ fontSize: 38, marginBottom: 16 }}>🔒</div>
-          <h2 style={{ color: "#f1f5f9", fontSize: 22, fontWeight: 700, margin: "0 0 12px" }}>Starter Plan Required</h2>
-          <p style={{ color: "#64748b", fontSize: 14, lineHeight: 1.7, margin: "0 0 28px" }}>Niche Bend is available on Starter and above. Upgrade to analyze any YouTube video and extract hook formulas, retention triggers, and bridge niche opportunities.</p>
-          <a href="/dashboard/settings" style={{ display: "inline-block", background: "linear-gradient(135deg,#6366f1,#7c3aed)", color: "white", padding: "13px 32px", borderRadius: 10, textDecoration: "none", fontWeight: 700, fontSize: 14 }}>Upgrade to Starter →</a>
+          <h2 style={{ color: "#e8edf5", fontSize: 22, fontWeight: 700, margin: "0 0 12px" }}>Starter Plan Required</h2>
+          <p style={{ color: "#7a9bb5", fontSize: 16, lineHeight: 1.7, margin: "0 0 28px" }}>Niche Bend is available on Starter and above. Upgrade to analyze any YouTube video and extract hook formulas, retention triggers, and bridge niche opportunities.</p>
+          <a href="/dashboard/settings" style={{ display: "inline-block", background: "linear-gradient(135deg,#0e6499,#1a8fd1)", color: "white", padding: "13px 32px", borderRadius: 10, textDecoration: "none", fontWeight: 700, fontSize: 16 }}>Upgrade to Starter →</a>
         </div>
       </div>
     );
@@ -102,83 +102,83 @@ export default function NicheBendPage() {
             <span style={{ fontSize: 24 }}>↬</span>
             <h1 style={{ fontSize: 22, fontWeight: 700, color: C.textBright, letterSpacing: -0.3 }}>Niche Bend</h1>
           </div>
-          <p style={{ fontSize: 13, color: C.textDim, maxWidth: 500, lineHeight: 1.6 }}>
+          <p style={{ fontSize: 15, color: C.textDim, maxWidth: 500, lineHeight: 1.6 }}>
             Paste a video from your niche. We’ll find bridge sub-niches that blend with your content
             to break out of the algorithmic bubble and reach new audiences.
           </p>
         </div>
 
         <div style={{ background: C.card, border: "1px solid " + C.border, borderRadius: 16, padding: "18px 20px", marginBottom: 20 }}>
-          <div style={{ fontSize: 11, fontWeight: 700, color: C.textDim, letterSpacing: 0.5, marginBottom: 10 }}>PASTE A VIDEO FROM YOUR NICHE</div>
+          <div style={{ fontSize: 13, fontWeight: 700, color: C.textDim, letterSpacing: 0.5, marginBottom: 10 }}>PASTE A VIDEO FROM YOUR NICHE</div>
           <div style={{ display: "flex", gap: 10 }}>
             <input
               value={url}
               onChange={e => setUrl(e.target.value)}
               onKeyDown={e => e.key === "Enter" && handleAnalyze()}
               placeholder="https://youtube.com/watch?v=..."
-              style={{ flex: 1, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 10, padding: "10px 14px", color: C.textBright, fontSize: 13, outline: "none" }}
+              style={{ flex: 1, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 10, padding: "10px 14px", color: C.textBright, fontSize: 15, outline: "none" }}
             />
             <button onClick={handleAnalyze} disabled={loading || !url.trim()}
-              style={{ padding: "10px 20px", borderRadius: 10, background: loading ? "rgba(99,102,241,0.15)" : "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)", color: loading ? C.accentDim : "#fff", border: "none", fontSize: 13, fontWeight: 700, cursor: loading ? "wait" : "pointer", opacity: !url.trim() ? 0.5 : 1, whiteSpace: "nowrap" }}>
+              style={{ padding: "10px 20px", borderRadius: 10, background: loading ? "rgba(77,184,255,0.13)" : "linear-gradient(135deg, #0e6499 0%, #1a8fd1 100%)", color: loading ? C.accentDim : "#fff", border: "none", fontSize: 15, fontWeight: 700, cursor: loading ? "wait" : "pointer", opacity: !url.trim() ? 0.5 : 1, whiteSpace: "nowrap" }}>
               {loading ? "Analyzing..." : "Analyze"}
             </button>
           </div>
         </div>
 
         {error && (
-          <div style={{ padding: "12px 16px", borderRadius: 10, background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.25)", color: "#fca5a5", fontSize: 13, marginBottom: 16 }}>{error}</div>
+          <div style={{ padding: "12px 16px", borderRadius: 10, background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.25)", color: "#fca5a5", fontSize: 15, marginBottom: 16 }}>{error}</div>
         )}
 
         {loading && (
           <div style={{ display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: 12, padding: "40px 0" }}>
-            <div style={{ width: 40, height: 40, border: "3px solid rgba(99,102,241,0.2)", borderTop: "3px solid #6366f1", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
-            <div style={{ fontSize: 13, color: C.accentDim, fontWeight: 600 }}>Extracting viral framework...</div>
-            <div style={{ fontSize: 11, color: C.textDim }}>hook type · structure · retention triggers · title formula</div>
+            <div style={{ width: 40, height: 40, border: "3px solid rgba(77,184,255,0.15)", borderTop: "3px solid #4db8ff", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
+            <div style={{ fontSize: 15, color: C.accentDim, fontWeight: 600 }}>Extracting viral framework...</div>
+            <div style={{ fontSize: 13, color: C.textDim }}>hook type · structure · retention triggers · title formula</div>
             <style>{"@keyframes spin { to { transform: rotate(360deg); } }"}</style>
           </div>
         )}
 
         {result && (
           <div>
-            <div style={{ background: "rgba(99,102,241,0.07)", border: "1px solid rgba(99,102,241,0.2)", borderRadius: 14, padding: "18px 20px", marginBottom: 16 }}>
+            <div style={{ background: "rgba(77,184,255,0.06)", border: "1px solid rgba(99,102,241,0.2)", borderRadius: 14, padding: "18px 20px", marginBottom: 16 }}>
               <div style={{ fontSize: 10, fontWeight: 700, color: C.accentDim, letterSpacing: 0.6, marginBottom: 10 }}>VIDEO ANALYZED</div>
-              <div style={{ fontSize: 14, fontWeight: 700, color: C.textBright, marginBottom: 4, lineHeight: 1.4 }}>{result.title}</div>
-              <div style={{ fontSize: 12, color: C.textDim, marginBottom: 14 }}>{result.channelTitle}</div>
+              <div style={{ fontSize: 16, fontWeight: 700, color: C.textBright, marginBottom: 4, lineHeight: 1.4 }}>{result.title}</div>
+              <div style={{ fontSize: 14, color: C.textDim, marginBottom: 14 }}>{result.channelTitle}</div>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-                <span style={{ fontSize: 10, fontWeight: 700, padding: "3px 9px", borderRadius: 5, background: "rgba(99,102,241,0.15)", color: C.accentDim }}>{result.hookAnalysis.hookType} HOOK</span>
-                <span style={{ fontSize: 10, fontWeight: 700, padding: "3px 9px", borderRadius: 5, background: "rgba(99,102,241,0.15)", color: C.accentDim }}>{result.structure?.length ?? 0} SECTIONS</span>
-                <span style={{ fontSize: 10, fontWeight: 700, padding: "3px 9px", borderRadius: 5, background: "rgba(99,102,241,0.15)", color: C.accentDim }}>{result.retentionTriggers?.length ?? 0} RETENTION TRIGGERS</span>
+                <span style={{ fontSize: 10, fontWeight: 700, padding: "3px 9px", borderRadius: 5, background: "rgba(77,184,255,0.13)", color: C.accentDim }}>{result.hookAnalysis.hookType} HOOK</span>
+                <span style={{ fontSize: 10, fontWeight: 700, padding: "3px 9px", borderRadius: 5, background: "rgba(77,184,255,0.13)", color: C.accentDim }}>{result.structure?.length ?? 0} SECTIONS</span>
+                <span style={{ fontSize: 10, fontWeight: 700, padding: "3px 9px", borderRadius: 5, background: "rgba(77,184,255,0.13)", color: C.accentDim }}>{result.retentionTriggers?.length ?? 0} RETENTION TRIGGERS</span>
               </div>
               {result.titleFormula?.formula && (
                 <div style={{ marginTop: 12, padding: "8px 12px", borderRadius: 8, background: "rgba(139,92,246,0.08)", border: "1px solid rgba(139,92,246,0.2)" }}>
-                  <div style={{ fontSize: 10, fontWeight: 700, color: "#c4b5fd", marginBottom: 4 }}>TITLE FORMULA (used to preview bridge niches)</div>
-                  <div style={{ fontSize: 12, color: C.textBright }}>{result.titleFormula.formula}</div>
+                  <div style={{ fontSize: 10, fontWeight: 700, color: "#9de4ff", marginBottom: 4 }}>TITLE FORMULA (used to preview bridge niches)</div>
+                  <div style={{ fontSize: 14, color: C.textBright }}>{result.titleFormula.formula}</div>
                 </div>
               )}
             </div>
 
 
             {/* Video length slider */}
-            <div style={{ marginBottom: 16, padding: "14px 16px", borderRadius: 12, background: "rgba(99,102,241,0.04)", border: "1px solid rgba(99,102,241,0.12)" }}>
+            <div style={{ marginBottom: 16, padding: "14px 16px", borderRadius: 12, background: "rgba(77,184,255,0.04)", border: "1px solid rgba(77,184,255,0.11)" }}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
-                <span style={{ fontSize: 11, fontWeight: 700, color: "#64748b", letterSpacing: 0.5 }}>VIDEO LENGTH</span>
-                <span style={{ fontSize: 13, fontWeight: 700, color: "#a5b4fc" }}>~{videoMinutes}:{String(extraSeconds).padStart(2, "0")} on YouTube</span>
+                <span style={{ fontSize: 13, fontWeight: 700, color: "#7a9bb5", letterSpacing: 0.5 }}>VIDEO LENGTH</span>
+                <span style={{ fontSize: 15, fontWeight: 700, color: "#7ed8ff" }}>~{videoMinutes}:{String(extraSeconds).padStart(2, "0")} on YouTube</span>
               </div>
               <input
                 type="range" min={10} max={20} step={1}
                 value={videoMinutes}
                 onChange={e => { setVideoMinutes(Number(e.target.value)); setExtraSeconds(20 + Math.floor(Math.random() * 30)); }}
-                style={{ width: "100%", accentColor: "#6366f1", cursor: "pointer" }}
+                style={{ width: "100%", accentColor: "#1a8fd1", cursor: "pointer" }}
               />
-              <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10, color: "#475569", marginTop: 6 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10, color: "#7a9bb5", marginTop: 6 }}>
                 <span>10 min</span><span>12 min</span><span>15 min</span><span>18 min</span><span>20 min</span>
               </div>
             </div>
             <button onClick={handleFindBridgeNiches}
-              style={{ width: "100%", height: 52, borderRadius: 12, background: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)", color: "#fff", border: "none", fontSize: 15, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 10, boxShadow: "0 4px 24px rgba(99,102,241,0.4)" }}>
+              style={{ width: "100%", height: 52, borderRadius: 12, background: "linear-gradient(135deg, #0e6499 0%, #1a8fd1 100%)", color: "#fff", border: "none", fontSize: 16, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 10, boxShadow: "0 4px 24px rgba(77,184,255,0.35)" }}>
               <span style={{ fontSize: 18 }}>↬</span>
               Find My Bridge Sub-Niches
-              <span style={{ fontSize: 14, opacity: 0.8 }}>→</span>
+              <span style={{ fontSize: 16, opacity: 0.8 }}>→</span>
             </button>
           </div>
         )}

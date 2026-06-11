@@ -23,8 +23,9 @@ export const STRIPE_PRICES = {
   agency: process.env.STRIPE_PRICE_AGENCY || "",
 } as const;
 
-// ---- startup: log which price IDs are active (dev + live audit) -----
-console.log("[stripe-config] STRIPE_PRICES:", JSON.stringify(STRIPE_PRICES));
+// Warn only when a price ID is missing — a silently empty ID breaks checkout
+const missingPrices = Object.entries(STRIPE_PRICES).filter(([, v]) => !v).map(([k]) => k);
+if (missingPrices.length) console.error("[stripe-config] missing price IDs:", missingPrices.join(", "));
 
 export type PlanId = "free" | "starter" | "pro" | "agency";
 

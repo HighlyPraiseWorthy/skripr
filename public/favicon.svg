@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- bg -->
+  <rect width="32" height="32" rx="6" fill="#080c12"/>
+  <!-- S shape: built from 3 bars + 2 connectors -->
+  <!-- Top horizontal bar -->
+  <rect x="8.5" y="7" width="15" height="3" rx="1.5" fill="#e8edf5"/>
+  <!-- Mid horizontal bar (accent blue) -->
+  <rect x="8.5" y="14.5" width="15" height="3" rx="1.5" fill="#4db8ff"/>
+  <!-- Bottom horizontal bar -->
+  <rect x="8.5" y="22" width="15" height="3" rx="1.5" fill="#e8edf5"/>
+  <!-- Top-left vertical connector -->
+  <rect x="8.5" y="7" width="3" height="10.5" fill="#e8edf5"/>
+  <!-- Bottom-right vertical connector -->
+  <rect x="20.5" y="14.5" width="3" height="10.5" fill="#e8edf5"/>
+</svg>

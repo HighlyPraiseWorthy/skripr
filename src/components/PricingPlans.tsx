@@ -3,12 +3,12 @@
 import { useState } from "react";
 
 const C = {
-  bg: "#12122a",
-  border: "rgba(99,102,241,0.12)",
-  borderHover: "rgba(99,102,241,0.35)",
-  accent: "#818cf8",
-  textBright: "#f1f5f9",
-  textDim: "#64748b",
+  bg: "#0d1520",
+  border: "rgba(77,184,255,0.12)",
+  borderHover: "rgba(77,184,255,0.30)",
+  accent: "#4db8ff",
+  textBright: "#e8edf5",
+  textDim: "#7a9bb5",
 };
 
 const PLANS = [
@@ -74,8 +74,8 @@ export function PricingPlans({ priceIds, currentPlan }: {
           key={plan.name}
           style={{
             borderRadius: 18,
-            background: currentPlan && planKeyMap[plan.name] === currentPlan ? "rgba(52,211,153,0.06)" : plan.highlight ? "rgba(99,102,241,0.08)" : C.bg,
-            border: `1px solid ${currentPlan && planKeyMap[plan.name] === currentPlan ? "rgba(52,211,153,0.35)" : plan.highlight ? "rgba(99,102,241,0.35)" : C.border}`,
+            background: currentPlan && planKeyMap[plan.name] === currentPlan ? "rgba(52,211,153,0.06)" : plan.highlight ? "rgba(77,184,255,0.07)" : C.bg,
+            border: `1px solid ${currentPlan && planKeyMap[plan.name] === currentPlan ? "rgba(52,211,153,0.35)" : plan.highlight ? "rgba(77,184,255,0.30)" : C.border}`,
             padding: "24px 20px",
             display: "flex",
             flexDirection: "column",
@@ -90,7 +90,7 @@ export function PricingPlans({ priceIds, currentPlan }: {
               position: "absolute", top: -11, left: "50%", transform: "translateX(-50%)",
               background: "linear-gradient(135deg,#059669,#34d399)",
               borderRadius: 20, padding: "3px 12px",
-              fontSize: 11, fontWeight: 700, color: "#fff", whiteSpace: "nowrap",
+              fontSize: 13, fontWeight: 700, color: "#fff", whiteSpace: "nowrap",
             }}>
               ✓ Current Plan
             </div>
@@ -98,24 +98,24 @@ export function PricingPlans({ priceIds, currentPlan }: {
           {(!currentPlan || planKeyMap[plan.name] !== currentPlan) && plan.badge && (
             <div style={{
               position: "absolute", top: -11, left: "50%", transform: "translateX(-50%)",
-              background: "linear-gradient(135deg,#6366f1,#a855f7)",
+              background: "linear-gradient(135deg,#0e6499,#4db8ff)",
               borderRadius: 20, padding: "3px 12px",
-              fontSize: 11, fontWeight: 700, color: "#fff", whiteSpace: "nowrap",
+              fontSize: 13, fontWeight: 700, color: "#fff", whiteSpace: "nowrap",
             }}>
               {plan.badge}
             </div>
           )}
 
           <div>
-            <p style={{ fontSize: 13, fontWeight: 600, color: C.accent, marginBottom: 4 }}>{plan.name}</p>
+            <p style={{ fontSize: 15, fontWeight: 600, color: C.accent, marginBottom: 4 }}>{plan.name}</p>
             <p style={{ fontSize: 28, fontWeight: 700, color: C.textBright, letterSpacing: -0.5 }}>
-              {plan.price}<span style={{ fontSize: 14, fontWeight: 400, color: C.textDim }}>/mo</span>
+              {plan.price}<span style={{ fontSize: 16, fontWeight: 400, color: C.textDim }}>/mo</span>
             </p>
           </div>
 
           <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 8, flex: 1 }}>
             {plan.features.map((f) => (
-              <li key={f} style={{ fontSize: 13, color: C.textDim, display: "flex", alignItems: "flex-start", gap: 8 }}>
+              <li key={f} style={{ fontSize: 15, color: "#b8d4ea", display: "flex", alignItems: "flex-start", gap: 8 }}>
                 <span style={{ color: "#34d399", marginTop: 1, flexShrink: 0 }}>✓</span>
                 {f}
               </li>
@@ -132,11 +132,11 @@ export function PricingPlans({ priceIds, currentPlan }: {
               background: currentPlan && planKeyMap[plan.name] === currentPlan
                 ? "rgba(52,211,153,0.12)"
                 : plan.highlight
-                ? "linear-gradient(135deg,#6366f1,#7c3aed,#a855f7)"
-                : "rgba(99,102,241,0.10)",
+                ? "linear-gradient(135deg,#0e6499,#1a8fd1,#4db8ff)"
+                : "rgba(77,184,255,0.09)",
               color: currentPlan && planKeyMap[plan.name] === currentPlan ? "#34d399" : plan.highlight ? "#fff" : C.accent,
-              border: currentPlan && planKeyMap[plan.name] === currentPlan ? "1px solid rgba(52,211,153,0.25)" : plan.highlight ? "none" : `1px solid rgba(99,102,241,0.20)`,
-              fontSize: 13,
+              border: currentPlan && planKeyMap[plan.name] === currentPlan ? "1px solid rgba(52,211,153,0.25)" : plan.highlight ? "none" : `1px solid rgba(77,184,255,0.18)`,
+              fontSize: 15,
               fontWeight: 600,
               cursor: currentPlan && planKeyMap[plan.name] === currentPlan ? "default" : loading ? "wait" : "pointer",
               opacity: loading && loading !== plan.name ? 0.5 : 1,

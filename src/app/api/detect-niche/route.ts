@@ -3,6 +3,8 @@ import { auth } from "@clerk/nextjs/server";
 import { Anthropic } from "@anthropic-ai/sdk";
 import { NICHES } from "@/lib/data/niches";
 
+export const maxDuration = 120;
+
 let anthropicClient: Anthropic | null = null;
 function getAnthropic(): Anthropic {
   if (!anthropicClient) {

@@ -23,11 +23,39 @@ export async function getScriptsThisMonth(userId: string): Promise<number> {
   const start = new Date();
   start.setDate(1); start.setHours(0, 0, 0, 0);
   const { count } = await supabaseAdmin
-    .from("scripts")
+    .from("generation_events")
     .select("id", { count: "exact", head: true })
     .eq("user_id", userId)
     .gte("created_at", start.toISOString());
   return count || 0;
+}
+
+// Pass the eventId from incrementGenerationCount so concurrent generations
+// can't refund each other's usage event; falls back to latest-event if absent.
+export async function refundGenerationCount(userId: string, eventId?: string | null): Promise<void> {
+  if (!supabaseAdmin) return;
+  if (eventId) {
+    await supabaseAdmin.from("generation_events").delete().eq("id", eventId).eq("user_id", userId);
+    return;
+  }
+  const { data } = await supabaseAdmin
+    .from("generation_events")
+    .select("id")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .single();
+  if (data) await supabaseAdmin.from("generation_events").delete().eq("id", data.id);
+}
+
+export async function incrementGenerationCount(userId: string): Promise<string | null> {
+  if (!supabaseAdmin) return null;
+  const { data } = await supabaseAdmin
+    .from("generation_events")
+    .insert({ user_id: userId })
+    .select("id")
+    .single();
+  return data?.id ?? null;
 }
 
 const ADMIN_USER_IDS = (process.env.ADMIN_USER_IDS || "").split(",").filter(Boolean);

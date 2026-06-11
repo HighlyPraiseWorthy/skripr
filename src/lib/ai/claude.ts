@@ -57,7 +57,7 @@ Your scripts follow these principles:
    a) RE-HOOK AT 0:30: The 30-second cliff is the #1 drop-off point. Place a hard re-hook at the 30-second mark — a new tension, a surprising pivot, or a "but here's what nobody tells you" moment. This is mandatory, not optional.
    b) ESCALATING OPEN LOOPS: Place open loops at the 1/3 and 2/3 points of the script. The 2/3 loop must be more urgent and higher-stakes than the 1/3 loop — escalate intensity, don't just repeat the pattern. The viewer must feel it would be a mistake to stop now.
    c) CALLBACK THREADING: Plant at least one seemingly throwaway detail or curious aside in the first 20% of the script. Return to it and pay it off in the final 20%. This creates the "I can't believe that came back" moment that drives shares and rewatch.
-3. TTS OPTIMIZATION: Short sentences (max 15 words). Natural conversational tone. Mark pauses with [PAUSE]. Mark emphasis with [EMPHASIS]word[/EMPHASIS].
+3. VOICEOVER-READY: Short sentences (max 15 words). Natural conversational tone. Plain spoken prose ONLY — never include stage directions, bracket markers, or annotations of any kind (no [PAUSE], no [EMPHASIS], no [MUSIC], nothing in brackets). Creators paste this text directly into AI voiceover tools or read it aloud word-for-word; anything that is not speakable text breaks their workflow.
 4. HUMANIZATION (critical): Write exactly like a real person talking — not an AI. Use:
    - Contractions always (don't, you're, it's, we've, that's)
    - Occasional sentence fragments for emphasis. Like this.
@@ -72,6 +72,7 @@ Your scripts follow these principles:
 4. CTA PLACEMENT: Don't wait until the end. Place a soft CTA at the 60-70% mark where retention typically drops, then a hard CTA at the end.
 5. STRUCTURE: Follow the exact structural pattern of the source viral video but apply it to the new topic.
 6. ANTI-REPETITION: Never start two consecutive sentences with the same word. Vary sentence length — mix short punchy sentences with longer ones. Never repeat a key point already made; build forward only.
+7. NO FABRICATED FACTS: Never state a specific statistic, percentage, dollar figure, year, named study, or named survey unless it appears in the provided source material. Use soft framing instead: "research suggests", "studies have shown", "experts estimate". Never attribute a quote or claim to a named real person unless it was in the source material. A creator will read this on camera — an invented number destroys their credibility.
 
 7. VARIETY ROTATION — BANNED PHRASES (never use any of these, ever):
 "Here's the thing", "But here's the thing", "Here's the deal", "Here's what's crazy",
@@ -216,7 +217,81 @@ function extractJSON(text: string, kind: "object" | "array"): unknown {
   throw new Error(`No valid JSON ${kind} found in Claude response. Text (last 300 chars): ${text.slice(-300)}`);
 }
 
+// Single extension pass only: each pass is a full Sonnet call (60-90s), and the
+// base generation already uses one. Stacking passes risks the Vercel function limit,
+// and a dead function loses everything — a slightly-short script beats no script.
+async function extendScriptToLength(fullScript: string, targetWords: number, topic: string, niche: string, startedAt: number): Promise<string> {
+  const count = (s: string) => s.split(/\s+/).filter(Boolean).length;
+  const words = count(fullScript);
+  if (words >= targetWords * 0.8) return fullScript;
+  const elapsed = Date.now() - startedAt;
+  if (elapsed > 180_000) {
+    console.log(`[extend] skipped — ${elapsed}ms elapsed, too close to function limit`);
+    return fullScript;
+  }
+  const needed = targetWords - words;
+  const paras = fullScript.split(/\n\n+/);
+  const conclusion = paras.length > 2 ? paras.pop()! : "";
+  const body = paras.join("\n\n");
+  const response = await getAnthropic().messages.create({
+    model: "claude-sonnet-4-6",
+    max_tokens: 8000,
+    system: "You are extending a YouTube script mid-production. Match the existing voice, pacing, sentence rhythm, and TTS style exactly. Never repeat a point already made. Never fabricate statistics, named studies, or quotes. Output ONLY the new segments as plain text — no preamble, no JSON, no headers, no conclusion.",
+    messages: [{ role: "user", content: `Topic: ${topic}\nNiche: ${niche}\n\nScript so far (conclusion removed):\n\n${body}\n\nThis script is ${words} words; the final target is ${targetWords} words. Write approximately ${Math.min(needed, 1500)} words of NEW body segments that will be inserted before the conclusion. Each segment must open with a re-hook (open loop, pattern interrupt, or raised stakes) and go deep: concrete examples, story beats, specific detail. Do NOT write any conclusion, callback, or wrap-up. Do NOT repeat existing content.` }],
+  });
+  const c = response.content[0];
+  if (c.type !== "text" || !c.text.trim()) return fullScript;
+  return [body, c.text.trim(), conclusion].filter(Boolean).join("\n\n");
+}
+
+function containsWord(s: unknown, word: string): boolean {
+  return typeof s === "string" && s.toLowerCase().includes(word.toLowerCase());
+}
+
+// The prompt asks for the magnet word in the title and hook, but the model treats it
+// as one soft preference among many constraints and sometimes drops it — so verify
+// after generation and repair with a small targeted rewrite instead of regenerating.
+async function enforceMagnetWord(script: GeneratedScript, word: string, topic: string): Promise<GeneratedScript> {
+  const titleOk = containsWord(script.title, word);
+  const hookOk = containsWord(script.hook, word);
+  if (titleOk && hookOk) return script;
+  const target = titleOk ? "the hook" : hookOk ? "the title" : "both the title and the hook";
+  const response = await getAnthropic().messages.create({
+    model: "claude-sonnet-4-6",
+    max_tokens: 700,
+    system: "You punch up YouTube titles and hooks. Output ONLY valid JSON, no preamble.",
+    messages: [{ role: "user", content: `Video topic: ${topic}\nCurrent title: ${script.title}\nCurrent hook: ${script.hook}\n\nRewrite ${target} so each naturally includes the word "${word}". Keep the same meaning, energy, and length. The word must feel inevitable, not forced. The title stays under 65 characters. Never use em dashes. Output JSON: {"title": "...", "hook": "..."}` }],
+  });
+  const c = response.content[0];
+  if (c.type !== "text") return script;
+  try {
+    const fixed = extractJSON(c.text, "object") as { title?: string; hook?: string };
+    if (!titleOk && fixed.title && containsWord(fixed.title, word)) script.title = fixed.title;
+    if (!hookOk && fixed.hook && containsWord(fixed.hook, word)) {
+      const oldHook = script.hook;
+      script.hook = fixed.hook;
+      // The body fields open with the hook — swap it there too, or the saved
+      // and copied script text would still carry the old hook
+      const norm = (s: string) => s.toLowerCase().replace(/\s+/g, " ").trim();
+      for (const k of ["fullScript", "script", "body", "content"]) {
+        const v = (script as any)[k];
+        if (typeof v === "string" && v.trim() && oldHook) {
+          const paras = v.split(/\n\n+/);
+          if (norm(paras[0] || "") === norm(oldHook)) {
+            paras[0] = fixed.hook;
+            (script as any)[k] = paras.join("\n\n");
+          }
+        }
+      }
+    }
+  } catch (e) {
+    console.error("[magnet] enforce rewrite unparseable, keeping original title/hook:", e);
+  }
+  return script;
+}
+
 export async function generateScript(input: ScriptGenerationInput): Promise<GeneratedScript> {
+  const startedAt = Date.now();
   const targetWords = input.targetMinutes ? Math.round(input.targetMinutes * 130) : null;
   const lengthGuide = {
     short: "60-90 seconds, 150-200 words",
@@ -255,8 +330,15 @@ ${hasTranscript
   : `Generate a highly engaging original script about: "${input.targetTopic || "the requested topic"}"`}${input.angle ? `\n\nCREATOR ANGLE (most important — build the entire script around this):\n"${input.angle}"\nDo NOT write a generic overview. Use this angle as the spine. Every section must prove, demonstrate, or build toward this specific perspective.` : ""}
 Target niche: ${input.targetNiche}
 Video length: ${targetWords ? `${input.targetMinutes} minutes (~${targetWords} words spoken aloud)` : lengthGuide[input.videoLength]}
+${targetWords && targetWords >= 1200 ? `
+CRITICAL LENGTH REQUIREMENT — scripts shorter than ${targetWords} words are FAILURES:
+- Structure the body as ${Math.max(4, Math.ceil((input.targetMinutes || 10) / 3))} distinct segments of roughly ${Math.round(targetWords / Math.max(4, Math.ceil((input.targetMinutes || 10) / 3)))} words EACH.
+- Open every segment with a re-hook: an open loop, a pattern interrupt, or raised stakes.
+- Inside every segment, go deep before moving on: one concrete example, one story beat, AND one piece of evidence or specific detail. Never compress or summarize a point you can expand.
+- Do NOT begin any conclusion, callback, or wrap-up until the cumulative word count has reached ${targetWords} words.
+- A viewer asked for a ${input.targetMinutes}-minute video. Delivering 8 minutes of content is a broken promise.` : ""}
 Tone: ${input.tone}
-TTS optimized: ${input.ttsOptimized ? "Yes — short sentences, mark pauses with [PAUSE], mark emphasis with [EMPHASIS]" : "No"}
+Voiceover delivery: plain spoken prose only — no [PAUSE], [EMPHASIS], or any bracketed markers. Every word must be speakable.
 
 TITLE RULES — the generated "title" field MUST follow these viral patterns. Study these real titles that got 3M–10M+ views:
 
@@ -294,7 +376,7 @@ BAD → GOOD examples:
 ❌ "The Best Script Generator for Creators" → ✅ "Why Your Scripts Stop Working (Most Creators Miss This)"
 ❌ "YouTube Script Writing Explained" → ✅ "The Real Reason Nobody Watches Your Videos"
 ${input.viralMagnetWord ? `
-VIRAL MAGNET REQUIREMENT: The title field MUST naturally incorporate the word "${input.viralMagnetWord}". Weave it in where it creates maximum curiosity or urgency — not forced, but inevitable.` : ""}
+VIRAL MAGNET REQUIREMENT: The title field MUST naturally incorporate the word "${input.viralMagnetWord}". The hook field MUST also include the word "${input.viralMagnetWord}" within its first two sentences. Weave it in where it creates maximum curiosity or urgency — not forced, but inevitable.` : ""}
 
 HOOK RULES — the "hook" field MUST use one of these 8 proven patterns. Pick the one that fits the topic best:
 1. Question — Surface a pain or curiosity directly: "Have you ever wondered why [X] never works?" / "What would you do if [scenario]?"
@@ -338,9 +420,12 @@ Output JSON with this exact structure:
   ]
 }`;
 
+  // 16000, not 8000: long scripts are written twice in the JSON (sections + fullScript),
+  // so a 2600-word script needs ~7500+ output tokens and truncates the JSON mid-string at 8000.
+  // 16K is the non-streaming-safe ceiling for the SDK.
   const response = await getAnthropic().messages.create({
     model: "claude-sonnet-4-6",
-    max_tokens: 4096,
+    max_tokens: 16000,
     system: SYSTEM_PROMPT,
     messages: [{ role: "user", content: userPrompt }],
   });
@@ -349,8 +434,47 @@ Output JSON with this exact structure:
   if (content.type !== "text") {
     throw new Error("Unexpected response type from Claude");
   }
+  if (response.stop_reason === "max_tokens") {
+    console.error(`[generate] output hit max_tokens — JSON likely truncated (targetWords=${targetWords})`);
+  }
 
-  const script = extractJSON(content.text, "object") as GeneratedScript;
+  let script: GeneratedScript;
+  try {
+    script = extractJSON(content.text, "object") as GeneratedScript;
+  } catch (e) {
+    if (response.stop_reason === "max_tokens") {
+      throw new Error("The script came out longer than expected and was cut off. Please try again — if it keeps happening, try a slightly shorter video length.");
+    }
+    throw e;
+  }
+
+  if (input.viralMagnetWord) {
+    try {
+      script = await enforceMagnetWord(script, input.viralMagnetWord, input.targetTopic || input.sourceTitle || "");
+      console.log(`[magnet] word="${input.viralMagnetWord}" inTitle=${containsWord(script.title, input.viralMagnetWord)} inHook=${containsWord(script.hook, input.viralMagnetWord)}`);
+    } catch (e) {
+      console.error("[magnet] enforce failed, keeping original title/hook:", e);
+    }
+  }
+
+  // Long-form scripts: JSON output caps prose length, so extend via continuation passes.
+  // The model names the body field inconsistently — find whichever one it used.
+  const bodyKey = ["fullScript", "script", "body", "content"].find(
+    (k) => typeof (script as any)[k] === "string" && (script as any)[k].trim().length > 0
+  );
+  if (targetWords && targetWords >= 1200 && bodyKey) {
+    try {
+      const before = (script as any)[bodyKey].split(/\s+/).filter(Boolean).length;
+      (script as any)[bodyKey] = await extendScriptToLength((script as any)[bodyKey], targetWords, input.targetTopic, input.targetNiche, startedAt);
+      const after = (script as any)[bodyKey].split(/\s+/).filter(Boolean).length;
+      console.log(`[extend] field=${bodyKey} target=${targetWords} before=${before} after=${after}`);
+    } catch (e) {
+      console.error("[extend] continuation failed, returning base script:", e);
+    }
+  } else if (targetWords && targetWords >= 1200) {
+    console.error("[extend] no body field found on script object; keys:", Object.keys(script || {}));
+  }
+
   return script;
 }
 
