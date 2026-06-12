@@ -84,6 +84,8 @@ export async function POST(req: Request) {
         role: "user",
         content: `You are a YouTube strategy expert. Analyze this video and extract the exact framework that made it perform.
 
+IMPORTANT — IGNORE SPONSORS/ADS: The transcript may open or pause with a sponsor read or ad (a brand, app, charity, donation match, promo code, "this video's sponsor", "link in the description"). That is a paid insertion, NOT the video's content. Skip it completely. The real hook is the first sentence of the ACTUAL content, never the sponsor intro. Never put a sponsor, brand, or promo into the hook, structure, retention triggers, title formula, or remix titles.
+
 TITLE: ${meta.title}
 CHANNEL: ${meta.channelTitle}
 

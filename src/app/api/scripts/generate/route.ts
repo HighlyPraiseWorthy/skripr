@@ -135,9 +135,21 @@ export async function POST(req: Request) {
     for (const k of ["fullScript", "script", "body", "content"]) {
       if (script[k]) script[k] = reflow(script[k]);
     }
-    if (Array.isArray(script.sections)) script.sections = script.sections.map((s: any) => ({
-      ...s, title: cleanText(s.title), content: cleanText(s.content),
-    }));
+    // Safety net: the prompt forbids sponsor reads, but if one slips through,
+    // drop any paragraph carrying an unambiguous ad marker (URL, promo code,
+    // "link in the description", "this video's sponsor", donation match).
+    const AD_MARKER = /\b(this (?:video|episode)'?s sponsor|sponsored by|use code|promo code|link in (?:the )?(?:description|bio)|first-time donors|donation matched|matched up to \$|\b\w+\.com\/|go to \w+\.com|visit \w+\.com)\b/i;
+    const stripAds = (s: any) => {
+      if (typeof s !== "string") return s;
+      const kept = s.split(/\n\n+/).filter((p: string) => !AD_MARKER.test(p));
+      return (kept.length ? kept : s.split(/\n\n+/)).join("\n\n");
+    };
+    for (const k of ["fullScript", "script", "body", "content", "hook", "cta"]) {
+      if (script[k]) script[k] = stripAds(script[k]);
+    }
+    if (Array.isArray(script.sections)) script.sections = script.sections
+      .filter((s: any) => !AD_MARKER.test(`${s?.title ?? ""} ${s?.content ?? ""}`))
+      .map((s: any) => ({ ...s, title: cleanText(s.title), content: cleanText(s.content) }));
     console.log(`[generate] done in ${elapsed}ms`);
 
     let magnetSuggestions: import("@/lib/magnet-word").MagnetSuggestion[] = [];
