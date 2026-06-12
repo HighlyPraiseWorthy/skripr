@@ -1,6 +1,7 @@
 import { PricingPlans } from "@/components/PricingPlans";
 import { AccountEditButton } from "@/components/AccountEditButton";
 import { BillingPortalButton } from "@/components/BillingPortalButton";
+import { VoiceMatchCard } from "@/components/VoiceMatchCard";
 import { checkScriptLimit } from "@/lib/usage";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
@@ -50,6 +51,13 @@ export default async function SettingsPage() {
               pro: process.env.STRIPE_PRICE_PRO || "",
               agency: process.env.STRIPE_PRICE_AGENCY || "",
             }} currentPlan={currentPlan} />
+          </section>
+
+          {/* Voice Match */}
+          <section style={{ borderRadius: 20, background: C.cardBg, border: `1px solid ${C.border}`, padding: "22px 26px" }}>
+            <p style={{ fontSize: 15, fontWeight: 600, color: C.accent, letterSpacing: 0.4, marginBottom: 8 }}>VOICE MATCH</p>
+            <p style={{ color: C.textDim, fontSize: 15, marginBottom: 16 }}>Teach Skripr to write in your voice</p>
+            <VoiceMatchCard />
           </section>
 
           {/* Billing */}

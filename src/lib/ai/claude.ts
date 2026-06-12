@@ -21,6 +21,7 @@ export interface ScriptGenerationInput {
   viralMagnetWord?: string;
   angle?: string;
   nicheFrameworks?: string;
+  voiceProfile?: string;
 }
 
 export interface GeneratedScript {
@@ -349,6 +350,11 @@ CRITICAL LENGTH REQUIREMENT — scripts shorter than ${targetWords} words are FA
 - A viewer asked for a ${input.targetMinutes}-minute video. Delivering 8 minutes of content is a broken promise.` : ""}
 Tone: ${input.tone}
 Voiceover delivery: plain spoken prose only — no [PAUSE], [EMPHASIS], or any bracketed markers. Every word must be speakable.
+${input.voiceProfile ? `
+CREATOR VOICE PROFILE — this creator's audience knows their voice; the script must sound like THEM, not like a generic narrator. Follow this profile for rhythm, diction, energy, humor, address, transitions, and CTA style. It overrides the generic Tone setting above, but NEVER overrides the banned-phrases list, formatting rules, anti-fabrication rule, no-sponsor rule, or voiceover-only rule:
+
+${input.voiceProfile}
+` : ""}
 ${input.nicheFrameworks ? `
 PROVEN VIRAL FRAMEWORKS FROM THIS NICHE — extracted from real high-performing videos in this exact niche. Model this script's structure, pacing, hook placement, and retention mechanics on these patterns. Adapt the MECHANICS to the new topic; never copy the content or wording:
 

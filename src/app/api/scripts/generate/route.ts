@@ -6,6 +6,7 @@ import { getMagnetSuggestions } from "@/lib/magnet-word";
 import { supabaseAdmin } from "@/lib/db/supabase";
 import { joinHookBody } from "@/lib/script-text";
 import { getNicheFrameworksBlock } from "@/lib/viral-frameworks";
+import { getVoiceProfile } from "@/lib/voice-profile";
 
 export const maxDuration = 300;
 
@@ -80,6 +81,10 @@ export async function POST(req: Request) {
     // captured by Viral Remixer usage. Time-boxed; null when none match.
     const nicheFrameworks = await getNicheFrameworksBlock(niche).catch(() => null);
 
+    // Voice matching: the creator's own style guide, when they've built one
+    const voiceProfile = await getVoiceProfile(userId).catch(() => null);
+    if (voiceProfile) console.log(`[voice] profile injected (${voiceProfile.length} chars)`);
+
     const scriptPromise = generateScript({
       sourceTranscript: truncated,
       targetTopic: topic || "",
@@ -93,6 +98,7 @@ export async function POST(req: Request) {
       viralMagnetWord: magnetWord,
       angle: enhancedAngle || undefined,
       nicheFrameworks: nicheFrameworks || undefined,
+      voiceProfile: voiceProfile || undefined,
     });
 
     const timeoutPromise = new Promise((_, reject) =>

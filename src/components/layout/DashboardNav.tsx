@@ -73,6 +73,15 @@ const navItems: {
     ),
   },
   {
+    href: "/dashboard/outliers",
+    label: "Outlier Finder",
+    isActive: (p) => p.startsWith("/dashboard/outliers"),
+    icon: (
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
+        d="M21 21l-4.35-4.35M11 6a5 5 0 100 10 5 5 0 000-10zm0 2.5V11l1.75 1.75" />
+    ),
+  },
+  {
     href: "/dashboard/scripts",
     label: "My Scripts",
     isActive: (p) =>

@@ -64,14 +64,29 @@ export default function ViralRemixerPage() {
     } catch {}
   }, [url, result, selectedRemix, videoMinutes, extraSeconds]);
 
-  async function handleAnalyze() {
-    if (!url.trim()) return;
+  // Prefill + auto-analyze when arriving from the Outlier Finder (?url=...)
+  useEffect(() => {
+    try {
+      const incoming = new URLSearchParams(window.location.search).get("url");
+      if (incoming && /youtube\.com|youtu\.be/.test(incoming)) {
+        setUrl(incoming);
+        setResult(null);
+        window.history.replaceState({}, "", "/dashboard/viral-remixer");
+        handleAnalyze(incoming);
+      }
+    } catch {}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  async function handleAnalyze(overrideUrl?: string) {
+    const target = (overrideUrl ?? url).trim();
+    if (!target) return;
     setLoading(true); setError(null); setResult(null);
     try {
       const res = await fetch("/api/viral-remixer", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url }),
+        body: JSON.stringify({ url: target }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Analysis failed");
@@ -129,7 +144,7 @@ export default function ViralRemixerPage() {
             />
           </div>
           <button
-            onClick={handleAnalyze}
+            onClick={() => handleAnalyze()}
             disabled={loading || !url.trim()}
             style={{
               height: 42, padding: "0 20px", background: loading ? "rgba(77,184,255,0.35)" : C.accent, color: "#fff",
