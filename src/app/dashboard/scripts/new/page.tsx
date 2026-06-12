@@ -112,7 +112,8 @@ export default function NewScriptPage() {
       if (s.extraSeconds) setExtraSeconds(s.extraSeconds);
       if (s.selectedHookType !== undefined) setSelectedHookType(s.selectedHookType);
       if (s.magnetWords?.length) setMagnetWords(s.magnetWords);
-      if (s.step && s.step !== "generating") setStep(s.step);
+      // Never restore "result"/"generating": the script object isn't persisted,
+      // so restoring those steps renders a blank page. Fresh visits start at input.
     } catch {}
   }, []);
 
@@ -122,7 +123,6 @@ export default function NewScriptPage() {
         inputMode, youtubeUrl, topic, niche, pastedTranscript,
         videoMinutes, extraSeconds, selectedHookType,
         magnetWords,
-        step: step === "generating" ? "input" : step,
       }));
     } catch {}
   }, [inputMode, youtubeUrl, topic, niche, pastedTranscript, videoMinutes, extraSeconds, selectedHookType, magnetWords, step]);
