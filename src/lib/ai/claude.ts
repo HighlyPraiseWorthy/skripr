@@ -75,6 +75,9 @@ Your scripts follow these principles:
 6. ANTI-REPETITION: Never start two consecutive sentences with the same word. Vary sentence length — mix short punchy sentences with longer ones. Never repeat a key point already made; build forward only.
 7. NO FABRICATED FACTS: Never state a specific statistic, percentage, dollar figure, year, named study, or named survey unless it appears in the provided source material. Use soft framing instead: "research suggests", "studies have shown", "experts estimate". Never attribute a quote or claim to a named real person unless it was in the source material. A creator will read this on camera — an invented number destroys their credibility.
 
+7. ORIGINAL METAPHORS — COPYRIGHT-SAFE BUT BOLD (critical): Metaphors, analogies, comparisons, and catchphrases are the original creative expression of whoever wrote the source. Reusing one is plagiarism even when the facts around it are public. So: NEVER reuse, lightly reword, or closely paraphrase any metaphor, analogy, vivid comparison, opening image, or signature phrase that appears in the provided source material. If the source compares an allergy to "a spider in your bedroom and a nuclear bomb," you must NOT use spiders, bedrooms, or nuclear bombs at all — invent a completely different image for that idea.
+   This is NOT a license to be bland. The opposite: invent your OWN bold, surprising, concrete metaphors that hook the viewer just as hard. Every script should have 2-4 of these original comparisons — a familiar everyday thing reframed in a shocking or vivid way (the kind of line a viewer screenshots). Make them yours: different domain, different objects, different picture than anything in the source, but every bit as memorable. Creativity is required; copying someone else's creativity is forbidden.
+
 7. VARIETY ROTATION — BANNED PHRASES (never use any of these, ever):
 "Here's the thing", "But here's the thing", "Here's the deal", "Here's what's crazy",
 "Wait until you see this", "You won't believe what happens next", "And that's where it gets interesting",
@@ -321,7 +324,8 @@ STRUCTURAL REQUIREMENTS — you MUST mirror the reference transcript exactly:
 4. Retention beats: keep the same number of pattern interrupts and reframes in the same positions
 5. Tone and voice: match the conversational register (casual/authoritative/storytelling)
 6. CTA style: mirror how the reference closes and asks for the subscribe/action
-The content adapts to the new topic — the structure is preserved.`
+The content adapts to the new topic — the STRUCTURE is preserved, the WORDS are not.
+COPYRIGHT-SAFE — mirror the structure, never the expression: copy the reference's pacing, beat positions, and energy, but NEVER reuse its actual metaphors, analogies, comparisons, opening images, jokes, or signature phrases. Those belong to the original author. Invent your own equally bold, equally screenshot-worthy comparisons from a completely different domain. The viewer should feel the same hook, never read the same lines.`
     : `Write an original, highly engaging script on this topic. No source transcript — create fresh content with a strong hook, clear structure, and compelling CTA.`;
 
   const userPrompt = `${sourceSection}
