@@ -88,7 +88,7 @@ export default function ScriptBriefPage() {
         if (data?.limitReached) { window.location.href = "/dashboard/settings?upgrade=1"; return; }
         setError(data?.error || "The connection dropped while generating. Please try again."); setPhase("angles"); return;
       }
-      setScript(data); setPhase("result");
+      setScript(data); setSavedId(data.savedId ?? null); setPhase("result");
     } catch (e: any) { setError(e?.message || "Failed to generate script"); setPhase("angles"); }
   }
 

@@ -73,6 +73,7 @@ export default function NewScriptPage() {
   const [extraSeconds, setExtraSeconds] = useState<number>(26);
   const [transcriptText, setTranscriptText] = useState("");
   const [generatedScript, setGeneratedScript] = useState<GeneratedScript | null>(null);
+  const [savedId, setSavedId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [userPlan, setUserPlan] = useState<string>("free");
@@ -159,7 +160,7 @@ export default function NewScriptPage() {
               setError(data?.error || "The connection dropped while generating. Please try again.");
             }
             setStep("input");
-          } else { setGeneratedScript(data); setAppliedMagnetTitle(null); setSelectedMagnet(null); setHookRewriteCount(0); setStep("result"); }
+          } else { setGeneratedScript(data); setAppliedMagnetTitle(null); setSelectedMagnet(null); setHookRewriteCount(0); setSavedId((data as any).savedId ?? null); setStep("result"); }
         })
         .catch(e => { setError(e.message); setStep("input"); });
     }
@@ -227,7 +228,7 @@ export default function NewScriptPage() {
         structurePattern: data.sections?.length ? `${data.sections.length}-section` : undefined,
         niche: data.niche || niche, wordCount: data.wordCount, estimatedDuration: data.estimatedDuration,
       });
-      setHookRewriteCount(0); setStep("result");
+      setHookRewriteCount(0); setSavedId((data as any).savedId ?? null); setStep("result");
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Failed to generate script");
       setStep("input");
@@ -236,6 +237,11 @@ export default function NewScriptPage() {
 
   async function saveScript() {
     if (!generatedScript) return;
+    // Already auto-saved server-side and unmodified — don't create a duplicate row
+    if (savedId && !appliedMagnetTitle && hookRewriteCount === 0) {
+      router.push("/dashboard/scripts");
+      return;
+    }
     setSaving(true); setError(null);
     try {
       const res = await fetch("/api/scripts/save", {
@@ -923,7 +929,7 @@ export default function NewScriptPage() {
                 <span style={{ fontSize: 11, color: "#7a9bb5", textAlign: "center" }}>Uses 1 credit</span>
               </div>
               <button onClick={saveScript} disabled={saving} style={{ flex: 2, padding: "12px 20px", borderRadius: 14, background: grad, color: "#fff", fontSize: 14, fontWeight: 600, border: "none", cursor: saving ? "wait" : "pointer", opacity: saving ? 0.6 : 1, boxShadow: "0 0 22px rgba(77,184,255,0.26)", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
-                {saving ? "Saving…" : "✦ Save Script"}
+                {saving ? "Saving…" : savedId && !appliedMagnetTitle && hookRewriteCount === 0 ? "✓ Saved — View in My Scripts" : "✦ Save Script"}
               </button>
             </div>
           </div>
