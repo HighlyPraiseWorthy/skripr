@@ -6,7 +6,7 @@ import { getMagnetSuggestions } from "@/lib/magnet-word";
 import { supabaseAdmin } from "@/lib/db/supabase";
 import { joinHookBody } from "@/lib/script-text";
 import { getNicheFrameworksBlock } from "@/lib/viral-frameworks";
-import { getVoiceProfile } from "@/lib/voice-profile";
+import { getVoiceProfile, getVoiceProfileById } from "@/lib/voice-profile";
 
 export const maxDuration = 300;
 
@@ -38,7 +38,7 @@ export async function POST(req: Request) {
   const startTime = Date.now();
 
   try {
-    const { transcript, niche, topic, sourceVideoId, videoLength = "long", targetMinutes, viralMagnetWord, angle, remixFramework, hookType, titleFormula, hookScript, contentStructure, retentionTriggers } = await req.json();
+    const { transcript, niche, topic, sourceVideoId, videoLength = "long", targetMinutes, viralMagnetWord, angle, remixFramework, hookType, titleFormula, hookScript, contentStructure, retentionTriggers, voiceProfileId } = await req.json();
 
     // Free plan: scripts capped at 10 minutes — longer scripts are a paid feature
     if (plan === "free" && targetMinutes && targetMinutes > 10) {
@@ -81,8 +81,12 @@ export async function POST(req: Request) {
     // captured by Viral Remixer usage. Time-boxed; null when none match.
     const nicheFrameworks = await getNicheFrameworksBlock(niche).catch(() => null);
 
-    // Voice matching: the creator's own style guide, when they've built one
-    const voiceProfile = await getVoiceProfile(userId).catch(() => null);
+    // Voice matching: per-script selection wins; "default" = no voice;
+    // no selection falls back to the user's active profile
+    let voiceProfile: string | null = null;
+    if (voiceProfileId === "default") voiceProfile = null;
+    else if (voiceProfileId) voiceProfile = await getVoiceProfileById(userId, String(voiceProfileId)).catch(() => null);
+    else voiceProfile = await getVoiceProfile(userId).catch(() => null);
     if (voiceProfile) console.log(`[voice] profile injected (${voiceProfile.length} chars)`);
 
     const scriptPromise = generateScript({

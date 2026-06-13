@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import GenerationProgress from "@/components/GenerationProgress";
 import { joinHookBody, bodyStartsWithHook } from "@/lib/script-text";
+import { VoiceSelect } from "@/components/VoiceSelect";
 
 const C = {
   bg: "#080c12", card: "#0d1520", cardHover: "#111d2e",
@@ -59,6 +60,7 @@ export default function NicheBendBriefPage() {
   const [copied, setCopied] = useState(false);
   const [savedId, setSavedId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [voiceId, setVoiceId] = useState<string | null>(null);
 
   useEffect(() => {
     try {
@@ -119,6 +121,7 @@ export default function NicheBendBriefPage() {
           titleFormula: angle.titleSuggestion, remixFramework: brief.remixFramework,
           contentStructure: brief.structure, retentionTriggers: brief.retentionTriggers,
           angle: "Blend these two niches: " + angle.blendExplained,
+          voiceProfileId: voiceId || undefined,
         }),
       });
       const data = await res.json().catch(() => null);
@@ -257,6 +260,7 @@ export default function NicheBendBriefPage() {
             <p style={{ fontSize: 13, color: C.textDim, margin: 0 }}>Each angle fuses your niche with <strong style={{ color: "#9de4ff" }}>{selectedNiche.name}</strong> to reach both communities.</p>
           </div>
           {error && <div style={{ padding: "12px 16px", borderRadius: 10, background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.25)", color: "#fca5a5", fontSize: 13, marginBottom: 16 }}>{error}</div>}
+          <VoiceSelect value={voiceId} onChange={setVoiceId} />
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             {angles.map((a, i) => (
               <div key={i} onClick={() => handlePickAngle(a)}

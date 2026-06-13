@@ -87,3 +87,19 @@ export async function deleteVoiceProfileById(userId: string, profileId: string):
   if (!supabaseAdmin) return;
   await supabaseAdmin.from("voice_profiles").delete().eq("user_id", userId).eq("id", profileId);
 }
+
+// Per-script voice override: fetch a specific profile's guide (ownership-checked)
+export async function getVoiceProfileById(userId: string, profileId: string): Promise<string | null> {
+  if (!supabaseAdmin) return null;
+  try {
+    const { data } = await supabaseAdmin
+      .from("voice_profiles")
+      .select("style_guide")
+      .eq("user_id", userId)
+      .eq("id", profileId)
+      .maybeSingle();
+    return data?.style_guide || null;
+  } catch {
+    return null;
+  }
+}

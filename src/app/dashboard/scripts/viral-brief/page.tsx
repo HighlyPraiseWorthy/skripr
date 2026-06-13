@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import GenerationProgress from "@/components/GenerationProgress";
 import { joinHookBody, bodyStartsWithHook } from "@/lib/script-text";
+import { VoiceSelect } from "@/components/VoiceSelect";
 
 const C = {
   bg: "#080c12", card: "#0d1520", cardHover: "#111d2e",
@@ -37,6 +38,7 @@ export default function ViralBriefPage() {
   const [copied, setCopied] = useState(false);
   const [savedId, setSavedId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [voiceId, setVoiceId] = useState<string | null>(null);
 
   useEffect(() => {
     try {
@@ -72,6 +74,7 @@ export default function ViralBriefPage() {
           hookType: brief.hookAnalysis.hookType, hookScript: brief.hookAnalysis.hook,
           titleFormula: angle.titleSuggestion, remixFramework: brief.remixFramework,
           contentStructure: brief.structure, retentionTriggers: brief.retentionTriggers,
+          voiceProfileId: voiceId || undefined,
         }),
       });
       const data = await res.json().catch(() => null);
@@ -244,6 +247,8 @@ export default function ViralBriefPage() {
         {error && (
           <div style={{ padding: "12px 16px", borderRadius: 10, background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.25)", color: "#fca5a5", fontSize: 13, marginBottom: 16 }}>{error}</div>
         )}
+        <VoiceSelect value={voiceId} onChange={setVoiceId} />
+
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
           {/* The remix title the user picked — always the first selectable option */}
           {brief?.selectedTitle && (
