@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/db/supabase";
+import { getMagnetTitleStats } from "@/lib/magnet-insights";
 
 export async function GET() {
   if (!supabaseAdmin) return NextResponse.json({ words: [] });
@@ -36,5 +37,18 @@ export async function GET() {
     ...byGrade["C"],
   ];
 
-  return NextResponse.json({ words: result });
+  // #2 Ground in real data: attach how many captured titles each word appears
+  // in (and the top views), so the UI can show honest proof + a trending strip.
+  const stats: Record<string, { count: number; topViews: number }> =
+    await getMagnetTitleStats(result.map((w: any) => w.word)).catch(() => ({}));
+  const withProof = result.map((w: any) => {
+    const s = stats[String(w.word).toLowerCase()];
+    return { ...w, proofCount: s?.count ?? 0, topViews: s?.topViews ?? 0 };
+  });
+  const trending = withProof
+    .filter((w: any) => w.proofCount > 0)
+    .sort((a: any, b: any) => b.proofCount - a.proofCount || b.topViews - a.topViews)
+    .slice(0, 8);
+
+  return NextResponse.json({ words: withProof, trending });
 }

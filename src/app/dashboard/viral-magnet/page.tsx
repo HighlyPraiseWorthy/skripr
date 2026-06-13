@@ -4,7 +4,10 @@ import { useState, useEffect } from "react";
 interface MagnetWord {
   id: string; word: string; grade: string;
   category: string; lift_range: string; why_it_works: string;
+  proofCount?: number; topViews?: number;
 }
+
+interface MagnetPair { word: string; why: string; proofCount?: number; }
 
 interface TitleResult {
   title: string;
@@ -37,10 +40,14 @@ export default function ViralMagnetPage() {
   const [error, setError] = useState<string | null>(null);
   const [plan, setPlan] = useState<string | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
+  const [trending, setTrending] = useState<MagnetWord[]>([]);
+  const [pairs, setPairs] = useState<MagnetPair[]>([]);
+  const [pairsFor, setPairsFor] = useState<string | null>(null);
+  const [pairsLoading, setPairsLoading] = useState(false);
 
   useEffect(() => {
     fetch("/api/user/plan").then(r=>r.json()).then(d=>setPlan(d.plan||"free")).catch(()=>setPlan("free"));
-    fetch("/api/magnet-words").then(r => r.json()).then(d => setWords(d.words || [])).catch(() => {});
+    fetch("/api/magnet-words").then(r => r.json()).then(d => { setWords(d.words || []); setTrending(d.trending || []); }).catch(() => {});
     try {
       const saved = localStorage.getItem("skripr_vm_state");
       if (!saved) return;
@@ -55,6 +62,32 @@ export default function ViralMagnetPage() {
   useEffect(() => {
     try { localStorage.setItem("skripr_vm_state", JSON.stringify({ title, script, selected, result })); } catch {}
   }, [title, script, selected, result]);
+
+  // #1 Pairing: when the primary (first-picked) word changes, fetch the words
+  // that amplify it. Keyed to selected[0] so adding a 2nd/3rd word won't refetch.
+  useEffect(() => {
+    if (plan === "free") return;
+    const primaryWord = words.find(w => w.id === selected[0])?.word || null;
+    if (!primaryWord) { setPairs([]); setPairsFor(null); return; }
+    let cancelled = false;
+    setPairsLoading(true);
+    fetch("/api/magnet-pairs", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ word: primaryWord, topic: title.trim() || undefined }),
+    })
+      .then(r => r.json())
+      .then(d => { if (!cancelled) { setPairs(d.pairs || []); setPairsFor(primaryWord); } })
+      .catch(() => { if (!cancelled) setPairs([]); })
+      .finally(() => { if (!cancelled) setPairsLoading(false); });
+    return () => { cancelled = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selected[0], words.length, plan]);
+
+  const addWordByName = (name: string) => {
+    const w = words.find(x => x.word.toLowerCase() === name.toLowerCase());
+    if (!w) return;
+    setSelected(prev => prev.includes(w.id) || prev.length >= 3 ? prev : [...prev, w.id]);
+  };
 
   const toggleWord = (id: string) => {
     setSelected(prev => {
@@ -157,6 +190,52 @@ export default function ViralMagnetPage() {
               }}
             />
           </div>
+
+          {/* #2 Trending in proven titles — real occurrences from the captured pool */}
+          {trending.length > 0 && (
+            <div style={{ marginBottom: 18, padding: "12px 14px", borderRadius: 12, background: "rgba(245,158,11,0.06)", border: "1px solid rgba(245,158,11,0.22)" }}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: "#fbbf24", letterSpacing: 0.5, marginBottom: 8 }}>🔥 TRENDING IN PROVEN TITLES</div>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
+                {trending.map(w => (
+                  <button key={w.id} onClick={() => addWordByName(w.word)} disabled={selected.includes(w.id) || selected.length >= 3}
+                    title={`Appears in ${w.proofCount} proven title${w.proofCount === 1 ? "" : "s"} Skripr has analyzed`}
+                    style={{ padding: "5px 11px", borderRadius: 8, fontSize: 14, fontWeight: 700, cursor: selected.includes(w.id) || selected.length >= 3 ? "default" : "pointer", border: "1px solid rgba(245,158,11,0.3)", background: selected.includes(w.id) ? "rgba(245,158,11,0.18)" : "transparent", color: "#fcd34d", opacity: !selected.includes(w.id) && selected.length >= 3 ? 0.4 : 1 }}>
+                    {w.word}
+                    <span style={{ marginLeft: 5, fontSize: 9, opacity: 0.7 }}>in {w.proofCount}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* #1 Pairing: words that amplify the primary pick */}
+          {selected.length > 0 && (pairsLoading || pairs.length > 0) && (
+            <div style={{ marginBottom: 18, padding: "12px 14px", borderRadius: 12, background: "rgba(167,139,250,0.06)", border: "1px solid rgba(167,139,250,0.22)" }}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: "#c4b5fd", letterSpacing: 0.5, marginBottom: 8 }}>
+                ⚡ PAIRS WELL WITH “{pairsFor || words.find(w => w.id === selected[0])?.word}”
+              </div>
+              {pairsLoading ? (
+                <div style={{ fontSize: 12, color: C.textDim }}>Finding words that amplify it…</div>
+              ) : (
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
+                  {pairs.map(p => {
+                    const w = words.find(x => x.word.toLowerCase() === p.word.toLowerCase());
+                    const isSel = w ? selected.includes(w.id) : false;
+                    return (
+                      <button key={p.word} onClick={() => addWordByName(p.word)} disabled={isSel || selected.length >= 3}
+                        title={`${p.why}${p.proofCount ? ` · in ${p.proofCount} proven titles` : ""}`}
+                        style={{ padding: "5px 11px", borderRadius: 8, fontSize: 14, fontWeight: 700, cursor: isSel || selected.length >= 3 ? "default" : "pointer", border: "1px solid rgba(167,139,250,0.3)", background: isSel ? "rgba(167,139,250,0.18)" : "transparent", color: "#ddd6fe", opacity: !isSel && selected.length >= 3 ? 0.4 : 1 }}>
+                        + {p.word}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+              {!pairsLoading && pairs.length > 0 && (
+                <div style={{ fontSize: 11, color: C.textDim, marginTop: 8, lineHeight: 1.5 }}>{pairs[0].why}</div>
+              )}
+            </div>
+          )}
 
           {/* Word picker */}
           <div>
