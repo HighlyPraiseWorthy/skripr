@@ -5,7 +5,7 @@ import { checkScriptLimit, incrementGenerationCount, refundGenerationCount } fro
 import { getMagnetSuggestions } from "@/lib/magnet-word";
 import { supabaseAdmin } from "@/lib/db/supabase";
 import { joinHookBody } from "@/lib/script-text";
-import { getNicheFrameworksBlock } from "@/lib/viral-frameworks";
+import { getNicheFrameworksBlock, getBendFrameworksBlock } from "@/lib/viral-frameworks";
 import { getVoiceProfile, getVoiceProfileById } from "@/lib/voice-profile";
 
 export const maxDuration = 300;
@@ -38,7 +38,7 @@ export async function POST(req: Request) {
   const startTime = Date.now();
 
   try {
-    const { transcript, niche, topic, sourceVideoId, videoLength = "long", targetMinutes, viralMagnetWord, angle, remixFramework, hookType, titleFormula, hookScript, contentStructure, retentionTriggers, voiceProfileId } = await req.json();
+    const { transcript, niche, topic, sourceVideoId, videoLength = "long", targetMinutes, viralMagnetWord, angle, remixFramework, hookType, titleFormula, hookScript, contentStructure, retentionTriggers, voiceProfileId, sourceNiche, bridgeNiche } = await req.json();
 
     // Free plan: scripts capped at 10 minutes — longer scripts are a paid feature
     if (plan === "free" && targetMinutes && targetMinutes > 10) {
@@ -77,9 +77,11 @@ export async function POST(req: Request) {
     const truncated = truncateTranscript(transcript || "", cap);
     console.log(`[generate] length=${videoLength} minutes=${targetMinutes ?? "-"} plan=${plan}`);
 
-    // Collective learning layer: real viral frameworks from this niche,
-    // captured by Viral Remixer usage. Time-boxed; null when none match.
-    const nicheFrameworks = await getNicheFrameworksBlock(niche).catch(() => null);
+    // Collective learning layer: real viral frameworks from this niche, captured
+    // by Viral Remixer usage. For a bend, pull from BOTH source + bridge niches.
+    const nicheFrameworks = bridgeNiche
+      ? await getBendFrameworksBlock(sourceNiche || niche, bridgeNiche).catch(() => null)
+      : await getNicheFrameworksBlock(niche).catch(() => null);
 
     // Voice matching: per-script selection wins; "default" = no voice;
     // no selection falls back to the user's active profile

@@ -74,6 +74,7 @@ export default function NicheBendPage() {
       remixFramework: result.remixFramework,
       videoTitle: result.title,
       channelTitle: result.channelTitle,
+      sourceNiche: (result as any).niche || null,
       targetMinutes: videoMinutes,
     };
     sessionStorage.setItem("skripr_niche_bend_brief", JSON.stringify(brief));

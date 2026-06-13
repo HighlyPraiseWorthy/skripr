@@ -19,6 +19,9 @@ type BridgeNiche = {
   hook: string;
   algorithmNote: string;
   titlePreview: string;
+  rpmLabel?: string | null;
+  bridgeRpm?: number | null;
+  proof?: BlendProof | null;
 };
 
 type BlendedAngle = {
@@ -37,7 +40,10 @@ type Brief = {
   remixFramework: string;
   videoTitle: string;
   channelTitle: string;
+  sourceNiche?: string | null;
 };
+
+type BlendProof = { tier: "proven" | "emerging" | "blue_ocean"; topViews: number; hitsOver100k: number; label: string };
 
 const Spinner = ({ label, sub }: { label: string; sub?: string }) => (
   <div style={{ minHeight: "100vh", background: C.bg, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: 14, fontFamily: "system-ui, sans-serif" }}>
@@ -80,7 +86,7 @@ export default function NicheBendBriefPage() {
         body: JSON.stringify({
           videoTitle: b.videoTitle, channelTitle: b.channelTitle,
           remixFramework: b.remixFramework, hookType: b.hookAnalysis.hookType,
-          titleFormula: b.titleFormula,
+          titleFormula: b.titleFormula, sourceNiche: b.sourceNiche || null,
         }),
       });
       const data = await res.json();
@@ -122,6 +128,8 @@ export default function NicheBendBriefPage() {
           contentStructure: brief.structure, retentionTriggers: brief.retentionTriggers,
           angle: "Blend these two niches: " + angle.blendExplained,
           voiceProfileId: voiceId || undefined,
+          sourceNiche: brief.sourceNiche || undefined,
+          bridgeNiche: selectedNiche.parentNiche || undefined,
         }),
       });
       const data = await res.json().catch(() => null);
@@ -305,6 +313,11 @@ export default function NicheBendBriefPage() {
           </div>
           <p style={{ fontSize: 13, color: C.textDim, margin: 0 }}>Each card shows a sub-niche that blends with your content. Titles are previewed using your video’s own formula.</p>
         </div>
+        <div style={{ background: "rgba(52,211,153,0.06)", border: "1px solid rgba(52,211,153,0.22)", borderRadius: 12, padding: "12px 16px", marginBottom: 20 }}>
+          <div style={{ fontSize: 12.5, color: "#a7e8cf", lineHeight: 1.55 }}>
+            <strong style={{ color: C.green }}>Why bending works:</strong> saturated niches force you to compete on quality against thousands of channels. Intersections compete with almost no one — and pull from two recommendation pools at once.
+          </div>
+        </div>
         {brief && (
           <div style={{ background: "rgba(77,184,255,0.06)", border: "1px solid rgba(99,102,241,0.2)", borderRadius: 12, padding: "12px 16px", marginBottom: 20 }}>
             <div style={{ fontSize: 10, fontWeight: 700, color: C.accentDim, letterSpacing: 0.6, marginBottom: 6 }}>ANALYZING FRAMEWORK FROM</div>
@@ -340,7 +353,28 @@ export default function NicheBendBriefPage() {
                 </div>
               )}
               {n.algorithmNote && (
-                <div style={{ fontSize: 11, color: "#7a9bb5" }}>⚡ {n.algorithmNote}</div>
+                <div style={{ fontSize: 11, color: "#7a9bb5", marginBottom: 10 }}>⚡ {n.algorithmNote}</div>
+              )}
+              {(n.proof || n.rpmLabel) && (
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                  {n.proof && (() => {
+                    const tone = n.proof.tier === "proven"
+                      ? { bg: "rgba(52,211,153,0.10)", bd: "rgba(52,211,153,0.3)", fg: "#34d399", icon: "✓" }
+                      : n.proof.tier === "emerging"
+                        ? { bg: "rgba(251,146,60,0.10)", bd: "rgba(251,146,60,0.3)", fg: "#fb923c", icon: "📈" }
+                        : { bg: "rgba(77,184,255,0.10)", bd: "rgba(77,184,255,0.3)", fg: "#9de4ff", icon: "🌊" };
+                    return (
+                      <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 11, fontWeight: 600, padding: "4px 10px", borderRadius: 7, background: tone.bg, border: `1px solid ${tone.bd}`, color: tone.fg }}>
+                        {tone.icon} {n.proof.label}
+                      </span>
+                    );
+                  })()}
+                  {n.rpmLabel && (
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 11, fontWeight: 600, padding: "4px 10px", borderRadius: 7, background: "rgba(250,204,21,0.08)", border: "1px solid rgba(250,204,21,0.28)", color: "#fde047" }}>
+                      💰 {n.rpmLabel}
+                    </span>
+                  )}
+                </div>
               )}
             </div>
           ))}

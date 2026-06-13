@@ -1,16 +1,17 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import Anthropic from "@anthropic-ai/sdk";
+import { rpmArbitrage, fetchBlendProof, resolveNiche } from "@/lib/bend-insights";
 
 const client = new Anthropic();
-export const maxDuration = 30;
+export const maxDuration = 60;
 
 export async function POST(req: Request) {
   const { userId } = await auth();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
-    const { videoTitle, channelTitle, remixFramework, hookType, titleFormula } = await req.json();
+    const { videoTitle, channelTitle, remixFramework, hookType, titleFormula, sourceNiche } = await req.json();
     const formula = (titleFormula?.formula || "").slice(0, 200);
     const framework = (remixFramework || "").slice(0, 400);
 
@@ -67,13 +68,25 @@ For each bridge sub-niche return EXACTLY these JSON fields:
     const raw = "[" + (msg.content[0].type === "text" ? msg.content[0].text : "");
     const parsed = JSON.parse(raw.replace(/```json|```/g, "").trim());
     // Strict field mapping — system prompt enforces exact keys
-    const niches = parsed.map((n: any) => ({
+    const base = parsed.map((n: any) => ({
       name: n.name || "Unknown",
       parentNiche: n.parentNiche || "",
       hook: n.hook || "",
       algorithmNote: n.algorithmNote || "",
       titlePreview: n.titlePreview || "",
     }));
+
+    const sourceNicheName = resolveNiche(sourceNiche)?.name || sourceNiche || "";
+    // Enrich each bridge with real RPM arbitrage (#2) + a YouTube blend proof (#1).
+    // Proof/RPM are best-effort: any failure leaves that field null and the card still renders.
+    const niches = await Promise.all(
+      base.map(async (n: any) => {
+        const rpm = rpmArbitrage(sourceNiche, n.parentNiche);
+        const query = `${n.name} ${sourceNicheName}`.trim();
+        const proof = await fetchBlendProof(query).catch(() => null);
+        return { ...n, rpmLabel: rpm?.label ?? null, bridgeRpm: rpm?.bridgeRpm ?? null, proof };
+      })
+    );
     return NextResponse.json({ niches });
   } catch (e: any) {
     console.error("[suggest-bridge-niches]", e?.message);

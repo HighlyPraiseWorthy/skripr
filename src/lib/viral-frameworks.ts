@@ -123,3 +123,22 @@ export async function getNicheFrameworksBlock(rawNiche: string | null | undefine
     return null;
   }
 }
+
+// Niche Bend (#3): inject proven frameworks from BOTH the source niche and the
+// bridge niche, so a blended script inherits retention mechanics from each
+// community. Falls back gracefully when one or both have no captured frameworks.
+export async function getBendFrameworksBlock(
+  sourceNiche: string | null | undefined,
+  bridgeNiche: string | null | undefined
+): Promise<string | null> {
+  const [a, b] = await Promise.all([
+    getNicheFrameworksBlock(sourceNiche).catch(() => null),
+    normalizeNiche(bridgeNiche) !== normalizeNiche(sourceNiche)
+      ? getNicheFrameworksBlock(bridgeNiche).catch(() => null)
+      : Promise.resolve(null),
+  ]);
+  const parts: string[] = [];
+  if (a) parts.push(`PROVEN FRAMEWORKS FROM THE SOURCE NICHE:\n${a}`);
+  if (b) parts.push(`PROVEN FRAMEWORKS FROM THE BRIDGE NICHE — borrow these communities' retention mechanics:\n${b}`);
+  return parts.length ? parts.join("\n\n") : null;
+}
