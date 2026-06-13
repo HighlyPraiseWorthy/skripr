@@ -142,3 +142,36 @@ export async function getBendFrameworksBlock(
   if (b) parts.push(`PROVEN FRAMEWORKS FROM THE BRIDGE NICHE — borrow these communities' retention mechanics:\n${b}`);
   return parts.length ? parts.join("\n\n") : null;
 }
+
+// Niche Bend learning loop: which niches Skripr has actually collected proven
+// frameworks for, ranked by top view count. Lets bridge suggestions prefer
+// niches we have real data on — so the more people upload, the smarter the
+// blend recommendations get. Time-boxed and empty-safe.
+export interface PoolNicheStat { niche: string; count: number; topViews: number; }
+export async function getPoolNicheStats(): Promise<PoolNicheStat[]> {
+  if (!supabaseAdmin) return [];
+  try {
+    const query = supabaseAdmin
+      .from("viral_frameworks")
+      .select("niche, source_views")
+      .not("niche", "is", null)
+      .limit(1000);
+    const timeout = new Promise<null>((resolve) => setTimeout(() => resolve(null), 2000));
+    const result = (await Promise.race([query, timeout])) as { data: any[] | null } | null;
+    const rows = result?.data;
+    if (!rows || rows.length === 0) return [];
+    const map = new Map<string, { count: number; topViews: number }>();
+    for (const r of rows) {
+      if (!r.niche) continue;
+      const cur = map.get(r.niche) || { count: 0, topViews: 0 };
+      cur.count += 1;
+      cur.topViews = Math.max(cur.topViews, Number(r.source_views || 0));
+      map.set(r.niche, cur);
+    }
+    return [...map.entries()]
+      .map(([niche, v]) => ({ niche, count: v.count, topViews: v.topViews }))
+      .sort((a, b) => b.topViews - a.topViews);
+  } catch {
+    return [];
+  }
+}

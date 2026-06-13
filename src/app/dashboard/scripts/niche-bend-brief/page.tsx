@@ -22,6 +22,7 @@ type BridgeNiche = {
   rpmLabel?: string | null;
   bridgeRpm?: number | null;
   proof?: BlendProof | null;
+  poolCount?: number | null;
 };
 
 type BlendedAngle = {
@@ -406,7 +407,7 @@ export default function NicheBendBriefPage() {
               {n.algorithmNote && (
                 <div style={{ fontSize: 11, color: "#7a9bb5", marginBottom: 10 }}>⚡ {n.algorithmNote}</div>
               )}
-              {(n.proof || n.rpmLabel) && (
+              {(n.proof || n.rpmLabel || n.poolCount) && (
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
                   {n.proof && (() => {
                     const tone = n.proof.tier === "proven"
@@ -425,14 +426,24 @@ export default function NicheBendBriefPage() {
                       💰 {n.rpmLabel}
                     </span>
                   )}
+                  {n.poolCount ? (
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 11, fontWeight: 600, padding: "4px 10px", borderRadius: 7, background: "rgba(167,139,250,0.10)", border: "1px solid rgba(167,139,250,0.3)", color: "#c4b5fd" }}>
+                      📚 Skripr has {n.poolCount} proven framework{n.poolCount === 1 ? "" : "s"} here
+                    </span>
+                  ) : null}
                 </div>
               )}
             </div>
           ))}
         </div>
         {niches.length > 0 && brief && (
-          <div style={{ marginTop: 16, textAlign: "center" }}>
+          <div style={{ marginTop: 16, textAlign: "center", display: "flex", flexDirection: "column", gap: 8, alignItems: "center" }}>
             <button onClick={() => fetchBridgeNiches(brief, seenNiches)} style={{ background: "none", border: "none", color: C.textDim, fontSize: 12, cursor: "pointer", textDecoration: "underline" }}>Generate different sub-niches</button>
+            {seenNiches.length >= 12 && (
+              <button onClick={() => { setSeenNiches([]); fetchBridgeNiches(brief, []); }} style={{ background: "none", border: "none", color: "#7ed8ff", fontSize: 12, cursor: "pointer" }}>
+                Seen a lot of options? ↺ Reset and start fresh
+              </button>
+            )}
           </div>
         )}
       </div>

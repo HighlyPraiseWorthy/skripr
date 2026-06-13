@@ -2,6 +2,10 @@ import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { rpmArbitrage, fetchBlendProof, resolveNiche } from "@/lib/bend-insights";
+import { getPoolNicheStats, normalizeNiche } from "@/lib/viral-frameworks";
+import { getNicheById } from "@/lib/data/niches";
+
+const fmtV = (v: number) => v >= 1e6 ? `${(v / 1e6).toFixed(1)}M` : v >= 1e3 ? `${Math.round(v / 1e3)}K` : `${v}`;
 
 const client = new Anthropic();
 export const maxDuration = 60;
@@ -16,6 +20,17 @@ export async function POST(req: Request) {
     const formula = (titleFormula?.formula || "").slice(0, 200);
     const framework = (remixFramework || "").slice(0, 400);
 
+    // Learning loop: niches Skripr has proven frameworks for, so we can prefer
+    // bridging toward them (and badge them on the card).
+    const poolStats = await getPoolNicheStats().catch(() => []);
+    const srcId = normalizeNiche(sourceNiche);
+    const poolCounts = new Map(poolStats.map(s => [s.niche, s.count]));
+    const poolPref = poolStats
+      .filter(s => s.niche !== srcId)
+      .slice(0, 12)
+      .map(s => `${getNicheById(s.niche)?.name || s.niche} (${s.count} framework${s.count === 1 ? "" : "s"}, top ${fmtV(s.topViews)} views)`)
+      .join("; ");
+
     const msg = await client.messages.create({
       model: "claude-haiku-4-5-20251001",
       max_tokens: 1000,
@@ -29,7 +44,7 @@ Channel: ${channelTitle || "Unknown"}
 Hook type: ${hookType}
 Title formula: ${formula}
 Framework signals: ${framework.slice(0, 150)}
-${excludeList.length ? `\nALREADY SHOWN TO THIS USER — do NOT suggest any of these or close variants; pick 5 genuinely DIFFERENT bridge sub-niches from other communities:\n${excludeList.map(n => `- ${n}`).join("\n")}\n` : ""}
+${excludeList.length ? `\nALREADY SHOWN TO THIS USER — do NOT suggest any of these or close variants; pick 5 genuinely DIFFERENT bridge sub-niches from other communities:\n${excludeList.map(n => `- ${n}`).join("\n")}\n` : ""}${poolPref ? `\nSKRIPR'S LEARNED DATA — these niches have proven high-performing frameworks in our database. PREFER bridging toward these when it still makes a surprising, completely-different-community blend, because the script can then borrow their real retention mechanics:\n${poolPref}\n` : ""}
 STEP 1 — Detect source niche: Based on the video title, channel name, and framework keywords, determine exactly what content niche this creator is in (e.g. "health & weight loss", "personal finance", "gaming", "psychology", "fitness", "true crime", "technology", "cooking").
 
 STEP 2 — Find bridge niches that are COMPLETELY DIFFERENT from that detected niche. Choose from the FULL range of YouTube communities: gaming, true crime, personal finance, philosophy, history, technology, cooking, travel, fitness, sports, relationships, self-improvement, science, comedy, anime, cars, DIY, parenting, fashion, music, real estate, entrepreneurship, military, space, wildlife, language learning, career advice. Pick the 5 that would create the most surprising and compelling cross-community blend. Prioritize variety — never pick 2 niches from the same broad category. Do NOT suggest anything from the same category as the detected source niche.
@@ -86,7 +101,9 @@ For each bridge sub-niche return EXACTLY these JSON fields:
         const rpm = rpmArbitrage(sourceNiche, n.parentNiche);
         const query = `${n.name} ${sourceNicheName}`.trim();
         const proof = await fetchBlendProof(query).catch(() => null);
-        return { ...n, rpmLabel: rpm?.label ?? null, bridgeRpm: rpm?.bridgeRpm ?? null, proof };
+        const bid = resolveNiche(n.parentNiche)?.id ?? null;
+        const poolCount = bid ? (poolCounts.get(bid) ?? 0) : 0;
+        return { ...n, rpmLabel: rpm?.label ?? null, bridgeRpm: rpm?.bridgeRpm ?? null, proof, poolCount: poolCount || null };
       })
     );
     return NextResponse.json({ niches });
