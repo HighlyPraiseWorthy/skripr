@@ -37,6 +37,19 @@ export default function CompliancePage() {
     if (!isSignedIn) setError("auth");
     fetch("/api/user/plan").then(r=>r.json()).then(d=>setPlan(d.plan||"free")).catch(()=>setPlan("free"));
   }, [isLoaded, isSignedIn]);
+  // Prefill when arriving from a saved script (My Scripts → Compliance)
+  useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem("skripr_prefill");
+      if (raw) {
+        const p = JSON.parse(raw);
+        if (p.title) setTitle(p.title);
+        if (p.script) setScript(p.script);
+        if (p.niche) setNiche(p.niche);
+        sessionStorage.removeItem("skripr_prefill");
+      }
+    } catch {}
+  }, []);
 
   async function handleCheck() {
     if (!script.trim() || !title.trim()) return;

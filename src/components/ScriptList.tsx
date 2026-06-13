@@ -2,6 +2,30 @@
 import Link from "next/link";
 import { useState, useMemo } from "react";
 import type { Script } from "@/lib/types/script";
+import { NICHES } from "@/lib/data/niches";
+
+// Saved niches are freeform text; the tool pages' niche <select> uses canonical
+// NICHES ids — resolve so the prefilled niche actually preselects.
+function resolveNicheId(raw?: string | null): string {
+  if (!raw) return "";
+  const s = raw.toLowerCase().trim();
+  const exact = NICHES.find(n => n.id === s || n.name.toLowerCase() === s);
+  if (exact) return exact.id;
+  const partial = NICHES.find(n => s.includes(n.id) || s.includes(n.name.toLowerCase()) || n.name.toLowerCase().includes(s));
+  return partial ? partial.id : "";
+}
+
+// Hand the script off to Metadata / Compliance with its fields prefilled.
+function sendToTool(path: string, script: Script) {
+  try {
+    sessionStorage.setItem("skripr_prefill", JSON.stringify({
+      title: script.title || "",
+      script: (script as any).content || "",
+      niche: resolveNicheId(script.niche),
+    }));
+  } catch {}
+  window.location.href = path;
+}
 
 const C = {
   cardBg: "#0d1520",
@@ -150,6 +174,20 @@ export function ScriptList({ scripts }: { scripts: Script[] }) {
                 </div>
               </div>
               <div style={{ display: "flex", gap: 8, flexShrink: 0, alignItems: "center" }}>
+                <button
+                  onClick={() => sendToTool("/dashboard/metadata", script)}
+                  title="Generate metadata for this script"
+                  style={{ padding: "7px 13px", borderRadius: 10, backgroundColor: "rgba(77,184,255,0.07)", color: C.accent, fontSize: 14, fontWeight: 500, border: "1px solid rgba(77,184,255,0.16)", cursor: "pointer" }}
+                >
+                  🏷 Metadata
+                </button>
+                <button
+                  onClick={() => sendToTool("/dashboard/compliance", script)}
+                  title="Check this script for demonetization risk"
+                  style={{ padding: "7px 13px", borderRadius: 10, backgroundColor: "rgba(77,184,255,0.07)", color: C.accent, fontSize: 14, fontWeight: 500, border: "1px solid rgba(77,184,255,0.16)", cursor: "pointer" }}
+                >
+                  🛡 Compliance
+                </button>
                 <Link
                   href={`/dashboard/scripts/${script.id}`}
                   style={{ padding: "7px 16px", borderRadius: 10, backgroundColor: "rgba(77,184,255,0.09)", color: C.accent, fontSize: 15, fontWeight: 500, textDecoration: "none", border: "1px solid rgba(77,184,255,0.16)" }}

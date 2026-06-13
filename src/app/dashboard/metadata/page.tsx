@@ -42,6 +42,19 @@ export default function MetadataPage() {
   useEffect(() => {
     try { const s = localStorage.getItem("skripr_meta_saved"); if (s) setSavedTitles(JSON.parse(s)); } catch {}
   }, []);
+  // Prefill when arriving from a saved script (My Scripts → Metadata)
+  useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem("skripr_prefill");
+      if (raw) {
+        const p = JSON.parse(raw);
+        if (p.title) setTitle(p.title);
+        if (p.script) setScript(p.script);
+        if (p.niche) setNiche(p.niche);
+        sessionStorage.removeItem("skripr_prefill");
+      }
+    } catch {}
+  }, []);
   useEffect(() => {
     try { localStorage.setItem("skripr_meta_saved", JSON.stringify(savedTitles)); } catch {}
   }, [savedTitles]);
