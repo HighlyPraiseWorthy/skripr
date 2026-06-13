@@ -58,6 +58,7 @@ export default function NicheBendBriefPage() {
   const [phase, setPhase] = useState<Phase>("loading");
   const [brief, setBrief] = useState<Brief | null>(null);
   const [niches, setNiches] = useState<BridgeNiche[]>([]);
+  const [seenNiches, setSeenNiches] = useState<string[]>([]);
   const [selectedNiche, setSelectedNiche] = useState<BridgeNiche | null>(null);
   const [angles, setAngles] = useState<BlendedAngle[]>([]);
   const [selectedAngle, setSelectedAngle] = useState<BlendedAngle | null>(null);
@@ -78,7 +79,7 @@ export default function NicheBendBriefPage() {
     } catch { window.location.href = "/dashboard/niche-bend"; }
   }, []);
 
-  async function fetchBridgeNiches(b: Brief) {
+  async function fetchBridgeNiches(b: Brief, exclude: string[] = []) {
     setPhase("loading");
     try {
       const res = await fetch("/api/suggest-bridge-niches", {
@@ -87,11 +88,14 @@ export default function NicheBendBriefPage() {
           videoTitle: b.videoTitle, channelTitle: b.channelTitle,
           remixFramework: b.remixFramework, hookType: b.hookAnalysis.hookType,
           titleFormula: b.titleFormula, sourceNiche: b.sourceNiche || null,
+          exclude,
         }),
       });
       const data = await res.json();
       if (data.error) throw new Error(data.error);
-      setNiches(data.niches ?? []);
+      const fresh: BridgeNiche[] = data.niches ?? [];
+      setNiches(fresh);
+      setSeenNiches(prev => Array.from(new Set([...prev, ...fresh.map(n => n.name)])));
       setPhase("niches");
     } catch (e: any) { setError(e?.message || "Failed to generate bridge niches"); setPhase("niches"); }
   }
@@ -428,7 +432,7 @@ export default function NicheBendBriefPage() {
         </div>
         {niches.length > 0 && brief && (
           <div style={{ marginTop: 16, textAlign: "center" }}>
-            <button onClick={() => fetchBridgeNiches(brief)} style={{ background: "none", border: "none", color: C.textDim, fontSize: 12, cursor: "pointer", textDecoration: "underline" }}>Generate different sub-niches</button>
+            <button onClick={() => fetchBridgeNiches(brief, seenNiches)} style={{ background: "none", border: "none", color: C.textDim, fontSize: 12, cursor: "pointer", textDecoration: "underline" }}>Generate different sub-niches</button>
           </div>
         )}
       </div>

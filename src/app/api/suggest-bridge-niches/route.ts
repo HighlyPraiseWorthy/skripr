@@ -11,13 +11,15 @@ export async function POST(req: Request) {
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
-    const { videoTitle, channelTitle, remixFramework, hookType, titleFormula, sourceNiche } = await req.json();
+    const { videoTitle, channelTitle, remixFramework, hookType, titleFormula, sourceNiche, exclude } = await req.json();
+    const excludeList: string[] = Array.isArray(exclude) ? exclude.filter(Boolean).slice(0, 40) : [];
     const formula = (titleFormula?.formula || "").slice(0, 200);
     const framework = (remixFramework || "").slice(0, 400);
 
     const msg = await client.messages.create({
       model: "claude-haiku-4-5-20251001",
       max_tokens: 1000,
+      temperature: 1, // variety across refreshes
       system: `You output ONLY valid JSON arrays. No prose, no markdown. Start with [ and end with ].
 Each object must have EXACTLY these keys: "name", "parentNiche", "hook", "algorithmNote", "titlePreview".`,
       messages: [{
@@ -27,7 +29,7 @@ Channel: ${channelTitle || "Unknown"}
 Hook type: ${hookType}
 Title formula: ${formula}
 Framework signals: ${framework.slice(0, 150)}
-
+${excludeList.length ? `\nALREADY SHOWN TO THIS USER — do NOT suggest any of these or close variants; pick 5 genuinely DIFFERENT bridge sub-niches from other communities:\n${excludeList.map(n => `- ${n}`).join("\n")}\n` : ""}
 STEP 1 — Detect source niche: Based on the video title, channel name, and framework keywords, determine exactly what content niche this creator is in (e.g. "health & weight loss", "personal finance", "gaming", "psychology", "fitness", "true crime", "technology", "cooking").
 
 STEP 2 — Find bridge niches that are COMPLETELY DIFFERENT from that detected niche. Choose from the FULL range of YouTube communities: gaming, true crime, personal finance, philosophy, history, technology, cooking, travel, fitness, sports, relationships, self-improvement, science, comedy, anime, cars, DIY, parenting, fashion, music, real estate, entrepreneurship, military, space, wildlife, language learning, career advice. Pick the 5 that would create the most surprising and compelling cross-community blend. Prioritize variety — never pick 2 niches from the same broad category. Do NOT suggest anything from the same category as the detected source niche.
