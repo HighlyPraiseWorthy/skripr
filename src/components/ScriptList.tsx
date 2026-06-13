@@ -49,7 +49,7 @@ function timeAgo(dateStr: string): string {
   return `${Math.floor(hrs / 24)}d ago`;
 }
 
-export function ScriptList({ scripts }: { scripts: Script[] }) {
+export function ScriptList({ scripts, isPaid = false }: { scripts: Script[]; isPaid?: boolean }) {
   const [search, setSearch] = useState("");
   const [filterNiche, setFilterNiche] = useState("all");
   const [sortBy, setSortBy] = useState<"newest" | "oldest" | "words">("newest");
@@ -171,23 +171,32 @@ export function ScriptList({ scripts }: { scripts: Script[] }) {
                   <span style={{ color: "#8abadc", fontSize: 15 }}>{(script.word_count || 0).toLocaleString()} words</span>
                   <span style={{ color: "#8abadc", fontSize: 15 }}>~{Math.round((script.estimated_duration || 0) / 60) || 1} min</span>
                   {script.created_at && <span style={{ color: "#8abadc", fontSize: 15 }}>{timeAgo(script.created_at)}</span>}
+                  {script.voice_name && (
+                    <span title="Voice Match used for this script" style={{ display: "inline-flex", alignItems: "center", gap: 4, padding: "3px 10px", borderRadius: 8, background: "rgba(167,139,250,0.10)", border: "1px solid rgba(167,139,250,0.3)", color: "#c4b5fd", fontSize: 13, fontWeight: 600 }}>
+                      🎙 {script.voice_name}
+                    </span>
+                  )}
                 </div>
               </div>
               <div style={{ display: "flex", gap: 8, flexShrink: 0, alignItems: "center" }}>
-                <button
-                  onClick={() => sendToTool("/dashboard/metadata", script)}
-                  title="Generate metadata for this script"
-                  style={{ padding: "7px 13px", borderRadius: 10, backgroundColor: "rgba(77,184,255,0.07)", color: C.accent, fontSize: 14, fontWeight: 500, border: "1px solid rgba(77,184,255,0.16)", cursor: "pointer" }}
-                >
-                  🏷 Metadata
-                </button>
-                <button
-                  onClick={() => sendToTool("/dashboard/compliance", script)}
-                  title="Check this script for demonetization risk"
-                  style={{ padding: "7px 13px", borderRadius: 10, backgroundColor: "rgba(77,184,255,0.07)", color: C.accent, fontSize: 14, fontWeight: 500, border: "1px solid rgba(77,184,255,0.16)", cursor: "pointer" }}
-                >
-                  🛡 Compliance
-                </button>
+                {isPaid && (
+                  <>
+                    <button
+                      onClick={() => sendToTool("/dashboard/metadata", script)}
+                      title="Generate metadata for this script"
+                      style={{ padding: "7px 13px", borderRadius: 10, backgroundColor: "rgba(77,184,255,0.07)", color: C.accent, fontSize: 14, fontWeight: 500, border: "1px solid rgba(77,184,255,0.16)", cursor: "pointer" }}
+                    >
+                      🏷 Metadata
+                    </button>
+                    <button
+                      onClick={() => sendToTool("/dashboard/compliance", script)}
+                      title="Check this script for demonetization risk"
+                      style={{ padding: "7px 13px", borderRadius: 10, backgroundColor: "rgba(77,184,255,0.07)", color: C.accent, fontSize: 14, fontWeight: 500, border: "1px solid rgba(77,184,255,0.16)", cursor: "pointer" }}
+                    >
+                      🛡 Compliance
+                    </button>
+                  </>
+                )}
                 <Link
                   href={`/dashboard/scripts/${script.id}`}
                   style={{ padding: "7px 16px", borderRadius: 10, backgroundColor: "rgba(77,184,255,0.09)", color: C.accent, fontSize: 15, fontWeight: 500, textDecoration: "none", border: "1px solid rgba(77,184,255,0.16)" }}

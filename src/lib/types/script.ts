@@ -27,6 +27,7 @@ export interface Script {
   metadata: Record<string, unknown> | null;
   compliance_score: number | null;
   status: string | null;
+  voice_name?: string | null;
   created_at: string;
   updated_at: string;
   versions?: ScriptVersion[];

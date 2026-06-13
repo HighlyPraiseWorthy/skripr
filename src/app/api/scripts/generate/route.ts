@@ -6,7 +6,7 @@ import { getMagnetSuggestions } from "@/lib/magnet-word";
 import { supabaseAdmin } from "@/lib/db/supabase";
 import { joinHookBody } from "@/lib/script-text";
 import { getNicheFrameworksBlock, getBendFrameworksBlock } from "@/lib/viral-frameworks";
-import { getVoiceProfile, getVoiceProfileById } from "@/lib/voice-profile";
+import { getActiveVoiceMeta, getVoiceMetaById } from "@/lib/voice-profile";
 import { captureFrameworkInBackground } from "@/lib/framework-capture";
 
 export const maxDuration = 300;
@@ -87,10 +87,15 @@ export async function POST(req: Request) {
     // Voice matching: per-script selection wins; "default" = no voice;
     // no selection falls back to the user's active profile
     let voiceProfile: string | null = null;
-    if (voiceProfileId === "default") voiceProfile = null;
-    else if (voiceProfileId) voiceProfile = await getVoiceProfileById(userId, String(voiceProfileId)).catch(() => null);
-    else voiceProfile = await getVoiceProfile(userId).catch(() => null);
-    if (voiceProfile) console.log(`[voice] profile injected (${voiceProfile.length} chars)`);
+    let voiceName: string | null = null;
+    if (voiceProfileId === "default") { /* explicit Skripr Default — no voice */ }
+    else {
+      const meta = voiceProfileId
+        ? await getVoiceMetaById(userId, String(voiceProfileId)).catch(() => null)
+        : await getActiveVoiceMeta(userId).catch(() => null);
+      if (meta) { voiceProfile = meta.styleGuide; voiceName = meta.name; }
+    }
+    if (voiceProfile) console.log(`[voice] profile injected: ${voiceName} (${voiceProfile.length} chars)`);
 
     // Learning loop: if this is a remix of a real YouTube video (New Script URL),
     // bank its framework into the pool. Overlaps generation so it adds ~no
@@ -200,6 +205,7 @@ export async function POST(req: Request) {
             word_count: wordCount,
             // integer column, stored as seconds — the UI renders Math.round(x / 60) min
             estimated_duration: targetMinutes ? targetMinutes * 60 : null,
+            voice_name: voiceName,
             source_video_id: sourceVideoId || null,
           })
           .select("id")

@@ -124,7 +124,7 @@ export default async function ScriptsPage() {
         {scripts.length === 0 ? (
           <EmptyStateGuide />
         ) : (
-          <ScriptList scripts={scripts} />
+          <ScriptList scripts={scripts} isPaid={usageData.plan !== "free"} />
         )}
       </div>
     </div>

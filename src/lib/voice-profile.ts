@@ -103,3 +103,36 @@ export async function getVoiceProfileById(userId: string, profileId: string): Pr
     return null;
   }
 }
+
+// Variants that also return the voice name, so generation can record which
+// voice produced each script (shown in My Scripts).
+export async function getActiveVoiceMeta(userId: string): Promise<{ styleGuide: string; name: string } | null> {
+  if (!supabaseAdmin) return null;
+  try {
+    const { data } = await supabaseAdmin
+      .from("voice_profiles")
+      .select("style_guide, name")
+      .eq("user_id", userId)
+      .eq("is_active", true)
+      .limit(1)
+      .maybeSingle();
+    return data ? { styleGuide: data.style_guide, name: data.name } : null;
+  } catch {
+    return null;
+  }
+}
+
+export async function getVoiceMetaById(userId: string, profileId: string): Promise<{ styleGuide: string; name: string } | null> {
+  if (!supabaseAdmin) return null;
+  try {
+    const { data } = await supabaseAdmin
+      .from("voice_profiles")
+      .select("style_guide, name")
+      .eq("user_id", userId)
+      .eq("id", profileId)
+      .maybeSingle();
+    return data ? { styleGuide: data.style_guide, name: data.name } : null;
+  } catch {
+    return null;
+  }
+}
