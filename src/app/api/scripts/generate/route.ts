@@ -7,6 +7,7 @@ import { supabaseAdmin } from "@/lib/db/supabase";
 import { joinHookBody } from "@/lib/script-text";
 import { getNicheFrameworksBlock, getBendFrameworksBlock } from "@/lib/viral-frameworks";
 import { getVoiceProfile, getVoiceProfileById } from "@/lib/voice-profile";
+import { captureFrameworkInBackground } from "@/lib/framework-capture";
 
 export const maxDuration = 300;
 
@@ -90,6 +91,13 @@ export async function POST(req: Request) {
     else if (voiceProfileId) voiceProfile = await getVoiceProfileById(userId, String(voiceProfileId)).catch(() => null);
     else voiceProfile = await getVoiceProfile(userId).catch(() => null);
     if (voiceProfile) console.log(`[voice] profile injected (${voiceProfile.length} chars)`);
+
+    // Learning loop: if this is a remix of a real YouTube video (New Script URL),
+    // bank its framework into the pool. Overlaps generation so it adds ~no
+    // wall-time, and skips if the video was already captured. Never blocks.
+    const capturePromise: Promise<void> = (sourceVideoId && typeof transcript === "string" && transcript.trim().length > 200)
+      ? captureFrameworkInBackground({ videoId: String(sourceVideoId), transcript, title: topic || null })
+      : Promise.resolve();
 
     const scriptPromise = generateScript({
       sourceTranscript: truncated,
@@ -203,6 +211,7 @@ export async function POST(req: Request) {
       console.error("[autosave] failed:", e);
     }
 
+    await capturePromise.catch(() => {}); // already overlapped generation; ensure it lands
     console.log(`[generate] total ${Date.now() - startTime}ms`);
     return NextResponse.json({ ...script, magnetSuggestions, savedId });
   } catch (error: any) {

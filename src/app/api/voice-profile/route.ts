@@ -10,6 +10,7 @@ import {
 } from "@/lib/voice-profile";
 import { fetchChannelLongform } from "@/lib/youtube-channel";
 import { getTranscriptRobust } from "@/lib/youtube-transcript";
+import { captureFrameworkInBackground } from "@/lib/framework-capture";
 
 export const maxDuration = 120;
 
@@ -31,16 +32,20 @@ export async function GET() {
   return NextResponse.json({ profiles: profiles.map(toClient), max: MAX_PROFILES });
 }
 
-async function samplesFromChannel(channelInput: string): Promise<{ samples: string; channelTitle: string }> {
+async function samplesFromChannel(channelInput: string): Promise<{ samples: string; channelTitle: string; videos: { videoId: string; transcript: string; title: string; views: number }[] }> {
   const scan = await fetchChannelLongform(channelInput);
   // The channel's most-viewed long-form videos carry the most representative voice
   const top = [...scan.videos].sort((a, b) => b.views - a.views).slice(0, 3);
   if (top.length === 0) throw new Error("No long-form videos found on this channel");
   const transcripts: string[] = [];
+  const videos: { videoId: string; transcript: string; title: string; views: number }[] = [];
   for (const v of top) {
     try {
       const t = await getTranscriptRobust(v.videoId);
-      if (t?.trim()) transcripts.push(t.slice(0, 9000));
+      if (t?.trim()) {
+        transcripts.push(t.slice(0, 9000));
+        videos.push({ videoId: v.videoId, transcript: t, title: v.title, views: v.views });
+      }
     } catch (e: any) {
       console.error(`[voice-profile] transcript failed for ${v.videoId}:`, e?.message);
     }
@@ -49,7 +54,7 @@ async function samplesFromChannel(channelInput: string): Promise<{ samples: stri
   if (joined.length < 400) {
     throw new Error("Couldn't fetch transcripts from this channel's videos — try pasting scripts instead");
   }
-  return { samples: joined, channelTitle: scan.channel.title };
+  return { samples: joined, channelTitle: scan.channel.title, videos };
 }
 
 export async function POST(req: Request) {
@@ -62,11 +67,13 @@ export async function POST(req: Request) {
     let text = String(samples || "").trim();
     let source = "scripts";
     let resolvedName = String(name || "").trim();
+    let channelVideos: { videoId: string; transcript: string; title: string; views: number }[] = [];
 
     if (!text && channel) {
       const fromChannel = await samplesFromChannel(String(channel));
       text = fromChannel.samples;
       source = "channel";
+      channelVideos = fromChannel.videos;
       if (!resolvedName) resolvedName = fromChannel.channelTitle;
     }
 
@@ -107,6 +114,15 @@ Be specific and concrete. No generic filler like "engaging" or "conversational" 
     if (!styleGuide) throw new Error("Style analysis came back empty — please try again");
 
     const profile = await createVoiceProfile(userId, resolvedName, source, styleGuide, text.slice(0, 600));
+
+    // Learning loop: bank frameworks from the channel's videos we already pulled
+    // transcripts for. Parallel + skip-if-already-captured, so it's bounded.
+    if (channelVideos.length) {
+      await Promise.allSettled(channelVideos.map(v =>
+        captureFrameworkInBackground({ videoId: v.videoId, transcript: v.transcript, title: v.title, views: v.views })
+      ));
+    }
+
     return NextResponse.json({ profile: toClient(profile) });
   } catch (e: any) {
     console.error("[voice-profile]", e?.message);
