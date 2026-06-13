@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import GenerationProgress from "@/components/GenerationProgress";
 import { joinHookBody, bodyStartsWithHook } from "@/lib/script-text";
 import { VoiceSelect } from "@/components/VoiceSelect";
+import { CompanionCtaToggle } from "@/components/CompanionCtaToggle";
 
 const C = {
   bg: "#080c12", card: "#0d1520", cardHover: "#111d2e",
@@ -41,6 +42,7 @@ export default function ScriptBriefPage() {
   const [selectedMagnet, setSelectedMagnet] = useState<number | null>(null);
   const [appliedMagnetTitle, setAppliedMagnetTitle] = useState<string | null>(null);
   const [voiceId, setVoiceId] = useState<string | null>(null);
+  const [companionCta, setCompanionCta] = useState(false);
 
   useEffect(() => {
     try {
@@ -82,6 +84,7 @@ export default function ScriptBriefPage() {
           targetMinutes: (brief as any).targetMinutes ?? undefined,
           viralMagnetWord: (brief as any).viralMagnetWord || undefined,
           voiceProfileId: voiceId || undefined,
+          companionCta,
           hookType: angle.hookType,
           angle: `Hook type: ${angle.hookType}. Opening hook to adapt: "${angle.hookPremise}". Suggested title: ${angle.titleSuggestion}`,
         }),
@@ -268,6 +271,7 @@ export default function ScriptBriefPage() {
         {error && <div style={{ padding: "12px 16px", borderRadius: 10, background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.25)", color: "#fca5a5", fontSize: 13, marginBottom: 16 }}>{error}</div>}
 
         <VoiceSelect value={voiceId} onChange={setVoiceId} />
+        <CompanionCtaToggle value={companionCta} onChange={setCompanionCta} />
 
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           {(brief?.angles ?? []).map((a, i) => {

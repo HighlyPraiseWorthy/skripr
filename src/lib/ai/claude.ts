@@ -22,6 +22,7 @@ export interface ScriptGenerationInput {
   angle?: string;
   nicheFrameworks?: string;
   voiceProfile?: string;
+  companionCta?: boolean;
 }
 
 export interface GeneratedScript {
@@ -350,6 +351,9 @@ CRITICAL LENGTH REQUIREMENT — scripts shorter than ${targetWords} words are FA
 - A viewer asked for a ${input.targetMinutes}-minute video. Delivering 8 minutes of content is a broken promise.` : ""}
 Tone: ${input.tone}
 Voiceover delivery: plain spoken prose only — no [PAUSE], [EMPHASIS], or any bracketed markers. Every word must be speakable.
+${input.companionCta
+  ? `COMPANION VIDEO CTA: End the script with a brief, natural call to action that points viewers to a RELATED video on this channel, phrased so it is true whether the creator places it on the end screen or in the description — e.g. "that video is either above this one right now or linked in the description." Keep the reference GENERAL — do NOT invent a specific title or topic for that video.`
+  : `NO COMPANION VIDEO: The creator may not have a related video to point to. Do NOT reference, tease, or claim that another video exists on this channel — no "watch my other video", "the next video is already waiting", "the video right after this", "above this one", or "linked in the description". Close instead with only a subscribe / comment / apply-this-now style CTA.`}
 ${input.voiceProfile ? `
 CREATOR VOICE PROFILE — this creator's audience knows their voice; the script must sound like THEM, not like a generic narrator. Follow this profile for rhythm, diction, energy, humor, address, transitions, and CTA style. It overrides the generic Tone setting above, but NEVER overrides the banned-phrases list, formatting rules, anti-fabrication rule, no-sponsor rule, or voiceover-only rule:
 
