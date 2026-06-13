@@ -270,6 +270,53 @@ export default function NicheBendBriefPage() {
           {error && <div style={{ padding: "12px 16px", borderRadius: 10, background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.25)", color: "#fca5a5", fontSize: 13, marginBottom: 16 }}>{error}</div>}
           <VoiceSelect value={voiceId} onChange={setVoiceId} />
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            {/* The bridge sub-niche the user picked — always the first selectable option */}
+            <div
+              onClick={() => handlePickAngle({
+                angle: selectedNiche.name,
+                description: selectedNiche.hook || `Blend your topic with ${selectedNiche.name}.`,
+                audience: selectedNiche.parentNiche || selectedNiche.name,
+                titleSuggestion: selectedNiche.titlePreview || "",
+                blendExplained: selectedNiche.hook || `${selectedNiche.name} (${selectedNiche.parentNiche})`,
+              })}
+              style={{ background: "rgba(77,184,255,0.07)", border: "1px solid rgba(77,184,255,0.45)", borderRadius: 14, padding: "18px 20px", cursor: "pointer", transition: "all 0.15s", display: "flex", alignItems: "flex-start", gap: 16 }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "rgba(77,184,255,0.12)"; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "rgba(77,184,255,0.07)"; }}>
+              <div style={{ width: 32, height: 32, borderRadius: 8, background: "rgba(77,184,255,0.2)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, fontSize: 15, color: "#9de4ff" }}>★</div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontSize: 10, fontWeight: 700, color: "#7ed8ff", letterSpacing: 0.6, marginBottom: 5 }}>YOUR PICK — {selectedNiche.parentNiche?.toUpperCase() || "BRIDGE"} BLEND</div>
+                <div style={{ fontSize: 15, fontWeight: 700, color: C.textBright, marginBottom: 4, lineHeight: 1.3 }}>{selectedNiche.name}</div>
+                {selectedNiche.hook && <div style={{ fontSize: 12, color: C.textDim, lineHeight: 1.5, marginBottom: 8 }}>{selectedNiche.hook}</div>}
+                {selectedNiche.titlePreview && (
+                  <div style={{ background: "rgba(77,184,255,0.06)", border: "1px solid rgba(77,184,255,0.13)", borderRadius: 7, padding: "6px 10px", marginBottom: 8 }}>
+                    <span style={{ fontSize: 10, fontWeight: 700, color: C.accentDim, marginRight: 6 }}>TITLE →</span>
+                    <span style={{ fontSize: 11, color: "#9de4ff", fontWeight: 600 }}>{selectedNiche.titlePreview}</span>
+                  </div>
+                )}
+                {(selectedNiche.proof || selectedNiche.rpmLabel) && (
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                    {selectedNiche.proof && (() => {
+                      const tone = selectedNiche.proof.tier === "proven"
+                        ? { bg: "rgba(52,211,153,0.10)", bd: "rgba(52,211,153,0.3)", fg: "#34d399", icon: "✓" }
+                        : selectedNiche.proof.tier === "emerging"
+                          ? { bg: "rgba(251,146,60,0.10)", bd: "rgba(251,146,60,0.3)", fg: "#fb923c", icon: "📈" }
+                          : { bg: "rgba(77,184,255,0.10)", bd: "rgba(77,184,255,0.3)", fg: "#9de4ff", icon: "🌊" };
+                      return (
+                        <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 11, fontWeight: 600, padding: "4px 10px", borderRadius: 7, background: tone.bg, border: `1px solid ${tone.bd}`, color: tone.fg }}>
+                          {tone.icon} {selectedNiche.proof.label}
+                        </span>
+                      );
+                    })()}
+                    {selectedNiche.rpmLabel && (
+                      <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 11, fontWeight: 600, padding: "4px 10px", borderRadius: 7, background: "rgba(250,204,21,0.08)", border: "1px solid rgba(250,204,21,0.28)", color: "#fde047" }}>
+                        💰 {selectedNiche.rpmLabel}
+                      </span>
+                    )}
+                  </div>
+                )}
+              </div>
+              <div style={{ flexShrink: 0, width: 32, height: 32, borderRadius: 8, background: "linear-gradient(135deg, #0e6499 0%, #1a8fd1 100%)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, color: "#fff" }}>→</div>
+            </div>
             {angles.map((a, i) => (
               <div key={i} onClick={() => handlePickAngle(a)}
                 style={{ background: C.card, border: "1px solid " + C.border, borderRadius: 14, padding: "18px 20px", cursor: "pointer", transition: "all 0.15s", display: "flex", alignItems: "flex-start", gap: 16 }}
