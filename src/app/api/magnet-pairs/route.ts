@@ -20,30 +20,37 @@ export async function POST(req: Request) {
   if (plan === "free") return NextResponse.json({ error: "Starter plan required" }, { status: 403 });
 
   try {
-    const { word, topic } = await req.json();
-    if (!word?.trim()) return NextResponse.json({ error: "word required" }, { status: 400 });
+    const body = await req.json();
+    const topic = body.topic;
+    // Accept the full current selection (words[]) — fall back to single `word`
+    const picked: string[] = Array.isArray(body.words)
+      ? body.words.filter(Boolean).map(String)
+      : (body.word ? [String(body.word)] : []);
+    if (picked.length === 0) return NextResponse.json({ pairs: [] });
     if (!supabaseAdmin) return NextResponse.json({ pairs: [] });
 
+    const pickedLower = new Set(picked.map(w => w.toLowerCase()));
     const { data } = await supabaseAdmin
       .from("magnet_words")
       .select("word")
       .eq("is_active", true);
-    const vocab: string[] = (data || []).map((w: any) => w.word).filter((w: string) => w.toLowerCase() !== String(word).toLowerCase());
+    const vocab: string[] = (data || []).map((w: any) => w.word).filter((w: string) => !pickedLower.has(w.toLowerCase()));
     if (vocab.length === 0) return NextResponse.json({ pairs: [] });
 
+    const stack = picked.join(" + ");
     const msg = await client.messages.create({
       model: "claude-haiku-4-5-20251001",
       max_tokens: 600,
       system: `You output ONLY a valid JSON array. No prose, no markdown. Start with [ and end with ].`,
       messages: [{
         role: "user",
-        content: `A creator is using the viral title word "${word}"${topic ? ` for a video about: "${String(topic).slice(0, 120)}"` : ""}.
+        content: `A creator is stacking these viral title words: "${stack}"${topic ? ` for a video about: "${String(topic).slice(0, 120)}"` : ""}.
 
-From this list of proven title words, pick the 4 that most AMPLIFY "${word}" when combined in the same title — words that compound the curiosity, emotion, or stakes rather than overlap with it:
+From this list of proven title words, pick the 4 that would most AMPLIFY this combination if added — words that compound the curiosity, emotion, or stakes of "${stack}" rather than overlap with what's already there:
 ${vocab.join(", ")}
 
-For each, return: {"word": "exact word from the list", "why": "one short clause on why it compounds with ${word}"}.
-Return a JSON array of exactly 4 objects, best pairing first.`,
+For each, return: {"word": "exact word from the list", "why": "one short clause on why it strengthens the ${stack} combination"}.
+Return a JSON array of exactly 4 objects, best addition first.`,
       }],
     });
 
@@ -53,7 +60,7 @@ Return a JSON array of exactly 4 objects, best pairing first.`,
     pairs = (Array.isArray(pairs) ? pairs : []).filter(p => p?.word).slice(0, 4);
 
     // Attach honest proof from the captured-title pool
-    const stats = await getMagnetTitleStats([word, ...pairs.map(p => p.word)]).catch(() => ({} as any));
+    const stats = await getMagnetTitleStats([...picked, ...pairs.map(p => p.word)]).catch(() => ({} as any));
     const enriched = pairs.map(p => {
       const s = stats[p.word.toLowerCase()];
       return { ...p, proofCount: s?.count ?? 0 };

@@ -63,25 +63,26 @@ export default function ViralMagnetPage() {
     try { localStorage.setItem("skripr_vm_state", JSON.stringify({ title, script, selected, result })); } catch {}
   }, [title, script, selected, result]);
 
-  // #1 Pairing: when the primary (first-picked) word changes, fetch the words
-  // that amplify it. Keyed to selected[0] so adding a 2nd/3rd word won't refetch.
+  // #1 Pairing: suggest the next word that amplifies the WHOLE current
+  // selection. Updates as words are added/removed; hides once 3 are picked.
+  const selKey = selected.join(",");
   useEffect(() => {
     if (plan === "free") return;
-    const primaryWord = words.find(w => w.id === selected[0])?.word || null;
-    if (!primaryWord) { setPairs([]); setPairsFor(null); return; }
+    const pickedNames = selected.map(id => words.find(w => w.id === id)?.word).filter(Boolean) as string[];
+    if (pickedNames.length === 0 || pickedNames.length >= 3) { setPairs([]); setPairsFor(null); return; }
     let cancelled = false;
     setPairsLoading(true);
     fetch("/api/magnet-pairs", {
       method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ word: primaryWord, topic: title.trim() || undefined }),
+      body: JSON.stringify({ words: pickedNames, topic: title.trim() || undefined }),
     })
       .then(r => r.json())
-      .then(d => { if (!cancelled) { setPairs(d.pairs || []); setPairsFor(primaryWord); } })
+      .then(d => { if (!cancelled) { setPairs(d.pairs || []); setPairsFor(pickedNames.join(" + ")); } })
       .catch(() => { if (!cancelled) setPairs([]); })
       .finally(() => { if (!cancelled) setPairsLoading(false); });
     return () => { cancelled = true; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selected[0], words.length, plan]);
+  }, [selKey, words.length, plan]);
 
   const addWordByName = (name: string) => {
     const w = words.find(x => x.word.toLowerCase() === name.toLowerCase());
@@ -208,11 +209,11 @@ export default function ViralMagnetPage() {
             </div>
           )}
 
-          {/* #1 Pairing: words that amplify the primary pick */}
-          {selected.length > 0 && (pairsLoading || pairs.length > 0) && (
+          {/* #1 Pairing: the next word that amplifies the whole current selection */}
+          {selected.length > 0 && selected.length < 3 && (pairsLoading || pairs.length > 0) && (
             <div style={{ marginBottom: 18, padding: "12px 14px", borderRadius: 12, background: "rgba(167,139,250,0.06)", border: "1px solid rgba(167,139,250,0.22)" }}>
               <div style={{ fontSize: 11, fontWeight: 700, color: "#c4b5fd", letterSpacing: 0.5, marginBottom: 8 }}>
-                ⚡ PAIRS WELL WITH “{pairsFor || words.find(w => w.id === selected[0])?.word}”
+                ⚡ {selected.length === 1 ? "PAIRS WELL WITH" : "ADD ONE MORE TO AMPLIFY"} “{pairsFor || selectedWords.map(w => w.word).join(" + ")}”
               </div>
               {pairsLoading ? (
                 <div style={{ fontSize: 12, color: C.textDim }}>Finding words that amplify it…</div>
