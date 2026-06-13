@@ -36,7 +36,7 @@ export function VoiceSelect({
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 10, background: "#0d1520", border: "1px solid rgba(77,184,255,0.12)", borderRadius: 12, padding: "10px 14px", marginBottom: 16 }}>
       <span style={{ fontSize: 14 }}>🎙️</span>
-      <span style={{ fontSize: 11, fontWeight: 700, color: "#7a9bb5", letterSpacing: 0.5 }}>VOICE FOR THIS SCRIPT</span>
+      <span style={{ fontSize: 11, fontWeight: 700, color: "#c3d9ea", letterSpacing: 0.5 }}>VOICE FOR THIS SCRIPT</span>
       <select
         value={value ?? "default"}
         onChange={e => onChange(e.target.value)}
