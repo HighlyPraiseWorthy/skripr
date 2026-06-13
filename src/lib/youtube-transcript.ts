@@ -143,3 +143,28 @@ export async function getTranscript(videoId: string): Promise<string> {
     throw new Error(`No transcript available for this video. ${e?.message ?? ""}`);
   }
 }
+
+// Supadata-first transcript fetch: direct YouTube scraping is IP-blocked from
+// Vercel, so prefer the Supadata API (same approach the viral-remixer route
+// uses) and fall back to the direct methods for local/dev environments.
+export async function getTranscriptRobust(videoId: string): Promise<string> {
+  const supaKey = process.env.SUPADATA_API_KEY;
+  if (supaKey) {
+    // lang=en first: multi-language channels (e.g. Kurzgesagt) can otherwise
+    // return a non-English caption track as the default
+    for (const langParam of ["&lang=en", ""]) {
+      try {
+        const r = await fetch(
+          `https://api.supadata.ai/v1/youtube/transcript?videoId=${videoId}&text=true${langParam}`,
+          { headers: { "x-api-key": supaKey }, signal: AbortSignal.timeout(15000) }
+        );
+        if (r.ok) {
+          const d = await r.json();
+          const t = typeof d === "string" ? d : (d.content ?? d.transcript ?? d.text ?? "");
+          if (typeof t === "string" && t.trim()) return t;
+        }
+      } catch { /* try next */ }
+    }
+  }
+  return getTranscript(videoId);
+}

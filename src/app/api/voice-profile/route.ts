@@ -9,7 +9,7 @@ import {
   MAX_PROFILES,
 } from "@/lib/voice-profile";
 import { fetchChannelLongform } from "@/lib/youtube-channel";
-import { getTranscript } from "@/lib/youtube-transcript";
+import { getTranscriptRobust } from "@/lib/youtube-transcript";
 
 export const maxDuration = 120;
 
@@ -39,9 +39,11 @@ async function samplesFromChannel(channelInput: string): Promise<{ samples: stri
   const transcripts: string[] = [];
   for (const v of top) {
     try {
-      const t = await getTranscript(v.videoId);
+      const t = await getTranscriptRobust(v.videoId);
       if (t?.trim()) transcripts.push(t.slice(0, 9000));
-    } catch { /* skip videos without transcripts */ }
+    } catch (e: any) {
+      console.error(`[voice-profile] transcript failed for ${v.videoId}:`, e?.message);
+    }
   }
   const joined = transcripts.join("\n\n---\n\n");
   if (joined.length < 400) {
