@@ -24,7 +24,6 @@ interface MagnetWordOption {
   lift_range: string;
   why_it_works: string;
   category: string;
-  proofCount?: number;
 }
 
 interface MagnetSuggestion {
@@ -84,7 +83,6 @@ export default function NewScriptPage() {
   const [userPlan, setUserPlan] = useState<string>("free");
   const [upgradeWall, setUpgradeWall] = useState(false);
   const [magnetWords, setMagnetWords] = useState<MagnetWordOption[]>([]);
-  const [trendingMagnet, setTrendingMagnet] = useState<MagnetWordOption[]>([]);
   const [selectedViralWord, setSelectedViralWord] = useState<string | null>(null);
   const [magnetGradeFilterScript, setMagnetGradeFilterScript] = useState<string>("all");
   const [lastUsedTranscript, setLastUsedTranscript] = useState<string>("");
@@ -177,7 +175,7 @@ export default function NewScriptPage() {
   }, []);
 
   useEffect(() => {
-    fetch("/api/magnet-words").then(r => r.json()).then(d => { setMagnetWords(d.words || []); setTrendingMagnet(d.trending || []); }).catch(() => {});
+    fetch("/api/magnet-words").then(r => r.json()).then(d => setMagnetWords(d.words || [])).catch(() => {});
   }, []);
 
   async function handleExtractOrProceed() {
@@ -570,24 +568,6 @@ export default function NewScriptPage() {
                     <span style={{ marginLeft: selectedViralWord ? 4 : "auto", fontSize: 10, fontWeight: 700, padding: "2px 7px", borderRadius: 5, background: "rgba(77,184,255,0.11)", color: C.badgeText }}>STARTER+</span>
                   )}
                 </div>
-                {/* Trending in proven titles — real occurrences from the captured pool */}
-                {userPlan !== "free" && trendingMagnet.length > 0 && (
-                  <div style={{ marginBottom: 10, padding: "9px 11px", borderRadius: 10, background: "rgba(245,158,11,0.06)", border: "1px solid rgba(245,158,11,0.20)" }}>
-                    <div style={{ fontSize: 10, fontWeight: 700, color: "#fbbf24", letterSpacing: 0.5, marginBottom: 6 }}>🔥 TRENDING IN PROVEN TITLES</div>
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-                      {trendingMagnet.map(w => {
-                        const isSel = selectedViralWord === w.word;
-                        return (
-                          <button key={w.id} onClick={() => setSelectedViralWord(isSel ? null : w.word)}
-                            title={`Appears in ${w.proofCount} proven title${w.proofCount === 1 ? "" : "s"} Skripr has analyzed`}
-                            style={{ padding: "4px 9px", borderRadius: 6, fontSize: 13, fontWeight: 700, cursor: "pointer", border: "1px solid rgba(245,158,11,0.3)", background: isSel ? "rgba(245,158,11,0.18)" : "transparent", color: "#fcd34d" }}>
-                            {w.word}<span style={{ marginLeft: 4, fontSize: 9, opacity: 0.7 }}>in {w.proofCount}</span>
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
                 {/* Grade filter tabs */}
                 <div style={{ display: "flex", gap: 5, marginBottom: 8 }}>
                   {["all", "S", "A", "B", "C"].map(g => {
@@ -627,9 +607,6 @@ export default function NewScriptPage() {
                           }}>
                             <span style={{ fontSize: 14, fontWeight: 700, color: isSelected ? gc : C.textBright }}>{mw.word}</span>
                             <span style={{ fontSize: 12, fontWeight: 700, padding: "2px 5px", borderRadius: 4, background: `${gc}22`, color: gc }}>{mw.grade}</span>
-                            {mw.proofCount ? (
-                              <span title={`In ${mw.proofCount} proven titles Skripr has analyzed`} style={{ fontSize: 9, fontWeight: 700, color: "#fcd34d" }}>📊{mw.proofCount}</span>
-                            ) : null}
                           </button>
                         );
                       })}
@@ -647,11 +624,6 @@ export default function NewScriptPage() {
                   <div style={{ marginTop: 8, fontSize: 11, color: C.textDim, padding: "5px 9px", borderRadius: 6, background: "rgba(77,184,255,0.05)" }}>
                     🧲 <span style={{ color: C.textBright, fontWeight: 600 }}>"{selectedViralWord}"</span> will be woven into your title and hook by our AI
                   </div>
-                )}
-                {userPlan !== "free" && (
-                  <a href="/dashboard/viral-magnet" style={{ display: "inline-block", marginTop: 8, fontSize: 11, fontWeight: 600, color: "#c4b5fd", textDecoration: "none" }}>
-                    ⚡ Want to stack 2–3 words for max pull? Open Viral Magnet →
-                  </a>
                 )}
               </div>
             )}
