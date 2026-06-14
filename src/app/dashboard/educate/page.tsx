@@ -138,11 +138,18 @@ const lessons = [
         </Section>
         <Section title="How to use Skripr's Niche Bend tool">
           <Bullet items={[
-            "Select your primary niche (what your channel covers)",
-            "Select an adjacent niche to borrow from (completely different genre works best)",
-            "Optionally paste a source video URL — Skripr reverse-engineers its hook type and structure, then transplants it into your niche",
-            "Get 10 crossover video ideas ranked by viral potential and competition level",
-            "Click 'Generate Script' on any idea to go straight to script generation with that topic pre-filled",
+            "Paste a viral video URL — Skripr reverse-engineers its hook type, structure, and title formula",
+            "Skripr suggests bridge sub-niches from completely different communities (e.g. a finance video → Speedrunning, Stoicism, True Crime)",
+            "Tap 'Generate different sub-niches' to rotate in fresh options — it never repeats ones you've already seen",
+            "Pick a bridge, then choose a blended angle — your pick leads the list, with extra angle options below it",
+            "Generate the script — the blend's hook style, structure, and retention beats are applied to your topic automatically",
+          ]} />
+        </Section>
+        <Section title="Reading the bridge cards: proof + RPM">
+          <Bullet items={[
+            "Proof badge — Skripr searches YouTube for the blend and tells you if it's already PROVEN (top videos with big views), lightly explored, or a BLUE OCEAN nobody has made yet",
+            "RPM badge — shows how the bridge niche's earnings-per-view compares to yours, so a blend can mean the same views at a higher payout (e.g. '≈2.5x higher RPM')",
+            "Use proven blends for safer bets; use blue-ocean blends to claim a space before anyone else does",
           ]} />
         </Section>
         <Section title="Best niche combinations">
@@ -153,7 +160,7 @@ const lessons = [
             "Documentary + Cooking — 'The Company That Changed How America Eats — And Kept It Secret'",
           ]} />
         </Section>
-        <Tip>The Viral Magnet Words feature works alongside Niche Bend. Pick a trending magnet word before generating your crossover ideas — it forces the titles to include high-click-rate language from current YouTube trends.</Tip>
+        <Tip>Saturated niches force you to compete on quality against thousands of channels. Intersections compete with almost no one — and pull from two recommendation pools at once. That's the whole point of bending.</Tip>
       </div>
     ),
   },
@@ -329,14 +336,17 @@ const lessons = [
           <Bullet items={[
             "Enter your video topic and optionally paste your script for better word suggestions",
             "Browse the word grid — words are grouped by tier and color-coded by impact level",
-            "Select up to 3 magnet words that feel natural together — the tool generates 8 title options",
-            "You get 3 same-formula variations and 5 new formula titles so you can see how the words behave in different structures",
-            "Copy the title that fits your script best — come back and try alternatives if CTR underperforms",
+            "Pick your first word, then check the 'Pairs well with' row — it suggests words that AMPLIFY the one you chose",
+            "Stack up to 3 words that compound; the suggestions update as you add each one",
+            "Generate — you get your original title for comparison, plus 3 same-formula and 5 new-formula variations, with your words combined in many of them",
           ]} />
+        </Section>
+        <Section title="Why pairing beats single words">
+          <p style={{ fontSize: 15, color: C.text, lineHeight: 1.7 }}>A single strong word lifts a title. The bigger gains come from words that <em>compound</em> — curiosity plus stakes plus specificity in the same title. 'Regret' is good. 'The Forbidden Truth You'll Regret Ignoring' stacks three triggers that each do different psychological work. Skripr's 'Pairs well with' suggestions are built to find words that strengthen each other rather than overlap, and the generated titles deliberately combine 2–3 of your picks where it still reads natural.</p>
         </Section>
         <Section title="Common mistakes with title words">
           <Bullet items={[
-            "Stacking S-tier words — triggers spam filters and looks desperate to the algorithm",
+            "Stacking multiple S-tier shock words of the SAME type — looks desperate and clickbait-y. Pairing works best when the words do different jobs (curiosity + stakes + specificity), not three intensity words piled together",
             "Using tier words that do not match the video tone — a calm educational video with an aggressive title creates viewer distrust",
             "Ignoring niche context — a word that is S-tier in fitness is B-tier at best in finance",
           ]} />
@@ -455,6 +465,129 @@ const lessons = [
           ]} />
         </Section>
         <Tip>The best remixing targets are videos that outperformed their channel average by 3x or more. That spike means the format — not just the topic — drove the performance.</Tip>
+      </div>
+    ),
+  },
+  {
+    title: "Voice Match: Make Every Script Sound Like You (or Anyone)",
+    category: "Script Writing",
+    level: "Intermediate",
+    duration: "5 min",
+    emoji: "🎙️",
+    summary: "Generic narration is forgettable. Voice Match locks a distinct writing voice onto every script you generate.",
+    content: (
+      <div>
+        <Section title="What Voice Match does">
+          <p style={{ fontSize: 15, color: C.text, lineHeight: 1.7 }}>Voice Match studies a creator's writing — sentence rhythm, vocabulary, energy, humor, signature phrases, how they open and close — and turns it into a profile Skripr writes in. You can build a voice from your own past scripts, or from any YouTube channel whose style you want to borrow. The result: a script on any topic, delivered in the exact voice you chose.</p>
+        </Section>
+        <Section title="How to build a voice">
+          <Bullet items={[
+            "Open the Voice Match tab and click Add a Voice (save up to 5)",
+            "Paste scripts — drop in 2–3 of your past scripts or transcripts, or",
+            "From a YouTube channel — paste a channel URL and Skripr pulls its top videos' transcripts and learns the voice automatically",
+            "Name it (e.g. 'My Voice', 'Documentary Narrator', 'High-Energy Hype') and build the profile",
+            "Click 'View voice profile' on any saved voice to read exactly what it captured",
+          ]} />
+        </Section>
+        <Section title="Using a voice on a script">
+          <Bullet items={[
+            "Set one voice as Active and it applies to every script you generate everywhere in Skripr",
+            "Or override per-script: every generator (New Script, Script Brief, Viral Remixer, Niche Bend) has a 'Voice for this script' picker",
+            "Pick 'Skripr Default' any time to go back to the standard high-retention narrator voice",
+            "Saved scripts show a 🎙 badge with the voice that made them, so you can track which voice performs best for you",
+          ]} />
+        </Section>
+        <Tip>Voice shapes rhythm, diction, humor, and CTA style — but never overrides the quality guardrails (banned-phrase filter, anti-fabrication, voiceover-clean formatting). You get the voice without losing the structure that drives retention.</Tip>
+      </div>
+    ),
+  },
+  {
+    title: "Outlier Finder: Spot the Videos a Channel Got Lucky With",
+    category: "Growth",
+    level: "Intermediate",
+    duration: "4 min",
+    emoji: "🎯",
+    summary: "Every channel has a few videos that massively outperformed the rest. Those are the formats worth studying — and remixing.",
+    content: (
+      <div>
+        <Section title="What an outlier is">
+          <p style={{ fontSize: 15, color: C.text, lineHeight: 1.7 }}>An outlier is a video that got far more views than the channel's typical video — 2x, 5x, sometimes 10x the baseline. That spike usually means the topic, hook, or format struck a nerve. Finding outliers tells you what's actually working right now, instead of guessing.</p>
+        </Section>
+        <Section title="How to use the Outlier Finder">
+          <Bullet items={[
+            "Open the Outlier Finder tab and paste any channel URL or @handle",
+            "Skripr pulls the channel's recent long-form videos and computes each one's multiple against the channel's median (e.g. '6.2x')",
+            "Outliers are color-coded so the breakout videos jump out instantly",
+            "Hit 'Remix This' on any outlier to drop it straight into the Viral Remixer with its framework already loaded",
+          ]} />
+        </Section>
+        <Section title="How to use what you find">
+          <Bullet items={[
+            "Study the outliers' titles and thumbnails for the pattern they share",
+            "Remix the format — not the content — into your own niche (see the Viral Remixer lesson)",
+            "Scan competitors and channels you admire to build a running sense of which formats are spiking",
+          ]} />
+        </Section>
+        <Tip>A video that beat its channel average by 3x+ is a stronger remix target than a video with more raw views on a huge channel. The multiple tells you the format drove it — not just the channel's existing size.</Tip>
+      </div>
+    ),
+  },
+  {
+    title: "Publish-Ready Scripts: Voiceover-Clean, Original, and Safe",
+    category: "Script Writing",
+    level: "Beginner",
+    duration: "5 min",
+    emoji: "✅",
+    summary: "A Skripr script is built to paste straight into a voiceover tool or read on camera — clean, original, and monetization-safe.",
+    content: (
+      <div>
+        <Section title="Voiceover-clean by default">
+          <p style={{ fontSize: 15, color: C.text, lineHeight: 1.7 }}>Scripts come out as plain spoken prose — no [PAUSE], [EMPHASIS], or bracketed stage directions, and no em dashes that trip up AI voices. Paragraphs flow like documentary narration rather than choppy one-line fragments, so it reads naturally whether a human or an AI voice reads it aloud.</p>
+        </Section>
+        <Section title="Original, not copied">
+          <Bullet items={[
+            "When you remix a source video, Skripr mirrors its STRUCTURE and pacing — never its actual wording, metaphors, or signature lines",
+            "It invents its own bold, screenshot-worthy comparisons instead of reusing the source's — protecting you from copyright and 'reused content' problems",
+            "Sponsor reads and ad segments in a source video are stripped out automatically, so a brand plug never leaks into your script",
+          ]} />
+        </Section>
+        <Section title="The companion-video CTA toggle">
+          <Bullet items={[
+            "Off by default, scripts won't claim you have another related video — no awkward 'watch my other video' line when you don't have one",
+            "Turn it ON (in any generator) only when you DO have a related video — the script then ends pointing viewers to it, 'above this one or linked in the description'",
+            "Either way the close stays honest: a clean subscribe/comment CTA when the toggle is off",
+          ]} />
+        </Section>
+        <Tip>Because scripts are voiceover-ready, the fastest workflow is: generate → skim the hook → paste into your AI voiceover tool. No find-and-replace cleanup of markers or symbols first.</Tip>
+      </div>
+    ),
+  },
+  {
+    title: "From Script to Upload: Metadata & Compliance in One Click",
+    category: "Workflow",
+    level: "Beginner",
+    duration: "3 min",
+    emoji: "🚀",
+    summary: "Once a script is saved, getting its metadata and a demonetization check is one click away — no copy-pasting between tools.",
+    content: (
+      <div>
+        <Section title="The My Scripts shortcuts">
+          <Bullet items={[
+            "Every saved script has 🏷 Metadata and 🛡 Compliance buttons (on Starter and above)",
+            "🏷 Metadata opens the Metadata tool with the script's title, content, and niche already filled in — just hit Generate for titles, description, tags, and thumbnail text",
+            "🛡 Compliance opens the checker pre-filled — scan for demonetization risk before you upload",
+            "No copy-pasting your script across pages — the handoff carries everything over for you",
+          ]} />
+        </Section>
+        <Section title="A clean end-to-end flow">
+          <Bullet items={[
+            "Generate a script (with your chosen voice and optional magnet word)",
+            "It auto-saves to My Scripts — nothing to remember to click",
+            "From the saved card: run Compliance to clear demonetization flags, then Metadata for your title/description/tags",
+            "Copy the voiceover-clean script into your editor and publish",
+          ]} />
+        </Section>
+        <Tip>Run Compliance before Metadata. There's no point optimizing a title and description for a script that has a demonetization flag you'd need to rewrite around first.</Tip>
       </div>
     ),
   },
