@@ -196,14 +196,13 @@ export default function ViralMagnetPage() {
           {/* #2 Trending in proven titles — real occurrences from the captured pool */}
           {trending.length > 0 && (
             <div style={{ marginBottom: 18, padding: "12px 14px", borderRadius: 12, background: "rgba(245,158,11,0.06)", border: "1px solid rgba(245,158,11,0.22)" }}>
-              <div style={{ fontSize: 11, fontWeight: 700, color: "#fbbf24", letterSpacing: 0.5, marginBottom: 8 }}>🔥 TRENDING IN PROVEN TITLES</div>
+              <div style={{ fontSize: 11, fontWeight: 700, color: "#fbbf24", letterSpacing: 0.5, marginBottom: 8 }}>🔥 PROVEN ON YOUTUBE</div>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
                 {trending.map(w => (
                   <button key={w.id} onClick={() => addWordByName(w.word)} disabled={selected.includes(w.id) || selected.length >= 3}
-                    title={`Appears in ${w.proofCount} proven title${w.proofCount === 1 ? "" : "s"} Skripr has analyzed`}
+                    title="A high-CTR word proven in real YouTube titles"
                     style={{ padding: "5px 11px", borderRadius: 8, fontSize: 14, fontWeight: 700, cursor: selected.includes(w.id) || selected.length >= 3 ? "default" : "pointer", border: "1px solid rgba(245,158,11,0.3)", background: selected.includes(w.id) ? "rgba(245,158,11,0.18)" : "transparent", color: "#fcd34d", opacity: !selected.includes(w.id) && selected.length >= 3 ? 0.4 : 1 }}>
                     {w.word}
-                    <span style={{ marginLeft: 5, fontSize: 9, opacity: 0.7 }}>in {w.proofCount}</span>
                   </button>
                 ))}
               </div>
@@ -225,7 +224,7 @@ export default function ViralMagnetPage() {
                     const isSel = w ? selected.includes(w.id) : false;
                     return (
                       <button key={p.word} onClick={() => addWordByName(p.word)} disabled={isSel || selected.length >= 3}
-                        title={`${p.why}${p.proofCount ? ` · in ${p.proofCount} proven titles` : ""}`}
+                        title={p.why}
                         style={{ padding: "5px 11px", borderRadius: 8, fontSize: 14, fontWeight: 700, cursor: isSel || selected.length >= 3 ? "default" : "pointer", border: "1px solid rgba(167,139,250,0.3)", background: isSel ? "rgba(167,139,250,0.18)" : "transparent", color: "#ddd6fe", opacity: !isSel && selected.length >= 3 ? 0.4 : 1 }}>
                         + {p.word}
                       </button>

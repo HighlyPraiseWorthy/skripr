@@ -431,8 +431,8 @@ export default function NicheBendBriefPage() {
                     </span>
                   )}
                   {n.poolCount ? (
-                    <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 11, fontWeight: 600, padding: "4px 10px", borderRadius: 7, background: "rgba(167,139,250,0.10)", border: "1px solid rgba(167,139,250,0.3)", color: "#c4b5fd" }}>
-                      📚 Skripr has proven frameworks here
+                    <span title="A well-established niche with proven viral patterns" style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 11, fontWeight: 600, padding: "4px 10px", borderRadius: 7, background: "rgba(167,139,250,0.10)", border: "1px solid rgba(167,139,250,0.3)", color: "#c4b5fd" }}>
+                      ✦ Strong niche match
                     </span>
                   ) : null}
                 </div>
