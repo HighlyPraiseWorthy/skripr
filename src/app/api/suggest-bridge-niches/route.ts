@@ -3,7 +3,9 @@ import { auth } from "@clerk/nextjs/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { rpmArbitrage, fetchBlendProof, resolveNiche } from "@/lib/bend-insights";
 import { getPoolNicheStats, normalizeNiche } from "@/lib/viral-frameworks";
-import { getNicheById } from "@/lib/data/niches";
+import { getNicheById, NICHES } from "@/lib/data/niches";
+
+const CANONICAL_NAMES = NICHES.map(n => n.name).join(", ");
 
 const fmtV = (v: number) => v >= 1e6 ? `${(v / 1e6).toFixed(1)}M` : v >= 1e3 ? `${Math.round(v / 1e3)}K` : `${v}`;
 
@@ -47,7 +49,7 @@ Framework signals: ${framework.slice(0, 150)}
 ${excludeList.length ? `\nALREADY SHOWN TO THIS USER — do NOT suggest any of these or close variants; pick 5 genuinely DIFFERENT bridge sub-niches from other communities:\n${excludeList.map(n => `- ${n}`).join("\n")}\n` : ""}${poolPref ? `\nSKRIPR'S LEARNED DATA — these niches have proven high-performing frameworks in our database. PREFER bridging toward these when it still makes a surprising, completely-different-community blend, because the script can then borrow their real retention mechanics:\n${poolPref}\n` : ""}
 STEP 1 — Detect source niche: Based on the video title, channel name, and framework keywords, determine exactly what content niche this creator is in (e.g. "health & weight loss", "personal finance", "gaming", "psychology", "fitness", "true crime", "technology", "cooking").
 
-STEP 2 — Find bridge niches that are COMPLETELY DIFFERENT from that detected niche. Choose from the FULL range of YouTube communities: gaming, true crime, personal finance, philosophy, history, technology, cooking, travel, fitness, sports, relationships, self-improvement, science, comedy, anime, cars, DIY, parenting, fashion, music, real estate, entrepreneurship, military, space, wildlife, language learning, career advice. Pick the 5 that would create the most surprising and compelling cross-community blend. Prioritize variety — never pick 2 niches from the same broad category. Do NOT suggest anything from the same category as the detected source niche.
+STEP 2 — Find bridge niches that are COMPLETELY DIFFERENT from that detected niche. Each bridge's "parentNiche" MUST be EXACTLY one of these canonical niches (copy the name verbatim): ${CANONICAL_NAMES}. Pick the 5 that would create the most surprising and compelling cross-community blend. Prioritize variety — never pick 2 from the same parentNiche. Do NOT suggest anything from the same category as the detected source niche.
 
 Find 5 BRIDGE SUB-NICHES from COMPLETELY DIFFERENT content categories than this video.
 
@@ -70,7 +72,7 @@ SUB-NICHES must be SPECIFIC, not broad categories:
 
 For each bridge sub-niche return EXACTLY these JSON fields:
 - "name": specific sub-niche name (2-4 words, e.g. "Dark Psychology")
-- "parentNiche": broader category (e.g. "True Crime", "Gaming", "Personal Finance")
+- "parentNiche": MUST be exactly one of the canonical niche names listed in STEP 2 (e.g. "True Crime", "Gaming", "Personal Finance") — never invent a category outside that list
 - "hook": one sentence on how BOTH audiences connect with this blend
 - "algorithmNote": why YouTube recommends this to BOTH communities simultaneously
 - "titlePreview": apply EXACTLY this formula "${formula}" to the blended topic

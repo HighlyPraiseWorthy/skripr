@@ -38,6 +38,16 @@ export const NICHES: Niche[] = [
   { id: "art", name: "Art & Design", description: "Art techniques, design, creativity", parentId: null, avgRPM: 9, competitionLevel: "low", adjacentNicheIds: ["photography", "culture", "education", "tech"] },
   { id: "music", name: "Music", description: "Music analysis, production, reviews", parentId: null, avgRPM: 7, competitionLevel: "medium", adjacentNicheIds: ["entertainment", "culture", "tech", "education"] },
   { id: "architecture", name: "Architecture", description: "Buildings, design, urban planning", parentId: null, avgRPM: 13, competitionLevel: "low", adjacentNicheIds: ["real-estate", "art", "history", "geography"] },
+  { id: "philosophy", name: "Philosophy", description: "Big ideas, ethics, meaning, stoicism", parentId: null, avgRPM: 9, competitionLevel: "medium", adjacentNicheIds: ["self-improvement", "psychology", "history", "science"] },
+  { id: "relationships", name: "Relationships & Dating", description: "Dating, marriage, social dynamics", parentId: null, avgRPM: 11, competitionLevel: "high", adjacentNicheIds: ["self-improvement", "psychology", "mental-health", "culture"] },
+  { id: "comedy", name: "Comedy & Humor", description: "Sketches, commentary, satire", parentId: null, avgRPM: 5, competitionLevel: "high", adjacentNicheIds: ["entertainment", "gaming", "culture", "storytelling"] },
+  { id: "diy", name: "DIY & Crafts", description: "Home projects, making, repairs", parentId: null, avgRPM: 9, competitionLevel: "medium", adjacentNicheIds: ["art", "cooking", "automotive", "photography"] },
+  { id: "parenting", name: "Parenting & Family", description: "Raising kids, family life", parentId: null, avgRPM: 12, competitionLevel: "medium", adjacentNicheIds: ["mental-health", "self-improvement", "education", "cooking"] },
+  { id: "fashion", name: "Fashion & Style", description: "Outfits, trends, grooming", parentId: null, avgRPM: 9, competitionLevel: "high", adjacentNicheIds: ["culture", "entertainment", "art", "photography"] },
+  { id: "military", name: "Military & Defense", description: "Warfare, weapons, conflict history", parentId: null, avgRPM: 10, competitionLevel: "medium", adjacentNicheIds: ["history", "science", "tech", "news"] },
+  { id: "wildlife", name: "Wildlife & Nature", description: "Animals, ecosystems, nature documentaries", parentId: null, avgRPM: 8, competitionLevel: "low", adjacentNicheIds: ["science", "travel", "geography", "space"] },
+  { id: "language-learning", name: "Language Learning", description: "Learning languages, linguistics", parentId: null, avgRPM: 11, competitionLevel: "low", adjacentNicheIds: ["education", "travel", "culture", "self-improvement"] },
+  { id: "career-advice", name: "Career & Work", description: "Jobs, interviews, workplace, skills", parentId: null, avgRPM: 14, competitionLevel: "high", adjacentNicheIds: ["business", "personal-finance", "productivity", "self-improvement"] },
 ];
 
 export function getNicheById(id: string): Niche | undefined {
