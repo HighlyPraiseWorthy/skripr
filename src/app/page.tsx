@@ -58,7 +58,7 @@ const T = {
 // ─── Micro-components ─────────────────────────────────────────────────────────
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <div style={{ fontSize: 10, fontWeight: 500, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: T.dim, marginBottom: 14 }}>
+    <div style={{ fontSize: 11.5, fontWeight: 600, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: T.accent, marginBottom: 14 }}>
       {children}
     </div>
   );
@@ -75,16 +75,16 @@ function FeatTag({ children, color = T.accent }: { children: React.ReactNode; co
 }
 
 function TermLine({ type, children }: { type: "comment" | "cmd" | "out" | "check"; children: React.ReactNode }) {
-  const colors = { comment: T.dim, cmd: T.accent, out: T.muted, check: T.green };
+  const colors = { comment: "#a9c3de", cmd: "#7cc9ff", out: "#dbe8f5", check: "#3ce6b0" };
   return (
-    <div style={{ fontFamily: "monospace", fontSize: 11, lineHeight: 1.8, color: colors[type] }}>
+    <div style={{ fontFamily: "monospace", fontSize: 13, lineHeight: 1.85, color: colors[type] }}>
       {children}
     </div>
   );
 }
 
 function Check({ color = T.green }: { color?: string }) {
-  return <span style={{ color, fontSize: 11, flexShrink: 0 }}>✓</span>;
+  return <span style={{ color, fontSize: 12, flexShrink: 0 }}>✓</span>;
 }
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
@@ -564,7 +564,7 @@ export default function LandingPage() {
           {/* Decoy words blurred + paywall gate */}
           <div className="hn-feat-artifact" style={{ position: "relative", overflow: "hidden", padding: 0 }}>
             <div style={{ padding: "20px 24px" }}>
-              <div style={{ fontSize: 9, fontWeight: 500, letterSpacing: "0.12em", textTransform: "uppercase" as const, color: T.dim, marginBottom: 12 }}>
+              <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase" as const, color: T.muted, marginBottom: 12 }}>
                 Finance niche · power words
               </div>
               <div style={{ display: "flex", flexWrap: "wrap" as const, gap: 6, filter: "none", userSelect: "none" as const }}>
