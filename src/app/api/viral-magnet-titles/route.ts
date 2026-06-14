@@ -50,13 +50,18 @@ GROUP 1 — "same-formula" (exactly 3 titles):
 Identify the structural formula/pattern of the original title. Generate 3 variations that preserve that exact formula but with the magnet word naturally woven in. These should feel like upgraded versions of the original — same DNA, higher CTR.
 
 GROUP 2 — "new-formula" (exactly 5 titles):
-Use different YouTube title formulas from the list above. Keep the same topic/niche. Each must naturally incorporate at least one of the magnet words. Use at least 3 different formula types across the 5 titles.
+Use different YouTube title formulas from the list above. Keep the same topic/niche. Use at least 3 different formula types across the 5 titles.
+
+WORD PAIRING (most important):
+${magnetWords.length >= 2
+  ? `- The user selected ${magnetWords.length} words (${magnetWords.join(", ")}) BECAUSE they want them working TOGETHER. At LEAST 4 of the 8 titles MUST naturally combine TWO of the selected words in the same title, and at least one title should try to land all ${magnetWords.length} words if it still reads naturally. Spread the remaining titles so every selected word appears somewhere across the set.`
+  : `- Only one word was selected — weave it naturally into every title.`}
+- Combine words ONLY when the title still reads natural and click-worthy. A clean two-word pairing (e.g. "The Forbidden Truth About...") beats three words crammed in awkwardly. Never force a word just to hit a count — but genuinely try to pair, since pairing is the whole point of selecting multiple words.
 
 RULES:
-- Every title must contain exactly ONE of the selected magnet words (use them all if possible, spread across the 8)
 - 6-12 words per title for optimal CTR
 - Specific > vague. Numbers and concrete details beat abstractions
-- The magnet word must feel INEVITABLE — like it belongs there — not inserted
+- Every magnet word used must feel INEVITABLE — like it belongs there — not inserted
 - No title should start with the same word as another title
 
 Return ONLY valid JSON, no markdown fences, no explanation:
@@ -67,7 +72,7 @@ Return ONLY valid JSON, no markdown fences, no explanation:
       "title": "string",
       "type": "same-formula",
       "formula": "string — which formula pattern was used",
-      "magnetWord": "string — which magnet word appears in this title",
+      "magnetWords": ["each selected magnet word that actually appears in this title"],
       "whyItWorks": "string — one tight sentence on why this title will perform"
     }
   ]
@@ -83,6 +88,15 @@ Return ONLY valid JSON, no markdown fences, no explanation:
     const raw = msg.content[0].type === "text" ? msg.content[0].text : "";
     const clean = raw.replace(/```json\n?|\n?```/g, "").trim();
     const data = JSON.parse(clean);
+    // Normalize: always expose magnetWords[] (older shape used magnetWord)
+    if (Array.isArray(data?.titles)) {
+      data.titles = data.titles.map((t: any) => ({
+        ...t,
+        magnetWords: Array.isArray(t.magnetWords)
+          ? t.magnetWords.filter(Boolean)
+          : (t.magnetWord ? [t.magnetWord] : []),
+      }));
+    }
     return NextResponse.json(data);
   } catch (err: any) {
     console.error("viral-magnet-titles error:", err);

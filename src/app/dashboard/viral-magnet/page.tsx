@@ -13,7 +13,8 @@ interface TitleResult {
   title: string;
   type: "same-formula" | "new-formula";
   formula: string;
-  magnetWord: string;
+  magnetWords?: string[];
+  magnetWord?: string;
   whyItWorks: string;
 }
 
@@ -334,6 +335,11 @@ export default function ViralMagnetPage() {
         {/* ── Results ── */}
         {result && (
           <div>
+            {/* Original title — baseline to compare the variants against */}
+            <div style={{ marginBottom: 14, borderRadius: 14, background: "rgba(122,155,181,0.06)", border: "1px dashed rgba(122,155,181,0.3)", padding: "12px 16px" }}>
+              <div style={{ fontSize: 10, fontWeight: 700, color: C.textDim, letterSpacing: 1, marginBottom: 5 }}>YOUR ORIGINAL</div>
+              <p style={{ fontSize: 16, fontWeight: 600, color: "#cbd5e1", margin: 0, lineHeight: 1.4 }}>{title}</p>
+            </div>
             {result.detectedFormula && (
               <div style={{ marginBottom: 16, display: "inline-flex", alignItems: "center", gap: 6, padding: "7px 14px", borderRadius: 10, background: "rgba(77,184,255,0.06)", border: "1px solid rgba(77,184,255,0.13)" }}>
                 <span style={{ fontSize: 13, color: C.textDim }}>Original formula detected:</span>
@@ -385,9 +391,15 @@ function TitleCard({ t, copied, onCopy }: { t: TitleResult; copied: string | nul
       <div style={{ flex: 1 }}>
         <p style={{ fontSize: 16, fontWeight: 600, color: "#e8edf5", margin: "0 0 7px 0", lineHeight: 1.4 }}>{t.title}</p>
         <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
-          <span style={{ fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 5, background: "rgba(77,184,255,0.13)", color: "#7ed8ff" }}>
-            🧲 {t.magnetWord}
-          </span>
+          {(() => {
+            const words = (t.magnetWords && t.magnetWords.length ? t.magnetWords : (t.magnetWord ? [t.magnetWord] : []));
+            const paired = words.length >= 2;
+            return (
+              <span style={{ fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 5, background: paired ? "rgba(167,139,250,0.16)" : "rgba(77,184,255,0.13)", color: paired ? "#c4b5fd" : "#7ed8ff" }}>
+                🧲 {words.join(" + ") || "—"}{paired ? "  ⚡paired" : ""}
+              </span>
+            );
+          })()}
           {t.formula && <span style={{ fontSize: 10, color: "#7a9bb5", fontStyle: "italic" }}>{t.formula}</span>}
         </div>
         {t.whyItWorks && (
