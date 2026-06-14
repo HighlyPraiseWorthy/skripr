@@ -578,10 +578,10 @@ export default function LandingPage() {
               <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase" as const, color: T.muted, marginBottom: 12 }}>
                 Finance niche · power words
               </div>
-              <div style={{ display: "flex", flexWrap: "wrap" as const, gap: 6, filter: "none", userSelect: "none" as const }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 6, filter: "none", userSelect: "none" as const }}>
                 {DECOY_WORDS.map(({ word, grade, lift, color }) => (
-                  <span key={word} className="hn-word" style={{ background: `${color}0a`, borderColor: `${color}33`, color }}>
-                    {word} <span style={{ fontSize: 10, fontWeight: 600, opacity: 0.85, marginLeft: 3 }}>{grade} {lift}</span>
+                  <span key={word} className="hn-word" style={{ background: `${color}0a`, borderColor: `${color}33`, color, display: "flex", alignItems: "baseline", gap: 4, whiteSpace: "nowrap" as const, overflow: "hidden" }}>
+                    {word} <span style={{ fontSize: 10, fontWeight: 600, opacity: 0.85 }}>{grade} {lift}</span>
                   </span>
                 ))}
               </div>
