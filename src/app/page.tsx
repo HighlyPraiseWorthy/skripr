@@ -48,8 +48,8 @@ const T = {
   bg3:    "#0a0f18",
   border: "#1a2840",
   text:   "#e8edf5",
-  muted:  "#a8c0d6",
-  dim:    "#6a8aaa",
+  muted:  "#c8dbed",
+  dim:    "#a2bcd6",
   accent: "#4db8ff",
   purple: "#7c6fff",
   green:  "#00d4a0",
@@ -531,7 +531,7 @@ export default function LandingPage() {
           <div style={{ padding: "32px 24px" }}>
             <SectionLabel>Script Generator</SectionLabel>
             <div style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.5px", color: T.text, marginBottom: 10, lineHeight: 1.1 }}>Any URL.<br />Full script.</div>
-            <div style={{ fontSize: 14, fontWeight: 400, color: T.dim, lineHeight: 1.7 }}>
+            <div style={{ fontSize: 15.5, fontWeight: 400, color: "#d4e4f3", lineHeight: 1.7 }}>
               Paste a YouTube URL. Skripr pulls the transcript, analyzes the narrative structure, and rebuilds it as a fully formatted, ready-to-record script adapted to your niche and target length.
             </div>
             <FeatTag color={T.green}>All plans</FeatTag>
@@ -556,7 +556,7 @@ export default function LandingPage() {
           <div style={{ padding: "32px 24px" }}>
             <SectionLabel>Viral Magnet</SectionLabel>
             <div style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.5px", color: T.text, marginBottom: 10, lineHeight: 1.1 }}>Stop guessing<br />titles.</div>
-            <div style={{ fontSize: 14, fontWeight: 400, color: T.dim, lineHeight: 1.7 }}>
+            <div style={{ fontSize: 15.5, fontWeight: 400, color: "#d4e4f3", lineHeight: 1.7 }}>
               Power words graded by click psychology and YouTube search behavior. Each word shows a predicted CTR lift. Pick one — it auto-injects into your title and script hook.
             </div>
             <FeatTag>Starter+</FeatTag>
@@ -585,7 +585,7 @@ export default function LandingPage() {
           <div style={{ padding: "32px 24px" }}>
             <SectionLabel>Viral Remixer</SectionLabel>
             <div style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.5px", color: T.text, marginBottom: 10, lineHeight: 1.1 }}>Any viral video.<br />Your version.</div>
-            <div style={{ fontSize: 14, fontWeight: 400, color: T.dim, lineHeight: 1.7 }}>
+            <div style={{ fontSize: 15.5, fontWeight: 400, color: "#d4e4f3", lineHeight: 1.7 }}>
               Takes any high-performing video concept and rebuilds it from scratch in your voice, your niche, your style. Same structural DNA — entirely original output.
             </div>
             <FeatTag>Starter+</FeatTag>
@@ -609,7 +609,7 @@ export default function LandingPage() {
           <div style={{ padding: "32px 24px" }}>
             <SectionLabel>Niche Bend</SectionLabel>
             <div style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.5px", color: T.text, marginBottom: 10, lineHeight: 1.1 }}>Any video.<br />10 new angles.</div>
-            <div style={{ fontSize: 14, fontWeight: 400, color: T.dim, lineHeight: 1.7 }}>
+            <div style={{ fontSize: 15.5, fontWeight: 400, color: "#d4e4f3", lineHeight: 1.7 }}>
               Take any viral video and cross-pollinate it into niches your competitors haven't touched. Viral Magnet injection built in — every angle pre-optimized for CTR.
             </div>
             <FeatTag>Starter+</FeatTag>
@@ -635,7 +635,7 @@ export default function LandingPage() {
           <div style={{ padding: "32px 24px" }}>
             <SectionLabel>Hook Engine</SectionLabel>
             <div style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.5px", color: T.text, marginBottom: 10, lineHeight: 1.1 }}>10 hooks.<br />Ranked.</div>
-            <div style={{ fontSize: 14, fontWeight: 400, color: T.dim, lineHeight: 1.7 }}>
+            <div style={{ fontSize: 15.5, fontWeight: 400, color: "#d4e4f3", lineHeight: 1.7 }}>
               Every script gets 10 opening hooks across different psychological patterns — curiosity loops, controversy openers, pattern interrupts, stat shocks. Each scored for predicted audience retention.
             </div>
             <FeatTag color={T.green}>All plans</FeatTag>
@@ -658,7 +658,7 @@ export default function LandingPage() {
           <div style={{ padding: "32px 24px" }}>
             <SectionLabel>A/B Titles</SectionLabel>
             <div style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.5px", color: T.text, marginBottom: 10, lineHeight: 1.1 }}>Test before<br />you publish.</div>
-            <div style={{ fontSize: 14, fontWeight: 400, color: T.dim, lineHeight: 1.7 }}>
+            <div style={{ fontSize: 15.5, fontWeight: 400, color: "#d4e4f3", lineHeight: 1.7 }}>
               Generate multiple title variants for every script — each one testing a different angle, emotion, or Viral Magnet word. Know which one to lead with before you upload.
             </div>
             <FeatTag color={T.green}>All plans</FeatTag>
@@ -682,7 +682,7 @@ export default function LandingPage() {
           <div style={{ padding: "32px 24px" }}>
             <SectionLabel>Metadata Suite</SectionLabel>
             <div style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.5px", color: T.text, marginBottom: 10, lineHeight: 1.1 }}>Titles, tags,<br />descriptions.</div>
-            <div style={{ fontSize: 14, fontWeight: 400, color: T.dim, lineHeight: 1.7 }}>
+            <div style={{ fontSize: 15.5, fontWeight: 400, color: "#d4e4f3", lineHeight: 1.7 }}>
               SEO-optimized titles, YouTube descriptions, and a full 30-tag set — generated from your script content. Never leave search discovery value on the table before you publish.
             </div>
             <FeatTag color={T.green}>All plans</FeatTag>
@@ -706,7 +706,7 @@ export default function LandingPage() {
           <div style={{ padding: "32px 24px" }}>
             <SectionLabel>Compliance Checker</SectionLabel>
             <div style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.5px", color: T.text, marginBottom: 10, lineHeight: 1.1 }}>Score before<br />you record.</div>
-            <div style={{ fontSize: 14, fontWeight: 400, color: T.dim, lineHeight: 1.7 }}>
+            <div style={{ fontSize: 15.5, fontWeight: 400, color: "#d4e4f3", lineHeight: 1.7 }}>
               Run your script through YouTube's advertiser-friendliness guidelines before you hit record. Get a score, a category breakdown, and rewrite suggestions — not after demonetization.
             </div>
             <FeatTag color={T.green}>All plans</FeatTag>
