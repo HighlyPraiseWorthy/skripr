@@ -247,13 +247,22 @@ export default function LandingPage() {
           <p style={{ fontSize: 18, fontWeight: 300, lineHeight: 1.6, color: T.muted, maxWidth: 640, marginBottom: 40, textAlign: "center" as const }}>
             Paste any YouTube URL. Skripr extracts the structure of a viral video, rebuilds it as a ready-to-record script in your niche, generates ranked hooks, injects Viral Magnet words, and delivers full metadata — in 60 seconds.
           </p>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center" as const, gap: 14, marginBottom: 36, flexWrap: "wrap" as const }}>
+            <span style={{ fontSize: 13, fontWeight: 300, color: T.dim, padding: "8px 16px", border: `1px solid ${T.border}`, borderRadius: 40 }}>
+              The old way: 4–5 hours a video · still hit-or-miss
+            </span>
+            <span style={{ color: T.accent, fontSize: 16, fontWeight: 600 }}>→</span>
+            <span style={{ fontSize: 13, fontWeight: 500, color: T.text, padding: "8px 16px", border: `1px solid ${T.accent}`, borderRadius: 40, background: "rgba(77,184,255,0.06)" }}>
+              With Skripr: idea to upload-ready in one sitting
+            </span>
+          </div>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "center" as const, gap: 14, marginBottom: 20 }}>
             <Link href="/sign-up" style={{
               background: T.accent, color: T.bg,
               fontSize: 12, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase" as const,
               padding: "12px 24px", textDecoration: "none",
             }}>Start free — 2 scripts →</Link>
-            <a href="#features" className="hn-ghost" style={{
+            <a href="#how" className="hn-ghost" style={{
               background: "transparent", color: T.muted,
               fontSize: 12, fontWeight: 400, letterSpacing: "0.08em", textTransform: "uppercase" as const,
               padding: "12px 20px", border: `1px solid ${T.border}`, textDecoration: "none",
@@ -492,6 +501,27 @@ export default function LandingPage() {
         ))}
       </div>
 
+      {/* ── HOW IT WORKS ── */}
+      <div id="how" style={{ padding: "72px 48px", maxWidth: 1060, margin: "0 auto" }}>
+        <div style={{ textAlign: "center" as const }}><SectionLabel>How it works</SectionLabel></div>
+        <div style={{ fontSize: 32, fontWeight: 700, letterSpacing: "-1px", color: T.text, lineHeight: 1.05, marginBottom: 44, textAlign: "center" as const }}>
+          Idea to upload-ready in three steps.
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 1, background: T.border, border: `1px solid ${T.border}` }}>
+          {[
+            { n: "01", t: "Start from what works", d: "Paste a viral video or drop in a topic. Skripr finds the proven structure, hook, and pacing behind it — no blank page." },
+            { n: "02", t: "Skripr writes the script", d: "A full, voiceover-ready script in your niche and your voice — ranked hooks, retention beats, and high-CTR title words built in." },
+            { n: "03", t: "Publish-ready, not a draft", d: "Get titles, description, tags, and a demonetization check in the same flow. Paste it into your voiceover tool and upload." },
+          ].map(s => (
+            <div key={s.n} style={{ background: T.bg, padding: "32px 26px" }}>
+              <div style={{ fontSize: 11, fontWeight: 400, letterSpacing: "0.1em", color: T.accent, marginBottom: 14 }}>{s.n}</div>
+              <div style={{ fontSize: 19, fontWeight: 700, letterSpacing: "-0.4px", color: T.text, marginBottom: 10, lineHeight: 1.15 }}>{s.t}</div>
+              <div style={{ fontSize: 14, fontWeight: 300, color: T.muted, lineHeight: 1.7 }}>{s.d}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* ── NUMBERED FEATURES ── */}
       <div id="features" style={{ borderBottom: `1px solid ${T.border}` }}>
 
@@ -705,6 +735,97 @@ export default function LandingPage() {
           </div>
         </div>
 
+      {/* ── NICHE BEND / RPM DIFFERENTIATOR ── */}
+      <div id="niche-edge" style={{ borderTop: `1px solid ${T.border}`, borderBottom: `1px solid ${T.border}`, background: T.bg2 }}>
+        <div style={{ padding: "72px 48px", maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "1.1fr 0.9fr", gap: 56, alignItems: "center" }}>
+          <div>
+            <SectionLabel>Niche Bend — only on Skripr</SectionLabel>
+            <div style={{ fontSize: 34, fontWeight: 700, letterSpacing: "-1px", color: T.text, lineHeight: 1.08, marginBottom: 18 }}>
+              Don't just chase more views.<br />
+              <span style={{ fontWeight: 200, color: T.purple }}>Reach an audience that pays more.</span>
+            </div>
+            <p style={{ fontSize: 15, fontWeight: 300, color: T.muted, lineHeight: 1.7, marginBottom: 18 }}>
+              Niche Bend takes a format that's already winning and blends it into a different, higher-value community — so the same idea reaches two recommendation pools at once, and earns more per view.
+            </p>
+            <div style={{ display: "flex", flexDirection: "column" as const, gap: 10 }}>
+              {[
+                "Bridges your topic into completely different niches — the kind of crossover that's still wide open",
+                "Shows whether each blend is already proven on YouTube or a blue ocean nobody's claimed",
+                "Surfaces the payout gap, so you can pivot toward niches that earn multiples more per 1,000 views",
+              ].map(t => (
+                <div key={t} style={{ display: "flex", gap: 10, alignItems: "flex-start", fontSize: 14, color: T.muted, fontWeight: 300, lineHeight: 1.6 }}>
+                  <Check color={T.purple} /> {t}
+                </div>
+              ))}
+            </div>
+          </div>
+          {/* RPM arbitrage visual */}
+          <div style={{ border: `1px solid ${T.border}`, borderRadius: 16, background: T.bg, padding: "26px 28px" }}>
+            <div style={{ fontSize: 10, fontWeight: 500, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: T.dim, marginBottom: 18 }}>Same views. Different payout.</div>
+            <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 14 }}>
+              <div style={{ flex: 1, padding: "14px 16px", borderRadius: 12, border: `1px solid ${T.border}` }}>
+                <div style={{ fontSize: 12, color: T.dim, marginBottom: 4 }}>Gaming</div>
+                <div style={{ fontSize: 26, fontWeight: 700, color: T.text }}>~$6 <span style={{ fontSize: 12, fontWeight: 300, color: T.dim }}>RPM</span></div>
+              </div>
+              <span style={{ color: T.purple, fontSize: 20, fontWeight: 600 }}>→</span>
+              <div style={{ flex: 1, padding: "14px 16px", borderRadius: 12, border: `1px solid ${T.purple}`, background: "rgba(124,111,255,0.07)" }}>
+                <div style={{ fontSize: 12, color: T.dim, marginBottom: 4 }}>Personal Finance</div>
+                <div style={{ fontSize: 26, fontWeight: 700, color: T.text }}>~$15 <span style={{ fontSize: 12, fontWeight: 300, color: T.dim }}>RPM</span></div>
+              </div>
+            </div>
+            <div style={{ fontSize: 13, color: T.muted, fontWeight: 300, lineHeight: 1.6 }}>
+              A gaming creator who bends toward finance-minded viewers can earn <span style={{ color: T.purple, fontWeight: 600 }}>≈2.5x more</span> on the same 100K views — without leaving what they're good at.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── COMPARISON: WHY NOT CHATGPT ── */}
+      <div id="compare" style={{ padding: "72px 48px", maxWidth: 1000, margin: "0 auto" }}>
+        <div style={{ textAlign: "center" as const }}><SectionLabel>ChatGPT vs Claude vs Skripr</SectionLabel></div>
+        <div style={{ fontSize: 32, fontWeight: 700, letterSpacing: "-1px", color: T.text, lineHeight: 1.05, marginBottom: 12, textAlign: "center" as const }}>
+          "Can't I just use ChatGPT?"
+        </div>
+        <p style={{ fontSize: 14, fontWeight: 300, color: T.muted, maxWidth: 560, lineHeight: 1.6, margin: "0 auto 40px", textAlign: "center" as const }}>
+          You can write <em>a</em> script in ChatGPT or Claude. But a general AI doesn't know what's working on YouTube right now, doesn't write in your voice, and hands you a draft you still have to clean, de-risk, and optimize.
+        </p>
+        <div style={{ border: `1px solid ${T.border}`, borderRadius: 12, overflow: "hidden" }}>
+          {/* header */}
+          <div style={{ display: "grid", gridTemplateColumns: "1.6fr 0.8fr 0.8fr 0.9fr", background: T.bg2, borderBottom: `1px solid ${T.border}` }}>
+            {["", "ChatGPT", "Claude", "Skripr"].map((h, i) => (
+              <div key={i} style={{ padding: "14px 16px", fontSize: 12, fontWeight: 700, letterSpacing: "0.04em", color: i === 3 ? T.accent : T.dim, textAlign: i === 0 ? "left" : "center", background: i === 3 ? "rgba(77,184,255,0.06)" : "transparent" }}>{h}</div>
+            ))}
+          </div>
+          {([
+            ["Write a script from a prompt", "y", "y", "y"],
+            ["Knows what's working on YouTube right now", "n", "n", "y"],
+            ["Finds a channel's breakout (outlier) videos", "n", "n", "y"],
+            ["Reverse-engineers a viral video's framework", "m", "m", "y"],
+            ["Writes in your voice — or any creator's", "n", "n", "y"],
+            ["Retention mechanics built into every script", "p", "p", "y"],
+            ["Voiceover-ready (no markers to clean up)", "n", "n", "y"],
+            ["Copyright-safe (original lines, sponsors stripped)", "n", "n", "y"],
+            ["Niche title science (high-CTR word pairing)", "n", "n", "y"],
+            ["Demonetization / compliance check", "n", "n", "y"],
+            ["Metadata: titles, description, tags, thumbnails", "m", "m", "y"],
+            ["Idea → publish in one workflow", "n", "n", "y"],
+          ] as const).map((row, ri) => (
+            <div key={ri} style={{ display: "grid", gridTemplateColumns: "1.6fr 0.8fr 0.8fr 0.9fr", borderBottom: ri === 11 ? "none" : `1px solid ${T.border}` }}>
+              <div style={{ padding: "13px 16px", fontSize: 13, color: T.muted, fontWeight: 300 }}>{row[0]}</div>
+              {[row[1], row[2], row[3]].map((v, ci) => (
+                <div key={ci} style={{ padding: "13px 16px", textAlign: "center" as const, fontSize: 12, background: ci === 2 ? "rgba(77,184,255,0.06)" : "transparent",
+                  color: v === "y" ? T.green : v === "n" ? T.dim : T.muted, fontWeight: v === "y" ? 700 : 400 }}>
+                  {v === "y" ? "✓" : v === "n" ? "✗" : v === "m" ? "Manual" : "If you prompt it"}
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+        <p style={{ fontSize: 13, fontWeight: 300, color: T.dim, lineHeight: 1.6, margin: "20px auto 0", maxWidth: 620, textAlign: "center" as const }}>
+          ChatGPT gives you a blank-canvas draft. Skripr gives you a performance-informed, voice-matched, publish-safe script — and the workflow to get it live.
+        </p>
+      </div>
+
       <div id="pricing" style={{ padding: "72px 48px", maxWidth: 1100, margin: "0 auto" }}>
         <div style={{ textAlign: "center" }}><SectionLabel>Pricing</SectionLabel></div>
         <div style={{ fontSize: 32, fontWeight: 700, letterSpacing: "-1px", color: T.text, lineHeight: 1.05, marginBottom: 10, textAlign: "center" as const }}>
@@ -820,6 +941,45 @@ export default function LandingPage() {
           Questions?{" "}
           <a href="mailto:skripr.app@gmail.com" style={{ color: T.accent, textDecoration: "none" }}>skripr.app@gmail.com</a>
         </div>
+      </div>
+
+      {/* ── FAQ ── */}
+      <div id="faq" style={{ padding: "72px 48px", maxWidth: 760, margin: "0 auto", borderTop: `1px solid ${T.border}` }}>
+        <div style={{ textAlign: "center" as const }}><SectionLabel>FAQ</SectionLabel></div>
+        <div style={{ fontSize: 32, fontWeight: 700, letterSpacing: "-1px", color: T.text, lineHeight: 1.05, marginBottom: 40, textAlign: "center" as const }}>
+          Questions, answered.
+        </div>
+        <div style={{ display: "flex", flexDirection: "column" as const, gap: 1, background: T.border, border: `1px solid ${T.border}` }}>
+          {[
+            { q: "Do I need a big channel for this to work?", a: "No. Skripr is built for brand-new and faceless channels. You start from videos that already work in your niche — so you're not guessing what to make, even with zero subscribers." },
+            { q: "Is it really free to try?", a: "Yes — your first 2 scripts are free, no credit card required. You only upgrade once you've seen the output for yourself." },
+            { q: "Will my scripts be original and safe to post?", a: "Yes. When you remix a video, Skripr mirrors its structure and pacing — never its wording. It writes its own metaphors and lines, strips out any sponsor reads, and outputs clean voiceover-ready text, so you're not copying anyone." },
+            { q: "Can it sound like me?", a: "Yes. Voice Match learns your writing style from your past scripts (or any channel you choose) and applies it to every script — so it reads like you, not a generic AI narrator." },
+            { q: "Why not just use ChatGPT?", a: "ChatGPT can write a draft, but it doesn't know what's performing on YouTube right now, can't find a channel's breakout videos, won't write in your voice, and gives you something you still have to clean and de-risk. Skripr does all of that in one workflow." },
+            { q: "What kind of videos is this for?", a: "Long-form, faceless, and on-camera channels across any niche — finance, history, psychology, true crime, science, fitness, and more. If it's a YouTube video with a script, Skripr can build it." },
+          ].map((f, i) => (
+            <div key={i} style={{ background: T.bg, padding: "22px 24px" }}>
+              <div style={{ fontSize: 15, fontWeight: 600, color: T.text, marginBottom: 8 }}>{f.q}</div>
+              <div style={{ fontSize: 14, fontWeight: 300, color: T.muted, lineHeight: 1.7 }}>{f.a}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── FINAL CTA ── */}
+      <div style={{ padding: "88px 48px", textAlign: "center" as const, borderTop: `1px solid ${T.border}`, background: T.bg2 }}>
+        <div style={{ fontSize: 44, fontWeight: 700, letterSpacing: "-1.5px", color: T.text, lineHeight: 1.05, marginBottom: 16, maxWidth: 680, margin: "0 auto 16px" }}>
+          Your next video is one paste away.
+        </div>
+        <p style={{ fontSize: 16, fontWeight: 300, color: T.muted, maxWidth: 520, lineHeight: 1.6, margin: "0 auto 32px" }}>
+          Start from what's already working, write it in your voice, and walk away with an upload-ready script — in one sitting.
+        </p>
+        <Link href="/sign-up" style={{
+          display: "inline-block", background: T.accent, color: T.bg,
+          fontSize: 13, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase" as const,
+          padding: "14px 32px", textDecoration: "none",
+        }}>Start free — 2 scripts →</Link>
+        <div style={{ marginTop: 18, fontSize: 13, color: T.dim, letterSpacing: "0.03em" }}>No credit card required · results in 60 seconds</div>
       </div>
 
       {/* ── FOOTER ── */}
