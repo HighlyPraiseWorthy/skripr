@@ -3,25 +3,28 @@ import Link from "next/link";
 
 // ─── Decoy Viral Magnet words (NOT the real word bank) ────────────────────────
 const DECOY_WORDS = [
+  // S-grade
   { word: "Untold",    grade: "S", lift: "+420%", color: "#4db8ff" },
   { word: "Silently",  grade: "S", lift: "+390%", color: "#4db8ff" },
   { word: "Exposed",   grade: "S", lift: "+355%", color: "#4db8ff" },
-  { word: "Brutal",    grade: "A", lift: "+215%", color: "#7c6fff" },
-  { word: "Actually",  grade: "A", lift: "+188%", color: "#7c6fff" },
-  { word: "Stopped",   grade: "A", lift: "+172%", color: "#7c6fff" },
-  { word: "Quietly",   grade: "B", lift: "+95%",  color: "#00d4a0" },
-  { word: "Finally",   grade: "B", lift: "+82%",  color: "#00d4a0" },
   { word: "Shocking",  grade: "S", lift: "+340%", color: "#4db8ff" },
-  { word: "Broken",    grade: "A", lift: "+160%", color: "#7c6fff" },
-  { word: "Banned",    grade: "S", lift: "+310%", color: "#4db8ff" },
-  { word: "Real",      grade: "B", lift: "+78%",  color: "#00d4a0" },
   { word: "Hidden",    grade: "S", lift: "+325%", color: "#4db8ff" },
-  { word: "Wrong",     grade: "A", lift: "+205%", color: "#7c6fff" },
+  { word: "Banned",    grade: "S", lift: "+310%", color: "#4db8ff" },
   { word: "Secretly",  grade: "S", lift: "+298%", color: "#4db8ff" },
+  // A-grade
+  { word: "Brutal",    grade: "A", lift: "+215%", color: "#7c6fff" },
+  { word: "Wrong",     grade: "A", lift: "+205%", color: "#7c6fff" },
+  { word: "Actually",  grade: "A", lift: "+188%", color: "#7c6fff" },
   { word: "Nobody",    grade: "A", lift: "+182%", color: "#7c6fff" },
-  { word: "Overrated", grade: "A", lift: "+150%", color: "#7c6fff" },
-  { word: "Proven",    grade: "B", lift: "+88%",  color: "#00d4a0" },
+  { word: "Stopped",   grade: "A", lift: "+172%", color: "#7c6fff" },
   { word: "Costly",    grade: "A", lift: "+167%", color: "#7c6fff" },
+  { word: "Broken",    grade: "A", lift: "+160%", color: "#7c6fff" },
+  { word: "Overrated", grade: "A", lift: "+150%", color: "#7c6fff" },
+  // B-grade
+  { word: "Quietly",   grade: "B", lift: "+95%",  color: "#00d4a0" },
+  { word: "Proven",    grade: "B", lift: "+88%",  color: "#00d4a0" },
+  { word: "Finally",   grade: "B", lift: "+82%",  color: "#00d4a0" },
+  { word: "Real",      grade: "B", lift: "+78%",  color: "#00d4a0" },
   { word: "Ignored",   grade: "B", lift: "+74%",  color: "#00d4a0" },
 ];
 
@@ -531,7 +534,7 @@ export default function LandingPage() {
       </div>
 
       {/* ── NUMBERED FEATURES ── */}
-      <div id="features" style={{ borderBottom: `1px solid ${T.border}` }}>
+      <div id="features" style={{ borderTop: `1px solid ${T.border}`, borderBottom: `1px solid ${T.border}` }}>
 
         {/* 01 — Script Generator */}
         <div className="hn-feat-row">
@@ -773,7 +776,7 @@ export default function LandingPage() {
             <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 14 }}>
               <div style={{ flex: 1, padding: "14px 16px", borderRadius: 12, border: `1px solid ${T.border}` }}>
                 <div style={{ fontSize: 13, fontWeight: 500, color: T.muted, marginBottom: 4 }}>Psychology</div>
-                <div style={{ fontSize: 26, fontWeight: 700, color: T.text }}>~$6 <span style={{ fontSize: 13, fontWeight: 400, color: T.muted }}>RPM</span></div>
+                <div style={{ fontSize: 26, fontWeight: 700, color: T.text }}>~$8 <span style={{ fontSize: 13, fontWeight: 400, color: T.muted }}>RPM</span></div>
               </div>
               <span style={{ color: T.purple, fontSize: 20, fontWeight: 600 }}>→</span>
               <div style={{ flex: 1, padding: "14px 16px", borderRadius: 12, border: `1px solid ${T.purple}`, background: "rgba(124,111,255,0.07)" }}>
@@ -782,7 +785,7 @@ export default function LandingPage() {
               </div>
             </div>
             <div style={{ fontSize: 15, color: T.text, fontWeight: 400, lineHeight: 1.65 }}>
-              A Psychology niche creator who bends toward finance-minded viewers can earn <span style={{ color: T.purple, fontWeight: 700 }}>≈2.5x more</span> on the same 100K views — without leaving what they're good at.
+              A Psychology niche creator who bends toward finance-minded viewers can earn <span style={{ color: T.purple, fontWeight: 700 }}>≈1.9x more</span> on the same 100K views — without leaving what they're good at.
             </div>
           </div>
         </div>
