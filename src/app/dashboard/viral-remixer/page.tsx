@@ -111,6 +111,7 @@ export default function ViralRemixerPage() {
       selectedTitleAudience: getRemixOptions(result.titleFormula)[selectedRemix]?.audience ?? "",
       videoTitle: result.title,
       channelTitle: result.channelTitle,
+      niche: (result as any).niche || null,
       targetMinutes: videoMinutes,
     };
     sessionStorage.setItem("skripr_viral_brief", JSON.stringify(brief));

@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import Anthropic from "@anthropic-ai/sdk";
+import { getNicheHookExamplesBlock, getNicheTitleFormulasBlock } from "@/lib/viral-frameworks";
+import { getPickedAnglesBlock } from "@/lib/angle-picks";
 
 const client = new Anthropic();
 export const maxDuration = 30;
@@ -10,12 +12,25 @@ export async function POST(req: Request) {
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
-    const { hookType, hookAnalysis, remixFramework, selectedTitle, selectedTitleDescription, selectedTitleAudience, titleFormula, videoTitle } = await req.json();
+    const { hookType, hookAnalysis, remixFramework, selectedTitle, selectedTitleDescription, selectedTitleAudience, titleFormula, videoTitle, niche } = await req.json();
 
     // Trim remixFramework to prevent transcript bleed into prompt
     const framework = (remixFramework || "").slice(0, 600);
     const whyItWorks = (hookAnalysis?.whyItWorks || "").slice(0, 300);
     const chosenTitle = (selectedTitle || "").slice(0, 150);
+
+    // Self-improving layer: read proven hooks/titles + picked angles for the
+    // source video's niche. Time-boxed, null-safe — never blocks suggestions.
+    const [pickedAngles, hookExamples, titleFormulas] = await Promise.all([
+      getPickedAnglesBlock(niche).catch(() => null),
+      getNicheHookExamplesBlock(niche, 4).catch(() => null),
+      getNicheTitleFormulasBlock(niche, 4).catch(() => null),
+    ]);
+    const learning = [
+      pickedAngles ? `ANGLES CREATORS PICKED IN THIS NICHE — lean toward this framing (never copy wording):\n${pickedAngles}` : "",
+      hookExamples ? `PROVEN HOOKS IN THIS NICHE:\n${hookExamples}` : "",
+      titleFormulas ? `PROVEN TITLES IN THIS NICHE — model "titleSuggestion" on these formulas:\n${titleFormulas}` : "",
+    ].filter(Boolean).join("\n\n");
 
     const msg = await client.messages.create({
       model: "claude-haiku-4-5-20251001",
@@ -36,6 +51,7 @@ HOOK TYPE: ${hookType}
 HOOK PSYCHOLOGY: ${whyItWorks}
 TITLE FORMULA: ${titleFormula?.formula || ""}
 FRAMEWORK SUMMARY: ${framework}
+${learning ? `\n${learning}\n` : ""}
 
 Output a JSON array of exactly 5 objects. Each object must have these exact keys:
 - "angle": punchy topic name, max 8 words
