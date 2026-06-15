@@ -651,8 +651,8 @@ export default function LandingPage() {
             </div>
             <FeatTag color={T.green}>All plans</FeatTag>
           </div>
-          <div className="hn-feat-artifact" style={{ padding: 0 }}>
-            <div style={{ height: "100%" }}>
+          <div className="hn-feat-artifact" style={{ padding: 0, justifyContent: "center" }}>
+            <div style={{ width: "100%" }}>
               {HOOKS.map(({ score, text }) => (
                 <div key={score} className="hn-hook-item">
                   <div style={{ fontSize: 13, fontWeight: 700, color: T.accent, flexShrink: 0, paddingTop: 1, minWidth: 32 }}>{score}</div>
