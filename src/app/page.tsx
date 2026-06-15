@@ -48,7 +48,7 @@ const PRODUCT_FACTS = [
   "A/B title variants generated per script",
   "Viral Remixer rebuilds any video concept",
   "Hook retention scores on every output",
-  "7 AI tools in one dashboard",
+  "10 AI tools in one dashboard",
 ];
 const FACTS_LOOP = [...PRODUCT_FACTS, ...PRODUCT_FACTS];
 
@@ -499,7 +499,7 @@ export default function LandingPage() {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 1, background: T.border, borderBottom: `1px solid ${T.border}` }}>
         {[
           { n: "60", sup: "s", label: "Script generation" },
-          { n: "8",  sup: "",  label: "AI tools, one dashboard" },
+          { n: "10", sup: "",  label: "AI tools, one dashboard" },
           { n: "10", sup: "×", label: "Faster than manual research" },
           { n: "2",  sup: "",  label: "Free scripts on signup" },
         ].map(({ n, sup, label }) => (
@@ -743,6 +743,53 @@ export default function LandingPage() {
                 </div>
               ))}
             </div>
+          </div>
+        </div>
+
+        {/* 09 — Outlier Finder */}
+        <div className="hn-feat-row">
+          <div style={{ fontSize: 14, fontWeight: 600, letterSpacing: "0.1em", color: T.muted, padding: "32px 24px", borderRight: `1px solid ${T.border}` }}>09</div>
+          <div style={{ padding: "32px 24px" }}>
+            <SectionLabel>Outlier Finder</SectionLabel>
+            <div style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.5px", color: T.text, marginBottom: 10, lineHeight: 1.1 }}>Find what's<br />breaking out.</div>
+            <div style={{ fontSize: 15.5, fontWeight: 400, color: "#d4e4f3", lineHeight: 1.7 }}>
+              Drop in any channel and Skripr surfaces its outlier videos — the ones massively outperforming its own average. See which formats are catching fire, then build your version before everyone else copies them.
+            </div>
+            <FeatTag>Starter+</FeatTag>
+          </div>
+          <div className="hn-feat-artifact">
+            <TermLine type="comment"># Scanning channel</TermLine>
+            <TermLine type="out">→ youtube.com/@financechannel</TermLine>
+            <TermLine type="check">✓ 48 videos analyzed</TermLine>
+            <br />
+            <TermLine type="comment"># Outliers found</TermLine>
+            <TermLine type="out">→ "The $0 Budget That Went Viral" — 14× channel avg</TermLine>
+            <TermLine type="out">→ "Why I Quit Index Funds" — 9× channel avg</TermLine>
+            <TermLine type="out">→ "The Bank Trick They Hate" — 6× channel avg</TermLine>
+            <TermLine type="check">✓ Ranked by outlier multiple</TermLine>
+          </div>
+        </div>
+
+        {/* 10 — Voice Match */}
+        <div className="hn-feat-row">
+          <div style={{ fontSize: 14, fontWeight: 600, letterSpacing: "0.1em", color: T.muted, padding: "32px 24px", borderRight: `1px solid ${T.border}` }}>10</div>
+          <div style={{ padding: "32px 24px" }}>
+            <SectionLabel>Voice Match</SectionLabel>
+            <div style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.5px", color: T.text, marginBottom: 10, lineHeight: 1.1 }}>Sound like<br />you. Always.</div>
+            <div style={{ fontSize: 15.5, fontWeight: 400, color: "#d4e4f3", lineHeight: 1.7 }}>
+              Save up to 5 voices from your own scripts or any YouTube channel. Pick one per script and Skripr writes in that exact style — so a calm explainer topic can read with the punch of a direct, no-fluff creator, or just like you.
+            </div>
+            <FeatTag>Starter+</FeatTag>
+          </div>
+          <div className="hn-feat-artifact">
+            <TermLine type="comment"># Saved voices</TermLine>
+            <TermLine type="out">→ Your channel · 12 scripts learned</TermLine>
+            <TermLine type="out">→ Voice B · punchy, direct</TermLine>
+            <TermLine type="out">→ Voice C · calm, explanatory</TermLine>
+            <br />
+            <TermLine type="comment"># Applying voice → this script</TermLine>
+            <TermLine type="check">✓ Tone, pacing & sentence length matched</TermLine>
+            <TermLine type="cmd">→ Reads like them, not generic AI</TermLine>
           </div>
         </div>
 
