@@ -1048,7 +1048,6 @@ export default function LandingPage() {
         <div style={{ display: "flex", gap: 24 }}>
           {[
             ["/dashboard/scripts/new","Scripts"],
-            ["/dashboard/hooks","Hooks"],
             ["/dashboard/educate","Learn"],
             ["/pricing","Pricing"],
             ["/terms","Terms"],
