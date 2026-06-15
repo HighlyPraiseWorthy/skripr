@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { generateHooks } from "@/lib/ai/claude";
-import { getNicheFrameworksBlock } from "@/lib/viral-frameworks";
+import { getNicheHookExamplesBlock } from "@/lib/viral-frameworks";
 
 export const maxDuration = 120;
 
@@ -16,7 +16,7 @@ export async function POST(req: Request) {
     // Learning layer: inject real high-performing hooks captured for this niche
     // so the Hook Engine improves as more videos are analyzed across Skripr.
     // Time-boxed and null-safe inside the helper, so it never blocks generation.
-    const nicheFrameworks = (await getNicheFrameworksBlock(niche).catch(() => null)) || undefined;
+    const nicheFrameworks = (await getNicheHookExamplesBlock(niche).catch(() => null)) || undefined;
 
     const hooks = await generateHooks({ topic, niche, tone: tone || "educational", count: count || 10, nicheFrameworks });
     return NextResponse.json({ hooks });

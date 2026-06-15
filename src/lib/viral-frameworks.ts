@@ -124,6 +124,81 @@ export async function getNicheFrameworksBlock(rawNiche: string | null | undefine
   }
 }
 
+// Hook Engine learning block: a denser, hook-only version of the frameworks
+// block. Where getNicheFrameworksBlock is built for script generation (and
+// carries structure / remix-framework noise), this returns more real hooks
+// with just the fields a hook writer needs — and deliberately spreads across
+// hook TYPES so the model learns varied openers, not five of the same pattern.
+// Time-boxed and empty-safe so it never delays generation.
+const MAX_HOOK_BLOCK_CHARS = 3000;
+export async function getNicheHookExamplesBlock(
+  rawNiche: string | null | undefined,
+  limit = 6
+): Promise<string | null> {
+  if (!supabaseAdmin) return null;
+  const nicheId = normalizeNiche(rawNiche);
+  if (!nicheId) return null;
+  try {
+    const query = supabaseAdmin
+      .from("viral_frameworks")
+      .select("hook_type, hook_text, why_it_works, source_views")
+      .eq("niche", nicheId)
+      .not("hook_text", "is", null)
+      .order("source_views", { ascending: false, nullsFirst: false })
+      .order("created_at", { ascending: false })
+      .limit(40);
+    const timeout = new Promise<null>((resolve) => setTimeout(() => resolve(null), 2000));
+    const result = (await Promise.race([query, timeout])) as { data: any[] | null } | null;
+    const rows = result?.data;
+    if (!rows || rows.length === 0) return null;
+
+    // Dedupe identical hooks (same video can be captured across surfaces, and
+    // near-duplicates add no signal), keeping the highest-view copy first.
+    const seen = new Set<string>();
+    const unique: any[] = [];
+    for (const r of rows) {
+      const key = String(r.hook_text || "").toLowerCase().replace(/\s+/g, " ").trim().slice(0, 80);
+      if (!key || seen.has(key)) continue;
+      seen.add(key);
+      unique.push(r);
+    }
+    if (unique.length === 0) return null;
+
+    // Spread across hook types: take the strongest example of each type first
+    // (one pass per type by view rank), then backfill with the next best until
+    // we hit the limit. This guarantees pattern variety when the pool allows it.
+    const byTypeFirst: any[] = [];
+    const usedTypes = new Set<string>();
+    for (const r of unique) {
+      const t = String(r.hook_type || "").toLowerCase().trim() || "unknown";
+      if (usedTypes.has(t)) continue;
+      usedTypes.add(t);
+      byTypeFirst.push(r);
+    }
+    const rest = unique.filter((r) => !byTypeFirst.includes(r));
+    const picked = [...byTypeFirst, ...rest].slice(0, limit);
+
+    const parts: string[] = [];
+    let total = 0;
+    for (const fw of picked) {
+      const views = fw.source_views ? ` · ${Math.round(fw.source_views / 1000)}K+ views` : "";
+      const entry = [
+        `- [${fw.hook_type || "unknown"}${views}] "${clip(fw.hook_text, 220)}"`,
+        fw.why_it_works ? `  Why it works: ${clip(fw.why_it_works, 160)}` : "",
+      ].filter(Boolean).join("\n");
+      if (total + entry.length > MAX_HOOK_BLOCK_CHARS) break;
+      parts.push(entry);
+      total += entry.length;
+    }
+    if (parts.length === 0) return null;
+    console.log(`[hooks] injected n=${parts.length} niche=${nicheId}`);
+    return parts.join("\n");
+  } catch (e: any) {
+    console.error("[hooks] examples fetch failed:", e?.message);
+    return null;
+  }
+}
+
 // Niche Bend (#3): inject proven frameworks from BOTH the source niche and the
 // bridge niche, so a blended script inherits retention mechanics from each
 // community. Falls back gracefully when one or both have no captured frameworks.
