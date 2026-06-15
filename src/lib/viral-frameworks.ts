@@ -52,6 +52,41 @@ export async function saveViralFramework(row: ViralFrameworkRow): Promise<void> 
   }
 }
 
+// Outlier Finder learning: outlier videos are proven over-performers, so their
+// TITLES are a high-quality signal for the title pool. We only have titles +
+// view counts here (no transcript), so we bank title-only rows. ignoreDuplicates
+// means we NEVER clobber a richer row already captured for that video from a
+// full analysis — we only add titles the pool doesn't have yet.
+export interface OutlierTitleRow { videoId: string; title: string; views: number }
+export async function captureOutlierTitles(
+  rawNiche: string | null | undefined,
+  videos: OutlierTitleRow[]
+): Promise<number> {
+  if (!supabaseAdmin) return 0;
+  const niche = normalizeNiche(rawNiche);
+  if (!niche) return 0;
+  const rows = videos
+    .filter((v) => v.videoId && v.title && v.title.trim())
+    .map((v) => ({
+      video_id: v.videoId,
+      video_title: v.title.slice(0, 300),
+      niche,
+      source_views: Number.isFinite(v.views) ? Math.round(v.views) : null,
+    }));
+  if (rows.length === 0) return 0;
+  try {
+    const { error } = await supabaseAdmin
+      .from("viral_frameworks")
+      .upsert(rows, { onConflict: "video_id", ignoreDuplicates: true });
+    if (error) { console.error("[outliers] capture failed:", error.message); return 0; }
+    console.log(`[outliers] captured ${rows.length} titles niche=${niche}`);
+    return rows.length;
+  } catch (e: any) {
+    console.error("[outliers] capture threw:", e?.message);
+    return 0;
+  }
+}
+
 export async function fetchSourceViews(videoId: string): Promise<number | null> {
   const key = process.env.YOUTUBE_API_KEY;
   if (!key) return null;
@@ -92,9 +127,15 @@ export async function getNicheFrameworksBlock(rawNiche: string | null | undefine
     const rows = result?.data;
     if (!rows || rows.length === 0) return null;
 
+    // Skip title-only rows (e.g. captured from the Outlier Finder, which has no
+    // transcript): they carry no hook or structure, so they'd inject empty
+    // framework examples. They still feed the TITLE block via video_title.
+    const usable = rows.filter((r: any) => r.hook_text || (Array.isArray(r.structure) && r.structure.length));
+    if (usable.length === 0) return null;
+
     // Sample from the pool instead of always taking the same top entries, so
     // every script in a niche doesn't converge on identical structure
-    const shuffled = [...rows].sort(() => Math.random() - 0.5);
+    const shuffled = [...usable].sort(() => Math.random() - 0.5);
     const picked = shuffled.slice(0, 3);
 
     const parts: string[] = [];
