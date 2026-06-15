@@ -7,6 +7,7 @@ import { supabaseAdmin } from "@/lib/db/supabase";
 import { joinHookBody } from "@/lib/script-text";
 import { getNicheFrameworksBlock, getBendFrameworksBlock, getNicheHookExamplesBlock, getNicheTitleFormulasBlock } from "@/lib/viral-frameworks";
 import { getKeptHooksBlock } from "@/lib/hook-picks";
+import { saveAnglePick } from "@/lib/angle-picks";
 import { getActiveVoiceMeta, getVoiceMetaById } from "@/lib/voice-profile";
 import { captureFrameworkInBackground } from "@/lib/framework-capture";
 
@@ -117,6 +118,20 @@ export async function POST(req: Request) {
     // wall-time, and skips if the video was already captured. Never blocks.
     const capturePromise: Promise<void> = (sourceVideoId && typeof transcript === "string" && transcript.trim().length > 200)
       ? captureFrameworkInBackground({ videoId: String(sourceVideoId), transcript, title: topic || null })
+      : Promise.resolve();
+
+    // Angle feedback loop: generating from an angle is the "I picked this" signal.
+    // Bank it (overlapping generation) so future "Suggest Angles" in this niche
+    // lean toward angles creators actually choose. Never blocks.
+    const anglePromise: Promise<void> = (typeof angle === "string" && angle.trim().length > 8)
+      ? saveAnglePick({
+          user_id: userId,
+          niche: niche || null,
+          topic: topic || null,
+          angle_text: angle,
+          hook_type: typeof hookType === "string" ? hookType : null,
+          audience_emotion: null,
+        })
       : Promise.resolve();
 
     const scriptPromise = generateScript({
@@ -236,6 +251,7 @@ export async function POST(req: Request) {
     }
 
     await capturePromise.catch(() => {}); // already overlapped generation; ensure it lands
+    await anglePromise.catch(() => {});   // bank the picked angle (overlapped generation)
     console.log(`[generate] total ${Date.now() - startTime}ms`);
     return NextResponse.json({ ...script, magnetSuggestions, savedId });
   } catch (error: any) {
