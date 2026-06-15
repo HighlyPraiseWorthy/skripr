@@ -123,10 +123,14 @@ export async function POST(req: Request) {
     // Angle feedback loop: generating from an angle is the "I picked this" signal.
     // Bank it (overlapping generation) so future "Suggest Angles" in this niche
     // lean toward angles creators actually choose. Never blocks.
+    // For a bend, key the pick to the canonical bridge niche (what the bend
+    // angle reader looks up) — NOT the freeform `niche`/audience string, or the
+    // pick would be written to a drawer nothing reads from.
+    const anglePickNiche = bridgeNiche || niche || null;
     const anglePromise: Promise<void> = (typeof angle === "string" && angle.trim().length > 8)
       ? saveAnglePick({
           user_id: userId,
-          niche: niche || null,
+          niche: anglePickNiche,
           topic: topic || null,
           angle_text: angle,
           hook_type: typeof hookType === "string" ? hookType : null,
