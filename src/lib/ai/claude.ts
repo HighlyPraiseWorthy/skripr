@@ -21,6 +21,11 @@ export interface ScriptGenerationInput {
   viralMagnetWord?: string;
   angle?: string;
   nicheFrameworks?: string;
+  // Real, proven hooks for this niche (view-ranked + creator-kept), built by the
+  // hook-learning helpers. Injected into the HOOK RULES so the script's opening
+  // line is modeled on hooks that actually work — and keeps improving as more
+  // videos are analyzed and more hooks are kept.
+  nicheHookExamples?: string;
   voiceProfile?: string;
   companionCta?: boolean;
 }
@@ -403,6 +408,10 @@ BAD → GOOD examples:
 ${input.viralMagnetWord ? `
 VIRAL MAGNET REQUIREMENT: The title field MUST naturally incorporate the word "${input.viralMagnetWord}". The hook field MUST also include the word "${input.viralMagnetWord}" within its first two sentences. Weave it in where it creates maximum curiosity or urgency — not forced, but inevitable.` : ""}
 
+${input.nicheHookExamples ? `
+PROVEN HOOKS FROM THIS NICHE — real opening lines that earned views or that creators chose to keep. Model the "hook" field on the strongest of these: match their tension, specificity, and opening move. NEVER reuse their wording, names, or numbers — only their mechanics:
+${input.nicheHookExamples}
+` : ""}
 HOOK RULES — the "hook" field MUST use one of these 8 proven patterns. Pick the one that fits the topic best:
 1. Question — Surface a pain or curiosity directly: "Have you ever wondered why [X] never works?" / "What would you do if [scenario]?"
 2. Stat/Number — Lead with a surprising data point: "73% of creators who [X] will [bad outcome] within [timeframe]."

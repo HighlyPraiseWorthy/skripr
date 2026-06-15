@@ -5,7 +5,8 @@ import { checkScriptLimit, incrementGenerationCount, refundGenerationCount } fro
 import { getMagnetSuggestions } from "@/lib/magnet-word";
 import { supabaseAdmin } from "@/lib/db/supabase";
 import { joinHookBody } from "@/lib/script-text";
-import { getNicheFrameworksBlock, getBendFrameworksBlock } from "@/lib/viral-frameworks";
+import { getNicheFrameworksBlock, getBendFrameworksBlock, getNicheHookExamplesBlock } from "@/lib/viral-frameworks";
+import { getKeptHooksBlock } from "@/lib/hook-picks";
 import { getActiveVoiceMeta, getVoiceMetaById } from "@/lib/voice-profile";
 import { captureFrameworkInBackground } from "@/lib/framework-capture";
 
@@ -84,6 +85,19 @@ export async function POST(req: Request) {
       ? await getBendFrameworksBlock(sourceNiche || niche, bridgeNiche).catch(() => null)
       : await getNicheFrameworksBlock(niche).catch(() => null);
 
+    // Hook learning for the script's opening line: proven hooks for this niche
+    // (view-ranked) + hooks creators kept (feedback loop). Both time-boxed and
+    // null-safe; combined into one block the prompt models the hook field on.
+    const hookNiche = bridgeNiche || niche;
+    const [hookExamples, keptHooks] = await Promise.all([
+      getNicheHookExamplesBlock(hookNiche).catch(() => null),
+      getKeptHooksBlock(hookNiche).catch(() => null),
+    ]);
+    const nicheHookExamples = [
+      keptHooks ? `Hooks creators kept (weight these highest):\n${keptHooks}` : "",
+      hookExamples || "",
+    ].filter(Boolean).join("\n\n") || null;
+
     // Voice matching: per-script selection wins; "default" = no voice;
     // no selection falls back to the user's active profile
     let voiceProfile: string | null = null;
@@ -117,6 +131,7 @@ export async function POST(req: Request) {
       viralMagnetWord: magnetWord,
       angle: enhancedAngle || undefined,
       nicheFrameworks: nicheFrameworks || undefined,
+      nicheHookExamples: nicheHookExamples || undefined,
       voiceProfile: voiceProfile || undefined,
       companionCta: !!companionCta,
     });
