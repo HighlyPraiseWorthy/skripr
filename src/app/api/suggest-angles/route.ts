@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { Anthropic } from "@anthropic-ai/sdk";
+import { EXPERT_ATTRIBUTION_RULE } from "@/lib/ai/claude";
 
 export const maxDuration = 120;
 
@@ -33,6 +34,8 @@ Each angle must be:
 
 Bad example: "Coffee has surprising health effects"
 Good example: "Most people drink coffee during the 90-minute cortisol window after waking — the exact window where caffeine has zero effect and just builds tolerance"
+
+${EXPERT_ATTRIBUTION_RULE}
 
 Respond with ONLY a JSON array of 4 strings. No preamble, no markdown.
 ["angle 1", "angle 2", "angle 3", "angle 4"]`,

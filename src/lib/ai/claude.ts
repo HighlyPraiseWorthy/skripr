@@ -62,6 +62,13 @@ export interface TTSTiming {
   emphasis: "normal" | "strong" | "whisper";
 }
 
+// Shared across every surface that writes titles, hooks, or scripts. A source
+// video's named expert belongs only to the source's topic — carrying it onto a
+// different topic/niche/angle misattributes a real person (e.g. a maternal-bonding
+// expert showing up on a true-crime title). Single source of truth so the rule
+// can't drift between routes.
+export const EXPERT_ATTRIBUTION_RULE = `NAMED-EXPERT / ATTRIBUTION RULE (critical): Never attach a real named person or expert to a title, hook, or claim unless that person is genuinely and verifiably tied to THIS specific topic. If a source or reference (e.g. a title formula like "... - [Named Expert]") carries an expert's name, that name belongs ONLY to the source's original topic. When the topic, niche, or angle changes you MUST NOT keep it — use a real expert who genuinely fits the new topic, or drop the named-expert reference entirely and end cleanly. NEVER reuse the source's expert on an unrelated topic, and NEVER invent a fake, generic, or unverifiable name.`;
+
 const SYSTEM_PROMPT = `You are Skripr's AI script engine. You specialize in writing YouTube scripts for faceless channels that are optimized for retention, algorithm performance, and AI voice (TTS) delivery.
 
 Your scripts follow these principles:
@@ -86,6 +93,8 @@ Your scripts follow these principles:
 5. STRUCTURE: Follow the exact structural pattern of the source viral video but apply it to the new topic.
 6. ANTI-REPETITION: Never start two consecutive sentences with the same word. Vary sentence length — mix short punchy sentences with longer ones. Never repeat a key point already made; build forward only.
 7. NO FABRICATED FACTS: Never state a specific statistic, percentage, dollar figure, year, named study, or named survey unless it appears in the provided source material. Use soft framing instead: "research suggests", "studies have shown", "experts estimate". Never attribute a quote or claim to a named real person unless it was in the source material. A creator will read this on camera — an invented number destroys their credibility.
+
+${EXPERT_ATTRIBUTION_RULE}
 
 7. NO SPONSORS, ADS, OR PROMOS (critical): The source transcript may contain sponsor reads, ad segments, or promotions for a product, app, brand, charity, newsletter, course, Patreon, donation match, or affiliate offer (e.g. "this video's sponsor", "use code X", "go to brand.com", "first-time donors", "link in the description"). These are NOT part of the video's content — they are a paid insertion belonging to a different creator's deal. Completely ignore and exclude them. Never name the sponsor, never reproduce the ad slot, never write a "and that's why I want to mention [brand]" segment, never invent your own sponsor read. Treat the transcript as if the sponsored portions were never there. The script you output must contain ZERO brand names, products, or promotional asks other than the channel's own subscribe/like CTA.
 
@@ -645,6 +654,8 @@ ${input.targetKeywords ? `Target keywords: ${input.targetKeywords.join(", ")}` :
 Current year: ${currentYear}
 
 ━━━ TITLES (generate exactly 10) ━━━
+${EXPERT_ATTRIBUTION_RULE}
+
 The three YouTube discovery surfaces need different title strategies:
 
 SEARCH titles (first 4) — These surface when users type queries into YouTube search.

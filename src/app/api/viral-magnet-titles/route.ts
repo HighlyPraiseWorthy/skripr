@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { getUserPlan } from "@/lib/usage";
 import Anthropic from "@anthropic-ai/sdk";
+import { EXPERT_ATTRIBUTION_RULE } from "@/lib/ai/claude";
 
 export const maxDuration = 120;
 
@@ -63,6 +64,8 @@ RULES:
 - Specific > vague. Numbers and concrete details beat abstractions
 - Every magnet word used must feel INEVITABLE — like it belongs there — not inserted
 - No title should start with the same word as another title
+
+${EXPERT_ATTRIBUTION_RULE}
 
 Return ONLY valid JSON, no markdown fences, no explanation:
 {

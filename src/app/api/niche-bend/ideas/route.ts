@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { Anthropic } from "@anthropic-ai/sdk";
 import { checkScriptLimit } from "@/lib/usage";
+import { EXPERT_ATTRIBUTION_RULE } from "@/lib/ai/claude";
 
 export const maxDuration = 60;
 
@@ -83,6 +84,7 @@ export async function POST(req: Request) {
       `- Format (list, challenge, comparison, story, experiment, reaction, educational, documentary)`,
       `- Why it works (brief reasoning)`,
       extraFields,
+      EXPERT_ATTRIBUTION_RULE,
       `Respond with ONLY a valid JSON array. No preamble, no explanation, no markdown code fences. Start your response with [ and end with ]. Sort by viralPotential descending.`,
       ``,
       `[`,

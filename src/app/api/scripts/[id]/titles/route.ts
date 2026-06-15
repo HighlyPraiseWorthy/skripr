@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { supabaseAdmin } from "@/lib/db/supabase";
 import Anthropic from "@anthropic-ai/sdk";
+import { EXPERT_ATTRIBUTION_RULE } from "@/lib/ai/claude";
 
 export const maxDuration = 30;
 
@@ -78,6 +79,8 @@ Current title: "${script.title}"
 Niche: ${script.niche || "general"}
 Script opening:
 ${preview}
+
+${EXPERT_ATTRIBUTION_RULE}
 
 Return ONLY a valid JSON array of exactly 5 title strings. No explanation, no markdown fences, just the raw JSON array.`,
     }],

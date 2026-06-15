@@ -3,6 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { getNicheHookExamplesBlock, getNicheTitleFormulasBlock } from "@/lib/viral-frameworks";
 import { getPickedAnglesBlock } from "@/lib/angle-picks";
+import { EXPERT_ATTRIBUTION_RULE } from "@/lib/ai/claude";
 
 const client = new Anthropic();
 export const maxDuration = 30;
@@ -36,7 +37,7 @@ export async function POST(req: Request) {
       system: "You output ONLY valid JSON arrays. No prose, no markdown. Start with [ and end with ].",
       messages: [{
         role: "user",
-        content: `Generate 5 YouTube angles that blend a creator’s niche with a bridge sub-niche.\n\nCREATOR VIDEO: "${(videoTitle || "").slice(0, 120)}"\nBRIDGE SUB-NICHE: ${bridgeSubNiche?.name || "Unknown"} (under ${bridgeSubNiche?.parentNiche || "Unknown"})\nHOOK TYPE: ${hookType}\nTITLE FORMULA: ${formula}\nVIDEO FRAMEWORK: ${framework}\n${learning ? `\n${learning}\n` : ""}\nEach angle must explicitly BLEND BOTH niches together. Not just one or the other.\nThe title must apply the formula above to the blended topic.\nNAMED-EXPERT RULE: if the formula contains a named person/expert (e.g. "- Erica Komisar"), that name belongs only to the source topic — do NOT keep it on the blended topic. Use a real expert who genuinely fits the new blend, or DROP the "- [Expert]" part entirely. Never reuse the source's expert on an unrelated topic, and never invent a fake name.\n\nRequired JSON keys per item:\n- "angle": punchy 8-word name showing the blend\n- "description": one sentence on exactly how both niches fuse\n- "audience": who from BOTH communities would click\n- "titleSuggestion": full title using the formula above\n- "blendExplained": "X audience discovers it through Y lens" (one short sentence)\n\n[`,
+        content: `Generate 5 YouTube angles that blend a creator’s niche with a bridge sub-niche.\n\nCREATOR VIDEO: "${(videoTitle || "").slice(0, 120)}"\nBRIDGE SUB-NICHE: ${bridgeSubNiche?.name || "Unknown"} (under ${bridgeSubNiche?.parentNiche || "Unknown"})\nHOOK TYPE: ${hookType}\nTITLE FORMULA: ${formula}\nVIDEO FRAMEWORK: ${framework}\n${learning ? `\n${learning}\n` : ""}\nEach angle must explicitly BLEND BOTH niches together. Not just one or the other.\nThe title must apply the formula above to the blended topic.\n${EXPERT_ATTRIBUTION_RULE}\n\nRequired JSON keys per item:\n- "angle": punchy 8-word name showing the blend\n- "description": one sentence on exactly how both niches fuse\n- "audience": who from BOTH communities would click\n- "titleSuggestion": full title using the formula above\n- "blendExplained": "X audience discovers it through Y lens" (one short sentence)\n\n[`,
       }, {
         role: "assistant",
         content: "[",

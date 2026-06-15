@@ -6,6 +6,7 @@ import { checkScriptLimit } from "@/lib/usage";
 import { supabaseAdmin } from "@/lib/db/supabase";
 import { NICHES } from "@/lib/data/niches";
 import { saveViralFramework, fetchSourceViews, normalizeNiche } from "@/lib/viral-frameworks";
+import { EXPERT_ATTRIBUTION_RULE } from "@/lib/ai/claude";
 
 export const maxDuration = 120;
 
@@ -92,7 +93,9 @@ RETENTION TRIGGERS REQUIREMENT — "retentionTriggers" must contain 6 to 9 disti
 REMIX TITLES REQUIREMENT — "remixTitles" must contain EXACTLY 10 entries:
 - Entries 1-5 ("scope": "close"): topics ADJACENT to this video's subject — same broad subject area, different specific angle (e.g. MONEY → banks, debt, taxes, gold, inflation).
 - Entries 6-10 ("scope": "wide"): the SAME title formula applied to COMPLETELY DIFFERENT niches far from this video's subject (e.g. MONEY → social media, diets, sleep, video games, marriage). Use the formula as-is — do not bolt on extra subtitle clauses the formula doesn't have.
-- Every entry needs a sharp one-sentence "description" of what that video would cover, and a specific "audience" (who clicks and why), not generic demographics.`,
+- Every entry needs a sharp one-sentence "description" of what that video would cover, and a specific "audience" (who clicks and why), not generic demographics.
+
+${EXPERT_ATTRIBUTION_RULE}`,
       }],
     });
 

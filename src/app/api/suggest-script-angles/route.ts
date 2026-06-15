@@ -3,6 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { getNicheHookExamplesBlock, getNicheTitleFormulasBlock } from "@/lib/viral-frameworks";
 import { getPickedAnglesBlock } from "@/lib/angle-picks";
+import { EXPERT_ATTRIBUTION_RULE } from "@/lib/ai/claude";
 
 const client = new Anthropic();
 export const maxDuration = 120;
@@ -58,6 +59,8 @@ For each angle return EXACTLY:
 - "titleSuggestion": full YouTube title (8-12 words, high CTR)
 - "whyItWorks": one sentence on the psychology
 - "audienceEmotion": primary emotion (curiosity / fear / anger / excitement / surprise)
+
+${EXPERT_ATTRIBUTION_RULE}
 
 [`,
       }, {

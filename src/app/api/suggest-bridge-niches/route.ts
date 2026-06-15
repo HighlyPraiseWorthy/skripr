@@ -4,6 +4,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import { rpmArbitrage, fetchBlendProof, resolveNiche } from "@/lib/bend-insights";
 import { getPoolNicheStats, normalizeNiche } from "@/lib/viral-frameworks";
 import { getNicheById, NICHES } from "@/lib/data/niches";
+import { EXPERT_ATTRIBUTION_RULE } from "@/lib/ai/claude";
 
 const CANONICAL_NAMES = NICHES.map(n => n.name).join(", ");
 
@@ -70,7 +71,7 @@ SUB-NICHES must be SPECIFIC, not broad categories:
 - NOT "Finance" → YES "Financial Anxiety" or "FIRE Movement"
 - NOT "Science" → YES "Neuroscience" or "Quantum Physics"
 
-NAMED-EXPERT RULE (critical): If the title formula contains a named person/expert (e.g. "- Erica Komisar"), that name belongs ONLY to the source video's topic. When you apply the formula to a DIFFERENT blended topic, you MUST NOT keep that name — Erica Komisar has nothing to do with true crime, philosophy, or business. Instead: if a real, widely-recognized expert genuinely fits the NEW blended topic, use them; otherwise DROP the "- [Expert]" part of the formula entirely and end the title cleanly. NEVER reuse the source's expert on an unrelated topic, and NEVER invent a fake or unverifiable name.
+${EXPERT_ATTRIBUTION_RULE}
 
 For each bridge sub-niche return EXACTLY these JSON fields:
 - "name": specific sub-niche name (2-4 words, e.g. "Dark Psychology")
