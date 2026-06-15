@@ -508,6 +508,11 @@ export interface HookGenerationInput {
   niche: string;
   tone: string;
   count?: number;
+  // Few-shot block of real, high-performing hooks for this niche (with their
+  // actual view counts), built by getNicheFrameworksBlock. When present, the
+  // model models new hooks on proven winners and calibrates retention scores
+  // against real performance instead of guessing.
+  nicheFrameworks?: string;
 }
 
 export interface GeneratedHook {
@@ -520,17 +525,36 @@ export interface GeneratedHook {
 export async function generateHooks(input: HookGenerationInput): Promise<GeneratedHook[]> {
   const count = input.count || 10;
 
+  // Learning layer: when we have real high-performing hooks captured for this
+  // niche, show them as few-shot examples AND use their view counts to anchor
+  // the predicted-retention scores, so scores reflect real performance bands
+  // instead of an uncalibrated guess.
+  const learningBlock = input.nicheFrameworks
+    ? `
+PROVEN HOOKS FROM THIS NICHE — real, high-performing videos with their actual view counts. Study what makes them work (the tension, the specificity, the opening move) and write NEW hooks that use the same mechanics on this topic. Never copy their wording, names, or numbers — only their structure and energy:
+${input.nicheFrameworks}
+
+RETENTION CALIBRATION — score each hook's predictedRetention against these real winners, not on a curve:
+- A hook whose mechanics closely match a proven high-view example here earns a high score (85-95).
+- A solid hook using a known pattern but with less tension or specificity sits mid (68-82).
+- A generic, vague, or warmup-style opener scores low (45-65).
+Do NOT inflate scores. Most hooks are average; reserve 90+ for hooks that genuinely rival the proven examples above.
+`
+    : `
+RETENTION CALIBRATION — be honest and conservative. Reserve 85+ only for hooks with sharp tension, hyper-specific detail, and an irresistible open loop. Generic or warmup-style openers must score in the 45-65 range. Do NOT inflate scores.
+`;
+
   const userPrompt = `Generate ${count} YouTube video hooks for:
 Topic: "${input.topic}"
 Niche: ${input.niche}
 Tone: ${input.tone}
 
 Use these 8 proven hook types: question, stat, story, controversy, "what if", list, result, myth-bust.
-
+${learningBlock}
 For each hook, provide:
 - The exact hook text (what the creator says in the first 5-10 seconds)
 - The hook type
-- Predicted retention score (0-100) — how many viewers will stay past the hook
+- Predicted retention score (0-100) — how many viewers will stay past the hook (calibrated per the rules above)
 - Brief reasoning for why this hook works
 
 Output JSON array:
