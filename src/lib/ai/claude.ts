@@ -509,10 +509,14 @@ export interface HookGenerationInput {
   tone: string;
   count?: number;
   // Few-shot block of real, high-performing hooks for this niche (with their
-  // actual view counts), built by getNicheFrameworksBlock. When present, the
+  // actual view counts), built by getNicheHookExamplesBlock. When present, the
   // model models new hooks on proven winners and calibrates retention scores
   // against real performance instead of guessing.
   nicheFrameworks?: string;
+  // Hooks creators actually kept/copied for this niche (feedback loop), built
+  // by getKeptHooksBlock. The strongest signal — proven by real taste, not just
+  // views — so it's weighted above the view-based examples.
+  keptHooks?: string;
 }
 
 export interface GeneratedHook {
@@ -529,8 +533,16 @@ export async function generateHooks(input: HookGenerationInput): Promise<Generat
   // niche, show them as few-shot examples AND use their view counts to anchor
   // the predicted-retention scores, so scores reflect real performance bands
   // instead of an uncalibrated guess.
+  const keptBlock = input.keptHooks
+    ? `
+HOOKS CREATORS ACTUALLY KEPT IN THIS NICHE — the strongest signal there is: real creators generated many options and chose to USE these. They reflect proven taste for this audience. Weight these above everything else — match their voice, rhythm, and opening move (never their exact wording):
+${input.keptHooks}
+`
+    : "";
+
   const learningBlock = input.nicheFrameworks
     ? `
+${keptBlock}
 PROVEN HOOKS FROM THIS NICHE — real, high-performing videos with their actual view counts. Study what makes them work (the tension, the specificity, the opening move) and write NEW hooks that use the same mechanics on this topic. Never copy their wording, names, or numbers — only their structure and energy:
 ${input.nicheFrameworks}
 
@@ -541,6 +553,7 @@ RETENTION CALIBRATION — score each hook's predictedRetention against these rea
 Do NOT inflate scores. Most hooks are average; reserve 90+ for hooks that genuinely rival the proven examples above.
 `
     : `
+${keptBlock}
 RETENTION CALIBRATION — be honest and conservative. Reserve 85+ only for hooks with sharp tension, hyper-specific detail, and an irresistible open loop. Generic or warmup-style openers must score in the 45-65 range. Do NOT inflate scores.
 `;
 

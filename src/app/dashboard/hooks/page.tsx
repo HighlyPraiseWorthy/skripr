@@ -38,6 +38,7 @@ export default function HooksPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [hooks, setHooks] = useState<any[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [keptIndex, setKeptIndex] = useState<number | null>(null);
 
   const nicheOptions = NICHES.map(n => ({ value: n.id, label: n.name }));
   const toneOptions = [
@@ -69,6 +70,26 @@ export default function HooksPage() {
     } finally {
       setIsLoading(false);
     }
+  }
+
+  // Feedback loop: copying a hook is the "I'm keeping this" signal. We copy to
+  // the clipboard AND record the pick so the Hook Engine learns what creators
+  // actually use in this niche. Recording is fire-and-forget — never block the
+  // copy on it.
+  async function keepHook(hook: any, index: number) {
+    try { await navigator.clipboard.writeText(hook.text || ""); } catch { /* clipboard may be blocked; still record */ }
+    setKeptIndex(index);
+    setTimeout(() => setKeptIndex(cur => (cur === index ? null : cur)), 1800);
+    fetch("/api/hooks/pick", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        niche, topic,
+        hookText: hook.text,
+        hookType: hook.type,
+        predictedRetention: hook.predictedRetention,
+      }),
+    }).catch(() => {});
   }
 
   const retentionColor = (r: number) => r >= 70 ? C.success : r >= 50 ? C.warning : C.danger;
@@ -194,9 +215,23 @@ export default function HooksPage() {
                       <p style={{ fontSize: 14, color: C.textDim, lineHeight: 1.5 }}>{hook.reasoning}</p>
                     </div>
 
-                    {/* Score */}
-                    <div style={{ flexShrink: 0 }}>
+                    {/* Score + keep */}
+                    <div style={{ flexShrink: 0, display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 8 }}>
                       <span style={{ fontSize: 22, fontWeight: 700, color: retentionColor(hook.predictedRetention || 0) }}>{hook.predictedRetention || 0}%</span>
+                      <button
+                        onClick={() => keepHook(hook, i)}
+                        title="Copy this hook and teach Skripr it's a keeper"
+                        style={{
+                          padding: "6px 12px", borderRadius: 9, cursor: "pointer", whiteSpace: "nowrap",
+                          fontSize: 13, fontWeight: 600,
+                          border: `1px solid ${keptIndex === i ? C.success : C.border}`,
+                          background: keptIndex === i ? "rgba(52,211,153,0.12)" : "rgba(77,184,255,0.10)",
+                          color: keptIndex === i ? C.success : C.accent,
+                          transition: "all .15s",
+                        }}
+                      >
+                        {keptIndex === i ? "✓ Copied" : "Use this hook"}
+                      </button>
                     </div>
                   </div>
                 );
