@@ -26,6 +26,11 @@ export interface ScriptGenerationInput {
   // line is modeled on hooks that actually work — and keeps improving as more
   // videos are analyzed and more hooks are kept.
   nicheHookExamples?: string;
+  // Real proven titles + their formulas for this niche, built by
+  // getNicheTitleFormulasBlock. Injected into the TITLE RULES so the title is
+  // modeled on templates that actually earned views — improving as more videos
+  // are analyzed.
+  nicheTitleFormulas?: string;
   voiceProfile?: string;
   companionCta?: boolean;
 }
@@ -370,6 +375,10 @@ PROVEN VIRAL FRAMEWORKS FROM THIS NICHE — extracted from real high-performing 
 ${input.nicheFrameworks}
 ` : ""}
 
+${input.nicheTitleFormulas ? `
+PROVEN TITLES FROM THIS NICHE — real titles that earned views in this exact niche, with the reusable formula each implies. Model the "title" field on the strongest of these: borrow the formula and structure, never the wording or subject. Adapt to THIS topic:
+${input.nicheTitleFormulas}
+` : ""}
 TITLE RULES — the generated "title" field MUST follow these viral patterns. Study these real titles that got 3M–10M+ views:
 
 PATTERN 1 — BOLD DECLARATION (2–6 words, strong verb or adjective):

@@ -199,6 +199,69 @@ export async function getNicheHookExamplesBlock(
   }
 }
 
+// Title learning block: Skripr captures a title_formula (the reusable template
+// a video's title implies) for every analyzed video, but the script-frameworks
+// block leaves it out. This surfaces the real proven TITLES for a niche plus
+// their formulas, so generation can model new titles on what actually worked.
+// Time-boxed and empty-safe.
+const MAX_TITLE_BLOCK_CHARS = 2600;
+export async function getNicheTitleFormulasBlock(
+  rawNiche: string | null | undefined,
+  limit = 6
+): Promise<string | null> {
+  if (!supabaseAdmin) return null;
+  const nicheId = normalizeNiche(rawNiche);
+  if (!nicheId) return null;
+  try {
+    const query = supabaseAdmin
+      .from("viral_frameworks")
+      .select("video_title, title_formula, source_views")
+      .eq("niche", nicheId)
+      .order("source_views", { ascending: false, nullsFirst: false })
+      .order("created_at", { ascending: false })
+      .limit(40);
+    const timeout = new Promise<null>((resolve) => setTimeout(() => resolve(null), 2000));
+    const result = (await Promise.race([query, timeout])) as { data: any[] | null } | null;
+    const rows = result?.data;
+    if (!rows || rows.length === 0) return null;
+
+    // Pull the formula string out of the JSONB ({ formula } from capture, or a
+    // richer object from the remixer). Keep only rows that carry a real title
+    // or a formula, and dedupe by title.
+    const seen = new Set<string>();
+    const cleaned: { title: string; formula: string; views: number | null }[] = [];
+    for (const r of rows) {
+      const tf = r.title_formula;
+      const formula = typeof tf === "string" ? tf : (tf && typeof tf === "object" ? String((tf as any).formula || "") : "");
+      const title = String(r.video_title || "").trim();
+      if (!title && !formula) continue;
+      const key = (title || formula).toLowerCase().replace(/\s+/g, " ").trim().slice(0, 80);
+      if (!key || seen.has(key)) continue;
+      seen.add(key);
+      cleaned.push({ title, formula, views: r.source_views ?? null });
+    }
+    if (cleaned.length === 0) return null;
+
+    const parts: string[] = [];
+    let total = 0;
+    for (const c of cleaned.slice(0, limit)) {
+      const views = c.views ? ` (${Math.round(c.views / 1000)}K+ views)` : "";
+      const entry = c.title
+        ? `- "${clip(c.title, 110)}"${views}${c.formula ? ` → formula: ${clip(c.formula, 120)}` : ""}`
+        : `- formula: ${clip(c.formula, 140)}${views}`;
+      if (total + entry.length > MAX_TITLE_BLOCK_CHARS) break;
+      parts.push(entry);
+      total += entry.length;
+    }
+    if (parts.length === 0) return null;
+    console.log(`[titles] injected n=${parts.length} niche=${nicheId}`);
+    return parts.join("\n");
+  } catch (e: any) {
+    console.error("[titles] formulas fetch failed:", e?.message);
+    return null;
+  }
+}
+
 // Niche Bend (#3): inject proven frameworks from BOTH the source niche and the
 // bridge niche, so a blended script inherits retention mechanics from each
 // community. Falls back gracefully when one or both have no captured frameworks.

@@ -5,7 +5,7 @@ import { checkScriptLimit, incrementGenerationCount, refundGenerationCount } fro
 import { getMagnetSuggestions } from "@/lib/magnet-word";
 import { supabaseAdmin } from "@/lib/db/supabase";
 import { joinHookBody } from "@/lib/script-text";
-import { getNicheFrameworksBlock, getBendFrameworksBlock, getNicheHookExamplesBlock } from "@/lib/viral-frameworks";
+import { getNicheFrameworksBlock, getBendFrameworksBlock, getNicheHookExamplesBlock, getNicheTitleFormulasBlock } from "@/lib/viral-frameworks";
 import { getKeptHooksBlock } from "@/lib/hook-picks";
 import { getActiveVoiceMeta, getVoiceMetaById } from "@/lib/voice-profile";
 import { captureFrameworkInBackground } from "@/lib/framework-capture";
@@ -89,9 +89,10 @@ export async function POST(req: Request) {
     // (view-ranked) + hooks creators kept (feedback loop). Both time-boxed and
     // null-safe; combined into one block the prompt models the hook field on.
     const hookNiche = bridgeNiche || niche;
-    const [hookExamples, keptHooks] = await Promise.all([
+    const [hookExamples, keptHooks, titleFormulas] = await Promise.all([
       getNicheHookExamplesBlock(hookNiche).catch(() => null),
       getKeptHooksBlock(hookNiche).catch(() => null),
+      getNicheTitleFormulasBlock(hookNiche).catch(() => null),
     ]);
     const nicheHookExamples = [
       keptHooks ? `Hooks creators kept (weight these highest):\n${keptHooks}` : "",
@@ -132,6 +133,7 @@ export async function POST(req: Request) {
       angle: enhancedAngle || undefined,
       nicheFrameworks: nicheFrameworks || undefined,
       nicheHookExamples: nicheHookExamples || undefined,
+      nicheTitleFormulas: titleFormulas || undefined,
       voiceProfile: voiceProfile || undefined,
       companionCta: !!companionCta,
     });
