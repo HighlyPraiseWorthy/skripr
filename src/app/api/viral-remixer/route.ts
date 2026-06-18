@@ -7,6 +7,7 @@ import { supabaseAdmin } from "@/lib/db/supabase";
 import { NICHES } from "@/lib/data/niches";
 import { saveViralFramework, fetchSourceViews, normalizeNiche } from "@/lib/viral-frameworks";
 import { EXPERT_ATTRIBUTION_RULE } from "@/lib/ai/claude";
+import { extractTrailingExpert, stripCarriedExpert } from "@/lib/title-utils";
 
 export const maxDuration = 120;
 
@@ -101,6 +102,14 @@ ${EXPERT_ATTRIBUTION_RULE}`,
 
     const raw = msg.content[0].type === "text" ? msg.content[0].text : "";
     const analysis = JSON.parse(raw.replace(/```json|```/g, "").trim());
+
+    // Hard guarantee: strip the source video's expert from any remix title that
+    // carried it onto a different topic, even if the model ignored the rule.
+    const sourceExpert = extractTrailingExpert(meta.title);
+    if (sourceExpert && Array.isArray(analysis.titleFormula?.remixTitles)) {
+      analysis.titleFormula.remixTitles = analysis.titleFormula.remixTitles.map((t: any) =>
+        ({ ...t, title: stripCarriedExpert(t?.title || "", sourceExpert) }));
+    }
 
     // Backward compat: older consumers read titleFormula.remixExamples (string[])
     if (analysis.titleFormula?.remixTitles && !analysis.titleFormula.remixExamples) {

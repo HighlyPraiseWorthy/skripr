@@ -5,6 +5,7 @@ import { rpmArbitrage, fetchBlendProof, resolveNiche } from "@/lib/bend-insights
 import { getPoolNicheStats, normalizeNiche } from "@/lib/viral-frameworks";
 import { getNicheById, NICHES } from "@/lib/data/niches";
 import { EXPERT_ATTRIBUTION_RULE } from "@/lib/ai/claude";
+import { extractTrailingExpert, stripCarriedExpert } from "@/lib/title-utils";
 
 const CANONICAL_NAMES = NICHES.map(n => n.name).join(", ");
 
@@ -90,12 +91,15 @@ For each bridge sub-niche return EXACTLY these JSON fields:
     const raw = "[" + (msg.content[0].type === "text" ? msg.content[0].text : "");
     const parsed = JSON.parse(raw.replace(/```json|```/g, "").trim());
     // Strict field mapping — system prompt enforces exact keys
+    // Hard guarantee: never show a bridge title that carried the source video's
+    // expert onto a different niche, even if the model ignored the prompt rule.
+    const sourceExpert = extractTrailingExpert(videoTitle);
     const base = parsed.map((n: any) => ({
       name: n.name || "Unknown",
       parentNiche: n.parentNiche || "",
       hook: n.hook || "",
       algorithmNote: n.algorithmNote || "",
-      titlePreview: n.titlePreview || "",
+      titlePreview: stripCarriedExpert(n.titlePreview || "", sourceExpert),
     }));
 
     const sourceNicheName = resolveNiche(sourceNiche)?.name || sourceNiche || "";

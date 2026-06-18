@@ -3,6 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { getNicheHookExamplesBlock, getNicheTitleFormulasBlock } from "@/lib/viral-frameworks";
 import { getPickedAnglesBlock } from "@/lib/angle-picks";
+import { extractTrailingExpert, stripCarriedExpert } from "@/lib/title-utils";
 
 const client = new Anthropic();
 export const maxDuration = 30;
@@ -67,7 +68,12 @@ Output a JSON array of exactly 5 objects. Each object must have these exact keys
     });
 
     const raw = "[" + (msg.content[0].type === "text" ? msg.content[0].text : "");
-    const angles = JSON.parse(raw.replace(/```json|```/g, "").trim());
+    const parsed = JSON.parse(raw.replace(/```json|```/g, "").trim());
+    // Hard guarantee: strip a carried-over source expert from each angle title.
+    const sourceExpert = extractTrailingExpert(videoTitle);
+    const angles = Array.isArray(parsed)
+      ? parsed.map((a: any) => ({ ...a, titleSuggestion: stripCarriedExpert(a?.titleSuggestion || "", sourceExpert) }))
+      : parsed;
     return NextResponse.json({ angles });
   } catch (e: any) {
     console.error("[suggest-viral-angles]", e?.message);

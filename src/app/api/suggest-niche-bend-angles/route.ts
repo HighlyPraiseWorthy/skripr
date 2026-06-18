@@ -4,6 +4,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import { getNicheHookExamplesBlock, getNicheTitleFormulasBlock } from "@/lib/viral-frameworks";
 import { getPickedAnglesBlock } from "@/lib/angle-picks";
 import { EXPERT_ATTRIBUTION_RULE } from "@/lib/ai/claude";
+import { extractTrailingExpert, stripCarriedExpert } from "@/lib/title-utils";
 
 const client = new Anthropic();
 export const maxDuration = 30;
@@ -45,7 +46,12 @@ export async function POST(req: Request) {
     });
 
     const raw = "[" + (msg.content[0].type === "text" ? msg.content[0].text : "");
-    const angles = JSON.parse(raw.replace(/```json|```/g, "").trim());
+    const parsed = JSON.parse(raw.replace(/```json|```/g, "").trim());
+    // Hard guarantee: strip a carried-over source expert from each blend title.
+    const sourceExpert = extractTrailingExpert(videoTitle);
+    const angles = Array.isArray(parsed)
+      ? parsed.map((a: any) => ({ ...a, titleSuggestion: stripCarriedExpert(a?.titleSuggestion || "", sourceExpert) }))
+      : parsed;
     return NextResponse.json({ angles });
   } catch (e: any) {
     console.error("[suggest-niche-bend-angles]", e?.message);
