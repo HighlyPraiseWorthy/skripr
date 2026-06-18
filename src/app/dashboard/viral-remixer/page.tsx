@@ -187,8 +187,8 @@ export default function ViralRemixerPage() {
             </div>
           </div>
 
-          {/* Breakdown cards */}
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 20, alignItems: "start" }}>
+          {/* Summary row: hook + structure, equal height */}
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 14, alignItems: "stretch" }}>
 
             {/* Hook */}
             <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 14, padding: 18 }}>
@@ -217,21 +217,23 @@ export default function ViralRemixerPage() {
                 ))}
               </div>
             </div>
+          </div>
 
-            {/* Retention */}
-            <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 14, padding: 18 }}>
-              <div style={{ fontSize: 10, fontWeight: 700, color: C.accentDim, letterSpacing: 0.6, marginBottom: 12 }}>🔒 RETENTION TRIGGERS</div>
-              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                {result.retentionTriggers.map((t, i) => (
-                  <div key={i} style={{ background: "rgba(0,0,0,0.20)", borderRadius: 8, padding: "9px 12px", border: `1px solid ${C.border}` }}>
-                    <div style={{ fontSize: 14, fontWeight: 600, color: C.textBright, marginBottom: 3 }}>{t.trigger} <span style={{ color: C.accentDim, fontWeight: 400, fontSize: 13 }}>at {t.timestamp}</span></div>
-                    <div style={{ fontSize: 13, color: C.textDim, fontStyle: "italic", lineHeight: 1.5 }}>"{t.example}"</div>
-                  </div>
-                ))}
-              </div>
+          {/* Retention — full width, multi-column so the cards fill space instead of stacking in one tall column */}
+          <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 14, padding: 18, marginBottom: 14 }}>
+            <div style={{ fontSize: 10, fontWeight: 700, color: C.accentDim, letterSpacing: 0.6, marginBottom: 12 }}>🔒 RETENTION TRIGGERS</div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 10, alignItems: "start" }}>
+              {result.retentionTriggers.map((t, i) => (
+                <div key={i} style={{ background: "rgba(0,0,0,0.20)", borderRadius: 8, padding: "9px 12px", border: `1px solid ${C.border}` }}>
+                  <div style={{ fontSize: 14, fontWeight: 600, color: C.textBright, marginBottom: 3 }}>{t.trigger} <span style={{ color: C.accentDim, fontWeight: 400, fontSize: 13 }}>at {t.timestamp}</span></div>
+                  <div style={{ fontSize: 13, color: C.textDim, fontStyle: "italic", lineHeight: 1.5 }}>"{t.example}"</div>
+                </div>
+              ))}
             </div>
+          </div>
 
-            {/* Title formula */}
+          {/* Title formula — full width */}
+          <div style={{ marginBottom: 20 }}>
             <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 14, padding: 18 }}>
               <div style={{ fontSize: 10, fontWeight: 700, color: C.accentDim, letterSpacing: 0.6, marginBottom: 12 }}>📋 TITLE FORMULA</div>
               <div style={{ background: "rgba(77,184,255,0.07)", border: `1px solid rgba(77,184,255,0.16)`, borderRadius: 8, padding: "10px 12px", marginBottom: 10 }}>
