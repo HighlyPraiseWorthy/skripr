@@ -14,7 +14,7 @@ const C = {
 };
 
 type Phase = "loading" | "angles" | "storytelling" | "generating" | "result";
-type Angle = { angle: string; description: string; audience: string; titleSuggestion: string; };
+type Angle = { angle: string; description: string; audience: string; titleSuggestion: string; swap?: string | null; };
 type Brief = {
   hookAnalysis: { hook: string; hookType: string; whyItWorks: string };
   structure: { timestamp: string; section: string; description: string; purpose: string }[];
@@ -307,6 +307,11 @@ export default function ViralBriefPage() {
               onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = C.card; (e.currentTarget as HTMLElement).style.borderColor = C.border; }}>
               <div style={{ width: 32, height: 32, borderRadius: 8, background: "rgba(77,184,255,0.11)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, fontSize: 13, fontWeight: 700, color: C.accentDim }}>{i + 1}</div>
               <div style={{ flex: 1, minWidth: 0 }}>
+                {a.swap && (
+                  <div style={{ display: "inline-block", fontSize: 10, fontWeight: 700, letterSpacing: 0.4, color: "#7c6fff", background: "rgba(124,111,255,0.12)", border: "1px solid rgba(124,111,255,0.3)", borderRadius: 6, padding: "2px 8px", marginBottom: 6 }}>
+                    🔀 WHITE-SPACE SWAP · {a.swap}
+                  </div>
+                )}
                 <div style={{ fontSize: 15, fontWeight: 700, color: C.textBright, marginBottom: 4, lineHeight: 1.3 }}>{a.angle}</div>
                 <div style={{ fontSize: 12, color: C.textDim, lineHeight: 1.5, marginBottom: 8 }}>{a.description}</div>
                 <div style={{ background: "rgba(77,184,255,0.06)", border: "1px solid rgba(77,184,255,0.13)", borderRadius: 7, padding: "6px 10px", marginBottom: 8 }}>
