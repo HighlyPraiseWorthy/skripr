@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import GenerationProgress from "@/components/GenerationProgress";
 import { VoiceSelect } from "@/components/VoiceSelect";
 import { CompanionCtaToggle } from "@/components/CompanionCtaToggle";
+import StorytellingPicker from "@/components/StorytellingPicker";
 
 const C = {
   bg: "#080c12", cardBg: "#0d1520", border: "rgba(77,184,255,0.11)",
@@ -14,7 +15,7 @@ const C = {
 };
 const grad = "linear-gradient(135deg,#0e6499,#1a8fd1,#4db8ff)";
 
-type Step = "input" | "generating" | "result";
+type Step = "input" | "storytelling" | "generating" | "result";
 type InputMode = "url" | "paste" | "topic";
 
 interface MagnetWordOption {
@@ -97,6 +98,7 @@ export default function NewScriptPage() {
   const [pendingHook, setPendingHook] = useState<string | null>(null);
   const [viralFramework, setViralFramework] = useState<{remixFramework: string; hookType: string; titleFormula: string; selectedTitle?: string} | null>(null);
   const [angle, setAngle] = useState("");
+  const [pendingTranscript, setPendingTranscript] = useState<string>("");
   const [suggestingAngles, setSuggestingAngles] = useState(false);
   const [angleSuggestions, setAngleSuggestions] = useState<string[]>([]);
   const [selectedHookType, setSelectedHookType] = useState<string | null>(null);
@@ -216,14 +218,23 @@ export default function NewScriptPage() {
     }
   }
 
-  async function runGenerate(transcript: string) {
+  // Interactive path: hold the transcript and show the storytelling step before
+  // writing. The query-param auto-gen path keeps generating directly (server
+  // auto-selects the mode there).
+  function runGenerate(transcript: string) {
+    setPendingTranscript(transcript);
+    setStep("storytelling");
+  }
+
+  async function doGenerate(transcript: string, storytellingMode: string, storytellingTechniques: string[]) {
     setLastUsedTranscript(transcript);
     setStep("generating");
     try {
       const res = await fetch("/api/scripts/generate", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ transcript, niche: niche || undefined, topic: topic || undefined, videoLength: videoMinutes >= 14 ? "long" : "medium", targetMinutes: videoMinutes, voiceProfileId: voiceId || undefined, companionCta,
-          sourceVideoId: youtubeUrl ? youtubeUrl.match(/[?&]v=([^&]+)/)?.[1] : undefined, viralMagnetWord: selectedViralWord || undefined, angle: angle || undefined, remixFramework: viralFramework?.remixFramework || undefined, hookType: viralFramework?.hookType || undefined, titleFormula: viralFramework?.selectedTitle || viralFramework?.titleFormula || undefined }),
+          sourceVideoId: youtubeUrl ? youtubeUrl.match(/[?&]v=([^&]+)/)?.[1] : undefined, viralMagnetWord: selectedViralWord || undefined, angle: angle || undefined, remixFramework: viralFramework?.remixFramework || undefined, hookType: viralFramework?.hookType || undefined, titleFormula: viralFramework?.selectedTitle || viralFramework?.titleFormula || undefined,
+          storytellingMode, storytellingTechniques }),
       });
       const data = await res.json().catch(() => null);
       if (!res.ok || !data) throw new Error(data?.error || "The connection dropped while generating. Please try again.");
@@ -714,6 +725,18 @@ export default function NewScriptPage() {
               </button>
             )}
           </div>
+        )}
+
+        {/* ─── STORYTELLING STEP ─── */}
+        {step === "storytelling" && (
+          <StorytellingPicker
+            topic={topic || lastUsedTranscript.slice(0, 120)}
+            niche={niche}
+            angle={angle}
+            sourceTranscript={inputMode !== "topic" ? pendingTranscript : undefined}
+            onGenerate={(mode, techniques) => doGenerate(pendingTranscript, mode, techniques)}
+            onBack={() => setStep("input")}
+          />
         )}
 
         {/* ─── GENERATING ─── */}

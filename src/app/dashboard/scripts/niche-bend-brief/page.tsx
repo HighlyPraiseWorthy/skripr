@@ -4,6 +4,7 @@ import GenerationProgress from "@/components/GenerationProgress";
 import { joinHookBody, bodyStartsWithHook } from "@/lib/script-text";
 import { VoiceSelect } from "@/components/VoiceSelect";
 import { CompanionCtaToggle } from "@/components/CompanionCtaToggle";
+import StorytellingPicker from "@/components/StorytellingPicker";
 
 const C = {
   bg: "#080c12", card: "#0d1520", cardHover: "#111d2e",
@@ -12,7 +13,7 @@ const C = {
   textDim: "#7a9bb5", green: "#34d399",
 };
 
-type Phase = "loading" | "niches" | "loading-angles" | "angles" | "generating" | "result";
+type Phase = "loading" | "niches" | "loading-angles" | "angles" | "storytelling" | "generating" | "result";
 
 type BridgeNiche = {
   name: string;
@@ -122,9 +123,16 @@ export default function NicheBendBriefPage() {
     } catch (e: any) { setError(e?.message || "Failed to generate angles"); setPhase("niches"); }
   }
 
-  async function handlePickAngle(angle: BlendedAngle) {
+  // Pick an angle → go to the storytelling step (don't generate yet).
+  function handlePickAngle(angle: BlendedAngle) {
     if (!brief || !selectedNiche) return;
-    setSelectedAngle(angle); setPhase("generating"); setError(null);
+    setSelectedAngle(angle); setError(null); setPhase("storytelling");
+  }
+
+  async function generateWithStory(storytellingMode: string, storytellingTechniques: string[]) {
+    const angle = selectedAngle;
+    if (!brief || !selectedNiche || !angle) return;
+    setPhase("generating"); setError(null);
     try {
       const res = await fetch("/api/scripts/generate", {
         method: "POST", headers: { "Content-Type": "application/json" },
@@ -138,6 +146,7 @@ export default function NicheBendBriefPage() {
           sourceNiche: brief.sourceNiche || undefined,
           bridgeNiche: selectedNiche.parentNiche || undefined,
           companionCta,
+          storytellingMode, storytellingTechniques,
         }),
       });
       const data = await res.json().catch(() => null);
@@ -180,6 +189,17 @@ export default function NicheBendBriefPage() {
     navigator.clipboard.writeText(parts.join("\n\n"));
     setCopied(true); setTimeout(() => setCopied(false), 2000);
   }
+
+  if (phase === "storytelling" && selectedAngle) return (
+    <StorytellingPicker
+      topic={selectedAngle.angle}
+      niche={selectedNiche?.parentNiche || selectedAngle.audience}
+      angle={selectedAngle.titleSuggestion || selectedAngle.angle}
+      sourceTitle={brief?.videoTitle}
+      onGenerate={generateWithStory}
+      onBack={() => setPhase("angles")}
+    />
+  );
 
   if (phase === "loading") return <Spinner label="Finding your bridge sub-niches..." sub="Analyzing niche · algorithm signals · blend potential" />;
   if (phase === "loading-angles") return <Spinner label={"Blending niches: " + (selectedNiche?.name || "")} sub="Generating angles that fuse both communities" />;

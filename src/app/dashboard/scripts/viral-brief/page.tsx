@@ -4,6 +4,7 @@ import GenerationProgress from "@/components/GenerationProgress";
 import { joinHookBody, bodyStartsWithHook } from "@/lib/script-text";
 import { VoiceSelect } from "@/components/VoiceSelect";
 import { CompanionCtaToggle } from "@/components/CompanionCtaToggle";
+import StorytellingPicker from "@/components/StorytellingPicker";
 
 const C = {
   bg: "#080c12", card: "#0d1520", cardHover: "#111d2e",
@@ -12,7 +13,7 @@ const C = {
   textDim: "#7a9bb5", green: "#34d399",
 };
 
-type Phase = "loading" | "angles" | "generating" | "result";
+type Phase = "loading" | "angles" | "storytelling" | "generating" | "result";
 type Angle = { angle: string; description: string; audience: string; titleSuggestion: string; };
 type Brief = {
   hookAnalysis: { hook: string; hookType: string; whyItWorks: string };
@@ -65,9 +66,16 @@ export default function ViralBriefPage() {
     } catch (e: any) { setError(e?.message || "Failed to generate angles"); setPhase("angles"); }
   }
 
-  async function handlePickAngle(angle: Angle) {
+  // Pick an angle → go to the storytelling step (don't generate yet).
+  function handlePickAngle(angle: Angle) {
     if (!brief) return;
-    setSelectedAngle(angle); setPhase("generating"); setError(null);
+    setSelectedAngle(angle); setError(null); setPhase("storytelling");
+  }
+
+  async function generateWithStory(storytellingMode: string, storytellingTechniques: string[]) {
+    const angle = selectedAngle;
+    if (!brief || !angle) return;
+    setPhase("generating"); setError(null);
     try {
       const res = await fetch("/api/scripts/generate", {
         method: "POST", headers: { "Content-Type": "application/json" },
@@ -78,6 +86,7 @@ export default function ViralBriefPage() {
           contentStructure: brief.structure, retentionTriggers: brief.retentionTriggers,
           voiceProfileId: voiceId || undefined,
           companionCta,
+          storytellingMode, storytellingTechniques,
         }),
       });
       const data = await res.json().catch(() => null);
@@ -124,6 +133,17 @@ export default function ViralBriefPage() {
       setSaving(false);
     }
   }
+
+  if (phase === "storytelling" && selectedAngle) return (
+    <StorytellingPicker
+      topic={selectedAngle.angle}
+      niche={selectedAngle.audience || brief?.niche}
+      angle={selectedAngle.titleSuggestion || selectedAngle.angle}
+      sourceTitle={brief?.videoTitle}
+      onGenerate={generateWithStory}
+      onBack={() => setPhase("angles")}
+    />
+  );
 
   if (phase === "loading") return (
     <div style={{ minHeight: "100vh", background: C.bg, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: 16, fontFamily: "system-ui, sans-serif" }}>
