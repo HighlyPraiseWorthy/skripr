@@ -8,6 +8,7 @@ import { joinHookBody } from "@/lib/script-text";
 import { getNicheFrameworksBlock, getBendFrameworksBlock, getNicheHookExamplesBlock, getNicheTitleFormulasBlock } from "@/lib/viral-frameworks";
 import { getKeptHooksBlock } from "@/lib/hook-picks";
 import { saveAnglePick } from "@/lib/angle-picks";
+import { autoSelectMode } from "@/lib/storytelling";
 import { getActiveVoiceMeta, getVoiceMetaById } from "@/lib/voice-profile";
 import { captureFrameworkInBackground } from "@/lib/framework-capture";
 
@@ -41,7 +42,7 @@ export async function POST(req: Request) {
   const startTime = Date.now();
 
   try {
-    const { transcript, niche, topic, sourceVideoId, videoLength = "long", targetMinutes, viralMagnetWord, angle, remixFramework, hookType, titleFormula, hookScript, contentStructure, retentionTriggers, voiceProfileId, sourceNiche, bridgeNiche, companionCta } = await req.json();
+    const { transcript, niche, topic, sourceVideoId, videoLength = "long", targetMinutes, viralMagnetWord, angle, remixFramework, hookType, titleFormula, hookScript, contentStructure, retentionTriggers, voiceProfileId, sourceNiche, bridgeNiche, companionCta, storytellingMode, storytellingTechniques } = await req.json();
 
     // Free plan: scripts capped at 10 minutes — longer scripts are a paid feature
     if (plan === "free" && targetMinutes && targetMinutes > 10) {
@@ -155,6 +156,11 @@ export async function POST(req: Request) {
       nicheTitleFormulas: titleFormulas || undefined,
       voiceProfile: voiceProfile || undefined,
       companionCta: !!companionCta,
+      // Storytelling engine: honor the user's picks; auto-select the mode when
+      // none was sent (old clients / one-click generate). buildStorytellingBlock
+      // resolves coherence + core techniques downstream.
+      storytellingMode: storytellingMode || autoSelectMode(niche, topic).id,
+      storytellingTechniques: Array.isArray(storytellingTechniques) ? storytellingTechniques : undefined,
     });
 
     const timeoutPromise = new Promise((_, reject) =>

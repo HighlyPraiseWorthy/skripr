@@ -1,4 +1,5 @@
 import { Anthropic } from "@anthropic-ai/sdk";
+import { buildStorytellingBlock } from "@/lib/storytelling";
 
 let _anthropic: Anthropic | null = null;
 function getAnthropic(): Anthropic {
@@ -33,6 +34,11 @@ export interface ScriptGenerationInput {
   nicheTitleFormulas?: string;
   voiceProfile?: string;
   companionCta?: boolean;
+  // Storytelling engine: narrative mode id + the resolved technique ids the
+  // script should weave in. When omitted, the route auto-selects. Rendered into
+  // the prompt via buildStorytellingBlock.
+  storytellingMode?: string;
+  storytellingTechniques?: string[];
 }
 
 export interface GeneratedScript {
@@ -378,6 +384,8 @@ CREATOR VOICE PROFILE — this creator's audience knows their voice; the script 
 
 ${input.voiceProfile}
 ` : ""}
+${buildStorytellingBlock(input.storytellingMode, input.storytellingTechniques)}
+
 ${input.nicheFrameworks ? `
 PROVEN VIRAL FRAMEWORKS FROM THIS NICHE — extracted from real high-performing videos in this exact niche. Model this script's structure, pacing, hook placement, and retention mechanics on these patterns. Adapt the MECHANICS to the new topic; never copy the content or wording:
 
