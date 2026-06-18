@@ -39,6 +39,10 @@ export interface ScriptGenerationInput {
   // the prompt via buildStorytellingBlock.
   storytellingMode?: string;
   storytellingTechniques?: string[];
+  // Creator-provided research / source material (pasted articles, notes, or
+  // auto-sourced facts). The script MAY state specific facts/numbers/studies
+  // that appear here; anything not in it still obeys the anti-fabrication rule.
+  sourceMaterial?: string;
 }
 
 export interface GeneratedScript {
@@ -405,6 +409,12 @@ CREATOR VOICE PROFILE — this creator's audience knows their voice; the script 
 ${input.voiceProfile}
 ` : ""}
 ${buildStorytellingBlock(input.storytellingMode, input.storytellingTechniques)}
+${input.sourceMaterial ? `
+VERIFIED SOURCE MATERIAL (provided by the creator) — you MAY state specific statistics, numbers, percentages, dollar figures, dates, named studies, and direct quotes ONLY when they appear in this material, and you SHOULD weave them in naturally for authority. This is a deliberate exception to the soft-framing rule, but ONLY for facts grounded here. For ANY claim NOT supported by this material, keep the soft-framing rule ("research suggests", "studies have shown"). Never invent a number, never attach a number to this material that isn't in it, and never copy long passages verbatim — restate facts in the script's own voice:
+"""
+${input.sourceMaterial.slice(0, 6000)}
+"""
+` : ""}
 
 ${input.nicheFrameworks ? `
 PROVEN VIRAL FRAMEWORKS FROM THIS NICHE — extracted from real high-performing videos in this exact niche. Model this script's structure, pacing, hook placement, and retention mechanics on these patterns. Adapt the MECHANICS to the new topic; never copy the content or wording:

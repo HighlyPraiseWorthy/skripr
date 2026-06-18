@@ -99,6 +99,7 @@ export default function NewScriptPage() {
   const [viralFramework, setViralFramework] = useState<{remixFramework: string; hookType: string; titleFormula: string; selectedTitle?: string} | null>(null);
   const [angle, setAngle] = useState("");
   const [pendingTranscript, setPendingTranscript] = useState<string>("");
+  const [sourceMaterial, setSourceMaterial] = useState<string>("");
   const [suggestingAngles, setSuggestingAngles] = useState(false);
   const [angleSuggestions, setAngleSuggestions] = useState<string[]>([]);
   const [selectedHookType, setSelectedHookType] = useState<string | null>(null);
@@ -234,7 +235,7 @@ export default function NewScriptPage() {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ transcript, niche: niche || undefined, topic: topic || undefined, videoLength: videoMinutes >= 14 ? "long" : "medium", targetMinutes: videoMinutes, voiceProfileId: voiceId || undefined, companionCta,
           sourceVideoId: youtubeUrl ? youtubeUrl.match(/[?&]v=([^&]+)/)?.[1] : undefined, viralMagnetWord: selectedViralWord || undefined, angle: angle || undefined, remixFramework: viralFramework?.remixFramework || undefined, hookType: viralFramework?.hookType || undefined, titleFormula: viralFramework?.selectedTitle || viralFramework?.titleFormula || undefined,
-          storytellingMode, storytellingTechniques }),
+          storytellingMode, storytellingTechniques, sourceMaterial: sourceMaterial.trim() || undefined }),
       });
       const data = await res.json().catch(() => null);
       if (!res.ok || !data) throw new Error(data?.error || "The connection dropped while generating. Please try again.");
@@ -555,6 +556,33 @@ export default function NewScriptPage() {
                 )}
               </div>
             )}
+
+            {/* ─── Research / source material (optional) ─── */}
+            <div style={{ marginTop: 16 }}>
+              <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 15, fontWeight: 600, color: "#9de4ff", letterSpacing: 0.3, marginBottom: 7 }}>
+                <span>📚</span> Research / source material
+                <span style={{ fontSize: 14, fontWeight: 400, color: "#7a9bb5", marginLeft: 4 }}>— paste articles, notes, or stats (optional)</span>
+              </label>
+              <textarea
+                value={sourceMaterial}
+                onChange={e => setSourceMaterial(e.target.value)}
+                placeholder="Paste facts, statistics, study findings, or article text here. Skripr will use real numbers ONLY from what you provide — everything else stays safely hedged."
+                rows={4}
+                style={{
+                  width: "100%", padding: "10px 14px", borderRadius: 12,
+                  background: "#0a1220", color: "#e8edf5", fontSize: 13,
+                  border: "1px solid rgba(77,184,255,0.13)", outline: "none",
+                  resize: "vertical", lineHeight: 1.6, fontFamily: "inherit", boxSizing: "border-box",
+                }}
+                onFocus={e => e.currentTarget.style.borderColor = "rgba(77,184,255,0.40)"}
+                onBlur={e => e.currentTarget.style.borderColor = "rgba(77,184,255,0.13)"}
+              />
+              {sourceMaterial.trim() && (
+                <p style={{ fontSize: 11, color: "#34d399", marginTop: 5 }}>
+                  ✓ Grounded — the script can cite real specifics from this material
+                </p>
+              )}
+            </div>
 
             {/* ─── Voice picker (pre-gen) ─── */}
             <div style={{ marginTop: 16 }}>

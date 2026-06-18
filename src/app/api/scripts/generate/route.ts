@@ -42,7 +42,7 @@ export async function POST(req: Request) {
   const startTime = Date.now();
 
   try {
-    const { transcript, niche, topic, sourceVideoId, videoLength = "long", targetMinutes, viralMagnetWord, angle, remixFramework, hookType, titleFormula, hookScript, contentStructure, retentionTriggers, voiceProfileId, sourceNiche, bridgeNiche, companionCta, storytellingMode, storytellingTechniques } = await req.json();
+    const { transcript, niche, topic, sourceVideoId, videoLength = "long", targetMinutes, viralMagnetWord, angle, remixFramework, hookType, titleFormula, hookScript, contentStructure, retentionTriggers, voiceProfileId, sourceNiche, bridgeNiche, companionCta, storytellingMode, storytellingTechniques, sourceMaterial } = await req.json();
 
     // Free plan: scripts capped at 10 minutes — longer scripts are a paid feature
     if (plan === "free" && targetMinutes && targetMinutes > 10) {
@@ -161,6 +161,7 @@ export async function POST(req: Request) {
       // resolves coherence + core techniques downstream.
       storytellingMode: storytellingMode || autoSelectMode(niche, topic).id,
       storytellingTechniques: Array.isArray(storytellingTechniques) ? storytellingTechniques : undefined,
+      sourceMaterial: typeof sourceMaterial === "string" && sourceMaterial.trim() ? sourceMaterial.trim() : undefined,
     });
 
     const timeoutPromise = new Promise((_, reject) =>
