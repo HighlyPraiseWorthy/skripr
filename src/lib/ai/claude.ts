@@ -75,10 +75,30 @@ export interface TTSTiming {
 // can't drift between routes.
 export const EXPERT_ATTRIBUTION_RULE = `NAMED-EXPERT / ATTRIBUTION RULE (critical): Never attach a real named person or expert to a title, hook, or claim unless that person is genuinely and verifiably tied to THIS specific topic. If a source or reference (e.g. a title formula like "... - [Named Expert]") carries an expert's name, that name belongs ONLY to the source's original topic. When the topic, niche, or angle changes you MUST NOT keep it — use a real expert who genuinely fits the new topic, or drop the named-expert reference entirely and end cleanly. NEVER reuse the source's expert on an unrelated topic, and NEVER invent a fake, generic, or unverifiable name.`;
 
+// Canonical hook-type taxonomy — single source of truth, used by the script
+// generator, the hook generator, the niche→hook mapping, and (as labels) the
+// framework capture. Consolidates the three older lists that had drifted apart.
+export const HOOK_TYPES: { name: string; how: string; ex: string }[] = [
+  { name: "Cold Open", how: "Drop straight into a specific moment or event, no setup.", ex: "On March 3rd, a fund manager closed his laptop and walked out. He never came back." },
+  { name: "Question", how: "Surface a pain or curiosity as a direct question.", ex: "What if the advice you've followed about money is the reason you're broke?" },
+  { name: "Data Drop", how: "Lead with a hyper-specific number that demands explanation.", ex: "The average person makes 35,000 decisions a day. 226 are about food alone." },
+  { name: "Provocation", how: "Challenge a belief the viewer already holds.", ex: "You've been told index funds are safe. That's only true if you have 30 years." },
+  { name: "Curiosity Gap", how: "State that something exists, withhold the payoff.", ex: "Three techniques. One has a 94% success rate. Nobody teaches the right one." },
+  { name: "Myth-Bust", how: "Destroy the single most common wrong assumption.", ex: "Every guide says to budget first. Here's why that quietly keeps you broke." },
+  { name: "Bold Claim", how: "State a counterintuitive result up front.", ex: "This one habit is responsible for most failed channels, and almost nobody names it." },
+  { name: "Direct Address", how: "Speak to a specific person in a specific moment.", ex: "If you've ever rewritten a hook five times and still hated it, stop." },
+  { name: "Teaser", how: "Promise a specific, concrete payoff by the end.", ex: "By the end of this you'll know the exact 6-account setup that changed everything." },
+  { name: "Pattern Interrupt", how: "Subvert the expected opening immediately.", ex: "Most videos on this start with a definition. We're skipping all of that." },
+  { name: "Scene-Setter", how: "Build sensory atmosphere before revealing the stakes.", ex: "The office smelled like burned coffee. Nobody had slept. The audit started in four hours." },
+  { name: "Story", how: "Open inside a personal narrative scene, present-tense.", ex: "Three years ago I was $40k in debt and lying about it to everyone I knew." },
+];
+export const HOOK_TYPE_NAMES = HOOK_TYPES.map((h) => h.name);
+export const HOOK_TYPES_PROMPT = HOOK_TYPES.map((h, i) => `${i + 1}. ${h.name} — ${h.how} e.g. "${h.ex}"`).join("\n");
+
 const SYSTEM_PROMPT = `You are Skripr's AI script engine. You specialize in writing YouTube scripts for faceless channels that are optimized for retention, algorithm performance, and AI voice (TTS) delivery.
 
 Your scripts follow these principles:
-1. HOOK: First 5 seconds must grab attention. Use one of these proven patterns: question hook, stat hook, story hook, controversy hook, "what if" hook, list hook, result hook, myth-bust hook.
+1. HOOK: First 5 seconds must grab attention using one of the proven hook types defined in the HOOK RULES section below (Cold Open, Question, Data Drop, Provocation, Curiosity Gap, Myth-Bust, Bold Claim, Direct Address, Teaser, Pattern Interrupt, Scene-Setter, Story).
 2. RETENTION BEATS: Use three precision mechanics — not generic pattern interrupts:
    a) RE-HOOK AT 0:30: The 30-second cliff is the #1 drop-off point. Place a hard re-hook at the 30-second mark — a new tension, a surprising pivot, or a "but here's what nobody tells you" moment. This is mandatory, not optional.
    b) ESCALATING OPEN LOOPS: Place open loops at the 1/3 and 2/3 points of the script. The 2/3 loop must be more urgent and higher-stakes than the 1/3 loop — escalate intensity, don't just repeat the pattern. The viewer must feel it would be a mistake to stop now.
@@ -438,15 +458,8 @@ ${input.nicheHookExamples ? `
 PROVEN HOOKS FROM THIS NICHE — real opening lines that earned views or that creators chose to keep. Model the "hook" field on the strongest of these: match their tension, specificity, and opening move. NEVER reuse their wording, names, or numbers — only their mechanics:
 ${input.nicheHookExamples}
 ` : ""}
-HOOK RULES — the "hook" field MUST use one of these 8 proven patterns. Pick the one that fits the topic best:
-1. Question — Surface a pain or curiosity directly: "Have you ever wondered why [X] never works?" / "What would you do if [scenario]?"
-2. Stat/Number — Lead with a surprising data point: "73% of creators who [X] will [bad outcome] within [timeframe]."
-3. Story — Drop into a scene with no setup: "Three years ago I [specific situation]..." — present tense, immediate.
-4. Myth-bust — Challenge the dominant belief: "Every guide about [topic] tells you [X]. Here's why that's backwards."
-5. Bold claim — State a counterintuitive result first: "This one [thing] is responsible for [outsized outcome] — and almost nobody uses it."
-6. Direct address — Speak to a specific person in a specific moment: "If you've ever [relatable struggle], stop what you're doing."
-7. Teaser — Promise a specific, concrete payoff: "By the end of this you'll know the exact [thing] that [specific result]."
-8. Pattern interrupt — Subvert expectations immediately: "Most videos about [topic] start with [common approach]. We're skipping all of that."
+HOOK RULES — the "hook" field MUST use one of these proven patterns. Pick the one that fits the topic best:
+${HOOK_TYPES_PROMPT}
 
 HOOK ANTI-PATTERNS — NEVER start the hook with any of these:
 ❌ "What if I told you..." ❌ "In this video..." ❌ "Today we're going to..." ❌ "Welcome back..." ❌ "Hey guys..." ❌ "In today's video..."
@@ -597,7 +610,8 @@ Topic: "${input.topic}"
 Niche: ${input.niche}
 Tone: ${input.tone}
 
-Use these 8 proven hook types: question, stat, story, controversy, "what if", list, result, myth-bust.
+Use one of these proven hook types (set "type" to the matching name):
+${HOOK_TYPES_PROMPT}
 ${learningBlock}
 For each hook, provide:
 - The exact hook text (what the creator says in the first 5-10 seconds)

@@ -3,6 +3,7 @@ import { supabaseAdmin } from "@/lib/db/supabase";
 import { saveViralFramework, fetchSourceViews, normalizeNiche } from "@/lib/viral-frameworks";
 import { getVideoMeta } from "@/lib/youtube-transcript";
 import { NICHES } from "@/lib/data/niches";
+import { HOOK_TYPE_NAMES } from "@/lib/ai/claude";
 
 // Background framework capture: whenever a real YouTube video flows through ANY
 // surface (New Script URL, Voice Match channel, etc.), extract its viral
@@ -56,7 +57,7 @@ ${input.transcript.slice(0, 7000)}
 
 Return JSON with EXACTLY these keys:
 {
-  "hookType": "the hook pattern used (e.g. Cold Open, Provocation, Curiosity Gap, Data Drop)",
+  "hookType": "the hook pattern used — pick the closest match from: ${HOOK_TYPE_NAMES.join(", ")}",
   "hook": "the opening hook line(s), verbatim from the content",
   "whyItWorks": "one sentence on the psychology of why this hook works",
   "structure": [{"section": "name", "description": "what happens"}],
