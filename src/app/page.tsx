@@ -512,6 +512,25 @@ export default function LandingPage() {
         ))}
       </div>
 
+      {/* ── POSITIONING BAND ── */}
+      <div style={{ borderTop: `1px solid ${T.border}`, borderBottom: `1px solid ${T.border}`, background: T.bg2 }}>
+        <div style={{ padding: "72px 48px", maxWidth: 760, margin: "0 auto", textAlign: "center" as const }}>
+          <SectionLabel>The top 10%</SectionLabel>
+          <div style={{ fontSize: 34, fontWeight: 700, letterSpacing: "-1px", color: T.text, lineHeight: 1.08, marginBottom: 22 }}>
+            Your competition is weaker<br />than you think.
+          </div>
+          <p style={{ fontSize: 17, fontWeight: 400, color: "#d4e4f3", lineHeight: 1.7, marginBottom: 16 }}>
+            90% of YouTube is noise — creators winging it, recycling 2019 playbooks, posting and hoping something sticks. That's who you're actually up against.
+          </p>
+          <p style={{ fontSize: 17, fontWeight: 400, color: "#d4e4f3", lineHeight: 1.7, marginBottom: 16 }}>
+            The top 10% don't win on luck. They win on sharp angles, real storytelling, and relentless testing. Simple — not easy. It just takes the work most people never do.
+          </p>
+          <p style={{ fontSize: 17, fontWeight: 500, color: T.text, lineHeight: 1.7 }}>
+            Skripr does that work <span style={{ fontStyle: "italic" }}>with</span> you: proven angles, a storytelling engine built for retention, and titles you can test before you post. <span style={{ color: T.accent }}>The top 10% is closer than it looks.</span>
+          </p>
+        </div>
+      </div>
+
       {/* ── HOW IT WORKS ── */}
       <div id="how" style={{ padding: "72px 48px", maxWidth: 1060, margin: "0 auto" }}>
         <div style={{ textAlign: "center" as const }}><SectionLabel>How it works</SectionLabel></div>
