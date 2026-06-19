@@ -5,7 +5,8 @@ import { checkScriptLimit, incrementGenerationCount, refundGenerationCount } fro
 import { getMagnetSuggestions } from "@/lib/magnet-word";
 import { supabaseAdmin } from "@/lib/db/supabase";
 import { joinHookBody } from "@/lib/script-text";
-import { getNicheFrameworksBlock, getBendFrameworksBlock, getNicheHookExamplesBlock, getNicheTitleFormulasBlock } from "@/lib/viral-frameworks";
+import { getNicheFrameworksBlock, getBendFrameworksBlock, getNicheHookExamplesBlock, getNicheTitleFormulasBlock, normalizeNiche } from "@/lib/viral-frameworks";
+import { detectNiche } from "@/lib/niche-detect";
 import { getKeptHooksBlock } from "@/lib/hook-picks";
 import { saveAnglePick } from "@/lib/angle-picks";
 import { autoSelectMode } from "@/lib/storytelling";
@@ -81,16 +82,29 @@ export async function POST(req: Request) {
     const truncated = truncateTranscript(transcript || "", cap);
     console.log(`[generate] length=${videoLength} minutes=${targetMinutes ?? "-"} plan=${plan}`);
 
+    // Niche resolution: if the user left niche blank or typed something that
+    // doesn't map to a canonical niche, auto-detect it from the transcript /
+    // topic / angle. Otherwise the niche-keyed learning (frameworks, hooks,
+    // titles, magnet) silently no-ops on a "general" fallback.
+    let resolvedNiche: string = niche || "";
+    if (!normalizeNiche(resolvedNiche)) {
+      const basis = (typeof transcript === "string" && transcript.trim().length > 100)
+        ? transcript
+        : [topic, angle].filter(Boolean).join(". ");
+      const detected = await detectNiche(basis).catch(() => null);
+      if (detected) { resolvedNiche = detected; console.log(`[generate] niche auto-detected: ${detected}`); }
+    }
+
     // Collective learning layer: real viral frameworks from this niche, captured
     // by Viral Remixer usage. For a bend, pull from BOTH source + bridge niches.
     const nicheFrameworks = bridgeNiche
-      ? await getBendFrameworksBlock(sourceNiche || niche, bridgeNiche).catch(() => null)
-      : await getNicheFrameworksBlock(niche).catch(() => null);
+      ? await getBendFrameworksBlock(sourceNiche || resolvedNiche, bridgeNiche).catch(() => null)
+      : await getNicheFrameworksBlock(resolvedNiche).catch(() => null);
 
     // Hook learning for the script's opening line: proven hooks for this niche
     // (view-ranked) + hooks creators kept (feedback loop). Both time-boxed and
     // null-safe; combined into one block the prompt models the hook field on.
-    const hookNiche = bridgeNiche || niche;
+    const hookNiche = bridgeNiche || resolvedNiche;
     const [hookExamples, keptHooks, titleFormulas] = await Promise.all([
       getNicheHookExamplesBlock(hookNiche).catch(() => null),
       getKeptHooksBlock(hookNiche).catch(() => null),
@@ -127,7 +141,7 @@ export async function POST(req: Request) {
     // For a bend, key the pick to the canonical bridge niche (what the bend
     // angle reader looks up) — NOT the freeform `niche`/audience string, or the
     // pick would be written to a drawer nothing reads from.
-    const anglePickNiche = bridgeNiche || niche || null;
+    const anglePickNiche = bridgeNiche || resolvedNiche || null;
     const anglePromise: Promise<void> = (typeof angle === "string" && angle.trim().length > 8)
       ? saveAnglePick({
           user_id: userId,
@@ -142,9 +156,9 @@ export async function POST(req: Request) {
     const scriptPromise = generateScript({
       sourceTranscript: truncated,
       targetTopic: topic || "",
-      targetNiche: niche || "general",
+      targetNiche: resolvedNiche || "general",
       sourceTitle: topic || "",
-      sourceNiche: niche || "general",
+      sourceNiche: resolvedNiche || "general",
       videoLength: videoLength as any,
       targetMinutes: targetMinutes ?? undefined,
       tone: "entertaining",
@@ -159,7 +173,7 @@ export async function POST(req: Request) {
       // Storytelling engine: honor the user's picks; auto-select the mode when
       // none was sent (old clients / one-click generate). buildStorytellingBlock
       // resolves coherence + core techniques downstream.
-      storytellingMode: storytellingMode || autoSelectMode(niche, topic).id,
+      storytellingMode: storytellingMode || autoSelectMode(resolvedNiche, topic).id,
       storytellingTechniques: Array.isArray(storytellingTechniques) ? storytellingTechniques : undefined,
       sourceMaterial: typeof sourceMaterial === "string" && sourceMaterial.trim() ? sourceMaterial.trim() : undefined,
       selectedTitle: typeof selectedTitle === "string" && selectedTitle.trim() ? selectedTitle.trim() : undefined,
