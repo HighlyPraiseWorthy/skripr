@@ -95,13 +95,15 @@ SAMPLES:
 ${text.slice(0, 24000)}
 """
 
-Write a compact profile (max 300 words) covering, in this order:
+Write a compact profile (max 340 words) covering, in this order:
 - Sentence rhythm: typical length, fragment usage, how they build and release tension
+- Opening / hook style: how they START a video — do they open on a metaphor, a question, a cold scene, a stat, a bold claim? Describe their signature opening move and quote one.
+- Imagery and metaphor: do they explain through analogies, metaphors, or vivid comparisons? How often, and what kind (physical/sensory, pop-culture, scientific, everyday)? Quote 1-2 verbatim examples. If they rarely use imagery, say so explicitly.
 - Vocabulary and diction: simple/technical, slang, contractions, words they favor
 - Energy and tone: where they sit between calm-documentary and hype, how serious vs playful
 - Person and address: how they talk to the viewer (you/we/I), how personal they get
 - Humor: type, frequency, and an example pattern
-- Signature phrases: exact recurring words/phrases (quote them verbatim)
+- Signature phrases & structural moves: exact recurring words/phrases (quote verbatim) AND any repeated structural patterns (e.g. numbered beats, "First… Second…", recurring segment shapes)
 - Transitions: how they move between ideas
 - CTA style: how they ask for subscribes/comments
 - Never-does: things notably absent from their style
