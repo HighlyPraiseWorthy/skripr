@@ -478,6 +478,8 @@ ${input.nicheHookExamples ? `
 PROVEN HOOKS FROM THIS NICHE — real opening lines that earned views or that creators chose to keep. Model the "hook" field on the strongest of these: match their tension, specificity, and opening move. NEVER reuse their wording, names, or numbers — only their mechanics:
 ${input.nicheHookExamples}
 ` : ""}
+THE HOOK SHOULD OVERSELL — go aggressive. The opening's job is to win the click and stop the scroll, so maximize curiosity, boldness, and stakes: the biggest, most surprising, most provocative framing the topic can honestly carry. The BODY then sustains attention and delivers on that promise. "Oversell" means bold framing and high curiosity — it does NOT mean asserting a fabricated fact as proven. The hook may promise big and tease hard, but any hard specific (number, stat, study, named person) still follows the fact rules above. Be punchy, never timid.
+
 HOOK RULES — the "hook" field MUST use one of these proven patterns. Pick the one that fits the topic best:
 ${HOOK_TYPES_PROMPT}
 
