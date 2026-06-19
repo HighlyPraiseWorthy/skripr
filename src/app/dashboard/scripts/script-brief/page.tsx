@@ -99,6 +99,7 @@ export default function ScriptBriefPage() {
           hookType: angle.hookType,
           angle: `Hook type: ${angle.hookType}. Opening hook to adapt: "${angle.hookPremise}". Suggested title: ${angle.titleSuggestion}`,
           storytellingMode, storytellingTechniques, sourceMaterial: sourceMaterial || undefined,
+          selectedTitle: angle.titleSuggestion || undefined,
         }),
       });
       const data = await res.json().catch(() => null);

@@ -149,6 +149,7 @@ export default function NicheBendBriefPage() {
           bridgeNiche: selectedNiche.parentNiche || undefined,
           companionCta,
           storytellingMode, storytellingTechniques, sourceMaterial: sourceMaterial || undefined,
+          selectedTitle: angle.titleSuggestion || undefined,
         }),
       });
       const data = await res.json().catch(() => null);

@@ -89,6 +89,7 @@ export default function ViralBriefPage() {
           voiceProfileId: voiceId || undefined,
           companionCta,
           storytellingMode, storytellingTechniques, sourceMaterial: sourceMaterial || undefined,
+          selectedTitle: angle.titleSuggestion || undefined,
         }),
       });
       const data = await res.json().catch(() => null);

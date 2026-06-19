@@ -43,6 +43,9 @@ export interface ScriptGenerationInput {
   // auto-sourced facts). The script MAY state specific facts/numbers/studies
   // that appear here; anything not in it still obeys the anti-fabrication rule.
   sourceMaterial?: string;
+  // The title the user explicitly chose (e.g. by picking an angle card). When
+  // set, it LOCKS the title — generation must use it as-is, not invent its own.
+  selectedTitle?: string;
 }
 
 export interface GeneratedScript {
@@ -436,7 +439,11 @@ ${input.nicheTitleFormulas ? `
 PROVEN TITLES FROM THIS NICHE — real titles that earned views in this exact niche, with the reusable formula each implies. Model the "title" field on the strongest of these: borrow the formula and structure, never the wording or subject. Adapt to THIS topic:
 ${input.nicheTitleFormulas}
 ` : ""}
-TITLE RULES — the generated "title" field MUST follow these viral patterns. Study these real titles that got 3M–10M+ views:
+${input.selectedTitle ? `
+TITLE — LOCKED (this overrides the TITLE RULES below): The creator already chose this exact title for the video. The "title" field MUST be this title, output essentially as-is. Do NOT invent, rewrite, or substitute a different title. Only minor cleanup is allowed (capitalization, a stray word, length trim); if a Viral Magnet word is required, weave it in WITHOUT changing the title's meaning or structure. Build the whole script to deliver on this exact title:
+"${input.selectedTitle}"
+` : `
+TITLE RULES — the generated "title" field MUST follow these viral patterns. Study these real titles that got 3M–10M+ views:`}
 
 PATTERN 1 — BOLD DECLARATION (2–6 words, strong verb or adjective):
 "AI Slop Is Destroying The Internet" · "Pregnancy is Insane" · "Alcohol is AMAZING" · "Trees Are So Weird" · "GERMANY IS OVER"
