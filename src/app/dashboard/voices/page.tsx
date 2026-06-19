@@ -165,7 +165,7 @@ export default function VoicesPage() {
                       Use this voice
                     </button>
                   )}
-                  <button onClick={() => reanalyze(v)} disabled={reanalyzingId === v.id} title="Re-analyze — refresh this voice with the latest analysis" style={{ background: "none", border: "none", color: C.accentDim, fontSize: 12, fontWeight: 600, cursor: reanalyzingId === v.id ? "wait" : "pointer", flexShrink: 0, whiteSpace: "nowrap" }}>
+                  <button onClick={() => reanalyze(v)} disabled={reanalyzingId === v.id} title="Re-analyze — refresh this voice with the latest analysis" style={{ padding: "7px 14px", borderRadius: 8, fontSize: 12, fontWeight: 600, color: C.accentDim, background: "rgba(77,184,255,0.08)", border: "1px solid rgba(77,184,255,0.2)", cursor: reanalyzingId === v.id ? "wait" : "pointer", flexShrink: 0, whiteSpace: "nowrap", opacity: reanalyzingId === v.id ? 0.6 : 1 }}>
                     {reanalyzingId === v.id ? "Refreshing…" : "↻ Re-analyze"}
                   </button>
                   <button onClick={() => remove(v.id)} title="Delete voice" style={{ background: "none", border: "none", color: C.textDim, fontSize: 15, cursor: "pointer", flexShrink: 0 }}>🗑</button>
