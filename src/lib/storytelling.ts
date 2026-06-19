@@ -35,7 +35,7 @@ export const TECHNIQUES: Technique[] = [
     directive: "Frame value as LOSS, not just gain — what the viewer loses by not knowing this. Every section should pass the test 'what do I lose if I stop watching now.' Prefer loss-aversion framing over aspirational ('the habits quietly draining your savings' beats 'how to save more')." },
   { id: "open-loops", name: "Open Loops",
     value: "Creates curiosity gaps the viewer can only close by watching on.",
-    directive: "Open a curiosity gap the script only closes later. Run one main loop plus smaller loops throughout (post-intro: 'number 4 changed everything'; info, event, identity, and escalation loops). Always delay before closing a loop — never open and immediately resolve." },
+    directive: "Open a curiosity gap the script only closes later. Run one main loop plus smaller loops throughout (post-intro: 'number 4 changed everything'; info, event, identity, and escalation loops). Always delay before closing a loop — never open and immediately resolve. EVERY loop you open MUST be closed inside the script: if you tease a specific answer ('we'll get to which one'), you must actually deliver that answer later. Never substitute a teased payoff with a 'comment below' prompt — engagement asks are additions, not replacements for the answer you promised." },
   { id: "emotional-progression", name: "Emotional Progression",
     value: "Moves viewers through an emotional arc, which is what actually drives retention.",
     directive: "Engineer an emotional arc by position: curiosity at the open, rising tension through the middle, anticipation at the peak, satisfaction (and optional relief or disbelief) at the close. Match the feeling to the moment." },
