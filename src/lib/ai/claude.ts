@@ -410,7 +410,15 @@ ${input.voiceProfile}
 ` : ""}
 ${buildStorytellingBlock(input.storytellingMode, input.storytellingTechniques)}
 ${input.sourceMaterial ? `
-VERIFIED SOURCE MATERIAL (provided by the creator) — you MAY state specific statistics, numbers, percentages, dollar figures, dates, named studies, and direct quotes ONLY when they appear in this material, and you SHOULD weave them in naturally for authority. This is a deliberate exception to the soft-framing rule, but ONLY for facts grounded here. For ANY claim NOT supported by this material, keep the soft-framing rule ("research suggests", "studies have shown"). Never invent a number, never attach a number to this material that isn't in it, and never copy long passages verbatim — restate facts in the script's own voice:
+VERIFIED SOURCE MATERIAL (provided by the creator). Treat this as the ONLY permitted source of hard specifics for this script.
+
+USE IT (required): Build the script's factual backbone on these facts. Weave SEVERAL of them in naturally, in the script's own voice (never copy verbatim). A grounded script must visibly USE the material it was given — do not write around it and ignore it.
+
+HARD RULE — NO OUTSIDE SPECIFICS: When source material is provided, EVERY specific statistic, percentage, number, dollar figure, exact date, named study, or named researcher that appears in the script MUST come from this material. You are FORBIDDEN from stating any specific figure from your own knowledge — even one you are confident is true, even a widely-known one (e.g. "several hundred percent above baseline", "80% of the brain", "a 2021 study"). If a point needs a specific you do NOT have in this material, either express it qualitatively with soft framing ("research suggests", "studies have shown", "a large spike") or leave the number out entirely. There are NO exceptions.
+
+Never invent a number, never attach a figure to this material that isn't in it, and never copy long passages verbatim — restate in the script's own voice.
+
+SOURCE MATERIAL:
 """
 ${input.sourceMaterial.slice(0, 6000)}
 """
