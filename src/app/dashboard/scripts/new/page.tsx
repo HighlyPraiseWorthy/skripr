@@ -99,11 +99,6 @@ export default function NewScriptPage() {
   const [viralFramework, setViralFramework] = useState<{remixFramework: string; hookType: string; titleFormula: string; selectedTitle?: string} | null>(null);
   const [angle, setAngle] = useState("");
   const [pendingTranscript, setPendingTranscript] = useState<string>("");
-  const [sourceMaterial, setSourceMaterial] = useState<string>("");
-  const [researching, setResearching] = useState(false);
-  const [researchFacts, setResearchFacts] = useState<{ fact: string; source: string | null }[]>([]);
-  const [selectedResearch, setSelectedResearch] = useState<Set<number>>(new Set());
-  const [researchError, setResearchError] = useState<string | null>(null);
   const [suggestingAngles, setSuggestingAngles] = useState(false);
   const [angleSuggestions, setAngleSuggestions] = useState<string[]>([]);
   const [selectedHookType, setSelectedHookType] = useState<string | null>(null);
@@ -223,35 +218,6 @@ export default function NewScriptPage() {
     }
   }
 
-  async function findResearch() {
-    if (!topic.trim() || researching) return;
-    setResearching(true); setResearchError(null);
-    try {
-      const res = await fetch("/api/research/find", {
-        method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ topic, angle: angle || undefined, niche: niche || undefined }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data?.error || "Research lookup failed");
-      const facts = Array.isArray(data.facts) ? data.facts : [];
-      setResearchFacts(facts);
-      setSelectedResearch(new Set(facts.map((_: any, i: number) => i))); // all approved by default
-      if (facts.length === 0) setResearchError("No citable facts found — try a more specific topic.");
-    } catch (e: any) {
-      setResearchError(e?.message || "Research lookup failed");
-    } finally {
-      setResearching(false);
-    }
-  }
-
-  function addResearchToSource() {
-    const chosen = researchFacts.filter((_, i) => selectedResearch.has(i));
-    if (chosen.length === 0) return;
-    const block = chosen.map(f => `- ${f.fact}${f.source ? ` (source: ${f.source})` : ""}`).join("\n");
-    setSourceMaterial(prev => (prev.trim() ? prev.trim() + "\n" + block : block));
-    setResearchFacts([]); setSelectedResearch(new Set());
-  }
-
   // Interactive path: hold the transcript and show the storytelling step before
   // writing. The query-param auto-gen path keeps generating directly (server
   // auto-selects the mode there).
@@ -260,7 +226,7 @@ export default function NewScriptPage() {
     setStep("storytelling");
   }
 
-  async function doGenerate(transcript: string, storytellingMode: string, storytellingTechniques: string[]) {
+  async function doGenerate(transcript: string, storytellingMode: string, storytellingTechniques: string[], sourceMaterial?: string) {
     setLastUsedTranscript(transcript);
     setStep("generating");
     try {
@@ -268,7 +234,7 @@ export default function NewScriptPage() {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ transcript, niche: niche || undefined, topic: topic || undefined, videoLength: videoMinutes >= 14 ? "long" : "medium", targetMinutes: videoMinutes, voiceProfileId: voiceId || undefined, companionCta,
           sourceVideoId: youtubeUrl ? youtubeUrl.match(/[?&]v=([^&]+)/)?.[1] : undefined, viralMagnetWord: selectedViralWord || undefined, angle: angle || undefined, remixFramework: viralFramework?.remixFramework || undefined, hookType: viralFramework?.hookType || undefined, titleFormula: viralFramework?.selectedTitle || viralFramework?.titleFormula || undefined,
-          storytellingMode, storytellingTechniques, sourceMaterial: sourceMaterial.trim() || undefined }),
+          storytellingMode, storytellingTechniques, sourceMaterial: sourceMaterial || undefined }),
       });
       const data = await res.json().catch(() => null);
       if (!res.ok || !data) throw new Error(data?.error || "The connection dropped while generating. Please try again.");
@@ -590,73 +556,6 @@ export default function NewScriptPage() {
               </div>
             )}
 
-            {/* ─── Research / source material (optional) ─── */}
-            <div style={{ marginTop: 16 }}>
-              <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 15, fontWeight: 600, color: "#9de4ff", letterSpacing: 0.3, marginBottom: 7 }}>
-                <span>📚</span> Research / source material
-                <span style={{ fontSize: 14, fontWeight: 400, color: "#7a9bb5", marginLeft: 4 }}>— paste articles, notes, or stats (optional)</span>
-              </label>
-              <textarea
-                value={sourceMaterial}
-                onChange={e => setSourceMaterial(e.target.value)}
-                placeholder="Paste facts, statistics, study findings, or article text here. Skripr will use real numbers ONLY from what you provide — everything else stays safely hedged."
-                rows={4}
-                style={{
-                  width: "100%", padding: "10px 14px", borderRadius: 12,
-                  background: "#0a1220", color: "#e8edf5", fontSize: 13,
-                  border: "1px solid rgba(77,184,255,0.13)", outline: "none",
-                  resize: "vertical", lineHeight: 1.6, fontFamily: "inherit", boxSizing: "border-box",
-                }}
-                onFocus={e => e.currentTarget.style.borderColor = "rgba(77,184,255,0.40)"}
-                onBlur={e => e.currentTarget.style.borderColor = "rgba(77,184,255,0.13)"}
-              />
-              {sourceMaterial.trim() && (
-                <p style={{ fontSize: 11, color: "#34d399", marginTop: 5 }}>
-                  ✓ Grounded — the script can cite real specifics from this material
-                </p>
-              )}
-
-              {/* Auto-source via Perplexity */}
-              <button
-                onClick={findResearch}
-                disabled={!topic.trim() || researching}
-                title={!topic.trim() ? "Add a topic first" : "Find cited facts for this topic"}
-                style={{
-                  marginTop: 10, padding: "9px 16px", borderRadius: 10, fontSize: 13, fontWeight: 600,
-                  border: "1px solid rgba(124,111,255,0.35)", background: "rgba(124,111,255,0.10)", color: "#b9adff",
-                  cursor: !topic.trim() || researching ? "not-allowed" : "pointer", opacity: !topic.trim() ? 0.5 : 1,
-                }}>
-                {researching ? "Finding research…" : "✦ Find research for me"}
-              </button>
-              {researchError && <p style={{ fontSize: 11, color: "#f87171", marginTop: 6 }}>{researchError}</p>}
-
-              {researchFacts.length > 0 && (
-                <div style={{ marginTop: 10, border: "1px solid rgba(124,111,255,0.25)", borderRadius: 12, padding: 14, background: "rgba(124,111,255,0.05)" }}>
-                  <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 0.4, color: "#b9adff", marginBottom: 4 }}>FOUND FACTS — uncheck any you don't trust, then add</div>
-                  <div style={{ fontSize: 11, color: "#7a9bb5", marginBottom: 10 }}>Citations let you verify. A cited number isn't a guarantee — confirm before publishing claims.</div>
-                  <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                    {researchFacts.map((f, i) => {
-                      const on = selectedResearch.has(i);
-                      return (
-                        <div key={i} onClick={() => setSelectedResearch(prev => { const n = new Set(prev); n.has(i) ? n.delete(i) : n.add(i); return n; })}
-                          style={{ display: "flex", gap: 10, alignItems: "flex-start", cursor: "pointer", padding: "8px 10px", borderRadius: 8, border: `1px solid ${on ? "rgba(124,111,255,0.45)" : "rgba(255,255,255,0.07)"}`, background: on ? "rgba(124,111,255,0.08)" : "transparent" }}>
-                          <span style={{ flexShrink: 0, width: 16, height: 16, borderRadius: 4, marginTop: 2, border: `1px solid ${on ? "#7c6fff" : "#7a9bb5"}`, background: on ? "#7c6fff" : "transparent", color: "#fff", fontSize: 11, fontWeight: 800, display: "flex", alignItems: "center", justifyContent: "center" }}>{on ? "✓" : ""}</span>
-                          <span style={{ minWidth: 0 }}>
-                            <span style={{ fontSize: 13, color: "#e8edf5", lineHeight: 1.5 }}>{f.fact}</span>
-                            {f.source && <a href={f.source} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} style={{ display: "block", fontSize: 11, color: "#7ed8ff", marginTop: 2, wordBreak: "break-all" }}>{f.source}</a>}
-                          </span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                  <button onClick={addResearchToSource} disabled={selectedResearch.size === 0}
-                    style={{ marginTop: 10, padding: "8px 14px", borderRadius: 9, fontSize: 13, fontWeight: 600, border: "none", background: "linear-gradient(135deg,#5b4fd6,#7c6fff)", color: "#fff", cursor: selectedResearch.size ? "pointer" : "not-allowed", opacity: selectedResearch.size ? 1 : 0.5 }}>
-                    Add {selectedResearch.size} to source material ↑
-                  </button>
-                </div>
-              )}
-            </div>
-
             {/* ─── Voice picker (pre-gen) ─── */}
             <div style={{ marginTop: 16 }}>
               <VoiceSelect value={voiceId} onChange={setVoiceId} />
@@ -835,7 +734,7 @@ export default function NewScriptPage() {
             niche={niche}
             angle={angle}
             sourceTranscript={inputMode !== "topic" ? pendingTranscript : undefined}
-            onGenerate={(mode, techniques) => doGenerate(pendingTranscript, mode, techniques)}
+            onGenerate={(mode, techniques, sourceMaterial) => doGenerate(pendingTranscript, mode, techniques, sourceMaterial)}
             onBack={() => setStep("input")}
           />
         )}

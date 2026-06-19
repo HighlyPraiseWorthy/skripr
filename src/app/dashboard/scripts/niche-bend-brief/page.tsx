@@ -129,7 +129,7 @@ export default function NicheBendBriefPage() {
     setSelectedAngle(angle); setError(null); setPhase("storytelling");
   }
 
-  async function generateWithStory(storytellingMode: string, storytellingTechniques: string[]) {
+  async function generateWithStory(storytellingMode: string, storytellingTechniques: string[], sourceMaterial?: string) {
     const angle = selectedAngle;
     if (!brief || !selectedNiche || !angle) return;
     setPhase("generating"); setError(null);
@@ -146,7 +146,7 @@ export default function NicheBendBriefPage() {
           sourceNiche: brief.sourceNiche || undefined,
           bridgeNiche: selectedNiche.parentNiche || undefined,
           companionCta,
-          storytellingMode, storytellingTechniques,
+          storytellingMode, storytellingTechniques, sourceMaterial,
         }),
       });
       const data = await res.json().catch(() => null);

@@ -72,7 +72,7 @@ export default function ViralBriefPage() {
     setSelectedAngle(angle); setError(null); setPhase("storytelling");
   }
 
-  async function generateWithStory(storytellingMode: string, storytellingTechniques: string[]) {
+  async function generateWithStory(storytellingMode: string, storytellingTechniques: string[], sourceMaterial?: string) {
     const angle = selectedAngle;
     if (!brief || !angle) return;
     setPhase("generating"); setError(null);
@@ -86,7 +86,7 @@ export default function ViralBriefPage() {
           contentStructure: brief.structure, retentionTriggers: brief.retentionTriggers,
           voiceProfileId: voiceId || undefined,
           companionCta,
-          storytellingMode, storytellingTechniques,
+          storytellingMode, storytellingTechniques, sourceMaterial,
         }),
       });
       const data = await res.json().catch(() => null);
