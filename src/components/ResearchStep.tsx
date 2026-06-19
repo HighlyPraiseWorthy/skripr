@@ -42,15 +42,19 @@ export default function ResearchStep(props: {
     finally { setResearching(false); }
   }
 
-  function addFactsToSource() {
-    const chosen = facts.filter((_, i) => picked.has(i));
-    if (chosen.length === 0) return;
-    const block = chosen.map((f) => `- ${f.fact}${f.source ? ` (source: ${f.source})` : ""}`).join("\n");
-    setSourceMaterial((p) => (p.trim() ? p.trim() + "\n" + block : block));
-    setFacts([]); setPicked(new Set());
+  // Checked facts are included automatically — no separate "add" step. Combine
+  // them with any pasted text into the final source material on Continue.
+  function buildSourceMaterial(): string | undefined {
+    const chosen = facts
+      .filter((_, i) => picked.has(i))
+      .map((f) => `- ${f.fact}${f.source ? ` (source: ${f.source})` : ""}`)
+      .join("\n");
+    const manual = sourceMaterial.trim();
+    return [chosen, manual].filter(Boolean).join("\n\n") || undefined;
   }
 
-  const grounded = sourceMaterial.trim().length > 0;
+  const includedCount = facts.filter((_, i) => picked.has(i)).length;
+  const grounded = includedCount > 0 || sourceMaterial.trim().length > 0;
 
   return (
     <div style={{ position: "fixed", inset: 0, zIndex: 1000, background: "rgba(4,8,12,0.86)", backdropFilter: "blur(6px)", display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }} role="dialog" aria-modal="true">
@@ -91,8 +95,8 @@ export default function ResearchStep(props: {
         {/* Found facts */}
         {facts.length > 0 && (
           <div style={{ marginTop: 12, border: `1px solid ${C.purple}45`, borderRadius: 12, padding: 14, background: `${C.purple}0e` }}>
-            <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 0.4, color: "#b9adff", marginBottom: 3 }}>FOUND {facts.length} CITED FACTS</div>
-            <div style={{ fontSize: 11.5, color: C.dim, marginBottom: 10 }}>Uncheck any you don't trust. A citation isn't a guarantee — verify before publishing.</div>
+            <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 0.4, color: "#b9adff", marginBottom: 3 }}>✓ {includedCount} FACTS WILL BE USED IN YOUR SCRIPT</div>
+            <div style={{ fontSize: 11.5, color: C.dim, marginBottom: 10 }}>These are added automatically — uncheck any you don't want. A citation isn't a guarantee, so verify before publishing.</div>
             <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
               {facts.map((f, i) => {
                 const on = picked.has(i);
@@ -108,16 +112,12 @@ export default function ResearchStep(props: {
                 );
               })}
             </div>
-            <button onClick={addFactsToSource} disabled={picked.size === 0}
-              style={{ marginTop: 10, padding: "8px 14px", borderRadius: 9, fontSize: 13, fontWeight: 600, border: "none", background: "linear-gradient(135deg,#5b4fd6,#7c6fff)", color: "#fff", cursor: picked.size ? "pointer" : "not-allowed", opacity: picked.size ? 1 : 0.5 }}>
-              Add {picked.size} to source material ↓
-            </button>
           </div>
         )}
 
         {/* Manual paste */}
         <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: C.dim, margin: "18px 0 8px" }}>
-          Or paste your own
+          Or add your own
         </div>
         <textarea
           value={sourceMaterial}
@@ -136,9 +136,9 @@ export default function ResearchStep(props: {
               Back
             </button>
           )}
-          <button onClick={() => props.onContinue(sourceMaterial.trim() || undefined)}
+          <button onClick={() => props.onContinue(buildSourceMaterial())}
             style={{ flex: 1, padding: "12px 18px", borderRadius: 12, border: "none", background: "linear-gradient(135deg,#0e6499,#1a8fd1,#4db8ff)", color: "#fff", fontSize: 15, fontWeight: 700, cursor: "pointer", boxShadow: "0 0 22px rgba(77,184,255,0.26)" }}>
-            {grounded ? "Continue →" : "Skip — continue →"}
+            {includedCount > 0 ? `Continue with ${includedCount} fact${includedCount === 1 ? "" : "s"} →` : grounded ? "Continue →" : "Skip — continue →"}
           </button>
         </div>
       </div>
