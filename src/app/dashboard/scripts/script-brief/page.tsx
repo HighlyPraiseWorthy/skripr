@@ -4,6 +4,7 @@ import GenerationProgress from "@/components/GenerationProgress";
 import { joinHookBody, bodyStartsWithHook } from "@/lib/script-text";
 import { VoiceSelect } from "@/components/VoiceSelect";
 import { CompanionCtaToggle } from "@/components/CompanionCtaToggle";
+import StorytellingPicker from "@/components/StorytellingPicker";
 
 const C = {
   bg: "#080c12", card: "#0d1520", cardHover: "#111d2e",
@@ -17,7 +18,7 @@ const EMOTION_COLOR: Record<string, string> = {
   excitement: "#34d399", surprise: "#9de4ff",
 };
 
-type Phase = "loading" | "angles" | "generating" | "result";
+type Phase = "loading" | "angles" | "storytelling" | "generating" | "result";
 type Angle = { hookType: string; hookPremise: string; titleSuggestion: string; whyItWorks: string; audienceEmotion: string; };
 type Brief = { topic: string; niche: string; videoLength: string; hookTypeFilter?: string | null; angles: Angle[]; };
 
@@ -71,10 +72,18 @@ export default function ScriptBriefPage() {
     } catch (e: any) { setError(e?.message || "Failed to generate angles"); setPhase("angles"); }
   }
 
-  async function handlePickAngle(angle: Angle) {
+  // Pick an angle → go to the storytelling step (don't generate yet).
+  function handlePickAngle(angle: Angle) {
     if (!brief) return;
-    setSelectedAngle(angle); setPhase("generating"); setError(null);
+    setSelectedAngle(angle); setError(null);
     setSelectedMagnet(null); setAppliedMagnetTitle(null);
+    setPhase("storytelling");
+  }
+
+  async function generateWithStory(storytellingMode: string, storytellingTechniques: string[], sourceMaterial?: string) {
+    const angle = selectedAngle;
+    if (!brief || !angle) return;
+    setPhase("generating"); setError(null);
     try {
       const res = await fetch("/api/scripts/generate", {
         method: "POST", headers: { "Content-Type": "application/json" },
@@ -87,6 +96,7 @@ export default function ScriptBriefPage() {
           companionCta,
           hookType: angle.hookType,
           angle: `Hook type: ${angle.hookType}. Opening hook to adapt: "${angle.hookPremise}". Suggested title: ${angle.titleSuggestion}`,
+          storytellingMode, storytellingTechniques, sourceMaterial,
         }),
       });
       const data = await res.json().catch(() => null);
@@ -130,6 +140,16 @@ export default function ScriptBriefPage() {
     navigator.clipboard.writeText(parts.join("\n\n"));
     setCopied(true); setTimeout(() => setCopied(false), 2000);
   }
+
+  if (phase === "storytelling" && selectedAngle) return (
+    <StorytellingPicker
+      topic={brief?.topic || selectedAngle.titleSuggestion || ""}
+      niche={brief?.niche}
+      angle={selectedAngle.hookPremise || selectedAngle.titleSuggestion}
+      onGenerate={generateWithStory}
+      onBack={() => setPhase("angles")}
+    />
+  );
 
   if (phase === "loading") return <Spinner label="Finding your best hook angles..." sub="Analyzing topic, audience psychology, and hook strategies" />;
   if (phase === "generating") return (
