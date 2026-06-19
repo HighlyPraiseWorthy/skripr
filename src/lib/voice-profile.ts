@@ -37,19 +37,19 @@ export async function listVoiceProfiles(userId: string): Promise<VoiceProfileRow
   if (!supabaseAdmin) return [];
   // Try with source_ref; if the column hasn't been migrated yet, fall back so
   // the voices page never breaks while the migration is pending.
-  let res = await supabaseAdmin
+  const withRef = await supabaseAdmin
     .from("voice_profiles")
     .select("id, name, source, style_guide, is_active, updated_at, source_ref")
     .eq("user_id", userId)
     .order("created_at", { ascending: true });
-  if (res.error) {
-    res = await supabaseAdmin
-      .from("voice_profiles")
-      .select("id, name, source, style_guide, is_active, updated_at")
-      .eq("user_id", userId)
-      .order("created_at", { ascending: true });
-  }
-  return (res.data ?? []) as VoiceProfileRow[];
+  if (!withRef.error) return (withRef.data ?? []) as VoiceProfileRow[];
+
+  const fallback = await supabaseAdmin
+    .from("voice_profiles")
+    .select("id, name, source, style_guide, is_active, updated_at")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: true });
+  return (fallback.data ?? []) as VoiceProfileRow[];
 }
 
 export async function createVoiceProfile(
