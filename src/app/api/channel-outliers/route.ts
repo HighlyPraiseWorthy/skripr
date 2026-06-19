@@ -42,11 +42,22 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Not enough long-form videos on this channel to compute outliers (needs 4+)" }, { status: 422 });
     }
 
-    const sorted = [...scan.videos].sort((a, b) => a.views - b.views);
-    const median = sorted[Math.floor(sorted.length / 2)].views || 1;
+    // Age-normalized outlier score: compare each video's VIEWS-PER-DAY against
+    // the channel's median views-per-day, so a genuine recent breakout beats an
+    // old video that only looks big because it's had years to accumulate views.
+    const now = Date.now();
+    const withVpd = scan.videos.map((v) => {
+      const days = Math.max((now - new Date(v.publishedAt).getTime()) / 86400000, 1);
+      return { ...v, viewsPerDay: v.views / days, ageDays: Math.round(days) };
+    });
+    const sortedVpd = [...withVpd].sort((a, b) => a.viewsPerDay - b.viewsPerDay);
+    const medianVpd = sortedVpd[Math.floor(sortedVpd.length / 2)].viewsPerDay || 1;
+    // Keep a raw-view median too (for display/context).
+    const sortedViews = [...scan.videos].sort((a, b) => a.views - b.views);
+    const median = sortedViews[Math.floor(sortedViews.length / 2)].views || 1;
 
-    const result = scan.videos
-      .map((v) => ({ ...v, outlierX: Math.round((v.views / median) * 10) / 10 }))
+    const result = withVpd
+      .map((v) => ({ ...v, outlierX: Math.round((v.viewsPerDay / medianVpd) * 10) / 10 }))
       .sort((a, b) => b.outlierX - a.outlierX);
 
     // Self-improving layer: outliers are proven over-performers, so bank their

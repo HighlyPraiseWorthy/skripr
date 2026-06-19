@@ -6,7 +6,7 @@ const C = {
   accentDim: "#4db8ff", textBright: "#e8edf5", textDim: "#7a9bb5", green: "#34d399",
 };
 
-type Voice = { id: string; name: string; source: string; styleGuide: string; isActive: boolean; updatedAt: string };
+type Voice = { id: string; name: string; source: string; styleGuide: string; isActive: boolean; updatedAt: string; canReanalyze?: boolean };
 
 export default function VoicesPage() {
   const [voices, setVoices] = useState<Voice[]>([]);
@@ -23,6 +23,8 @@ export default function VoicesPage() {
   const [samples, setSamples] = useState("");
   const [channel, setChannel] = useState("");
   const [building, setBuilding] = useState(false);
+  const [reanalyzeTarget, setReanalyzeTarget] = useState<string | null>(null);
+  const [reanalyzingId, setReanalyzingId] = useState<string | null>(null);
 
   async function refresh() {
     try {
@@ -37,14 +39,15 @@ export default function VoicesPage() {
   async function build() {
     setBuilding(true); setError(null);
     try {
-      const body = mode === "scripts" ? { name, samples } : { name, channel };
+      const base = mode === "scripts" ? { name, samples } : { name, channel };
+      const body = reanalyzeTarget ? { ...base, reanalyzeId: reanalyzeTarget } : base;
       const res = await fetch("/api/voice-profile", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to build voice");
-      setName(""); setSamples(""); setChannel(""); setShowForm(false);
+      setName(""); setSamples(""); setChannel(""); setShowForm(false); setReanalyzeTarget(null);
       await refresh();
     } catch (e: any) {
       setError(e.message);
@@ -72,6 +75,29 @@ export default function VoicesPage() {
       body: JSON.stringify({ id }),
     }).catch(() => {});
     await refresh();
+  }
+
+  async function reanalyze(v: Voice) {
+    setError(null);
+    if (v.canReanalyze) {
+      // One-click: the channel is stored, just re-fetch + regenerate in place.
+      setReanalyzingId(v.id);
+      try {
+        const res = await fetch("/api/voice-profile", {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ reanalyzeId: v.id }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Re-analyze failed");
+        await refresh();
+      } catch (e: any) { setError(e.message); }
+      finally { setReanalyzingId(null); }
+    } else {
+      // No stored channel (older profile / pasted scripts): re-enter the source once.
+      setReanalyzeTarget(v.id); setName(v.name);
+      setMode(v.source === "channel" ? "channel" : "scripts");
+      setChannel(""); setSamples(""); setShowForm(true);
+    }
   }
 
   const anyActive = voices.some(v => v.isActive);
@@ -139,6 +165,9 @@ export default function VoicesPage() {
                       Use this voice
                     </button>
                   )}
+                  <button onClick={() => reanalyze(v)} disabled={reanalyzingId === v.id} title="Re-analyze — refresh this voice with the latest analysis" style={{ background: "none", border: "none", color: C.accentDim, fontSize: 12, fontWeight: 600, cursor: reanalyzingId === v.id ? "wait" : "pointer", flexShrink: 0, whiteSpace: "nowrap" }}>
+                    {reanalyzingId === v.id ? "Refreshing…" : "↻ Re-analyze"}
+                  </button>
                   <button onClick={() => remove(v.id)} title="Delete voice" style={{ background: "none", border: "none", color: C.textDim, fontSize: 15, cursor: "pointer", flexShrink: 0 }}>🗑</button>
                 </div>
                 {expanded === v.id && (
@@ -202,9 +231,9 @@ export default function VoicesPage() {
                 disabled={building || (mode === "scripts" ? !canBuildFromScripts : !canBuildFromChannel)}
                 style={{ padding: "10px 20px", borderRadius: 10, fontSize: 13, fontWeight: 700, color: "#fff", border: "none", cursor: building ? "wait" : "pointer", background: "linear-gradient(135deg, #0e6499 0%, #1a8fd1 100%)", opacity: building || (mode === "scripts" ? !canBuildFromScripts : !canBuildFromChannel) ? 0.6 : 1 }}
               >
-                {building ? (mode === "channel" ? "Fetching transcripts & analyzing..." : "Analyzing the voice...") : "Build Voice Profile"}
+                {building ? (mode === "channel" ? "Fetching transcripts & analyzing..." : "Analyzing the voice...") : (reanalyzeTarget ? "Re-analyze Voice" : "Build Voice Profile")}
               </button>
-              <button onClick={() => { setShowForm(false); setError(null); }} style={{ background: "none", border: "none", color: C.textDim, fontSize: 12.5, cursor: "pointer", textDecoration: "underline" }}>
+              <button onClick={() => { setShowForm(false); setError(null); setReanalyzeTarget(null); }} style={{ background: "none", border: "none", color: C.textDim, fontSize: 12.5, cursor: "pointer", textDecoration: "underline" }}>
                 Cancel
               </button>
               {mode === "scripts" && (

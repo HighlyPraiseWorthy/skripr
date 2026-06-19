@@ -13,6 +13,7 @@ export interface VoiceProfileRow {
   style_guide: string;
   is_active: boolean;
   updated_at: string;
+  source_ref?: string | null;
 }
 
 // The active profile's style guide — what generation injects
@@ -34,12 +35,21 @@ export async function getVoiceProfile(userId: string): Promise<string | null> {
 
 export async function listVoiceProfiles(userId: string): Promise<VoiceProfileRow[]> {
   if (!supabaseAdmin) return [];
-  const { data } = await supabaseAdmin
+  // Try with source_ref; if the column hasn't been migrated yet, fall back so
+  // the voices page never breaks while the migration is pending.
+  let res = await supabaseAdmin
     .from("voice_profiles")
-    .select("id, name, source, style_guide, is_active, updated_at")
+    .select("id, name, source, style_guide, is_active, updated_at, source_ref")
     .eq("user_id", userId)
     .order("created_at", { ascending: true });
-  return (data ?? []) as VoiceProfileRow[];
+  if (res.error) {
+    res = await supabaseAdmin
+      .from("voice_profiles")
+      .select("id, name, source, style_guide, is_active, updated_at")
+      .eq("user_id", userId)
+      .order("created_at", { ascending: true });
+  }
+  return (res.data ?? []) as VoiceProfileRow[];
 }
 
 export async function createVoiceProfile(
@@ -47,7 +57,8 @@ export async function createVoiceProfile(
   name: string,
   source: string,
   styleGuide: string,
-  sampleExcerpt: string
+  sampleExcerpt: string,
+  sourceRef?: string | null
 ): Promise<VoiceProfileRow> {
   if (!supabaseAdmin) throw new Error("Database not configured");
   const existing = await listVoiceProfiles(userId);
@@ -62,12 +73,48 @@ export async function createVoiceProfile(
       source,
       style_guide: styleGuide,
       sample_excerpt: sampleExcerpt,
+      source_ref: sourceRef || null,
       is_active: existing.length === 0, // first voice becomes active automatically
     })
-    .select("id, name, source, style_guide, is_active, updated_at")
+    .select("id, name, source, style_guide, is_active, updated_at, source_ref")
     .single();
   if (error) throw new Error(error.message);
   return data as VoiceProfileRow;
+}
+
+// Re-analyze in place: refresh an existing profile's style guide (and source_ref)
+// without changing its id, name, or active state.
+export async function updateVoiceProfileStyle(
+  userId: string,
+  profileId: string,
+  styleGuide: string,
+  sampleExcerpt: string,
+  sourceRef?: string | null
+): Promise<VoiceProfileRow> {
+  if (!supabaseAdmin) throw new Error("Database not configured");
+  const patch: Record<string, unknown> = { style_guide: styleGuide, sample_excerpt: sampleExcerpt, updated_at: new Date().toISOString() };
+  if (sourceRef) patch.source_ref = sourceRef;
+  const { data, error } = await supabaseAdmin
+    .from("voice_profiles")
+    .update(patch)
+    .eq("user_id", userId)
+    .eq("id", profileId)
+    .select("id, name, source, style_guide, is_active, updated_at, source_ref")
+    .single();
+  if (error) throw new Error(error.message);
+  return data as VoiceProfileRow;
+}
+
+// Read a profile's stored channel ref (for one-click re-analyze).
+export async function getVoiceProfileSourceRef(userId: string, profileId: string): Promise<string | null> {
+  if (!supabaseAdmin) return null;
+  const { data } = await supabaseAdmin
+    .from("voice_profiles")
+    .select("source_ref")
+    .eq("user_id", userId)
+    .eq("id", profileId)
+    .maybeSingle();
+  return (data?.source_ref as string) || null;
 }
 
 export async function setActiveVoiceProfile(userId: string, profileId: string | null): Promise<void> {

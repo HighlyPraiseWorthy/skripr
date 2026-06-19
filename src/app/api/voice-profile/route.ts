@@ -4,6 +4,8 @@ import { Anthropic } from "@anthropic-ai/sdk";
 import {
   listVoiceProfiles,
   createVoiceProfile,
+  updateVoiceProfileStyle,
+  getVoiceProfileSourceRef,
   setActiveVoiceProfile,
   deleteVoiceProfileById,
   MAX_PROFILES,
@@ -23,6 +25,8 @@ function getClient(): Anthropic {
 const toClient = (p: any) => ({
   id: p.id, name: p.name, source: p.source, styleGuide: p.style_guide,
   isActive: p.is_active, updatedAt: p.updated_at,
+  // canReanalyze: a channel handle is stored, so the profile can be refreshed in one click
+  canReanalyze: !!p.source_ref,
 });
 
 export async function GET() {
@@ -62,17 +66,27 @@ export async function POST(req: Request) {
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
-    const { name, samples, channel } = await req.json();
+    const { name, samples, channel, reanalyzeId } = await req.json();
 
     let text = String(samples || "").trim();
     let source = "scripts";
     let resolvedName = String(name || "").trim();
     let channelVideos: { videoId: string; transcript: string; title: string; views: number }[] = [];
+    let sourceRef: string | null = null;
+    let channelInput = channel ? String(channel) : "";
 
-    if (!text && channel) {
-      const fromChannel = await samplesFromChannel(String(channel));
+    // One-click re-analyze: no new input, but the profile already stores the
+    // channel it was built from — re-fetch from that.
+    if (reanalyzeId && !text && !channelInput) {
+      const storedRef = await getVoiceProfileSourceRef(userId, String(reanalyzeId));
+      if (storedRef) channelInput = storedRef;
+    }
+
+    if (!text && channelInput) {
+      const fromChannel = await samplesFromChannel(channelInput);
       text = fromChannel.samples;
       source = "channel";
+      sourceRef = channelInput;
       channelVideos = fromChannel.videos;
       if (!resolvedName) resolvedName = fromChannel.channelTitle;
     }
@@ -115,7 +129,9 @@ Be specific and concrete. No generic filler like "engaging" or "conversational" 
     const styleGuide = (msg.content[0].type === "text" ? msg.content[0].text : "").trim().slice(0, 2600);
     if (!styleGuide) throw new Error("Style analysis came back empty — please try again");
 
-    const profile = await createVoiceProfile(userId, resolvedName, source, styleGuide, text.slice(0, 600));
+    const profile = reanalyzeId
+      ? await updateVoiceProfileStyle(userId, String(reanalyzeId), styleGuide, text.slice(0, 600), sourceRef)
+      : await createVoiceProfile(userId, resolvedName, source, styleGuide, text.slice(0, 600), sourceRef);
 
     // Learning loop: bank frameworks from the channel's videos we already pulled
     // transcripts for. Parallel + skip-if-already-captured, so it's bounded.
