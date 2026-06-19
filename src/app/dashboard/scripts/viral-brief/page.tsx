@@ -5,6 +5,7 @@ import { joinHookBody, bodyStartsWithHook } from "@/lib/script-text";
 import { VoiceSelect } from "@/components/VoiceSelect";
 import { CompanionCtaToggle } from "@/components/CompanionCtaToggle";
 import StorytellingPicker from "@/components/StorytellingPicker";
+import ResearchStep from "@/components/ResearchStep";
 
 const C = {
   bg: "#080c12", card: "#0d1520", cardHover: "#111d2e",
@@ -13,7 +14,7 @@ const C = {
   textDim: "#7a9bb5", green: "#34d399",
 };
 
-type Phase = "loading" | "angles" | "storytelling" | "generating" | "result";
+type Phase = "loading" | "angles" | "research" | "storytelling" | "generating" | "result";
 type Angle = { angle: string; description: string; audience: string; titleSuggestion: string; swap?: string | null; };
 type Brief = {
   hookAnalysis: { hook: string; hookType: string; whyItWorks: string };
@@ -35,6 +36,7 @@ export default function ViralBriefPage() {
   const [brief, setBrief] = useState<Brief | null>(null);
   const [angles, setAngles] = useState<Angle[]>([]);
   const [selectedAngle, setSelectedAngle] = useState<Angle | null>(null);
+  const [sourceMaterial, setSourceMaterial] = useState<string>("");
   const [script, setScript] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
@@ -69,10 +71,10 @@ export default function ViralBriefPage() {
   // Pick an angle → go to the storytelling step (don't generate yet).
   function handlePickAngle(angle: Angle) {
     if (!brief) return;
-    setSelectedAngle(angle); setError(null); setPhase("storytelling");
+    setSelectedAngle(angle); setError(null); setPhase("research");
   }
 
-  async function generateWithStory(storytellingMode: string, storytellingTechniques: string[], sourceMaterial?: string) {
+  async function generateWithStory(storytellingMode: string, storytellingTechniques: string[]) {
     const angle = selectedAngle;
     if (!brief || !angle) return;
     setPhase("generating"); setError(null);
@@ -86,7 +88,7 @@ export default function ViralBriefPage() {
           contentStructure: brief.structure, retentionTriggers: brief.retentionTriggers,
           voiceProfileId: voiceId || undefined,
           companionCta,
-          storytellingMode, storytellingTechniques, sourceMaterial,
+          storytellingMode, storytellingTechniques, sourceMaterial: sourceMaterial || undefined,
         }),
       });
       const data = await res.json().catch(() => null);
@@ -134,14 +136,26 @@ export default function ViralBriefPage() {
     }
   }
 
+  if (phase === "research" && selectedAngle) return (
+    <ResearchStep
+      topic={selectedAngle.angle}
+      niche={selectedAngle.audience || brief?.niche}
+      angle={selectedAngle.titleSuggestion || selectedAngle.angle}
+      angleLabel={selectedAngle.titleSuggestion || selectedAngle.angle}
+      onContinue={(sm) => { setSourceMaterial(sm || ""); setPhase("storytelling"); }}
+      onBack={() => setPhase("angles")}
+    />
+  );
+
   if (phase === "storytelling" && selectedAngle) return (
     <StorytellingPicker
       topic={selectedAngle.angle}
       niche={selectedAngle.audience || brief?.niche}
       angle={selectedAngle.titleSuggestion || selectedAngle.angle}
+      angleLabel={selectedAngle.titleSuggestion || selectedAngle.angle}
       sourceTitle={brief?.videoTitle}
       onGenerate={generateWithStory}
-      onBack={() => setPhase("angles")}
+      onBack={() => setPhase("research")}
     />
   );
 

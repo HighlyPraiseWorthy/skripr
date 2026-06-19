@@ -5,6 +5,7 @@ import { joinHookBody, bodyStartsWithHook } from "@/lib/script-text";
 import { VoiceSelect } from "@/components/VoiceSelect";
 import { CompanionCtaToggle } from "@/components/CompanionCtaToggle";
 import StorytellingPicker from "@/components/StorytellingPicker";
+import ResearchStep from "@/components/ResearchStep";
 
 const C = {
   bg: "#080c12", card: "#0d1520", cardHover: "#111d2e",
@@ -18,7 +19,7 @@ const EMOTION_COLOR: Record<string, string> = {
   excitement: "#34d399", surprise: "#9de4ff",
 };
 
-type Phase = "loading" | "angles" | "storytelling" | "generating" | "result";
+type Phase = "loading" | "angles" | "research" | "storytelling" | "generating" | "result";
 type Angle = { hookType: string; hookPremise: string; titleSuggestion: string; whyItWorks: string; audienceEmotion: string; };
 type Brief = { topic: string; niche: string; videoLength: string; hookTypeFilter?: string | null; angles: Angle[]; };
 
@@ -35,6 +36,7 @@ export default function ScriptBriefPage() {
   const [phase, setPhase] = useState<Phase>("loading");
   const [brief, setBrief] = useState<Brief | null>(null);
   const [selectedAngle, setSelectedAngle] = useState<Angle | null>(null);
+  const [sourceMaterial, setSourceMaterial] = useState<string>("");
   const [script, setScript] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
@@ -72,15 +74,15 @@ export default function ScriptBriefPage() {
     } catch (e: any) { setError(e?.message || "Failed to generate angles"); setPhase("angles"); }
   }
 
-  // Pick an angle → go to the storytelling step (don't generate yet).
+  // Pick an angle → research step → storytelling step → generate.
   function handlePickAngle(angle: Angle) {
     if (!brief) return;
     setSelectedAngle(angle); setError(null);
     setSelectedMagnet(null); setAppliedMagnetTitle(null);
-    setPhase("storytelling");
+    setPhase("research");
   }
 
-  async function generateWithStory(storytellingMode: string, storytellingTechniques: string[], sourceMaterial?: string) {
+  async function generateWithStory(storytellingMode: string, storytellingTechniques: string[]) {
     const angle = selectedAngle;
     if (!brief || !angle) return;
     setPhase("generating"); setError(null);
@@ -96,7 +98,7 @@ export default function ScriptBriefPage() {
           companionCta,
           hookType: angle.hookType,
           angle: `Hook type: ${angle.hookType}. Opening hook to adapt: "${angle.hookPremise}". Suggested title: ${angle.titleSuggestion}`,
-          storytellingMode, storytellingTechniques, sourceMaterial,
+          storytellingMode, storytellingTechniques, sourceMaterial: sourceMaterial || undefined,
         }),
       });
       const data = await res.json().catch(() => null);
@@ -141,13 +143,25 @@ export default function ScriptBriefPage() {
     setCopied(true); setTimeout(() => setCopied(false), 2000);
   }
 
+  if (phase === "research" && selectedAngle) return (
+    <ResearchStep
+      topic={brief?.topic || selectedAngle.titleSuggestion || ""}
+      niche={brief?.niche}
+      angle={selectedAngle.hookPremise || selectedAngle.titleSuggestion}
+      angleLabel={selectedAngle.titleSuggestion || selectedAngle.hookPremise}
+      onContinue={(sm) => { setSourceMaterial(sm || ""); setPhase("storytelling"); }}
+      onBack={() => setPhase("angles")}
+    />
+  );
+
   if (phase === "storytelling" && selectedAngle) return (
     <StorytellingPicker
       topic={brief?.topic || selectedAngle.titleSuggestion || ""}
       niche={brief?.niche}
       angle={selectedAngle.hookPremise || selectedAngle.titleSuggestion}
+      angleLabel={selectedAngle.titleSuggestion || selectedAngle.hookPremise}
       onGenerate={generateWithStory}
-      onBack={() => setPhase("angles")}
+      onBack={() => setPhase("research")}
     />
   );
 

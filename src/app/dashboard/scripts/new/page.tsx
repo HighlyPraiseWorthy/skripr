@@ -7,6 +7,7 @@ import GenerationProgress from "@/components/GenerationProgress";
 import { VoiceSelect } from "@/components/VoiceSelect";
 import { CompanionCtaToggle } from "@/components/CompanionCtaToggle";
 import StorytellingPicker from "@/components/StorytellingPicker";
+import ResearchStep from "@/components/ResearchStep";
 
 const C = {
   bg: "#080c12", cardBg: "#0d1520", border: "rgba(77,184,255,0.11)",
@@ -15,7 +16,7 @@ const C = {
 };
 const grad = "linear-gradient(135deg,#0e6499,#1a8fd1,#4db8ff)";
 
-type Step = "input" | "storytelling" | "generating" | "result";
+type Step = "input" | "research" | "storytelling" | "generating" | "result";
 type InputMode = "url" | "paste" | "topic";
 
 interface MagnetWordOption {
@@ -99,6 +100,7 @@ export default function NewScriptPage() {
   const [viralFramework, setViralFramework] = useState<{remixFramework: string; hookType: string; titleFormula: string; selectedTitle?: string} | null>(null);
   const [angle, setAngle] = useState("");
   const [pendingTranscript, setPendingTranscript] = useState<string>("");
+  const [sourceMaterial, setSourceMaterial] = useState<string>("");
   const [suggestingAngles, setSuggestingAngles] = useState(false);
   const [angleSuggestions, setAngleSuggestions] = useState<string[]>([]);
   const [selectedHookType, setSelectedHookType] = useState<string | null>(null);
@@ -223,7 +225,7 @@ export default function NewScriptPage() {
   // auto-selects the mode there).
   function runGenerate(transcript: string) {
     setPendingTranscript(transcript);
-    setStep("storytelling");
+    setStep("research");
   }
 
   async function doGenerate(transcript: string, storytellingMode: string, storytellingTechniques: string[], sourceMaterial?: string) {
@@ -727,15 +729,28 @@ export default function NewScriptPage() {
           </div>
         )}
 
+        {/* ─── RESEARCH STEP ─── */}
+        {step === "research" && (
+          <ResearchStep
+            topic={topic || lastUsedTranscript.slice(0, 120)}
+            niche={niche}
+            angle={angle}
+            angleLabel={angle || undefined}
+            onContinue={(sm) => { setSourceMaterial(sm || ""); setStep("storytelling"); }}
+            onBack={() => setStep("input")}
+          />
+        )}
+
         {/* ─── STORYTELLING STEP ─── */}
         {step === "storytelling" && (
           <StorytellingPicker
             topic={topic || lastUsedTranscript.slice(0, 120)}
             niche={niche}
             angle={angle}
+            angleLabel={angle || undefined}
             sourceTranscript={inputMode !== "topic" ? pendingTranscript : undefined}
-            onGenerate={(mode, techniques, sourceMaterial) => doGenerate(pendingTranscript, mode, techniques, sourceMaterial)}
-            onBack={() => setStep("input")}
+            onGenerate={(mode, techniques) => doGenerate(pendingTranscript, mode, techniques, sourceMaterial)}
+            onBack={() => setStep("research")}
           />
         )}
 

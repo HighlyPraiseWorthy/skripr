@@ -30,7 +30,8 @@ export default function StorytellingPicker(props: {
   sourceTitle?: string;
   sourceTranscript?: string;
   busy?: boolean;
-  onGenerate: (mode: string, techniqueIds: string[], sourceMaterial?: string) => void;
+  angleLabel?: string;
+  onGenerate: (mode: string, techniqueIds: string[]) => void;
   onBack?: () => void;
 }) {
   const [data, setData] = useState<RecResponse | null>(null);
@@ -38,40 +39,6 @@ export default function StorytellingPicker(props: {
   const [error, setError] = useState<string | null>(null);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [choice, setChoice] = useState<"recommended" | "original" | "custom">("recommended");
-
-  // Research / source material — lives here (after the angle is chosen) so it
-  // can be grounded in the actual angle. Real numbers in the script come only
-  // from what's collected here.
-  const [sourceMaterial, setSourceMaterial] = useState("");
-  const [researching, setResearching] = useState(false);
-  const [facts, setFacts] = useState<{ fact: string; source: string | null }[]>([]);
-  const [picked, setPicked] = useState<Set<number>>(new Set());
-  const [researchError, setResearchError] = useState<string | null>(null);
-
-  async function findResearch() {
-    if (researching) return;
-    setResearching(true); setResearchError(null);
-    try {
-      const res = await fetch("/api/research/find", {
-        method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ topic: props.topic, angle: props.angle, niche: props.niche }),
-      });
-      const d = await res.json();
-      if (!res.ok) throw new Error(d?.error || "Research lookup failed");
-      const fs = Array.isArray(d.facts) ? d.facts : [];
-      setFacts(fs); setPicked(new Set(fs.map((_: any, i: number) => i)));
-      if (fs.length === 0) setResearchError("No citable facts found — try a more specific topic.");
-    } catch (e: any) { setResearchError(e?.message || "Research lookup failed"); }
-    finally { setResearching(false); }
-  }
-
-  function addFactsToSource() {
-    const chosen = facts.filter((_, i) => picked.has(i));
-    if (chosen.length === 0) return;
-    const block = chosen.map((f) => `- ${f.fact}${f.source ? ` (source: ${f.source})` : ""}`).join("\n");
-    setSourceMaterial((p) => (p.trim() ? p.trim() + "\n" + block : block));
-    setFacts([]); setPicked(new Set());
-  }
 
   useEffect(() => {
     (async () => {
@@ -133,9 +100,15 @@ export default function StorytellingPicker(props: {
     <div style={wrap} role="dialog" aria-modal="true">
       <div style={panel}>
         <div style={{ fontSize: 20, fontWeight: 700, color: C.text, marginBottom: 4 }}>Choose your storytelling style</div>
-        <div style={{ fontSize: 13.5, color: C.dim, lineHeight: 1.5, marginBottom: 18 }}>
+        <div style={{ fontSize: 13.5, color: C.dim, lineHeight: 1.5, marginBottom: props.angleLabel ? 12 : 18 }}>
           How Skripr shapes the narrative to hold attention. Pick a preset or customize — core techniques stay on.
         </div>
+        {props.angleLabel && (
+          <div style={{ marginBottom: 16, padding: "10px 12px", borderRadius: 10, background: "rgba(77,184,255,0.06)", border: `1px solid ${C.border}` }}>
+            <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: 0.5, color: C.accent }}>YOUR ANGLE</span>
+            <div style={{ fontSize: 13, color: C.text, lineHeight: 1.5, marginTop: 3 }}>{props.angleLabel}</div>
+          </div>
+        )}
 
         {loading && <div style={{ color: C.dim, fontSize: 14, padding: "30px 0", textAlign: "center" }}>Analyzing the best techniques for this topic…</div>}
         {error && <div style={{ color: "#f87171", fontSize: 14, marginBottom: 12 }}>{error}</div>}
@@ -190,47 +163,6 @@ export default function StorytellingPicker(props: {
               })}
             </div>
 
-            {/* Research / source material */}
-            <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: C.dim, margin: "18px 0 8px" }}>
-              Research / source material <span style={{ textTransform: "none", letterSpacing: 0, fontWeight: 400 }}>— optional, grounds real numbers</span>
-            </div>
-            <textarea
-              value={sourceMaterial}
-              onChange={(e) => setSourceMaterial(e.target.value)}
-              placeholder="Paste facts, stats, or article text. Real numbers in the script come only from what's here — everything else stays hedged."
-              rows={3}
-              style={{ width: "100%", padding: "10px 12px", borderRadius: 10, background: "#0a1220", color: C.text, fontSize: 13, border: `1px solid ${C.border}`, outline: "none", resize: "vertical", lineHeight: 1.55, fontFamily: "inherit", boxSizing: "border-box" }}
-            />
-            <button onClick={findResearch} disabled={researching}
-              style={{ marginTop: 8, padding: "8px 14px", borderRadius: 9, fontSize: 13, fontWeight: 600, border: `1px solid ${C.purple}55`, background: `${C.purple}1a`, color: "#b9adff", cursor: researching ? "wait" : "pointer" }}>
-              {researching ? "Finding research…" : "✦ Find research for me"}
-            </button>
-            {researchError && <p style={{ fontSize: 11, color: "#f87171", marginTop: 6 }}>{researchError}</p>}
-            {facts.length > 0 && (
-              <div style={{ marginTop: 10, border: `1px solid ${C.purple}40`, borderRadius: 10, padding: 12, background: `${C.purple}0d` }}>
-                <div style={{ fontSize: 11, color: C.dim, marginBottom: 8 }}>Uncheck any you don't trust. A citation isn't a guarantee — verify before publishing.</div>
-                <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                  {facts.map((f, i) => {
-                    const on = picked.has(i);
-                    return (
-                      <div key={i} onClick={() => setPicked((p) => { const n = new Set(p); n.has(i) ? n.delete(i) : n.add(i); return n; })}
-                        style={{ display: "flex", gap: 9, alignItems: "flex-start", cursor: "pointer", padding: "7px 9px", borderRadius: 8, border: `1px solid ${on ? `${C.purple}70` : C.border}`, background: on ? `${C.purple}14` : "transparent" }}>
-                        <span style={{ flexShrink: 0, width: 16, height: 16, borderRadius: 4, marginTop: 2, border: `1px solid ${on ? C.purple : C.dim}`, background: on ? C.purple : "transparent", color: "#fff", fontSize: 11, fontWeight: 800, display: "flex", alignItems: "center", justifyContent: "center" }}>{on ? "✓" : ""}</span>
-                        <span style={{ minWidth: 0 }}>
-                          <span style={{ fontSize: 12.5, color: C.text, lineHeight: 1.45 }}>{f.fact}</span>
-                          {f.source && <a href={f.source} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} style={{ display: "block", fontSize: 11, color: "#7ed8ff", marginTop: 2, wordBreak: "break-all" }}>{f.source}</a>}
-                        </span>
-                      </div>
-                    );
-                  })}
-                </div>
-                <button onClick={addFactsToSource} disabled={picked.size === 0}
-                  style={{ marginTop: 9, padding: "7px 12px", borderRadius: 8, fontSize: 12.5, fontWeight: 600, border: "none", background: "linear-gradient(135deg,#5b4fd6,#7c6fff)", color: "#fff", cursor: picked.size ? "pointer" : "not-allowed", opacity: picked.size ? 1 : 0.5 }}>
-                  Add {picked.size} to source material ↑
-                </button>
-              </div>
-            )}
-
             {/* Actions */}
             <div style={{ display: "flex", gap: 10, marginTop: 20 }}>
               {props.onBack && (
@@ -240,7 +172,7 @@ export default function StorytellingPicker(props: {
                 </button>
               )}
               <button
-                onClick={() => props.onGenerate(data.mode.id, [...selected], sourceMaterial.trim() || undefined)}
+                onClick={() => props.onGenerate(data.mode.id, [...selected])}
                 disabled={props.busy}
                 style={{
                   flex: 1, padding: "12px 18px", borderRadius: 12, border: "none",

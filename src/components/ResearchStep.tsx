@@ -1,0 +1,147 @@
+"use client";
+
+import { useState } from "react";
+
+// Dedicated step shown AFTER the angle is picked and BEFORE the storytelling
+// step. Optional: the user can auto-source cited facts (Perplexity) or paste
+// their own, or skip. Whatever they keep grounds real numbers in the script.
+
+const C = {
+  bg: "#080c12", card: "#0d1520", border: "rgba(77,184,255,0.14)",
+  accent: "#4db8ff", text: "#e8edf5", dim: "#a2bcd6", green: "#34d399", purple: "#7c6fff",
+};
+
+export default function ResearchStep(props: {
+  topic: string;
+  niche?: string;
+  angle?: string;
+  angleLabel?: string;
+  onContinue: (sourceMaterial?: string) => void;
+  onBack?: () => void;
+}) {
+  const [sourceMaterial, setSourceMaterial] = useState("");
+  const [researching, setResearching] = useState(false);
+  const [facts, setFacts] = useState<{ fact: string; source: string | null }[]>([]);
+  const [picked, setPicked] = useState<Set<number>>(new Set());
+  const [error, setError] = useState<string | null>(null);
+
+  async function findResearch() {
+    if (researching) return;
+    setResearching(true); setError(null);
+    try {
+      const res = await fetch("/api/research/find", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ topic: props.topic, angle: props.angle, niche: props.niche }),
+      });
+      const d = await res.json();
+      if (!res.ok) throw new Error(d?.error || "Research lookup failed");
+      const fs = Array.isArray(d.facts) ? d.facts : [];
+      setFacts(fs); setPicked(new Set(fs.map((_: any, i: number) => i)));
+      if (fs.length === 0) setError("No citable facts found — try a more specific topic, or paste your own below.");
+    } catch (e: any) { setError(e?.message || "Research lookup failed"); }
+    finally { setResearching(false); }
+  }
+
+  function addFactsToSource() {
+    const chosen = facts.filter((_, i) => picked.has(i));
+    if (chosen.length === 0) return;
+    const block = chosen.map((f) => `- ${f.fact}${f.source ? ` (source: ${f.source})` : ""}`).join("\n");
+    setSourceMaterial((p) => (p.trim() ? p.trim() + "\n" + block : block));
+    setFacts([]); setPicked(new Set());
+  }
+
+  const grounded = sourceMaterial.trim().length > 0;
+
+  return (
+    <div style={{ position: "fixed", inset: 0, zIndex: 1000, background: "rgba(4,8,12,0.86)", backdropFilter: "blur(6px)", display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }} role="dialog" aria-modal="true">
+      <div style={{ width: "100%", maxWidth: 640, maxHeight: "90vh", overflowY: "auto", background: C.card, border: `1px solid ${C.border}`, borderRadius: 22, padding: "28px 28px 22px", boxShadow: "0 24px 90px rgba(0,0,0,0.55)" }}>
+
+        {/* Header */}
+        <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 6 }}>
+          <div style={{ width: 40, height: 40, borderRadius: 12, background: "linear-gradient(135deg,#5b4fd6,#7c6fff)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, flexShrink: 0, boxShadow: "0 4px 18px rgba(124,111,255,0.4)" }}>📚</div>
+          <div>
+            <div style={{ fontSize: 21, fontWeight: 700, color: C.text }}>Ground it in real research</div>
+            <div style={{ fontSize: 13, color: C.dim }}>Optional — add cited facts and Skripr states real numbers instead of hedging.</div>
+          </div>
+        </div>
+
+        {/* Angle context */}
+        {props.angleLabel && (
+          <div style={{ marginTop: 14, padding: "10px 12px", borderRadius: 10, background: "rgba(77,184,255,0.06)", border: `1px solid ${C.border}` }}>
+            <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: 0.5, color: C.accent }}>YOUR ANGLE</span>
+            <div style={{ fontSize: 13, color: C.text, lineHeight: 1.5, marginTop: 3 }}>{props.angleLabel}</div>
+          </div>
+        )}
+
+        {/* Hero: auto-source */}
+        <button onClick={findResearch} disabled={researching}
+          style={{
+            width: "100%", marginTop: 16, padding: "16px 18px", borderRadius: 14, border: "none", cursor: researching ? "wait" : "pointer",
+            background: "linear-gradient(135deg,#5b4fd6 0%,#7c6fff 55%,#9b8cff 100%)", color: "#fff", textAlign: "left",
+            boxShadow: "0 6px 26px rgba(124,111,255,0.4)", display: "flex", alignItems: "center", gap: 14,
+          }}>
+          <span style={{ fontSize: 24, flexShrink: 0 }}>{researching ? "⏳" : "✦"}</span>
+          <span>
+            <span style={{ display: "block", fontSize: 16, fontWeight: 700 }}>{researching ? "Searching the web for facts…" : "Find research for me"}</span>
+            <span style={{ display: "block", fontSize: 12.5, color: "rgba(255,255,255,0.85)", marginTop: 2 }}>Skripr pulls real, cited stats for this topic — you just approve them.</span>
+          </span>
+        </button>
+        {error && <p style={{ fontSize: 12, color: "#fca5a5", marginTop: 8 }}>{error}</p>}
+
+        {/* Found facts */}
+        {facts.length > 0 && (
+          <div style={{ marginTop: 12, border: `1px solid ${C.purple}45`, borderRadius: 12, padding: 14, background: `${C.purple}0e` }}>
+            <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 0.4, color: "#b9adff", marginBottom: 3 }}>FOUND {facts.length} CITED FACTS</div>
+            <div style={{ fontSize: 11.5, color: C.dim, marginBottom: 10 }}>Uncheck any you don't trust. A citation isn't a guarantee — verify before publishing.</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
+              {facts.map((f, i) => {
+                const on = picked.has(i);
+                return (
+                  <div key={i} onClick={() => setPicked((p) => { const n = new Set(p); n.has(i) ? n.delete(i) : n.add(i); return n; })}
+                    style={{ display: "flex", gap: 9, alignItems: "flex-start", cursor: "pointer", padding: "8px 10px", borderRadius: 8, border: `1px solid ${on ? `${C.purple}70` : C.border}`, background: on ? `${C.purple}16` : "transparent" }}>
+                    <span style={{ flexShrink: 0, width: 16, height: 16, borderRadius: 4, marginTop: 2, border: `1px solid ${on ? C.purple : C.dim}`, background: on ? C.purple : "transparent", color: "#fff", fontSize: 11, fontWeight: 800, display: "flex", alignItems: "center", justifyContent: "center" }}>{on ? "✓" : ""}</span>
+                    <span style={{ minWidth: 0 }}>
+                      <span style={{ fontSize: 13, color: C.text, lineHeight: 1.45 }}>{f.fact}</span>
+                      {f.source && <a href={f.source} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} style={{ display: "block", fontSize: 11, color: "#7ed8ff", marginTop: 2, wordBreak: "break-all" }}>{f.source}</a>}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+            <button onClick={addFactsToSource} disabled={picked.size === 0}
+              style={{ marginTop: 10, padding: "8px 14px", borderRadius: 9, fontSize: 13, fontWeight: 600, border: "none", background: "linear-gradient(135deg,#5b4fd6,#7c6fff)", color: "#fff", cursor: picked.size ? "pointer" : "not-allowed", opacity: picked.size ? 1 : 0.5 }}>
+              Add {picked.size} to source material ↓
+            </button>
+          </div>
+        )}
+
+        {/* Manual paste */}
+        <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: C.dim, margin: "18px 0 8px" }}>
+          Or paste your own
+        </div>
+        <textarea
+          value={sourceMaterial}
+          onChange={(e) => setSourceMaterial(e.target.value)}
+          placeholder="Paste facts, stats, study findings, or article text. Real numbers come only from what's here."
+          rows={4}
+          style={{ width: "100%", padding: "11px 13px", borderRadius: 12, background: "#0a1220", color: C.text, fontSize: 13, border: `1px solid ${grounded ? `${C.green}55` : C.border}`, outline: "none", resize: "vertical", lineHeight: 1.55, fontFamily: "inherit", boxSizing: "border-box" }}
+        />
+        {grounded && <p style={{ fontSize: 11.5, color: C.green, marginTop: 6 }}>✓ Grounded — the script can cite these specifics</p>}
+
+        {/* Actions */}
+        <div style={{ display: "flex", gap: 10, marginTop: 22 }}>
+          {props.onBack && (
+            <button onClick={props.onBack}
+              style={{ padding: "12px 18px", borderRadius: 12, border: `1px solid ${C.border}`, background: "transparent", color: C.dim, fontSize: 14, fontWeight: 600, cursor: "pointer" }}>
+              Back
+            </button>
+          )}
+          <button onClick={() => props.onContinue(sourceMaterial.trim() || undefined)}
+            style={{ flex: 1, padding: "12px 18px", borderRadius: 12, border: "none", background: "linear-gradient(135deg,#0e6499,#1a8fd1,#4db8ff)", color: "#fff", fontSize: 15, fontWeight: 700, cursor: "pointer", boxShadow: "0 0 22px rgba(77,184,255,0.26)" }}>
+            {grounded ? "Continue →" : "Skip — continue →"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
