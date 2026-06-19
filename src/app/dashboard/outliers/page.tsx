@@ -69,12 +69,12 @@ export default function OutliersPage() {
           </p>
         </div>
 
-        <div style={{ display: "flex", gap: 10, marginBottom: 18 }}>
+        <div style={{ display: "flex", gap: 10, marginBottom: 18, maxWidth: 620, margin: "0 auto 18px" }}>
           <input
             value={channel}
             onChange={e => setChannel(e.target.value)}
             onKeyDown={e => e.key === "Enter" && handleScan()}
-            placeholder="Channel URL or @handle (e.g. @kurzgesagt)"
+            placeholder="Channel URL or @handle (e.g. @fern)"
             style={{ flex: 1, height: 48, borderRadius: 12, border: `1px solid ${C.border}`, background: C.card, color: C.textBright, padding: "0 16px", fontSize: 14, outline: "none" }}
           />
           <button
