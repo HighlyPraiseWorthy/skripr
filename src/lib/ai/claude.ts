@@ -418,6 +418,8 @@ HARD RULE — NO OUTSIDE SPECIFICS: When source material is provided, EVERY spec
 
 Never invent a number, never attach a figure to this material that isn't in it, and never copy long passages verbatim — restate in the script's own voice.
 
+CLAIM INTEGRITY (critical): A fact may ONLY support what it directly states. Do NOT use a fact as evidence for a larger, different, or speculative claim it doesn't establish — e.g. do NOT use "the Navy tests SEALs for steroids" to imply "there is a hidden cognitive super-drug," and do NOT present a citation as proof of a cover-up, conspiracy, or mechanism the source never mentions. If the chosen angle reaches beyond what the source material actually supports, keep those reaches clearly hedged as opinion/speculation ("some believe", "it's possible") and NEVER imply the cited sources prove them. The viewer must be able to click any source and find it genuinely backs the claim it's next to.
+
 SOURCE MATERIAL:
 """
 ${input.sourceMaterial.slice(0, 6000)}
