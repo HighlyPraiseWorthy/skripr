@@ -13,11 +13,26 @@ export async function findResearch(input: { topic: string; angle?: string; niche
   if (!key) return { ok: false, error: "Research sourcing isn't set up yet." };
   const topic = (input.topic || "").slice(0, 200);
   if (!topic.trim()) return { ok: false, error: "Add a topic first." };
+  const angle = (input.angle || "").slice(0, 220);
 
-  const prompt = `Find verified, citable facts for a YouTube video.
-Topic: ${topic}${input.angle ? `\nAngle: ${String(input.angle).slice(0, 200)}` : ""}${input.niche ? `\nNiche: ${input.niche}` : ""}
+  // Angle-led: the hook creates the curiosity gap; the body must pay it off, so
+  // bias the research toward facts that substantiate the chosen angle, using the
+  // topic only as the domain to stay within. Falls back to topic-wide when no
+  // angle is provided.
+  const lead = angle
+    ? `Find verified, citable facts that SUBSTANTIATE this specific video angle — so the script can deliver on the curiosity its hook creates.
 
-Return the 5-8 most useful SPECIFIC facts — real numbers, percentages, dollar figures, dates, or named study findings — that a creator could state on camera. Only include facts you can attribute to a real source. Output ONLY a JSON array, no prose:
+ANGLE (what the video promises): "${angle}"
+TOPIC (stay within this domain): ${topic}${input.niche ? `\nNICHE: ${input.niche}` : ""}
+
+Return the 5-8 most useful SPECIFIC facts that DIRECTLY support, prove, or deepen THIS angle (real numbers, percentages, dollar figures, dates, or named study findings). Prioritize facts relevant to the angle; include a broader topic fact only when it reinforces the angle.`
+    : `Find verified, citable facts for a YouTube video.
+TOPIC: ${topic}${input.niche ? `\nNICHE: ${input.niche}` : ""}
+
+Return the 5-8 most useful SPECIFIC facts a creator could state on camera (real numbers, percentages, dollar figures, dates, or named study findings).`;
+
+  const prompt = `${lead}
+Only include facts you can attribute to a real source. Output ONLY a JSON array, no prose:
 [{"fact":"the specific fact, including the exact number","source":"the source URL it comes from"}]`;
 
   try {
