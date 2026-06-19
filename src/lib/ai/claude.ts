@@ -410,6 +410,8 @@ ${input.voiceProfile ? `
 CREATOR VOICE PROFILE — this creator's audience knows their voice; the script must sound like THEM, not like a generic narrator. Follow this profile for rhythm, diction, energy, humor, address, transitions, and CTA style. It overrides the generic Tone setting above, but NEVER overrides the banned-phrases list, formatting rules, anti-fabrication rule, no-sponsor rule, or voiceover-only rule:
 
 ${input.voiceProfile}
+
+VOICE-DRIVEN HOOK: If this voice profile favors metaphors, analogies, or vivid sensory comparisons, strongly PREFER opening the hook with a bold, original metaphor or analogy in that style — it's the channel's signature and makes the opening punchier and more catchy. Keep it fresh and specific (never a cliché), still obey the hook anti-patterns and fact rules, and only choose a different hook type when it clearly hits harder for this topic.
 ` : ""}
 ${buildStorytellingBlock(input.storytellingMode, input.storytellingTechniques)}
 ${input.sourceMaterial ? `
