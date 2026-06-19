@@ -256,7 +256,7 @@ export default function LandingPage() {
             <span style={{ fontWeight: 200, color: T.accent }}>starts with someone else's.</span>
           </div>
           <p style={{ fontSize: 18, fontWeight: 300, lineHeight: 1.6, color: T.muted, maxWidth: 640, marginBottom: 40, textAlign: "center" as const }}>
-            Paste any YouTube URL. Skripr extracts the structure of a viral video, rebuilds it as a ready-to-record script in your niche, generates ranked hooks, injects Viral Magnet words, and delivers full metadata — in 60 seconds.
+            Idea to upload-ready script in 60 seconds. Paste a topic or any proven video, and Skripr writes it in your voice — hooks, retention structure, title, and metadata, all done.
           </p>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "center" as const, gap: 14, marginBottom: 36, flexWrap: "wrap" as const }}>
             <span style={{ fontSize: 15, fontWeight: 400, color: T.muted, padding: "9px 18px", border: `1px solid ${T.border}`, borderRadius: 40 }}>
@@ -482,8 +482,8 @@ export default function LandingPage() {
             <span style={{ borderRadius: "50%", width: 8, height: 8, background: T.accent, display: "block", position: "relative" as const, zIndex: 1 }} />
           </span>
           <span style={{ fontSize: 13.5, fontWeight: 400, color: T.muted, letterSpacing: "0.02em" }}>
-            Skripr is live. Join early —{" "}
-            <span style={{ color: T.text, fontWeight: 500 }}>be among the first creators to use it.</span>
+            Founding members get in first —{" "}
+            <span style={{ color: T.text, fontWeight: 500 }}>and lock in early-access pricing as Skripr grows.</span>
           </span>
         </div>
         <Link href="/sign-up" style={{
@@ -909,7 +909,7 @@ export default function LandingPage() {
           Simple. No surprises.
         </div>
         <div style={{ fontSize: 15.5, fontWeight: 400, color: T.muted, maxWidth: 460, lineHeight: 1.6, marginBottom: 48, textAlign: "center", margin: "0 auto 48px" }}>
-          Start with 2 free scripts. No card required.
+          Start with 2 free scripts. No card required. Cancel anytime.
         </div>
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 1, background: T.border, border: `1px solid ${T.border}` }}>
