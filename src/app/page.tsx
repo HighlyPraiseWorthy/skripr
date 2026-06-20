@@ -69,7 +69,7 @@ const T = {
 // ─── Micro-components ─────────────────────────────────────────────────────────
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <div style={{ fontSize: 11.5, fontWeight: 600, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: T.accent, marginBottom: 14 }}>
+    <div style={{ fontSize: 10, fontWeight: 500, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: T.dim, marginBottom: 14 }}>
       {children}
     </div>
   );
@@ -79,8 +79,8 @@ function FeatTag({ children, color = T.accent }: { children: React.ReactNode; co
   return (
     <span style={{
       display: "inline-block", marginTop: 14,
-      fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase" as const,
-      padding: "4px 9px", border: `1px solid ${color}55`, color,
+      fontSize: 9, fontWeight: 500, letterSpacing: "0.1em", textTransform: "uppercase" as const,
+      padding: "3px 8px", border: `1px solid ${color}33`, color,
     }}>{children}</span>
   );
 }
@@ -88,14 +88,14 @@ function FeatTag({ children, color = T.accent }: { children: React.ReactNode; co
 function TermLine({ type, children }: { type: "comment" | "cmd" | "out" | "check"; children: React.ReactNode }) {
   const colors = { comment: "#a9c3de", cmd: "#7cc9ff", out: "#dbe8f5", check: "#3ce6b0" };
   return (
-    <div style={{ fontFamily: "monospace", fontSize: 13, lineHeight: 1.85, color: colors[type] }}>
+    <div style={{ fontFamily: "monospace", fontSize: 11, lineHeight: 1.8, color: colors[type] }}>
       {children}
     </div>
   );
 }
 
 function Check({ color = T.green }: { color?: string }) {
-  return <span style={{ color, fontSize: 12, flexShrink: 0 }}>✓</span>;
+  return <span style={{ color, fontSize: 11, flexShrink: 0 }}>✓</span>;
 }
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
@@ -167,7 +167,7 @@ export default function LandingPage() {
         .hn-star-m  { width:4px; height:4px; animation: star-pulse-1 7.1s ease-in-out infinite; background: radial-gradient(circle, #ffffff 0%, #9ce4ff 30%, #4db8ff 60%, transparent 80%); }
         @keyframes spin-border { 0% { transform: translate(-50%,-50%) rotate(0deg); } 100% { transform: translate(-50%,-50%) rotate(360deg); } }
 
-        .hn-nav-link { font-size:13px; font-weight:500; letter-spacing:0.08em; color:${T.muted}; text-decoration:none; transition:color .15s; }
+        .hn-nav-link { font-size:12px; font-weight:400; letter-spacing:0.08em; color:${T.dim}; text-decoration:none; transition:color .15s; }
         .hn-nav-link:hover { color:${T.accent}; }
         .hn-ghost:hover { color:${T.accent} !important; border-color:${T.accent}44 !important; }
         .hn-feat-row { display:grid; grid-template-columns:80px 1fr 1fr; border-bottom:1px solid ${T.border}; align-items:stretch; }
@@ -175,15 +175,15 @@ export default function LandingPage() {
         .hn-feat-artifact { background:${T.bg2}; border-left:1px solid ${T.border}; padding:28px 24px; display:flex; flex-direction:column; justify-content:flex-start; }
         .hn-hook-item { display:flex; align-items:flex-start; gap:10px; padding:10px 14px; border-bottom:1px solid ${T.border}; }
         .hn-hook-item:last-child { border-bottom:none; }
-        .hn-comp-row { display:flex; justify-content:space-between; padding:9px 16px; border-bottom:1px solid ${T.border}; font-size:12.5px; }
+        .hn-comp-row { display:flex; justify-content:space-between; padding:8px 16px; border-bottom:1px solid ${T.border}; font-size:11px; }
         .hn-comp-row:last-child { border-bottom:none; }
         .hn-price-card { background:${T.bg}; padding:28px 24px; transition:background .2s; }
         .hn-price-card:hover { background:${T.bg3}; }
         .hn-price-btn { transition:opacity .15s; }
         .hn-price-btn:hover { opacity:.85; }
-        .hn-foot-link { font-size:12.5px; color:${T.muted}; text-decoration:none; letter-spacing:.04em; transition:color .15s; }
+        .hn-foot-link { font-size:11px; color:${T.dim}; text-decoration:none; letter-spacing:.04em; transition:color .15s; }
         .hn-foot-link:hover { color:${T.accent}; }
-        .hn-word { padding:6px 12px; font-size:12.5px; font-weight:600; border:1px solid; letter-spacing:.02em; }
+        .hn-word { padding:5px 11px; font-size:11px; font-weight:500; border:1px solid; letter-spacing:.02em; }
         .hn-price-featured { background:${T.bg2} !important; outline:1px solid ${T.accent}44; }
       `}</style>
 
@@ -263,11 +263,11 @@ export default function LandingPage() {
             Idea to upload-ready script in 60 seconds. Paste a topic or any proven video, and Skripr writes it in your voice — hooks, retention structure, title, and metadata, all done.
           </p>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "center" as const, gap: 14, marginBottom: 36, flexWrap: "wrap" as const }}>
-            <span style={{ fontSize: 15, fontWeight: 400, color: T.muted, padding: "9px 18px", border: `1px solid ${T.border}`, borderRadius: 40 }}>
+            <span style={{ fontSize: 13, fontWeight: 400, color: T.muted, padding: "8px 16px", border: `1px solid ${T.border}`, borderRadius: 40 }}>
               The old way: 4–5 hours a video · still hit-or-miss
             </span>
-            <span style={{ color: T.accent, fontSize: 18, fontWeight: 700 }}>→</span>
-            <span style={{ fontSize: 15, fontWeight: 600, color: T.text, padding: "9px 18px", border: `1px solid ${T.accent}`, borderRadius: 40, background: "rgba(77,184,255,0.10)" }}>
+            <span style={{ color: T.accent, fontSize: 16, fontWeight: 600 }}>→</span>
+            <span style={{ fontSize: 13, fontWeight: 500, color: T.text, padding: "8px 16px", border: `1px solid ${T.accent}`, borderRadius: 40, background: "rgba(77,184,255,0.06)" }}>
               With Skripr: idea to upload-ready in one sitting
             </span>
           </div>
@@ -286,7 +286,7 @@ export default function LandingPage() {
           </div>
           <div style={{ display: "flex", gap: 24, paddingBottom: 56, justifyContent: "center" as const }}>
             {["No credit card required", "Results in 60s", "Built for YouTubers"].map(t => (
-              <span key={t} style={{ fontSize: 14, color: T.muted, letterSpacing: "0.03em" }}>{t}</span>
+              <span key={t} style={{ fontSize: 13, color: T.muted, letterSpacing: "0.03em" }}>{t}</span>
             ))}
           </div>
         </div>
@@ -331,7 +331,7 @@ export default function LandingPage() {
                     <span style={{ marginLeft: "auto", fontSize: 10, fontWeight: 700, color: gc[card.grade], background: `${gc[card.grade]}18`, padding: "2px 7px", borderRadius: 4 }}>🧲 {card.word} · {card.grade}</span>
                   </div>
                   <div style={{ fontSize: 13, fontWeight: 700, color: T.text, lineHeight: 1.35, marginBottom: 8 }}>{card.title}</div>
-                  <div style={{ fontSize: 12.5, color: T.muted, lineHeight: 1.6, fontStyle: "italic" }}>"{card.hook}"</div>
+                  <div style={{ fontSize: 11, color: T.muted, lineHeight: 1.6, fontStyle: "italic" }}>"{card.hook}"</div>
                 </div>
               );
             })}
@@ -390,7 +390,7 @@ export default function LandingPage() {
                 <div key={i} style={{ flexShrink: 0, display: "flex", alignItems: "center", gap: 10, padding: "10px 16px", borderRadius: 40, background: T.bg2, border: `1px solid ${T.border}` }}>
                   <span style={{ fontSize: 13, fontWeight: 700, color: c }}>{w.word}</span>
                   <span style={{ fontSize: 9, fontWeight: 700, color: T.bg, background: c, padding: "1px 5px", borderRadius: 3 }}>{w.grade}</span>
-                  <span style={{ fontSize: 12, color: T.muted }}>{w.cat}</span>
+                  <span style={{ fontSize: 11, color: T.muted }}>{w.cat}</span>
                 </div>
               );
             })}
@@ -404,7 +404,7 @@ export default function LandingPage() {
             {["#ff5f57","#febc2e","#28c840"].map((c, i) => (
               <div key={i} style={{ width: 9, height: 9, borderRadius: "50%", background: c }} />
             ))}
-            <span style={{ fontSize: 13, color: T.muted, letterSpacing: "0.05em", fontFamily: "monospace", marginLeft: 6 }}>
+            <span style={{ fontSize: 12, color: T.muted, letterSpacing: "0.05em", fontFamily: "monospace", marginLeft: 6 }}>
               skripr.vercel.app/dashboard/scripts/new
             </span>
           </div>
@@ -416,8 +416,8 @@ export default function LandingPage() {
                 ["Length", "8 minutes", false],
               ].map(([lbl, val, isUrl]) => (
                 <div key={lbl as string}>
-                  <div style={{ fontSize: 11.5, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase" as const, color: T.muted, marginBottom: 5 }}>{lbl}</div>
-                  <div style={{ fontSize: isUrl ? 11.5 : 12.5, color: isUrl ? T.accent : T.text, padding: "8px 9px", border: `1px solid ${T.border}`, background: T.bg, lineHeight: 1.35, wordBreak: "break-all" as const }}>{val}</div>
+                  <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase" as const, color: T.muted, marginBottom: 4 }}>{lbl}</div>
+                  <div style={{ fontSize: isUrl ? 10 : 11, color: isUrl ? T.accent : T.text, padding: "7px 8px", border: `1px solid ${T.border}`, background: T.bg, lineHeight: 1.3, wordBreak: "break-all" as const }}>{val}</div>
                 </div>
               ))}
               <button style={{ background: "linear-gradient(135deg,#0e6499,#1a8fd1,#4db8ff)", color: "#fff", fontSize: 12, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase" as const, padding: 11, border: "none", cursor: "pointer", marginTop: 4, borderRadius: 8, boxShadow: "0 4px 18px rgba(77,184,255,0.35)" }}>
@@ -438,7 +438,7 @@ export default function LandingPage() {
               <div style={{ fontSize: 13, color: T.accent, fontStyle: "italic", marginBottom: 11 }}>
                 "Most people manage their money wrong — and I'll show you the exact system I use instead."
               </div>
-              <div style={{ fontSize: 13.5, color: T.text, lineHeight: 1.7, fontWeight: 400 }}>
+              <div style={{ fontSize: 13, color: T.text, lineHeight: 1.7, fontWeight: 400 }}>
                 I used to be terrible with money. Then I stumbled on a system so simple it felt almost too obvious — and it completely changed how I handle every dollar I make.
                 <span style={{ display: "inline-block", width: 1.5, height: 11, background: T.accent, marginLeft: 2, verticalAlign: "middle", animation: "blink 1s infinite" }} />
                 <br /><br />
@@ -455,12 +455,12 @@ export default function LandingPage() {
 
         {/* ── NICHE STRIP ── */}
         <div style={{ display: "flex", alignItems: "center", padding: "24px 48px", borderTop: `1px solid ${T.border}`, borderBottom: `1px solid ${T.border}` }}>
-          <div style={{ fontSize: 11.5, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase" as const, color: T.muted, paddingRight: 28, borderRight: `1px solid ${T.border}`, marginRight: 28, flexShrink: 0, whiteSpace: "nowrap" as const }}>
+          <div style={{ fontSize: 10, fontWeight: 400, letterSpacing: "0.12em", textTransform: "uppercase" as const, color: T.muted, paddingRight: 28, borderRight: `1px solid ${T.border}`, marginRight: 28, flexShrink: 0, whiteSpace: "nowrap" as const }}>
             Works for creators in
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 20, flexWrap: "wrap" as const }}>
             {["True Crime","Psychology","Storytelling","History","Lifestyle","Gaming","Finance","Self Improvement","Motivation","Health"].map((n, i, arr) => (
-              <span key={n} style={{ fontSize: 14, color: T.text, fontWeight: 400, letterSpacing: "0.03em" }}>
+              <span key={n} style={{ fontSize: 13, color: T.muted, letterSpacing: "0.03em" }}>
                 {n}{i < arr.length - 1 && <span style={{ marginLeft: 20, color: T.border }}>·</span>}
               </span>
             ))}
@@ -473,7 +473,7 @@ export default function LandingPage() {
         <div style={{ display: "flex", animation: "marquee-facts 44s linear infinite", width: "max-content" }}>
           {FACTS_LOOP.map((fact, i) => (
             <span key={i} style={{ display: "inline-flex", alignItems: "center", flexShrink: 0 }}>
-              <span style={{ fontSize: 12.5, fontWeight: 400, color: T.muted, letterSpacing: "0.04em", whiteSpace: "nowrap" as const, padding: "0 28px" }}>
+              <span style={{ fontSize: 11, fontWeight: 400, color: T.muted, letterSpacing: "0.04em", whiteSpace: "nowrap" as const, padding: "0 28px" }}>
                 {fact}
               </span>
               <span style={{ color: T.border, fontSize: 16, flexShrink: 0 }}>·</span>
@@ -493,13 +493,13 @@ export default function LandingPage() {
             <span style={{ position: "absolute" as const, inset: 0, borderRadius: "50%", background: T.accent, animation: "pulse-dot 2s ease infinite" }} />
             <span style={{ borderRadius: "50%", width: 8, height: 8, background: T.accent, display: "block", position: "relative" as const, zIndex: 1 }} />
           </span>
-          <span style={{ fontSize: 13.5, fontWeight: 400, color: T.muted, letterSpacing: "0.02em" }}>
+          <span style={{ fontSize: 12, fontWeight: 400, color: T.muted, letterSpacing: "0.02em" }}>
             Founding members get in first —{" "}
             <span style={{ color: T.text, fontWeight: 500 }}>and lock in early-access pricing as Skripr grows.</span>
           </span>
         </div>
         <Link href="/sign-up" style={{
-          fontSize: 12.5, fontWeight: 600, color: T.accent,
+          fontSize: 11, fontWeight: 500, color: T.accent,
           letterSpacing: "0.06em", textDecoration: "none",
           borderBottom: `1px solid ${T.accent}44`, paddingBottom: 1,
         }}>
@@ -519,7 +519,7 @@ export default function LandingPage() {
             <div style={{ fontSize: 34, fontWeight: 700, letterSpacing: "-1.5px", color: T.accent, lineHeight: 1 }}>
               {n}<sup style={{ fontSize: 18, fontWeight: 200, verticalAlign: "top", marginTop: 4, display: "inline-block" }}>{sup}</sup>
             </div>
-            <div style={{ fontSize: 11.5, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase" as const, color: T.muted, marginTop: 6 }}>{label}</div>
+            <div style={{ fontSize: 10, fontWeight: 400, letterSpacing: "0.08em", textTransform: "uppercase" as const, color: T.muted, marginTop: 5 }}>{label}</div>
           </div>
         ))}
       </div>
@@ -556,9 +556,9 @@ export default function LandingPage() {
             { n: "03", t: "Publish-ready, not a draft", d: "Get titles, description, tags, and a demonetization check in the same flow. Paste it into your voiceover tool and upload." },
           ].map(s => (
             <div key={s.n} style={{ background: T.bg, padding: "32px 26px" }}>
-              <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: "0.1em", color: T.accent, marginBottom: 14 }}>{s.n}</div>
-              <div style={{ fontSize: 21, fontWeight: 700, letterSpacing: "-0.4px", color: T.text, marginBottom: 10, lineHeight: 1.15 }}>{s.t}</div>
-              <div style={{ fontSize: 16, fontWeight: 400, color: "#d4e4f3", lineHeight: 1.7 }}>{s.d}</div>
+              <div style={{ fontSize: 11, fontWeight: 400, letterSpacing: "0.1em", color: T.accent, marginBottom: 14 }}>{s.n}</div>
+              <div style={{ fontSize: 19, fontWeight: 700, letterSpacing: "-0.4px", color: T.text, marginBottom: 10, lineHeight: 1.15 }}>{s.t}</div>
+              <div style={{ fontSize: 14, fontWeight: 400, color: "#d4e4f3", lineHeight: 1.7 }}>{s.d}</div>
             </div>
           ))}
         </div>
@@ -569,11 +569,11 @@ export default function LandingPage() {
 
         {/* 01 — Script Generator */}
         <div className="hn-feat-row">
-          <div style={{ fontSize: 14, fontWeight: 600, letterSpacing: "0.1em", color: T.muted, padding: "32px 24px", borderRight: `1px solid ${T.border}` }}>01</div>
+          <div style={{ fontSize: 11, fontWeight: 400, letterSpacing: "0.1em", color: T.dim, padding: "32px 24px", borderRight: `1px solid ${T.border}` }}>01</div>
           <div style={{ padding: "32px 24px" }}>
             <SectionLabel>Script Generator</SectionLabel>
             <div style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.5px", color: T.text, marginBottom: 10, lineHeight: 1.1 }}>Any URL.<br />Full script.</div>
-            <div style={{ fontSize: 15.5, fontWeight: 400, color: "#d4e4f3", lineHeight: 1.7 }}>
+            <div style={{ fontSize: 14, fontWeight: 400, color: "#d4e4f3", lineHeight: 1.7 }}>
               Paste a YouTube URL. Skripr pulls the transcript, analyzes the narrative structure, and rebuilds it as a fully formatted, ready-to-record script adapted to your niche and target length.
             </div>
             <FeatTag color={T.green}>All plans</FeatTag>
@@ -594,11 +594,11 @@ export default function LandingPage() {
 
         {/* 02 — Viral Magnet */}
         <div id="viral-magnet" className="hn-feat-row">
-          <div style={{ fontSize: 14, fontWeight: 600, letterSpacing: "0.1em", color: T.muted, padding: "32px 24px", borderRight: `1px solid ${T.border}` }}>02</div>
+          <div style={{ fontSize: 11, fontWeight: 400, letterSpacing: "0.1em", color: T.dim, padding: "32px 24px", borderRight: `1px solid ${T.border}` }}>02</div>
           <div style={{ padding: "32px 24px" }}>
             <SectionLabel>Viral Magnet</SectionLabel>
             <div style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.5px", color: T.text, marginBottom: 10, lineHeight: 1.1 }}>Stop guessing<br />titles.</div>
-            <div style={{ fontSize: 15.5, fontWeight: 400, color: "#d4e4f3", lineHeight: 1.7 }}>
+            <div style={{ fontSize: 14, fontWeight: 400, color: "#d4e4f3", lineHeight: 1.7 }}>
               Power words graded by click psychology and YouTube search behavior. Each word shows a predicted CTR lift. Pick one — it auto-injects into your title and script hook.
             </div>
             <FeatTag>Starter+</FeatTag>
@@ -623,11 +623,11 @@ export default function LandingPage() {
 
         {/* 03 — Viral Remixer */}
         <div className="hn-feat-row">
-          <div style={{ fontSize: 14, fontWeight: 600, letterSpacing: "0.1em", color: T.muted, padding: "32px 24px", borderRight: `1px solid ${T.border}` }}>03</div>
+          <div style={{ fontSize: 11, fontWeight: 400, letterSpacing: "0.1em", color: T.dim, padding: "32px 24px", borderRight: `1px solid ${T.border}` }}>03</div>
           <div style={{ padding: "32px 24px" }}>
             <SectionLabel>Viral Remixer</SectionLabel>
             <div style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.5px", color: T.text, marginBottom: 10, lineHeight: 1.1 }}>Any viral video.<br />Your version.</div>
-            <div style={{ fontSize: 15.5, fontWeight: 400, color: "#d4e4f3", lineHeight: 1.7 }}>
+            <div style={{ fontSize: 14, fontWeight: 400, color: "#d4e4f3", lineHeight: 1.7 }}>
               Takes any high-performing video concept and rebuilds it from scratch in your voice, your niche, your style. Same structural DNA — entirely original output.
             </div>
             <FeatTag>Starter+</FeatTag>
@@ -647,11 +647,11 @@ export default function LandingPage() {
 
         {/* 04 — Niche Bend */}
         <div className="hn-feat-row">
-          <div style={{ fontSize: 14, fontWeight: 600, letterSpacing: "0.1em", color: T.muted, padding: "32px 24px", borderRight: `1px solid ${T.border}` }}>04</div>
+          <div style={{ fontSize: 11, fontWeight: 400, letterSpacing: "0.1em", color: T.dim, padding: "32px 24px", borderRight: `1px solid ${T.border}` }}>04</div>
           <div style={{ padding: "32px 24px" }}>
             <SectionLabel>Niche Bend</SectionLabel>
             <div style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.5px", color: T.text, marginBottom: 10, lineHeight: 1.1 }}>Any video.<br />10 new angles.</div>
-            <div style={{ fontSize: 15.5, fontWeight: 400, color: "#d4e4f3", lineHeight: 1.7 }}>
+            <div style={{ fontSize: 14, fontWeight: 400, color: "#d4e4f3", lineHeight: 1.7 }}>
               Take any viral video and cross-pollinate it into niches your competitors haven't touched. Viral Magnet injection built in — every angle pre-optimized for CTR.
             </div>
             <FeatTag>Starter+</FeatTag>
@@ -673,11 +673,11 @@ export default function LandingPage() {
       {/* ── PRICING ── */}
         {/* 05 — Hook Engine */}
         <div className="hn-feat-row">
-          <div style={{ fontSize: 14, fontWeight: 600, letterSpacing: "0.1em", color: T.muted, padding: "32px 24px", borderRight: `1px solid ${T.border}` }}>05</div>
+          <div style={{ fontSize: 11, fontWeight: 400, letterSpacing: "0.1em", color: T.dim, padding: "32px 24px", borderRight: `1px solid ${T.border}` }}>05</div>
           <div style={{ padding: "32px 24px" }}>
             <SectionLabel>Hook Engine</SectionLabel>
             <div style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.5px", color: T.text, marginBottom: 10, lineHeight: 1.1 }}>10 hooks.<br />Ranked.</div>
-            <div style={{ fontSize: 15.5, fontWeight: 400, color: "#d4e4f3", lineHeight: 1.7 }}>
+            <div style={{ fontSize: 14, fontWeight: 400, color: "#d4e4f3", lineHeight: 1.7 }}>
               Every script gets 10 opening hooks across different psychological patterns — curiosity loops, controversy openers, pattern interrupts, stat shocks. Each scored for predicted audience retention.
             </div>
             <FeatTag color={T.green}>All plans</FeatTag>
@@ -686,8 +686,8 @@ export default function LandingPage() {
             <div style={{ width: "100%" }}>
               {HOOKS.map(({ score, text }) => (
                 <div key={score} className="hn-hook-item">
-                  <div style={{ fontSize: 13, fontWeight: 700, color: T.accent, flexShrink: 0, paddingTop: 1, minWidth: 32 }}>{score}</div>
-                  <div style={{ fontSize: 13.5, color: T.text, lineHeight: 1.6, fontWeight: 400 }}>{text}</div>
+                  <div style={{ fontSize: 10, fontWeight: 700, color: T.accent, flexShrink: 0, paddingTop: 1, minWidth: 28 }}>{score}</div>
+                  <div style={{ fontSize: 11, color: T.muted, lineHeight: 1.5, fontWeight: 400 }}>{text}</div>
                 </div>
               ))}
             </div>
@@ -696,11 +696,11 @@ export default function LandingPage() {
 
         {/* 06 — A/B Titles */}
         <div className="hn-feat-row">
-          <div style={{ fontSize: 14, fontWeight: 600, letterSpacing: "0.1em", color: T.muted, padding: "32px 24px", borderRight: `1px solid ${T.border}` }}>06</div>
+          <div style={{ fontSize: 11, fontWeight: 400, letterSpacing: "0.1em", color: T.dim, padding: "32px 24px", borderRight: `1px solid ${T.border}` }}>06</div>
           <div style={{ padding: "32px 24px" }}>
             <SectionLabel>A/B Titles</SectionLabel>
             <div style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.5px", color: T.text, marginBottom: 10, lineHeight: 1.1 }}>Test before<br />you publish.</div>
-            <div style={{ fontSize: 15.5, fontWeight: 400, color: "#d4e4f3", lineHeight: 1.7 }}>
+            <div style={{ fontSize: 14, fontWeight: 400, color: "#d4e4f3", lineHeight: 1.7 }}>
               Generate multiple title variants for every script — each one testing a different angle, emotion, or Viral Magnet word. Know which one to lead with before you upload.
             </div>
             <FeatTag color={T.green}>All plans</FeatTag>
@@ -720,11 +720,11 @@ export default function LandingPage() {
 
         {/* 07 — Metadata Suite */}
         <div className="hn-feat-row">
-          <div style={{ fontSize: 14, fontWeight: 600, letterSpacing: "0.1em", color: T.muted, padding: "32px 24px", borderRight: `1px solid ${T.border}` }}>07</div>
+          <div style={{ fontSize: 11, fontWeight: 400, letterSpacing: "0.1em", color: T.dim, padding: "32px 24px", borderRight: `1px solid ${T.border}` }}>07</div>
           <div style={{ padding: "32px 24px" }}>
             <SectionLabel>Metadata Suite</SectionLabel>
             <div style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.5px", color: T.text, marginBottom: 10, lineHeight: 1.1 }}>Titles, tags,<br />descriptions.</div>
-            <div style={{ fontSize: 15.5, fontWeight: 400, color: "#d4e4f3", lineHeight: 1.7 }}>
+            <div style={{ fontSize: 14, fontWeight: 400, color: "#d4e4f3", lineHeight: 1.7 }}>
               SEO-optimized titles, YouTube descriptions, and a full 30-tag set — generated from your script content. Never leave search discovery value on the table before you publish.
             </div>
             <FeatTag color={T.green}>All plans</FeatTag>
@@ -744,11 +744,11 @@ export default function LandingPage() {
 
         {/* 08 — Outlier Finder */}
         <div className="hn-feat-row">
-          <div style={{ fontSize: 14, fontWeight: 600, letterSpacing: "0.1em", color: T.muted, padding: "32px 24px", borderRight: `1px solid ${T.border}` }}>08</div>
+          <div style={{ fontSize: 11, fontWeight: 400, letterSpacing: "0.1em", color: T.dim, padding: "32px 24px", borderRight: `1px solid ${T.border}` }}>08</div>
           <div style={{ padding: "32px 24px" }}>
             <SectionLabel>Outlier Finder</SectionLabel>
             <div style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.5px", color: T.text, marginBottom: 10, lineHeight: 1.1 }}>Find what's<br />breaking out.</div>
-            <div style={{ fontSize: 15.5, fontWeight: 400, color: "#d4e4f3", lineHeight: 1.7 }}>
+            <div style={{ fontSize: 14, fontWeight: 400, color: "#d4e4f3", lineHeight: 1.7 }}>
               Drop in any channel and Skripr surfaces its outlier videos — the ones massively outperforming its own average. See which formats are catching fire, then build your version before everyone else copies them.
             </div>
             <FeatTag>Starter+</FeatTag>
@@ -768,11 +768,11 @@ export default function LandingPage() {
 
         {/* 09 — Voice Match */}
         <div className="hn-feat-row">
-          <div style={{ fontSize: 14, fontWeight: 600, letterSpacing: "0.1em", color: T.muted, padding: "32px 24px", borderRight: `1px solid ${T.border}` }}>09</div>
+          <div style={{ fontSize: 11, fontWeight: 400, letterSpacing: "0.1em", color: T.dim, padding: "32px 24px", borderRight: `1px solid ${T.border}` }}>09</div>
           <div style={{ padding: "32px 24px" }}>
             <SectionLabel>Voice Match</SectionLabel>
             <div style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.5px", color: T.text, marginBottom: 10, lineHeight: 1.1 }}>Sound like<br />you. Always.</div>
-            <div style={{ fontSize: 15.5, fontWeight: 400, color: "#d4e4f3", lineHeight: 1.7 }}>
+            <div style={{ fontSize: 14, fontWeight: 400, color: "#d4e4f3", lineHeight: 1.7 }}>
               Save up to 5 voices from your own scripts or any YouTube channel. Pick one per script and Skripr writes in that exact style — so a calm explainer topic can read with the punch of a direct, no-fluff creator, or just like you.
             </div>
             <FeatTag>Starter+</FeatTag>
@@ -795,7 +795,7 @@ export default function LandingPage() {
           <div style={{ padding: "32px 24px" }}>
             <SectionLabel>Compliance Checker</SectionLabel>
             <div style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.5px", color: T.text, marginBottom: 10, lineHeight: 1.1 }}>Score before<br />you record.</div>
-            <div style={{ fontSize: 15.5, fontWeight: 400, color: "#d4e4f3", lineHeight: 1.7 }}>
+            <div style={{ fontSize: 14, fontWeight: 400, color: "#d4e4f3", lineHeight: 1.7 }}>
               Run your script through YouTube's advertiser-friendliness guidelines before you hit record. Get a score, a category breakdown, and rewrite suggestions — not after demonetization.
             </div>
             <FeatTag color={T.green}>All plans</FeatTag>
@@ -842,7 +842,7 @@ export default function LandingPage() {
                 "Shows whether each blend is already proven on YouTube or a blue ocean nobody's claimed",
                 "Surfaces the payout gap, so you can pivot toward niches that earn multiples more per 1,000 views",
               ].map(t => (
-                <div key={t} style={{ display: "flex", gap: 10, alignItems: "flex-start", fontSize: 15.5, color: T.text, fontWeight: 400, lineHeight: 1.6 }}>
+                <div key={t} style={{ display: "flex", gap: 10, alignItems: "flex-start", fontSize: 14.5, color: T.text, fontWeight: 400, lineHeight: 1.6 }}>
                   <Check color={T.purple} /> {t}
                 </div>
               ))}
@@ -850,7 +850,7 @@ export default function LandingPage() {
           </div>
           {/* RPM arbitrage visual */}
           <div style={{ border: `1px solid ${T.border}`, borderRadius: 16, background: T.bg, padding: "26px 28px" }}>
-            <div style={{ fontSize: 11.5, fontWeight: 600, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: T.muted, marginBottom: 18 }}>Same views. Different payout.</div>
+            <div style={{ fontSize: 10, fontWeight: 500, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: T.dim, marginBottom: 18 }}>Same views. Different payout.</div>
             <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 14 }}>
               <div style={{ flex: 1, padding: "14px 16px", borderRadius: 12, border: `1px solid ${T.border}` }}>
                 <div style={{ fontSize: 13, fontWeight: 500, color: T.muted, marginBottom: 4 }}>Psychology</div>
@@ -920,7 +920,7 @@ export default function LandingPage() {
         <div style={{ fontSize: 32, fontWeight: 700, letterSpacing: "-1px", color: T.text, lineHeight: 1.05, marginBottom: 10, textAlign: "center" as const }}>
           Simple. No surprises.
         </div>
-        <div style={{ fontSize: 15.5, fontWeight: 400, color: T.muted, maxWidth: 460, lineHeight: 1.6, marginBottom: 48, textAlign: "center", margin: "0 auto 48px" }}>
+        <div style={{ fontSize: 14, fontWeight: 300, color: T.muted, maxWidth: 420, lineHeight: 1.6, marginBottom: 48, textAlign: "center", margin: "0 auto 48px" }}>
           Start with 2 free scripts. No card required. Cancel anytime.
         </div>
 
@@ -928,21 +928,21 @@ export default function LandingPage() {
 
           {/* Starter */}
           <div className="hn-price-card">
-            <div style={{ fontSize: 11.5, fontWeight: 600, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: T.muted, marginBottom: 16 }}>Starter</div>
+            <div style={{ fontSize: 10, fontWeight: 500, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: T.dim, marginBottom: 16 }}>Starter</div>
             <div style={{ display: "flex", alignItems: "baseline", gap: 2, marginBottom: 4 }}>
               <span style={{ fontSize: 36, fontWeight: 700, letterSpacing: "-2px", color: T.text, lineHeight: 1 }}>$19</span>
-              <span style={{ fontSize: 13, color: T.muted, fontWeight: 400 }}>/mo</span>
+              <span style={{ fontSize: 12, color: T.dim, fontWeight: 300 }}>/mo</span>
             </div>
-            <div style={{ fontSize: 12.5, color: T.muted, marginBottom: 20 }}>20 scripts / month</div>
+            <div style={{ fontSize: 11, color: T.dim, marginBottom: 20 }}>20 scripts / month</div>
             <div style={{ height: 1, background: T.border, margin: "16px 0" }} />
             {["20 scripts / month","Niche Bend Engine","Viral Remixer","Viral Magnet Titles","Metadata & A/B Testing"].map(f => (
-              <div key={f} style={{ fontSize: 13.5, color: T.text, padding: "5px 0", display: "flex", alignItems: "center", gap: 8, fontWeight: 400 }}>
+              <div key={f} style={{ fontSize: 12, color: T.muted, padding: "4px 0", display: "flex", alignItems: "center", gap: 8, fontWeight: 300 }}>
                 <Check /> {f}
               </div>
             ))}
             <button onClick={() => handleCheckout("starter")} className="hn-price-btn" style={{
               display: "block", width: "100%", marginTop: 24, padding: 10,
-              fontSize: 12.5, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase",
+              fontSize: 11, fontWeight: 400, letterSpacing: "0.08em", textTransform: "uppercase",
               textAlign: "center", cursor: "pointer",
               background: "transparent", color: T.muted, border: `1px solid ${T.border}`,
             }}>Get Starter</button>
@@ -962,15 +962,15 @@ export default function LandingPage() {
             }} />
             {/* Card content sits on top */}
             <div className="hn-price-card" style={{ position: "relative", zIndex: 1, background: T.bg2 }}>
-              <div style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" as const, color: T.bg, background: T.accent, padding: "4px 9px", display: "inline-block", marginBottom: 12 }}>
+              <div style={{ fontSize: 9, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase" as const, color: T.bg, background: T.accent, padding: "3px 8px", display: "inline-block", marginBottom: 12 }}>
                 Most Popular
               </div>
-              <div style={{ fontSize: 11.5, fontWeight: 600, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: T.muted, marginBottom: 16 }}>Pro</div>
+              <div style={{ fontSize: 10, fontWeight: 500, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: T.dim, marginBottom: 16 }}>Pro</div>
               <div style={{ display: "flex", alignItems: "baseline", gap: 2, marginBottom: 4 }}>
                 <span style={{ fontSize: 36, fontWeight: 700, letterSpacing: "-2px", color: T.text, lineHeight: 1 }}>$39</span>
-                <span style={{ fontSize: 13, color: T.muted, fontWeight: 400 }}>/mo</span>
+                <span style={{ fontSize: 12, color: T.dim, fontWeight: 300 }}>/mo</span>
               </div>
-              <div style={{ fontSize: 12.5, color: T.muted, marginBottom: 20 }}>50 scripts / month</div>
+              <div style={{ fontSize: 11, color: T.dim, marginBottom: 20 }}>50 scripts / month</div>
               <div style={{ height: 1, background: T.border, margin: "16px 0" }} />
               {[
                 "50 scripts / month",
@@ -981,13 +981,13 @@ export default function LandingPage() {
                 "Compliance Checker (20/mo)",
                 "Priority generation",
               ].map(f => (
-                <div key={f} style={{ fontSize: 13.5, color: T.text, padding: "5px 0", display: "flex", alignItems: "center", gap: 8, fontWeight: 400 }}>
+                <div key={f} style={{ fontSize: 12, color: T.muted, padding: "4px 0", display: "flex", alignItems: "center", gap: 8, fontWeight: 300 }}>
                   <Check /> {f}
                 </div>
               ))}
               <button onClick={() => handleCheckout("pro")} className="hn-price-btn" style={{
                 display: "block", width: "100%", marginTop: 24, padding: 10,
-                fontSize: 12.5, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase",
+                fontSize: 11, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase",
                 textAlign: "center", cursor: "pointer",
                 background: T.accent, color: T.bg, border: "none",
               }}>Get Pro →</button>
@@ -995,12 +995,12 @@ export default function LandingPage() {
           </div>
           {/* Agency */}
           <div className="hn-price-card">
-            <div style={{ fontSize: 11.5, fontWeight: 600, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: T.muted, marginBottom: 16 }}>Agency</div>
+            <div style={{ fontSize: 10, fontWeight: 500, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: T.dim, marginBottom: 16 }}>Agency</div>
             <div style={{ display: "flex", alignItems: "baseline", gap: 2, marginBottom: 4 }}>
               <span style={{ fontSize: 36, fontWeight: 700, letterSpacing: "-2px", color: T.text, lineHeight: 1 }}>$99</span>
-              <span style={{ fontSize: 13, color: T.muted, fontWeight: 400 }}>/mo</span>
+              <span style={{ fontSize: 12, color: T.dim, fontWeight: 300 }}>/mo</span>
             </div>
-            <div style={{ fontSize: 12.5, color: T.muted, marginBottom: 20 }}>200 scripts / month</div>
+            <div style={{ fontSize: 11, color: T.dim, marginBottom: 20 }}>200 scripts / month</div>
             <div style={{ height: 1, background: T.border, margin: "16px 0" }} />
             {[
               "200 scripts / month",
@@ -1012,13 +1012,13 @@ export default function LandingPage() {
               "Priority generation",
               "5 team seats",
             ].map(f => (
-              <div key={f} style={{ fontSize: 13.5, color: T.text, padding: "5px 0", display: "flex", alignItems: "center", gap: 8, fontWeight: 400 }}>
+              <div key={f} style={{ fontSize: 12, color: T.muted, padding: "4px 0", display: "flex", alignItems: "center", gap: 8, fontWeight: 300 }}>
                 <Check /> {f}
               </div>
             ))}
             <button onClick={() => handleCheckout("agency")} className="hn-price-btn" style={{
               display: "block", width: "100%", marginTop: 24, padding: 10,
-              fontSize: 12.5, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase",
+              fontSize: 11, fontWeight: 400, letterSpacing: "0.08em", textTransform: "uppercase",
               textAlign: "center", cursor: "pointer",
               background: "transparent", color: T.muted, border: `1px solid ${T.border}`,
             }}>Get Agency</button>
@@ -1026,7 +1026,7 @@ export default function LandingPage() {
 
         </div>
 
-        <div style={{ marginTop: 20, fontSize: 13, color: T.muted, textAlign: "center" as const }}>
+        <div style={{ marginTop: 20, fontSize: 11, color: T.dim, textAlign: "center" as const }}>
           Questions?{" "}
           <a href="mailto:skripr.app@gmail.com" style={{ color: T.accent, textDecoration: "none" }}>skripr.app@gmail.com</a>
         </div>
@@ -1049,7 +1049,7 @@ export default function LandingPage() {
           ].map((f, i) => (
             <div key={i} style={{ background: T.bg, padding: "22px 24px" }}>
               <div style={{ fontSize: 16.5, fontWeight: 600, color: T.text, marginBottom: 8 }}>{f.q}</div>
-              <div style={{ fontSize: 15.5, fontWeight: 400, color: "#d4e4f3", lineHeight: 1.7 }}>{f.a}</div>
+              <div style={{ fontSize: 14, fontWeight: 400, color: "#d4e4f3", lineHeight: 1.7 }}>{f.a}</div>
             </div>
           ))}
         </div>
@@ -1087,7 +1087,7 @@ export default function LandingPage() {
             <Link key={href} href={href} className="hn-foot-link">{label}</Link>
           ))}
         </div>
-        <div style={{ fontSize: 11.5, color: T.muted, letterSpacing: "0.04em" }}>© 2026 Skripr. Built for creators.</div>
+        <div style={{ fontSize: 10, color: T.dim, letterSpacing: "0.04em" }}>© 2026 Skripr. Built for creators.</div>
       </footer>
 
     </div>
