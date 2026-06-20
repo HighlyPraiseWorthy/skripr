@@ -252,8 +252,8 @@ export default function LandingPage() {
       <div style={{ paddingTop: 56 }}>
         <div style={{ padding: "80px 48px 0", width: "100%", display: "flex", flexDirection: "column" as const, alignItems: "center" as const, animation: "fadein .6s ease both" }}>
           <div style={{ fontSize: 72, fontWeight: 700, lineHeight: 0.95, letterSpacing: "-2.5px", color: T.text, marginBottom: 20, textAlign: "center" as const }}>
-            Your next viral video<br />
-            <span style={{ fontWeight: 200, color: T.accent }}>starts with someone else's.</span>
+            Your next video starts with<br />
+            <span style={{ fontWeight: 200, color: T.accent }}>what already works.</span>
           </div>
           <p style={{ fontSize: 18, fontWeight: 300, lineHeight: 1.6, color: T.muted, maxWidth: 640, marginBottom: 40, textAlign: "center" as const }}>
             Idea to upload-ready script in 60 seconds. Paste a topic or any proven video, and Skripr writes it in your voice — hooks, retention structure, title, and metadata, all done.
