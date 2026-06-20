@@ -395,7 +395,7 @@ export default function LandingPage() {
       </div>
 
       {/* ── DEMO WINDOW ── */}
-        <div style={{ margin: "0 auto", maxWidth: 860, border: `1px solid ${T.accent}22`, background: T.bg2, borderRadius: 16, overflow: "hidden", boxShadow: "0 24px 80px rgba(0,0,0,0.5), 0 0 60px rgba(77,184,255,0.07)" }}>
+        <div style={{ margin: "0 auto", maxWidth: 860, border: `1px solid ${T.accent}55`, background: T.bg2, borderRadius: 16, overflow: "hidden", boxShadow: "0 30px 90px rgba(0,0,0,0.55), 0 0 70px rgba(77,184,255,0.28), 0 0 140px rgba(77,184,255,0.16)" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 7, padding: "10px 14px", borderBottom: `1px solid ${T.border}`, background: T.bg }}>
             {["#ff5f57","#febc2e","#28c840"].map((c, i) => (
               <div key={i} style={{ width: 9, height: 9, borderRadius: "50%", background: c }} />
