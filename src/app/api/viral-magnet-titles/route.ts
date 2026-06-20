@@ -45,7 +45,10 @@ YouTube title formulas to reference:
 - Confession: "I've [done X for N years]. Here's what I actually learned"
 - Before/after: "How I went from [before] to [after] in [timeframe]"
 
-TASK: Generate exactly 8 viral-optimized titles using the provided magnet words.
+TASK: Generate exactly 9 titles using the provided magnet words (1 minimal + 3 same-formula + 5 new-formula).
+
+GROUP 0 — "minimal" (exactly 1 title):
+The user already likes their ORIGINAL TITLE and just wants to see it with the magnet word added. Take the ORIGINAL TITLE and change as LITTLE as possible: keep every existing word and the exact structure, and insert the selected magnet word(s) in the most natural-reading position. Example: "The World's Most Addictive App" + "insane" → "The World's Most Insane Addictive App". Do NOT rephrase, shorten, reorder, or restructure — the smallest possible edit only. If more than one word is selected, slot them all in naturally if it still reads cleanly; otherwise use just the first.
 
 GROUP 1 — "same-formula" (exactly 3 titles):
 Identify the structural formula/pattern of the original title. Generate 3 variations that preserve that exact formula but with the magnet word naturally woven in. These should feel like upgraded versions of the original — same DNA, higher CTR.
@@ -60,10 +63,10 @@ ${magnetWords.length >= 2
 - Combine words ONLY when the title still reads natural and click-worthy. A clean two-word pairing (e.g. "The Forbidden Truth About...") beats three words crammed in awkwardly. Never force a word just to hit a count — but genuinely try to pair, since pairing is the whole point of selecting multiple words.
 
 RULES:
-- 6-12 words per title for optimal CTR
+- 6-12 words per title for optimal CTR (the "minimal" title is EXEMPT — it must stay as close to the original length/structure as possible)
 - Specific > vague. Numbers and concrete details beat abstractions
 - Every magnet word used must feel INEVITABLE — like it belongs there — not inserted
-- No title should start with the same word as another title
+- No title should start with the same word as another title (the "minimal" title is exempt from this)
 
 ${EXPERT_ATTRIBUTION_RULE}
 
@@ -84,7 +87,7 @@ Return ONLY valid JSON, no markdown fences, no explanation:
   try {
     const msg = await client.messages.create({
       model: "claude-sonnet-4-6",
-      max_tokens: 1500,
+      max_tokens: 1800,
       messages: [{ role: "user", content: prompt }],
     });
 

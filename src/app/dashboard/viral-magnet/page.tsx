@@ -11,7 +11,7 @@ interface MagnetPair { word: string; why: string; proofCount?: number; }
 
 interface TitleResult {
   title: string;
-  type: "same-formula" | "new-formula";
+  type: "minimal" | "same-formula" | "new-formula";
   formula: string;
   magnetWords?: string[];
   magnetWord?: string;
@@ -120,6 +120,7 @@ export default function ViralMagnetPage() {
     setCopied(t); setTimeout(() => setCopied(null), 2000);
   };
 
+  const minimal     = result?.titles.filter(t => t.type === "minimal") || [];
   const sameFormula = result?.titles.filter(t => t.type === "same-formula") || [];
   const newFormula  = result?.titles.filter(t => t.type === "new-formula") || [];
   const canGenerate = !loading && title.trim().length > 0 && selectedWords.length > 0;
@@ -336,7 +337,7 @@ export default function ViralMagnetPage() {
               transition: "all 0.15s",
             }}
           >
-            {loading ? "⟳ Generating 8 titles…" : "✦ Generate Viral Titles"}
+            {loading ? "⟳ Generating titles…" : "✦ Generate Viral Titles"}
           </button>
         </div>
 
@@ -359,6 +360,15 @@ export default function ViralMagnetPage() {
               <div style={{ marginBottom: 16, display: "inline-flex", alignItems: "center", gap: 6, padding: "7px 14px", borderRadius: 10, background: "rgba(77,184,255,0.06)", border: "1px solid rgba(77,184,255,0.13)" }}>
                 <span style={{ fontSize: 13, color: C.textDim }}>Original formula detected:</span>
                 <span style={{ fontSize: 13, fontWeight: 700, color: "#7ed8ff" }}>{result.detectedFormula}</span>
+              </div>
+            )}
+
+            {minimal.length > 0 && (
+              <div style={{ marginBottom: 14 }}>
+                <SectionDivider label="Your Title + Magnet Word" color="#f59e0b" />
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  {minimal.map((t, i) => <TitleCard key={i} t={t} copied={copied} onCopy={copyTitle} />)}
+                </div>
               </div>
             )}
 
