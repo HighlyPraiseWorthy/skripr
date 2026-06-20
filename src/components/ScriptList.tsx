@@ -38,6 +38,17 @@ const C = {
   inputBg: "#0a1220",
 };
 
+// Niche is freeform — sometimes a clean canonical niche, sometimes a long
+// audience sentence. Show the canonical name when it resolves, otherwise clamp
+// so a stray sentence can't blow up the card.
+function nicheLabel(raw?: string | null): string {
+  if (!raw) return "";
+  const id = resolveNicheId(raw);
+  if (id) return NICHES.find(n => n.id === id)?.name || raw;
+  const t = raw.trim();
+  return t.length > 26 ? t.slice(0, 26).trimEnd() + "…" : t;
+}
+
 function timeAgo(dateStr: string): string {
   if (!dateStr) return "just now";
   const diff = Date.now() - new Date(dateStr).getTime();
@@ -157,15 +168,15 @@ export function ScriptList({ scripts, isPaid = false }: { scripts: Script[]; isP
       <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
         {filtered.map(script => (
           <div key={script.id} style={{ borderRadius: 16, backgroundColor: C.cardBg, border: `1px solid ${C.border}`, padding: "20px 22px" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16 }}>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <h3 style={{ fontSize: 17, fontWeight: 600, color: "#e8edf5", marginBottom: 8, letterSpacing: -0.2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                   {script.title}
                 </h3>
                 <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
                   {script.niche && (
-                    <span style={{ padding: "3px 10px", borderRadius: 8, backgroundColor: C.badgeBg, color: C.badgeText, fontSize: 13, fontWeight: 600, letterSpacing: 0.3, textTransform: "uppercase" }}>
-                      {script.niche}
+                    <span style={{ maxWidth: 220, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", padding: "3px 10px", borderRadius: 8, backgroundColor: C.badgeBg, color: C.badgeText, fontSize: 13, fontWeight: 600, letterSpacing: 0.3, textTransform: "uppercase" }}>
+                      {nicheLabel(script.niche)}
                     </span>
                   )}
                   <span style={{ color: "#8abadc", fontSize: 15 }}>{(script.word_count || 0).toLocaleString()} words</span>
