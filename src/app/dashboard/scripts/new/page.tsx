@@ -624,14 +624,32 @@ export default function NewScriptPage() {
                         );
                       })}
                   </div>
-                  {userPlan === "free" && (
-                    <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 5, borderRadius: 8, background: "rgba(10,10,20,0.60)", backdropFilter: "blur(1px)" }}>
-                      <span style={{ fontSize: 14 }}>🔒</span>
-                      <span style={{ fontSize: 11, fontWeight: 700, color: C.textBright }}>Starter+ feature</span>
-                      <span style={{ fontSize: 10, color: C.textDim }}>Upgrade to use Viral Magnet</span>
-                      <a href="/pricing" style={{ marginTop: 3, fontSize: 10, fontWeight: 700, padding: "4px 12px", borderRadius: 6, background: "linear-gradient(135deg,#0e6499,#4db8ff)", color: "#fff", textDecoration: "none" }}>Upgrade →</a>
-                    </div>
-                  )}
+                  {userPlan === "free" && (() => {
+                    // Sell at the wall: preview the 3 highest-graded words clearly so
+                    // the lock creates desire instead of just blocking.
+                    const rank: Record<string, number> = { S: 0, A: 1, B: 2, C: 3 };
+                    const top = [...magnetWords].sort((a, b) => (rank[a.grade] ?? 9) - (rank[b.grade] ?? 9)).slice(0, 3);
+                    return (
+                      <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 8, borderRadius: 8, background: "rgba(8,12,18,0.80)", backdropFilter: "blur(1px)", padding: "0 16px", textAlign: "center" }}>
+                        <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: 0.5, color: C.badgeText, textTransform: "uppercase" }}>🧲 Top words in your niche right now</span>
+                        <div style={{ display: "flex", gap: 7, flexWrap: "wrap", justifyContent: "center" }}>
+                          {top.map(mw => {
+                            const gc = mw.grade === "S" ? "#f59e0b" : mw.grade === "A" ? "#4db8ff" : mw.grade === "B" ? "#34d399" : "#a6c0d8";
+                            return (
+                              <span key={mw.id} style={{ display: "inline-flex", alignItems: "center", gap: 4, padding: "4px 10px", borderRadius: 6, border: `1px solid ${gc}55`, background: `${gc}14` }}>
+                                <span style={{ fontSize: 14, fontWeight: 700, color: C.textBright }}>{mw.word}</span>
+                                <span style={{ fontSize: 11, fontWeight: 700, padding: "1px 5px", borderRadius: 4, background: `${gc}22`, color: gc }}>{mw.grade}</span>
+                              </span>
+                            );
+                          })}
+                        </div>
+                        <span style={{ fontSize: 11, color: C.textBright, maxWidth: 340, lineHeight: 1.45 }}>
+                          Bake one into your title and our AI weaves it through your hook to lift click-through.
+                        </span>
+                        <a href="/pricing" style={{ marginTop: 2, fontSize: 11, fontWeight: 700, padding: "6px 16px", borderRadius: 7, background: "linear-gradient(135deg,#0e6499,#4db8ff)", color: "#fff", textDecoration: "none" }}>Unlock with Starter →</a>
+                      </div>
+                    );
+                  })()}
                 </div>
                 {selectedViralWord && (
                   <div style={{ marginTop: 8, fontSize: 11, color: C.textDim, padding: "5px 9px", borderRadius: 6, background: "rgba(77,184,255,0.05)" }}>
