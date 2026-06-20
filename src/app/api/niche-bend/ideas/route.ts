@@ -19,7 +19,7 @@ export async function POST(req: Request) {
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { plan } = await checkScriptLimit(userId).catch(() => ({ plan: "free" } as any));
-  if (plan === "free") return NextResponse.json({ error: "Niche Bend requires a Starter plan or above. Upgrade at skripr.vercel.app/dashboard/settings" }, { status: 403 });
+  if (plan === "free") return NextResponse.json({ error: "Niche Bend requires a Starter plan or above. Upgrade at skripr.app/dashboard/settings" }, { status: 403 });
 
   try {
     const { nicheA, nicheB, viralMagnetWord, sourceVideoTranscript, sourceVideoTitle, previousTitles } = await req.json();

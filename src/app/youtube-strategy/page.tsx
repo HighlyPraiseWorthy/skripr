@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     title: "YouTube Strategy Guide (2026) | Skripr",
     description: "Free YouTube growth guides covering niche strategy, viral video analysis, title optimization, retention, and monetization.",
     type: "website",
-    url: "https://skripr.vercel.app/youtube-strategy",
+    url: "https://skripr.app/youtube-strategy",
   },
   twitter: {
     card: "summary_large_image",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     description: "Free YouTube growth guides covering niche strategy, viral video analysis, title optimization, retention, and monetization.",
   },
   alternates: {
-    canonical: "https://skripr.vercel.app/youtube-strategy",
+    canonical: "https://skripr.app/youtube-strategy",
   },
 };
 
@@ -26,11 +26,11 @@ const jsonLd = {
   "@type": "WebPage",
   name: "YouTube Strategy Guide",
   description: "Free YouTube growth guides for beginner and intermediate creators.",
-  url: "https://skripr.vercel.app/youtube-strategy",
+  url: "https://skripr.app/youtube-strategy",
   publisher: {
     "@type": "Organization",
     name: "Skripr",
-    url: "https://skripr.vercel.app",
+    url: "https://skripr.app",
   },
 };
 

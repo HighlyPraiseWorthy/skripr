@@ -405,7 +405,7 @@ export default function LandingPage() {
               <div key={i} style={{ width: 9, height: 9, borderRadius: "50%", background: c }} />
             ))}
             <span style={{ fontSize: 12, color: T.muted, letterSpacing: "0.05em", fontFamily: "monospace", marginLeft: 6 }}>
-              skripr.vercel.app/dashboard/scripts/new
+              skripr.app/dashboard/scripts/new
             </span>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "220px 1fr", minHeight: 240 }}>

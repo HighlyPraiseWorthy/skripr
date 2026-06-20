@@ -16,7 +16,7 @@ export async function POST(req: Request) {
   const plan = await getUserPlan(userId);
   if (plan === "free") {
     return NextResponse.json(
-      { error: "Viral Magnet Titles requires a Starter plan or above. Upgrade at skripr.vercel.app/dashboard/settings" },
+      { error: "Viral Magnet Titles requires a Starter plan or above. Upgrade at skripr.app/dashboard/settings" },
       { status: 403 }
     );
   }

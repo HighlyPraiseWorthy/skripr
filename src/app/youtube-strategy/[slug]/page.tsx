@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       title: article.metaTitle,
       description: article.metaDescription,
       type: "article",
-      url: `https://skripr.vercel.app/youtube-strategy/${article.slug}`,
+      url: `https://skripr.app/youtube-strategy/${article.slug}`,
     },
     twitter: {
       card: "summary_large_image",
@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       description: article.metaDescription,
     },
     alternates: {
-      canonical: `https://skripr.vercel.app/youtube-strategy/${article.slug}`,
+      canonical: `https://skripr.app/youtube-strategy/${article.slug}`,
     },
   };
 }
@@ -135,17 +135,17 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
     author: {
       "@type": "Organization",
       name: "Skripr",
-      url: "https://skripr.vercel.app",
+      url: "https://skripr.app",
     },
     publisher: {
       "@type": "Organization",
       name: "Skripr",
       logo: {
         "@type": "ImageObject",
-        url: "https://skripr.vercel.app/icon.svg",
+        url: "https://skripr.app/icon.svg",
       },
     },
-    mainEntityOfPage: `https://skripr.vercel.app/youtube-strategy/${article.slug}`,
+    mainEntityOfPage: `https://skripr.app/youtube-strategy/${article.slug}`,
     datePublished: "2026-06-04",
     dateModified: "2026-06-04",
   };

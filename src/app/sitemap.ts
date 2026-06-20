@@ -2,7 +2,7 @@ import { MetadataRoute } from "next";
 import { articles } from "./youtube-strategy/articles";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://skripr.vercel.app";
+  const baseUrl = "https://skripr.app";
 
   const articleUrls = articles.map((article) => ({
     url: `${baseUrl}/youtube-strategy/${article.slug}`,

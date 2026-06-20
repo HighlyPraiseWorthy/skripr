@@ -65,7 +65,7 @@ export function ScriptExportBar({ title, content }: { title: string; content: st
       root.id = "skripr-print-root";
       document.body.appendChild(root);
     }
-    root.innerHTML = `<h1>${title.replace(/</g, "&lt;")}</h1><div class="meta">${wordCount} words &nbsp;·&nbsp; ~${estMinutes} min &nbsp;·&nbsp; ${new Date().toLocaleDateString()} &nbsp;·&nbsp; skripr.vercel.app</div><div class="body">${content.replace(/</g, "&lt;")}</div>`;
+    root.innerHTML = `<h1>${title.replace(/</g, "&lt;")}</h1><div class="meta">${wordCount} words &nbsp;·&nbsp; ~${estMinutes} min &nbsp;·&nbsp; ${new Date().toLocaleDateString()} &nbsp;·&nbsp; skripr.app</div><div class="body">${content.replace(/</g, "&lt;")}</div>`;
     window.print();
   }
 

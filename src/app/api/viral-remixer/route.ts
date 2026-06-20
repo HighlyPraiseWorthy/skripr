@@ -22,7 +22,7 @@ export async function POST(req: Request) {
     const { allowed, plan, used, limit } = await checkScriptLimit(userId);
     if (!allowed) {
       return NextResponse.json(
-        { error: `Script limit reached (${used}/${limit}). Upgrade to keep remixing at skripr.vercel.app/dashboard/settings` },
+        { error: `Script limit reached (${used}/${limit}). Upgrade to keep remixing at skripr.app/dashboard/settings` },
         { status: 403 }
       );
     }
