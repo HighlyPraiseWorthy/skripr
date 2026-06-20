@@ -147,7 +147,7 @@ export default function ViralMagnetPage() {
             </div>
           )}
           <h2 style={{ color: "#e8edf5", fontSize: 22, fontWeight: 700, margin: top.length ? "0 0 10px" : "8px 0 10px" }}>Bake proven words into every title</h2>
-          <p style={{ color: "#a6c0d8", fontSize: 15, lineHeight: 1.7, margin: "0 0 26px" }}>These are the highest-performing words in your niche, graded S/A/B/C from live data. Pick up to three and our AI rewrites your title and hook around them to lift click-through.</p>
+          <p style={{ color: "#a6c0d8", fontSize: 15, lineHeight: 1.7, margin: "0 0 26px" }}>These are the highest-performing words in your niche, graded S/A/B/C from live data. Pick up to three and our AI rewrites your title around them to lift click-through.</p>
           <a href="/dashboard/settings" style={{ display: "inline-block", background: "linear-gradient(135deg,#0e6499,#1a8fd1)", color: "white", padding: "13px 32px", borderRadius: 10, textDecoration: "none", fontWeight: 700, fontSize: 16 }}>Unlock with Starter →</a>
         </div>
       </div>

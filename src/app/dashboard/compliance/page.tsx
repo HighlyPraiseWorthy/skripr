@@ -104,13 +104,30 @@ export default function CompliancePage() {
   }
 
   if (plan === "free") {
+    // Sell at the wall: preview the 6 policy dimensions it scans so the lock
+    // shows the value instead of just blocking.
+    const dims = [
+      "Advertiser-friendly content",
+      "Community guidelines risk",
+      "Sensitive topic flags",
+      "Misleading content",
+      "Engagement integrity",
+      "Overall monetization risk",
+    ];
     return (
       <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "70vh", padding: "40px 20px" }}>
-        <div style={{ background: "#0d1520", border: "1px solid rgba(77,184,255,0.30)", borderRadius: 18, padding: "44px 48px", maxWidth: 440, textAlign: "center" }}>
-          <div style={{ fontSize: 38, marginBottom: 16 }}>🔒</div>
-          <h2 style={{ color: "#e8edf5", fontSize: 22, fontWeight: 700, margin: "0 0 12px" }}>Starter Plan Required</h2>
-          <p style={{ color: "#a6c0d8", fontSize: 16, lineHeight: 1.7, margin: "0 0 28px" }}>Compliance Checker is available on Starter and above. Upgrade to scan your scripts for demonetization risk across 6 YouTube policy dimensions.</p>
-          <a href="/dashboard/settings" style={{ display: "inline-block", background: "linear-gradient(135deg,#0e6499,#1a8fd1)", color: "white", padding: "13px 32px", borderRadius: 10, textDecoration: "none", fontWeight: 700, fontSize: 16 }}>Upgrade to Starter →</a>
+        <div style={{ background: "#0d1520", border: "1px solid rgba(77,184,255,0.30)", borderRadius: 18, padding: "40px 44px", maxWidth: 520, textAlign: "center" }}>
+          <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: 0.5, color: "#7ed8ff", textTransform: "uppercase" }}>🛡 What we scan your script for</span>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", margin: "18px 0 22px" }}>
+            {dims.map(d => (
+              <span key={d} style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "6px 12px", borderRadius: 8, border: "1px solid rgba(77,184,255,0.16)", background: "rgba(77,184,255,0.05)", fontSize: 13, fontWeight: 600, color: "#e8edf5" }}>
+                <span style={{ color: "#34d399" }}>✓</span> {d}
+              </span>
+            ))}
+          </div>
+          <h2 style={{ color: "#e8edf5", fontSize: 22, fontWeight: 700, margin: "0 0 10px" }}>Catch demonetization before you publish</h2>
+          <p style={{ color: "#a6c0d8", fontSize: 15, lineHeight: 1.7, margin: "0 0 26px" }}>Skripr scans your script across all 6 YouTube policy dimensions and flags the exact phrases putting ad revenue at risk — with fixes you can paste straight in.</p>
+          <a href="/dashboard/settings" style={{ display: "inline-block", background: "linear-gradient(135deg,#0e6499,#1a8fd1)", color: "white", padding: "13px 32px", borderRadius: 10, textDecoration: "none", fontWeight: 700, fontSize: 16 }}>Unlock with Starter →</a>
         </div>
       </div>
     );
