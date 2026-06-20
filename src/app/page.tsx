@@ -420,7 +420,7 @@ export default function LandingPage() {
                 ⚡ Generate
               </button>
               <div style={{ display: "inline-flex", alignItems: "center", gap: 4, background: `${T.accent}0c`, border: `1px solid ${T.accent}22`, fontSize: 11, fontWeight: 600, color: T.accent, padding: "5px 9px", letterSpacing: ".04em", marginTop: 6 }}>
-                Viral Magnet: "Changed" · A · +188%
+                Viral Magnet: "Changed" · A-tier
               </div>
             </div>
             <div style={{ padding: "16px 20px" }}>
