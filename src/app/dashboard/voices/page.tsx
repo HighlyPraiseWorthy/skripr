@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 
 const C = {
   bg: "#080c12", card: "#0d1520", border: "rgba(77,184,255,0.12)",
-  accentDim: "#4db8ff", textBright: "#e8edf5", textDim: "#7a9bb5", green: "#34d399",
+  accentDim: "#4db8ff", textBright: "#e8edf5", textDim: "#a6c0d8", green: "#34d399",
 };
 
 type Voice = { id: string; name: string; source: string; styleGuide: string; isActive: boolean; updatedAt: string; canReanalyze?: boolean };

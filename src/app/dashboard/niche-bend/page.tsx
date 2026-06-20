@@ -5,7 +5,7 @@ const C = {
   bg: "#080c12", card: "#0d1520", cardHover: "#111d2e",
   border: "rgba(255,255,255,0.07)", borderAccent: "rgba(77,184,255,0.30)",
   accent: "#1a8fd1", accentDim: "#4db8ff", textBright: "#e8edf5",
-  textDim: "#7a9bb5", green: "#34d399",
+  textDim: "#a6c0d8", green: "#34d399",
 };
 
 type AnalysisResult = {
@@ -87,7 +87,7 @@ export default function NicheBendPage() {
         <div style={{ background: "#0d1520", border: "1px solid rgba(77,184,255,0.30)", borderRadius: 18, padding: "44px 48px", maxWidth: 440, textAlign: "center" }}>
           <div style={{ fontSize: 38, marginBottom: 16 }}>🔒</div>
           <h2 style={{ color: "#e8edf5", fontSize: 22, fontWeight: 700, margin: "0 0 12px" }}>Starter Plan Required</h2>
-          <p style={{ color: "#7a9bb5", fontSize: 16, lineHeight: 1.7, margin: "0 0 28px" }}>Niche Bend is available on Starter and above. Upgrade to analyze any YouTube video and extract hook formulas, retention triggers, and bridge niche opportunities.</p>
+          <p style={{ color: "#a6c0d8", fontSize: 16, lineHeight: 1.7, margin: "0 0 28px" }}>Niche Bend is available on Starter and above. Upgrade to analyze any YouTube video and extract hook formulas, retention triggers, and bridge niche opportunities.</p>
           <a href="/dashboard/settings" style={{ display: "inline-block", background: "linear-gradient(135deg,#0e6499,#1a8fd1)", color: "white", padding: "13px 32px", borderRadius: 10, textDecoration: "none", fontWeight: 700, fontSize: 16 }}>Upgrade to Starter →</a>
         </div>
       </div>
@@ -162,7 +162,7 @@ export default function NicheBendPage() {
             {/* Video length slider */}
             <div style={{ marginBottom: 16, padding: "14px 16px", borderRadius: 12, background: "rgba(77,184,255,0.04)", border: "1px solid rgba(77,184,255,0.11)" }}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
-                <span style={{ fontSize: 13, fontWeight: 700, color: "#7a9bb5", letterSpacing: 0.5 }}>VIDEO LENGTH</span>
+                <span style={{ fontSize: 13, fontWeight: 700, color: "#a6c0d8", letterSpacing: 0.5 }}>VIDEO LENGTH</span>
                 <span style={{ fontSize: 15, fontWeight: 700, color: "#7ed8ff" }}>~{videoMinutes}:{String(extraSeconds).padStart(2, "0")} on YouTube</span>
               </div>
               <input
@@ -171,7 +171,7 @@ export default function NicheBendPage() {
                 onChange={e => { setVideoMinutes(Number(e.target.value)); setExtraSeconds(20 + Math.floor(Math.random() * 30)); }}
                 style={{ width: "100%", accentColor: "#1a8fd1", cursor: "pointer" }}
               />
-              <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10, color: "#7a9bb5", marginTop: 6 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10, color: "#a6c0d8", marginTop: 6 }}>
                 <span>10 min</span><span>12 min</span><span>15 min</span><span>18 min</span><span>20 min</span>
               </div>
             </div>

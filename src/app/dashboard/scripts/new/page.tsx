@@ -11,7 +11,7 @@ import ResearchStep from "@/components/ResearchStep";
 
 const C = {
   bg: "#080c12", cardBg: "#0d1520", border: "rgba(77,184,255,0.11)",
-  accent: "#4db8ff", text: "#e8edf5", textDim: "#7a9bb5",
+  accent: "#4db8ff", text: "#e8edf5", textDim: "#a6c0d8",
   textBright: "#e8edf5", danger: "#f87171", badgeBg: "rgba(77,184,255,0.11)", badgeText: "#7ed8ff",
 };
 const grad = "linear-gradient(135deg,#0e6499,#1a8fd1,#4db8ff)";
@@ -298,16 +298,16 @@ export default function NewScriptPage() {
             <span style={{ fontSize: 18 }}>🔥</span>
             <div>
               <div style={{ fontSize: 13, fontWeight: 700, color: "#7ed8ff", marginBottom: 3 }}>Viral framework loaded</div>
-              <div style={{ fontSize: 12, color: "#8aa4bf", lineHeight: 1.5 }}>
+              <div style={{ fontSize: 12, color: "#aec5dd", lineHeight: 1.5 }}>
                 Hook: <span style={{ color: "#e8edf5" }}>{viralFramework.hookType}</span>
                 {viralFramework.titleFormula && <> · Formula: <span style={{ color: "#e8edf5" }}>{viralFramework.titleFormula}</span></>}
               </div>
               {viralFramework.selectedTitle && (
-                <div style={{ fontSize: 12, color: "#8aa4bf", marginTop: 4 }}>
+                <div style={{ fontSize: 12, color: "#aec5dd", marginTop: 4 }}>
                   Title: <span style={{ color: "#7ed8ff", fontWeight: 600 }}>{viralFramework.selectedTitle}</span>
                 </div>
               )}
-              <div style={{ fontSize: 12, color: "#8aa4bf", marginTop: 4 }}>Fill in your topic and niche below, then click <strong style={{ color: "#7ed8ff" }}>Generate Script</strong>.</div>
+              <div style={{ fontSize: 12, color: "#aec5dd", marginTop: 4 }}>Fill in your topic and niche below, then click <strong style={{ color: "#7ed8ff" }}>Generate Script</strong>.</div>
             </div>
           </div>
         )}
@@ -442,7 +442,7 @@ export default function NewScriptPage() {
                   </button>
                   {angleSuggestions.length > 0 && (
                     <div style={{ marginTop: 12, display: "flex", flexDirection: "column", gap: 8 }}>
-                      <p style={{ fontSize: 11, color: "#7a9bb5", marginBottom: 2 }}>Pick one — or edit it below:</p>
+                      <p style={{ fontSize: 11, color: "#a6c0d8", marginBottom: 2 }}>Pick one — or edit it below:</p>
                       {angleSuggestions.map((s, i) => (
                         <button
                           key={i}
@@ -451,7 +451,7 @@ export default function NewScriptPage() {
                             textAlign: "left", padding: "10px 14px", borderRadius: 10, cursor: "pointer",
                             background: angle === s ? "rgba(77,184,255,0.12)" : "rgba(77,184,255,0.04)",
                             border: `1px solid ${angle === s ? "rgba(77,184,255,0.35)" : "rgba(77,184,255,0.13)"}`,
-                            color: angle === s ? "#e8edf5" : "#8aa4bf",
+                            color: angle === s ? "#e8edf5" : "#aec5dd",
                             fontSize: 13, lineHeight: 1.5, transition: "all 0.12s",
                           }}
                         >
@@ -468,7 +468,7 @@ export default function NewScriptPage() {
               <div style={{ marginTop: 16 }}>
                 <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 15, fontWeight: 600, color: "rgba(129,140,248,0.9)", letterSpacing: 0.3, marginBottom: 7 }}>
                   <span>🎯</span> YOUR ANGLE
-                  <span style={{ fontSize: 14, fontWeight: 400, color: "#7a9bb5", marginLeft: 4 }}>— the counterintuitive truth that drives the script (optional but powerful)</span>
+                  <span style={{ fontSize: 14, fontWeight: 400, color: "#a6c0d8", marginLeft: 4 }}>— the counterintuitive truth that drives the script (optional but powerful)</span>
                 </label>
                 <textarea
                   value={angle}
@@ -518,7 +518,7 @@ export default function NewScriptPage() {
                 <div style={{ marginTop: 16 }}>
                   <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 15, fontWeight: 600, color: "rgba(129,140,248,0.9)", letterSpacing: 0.3, marginBottom: 7 }}>
                     <span>🎯</span> YOUR ANGLE
-                    <span style={{ fontSize: 14, fontWeight: 400, color: "#7a9bb5", marginLeft: 4 }}>— the counterintuitive truth that drives the script (optional but powerful)</span>
+                    <span style={{ fontSize: 14, fontWeight: 400, color: "#a6c0d8", marginLeft: 4 }}>— the counterintuitive truth that drives the script (optional but powerful)</span>
                   </label>
                   <textarea
                     value={angle}
@@ -584,7 +584,7 @@ export default function NewScriptPage() {
                 {/* Grade filter tabs */}
                 <div style={{ display: "flex", gap: 5, marginBottom: 8 }}>
                   {["all", "S", "A", "B", "C"].map(g => {
-                    const gColors: Record<string, string> = { all: "#4db8ff", S: "#f59e0b", A: "#4db8ff", B: "#34d399", C: "#7a9bb5" };
+                    const gColors: Record<string, string> = { all: "#4db8ff", S: "#f59e0b", A: "#4db8ff", B: "#34d399", C: "#a6c0d8" };
                     const isActive = magnetGradeFilterScript === g;
                     const gc = gColors[g] || "#4db8ff";
                     return (
@@ -608,7 +608,7 @@ export default function NewScriptPage() {
                     {magnetWords
                       .filter(mw => magnetGradeFilterScript === "all" || mw.grade === magnetGradeFilterScript)
                       .map(mw => {
-                        const gc = mw.grade === "S" ? "#f59e0b" : mw.grade === "A" ? "#4db8ff" : mw.grade === "B" ? "#34d399" : "#7a9bb5";
+                        const gc = mw.grade === "S" ? "#f59e0b" : mw.grade === "A" ? "#4db8ff" : mw.grade === "B" ? "#34d399" : "#a6c0d8";
                         const isSelected = selectedViralWord === mw.word;
                         return (
                           <button key={mw.id} onClick={() => setSelectedViralWord(isSelected ? null : mw.word)} title={mw.why_it_works} style={{
@@ -644,7 +644,7 @@ export default function NewScriptPage() {
             {/* Video length slider — all modes */}
             <div style={{ marginTop: 20, padding: "14px 16px", borderRadius: 12, background: "rgba(77,184,255,0.04)", border: "1px solid rgba(77,184,255,0.11)" }}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
-                <span style={{ fontSize: 11, fontWeight: 700, color: "#7a9bb5", letterSpacing: 0.5 }}>VIDEO LENGTH</span>
+                <span style={{ fontSize: 11, fontWeight: 700, color: "#a6c0d8", letterSpacing: 0.5 }}>VIDEO LENGTH</span>
                 <span style={{ fontSize: 13, fontWeight: 700, color: "#7ed8ff" }}>~{videoMinutes}:{String(extraSeconds).padStart(2, "0")} on YouTube</span>
               </div>
               <input
@@ -653,7 +653,7 @@ export default function NewScriptPage() {
                 onChange={e => { setVideoMinutes(Number(e.target.value)); setExtraSeconds(20 + Math.floor(Math.random() * 30)); }}
                 style={{ width: "100%", accentColor: "#1a8fd1", cursor: "pointer", height: 4 }}
               />
-              <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10, color: "#7a9bb5", marginTop: 6 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10, color: "#a6c0d8", marginTop: 6 }}>
                 <span>10 min</span><span>12 min</span><span>15 min</span><span>18 min</span><span>20 min</span>
               </div>
             </div>
@@ -661,8 +661,8 @@ export default function NewScriptPage() {
             {/* Hook type picker — topic mode */}
             {inputMode === "topic" && (
               <div style={{ marginTop: 20 }}>
-                <div style={{ fontSize: 11, fontWeight: 700, color: "#7a9bb5", letterSpacing: 0.5, marginBottom: 10 }}>
-                  HOOK TYPE <span style={{ fontWeight: 400, color: "#7a9bb5" }}>— optional, pick a psychological approach</span>
+                <div style={{ fontSize: 11, fontWeight: 700, color: "#a6c0d8", letterSpacing: 0.5, marginBottom: 10 }}>
+                  HOOK TYPE <span style={{ fontWeight: 400, color: "#a6c0d8" }}>— optional, pick a psychological approach</span>
                 </div>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
                   {[
@@ -683,7 +683,7 @@ export default function NewScriptPage() {
                           padding: "6px 12px", borderRadius: 8, fontSize: 12, fontWeight: 600, cursor: "pointer",
                           border: active ? "1.5px solid rgba(77,184,255,0.50)" : "1px solid rgba(99,102,241,0.2)",
                           background: active ? "rgba(77,184,255,0.13)" : "rgba(77,184,255,0.04)",
-                          color: active ? "#7ed8ff" : "#7a9bb5",
+                          color: active ? "#7ed8ff" : "#a6c0d8",
                           transition: "all 0.15s",
                         }}>
                         {emoji} {label}
@@ -897,7 +897,7 @@ export default function NewScriptPage() {
                   {/* Word selector tabs */}
                   <div style={{ display: "flex", gap: 8, marginBottom: 14 }}>
                     {generatedScript.magnetSuggestions.map((s, i) => {
-                      const gradeColors: Record<string, string> = { S: "#f59e0b", A: "#4db8ff", B: "#34d399", C: "#7a9bb5" };
+                      const gradeColors: Record<string, string> = { S: "#f59e0b", A: "#4db8ff", B: "#34d399", C: "#a6c0d8" };
                       const isSelected = selectedMagnet === i;
                       return (
                         <button key={i} onClick={() => setSelectedMagnet(isSelected ? null : i)} style={{
@@ -917,7 +917,7 @@ export default function NewScriptPage() {
                   {/* Expanded card */}
                   {selectedMagnet !== null && generatedScript.magnetSuggestions[selectedMagnet] && (() => {
                     const s = generatedScript.magnetSuggestions![selectedMagnet];
-                    const gradeColors: Record<string, string> = { S: "#f59e0b", A: "#4db8ff", B: "#34d399", C: "#7a9bb5" };
+                    const gradeColors: Record<string, string> = { S: "#f59e0b", A: "#4db8ff", B: "#34d399", C: "#a6c0d8" };
                     const gc = gradeColors[s.word.grade] || C.accent;
                     const isApplied = appliedMagnetTitle === s.injectedTitle;
                     const canApply = userPlan !== "free";
@@ -974,7 +974,7 @@ export default function NewScriptPage() {
                 <button onClick={() => runGenerate(lastUsedTranscript)} style={{ width: "100%", padding: "12px 20px", borderRadius: 14, background: "rgba(77,184,255,0.07)", color: C.accent, fontSize: 14, fontWeight: 500, border: "1px solid rgba(77,184,255,0.16)", cursor: "pointer" }}>
                   ↻ Regenerate
                 </button>
-                <span style={{ fontSize: 11, color: "#7a9bb5", textAlign: "center" }}>Uses 1 credit</span>
+                <span style={{ fontSize: 11, color: "#a6c0d8", textAlign: "center" }}>Uses 1 credit</span>
               </div>
               <button onClick={saveScript} disabled={saving} style={{ flex: 2, padding: "12px 20px", borderRadius: 14, background: grad, color: "#fff", fontSize: 14, fontWeight: 600, border: "none", cursor: saving ? "wait" : "pointer", opacity: saving ? 0.6 : 1, boxShadow: "0 0 22px rgba(77,184,255,0.26)", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
                 {saving ? "Saving…" : savedId && !appliedMagnetTitle && hookRewriteCount === 0 ? "✓ Saved — View in My Scripts" : "✦ Save Script"}

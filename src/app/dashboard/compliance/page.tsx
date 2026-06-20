@@ -10,7 +10,7 @@ const C = {
   border: "rgba(77,184,255,0.11)",
   accent: "#4db8ff",
   text: "#e8edf5",
-  textDim: "#7a9bb5",
+  textDim: "#a6c0d8",
   textBright: "#e8edf5",
   danger: "#f87171",
   success: "#34d399",
@@ -109,7 +109,7 @@ export default function CompliancePage() {
         <div style={{ background: "#0d1520", border: "1px solid rgba(77,184,255,0.30)", borderRadius: 18, padding: "44px 48px", maxWidth: 440, textAlign: "center" }}>
           <div style={{ fontSize: 38, marginBottom: 16 }}>🔒</div>
           <h2 style={{ color: "#e8edf5", fontSize: 22, fontWeight: 700, margin: "0 0 12px" }}>Starter Plan Required</h2>
-          <p style={{ color: "#7a9bb5", fontSize: 16, lineHeight: 1.7, margin: "0 0 28px" }}>Compliance Checker is available on Starter and above. Upgrade to scan your scripts for demonetization risk across 6 YouTube policy dimensions.</p>
+          <p style={{ color: "#a6c0d8", fontSize: 16, lineHeight: 1.7, margin: "0 0 28px" }}>Compliance Checker is available on Starter and above. Upgrade to scan your scripts for demonetization risk across 6 YouTube policy dimensions.</p>
           <a href="/dashboard/settings" style={{ display: "inline-block", background: "linear-gradient(135deg,#0e6499,#1a8fd1)", color: "white", padding: "13px 32px", borderRadius: 10, textDecoration: "none", fontWeight: 700, fontSize: 16 }}>Upgrade to Starter →</a>
         </div>
       </div>

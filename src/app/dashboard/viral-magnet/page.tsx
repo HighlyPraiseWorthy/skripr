@@ -25,11 +25,11 @@ interface GenerateResult {
 
 const C = {
   bg: "#080c12", cardBg: "#0d1520", border: "rgba(77,184,255,0.11)",
-  accent: "#1a8fd1", text: "#e8edf5", textDim: "#7a9bb5",
+  accent: "#1a8fd1", text: "#e8edf5", textDim: "#a6c0d8",
   textBright: "#e8edf5", badgeBg: "rgba(77,184,255,0.11)", badgeText: "#7ed8ff",
 };
 
-const gradeColors: Record<string, string> = { S: "#f59e0b", A: "#4db8ff", B: "#34d399", C: "#7a9bb5" };
+const gradeColors: Record<string, string> = { S: "#f59e0b", A: "#4db8ff", B: "#34d399", C: "#a6c0d8" };
 
 export default function ViralMagnetPage() {
   const [words, setWords] = useState<MagnetWord[]>([]);
@@ -130,7 +130,7 @@ export default function ViralMagnetPage() {
         <div style={{ background: "#0d1520", border: "1px solid rgba(77,184,255,0.30)", borderRadius: 18, padding: "44px 48px", maxWidth: 440, textAlign: "center" }}>
           <div style={{ fontSize: 38, marginBottom: 16 }}>🔒</div>
           <h2 style={{ color: "#e8edf5", fontSize: 22, fontWeight: 700, margin: "0 0 12px" }}>Starter Plan Required</h2>
-          <p style={{ color: "#7a9bb5", fontSize: 16, lineHeight: 1.7, margin: "0 0 28px" }}>Viral Magnet Titles is available on Starter and above. Unlock word-tier analysis, S/A/B/C grade breakdowns, and AI title generation.</p>
+          <p style={{ color: "#a6c0d8", fontSize: 16, lineHeight: 1.7, margin: "0 0 28px" }}>Viral Magnet Titles is available on Starter and above. Unlock word-tier analysis, S/A/B/C grade breakdowns, and AI title generation.</p>
           <a href="/dashboard/settings" style={{ display: "inline-block", background: "linear-gradient(135deg,#0e6499,#1a8fd1)", color: "white", padding: "13px 32px", borderRadius: 10, textDecoration: "none", fontWeight: 700, fontSize: 16 }}>Upgrade to Starter →</a>
         </div>
       </div>
@@ -399,10 +399,10 @@ function TitleCard({ t, copied, onCopy }: { t: TitleResult; copied: string | nul
               </span>
             );
           })()}
-          {t.formula && <span style={{ fontSize: 10, color: "#7a9bb5", fontStyle: "italic" }}>{t.formula}</span>}
+          {t.formula && <span style={{ fontSize: 10, color: "#a6c0d8", fontStyle: "italic" }}>{t.formula}</span>}
         </div>
         {t.whyItWorks && (
-          <p style={{ fontSize: 13, color: "#7a9bb5", margin: "6px 0 0 0", lineHeight: 1.5 }}>{t.whyItWorks}</p>
+          <p style={{ fontSize: 13, color: "#a6c0d8", margin: "6px 0 0 0", lineHeight: 1.5 }}>{t.whyItWorks}</p>
         )}
       </div>
       <button

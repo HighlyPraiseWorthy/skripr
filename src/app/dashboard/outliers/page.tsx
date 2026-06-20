@@ -5,7 +5,7 @@ const C = {
   bg: "#080c12", card: "#0d1520", cardHover: "#111d2e",
   border: "rgba(77,184,255,0.12)", borderAccent: "rgba(77,184,255,0.30)",
   accent: "#1a8fd1", accentDim: "#4db8ff", textBright: "#e8edf5",
-  textDim: "#7a9bb5", green: "#34d399",
+  textDim: "#a6c0d8", green: "#34d399",
 };
 
 type OutlierVideo = {

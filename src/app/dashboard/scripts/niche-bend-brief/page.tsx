@@ -11,7 +11,7 @@ const C = {
   bg: "#080c12", card: "#0d1520", cardHover: "#111d2e",
   border: "rgba(255,255,255,0.07)", borderAccent: "rgba(77,184,255,0.30)",
   accent: "#1a8fd1", accentDim: "#4db8ff", textBright: "#e8edf5",
-  textDim: "#7a9bb5", green: "#34d399",
+  textDim: "#a6c0d8", green: "#34d399",
 };
 
 type Phase = "loading" | "niches" | "loading-angles" | "angles" | "research" | "storytelling" | "generating" | "result";
@@ -263,7 +263,7 @@ export default function NicheBendBriefPage() {
           {body && (
             <div style={{ background: C.card, border: "1px solid " + C.border, borderRadius: 12, padding: "18px 22px", marginBottom: 20 }}>
               <div style={{ fontSize: 10, fontWeight: 700, color: C.accentDim, letterSpacing: 0.6, marginBottom: 12 }}>SCRIPT</div>
-              <div style={{ fontSize: 13, color: "#8aa4bf", lineHeight: 1.9, whiteSpace: "pre-wrap", maxHeight: 520, overflowY: "auto" }}>{body}</div>
+              <div style={{ fontSize: 13, color: "#aec5dd", lineHeight: 1.9, whiteSpace: "pre-wrap", maxHeight: 520, overflowY: "auto" }}>{body}</div>
             </div>
           )}
           {error && <div style={{ padding: "10px 14px", borderRadius: 8, background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.25)", color: "#fca5a5", fontSize: 12, marginBottom: 12 }}>{error}</div>}
@@ -444,7 +444,7 @@ export default function NicheBendBriefPage() {
                 </div>
               )}
               {n.algorithmNote && (
-                <div style={{ fontSize: 11, color: "#7a9bb5", marginBottom: 10 }}>⚡ {n.algorithmNote}</div>
+                <div style={{ fontSize: 11, color: "#a6c0d8", marginBottom: 10 }}>⚡ {n.algorithmNote}</div>
               )}
               {(n.proof || n.rpmLabel || n.poolCount) && (
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>

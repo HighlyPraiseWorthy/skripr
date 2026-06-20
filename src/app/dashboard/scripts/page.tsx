@@ -12,7 +12,7 @@ const C = {
   border: "rgba(77,184,255,0.11)",
   accent: "#4db8ff",
   text: "#e8edf5",
-  textDim: "#7a9bb5",
+  textDim: "#a6c0d8",
   textBright: "#e8edf5",
   danger: "#f87171",
   badgeBg: "rgba(77,184,255,0.11)",

@@ -8,7 +8,7 @@ const C = {
   accent: "#1a8fd1",
   accentDim: "#4db8ff",
   textBright: "#e8edf5",
-  textDim: "#7a9bb5",
+  textDim: "#a6c0d8",
   green: "#34d399",
 };
 
@@ -294,7 +294,7 @@ export default function ViralRemixerPage() {
           {/* Video length */}
           <div style={{ marginBottom: 20, padding: "18px 20px", borderRadius: 14, background: "rgba(77,184,255,0.04)", border: "1px solid rgba(77,184,255,0.11)" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
-              <span style={{ fontSize: 14, fontWeight: 700, color: "#8aa4bf", letterSpacing: 0.5, textTransform: "uppercase" }}>Video Length</span>
+              <span style={{ fontSize: 14, fontWeight: 700, color: "#aec5dd", letterSpacing: 0.5, textTransform: "uppercase" }}>Video Length</span>
               <span style={{ fontSize: 16, fontWeight: 700, color: "#7ed8ff" }}>~{videoMinutes}:{String(extraSeconds).padStart(2, "0")} on YouTube</span>
             </div>
             <input
@@ -303,7 +303,7 @@ export default function ViralRemixerPage() {
               onChange={e => { setVideoMinutes(Number(e.target.value)); setExtraSeconds(20 + Math.floor(Math.random() * 30)); }}
               style={{ width: "100%", accentColor: "#1a8fd1", cursor: "pointer" }}
             />
-            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10, color: "#7a9bb5", marginTop: 8 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10, color: "#a6c0d8", marginTop: 8 }}>
               <span>10 min</span><span>12 min</span><span>15 min</span><span>18 min</span><span>20 min</span>
             </div>
           </div>

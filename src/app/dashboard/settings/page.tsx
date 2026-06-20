@@ -11,7 +11,7 @@ const C = {
   accent: "#4db8ff",
   textBright: "#e8edf5",
   text: "#e8edf5",
-  textDim: "#7a9bb5",
+  textDim: "#a6c0d8",
   badgeBg: "rgba(77,184,255,0.11)",
   badgeText: "#7ed8ff",
 };
@@ -37,7 +37,7 @@ export default async function SettingsPage() {
               <span style={{ fontSize: 10, fontWeight: 700, color: "#34d399", background: "rgba(52,211,153,0.12)", border: "1px solid rgba(52,211,153,0.30)", padding: "3px 8px", borderRadius: 6, letterSpacing: 0.5 }}>⚡ ADMIN</span>
             )}
           </div>
-          <p style={{ color: "#7a9bb5", fontSize: 16, lineHeight: 1.6 }}>Manage your account and subscription{isAdmin ? " · Unlimited access active" : ""}</p>
+          <p style={{ color: "#a6c0d8", fontSize: 16, lineHeight: 1.6 }}>Manage your account and subscription{isAdmin ? " · Unlimited access active" : ""}</p>
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>

@@ -11,7 +11,7 @@ const C = {
   bg: "#080c12", card: "#0d1520", cardHover: "#111d2e",
   border: "rgba(255,255,255,0.07)", borderAccent: "rgba(77,184,255,0.30)",
   accent: "#1a8fd1", accentDim: "#4db8ff", textBright: "#e8edf5",
-  textDim: "#7a9bb5", green: "#34d399",
+  textDim: "#a6c0d8", green: "#34d399",
 };
 
 type Phase = "loading" | "angles" | "research" | "storytelling" | "generating" | "result";
@@ -223,7 +223,7 @@ export default function ViralBriefPage() {
           {body && (
             <div style={{ background: C.card, border: "1px solid " + C.border, borderRadius: 12, padding: "18px 22px", marginBottom: 20 }}>
               <div style={{ fontSize: 10, fontWeight: 700, color: C.accentDim, letterSpacing: 0.6, marginBottom: 12 }}>SCRIPT</div>
-              <div style={{ fontSize: 13, color: "#8aa4bf", lineHeight: 1.9, whiteSpace: "pre-wrap", maxHeight: 520, overflowY: "auto" }}>{body}</div>
+              <div style={{ fontSize: 13, color: "#aec5dd", lineHeight: 1.9, whiteSpace: "pre-wrap", maxHeight: 520, overflowY: "auto" }}>{body}</div>
             </div>
           )}
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
@@ -309,7 +309,7 @@ export default function ViralBriefPage() {
                   <div style={{ fontSize: 12, color: C.textDim, lineHeight: 1.5, marginBottom: 8 }}>{brief.selectedTitleDescription}</div>
                 )}
                 {brief.selectedTitleAudience && (
-                  <div style={{ fontSize: 11, color: C.textDim }}><span style={{ color: "#7a9bb5" }}>Audience: </span>{brief.selectedTitleAudience}</div>
+                  <div style={{ fontSize: 11, color: C.textDim }}><span style={{ color: "#a6c0d8" }}>Audience: </span>{brief.selectedTitleAudience}</div>
                 )}
               </div>
               <div style={{ flexShrink: 0, width: 32, height: 32, borderRadius: 8, background: "linear-gradient(135deg, #0e6499 0%, #1a8fd1 100%)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, color: "#fff", boxShadow: "0 2px 8px rgba(99,102,241,0.3)" }}>→</div>
@@ -333,7 +333,7 @@ export default function ViralBriefPage() {
                   <span style={{ fontSize: 10, fontWeight: 700, color: C.accentDim, marginRight: 6 }}>TITLE →</span>
                   <span style={{ fontSize: 11, color: "#9de4ff", fontWeight: 600 }}>{a.titleSuggestion}</span>
                 </div>
-                <div style={{ fontSize: 11, color: C.textDim }}><span style={{ color: "#7a9bb5" }}>Audience: </span>{a.audience}</div>
+                <div style={{ fontSize: 11, color: C.textDim }}><span style={{ color: "#a6c0d8" }}>Audience: </span>{a.audience}</div>
               </div>
               <div style={{ flexShrink: 0, width: 32, height: 32, borderRadius: 8, background: "linear-gradient(135deg, #0e6499 0%, #1a8fd1 100%)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, color: "#fff", boxShadow: "0 2px 8px rgba(99,102,241,0.3)" }}>→</div>
             </div>
