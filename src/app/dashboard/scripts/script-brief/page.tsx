@@ -46,8 +46,10 @@ export default function ScriptBriefPage() {
   const [appliedMagnetTitle, setAppliedMagnetTitle] = useState<string | null>(null);
   const [voiceId, setVoiceId] = useState<string | null>(null);
   const [companionCta, setCompanionCta] = useState(false);
+  const [userPlan, setUserPlan] = useState<string>("free");
 
   useEffect(() => {
+    fetch("/api/user/plan").then(r => r.json()).then(d => setUserPlan(d.plan || "free")).catch(() => {});
     try {
       const stored = sessionStorage.getItem("skripr_script_brief");
       if (!stored) { window.location.href = "/dashboard/scripts/new"; return; }
@@ -207,42 +209,69 @@ export default function ScriptBriefPage() {
                 <span style={{ fontSize: 15 }}>&#129522;</span>
                 <span style={{ fontSize: 13, fontWeight: 700, color: C.textBright }}>Viral Magnet</span>
                 <span style={{ fontSize: 11, color: C.textDim }}>Add one word to pull more clicks</span>
+                {userPlan === "free" && (
+                  <span style={{ marginLeft: "auto", fontSize: 10, fontWeight: 700, padding: "2px 7px", borderRadius: 5, background: "rgba(77,184,255,0.11)", color: "#7ed8ff" }}>STARTER+</span>
+                )}
               </div>
-              <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: selectedMagnet !== null ? 10 : 0 }}>
-                {script.magnetSuggestions.map((s: any, i: number) => {
-                  const gc: Record<string, string> = { S: "#f59e0b", A: "#4db8ff", B: "#34d399", C: "#a6c0d8" };
-                  const active = selectedMagnet === i;
-                  const col = gc[s.word?.grade] || C.accentDim;
-                  return (
-                    <button key={i} onClick={() => setSelectedMagnet(active ? null : i)} style={{ padding: "5px 12px", borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: "pointer", border: active ? `1.5px solid ${col}` : "1px solid rgba(77,184,255,0.16)", background: active ? "rgba(77,184,255,0.11)" : "transparent", color: active ? col : C.textDim, transition: "all 0.15s" }}>
-                      {s.word?.word} <span style={{ fontSize: 10, opacity: 0.8 }}>{s.word?.grade}</span>
-                    </button>
-                  );
-                })}
-              </div>
-              {selectedMagnet !== null && script.magnetSuggestions[selectedMagnet] && (() => {
-                const s = script.magnetSuggestions[selectedMagnet];
-                const gc: Record<string, string> = { S: "#f59e0b", A: "#4db8ff", B: "#34d399", C: "#a6c0d8" };
-                const col = gc[s.word?.grade] || C.accentDim;
-                const isApplied = appliedMagnetTitle === s.injectedTitle;
-                return (
-                  <div style={{ borderRadius: 10, background: "rgba(0,0,0,0.18)", border: "1px solid rgba(77,184,255,0.12)", padding: "12px 14px" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
-                      <span style={{ fontSize: 16, fontWeight: 800, color: col }}>{s.word?.word}</span>
-                      <span style={{ fontSize: 10, fontWeight: 700, padding: "2px 6px", borderRadius: 4, background: col + "22", color: col }}>{s.word?.grade}-tier</span>
-                      <span style={{ marginLeft: "auto", fontSize: 12, fontWeight: 700, color: C.green }}>{s.word?.lift_range} lift</span>
-                    </div>
-                    <p style={{ fontSize: 12, color: C.textDim, lineHeight: 1.6, marginBottom: 10 }}>{s.word?.why_it_works}</p>
-                    <div style={{ borderRadius: 8, background: "rgba(77,184,255,0.05)", padding: "8px 12px", marginBottom: 10, fontSize: 12 }}>
-                      <div style={{ color: C.textDim, marginBottom: 4 }}>Before: {script.title}</div>
-                      <div style={{ color: C.textBright, fontWeight: 600 }}>After: {s.injectedTitle}</div>
-                    </div>
-                    <button onClick={() => setAppliedMagnetTitle(isApplied ? null : s.injectedTitle)} style={{ width: "100%", padding: "9px", borderRadius: 9, fontSize: 13, fontWeight: 600, cursor: "pointer", border: "none", background: isApplied ? "rgba(248,113,113,0.10)" : "linear-gradient(135deg,#0e6499,#1a8fd1)", color: isApplied ? "#f87171" : "#fff" }}>
-                      {isApplied ? "Remove Viral Magnet" : "Apply Viral Magnet"}
-                    </button>
+              {userPlan === "free" ? (
+                // Sell at the wall: preview the top suggested words but gate applying.
+                <div>
+                  <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 12 }}>
+                    {script.magnetSuggestions.slice(0, 3).map((s: any, i: number) => {
+                      const gc: Record<string, string> = { S: "#f59e0b", A: "#4db8ff", B: "#34d399", C: "#a6c0d8" };
+                      const col = gc[s.word?.grade] || C.accentDim;
+                      return (
+                        <span key={i} style={{ display: "inline-flex", alignItems: "center", gap: 5, padding: "5px 11px", borderRadius: 8, border: `1px solid ${col}55`, background: `${col}14` }}>
+                          <span style={{ fontSize: 13, fontWeight: 700, color: C.textBright }}>{s.word?.word}</span>
+                          <span style={{ fontSize: 10, fontWeight: 700, padding: "1px 5px", borderRadius: 4, background: `${col}22`, color: col }}>{s.word?.grade}</span>
+                        </span>
+                      );
+                    })}
                   </div>
-                );
-              })()}
+                  <p style={{ fontSize: 12, color: C.textDim, lineHeight: 1.6, marginBottom: 12 }}>
+                    Bake a proven word into your title — our AI rewrites it to pull more clicks.
+                  </p>
+                  <a href="/dashboard/settings" style={{ display: "inline-block", fontSize: 12, fontWeight: 700, padding: "8px 18px", borderRadius: 8, background: "linear-gradient(135deg,#0e6499,#1a8fd1)", color: "#fff", textDecoration: "none" }}>Unlock with Starter →</a>
+                </div>
+              ) : (
+                <>
+                  <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: selectedMagnet !== null ? 10 : 0 }}>
+                    {script.magnetSuggestions.map((s: any, i: number) => {
+                      const gc: Record<string, string> = { S: "#f59e0b", A: "#4db8ff", B: "#34d399", C: "#a6c0d8" };
+                      const active = selectedMagnet === i;
+                      const col = gc[s.word?.grade] || C.accentDim;
+                      return (
+                        <button key={i} onClick={() => setSelectedMagnet(active ? null : i)} style={{ padding: "5px 12px", borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: "pointer", border: active ? `1.5px solid ${col}` : "1px solid rgba(77,184,255,0.16)", background: active ? "rgba(77,184,255,0.11)" : "transparent", color: active ? col : C.textDim, transition: "all 0.15s" }}>
+                          {s.word?.word} <span style={{ fontSize: 10, opacity: 0.8 }}>{s.word?.grade}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                  {selectedMagnet !== null && script.magnetSuggestions[selectedMagnet] && (() => {
+                    const s = script.magnetSuggestions[selectedMagnet];
+                    const gc: Record<string, string> = { S: "#f59e0b", A: "#4db8ff", B: "#34d399", C: "#a6c0d8" };
+                    const col = gc[s.word?.grade] || C.accentDim;
+                    const isApplied = appliedMagnetTitle === s.injectedTitle;
+                    return (
+                      <div style={{ borderRadius: 10, background: "rgba(0,0,0,0.18)", border: "1px solid rgba(77,184,255,0.12)", padding: "12px 14px" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+                          <span style={{ fontSize: 16, fontWeight: 800, color: col }}>{s.word?.word}</span>
+                          <span style={{ fontSize: 10, fontWeight: 700, padding: "2px 6px", borderRadius: 4, background: col + "22", color: col }}>{s.word?.grade}-tier</span>
+                          <span style={{ marginLeft: "auto", fontSize: 12, fontWeight: 700, color: C.green }}>{s.word?.lift_range} lift</span>
+                        </div>
+                        <p style={{ fontSize: 12, color: C.textDim, lineHeight: 1.6, marginBottom: 10 }}>{s.word?.why_it_works}</p>
+                        <div style={{ borderRadius: 8, background: "rgba(77,184,255,0.05)", padding: "8px 12px", marginBottom: 10, fontSize: 12 }}>
+                          <div style={{ color: C.textDim, marginBottom: 4 }}>Before: {script.title}</div>
+                          <div style={{ color: C.textBright, fontWeight: 600 }}>After: {s.injectedTitle}</div>
+                        </div>
+                        <button onClick={() => setAppliedMagnetTitle(isApplied ? null : s.injectedTitle)} style={{ width: "100%", padding: "9px", borderRadius: 9, fontSize: 13, fontWeight: 600, cursor: "pointer", border: "none", background: isApplied ? "rgba(248,113,113,0.10)" : "linear-gradient(135deg,#0e6499,#1a8fd1)", color: isApplied ? "#f87171" : "#fff" }}>
+                          {isApplied ? "Remove Viral Magnet" : "Apply Viral Magnet"}
+                        </button>
+                      </div>
+                    );
+                  })()}
+                </>
+              )}
             </div>
           )}
 
