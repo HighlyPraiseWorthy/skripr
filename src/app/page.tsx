@@ -151,6 +151,9 @@ export default function LandingPage() {
         @keyframes blink { 0%,100% { opacity:1 } 50% { opacity:0 } }
         @keyframes pulse-dot { 0%,100% { opacity:0.4; transform:scale(1) } 50% { opacity:1; transform:scale(1.15) } }
         @keyframes fadein { from { opacity:0; transform:translateY(16px) } to { opacity:1; transform:none } }
+        @keyframes hero-glow-pulse { 0%,100% { opacity:0.5; transform:translateX(-50%) scale(1) } 50% { opacity:1; transform:translateX(-50%) scale(1.05) } }
+        .hero-glow { animation: hero-glow-pulse 9s ease-in-out infinite; }
+        @media (prefers-reduced-motion: reduce) { .hero-glow { animation: none; opacity: 0.8; } }
         @keyframes star-pulse-1 { 0%,100%{opacity:0.15;transform:scale(1)} 50%{opacity:0.55;transform:scale(1.3)} }
         @keyframes star-pulse-2 { 0%,100%{opacity:0.08;transform:scale(1)} 50%{opacity:0.4;transform:scale(1.4)} }
         @keyframes star-pulse-3 { 0%,100%{opacity:0.2;transform:scale(1)} 60%{opacity:0.6;transform:scale(1.2)} }
@@ -249,8 +252,9 @@ export default function LandingPage() {
       </nav>
 
       {/* ── HERO ── */}
-      <div style={{ paddingTop: 56 }}>
-        <div style={{ padding: "80px 48px 0", width: "100%", display: "flex", flexDirection: "column" as const, alignItems: "center" as const, animation: "fadein .6s ease both" }}>
+      <div style={{ paddingTop: 56, position: "relative" as const }}>
+        <div className="hero-glow" aria-hidden style={{ position: "absolute" as const, top: 70, left: "50%", transform: "translateX(-50%)", width: 920, height: 540, maxWidth: "100%", borderRadius: "50%", background: "radial-gradient(circle, rgba(77,184,255,0.22) 0%, rgba(124,111,255,0.10) 42%, transparent 70%)", pointerEvents: "none" as const, zIndex: 0 }} />
+        <div style={{ padding: "80px 48px 0", width: "100%", display: "flex", flexDirection: "column" as const, alignItems: "center" as const, animation: "fadein .6s ease both", position: "relative" as const, zIndex: 1 }}>
           <div style={{ fontSize: 72, fontWeight: 700, lineHeight: 0.95, letterSpacing: "-2.5px", color: T.text, marginBottom: 20, textAlign: "center" as const }}>
             Your next video starts with<br />
             <span style={{ fontWeight: 200, color: T.accent }}>what already works.</span>
