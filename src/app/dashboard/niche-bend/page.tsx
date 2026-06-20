@@ -82,13 +82,31 @@ export default function NicheBendPage() {
   }
 
   if (plan === "free") {
+    // Sell at the wall: preview what the analysis hands back so the lock
+    // shows the outcome instead of just blocking.
+    const gives = [
+      { icon: "🪝", label: "Hook formula", desc: "why the opening grabbed viewers" },
+      { icon: "📈", label: "Retention triggers", desc: "the beats that held watch time" },
+      { icon: "🌉", label: "Bridge niches", desc: "where to cross it into yours" },
+    ];
     return (
       <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "70vh", padding: "40px 20px" }}>
-        <div style={{ background: "#0d1520", border: "1px solid rgba(77,184,255,0.30)", borderRadius: 18, padding: "44px 48px", maxWidth: 440, textAlign: "center" }}>
-          <div style={{ fontSize: 38, marginBottom: 16 }}>🔒</div>
-          <h2 style={{ color: "#e8edf5", fontSize: 22, fontWeight: 700, margin: "0 0 12px" }}>Starter Plan Required</h2>
-          <p style={{ color: "#a6c0d8", fontSize: 16, lineHeight: 1.7, margin: "0 0 28px" }}>Niche Bend is available on Starter and above. Upgrade to analyze any YouTube video and extract hook formulas, retention triggers, and bridge niche opportunities.</p>
-          <a href="/dashboard/settings" style={{ display: "inline-block", background: "linear-gradient(135deg,#0e6499,#1a8fd1)", color: "white", padding: "13px 32px", borderRadius: 10, textDecoration: "none", fontWeight: 700, fontSize: 16 }}>Upgrade to Starter →</a>
+        <div style={{ background: "#0d1520", border: "1px solid rgba(77,184,255,0.30)", borderRadius: 18, padding: "40px 44px", maxWidth: 520, textAlign: "center" }}>
+          <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: 0.5, color: "#7ed8ff", textTransform: "uppercase" }}>⚡ Turn any viral video into your script</span>
+          <div style={{ display: "flex", flexDirection: "column", gap: 8, margin: "18px 0 22px", textAlign: "left" }}>
+            {gives.map(g => (
+              <div key={g.label} style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 14px", borderRadius: 10, border: "1px solid rgba(77,184,255,0.14)", background: "rgba(77,184,255,0.05)" }}>
+                <span style={{ fontSize: 18 }}>{g.icon}</span>
+                <div>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: "#e8edf5" }}>{g.label}</div>
+                  <div style={{ fontSize: 12, color: "#a6c0d8" }}>{g.desc}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <h2 style={{ color: "#e8edf5", fontSize: 22, fontWeight: 700, margin: "0 0 10px" }}>Reverse-engineer any viral video</h2>
+          <p style={{ color: "#a6c0d8", fontSize: 15, lineHeight: 1.7, margin: "0 0 26px" }}>Paste a YouTube link and Skripr breaks down exactly why it worked — then hands you a ready-to-write brief bent into your niche.</p>
+          <a href="/dashboard/settings" style={{ display: "inline-block", background: "linear-gradient(135deg,#0e6499,#1a8fd1)", color: "white", padding: "13px 32px", borderRadius: 10, textDecoration: "none", fontWeight: 700, fontSize: 16 }}>Unlock with Starter →</a>
         </div>
       </div>
     );

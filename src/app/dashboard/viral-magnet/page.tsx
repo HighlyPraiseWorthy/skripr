@@ -125,13 +125,30 @@ export default function ViralMagnetPage() {
   const canGenerate = !loading && title.trim().length > 0 && selectedWords.length > 0;
 
   if (plan === "free") {
+    // Sell at the wall: preview the 3 highest-graded words so the lock
+    // shows real niche-specific value instead of just blocking.
+    const rank: Record<string, number> = { S: 0, A: 1, B: 2, C: 3 };
+    const top = [...words].sort((a, b) => (rank[a.grade] ?? 9) - (rank[b.grade] ?? 9)).slice(0, 3);
     return (
       <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "70vh", padding: "40px 20px" }}>
-        <div style={{ background: "#0d1520", border: "1px solid rgba(77,184,255,0.30)", borderRadius: 18, padding: "44px 48px", maxWidth: 440, textAlign: "center" }}>
-          <div style={{ fontSize: 38, marginBottom: 16 }}>🔒</div>
-          <h2 style={{ color: "#e8edf5", fontSize: 22, fontWeight: 700, margin: "0 0 12px" }}>Starter Plan Required</h2>
-          <p style={{ color: "#a6c0d8", fontSize: 16, lineHeight: 1.7, margin: "0 0 28px" }}>Viral Magnet Titles is available on Starter and above. Unlock word-tier analysis, S/A/B/C grade breakdowns, and AI title generation.</p>
-          <a href="/dashboard/settings" style={{ display: "inline-block", background: "linear-gradient(135deg,#0e6499,#1a8fd1)", color: "white", padding: "13px 32px", borderRadius: 10, textDecoration: "none", fontWeight: 700, fontSize: 16 }}>Upgrade to Starter →</a>
+        <div style={{ background: "#0d1520", border: "1px solid rgba(77,184,255,0.30)", borderRadius: 18, padding: "40px 44px", maxWidth: 480, textAlign: "center" }}>
+          <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: 0.5, color: "#7ed8ff", textTransform: "uppercase" }}>🧲 Top words in your niche right now</span>
+          {top.length > 0 && (
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap", justifyContent: "center", margin: "16px 0 22px" }}>
+              {top.map(mw => {
+                const gc = mw.grade === "S" ? "#f59e0b" : mw.grade === "A" ? "#4db8ff" : mw.grade === "B" ? "#34d399" : "#a6c0d8";
+                return (
+                  <span key={mw.id} style={{ display: "inline-flex", alignItems: "center", gap: 5, padding: "6px 12px", borderRadius: 8, border: `1px solid ${gc}55`, background: `${gc}14` }}>
+                    <span style={{ fontSize: 16, fontWeight: 700, color: "#e8edf5" }}>{mw.word}</span>
+                    <span style={{ fontSize: 12, fontWeight: 700, padding: "1px 6px", borderRadius: 4, background: `${gc}22`, color: gc }}>{mw.grade}</span>
+                  </span>
+                );
+              })}
+            </div>
+          )}
+          <h2 style={{ color: "#e8edf5", fontSize: 22, fontWeight: 700, margin: top.length ? "0 0 10px" : "8px 0 10px" }}>Bake proven words into every title</h2>
+          <p style={{ color: "#a6c0d8", fontSize: 15, lineHeight: 1.7, margin: "0 0 26px" }}>These are the highest-performing words in your niche, graded S/A/B/C from live data. Pick up to three and our AI rewrites your title and hook around them to lift click-through.</p>
+          <a href="/dashboard/settings" style={{ display: "inline-block", background: "linear-gradient(135deg,#0e6499,#1a8fd1)", color: "white", padding: "13px 32px", borderRadius: 10, textDecoration: "none", fontWeight: 700, fontSize: 16 }}>Unlock with Starter →</a>
         </div>
       </div>
     );
