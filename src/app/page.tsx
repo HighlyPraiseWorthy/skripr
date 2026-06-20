@@ -395,10 +395,10 @@ export default function LandingPage() {
       </div>
 
       {/* ── DEMO WINDOW ── */}
-        <div style={{ margin: "0 auto", maxWidth: 860, border: `1px solid ${T.border}`, background: T.bg2 }}>
+        <div style={{ margin: "0 auto", maxWidth: 860, border: `1px solid ${T.accent}22`, background: T.bg2, borderRadius: 16, overflow: "hidden", boxShadow: "0 24px 80px rgba(0,0,0,0.5), 0 0 60px rgba(77,184,255,0.07)" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 7, padding: "10px 14px", borderBottom: `1px solid ${T.border}`, background: T.bg }}>
-            {["#2a3040","#2a3040","#2a3040"].map((c, i) => (
-              <div key={i} style={{ width: 8, height: 8, borderRadius: "50%", background: c }} />
+            {["#ff5f57","#febc2e","#28c840"].map((c, i) => (
+              <div key={i} style={{ width: 9, height: 9, borderRadius: "50%", background: c }} />
             ))}
             <span style={{ fontSize: 13, color: T.muted, letterSpacing: "0.05em", fontFamily: "monospace", marginLeft: 6 }}>
               skripr.vercel.app/dashboard/scripts/new
@@ -416,7 +416,7 @@ export default function LandingPage() {
                   <div style={{ fontSize: isUrl ? 11.5 : 12.5, color: isUrl ? T.accent : T.text, padding: "8px 9px", border: `1px solid ${T.border}`, background: T.bg, lineHeight: 1.35, wordBreak: "break-all" as const }}>{val}</div>
                 </div>
               ))}
-              <button style={{ background: T.accent, color: T.bg, fontSize: 12, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase" as const, padding: 11, border: "none", cursor: "pointer", marginTop: 4 }}>
+              <button style={{ background: "linear-gradient(135deg,#0e6499,#1a8fd1,#4db8ff)", color: "#fff", fontSize: 12, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase" as const, padding: 11, border: "none", cursor: "pointer", marginTop: 4, borderRadius: 8, boxShadow: "0 4px 18px rgba(77,184,255,0.35)" }}>
                 ⚡ Generate
               </button>
               <div style={{ display: "inline-flex", alignItems: "center", gap: 4, background: `${T.accent}0c`, border: `1px solid ${T.accent}22`, fontSize: 11, fontWeight: 600, color: T.accent, padding: "5px 9px", letterSpacing: ".04em", marginTop: 6 }}>
@@ -424,6 +424,10 @@ export default function LandingPage() {
               </div>
             </div>
             <div style={{ padding: "16px 20px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+                <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", color: T.green, background: `${T.green}14`, border: `1px solid ${T.green}33`, padding: "3px 8px", borderRadius: 6 }}>✓ GENERATED</span>
+                <span style={{ fontSize: 11.5, color: T.dim }}>~8 min · ready to record</span>
+              </div>
               <div style={{ fontSize: 15, fontWeight: 600, letterSpacing: "-0.3px", color: T.text, marginBottom: 9, lineHeight: 1.3 }}>
                 How I Manage My Money — The 6-Account System That Changed Everything
               </div>
@@ -435,6 +439,11 @@ export default function LandingPage() {
                 <span style={{ display: "inline-block", width: 1.5, height: 11, background: T.accent, marginLeft: 2, verticalAlign: "middle", animation: "blink 1s infinite" }} />
                 <br /><br />
                 It's not about earning more. It's about where the money goes the moment it hits your account. Here's the exact 6-account setup I use...
+              </div>
+              <div style={{ display: "flex", flexWrap: "wrap" as const, gap: 6, marginTop: 16, paddingTop: 14, borderTop: `1px solid ${T.border}` }}>
+                {["10 ranked hooks", "SEO title", "30 tags", "Compliance ✓"].map(c => (
+                  <span key={c} style={{ fontSize: 10.5, fontWeight: 500, color: T.muted, background: T.bg, border: `1px solid ${T.border}`, padding: "3px 9px", borderRadius: 20 }}>{c}</span>
+                ))}
               </div>
             </div>
           </div>
