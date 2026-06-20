@@ -257,8 +257,8 @@ export default function ViralMagnetPage() {
                 if (!gradeWords.length) return null;
                 const gc = gradeColors[grade];
                 return (
-                  <div key={grade} style={{ marginBottom: 12 }}>
-                    <div style={{ fontSize: 10, fontWeight: 700, color: gc, letterSpacing: 1, marginBottom: 7, textTransform: "uppercase" }}>
+                  <div key={grade} style={{ marginBottom: 10 }}>
+                    <div style={{ fontSize: 10, fontWeight: 700, color: gc, letterSpacing: 1, marginBottom: 6, textTransform: "uppercase" }}>
                       {grade}-Tier · {grade === "S" ? "Exceptional" : grade === "A" ? "Strong" : grade === "B" ? "Good" : "Standard"}
                     </div>
                     <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
@@ -270,9 +270,9 @@ export default function ViralMagnetPage() {
                             key={w.id}
                             onClick={() => toggleWord(w.id)}
                             disabled={isDisabled}
-                            title={`${w.why_it_works} · ${w.lift_range} CTR lift`}
+                            title={w.why_it_works}
                             style={{
-                              padding: "5px 12px", borderRadius: 8, fontSize: 14, fontWeight: 700,
+                              padding: "5px 12px", borderRadius: 8, fontSize: 14, fontWeight: 600,
                               cursor: isDisabled ? "not-allowed" : "pointer",
                               border: isSel ? `1.5px solid ${gc}` : "1px solid rgba(77,184,255,0.16)",
                               background: isSel ? `${gc}22` : "transparent",
@@ -282,7 +282,6 @@ export default function ViralMagnetPage() {
                             }}
                           >
                             {w.word}
-                            <span style={{ marginLeft: 5, fontSize: 9, opacity: 0.65 }}>{w.lift_range}</span>
                           </button>
                         );
                       })}
