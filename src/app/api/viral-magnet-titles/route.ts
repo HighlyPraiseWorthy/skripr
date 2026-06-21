@@ -45,10 +45,11 @@ YouTube title formulas to reference:
 - Confession: "I've [done X for N years]. Here's what I actually learned"
 - Before/after: "How I went from [before] to [after] in [timeframe]"
 
-TASK: Generate exactly 9 titles using the provided magnet words (1 minimal + 3 same-formula + 5 new-formula).
+TASK: Generate ONE "minimal" title for EACH selected magnet word (so ${magnetWords.length} minimal title${magnetWords.length === 1 ? "" : "s"}), plus 3 same-formula and 5 new-formula titles.
 
-GROUP 0 — "minimal" (exactly 1 title):
-The user already likes their ORIGINAL TITLE and just wants to see it with the magnet word added. Take the ORIGINAL TITLE and change as LITTLE as possible: keep every existing word and the exact structure, and insert the selected magnet word(s) in the most natural-reading position. Example: "The World's Most Addictive App" + "insane" → "The World's Most Insane Addictive App". Do NOT rephrase, shorten, reorder, or restructure — the smallest possible edit only. If more than one word is selected, slot them all in naturally if it still reads cleanly; otherwise use just the first.
+GROUP 0 — "minimal" (exactly one title PER selected word — ${magnetWords.length} total):
+The user already likes their ORIGINAL TITLE and just wants to see it with each magnet word added on its own. For EACH selected word, produce one title that takes the ORIGINAL TITLE and changes as LITTLE as possible: keep every existing word and the exact structure, and insert THAT ONE word in the most natural-reading position. Example: "The World's Most Addictive App" + "insane" → "The World's Most Insane Addictive App". Do NOT rephrase, shorten, reorder, or restructure — smallest possible edit only. Each minimal title uses exactly ONE magnet word (do not combine words here — combining belongs in the same-formula/new-formula groups).
+GRACEFUL FALLBACK: if a word genuinely cannot be slotted in with a near-minimal edit while staying grammatical and natural, make the SMALLEST possible natural adjustment to fit it — never output awkward or broken grammar, and never just jam the word in. If the word is already present in the original title, lightly reposition or keep it so the title still reads clean. Every minimal title must read like a real, publishable title.
 
 GROUP 1 — "same-formula" (exactly 3 titles):
 Identify the structural formula/pattern of the original title. Generate 3 variations that preserve that exact formula but with the magnet word naturally woven in. These should feel like upgraded versions of the original — same DNA, higher CTR.
@@ -87,7 +88,7 @@ Return ONLY valid JSON, no markdown fences, no explanation:
   try {
     const msg = await client.messages.create({
       model: "claude-sonnet-4-6",
-      max_tokens: 1800,
+      max_tokens: 2200,
       messages: [{ role: "user", content: prompt }],
     });
 

@@ -365,7 +365,7 @@ export default function ViralMagnetPage() {
 
             {minimal.length > 0 && (
               <div style={{ marginBottom: 14 }}>
-                <SectionDivider label="Your Title + Magnet Word" color="#f59e0b" />
+                <SectionDivider label={minimal.length > 1 ? "Your Title + Each Magnet Word" : "Your Title + Magnet Word"} color="#f59e0b" />
                 <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                   {minimal.map((t, i) => <TitleCard key={i} t={t} copied={copied} onCopy={copyTitle} />)}
                 </div>
