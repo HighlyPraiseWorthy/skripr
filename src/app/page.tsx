@@ -547,9 +547,12 @@ export default function LandingPage() {
       <div style={{ borderBottom: `1px solid ${T.border}` }}>
         <div style={{ padding: "72px 48px", maxWidth: 1060, margin: "0 auto" }}>
           <div style={{ textAlign: "center" as const }}><SectionLabel>Why Skripr</SectionLabel></div>
-          <div style={{ fontSize: 32, fontWeight: 700, letterSpacing: "-1px", color: T.text, lineHeight: 1.05, marginBottom: 44, textAlign: "center" as const }}>
-            Same idea. Completely different odds.
+          <div style={{ fontSize: 34, fontWeight: 700, letterSpacing: "-1px", color: T.text, lineHeight: 1.08, marginBottom: 16, textAlign: "center" as const }}>
+            It was never about talent.
           </div>
+          <p style={{ fontSize: 17, fontWeight: 400, color: "#d4e4f3", lineHeight: 1.7, maxWidth: 600, margin: "0 auto 44px", textAlign: "center" as const }}>
+            The creators winning right now aren't more gifted than you. They just start from what already works instead of a blank page. So can you.
+          </p>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: 1, background: T.border, border: `1px solid ${T.border}` }}>
             {[
               { t: "Two ways to make your next video.", d: "The old way: blank doc, guess a title, write two thousand words that sound like everyone else, post, hope. The new way: paste a video that already worked and Skripr hands you the angle, hook, retention beats, and title — in your voice — in about a minute. Then you just record." },
