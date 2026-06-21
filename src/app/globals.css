@@ -24,3 +24,41 @@ body {
     background-clip: text;
   }
 }
+
+/* ── Clerk dark theme: force readable contrast ──
+   The appearance prop sets the dark backgrounds but doesn't reliably color
+   every text slot, leaving dark-on-dark. Pin the text colors on Clerk's stable
+   .cl-* classes so the Manage Account modal / popover stay legible. */
+.cl-card,
+.cl-rootBox,
+.cl-modalContent,
+.cl-navbar,
+.cl-scrollBox {
+  color: #e8edf5;
+}
+.cl-headerTitle,
+.cl-navbarTitle,
+.cl-navbarButton,
+.cl-profileSectionTitleText,
+.cl-accordionTriggerButton,
+.cl-menuButton,
+.cl-breadcrumbsItem,
+.cl-formFieldLabel,
+.cl-userPreviewMainIdentifier,
+.cl-userButtonPopoverActionButton,
+.cl-selectButton {
+  color: #e8edf5 !important;
+}
+.cl-headerSubtitle,
+.cl-navbarTitleSubtitle,
+.cl-profileSectionContent,
+.cl-profileSectionPrimaryButton,
+.cl-userPreviewSecondaryIdentifier,
+.cl-formFieldHintText,
+.cl-breadcrumbsItemDivider {
+  color: #a6c0d8 !important;
+}
+.cl-profileSectionContent .cl-formButtonReset,
+.cl-profileSectionPrimaryButton {
+  color: #4db8ff !important;
+}
