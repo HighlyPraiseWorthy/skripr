@@ -287,28 +287,11 @@ export function DashboardNav() {
         </Link>
 
         <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", borderRadius: 8 }}>
+          {/* Colors come from the global dark theme on ClerkProvider; only size the avatar here. */}
           <UserButton appearance={{
-            variables: {
-              colorBackground: "#0d1520",
-              colorText: "#e8edf5",
-              colorTextSecondary: "#a6c0d8",
-              colorPrimary: "#4db8ff",
-              colorInputBackground: "#0a1220",
-              colorInputText: "#e8edf5",
-              colorNeutral: "#e8edf5",
-              borderRadius: "10px",
-            },
             elements: {
               userButtonAvatarBox: { width: 26, height: 26, borderRadius: 6 },
               userButtonTrigger: { width: 26, height: 26, borderRadius: 6 },
-              userButtonPopoverCard: { background: "#0d1520", border: "1px solid rgba(77,184,255,0.16)", boxShadow: "0 20px 60px rgba(0,0,0,0.55)" },
-              userButtonPopoverMain: { background: "#0d1520" },
-              userButtonPopoverFooter: { background: "#0a0f18", borderTop: "1px solid rgba(77,184,255,0.10)" },
-              userButtonPopoverActionButton: { color: "#e8edf5" },
-              userButtonPopoverActionButton__manageAccount: { color: "#e8edf5" },
-              userButtonPopoverActionButtonIcon: { color: "#a6c0d8" },
-              userPreviewMainIdentifier: { color: "#e8edf5" },
-              userPreviewSecondaryIdentifier: { color: "#a6c0d8" },
             },
           }} />
           <span style={{ fontSize: 13, fontWeight: 500, color: C.sub }}>Account</span>
