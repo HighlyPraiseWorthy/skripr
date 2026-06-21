@@ -55,3 +55,17 @@ body {
 .cl-navbarButton[data-active="true"] {
   color: #4db8ff !important;
 }
+/* Social sign-in buttons (e.g. Continue with Google) — give a clear, clickable
+   surface so they don't blend into the dark card. */
+.cl-socialButtonsBlockButton,
+.cl-socialButtonsIconButton {
+  background: rgba(77, 184, 255, 0.08) !important;
+  border: 1px solid rgba(77, 184, 255, 0.35) !important;
+  border-radius: 10px !important;
+  transition: background 0.15s, border-color 0.15s !important;
+}
+.cl-socialButtonsBlockButton:hover,
+.cl-socialButtonsIconButton:hover {
+  background: rgba(77, 184, 255, 0.16) !important;
+  border-color: rgba(77, 184, 255, 0.6) !important;
+}
