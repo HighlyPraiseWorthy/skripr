@@ -27,38 +27,32 @@ body {
 
 /* ── Clerk dark theme: force readable contrast ──
    The appearance prop sets the dark backgrounds but doesn't reliably color
-   every text slot, leaving dark-on-dark. Pin the text colors on Clerk's stable
-   .cl-* classes so the Manage Account modal / popover stay legible. */
-.cl-card,
+   every text slot, leaving dark-on-dark. Broadly brighten all Clerk text, then
+   layer muted + accent shades back on top so the modal/popover stay legible. */
 .cl-rootBox,
+.cl-card,
 .cl-modalContent,
 .cl-navbar,
-.cl-scrollBox {
-  color: #e8edf5;
-}
-.cl-headerTitle,
-.cl-navbarTitle,
-.cl-navbarButton,
-.cl-profileSectionTitleText,
-.cl-accordionTriggerButton,
-.cl-menuButton,
-.cl-breadcrumbsItem,
-.cl-formFieldLabel,
-.cl-userPreviewMainIdentifier,
-.cl-userButtonPopoverActionButton,
-.cl-selectButton {
+.cl-scrollBox,
+.cl-card *,
+.cl-navbar * {
   color: #e8edf5 !important;
 }
+/* Secondary / muted text */
 .cl-headerSubtitle,
 .cl-navbarTitleSubtitle,
 .cl-profileSectionContent,
-.cl-profileSectionPrimaryButton,
 .cl-userPreviewSecondaryIdentifier,
 .cl-formFieldHintText,
-.cl-breadcrumbsItemDivider {
+.cl-breadcrumbsItemDivider,
+.cl-dividerText {
   color: #a6c0d8 !important;
 }
-.cl-profileSectionContent .cl-formButtonReset,
-.cl-profileSectionPrimaryButton {
+/* Accent action links/buttons */
+.cl-profileSectionPrimaryButton,
+.cl-formButtonReset,
+.cl-profileSectionItemButton,
+.cl-accountSwitcherActionButton,
+.cl-navbarButton[data-active="true"] {
   color: #4db8ff !important;
 }
