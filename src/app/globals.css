@@ -29,13 +29,12 @@ body {
    The appearance prop sets the dark backgrounds but doesn't reliably color
    every text slot, leaving dark-on-dark. Broadly brighten all Clerk text, then
    layer muted + accent shades back on top so the modal/popover stay legible. */
-.cl-rootBox,
-.cl-card,
-.cl-modalContent,
-.cl-navbar,
-.cl-scrollBox,
-.cl-card *,
-.cl-navbar * {
+.cl-rootBox, .cl-rootBox *,
+.cl-modalContent, .cl-modalContent *,
+.cl-card, .cl-card *,
+.cl-navbar, .cl-navbar *,
+.cl-scrollBox, .cl-scrollBox *,
+.cl-userButtonPopoverCard, .cl-userButtonPopoverCard * {
   color: #e8edf5 !important;
 }
 /* Secondary / muted text */
