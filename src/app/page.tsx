@@ -543,6 +543,29 @@ export default function LandingPage() {
         </div>
       </div>
 
+      {/* ── WHY SKRIPR / THE CASE ── */}
+      <div style={{ borderBottom: `1px solid ${T.border}` }}>
+        <div style={{ padding: "72px 48px", maxWidth: 1060, margin: "0 auto" }}>
+          <div style={{ textAlign: "center" as const }}><SectionLabel>Why Skripr</SectionLabel></div>
+          <div style={{ fontSize: 32, fontWeight: 700, letterSpacing: "-1px", color: T.text, lineHeight: 1.05, marginBottom: 44, textAlign: "center" as const }}>
+            Same idea. Completely different odds.
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: 1, background: T.border, border: `1px solid ${T.border}` }}>
+            {[
+              { t: "Two ways to make your next video.", d: "The old way: blank doc, guess a title, write two thousand words that sound like everyone else, post, hope. The new way: paste a video that already worked and Skripr hands you the angle, hook, retention beats, and title — in your voice — in about a minute. Then you just record." },
+              { t: "Stop writing into the dark.", d: "Most creators are guessing — recycling a 2019 playbook and hoping something sticks. Skripr writes from what's pulling views in your niche right now: the hooks, the title patterns, the angles working this week. Not theory. Not last year. Now." },
+              { t: "Sound like you — or anyone you want.", d: "Generic AI gives you scripts everyone can smell. Point Skripr at any channel — your own, or a creator you admire — and it learns the rhythm, the phrasing, the way they open, then writes every script in that voice." },
+              { t: "No credits. No contracts. No catch.", d: "Start free — two full scripts, no card. When it's working for you, it's $19 a month for twenty scripts. Cancel anytime. No annual lock-in, no credit math, no “book a call to get your refund.” Just scripts." },
+            ].map(b => (
+              <div key={b.t} style={{ background: T.bg, padding: "32px 30px" }}>
+                <div style={{ fontSize: 19, fontWeight: 700, letterSpacing: "-0.4px", color: T.text, marginBottom: 12, lineHeight: 1.2 }}>{b.t}</div>
+                <div style={{ fontSize: 14, fontWeight: 400, color: "#d4e4f3", lineHeight: 1.75 }}>{b.d}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
       {/* ── HOW IT WORKS ── */}
       <div id="how" style={{ padding: "72px 48px", maxWidth: 1060, margin: "0 auto" }}>
         <div style={{ textAlign: "center" as const }}><SectionLabel>How it works</SectionLabel></div>
