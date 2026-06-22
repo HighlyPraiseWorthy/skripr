@@ -57,7 +57,7 @@ export default function YouTubeStrategyHub() {
           transform: "translateX(-50%)",
           width: 800,
           height: 600,
-          background: "radial-gradient(ellipse, rgba(99,102,241,0.10) 0%, transparent 70%)",
+          background: "radial-gradient(ellipse, rgba(77,184,255,0.10) 0%, transparent 70%)",
           pointerEvents: "none",
         }} />
 
@@ -68,9 +68,9 @@ export default function YouTubeStrategyHub() {
             gap: 8,
             padding: "6px 18px",
             borderRadius: 999,
-            background: "rgba(99,102,241,0.10)",
-            border: "1px solid rgba(99,102,241,0.24)",
-            color: "#a5b4fc",
+            background: "rgba(77,184,255,0.10)",
+            border: "1px solid rgba(77,184,255,0.24)",
+            color: "#7ed8ff",
             fontSize: 13,
             fontWeight: 600,
             marginBottom: 28,
@@ -83,12 +83,12 @@ export default function YouTubeStrategyHub() {
             fontWeight: 800,
             lineHeight: 1.1,
             letterSpacing: "-0.035em",
-            color: "#f1f5f9",
+            color: "#e8edf5",
             marginBottom: 20,
           }}>
             Everything you need to{" "}
             <span style={{
-              background: "linear-gradient(90deg,#818cf8,#c084fc)",
+              background: "linear-gradient(90deg,#7ed8ff,#7ed8ff)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
             }}>
@@ -98,12 +98,12 @@ export default function YouTubeStrategyHub() {
 
           <p style={{
             fontSize: 18,
-            color: "#94a3b8",
+            color: "#bcd2e8",
             lineHeight: 1.75,
             maxWidth: 560,
             margin: "0 auto 40px",
           }}>
-            Actionable guides on niche strategy, viral video analysis, title optimization, retention, and monetization — built for creators who want data-driven growth.
+            Actionable guides on niche strategy, viral video analysis, title optimization, retention, and monetization, built for creators who want data-driven growth.
           </p>
 
           <Link
@@ -114,10 +114,10 @@ export default function YouTubeStrategyHub() {
               fontSize: 16,
               fontWeight: 700,
               borderRadius: 14,
-              background: "linear-gradient(135deg,#6366f1,#a855f7)",
+              background: "linear-gradient(135deg,#4db8ff,#4db8ff)",
               color: "#fff",
               textDecoration: "none",
-              boxShadow: "0 8px 32px rgba(99,102,241,0.38)",
+              boxShadow: "0 8px 32px rgba(77,184,255,0.38)",
             }}
           >
             Start Creating with Skripr →
@@ -133,13 +133,13 @@ export default function YouTubeStrategyHub() {
               <h2 style={{
                 fontSize: 24,
                 fontWeight: 800,
-                color: "#f1f5f9",
+                color: "#e8edf5",
                 letterSpacing: "-0.02em",
                 marginBottom: 8,
               }}>
                 {cluster.name}
               </h2>
-              <p style={{ fontSize: 15, color: "#64748b", margin: 0 }}>
+              <p style={{ fontSize: 15, color: "#8aa4bf", margin: 0 }}>
                 {cluster.description}
               </p>
             </div>
@@ -156,8 +156,8 @@ export default function YouTubeStrategyHub() {
                   style={{
                     padding: "22px 24px",
                     borderRadius: 14,
-                    background: "rgba(255,255,255,0.025)",
-                    border: "1px solid rgba(255,255,255,0.07)",
+                    background: "rgba(77,184,255,0.025)",
+                    border: "1px solid rgba(77,184,255,0.07)",
                     textDecoration: "none",
                     display: "block",
                     transition: "border-color 0.2s, background 0.2s",
@@ -165,7 +165,7 @@ export default function YouTubeStrategyHub() {
                 >
                   <p style={{
                     fontSize: 12,
-                    color: "#818cf8",
+                    color: "#7ed8ff",
                     fontWeight: 600,
                     marginBottom: 8,
                     textTransform: "uppercase",
@@ -176,7 +176,7 @@ export default function YouTubeStrategyHub() {
                   <h3 style={{
                     fontSize: 16,
                     fontWeight: 700,
-                    color: "#f1f5f9",
+                    color: "#e8edf5",
                     lineHeight: 1.4,
                     marginBottom: 8,
                   }}>
@@ -184,7 +184,7 @@ export default function YouTubeStrategyHub() {
                   </h3>
                   <p style={{
                     fontSize: 13,
-                    color: "#64748b",
+                    color: "#8aa4bf",
                     lineHeight: 1.6,
                     margin: 0,
                   }}>
@@ -199,7 +199,7 @@ export default function YouTubeStrategyHub() {
 
       {/* Bottom CTA */}
       <section style={{
-        borderTop: "1px solid rgba(255,255,255,0.05)",
+        borderTop: "1px solid rgba(77,184,255,0.05)",
         padding: "80px 24px",
         textAlign: "center",
       }}>
@@ -207,7 +207,7 @@ export default function YouTubeStrategyHub() {
           <h2 style={{
             fontSize: "clamp(24px,4vw,36px)",
             fontWeight: 800,
-            color: "#f1f5f9",
+            color: "#e8edf5",
             letterSpacing: "-0.03em",
             marginBottom: 16,
           }}>
@@ -215,11 +215,11 @@ export default function YouTubeStrategyHub() {
           </h2>
           <p style={{
             fontSize: 16,
-            color: "#94a3b8",
+            color: "#bcd2e8",
             lineHeight: 1.7,
             marginBottom: 32,
           }}>
-            Skripr generates retention-optimized YouTube scripts with proven hook patterns, open loops, and niche crossover intelligence — in under 30 seconds.
+            Skripr generates retention-optimized YouTube scripts with proven hook patterns, open loops, and niche crossover intelligence, in under 30 seconds.
           </p>
           <Link
             href="/sign-up"
@@ -229,15 +229,15 @@ export default function YouTubeStrategyHub() {
               fontSize: 16,
               fontWeight: 700,
               borderRadius: 14,
-              background: "linear-gradient(135deg,#6366f1,#a855f7)",
+              background: "linear-gradient(135deg,#4db8ff,#4db8ff)",
               color: "#fff",
               textDecoration: "none",
-              boxShadow: "0 8px 32px rgba(99,102,241,0.38)",
+              boxShadow: "0 8px 32px rgba(77,184,255,0.38)",
             }}
           >
             Try Skripr Free →
           </Link>
-          <p style={{ fontSize: 13, color: "#475569", marginTop: 14 }}>
+          <p style={{ fontSize: 13, color: "#5a6b7d", marginTop: 14 }}>
             Free plan · No credit card · 2 scripts/month
           </p>
         </div>

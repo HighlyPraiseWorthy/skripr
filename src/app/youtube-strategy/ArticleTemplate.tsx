@@ -11,13 +11,13 @@ export function ArticleCTA({ article }: { article: Article }) {
       marginTop: 48,
       padding: "28px 32px",
       borderRadius: 16,
-      background: "linear-gradient(135deg, rgba(99,102,241,0.12), rgba(168,85,247,0.12))",
-      border: "1px solid rgba(99,102,241,0.25)",
+      background: "linear-gradient(135deg, rgba(77,184,255,0.12), rgba(77,184,255,0.12))",
+      border: "1px solid rgba(77,184,255,0.25)",
     }}>
-      <p style={{ fontSize: 18, fontWeight: 700, color: "#f1f5f9", marginBottom: 8 }}>
+      <p style={{ fontSize: 18, fontWeight: 700, color: "#e8edf5", marginBottom: 8 }}>
         Ready to put this into practice?
       </p>
-      <p style={{ fontSize: 14, color: "#94a3b8", lineHeight: 1.7, marginBottom: 20 }}>
+      <p style={{ fontSize: 14, color: "#bcd2e8", lineHeight: 1.7, marginBottom: 20 }}>
         Skripr generates retention-optimized YouTube scripts with the exact structural patterns covered in this article.
         {article.cluster.includes("Niche") && " The Niche Bend Engine finds crossover opportunities automatically."}
         {article.cluster.includes("Viral") && " Competitor Video Analysis reverse-engineers any viral video's structure."}
@@ -32,10 +32,10 @@ export function ArticleCTA({ article }: { article: Article }) {
           fontSize: 15,
           fontWeight: 700,
           borderRadius: 12,
-          background: "linear-gradient(135deg,#6366f1,#a855f7)",
+          background: "linear-gradient(135deg,#4db8ff,#4db8ff)",
           color: "#fff",
           textDecoration: "none",
-          boxShadow: "0 4px 20px rgba(99,102,241,0.35)",
+          boxShadow: "0 4px 20px rgba(77,184,255,0.35)",
         }}
       >
         Try Skripr Free →
@@ -50,7 +50,7 @@ export function RelatedArticles({ currentSlug, articles }: { currentSlug: string
 
   return (
     <div style={{ marginTop: 48 }}>
-      <h3 style={{ fontSize: 18, fontWeight: 700, color: "#f1f5f9", marginBottom: 16 }}>
+      <h3 style={{ fontSize: 18, fontWeight: 700, color: "#e8edf5", marginBottom: 16 }}>
         Related Articles
       </h3>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 12 }}>
@@ -61,17 +61,17 @@ export function RelatedArticles({ currentSlug, articles }: { currentSlug: string
             style={{
               padding: "16px 18px",
               borderRadius: 12,
-              background: "rgba(255,255,255,0.03)",
-              border: "1px solid rgba(255,255,255,0.07)",
+              background: "rgba(77,184,255,0.03)",
+              border: "1px solid rgba(77,184,255,0.07)",
               textDecoration: "none",
               display: "block",
               transition: "border-color 0.2s",
             }}
           >
-            <p style={{ fontSize: 13, color: "#818cf8", fontWeight: 600, marginBottom: 6 }}>
+            <p style={{ fontSize: 13, color: "#7ed8ff", fontWeight: 600, marginBottom: 6 }}>
               {a.cluster}
             </p>
-            <p style={{ fontSize: 14, color: "#e2e8f0", fontWeight: 600, lineHeight: 1.4, margin: 0 }}>
+            <p style={{ fontSize: 14, color: "#d2e2f2", fontWeight: 600, lineHeight: 1.4, margin: 0 }}>
               {a.title}
             </p>
           </Link>
@@ -94,16 +94,16 @@ export function TableOfContents({ content }: { content: string }) {
       margin: "32px 0",
       padding: "20px 24px",
       borderRadius: 12,
-      background: "rgba(255,255,255,0.02)",
-      border: "1px solid rgba(255,255,255,0.06)",
+      background: "rgba(77,184,255,0.02)",
+      border: "1px solid rgba(77,184,255,0.06)",
     }}>
-      <p style={{ fontSize: 13, fontWeight: 700, color: "#818cf8", marginBottom: 12, textTransform: "uppercase", letterSpacing: 1 }}>
+      <p style={{ fontSize: 13, fontWeight: 700, color: "#7ed8ff", marginBottom: 12, textTransform: "uppercase", letterSpacing: 1 }}>
         In this article
       </p>
       <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 8 }}>
         {headings.map((h, i) => (
           <li key={i}>
-            <span style={{ color: "#64748b", fontSize: 13 }}>
+            <span style={{ color: "#8aa4bf", fontSize: 13 }}>
               {String(i + 1).padStart(2, "0")}. {h}
             </span>
           </li>
@@ -118,7 +118,7 @@ export function ArticleFAQ({ faqs }: { faqs: { q: string; a: string }[] }) {
 
   return (
     <div style={{ marginTop: 48 }}>
-      <h2 style={{ fontSize: 22, fontWeight: 700, color: "#f1f5f9", marginBottom: 20 }}>
+      <h2 style={{ fontSize: 22, fontWeight: 700, color: "#e8edf5", marginBottom: 20 }}>
         Frequently Asked Questions
       </h2>
       <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
@@ -126,13 +126,13 @@ export function ArticleFAQ({ faqs }: { faqs: { q: string; a: string }[] }) {
           <div key={i} style={{
             padding: "18px 22px",
             borderRadius: 12,
-            background: "rgba(255,255,255,0.02)",
-            border: "1px solid rgba(255,255,255,0.06)",
+            background: "rgba(77,184,255,0.02)",
+            border: "1px solid rgba(77,184,255,0.06)",
           }}>
-            <p style={{ fontSize: 15, fontWeight: 600, color: "#f1f5f9", marginBottom: 8 }}>
+            <p style={{ fontSize: 15, fontWeight: 600, color: "#e8edf5", marginBottom: 8 }}>
               {faq.q}
             </p>
-            <p style={{ fontSize: 14, color: "#94a3b8", lineHeight: 1.7, margin: 0 }}>
+            <p style={{ fontSize: 14, color: "#bcd2e8", lineHeight: 1.7, margin: 0 }}>
               {faq.a}
             </p>
           </div>
@@ -166,7 +166,7 @@ export function renderMarkdown(content: string): string {
         continue;
       } else {
         // End of table
-        html += `<div style="overflow-x:auto;margin:24px 0"><table style="width:100%;border-collapse:collapse;font-size:14px"><thead><tr>${tableHeaders.map(h => `<th style="padding:10px 14px;text-align:left;background:rgba(99,102,241,0.08);color:#a5b4fc;font-weight:600;border-bottom:1px solid rgba(99,102,241,0.2)">${h}</th>`).join("")}</tr></thead><tbody>${tableRows.map((row, ri) => `<tr style="background:${ri % 2 === 0 ? "rgba(255,255,255,0.02)" : "transparent"}">${row.map(cell => `<td style="padding:10px 14px;color:#94a3b8;border-bottom:1px solid rgba(255,255,255,0.04)">${cell}</td>`).join("")}</tr>`).join("")}</tbody></table></div>\n`;
+        html += `<div style="overflow-x:auto;margin:24px 0"><table style="width:100%;border-collapse:collapse;font-size:14px"><thead><tr>${tableHeaders.map(h => `<th style="padding:10px 14px;text-align:left;background:rgba(77,184,255,0.08);color:#7ed8ff;font-weight:600;border-bottom:1px solid rgba(77,184,255,0.2)">${h}</th>`).join("")}</tr></thead><tbody>${tableRows.map((row, ri) => `<tr style="background:${ri % 2 === 0 ? "rgba(77,184,255,0.02)" : "transparent"}">${row.map(cell => `<td style="padding:10px 14px;color:#bcd2e8;border-bottom:1px solid rgba(77,184,255,0.04)">${cell}</td>`).join("")}</tr>`).join("")}</tbody></table></div>\n`;
         inTable = false;
         tableRows = [];
         tableHeaders = [];
@@ -175,26 +175,26 @@ export function renderMarkdown(content: string): string {
 
     // Headers
     if (line.startsWith("### ")) {
-      html += `<h3 style="font-size:18px;font-weight:700;color:#f1f5f9;margin:32px 0 12px">${line.slice(4)}</h3>\n`;
+      html += `<h3 style="font-size:18px;font-weight:700;color:#e8edf5;margin:32px 0 12px">${line.slice(4)}</h3>\n`;
     } else if (line.startsWith("## ")) {
-      html += `<h2 style="font-size:24px;font-weight:800;color:#f1f5f9;margin:40px 0 16px;letter-spacing:-0.02em">${line.slice(3)}</h2>\n`;
+      html += `<h2 style="font-size:24px;font-weight:800;color:#e8edf5;margin:40px 0 16px;letter-spacing:-0.02em">${line.slice(3)}</h2>\n`;
     } else if (line.startsWith("- ")) {
-      html += `<li style="color:#94a3b8;font-size:14px;line-height:1.8;padding-left:8px">${line.slice(2)}</li>\n`;
+      html += `<li style="color:#bcd2e8;font-size:14px;line-height:1.8;padding-left:8px">${line.slice(2)}</li>\n`;
     } else if (/^\d+\.\s/.test(line)) {
       const text = line.replace(/^\d+\.\s/, "");
-      html += `<li style="color:#94a3b8;font-size:14px;line-height:1.8;padding-left:8px;list-style:decimal">${text}</li>\n`;
+      html += `<li style="color:#bcd2e8;font-size:14px;line-height:1.8;padding-left:8px;list-style:decimal">${text}</li>\n`;
     } else if (line.trim() === "") {
       html += "\n";
     } else {
       // Bold inline
-      let processed = line.replace(/\*\*(.+?)\*\*/g, '<strong style="color:#e2e8f0;font-weight:600">$1</strong>');
-      html += `<p style="color:#94a3b8;font-size:15px;line-height:1.85;margin:0 0 16px">${processed}</p>\n`;
+      let processed = line.replace(/\*\*(.+?)\*\*/g, '<strong style="color:#d2e2f2;font-weight:600">$1</strong>');
+      html += `<p style="color:#bcd2e8;font-size:15px;line-height:1.85;margin:0 0 16px">${processed}</p>\n`;
     }
   }
 
   // Close table if file ends during table
   if (inTable && tableHeaders.length > 0) {
-    html += `<div style="overflow-x:auto;margin:24px 0"><table style="width:100%;border-collapse:collapse;font-size:14px"><thead><tr>${tableHeaders.map(h => `<th style="padding:10px 14px;text-align:left;background:rgba(99,102,241,0.08);color:#a5b4fc;font-weight:600;border-bottom:1px solid rgba(99,102,241,0.2)">${h}</th>`).join("")}</tr></thead><tbody>${tableRows.map((row, ri) => `<tr style="background:${ri % 2 === 0 ? "rgba(255,255,255,0.02)" : "transparent"}">${row.map(cell => `<td style="padding:10px 14px;color:#94a3b8;border-bottom:1px solid rgba(255,255,255,0.04)">${cell}</td>`).join("")}</tr>`).join("")}</tbody></table></div>\n`;
+    html += `<div style="overflow-x:auto;margin:24px 0"><table style="width:100%;border-collapse:collapse;font-size:14px"><thead><tr>${tableHeaders.map(h => `<th style="padding:10px 14px;text-align:left;background:rgba(77,184,255,0.08);color:#7ed8ff;font-weight:600;border-bottom:1px solid rgba(77,184,255,0.2)">${h}</th>`).join("")}</tr></thead><tbody>${tableRows.map((row, ri) => `<tr style="background:${ri % 2 === 0 ? "rgba(77,184,255,0.02)" : "transparent"}">${row.map(cell => `<td style="padding:10px 14px;color:#bcd2e8;border-bottom:1px solid rgba(77,184,255,0.04)">${cell}</td>`).join("")}</tr>`).join("")}</tbody></table></div>\n`;
   }
 
   return html;
