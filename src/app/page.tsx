@@ -260,7 +260,7 @@ export default function LandingPage() {
             <span style={{ fontWeight: 200, color: T.accent }}>what already works.</span>
           </div>
           <p style={{ fontSize: 18, fontWeight: 300, lineHeight: 1.6, color: T.muted, maxWidth: 640, marginBottom: 40, textAlign: "center" as const }}>
-            Idea to upload-ready script in 60 seconds. Paste a topic or any proven video, and Skripr writes it in your voice — hooks, retention structure, title, and metadata, all done.
+            Idea to upload-ready script in 60 seconds. Paste a topic or any proven video, and Skripr writes it in your voice. Hooks, retention structure, title, and metadata, all done.
           </p>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "center" as const, gap: 14, marginBottom: 36, flexWrap: "wrap" as const }}>
             <span style={{ fontSize: 13, fontWeight: 400, color: T.muted, padding: "8px 16px", border: `1px solid ${T.border}`, borderRadius: 40 }}>
@@ -276,7 +276,7 @@ export default function LandingPage() {
               background: T.accent, color: T.bg,
               fontSize: 12, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase" as const,
               padding: "12px 24px", textDecoration: "none",
-            }}>Start free — 2 scripts →</Link>
+            }}>Start free, 2 scripts →</Link>
             <a href="#how" className="hn-ghost" style={{
               background: "transparent", color: T.muted,
               fontSize: 12, fontWeight: 400, letterSpacing: "0.08em", textTransform: "uppercase" as const,
@@ -301,7 +301,7 @@ export default function LandingPage() {
           .ticker-left:hover, .ticker-right:hover { animation-play-state: paused; }
         `}</style>
 
-        {/* Row 1 — Script output cards, scroll left */}
+        {/* Row 1 - Script output cards, scroll left */}
         <div style={{ overflow: "hidden", marginBottom: 14 }}>
           <div className="ticker-left">
             {[
@@ -338,7 +338,7 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {/* Row 2 — Viral Magnet word pills + CTR stats, scroll right */}
+        {/* Row 2 - Viral Magnet word pills + CTR stats, scroll right */}
         <div style={{ overflow: "hidden" }}>
           <div className="ticker-right">
             {[
@@ -433,13 +433,13 @@ export default function LandingPage() {
                 <span style={{ fontSize: 11.5, color: T.dim }}>~8 min · ready to record</span>
               </div>
               <div style={{ fontSize: 15, fontWeight: 600, letterSpacing: "-0.3px", color: T.text, marginBottom: 9, lineHeight: 1.3 }}>
-                How I Manage My Money — The 6-Account System That Changed Everything
+                How I Manage My Money: The 6-Account System That Changed Everything
               </div>
               <div style={{ fontSize: 13, color: T.accent, fontStyle: "italic", marginBottom: 11 }}>
-                "Most people manage their money wrong — and I'll show you the exact system I use instead."
+                "Most people manage their money wrong, and I'll show you the exact system I use instead."
               </div>
               <div style={{ fontSize: 13, color: T.text, lineHeight: 1.7, fontWeight: 400 }}>
-                I used to be terrible with money. Then I stumbled on a system so simple it felt almost too obvious — and it completely changed how I handle every dollar I make.
+                I used to be terrible with money. Then I stumbled on a system so simple it felt almost too obvious, and it completely changed how I handle every dollar I make.
                 <span style={{ display: "inline-block", width: 1.5, height: 11, background: T.accent, marginLeft: 2, verticalAlign: "middle", animation: "blink 1s infinite" }} />
                 <br /><br />
                 It's not about earning more. It's about where the money goes the moment it hits your account. Here's the exact 6-account setup I use...
@@ -494,7 +494,7 @@ export default function LandingPage() {
             <span style={{ borderRadius: "50%", width: 8, height: 8, background: T.accent, display: "block", position: "relative" as const, zIndex: 1 }} />
           </span>
           <span style={{ fontSize: 12, fontWeight: 400, color: T.muted, letterSpacing: "0.02em" }}>
-            Founding members get in first —{" "}
+            Founding members get in first,{" "}
             <span style={{ color: T.text, fontWeight: 500 }}>and lock in early-access pricing as Skripr grows.</span>
           </span>
         </div>
@@ -532,10 +532,10 @@ export default function LandingPage() {
             Your competition is weaker<br />than you think.
           </div>
           <p style={{ fontSize: 17, fontWeight: 400, color: "#d4e4f3", lineHeight: 1.7, marginBottom: 16 }}>
-            90% of YouTube is noise — creators winging it, recycling 2019 playbooks, posting and hoping something sticks. That's who you're actually up against.
+            90% of YouTube is noise. Creators winging it, recycling 2019 playbooks, posting and hoping something sticks. That's who you're actually up against.
           </p>
           <p style={{ fontSize: 17, fontWeight: 400, color: "#d4e4f3", lineHeight: 1.7, marginBottom: 16 }}>
-            The top 10% don't win on luck. They win on sharp angles, real storytelling, and relentless testing. Simple — not easy. It just takes the work most people never do.
+            The top 10% don't win on luck. They win on sharp angles, real storytelling, and relentless testing. Simple, not easy. It just takes the work most people never do.
           </p>
           <p style={{ fontSize: 17, fontWeight: 500, color: T.text, lineHeight: 1.7 }}>
             Skripr does that work <span style={{ fontStyle: "italic" }}>with</span> you: proven angles, a storytelling engine built for retention, and titles you can test before you post. <span style={{ color: T.accent }}>The top 10% is closer than it looks.</span>
@@ -555,10 +555,10 @@ export default function LandingPage() {
           </p>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: 1, background: T.border, border: `1px solid ${T.border}` }}>
             {[
-              { t: "You don't need a blank page.", d: "Staring at a blank doc is why most videos die before they're written. Paste a video that already worked and Skripr rebuilds its proven structure — hook, retention beats, and title — in your voice, in about a minute. You stop starting from zero and start from what's already winning." },
-              { t: "Stop writing into the dark.", d: "You're not failing for lack of talent — you're guessing. Skripr reads what's actually pulling views in your niche this week and hands you the hooks, title patterns, and angles behind it. So you stop gambling on every upload and post like you already know it'll land." },
-              { t: "Sound like you — or anyone you want.", d: "Generic AI gets sensed in a sentence, and viewers click off. Point Skripr at any channel — your own, or a creator you admire — and it learns the rhythm, phrasing, and openings, then writes every script in that voice. Your audience hears a real creator, not a robot — and they stay." },
-              { t: "No credits. No contracts. No catch.", d: "Other tools lock you into a yearly plan and meter you with credits that run dry mid-script. Skripr is flat monthly — two scripts free, then twenty for $19, cancel anytime. No annual handcuffs, no credit math, just the freedom to create as much as you want." },
+              { t: "You don't need a blank page.", d: "Staring at a blank doc is why most videos die before they're written. Paste a video that already worked and Skripr rebuilds its proven structure in your voice: the hook, the retention beats, the title, in about a minute. You stop starting from zero and start from what's already winning." },
+              { t: "Stop writing into the dark.", d: "You're not failing for lack of talent. You're guessing. Skripr reads what's actually pulling views in your niche this week and hands you the hooks, title patterns, and angles behind it. So you stop gambling on every upload and post like you already know it'll land." },
+              { t: "Sound like you, or anyone you want.", d: "Generic AI gets sensed in a sentence, and viewers click off. Point Skripr at any channel, your own or a creator you admire, and it learns the rhythm, phrasing, and openings, then writes every script in that voice. Your audience hears a real creator, not a robot, and they stay." },
+              { t: "No credits. No contracts. No catch.", d: "Other tools lock you into a yearly plan and meter you with credits that run dry mid-script. Skripr is flat monthly. Two scripts free, then twenty for $19, cancel anytime. No annual handcuffs, no credit math, just the freedom to create as much as you want." },
             ].map(b => (
               <div key={b.t} style={{ background: T.bg, padding: "32px 30px" }}>
                 <div style={{ fontSize: 19, fontWeight: 700, letterSpacing: "-0.4px", color: T.text, marginBottom: 12, lineHeight: 1.2 }}>{b.t}</div>
@@ -577,8 +577,8 @@ export default function LandingPage() {
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 1, background: T.border, border: `1px solid ${T.border}` }}>
           {[
-            { n: "01", t: "Start from what works", d: "Paste a viral video or drop in a topic. Skripr finds the proven structure, hook, and pacing behind it — no blank page." },
-            { n: "02", t: "Skripr writes the script", d: "A full, voiceover-ready script in your niche and your voice — ranked hooks, retention beats, and high-CTR title words built in." },
+            { n: "01", t: "Start from what works", d: "Paste a viral video or drop in a topic. Skripr finds the proven structure, hook, and pacing behind it. No blank page." },
+            { n: "02", t: "Skripr writes the script", d: "A full, voiceover-ready script in your niche and your voice, with ranked hooks, retention beats, and high-CTR title words built in." },
             { n: "03", t: "Publish-ready, not a draft", d: "Get titles, description, tags, and a demonetization check in the same flow. Paste it into your voiceover tool and upload." },
           ].map(s => (
             <div key={s.n} style={{ background: T.bg, padding: "32px 26px" }}>
@@ -593,7 +593,7 @@ export default function LandingPage() {
       {/* ── NUMBERED FEATURES ── */}
       <div id="features" style={{ borderTop: `1px solid ${T.border}`, borderBottom: `1px solid ${T.border}` }}>
 
-        {/* 01 — Script Generator */}
+        {/* 01 - Script Generator */}
         <div className="hn-feat-row">
           <div style={{ fontSize: 11, fontWeight: 400, letterSpacing: "0.1em", color: T.dim, padding: "32px 24px", borderRight: `1px solid ${T.border}` }}>01</div>
           <div style={{ padding: "32px 24px" }}>
@@ -618,14 +618,14 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {/* 02 — Viral Magnet */}
+        {/* 02 - Viral Magnet */}
         <div id="viral-magnet" className="hn-feat-row">
           <div style={{ fontSize: 11, fontWeight: 400, letterSpacing: "0.1em", color: T.dim, padding: "32px 24px", borderRight: `1px solid ${T.border}` }}>02</div>
           <div style={{ padding: "32px 24px" }}>
             <SectionLabel>Viral Magnet</SectionLabel>
             <div style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.5px", color: T.text, marginBottom: 10, lineHeight: 1.1 }}>Stop guessing<br />titles.</div>
             <div style={{ fontSize: 14, fontWeight: 400, color: "#d4e4f3", lineHeight: 1.7 }}>
-              Power words graded by click psychology and YouTube search behavior. Each word shows a predicted CTR lift. Pick one — it auto-injects into your title and script hook.
+              Power words graded by click psychology and YouTube search behavior. Each word shows a predicted CTR lift. Pick one and it auto-injects into your title and script hook.
             </div>
             <FeatTag>Starter+</FeatTag>
           </div>
@@ -647,14 +647,14 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {/* 03 — Viral Remixer */}
+        {/* 03 - Viral Remixer */}
         <div className="hn-feat-row">
           <div style={{ fontSize: 11, fontWeight: 400, letterSpacing: "0.1em", color: T.dim, padding: "32px 24px", borderRight: `1px solid ${T.border}` }}>03</div>
           <div style={{ padding: "32px 24px" }}>
             <SectionLabel>Viral Remixer</SectionLabel>
             <div style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.5px", color: T.text, marginBottom: 10, lineHeight: 1.1 }}>Any viral video.<br />Your version.</div>
             <div style={{ fontSize: 14, fontWeight: 400, color: "#d4e4f3", lineHeight: 1.7 }}>
-              Takes any high-performing video concept and rebuilds it from scratch in your voice, your niche, your style. Same structural DNA — entirely original output.
+              Takes any high-performing video concept and rebuilds it from scratch in your voice, your niche, your style. Same structural DNA, entirely original output.
             </div>
             <FeatTag>Starter+</FeatTag>
           </div>
@@ -671,14 +671,14 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {/* 04 — Niche Bend */}
+        {/* 04 - Niche Bend */}
         <div className="hn-feat-row">
           <div style={{ fontSize: 11, fontWeight: 400, letterSpacing: "0.1em", color: T.dim, padding: "32px 24px", borderRight: `1px solid ${T.border}` }}>04</div>
           <div style={{ padding: "32px 24px" }}>
             <SectionLabel>Niche Bend</SectionLabel>
             <div style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.5px", color: T.text, marginBottom: 10, lineHeight: 1.1 }}>Any video.<br />10 new angles.</div>
             <div style={{ fontSize: 14, fontWeight: 400, color: "#d4e4f3", lineHeight: 1.7 }}>
-              Take any viral video and cross-pollinate it into niches your competitors haven't touched. Viral Magnet injection built in — every angle pre-optimized for CTR.
+              Take any viral video and cross-pollinate it into niches your competitors haven't touched. Viral Magnet injection built in, so every angle is pre-optimized for CTR.
             </div>
             <FeatTag>Starter+</FeatTag>
           </div>
@@ -697,14 +697,14 @@ export default function LandingPage() {
       </div>
 
       {/* ── PRICING ── */}
-        {/* 05 — Hook Engine */}
+        {/* 05 - Hook Engine */}
         <div className="hn-feat-row">
           <div style={{ fontSize: 11, fontWeight: 400, letterSpacing: "0.1em", color: T.dim, padding: "32px 24px", borderRight: `1px solid ${T.border}` }}>05</div>
           <div style={{ padding: "32px 24px" }}>
             <SectionLabel>Hook Engine</SectionLabel>
             <div style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.5px", color: T.text, marginBottom: 10, lineHeight: 1.1 }}>10 hooks.<br />Ranked.</div>
             <div style={{ fontSize: 14, fontWeight: 400, color: "#d4e4f3", lineHeight: 1.7 }}>
-              Every script gets 10 opening hooks across different psychological patterns — curiosity loops, controversy openers, pattern interrupts, stat shocks. Each scored for predicted audience retention.
+              Every script gets 10 opening hooks across different psychological patterns: curiosity loops, controversy openers, pattern interrupts, stat shocks. Each scored for predicted audience retention.
             </div>
             <FeatTag color={T.green}>All plans</FeatTag>
           </div>
@@ -720,14 +720,14 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {/* 06 — A/B Titles */}
+        {/* 06 - A/B Titles */}
         <div className="hn-feat-row">
           <div style={{ fontSize: 11, fontWeight: 400, letterSpacing: "0.1em", color: T.dim, padding: "32px 24px", borderRight: `1px solid ${T.border}` }}>06</div>
           <div style={{ padding: "32px 24px" }}>
             <SectionLabel>A/B Titles</SectionLabel>
             <div style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.5px", color: T.text, marginBottom: 10, lineHeight: 1.1 }}>Test before<br />you publish.</div>
             <div style={{ fontSize: 14, fontWeight: 400, color: "#d4e4f3", lineHeight: 1.7 }}>
-              Generate multiple title variants for every script — each one testing a different angle, emotion, or Viral Magnet word. Know which one to lead with before you upload.
+              Generate multiple title variants for every script, each one testing a different angle, emotion, or Viral Magnet word. Know which one to lead with before you upload.
             </div>
             <FeatTag color={T.green}>All plans</FeatTag>
           </div>
@@ -735,7 +735,7 @@ export default function LandingPage() {
             <TermLine type="comment"># A/B title variants</TermLine>
             <TermLine type="cmd">A → "The Untold Mistake Draining Your Savings"</TermLine>
             <TermLine type="cmd">B → "Stop Doing This With Your Money (Brutal Truth)"</TermLine>
-            <TermLine type="cmd">C → "Why You're Still Broke — The Silent Reason"</TermLine>
+            <TermLine type="cmd">C → "Why You're Still Broke: The Silent Reason"</TermLine>
             <TermLine type="cmd">D → "Hidden Reason You're Still Broke in 2026"</TermLine>
             <br />
             <TermLine type="comment"># Scoring</TermLine>
@@ -744,14 +744,14 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {/* 07 — Metadata Suite */}
+        {/* 07 - Metadata Suite */}
         <div className="hn-feat-row">
           <div style={{ fontSize: 11, fontWeight: 400, letterSpacing: "0.1em", color: T.dim, padding: "32px 24px", borderRight: `1px solid ${T.border}` }}>07</div>
           <div style={{ padding: "32px 24px" }}>
             <SectionLabel>Metadata Suite</SectionLabel>
             <div style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.5px", color: T.text, marginBottom: 10, lineHeight: 1.1 }}>Titles, tags,<br />descriptions.</div>
             <div style={{ fontSize: 14, fontWeight: 400, color: "#d4e4f3", lineHeight: 1.7 }}>
-              SEO-optimized titles, YouTube descriptions, and a full 30-tag set — generated from your script content. Never leave search discovery value on the table before you publish.
+              SEO-optimized titles, YouTube descriptions, and a full 30-tag set, generated from your script content. Never leave search discovery value on the table before you publish.
             </div>
             <FeatTag color={T.green}>All plans</FeatTag>
           </div>
@@ -768,14 +768,14 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {/* 08 — Outlier Finder */}
+        {/* 08 - Outlier Finder */}
         <div className="hn-feat-row">
           <div style={{ fontSize: 11, fontWeight: 400, letterSpacing: "0.1em", color: T.dim, padding: "32px 24px", borderRight: `1px solid ${T.border}` }}>08</div>
           <div style={{ padding: "32px 24px" }}>
             <SectionLabel>Outlier Finder</SectionLabel>
             <div style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.5px", color: T.text, marginBottom: 10, lineHeight: 1.1 }}>Find what's<br />breaking out.</div>
             <div style={{ fontSize: 14, fontWeight: 400, color: "#d4e4f3", lineHeight: 1.7 }}>
-              Drop in any channel and Skripr surfaces its outlier videos — the ones massively outperforming its own average. See which formats are catching fire, then build your version before everyone else copies them.
+              Drop in any channel and Skripr surfaces its outlier videos, the ones massively outperforming its own average. See which formats are catching fire, then build your version before everyone else copies them.
             </div>
             <FeatTag>Starter+</FeatTag>
           </div>
@@ -785,21 +785,21 @@ export default function LandingPage() {
             <TermLine type="check">✓ 48 videos analyzed</TermLine>
             <br />
             <TermLine type="comment"># Outliers found</TermLine>
-            <TermLine type="out">→ "The $0 Budget That Went Viral" — 14× channel avg</TermLine>
-            <TermLine type="out">→ "Why I Quit Index Funds" — 9× channel avg</TermLine>
-            <TermLine type="out">→ "The Bank Trick They Hate" — 6× channel avg</TermLine>
+            <TermLine type="out">→ "The $0 Budget That Went Viral" (14× channel avg)</TermLine>
+            <TermLine type="out">→ "Why I Quit Index Funds" (9× channel avg)</TermLine>
+            <TermLine type="out">→ "The Bank Trick They Hate" (6× channel avg)</TermLine>
             <TermLine type="check">✓ Ranked by outlier multiple</TermLine>
           </div>
         </div>
 
-        {/* 09 — Voice Match */}
+        {/* 09 - Voice Match */}
         <div className="hn-feat-row">
           <div style={{ fontSize: 11, fontWeight: 400, letterSpacing: "0.1em", color: T.dim, padding: "32px 24px", borderRight: `1px solid ${T.border}` }}>09</div>
           <div style={{ padding: "32px 24px" }}>
             <SectionLabel>Voice Match</SectionLabel>
             <div style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.5px", color: T.text, marginBottom: 10, lineHeight: 1.1 }}>Sound like<br />you. Always.</div>
             <div style={{ fontSize: 14, fontWeight: 400, color: "#d4e4f3", lineHeight: 1.7 }}>
-              Save up to 5 voices from your own scripts or any YouTube channel. Pick one per script and Skripr writes in that exact style — so a calm explainer topic can read with the punch of a direct, no-fluff creator, or just like you.
+              Save up to 5 voices from your own scripts or any YouTube channel. Pick one per script and Skripr writes in that exact style, so a calm explainer topic can read with the punch of a direct, no-fluff creator, or just like you.
             </div>
             <FeatTag>Starter+</FeatTag>
           </div>
@@ -815,14 +815,14 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {/* 10 — Compliance Checker */}
+        {/* 10 - Compliance Checker */}
         <div className="hn-feat-row">
           <div style={{ fontSize: 14, fontWeight: 600, letterSpacing: "0.1em", color: T.muted, padding: "32px 24px", borderRight: `1px solid ${T.border}` }}>10</div>
           <div style={{ padding: "32px 24px" }}>
             <SectionLabel>Compliance Checker</SectionLabel>
             <div style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.5px", color: T.text, marginBottom: 10, lineHeight: 1.1 }}>Score before<br />you record.</div>
             <div style={{ fontSize: 14, fontWeight: 400, color: "#d4e4f3", lineHeight: 1.7 }}>
-              Run your script through YouTube's advertiser-friendliness guidelines before you hit record. Get a score, a category breakdown, and rewrite suggestions — not after demonetization.
+              Run your script through YouTube's advertiser-friendliness guidelines before you hit record. Get a score, a category breakdown, and rewrite suggestions, not after demonetization.
             </div>
             <FeatTag color={T.green}>All plans</FeatTag>
           </div>
@@ -854,17 +854,17 @@ export default function LandingPage() {
       <div id="niche-edge" style={{ borderTop: `1px solid ${T.border}`, borderBottom: `1px solid ${T.border}`, background: T.bg2 }}>
         <div style={{ padding: "72px 48px", maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "1.1fr 0.9fr", gap: 56, alignItems: "center" }}>
           <div>
-            <SectionLabel>Niche Bend — only on Skripr</SectionLabel>
+            <SectionLabel>Niche Bend: only on Skripr</SectionLabel>
             <div style={{ fontSize: 34, fontWeight: 700, letterSpacing: "-1px", color: T.text, lineHeight: 1.08, marginBottom: 18 }}>
               Don't just chase more views.<br />
               <span style={{ fontWeight: 200, color: T.purple }}>Reach an audience that pays more.</span>
             </div>
             <p style={{ fontSize: 17, fontWeight: 400, color: "#d4e4f3", lineHeight: 1.7, marginBottom: 20 }}>
-              Niche Bend takes a format that's already winning and blends it into a different, higher-value community — so the same idea reaches two recommendation pools at once, and earns more per view.
+              Niche Bend takes a format that's already winning and blends it into a different, higher-value community, so the same idea reaches two recommendation pools at once and earns more per view.
             </p>
             <div style={{ display: "flex", flexDirection: "column" as const, gap: 12 }}>
               {[
-                "Bridges your topic into completely different niches — the kind of crossover that's still wide open",
+                "Bridges your topic into completely different niches, the kind of crossover that's still wide open",
                 "Shows whether each blend is already proven on YouTube or a blue ocean nobody's claimed",
                 "Surfaces the payout gap, so you can pivot toward niches that earn multiples more per 1,000 views",
               ].map(t => (
@@ -889,7 +889,7 @@ export default function LandingPage() {
               </div>
             </div>
             <div style={{ fontSize: 15, color: T.text, fontWeight: 400, lineHeight: 1.65 }}>
-              A Psychology niche creator who bends toward finance-minded viewers can earn <span style={{ color: T.purple, fontWeight: 700 }}>≈1.9x more</span> on the same 100K views — without leaving what they're good at.
+              A Psychology niche creator who bends toward finance-minded viewers can earn <span style={{ color: T.purple, fontWeight: 700 }}>≈1.9x more</span> on the same 100K views, without leaving what they're good at.
             </div>
           </div>
         </div>
@@ -916,7 +916,7 @@ export default function LandingPage() {
             ["Knows what's working on YouTube right now", "n", "n", "y"],
             ["Finds a channel's breakout (outlier) videos", "n", "n", "y"],
             ["Reverse-engineers a viral video's framework", "m", "m", "y"],
-            ["Writes in your voice — or any creator's", "n", "n", "y"],
+            ["Writes in your voice, or any creator's", "n", "n", "y"],
             ["Retention mechanics built into every script", "p", "p", "y"],
             ["Voiceover-ready (no markers to clean up)", "n", "n", "y"],
             ["Copyright-safe (original lines, sponsors stripped)", "n", "n", "y"],
@@ -937,7 +937,7 @@ export default function LandingPage() {
           ))}
         </div>
         <p style={{ fontSize: 15, fontWeight: 400, color: T.muted, lineHeight: 1.6, margin: "22px auto 0", maxWidth: 640, textAlign: "center" as const }}>
-          ChatGPT gives you a blank-canvas draft. Skripr gives you a performance-informed, voice-matched, publish-safe script — and the workflow to get it live.
+          ChatGPT gives you a blank-canvas draft. Skripr gives you a performance-informed, voice-matched, publish-safe script, plus the workflow to get it live.
         </p>
       </div>
 
@@ -974,9 +974,9 @@ export default function LandingPage() {
             }}>Get Starter</button>
           </div>
 
-          {/* Pro — featured */}
+          {/* Pro - featured */}
           <div style={{ position: "relative", padding: "2px", background: T.bg2, overflow: "hidden" }}>
-            {/* Spinning beam — oversized rotating div behind card */}
+            {/* Spinning beam - oversized rotating div behind card */}
             <div style={{
               position: "absolute",
               top: "50%", left: "50%",
@@ -1066,12 +1066,12 @@ export default function LandingPage() {
         </div>
         <div style={{ display: "flex", flexDirection: "column" as const, gap: 1, background: T.border, border: `1px solid ${T.border}` }}>
           {[
-            { q: "Do I need a big channel for this to work?", a: "No. Skripr is built for brand-new and faceless channels. You start from videos that already work in your niche — so you're not guessing what to make, even with zero subscribers." },
-            { q: "Is it really free to try?", a: "Yes — your first 2 scripts are free, no credit card required. You only upgrade once you've seen the output for yourself." },
-            { q: "Will my scripts be original and safe to post?", a: "Yes. When you remix a video, Skripr mirrors its structure and pacing — never its wording. It writes its own metaphors and lines, strips out any sponsor reads, and outputs clean voiceover-ready text, so you're not copying anyone." },
-            { q: "Can it sound like me?", a: "Yes. Voice Match learns your writing style from your past scripts (or any channel you choose) and applies it to every script — so it reads like you, not a generic AI narrator." },
+            { q: "Do I need a big channel for this to work?", a: "No. Skripr is built for brand-new and faceless channels. You start from videos that already work in your niche, so you're not guessing what to make, even with zero subscribers." },
+            { q: "Is it really free to try?", a: "Yes, your first 2 scripts are free, no credit card required. You only upgrade once you've seen the output for yourself." },
+            { q: "Will my scripts be original and safe to post?", a: "Yes. When you remix a video, Skripr mirrors its structure and pacing, never its wording. It writes its own metaphors and lines, strips out any sponsor reads, and outputs clean voiceover-ready text, so you're not copying anyone." },
+            { q: "Can it sound like me?", a: "Yes. Voice Match learns your writing style from your past scripts (or any channel you choose) and applies it to every script, so it reads like you, not a generic AI narrator." },
             { q: "Why not just use ChatGPT?", a: "ChatGPT can write a draft, but it doesn't know what's performing on YouTube right now, can't find a channel's breakout videos, won't write in your voice, and gives you something you still have to clean and de-risk. Skripr does all of that in one workflow." },
-            { q: "What kind of videos is this for?", a: "Long-form, faceless, and on-camera channels across any niche — finance, history, psychology, true crime, science, fitness, and more. If it's a YouTube video with a script, Skripr can build it." },
+            { q: "What kind of videos is this for?", a: "Long-form, faceless, and on-camera channels across any niche: finance, history, psychology, true crime, science, fitness, and more. If it's a YouTube video with a script, Skripr can build it." },
           ].map((f, i) => (
             <div key={i} style={{ background: T.bg, padding: "22px 24px" }}>
               <div style={{ fontSize: 16.5, fontWeight: 600, color: T.text, marginBottom: 8 }}>{f.q}</div>
@@ -1087,13 +1087,13 @@ export default function LandingPage() {
           Your next video is one paste away.
         </div>
         <p style={{ fontSize: 18, fontWeight: 400, color: "#d4e4f3", maxWidth: 540, lineHeight: 1.6, margin: "0 auto 32px" }}>
-          Start from what's already working, write it in your voice, and walk away with an upload-ready script — in one sitting.
+          Start from what's already working, write it in your voice, and walk away with an upload-ready script, in one sitting.
         </p>
         <Link href="/sign-up" style={{
           display: "inline-block", background: T.accent, color: T.bg,
           fontSize: 13, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase" as const,
           padding: "14px 32px", textDecoration: "none",
-        }}>Start free — 2 scripts →</Link>
+        }}>Start free, 2 scripts →</Link>
         <div style={{ marginTop: 18, fontSize: 15, color: T.muted, letterSpacing: "0.03em" }}>No credit card required · results in 60 seconds</div>
       </div>
 
