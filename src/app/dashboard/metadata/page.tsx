@@ -164,8 +164,8 @@ export default function MetadataPage() {
                 };
                 const parsed: {type: string; text: string}[] = (metadata.titles || []).map(parse);
                 const sections = [
-                  { type: "SEARCH", label: "Search", color: "#1a8fd1", desc: "Keyword-first — surfaces when viewers search YouTube" },
-                  { type: "BROWSE", label: "Browse", color: "#1a8fd1", desc: "Hook-first — surfaces on home feed and recommendations" },
+                  { type: "SEARCH", label: "Search", color: "#1a8fd1", desc: "Keyword-first, surfaces when viewers search YouTube" },
+                  { type: "BROWSE", label: "Browse", color: "#1a8fd1", desc: "Hook-first, surfaces on home feed and recommendations" },
                   { type: "HYBRID", label: "Hybrid", color: "#10b981", desc: "Works for both Search and Browse surfaces" },
                 ];
                 return sections.map(section => {

@@ -5,10 +5,10 @@ import { usePathname } from "next/navigation";
 import { UserButton } from "@clerk/nextjs";
 import { useState, useEffect } from "react";
 
-// ─── Cold Chrome palette — matches landing page ────────────────────────────
+// ─── Cold Chrome palette, matches landing page ────────────────────────────
 const C = {
   bg:           "#080c12",   // was #111113
-  border:       "#1a2840",   // was #27272a — slightly bluer
+  border:       "#1a2840",   // was #27272a, slightly bluer
   text:         "#e8edf5",   // was #f4f4f5
   muted:        "#8aa4bf",   // was #a1a1aa
   sub:          "#4a6a8a",   // was #71717a
@@ -18,7 +18,7 @@ const C = {
   accent:       "#4db8ff",   // was #8b5cf6 violet → Cold Chrome blue
 };
 
-// Script-gen sub-routes — used to distinguish "Scripts" tab vs "My Scripts" tab
+// Script-gen sub-routes, used to distinguish "Scripts" tab vs "My Scripts" tab
 const SCRIPT_GEN_PREFIXES = [
   "/dashboard/scripts/new",
   "/dashboard/scripts/script-brief",
@@ -182,7 +182,7 @@ export function DashboardNav() {
       <div style={{ padding: "20px 20px 14px" }}>
         <Link href="/dashboard/scripts/new"
           style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
-          {/* Cold Chrome S mark — matches favicon */}
+          {/* Cold Chrome S mark, matches favicon */}
           <div style={{
             width: 32, height: 32, borderRadius: 7, flexShrink: 0,
             background: "#080c12",

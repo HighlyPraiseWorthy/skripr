@@ -126,8 +126,8 @@ export default function CompliancePage() {
             ))}
           </div>
           <h2 style={{ color: "#e8edf5", fontSize: 22, fontWeight: 700, margin: "0 0 10px" }}>Catch demonetization before you publish</h2>
-          <p style={{ color: "#a6c0d8", fontSize: 15, lineHeight: 1.7, margin: "0 0 26px" }}>Skripr scans your script across all 6 YouTube policy dimensions and flags the exact phrases putting ad revenue at risk — with fixes you can paste straight in.</p>
-          <a href="/dashboard/settings" style={{ display: "inline-block", background: "linear-gradient(135deg,#0e6499,#1a8fd1)", color: "white", padding: "13px 32px", borderRadius: 10, textDecoration: "none", fontWeight: 700, fontSize: 16 }}>Unlock with Pro →</a>
+          <p style={{ color: "#a6c0d8", fontSize: 15, lineHeight: 1.7, margin: "0 0 26px" }}>Skripr scans your script across all 6 YouTube policy dimensions and flags the exact phrases putting ad revenue at risk, with fixes you can paste straight in.</p>
+          <a href="/dashboard/settings" style={{ display: "inline-block", background: "linear-gradient(135deg,#0e6499,#1a8fd1)", color: "white", padding: "13px 32px", borderRadius: 10, textDecoration: "none", fontWeight: 700, fontSize: 16 }}>Get Pro →</a>
         </div>
       </div>
     );

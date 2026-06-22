@@ -37,12 +37,12 @@ export default function ResearchStep(props: {
       if (!res.ok) throw new Error(d?.error || "Research lookup failed");
       const fs = Array.isArray(d.facts) ? d.facts : [];
       setFacts(fs); setPicked(new Set(fs.map((_: any, i: number) => i)));
-      if (fs.length === 0) setError("No citable facts found — try a more specific topic, or paste your own below.");
+      if (fs.length === 0) setError("No citable facts found, try a more specific topic, or paste your own below.");
     } catch (e: any) { setError(e?.message || "Research lookup failed"); }
     finally { setResearching(false); }
   }
 
-  // Checked facts are included automatically — no separate "add" step. Combine
+  // Checked facts are included automatically, no separate "add" step. Combine
   // them with any pasted text into the final source material on Continue.
   function buildSourceMaterial(): string | undefined {
     const chosen = facts
@@ -65,7 +65,7 @@ export default function ResearchStep(props: {
           <div style={{ width: 40, height: 40, borderRadius: 12, background: "linear-gradient(135deg,#5b4fd6,#7c6fff)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, flexShrink: 0, boxShadow: "0 4px 18px rgba(124,111,255,0.4)" }}>📚</div>
           <div>
             <div style={{ fontSize: 21, fontWeight: 700, color: C.text }}>Ground it in real research</div>
-            <div style={{ fontSize: 13, color: C.dim }}>Optional — add cited facts and Skripr states real numbers instead of hedging.</div>
+            <div style={{ fontSize: 13, color: C.dim }}>Optional, add cited facts and Skripr states real numbers instead of hedging.</div>
           </div>
         </div>
 
@@ -87,7 +87,7 @@ export default function ResearchStep(props: {
           <span style={{ fontSize: 24, flexShrink: 0 }}>{researching ? "⏳" : "✦"}</span>
           <span>
             <span style={{ display: "block", fontSize: 16, fontWeight: 700 }}>{researching ? "Searching the web for facts…" : "Find research for me"}</span>
-            <span style={{ display: "block", fontSize: 12.5, color: "rgba(255,255,255,0.85)", marginTop: 2 }}>Skripr pulls real, cited stats for this topic — you just approve them.</span>
+            <span style={{ display: "block", fontSize: 12.5, color: "rgba(255,255,255,0.85)", marginTop: 2 }}>Skripr pulls real, cited stats for this topic, you just approve them.</span>
           </span>
         </button>
         {error && <p style={{ fontSize: 12, color: "#fca5a5", marginTop: 8 }}>{error}</p>}
@@ -96,7 +96,7 @@ export default function ResearchStep(props: {
         {facts.length > 0 && (
           <div style={{ marginTop: 12, border: `1px solid ${C.purple}45`, borderRadius: 12, padding: 14, background: `${C.purple}0e` }}>
             <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 0.4, color: "#b9adff", marginBottom: 3 }}>✓ {includedCount} FACTS WILL BE USED IN YOUR SCRIPT</div>
-            <div style={{ fontSize: 11.5, color: C.dim, marginBottom: 10 }}>These are added automatically — uncheck any you don't want. A citation isn't a guarantee, so verify before publishing.</div>
+            <div style={{ fontSize: 11.5, color: C.dim, marginBottom: 10 }}>These are added automatically, uncheck any you don't want. A citation isn't a guarantee, so verify before publishing.</div>
             <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
               {facts.map((f, i) => {
                 const on = picked.has(i);
@@ -126,7 +126,7 @@ export default function ResearchStep(props: {
           rows={4}
           style={{ width: "100%", padding: "11px 13px", borderRadius: 12, background: "#0a1220", color: C.text, fontSize: 13, border: `1px solid ${grounded ? `${C.green}55` : C.border}`, outline: "none", resize: "vertical", lineHeight: 1.55, fontFamily: "inherit", boxSizing: "border-box" }}
         />
-        {grounded && <p style={{ fontSize: 11.5, color: C.green, marginTop: 6 }}>✓ Grounded — the script can cite these specifics</p>}
+        {grounded && <p style={{ fontSize: 11.5, color: C.green, marginTop: 6 }}>✓ Grounded, the script can cite these specifics</p>}
 
         {/* Actions */}
         <div style={{ display: "flex", gap: 10, marginTop: 22 }}>
@@ -138,7 +138,7 @@ export default function ResearchStep(props: {
           )}
           <button onClick={() => props.onContinue(buildSourceMaterial())}
             style={{ flex: 1, padding: "12px 18px", borderRadius: 12, border: "none", background: "linear-gradient(135deg,#0e6499,#1a8fd1,#4db8ff)", color: "#fff", fontSize: 15, fontWeight: 700, cursor: "pointer", boxShadow: "0 0 22px rgba(77,184,255,0.26)" }}>
-            {includedCount > 0 ? `Continue with ${includedCount} fact${includedCount === 1 ? "" : "s"} →` : grounded ? "Continue →" : "Skip — continue →"}
+            {includedCount > 0 ? `Continue with ${includedCount} fact${includedCount === 1 ? "" : "s"} →` : grounded ? "Continue →" : "Skip, continue →"}
           </button>
         </div>
       </div>

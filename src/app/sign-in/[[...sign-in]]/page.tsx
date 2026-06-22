@@ -39,7 +39,7 @@ export default function SignInPage() {
         </div>
         <SignIn
           /*
-           * Hardcoded string literal — no dynamic computation.
+           * Hardcoded string literal, no dynamic computation.
            * In v7.3.3 forceRedirectUrl is used ONCE after successful sign-in
            * then cleared, so the user always lands on /dashboard/scripts first.
            */

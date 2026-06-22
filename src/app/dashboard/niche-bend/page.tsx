@@ -105,8 +105,8 @@ export default function NicheBendPage() {
             ))}
           </div>
           <h2 style={{ color: "#e8edf5", fontSize: 22, fontWeight: 700, margin: "0 0 10px" }}>Reverse-engineer any viral video</h2>
-          <p style={{ color: "#a6c0d8", fontSize: 15, lineHeight: 1.7, margin: "0 0 26px" }}>Paste a YouTube link and Skripr breaks down exactly why it worked — then hands you a ready-to-write brief bent into your niche.</p>
-          <a href="/dashboard/settings" style={{ display: "inline-block", background: "linear-gradient(135deg,#0e6499,#1a8fd1)", color: "white", padding: "13px 32px", borderRadius: 10, textDecoration: "none", fontWeight: 700, fontSize: 16 }}>Unlock with Starter →</a>
+          <p style={{ color: "#a6c0d8", fontSize: 15, lineHeight: 1.7, margin: "0 0 26px" }}>Paste a YouTube link and Skripr breaks down exactly why it worked, then hands you a ready-to-write brief bent into your niche.</p>
+          <a href="/dashboard/settings" style={{ display: "inline-block", background: "linear-gradient(135deg,#0e6499,#1a8fd1)", color: "white", padding: "13px 32px", borderRadius: 10, textDecoration: "none", fontWeight: 700, fontSize: 16 }}>Get Starter →</a>
         </div>
       </div>
     );

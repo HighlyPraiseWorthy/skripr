@@ -101,7 +101,7 @@ export default function StorytellingPicker(props: {
       <div style={panel}>
         <div style={{ fontSize: 20, fontWeight: 700, color: C.text, marginBottom: 4 }}>Choose your storytelling style</div>
         <div style={{ fontSize: 13.5, color: C.dim, lineHeight: 1.5, marginBottom: props.angleLabel ? 12 : 18 }}>
-          How Skripr shapes the narrative to hold attention. Pick a preset or customize — core techniques stay on.
+          How Skripr shapes the narrative to hold attention. Pick a preset or customize, core techniques stay on.
         </div>
         {props.angleLabel && (
           <div style={{ marginBottom: 16, padding: "10px 12px", borderRadius: 10, background: "rgba(77,184,255,0.06)", border: `1px solid ${C.border}` }}>
@@ -125,7 +125,7 @@ export default function StorytellingPicker(props: {
               </button>
             )}
             <button style={presetCard(choice === "recommended")} onClick={() => applyPreset("recommended")}>
-              <div style={{ fontSize: 14, fontWeight: 700, color: C.accent }}>✦ Skripr recommended — {data.mode.name}</div>
+              <div style={{ fontSize: 14, fontWeight: 700, color: C.accent }}>✦ Skripr recommended, {data.mode.name}</div>
               <div style={{ fontSize: 12.5, color: C.dim, marginTop: 3 }}>
                 {data.recommended.map((t) => t.name).join(" · ")}
               </div>

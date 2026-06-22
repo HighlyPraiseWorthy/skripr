@@ -254,7 +254,7 @@ export default function NewScriptPage() {
 
   async function saveScript() {
     if (!generatedScript) return;
-    // Already auto-saved server-side and unmodified — don't create a duplicate row
+    // Already auto-saved server-side and unmodified, don't create a duplicate row
     if (savedId && !appliedMagnetTitle && hookRewriteCount === 0) {
       router.push("/dashboard/scripts");
       return;
@@ -337,7 +337,7 @@ export default function NewScriptPage() {
               </p>
               <div style={{ display: "flex", gap: 10 }}>
                 <a href="/dashboard/settings" style={{ flex: 1, display: "block", textAlign: "center", padding: "11px", borderRadius: 10, background: "linear-gradient(135deg,#0e6499,#1a8fd1,#4db8ff)", color: "#fff", fontSize: 14, fontWeight: 600, textDecoration: "none", boxShadow: "0 0 18px rgba(77,184,255,0.26)" }}>
-                  Upgrade to Starter — $19/mo
+                  Upgrade to Starter, $19/mo
                 </a>
                 <button onClick={() => setUpgradeWall(false)} style={{ padding: "11px 16px", borderRadius: 10, background: "transparent", border: "1px solid rgba(77,184,255,0.18)", color: C.textDim, fontSize: 13, cursor: "pointer" }}>
                   Dismiss
@@ -370,7 +370,7 @@ export default function NewScriptPage() {
                 {/* How to get transcript tip */}
                 <div style={{ marginTop: 12, padding: "10px 14px", borderRadius: 10, background: "rgba(77,184,255,0.05)", border: "1px solid rgba(77,184,255,0.09)" }}>
                   <p style={{ color: C.textDim, fontSize: 12, lineHeight: 1.6, margin: 0 }}>
-                    💡 <strong style={{ color: C.accent }}>Tip:</strong> If auto-extraction fails, switch to "Paste Transcript" — on YouTube, click <strong style={{ color: C.textBright }}>⋯ → Show transcript</strong> and paste it here.
+                    💡 <strong style={{ color: C.accent }}>Tip:</strong> If auto-extraction fails, switch to "Paste Transcript", on YouTube, click <strong style={{ color: C.textBright }}>⋯ → Show transcript</strong> and paste it here.
                   </p>
                 </div>
               </div>
@@ -399,7 +399,7 @@ export default function NewScriptPage() {
                     <span style={{ fontSize: 17, fontWeight: 700, color: C.textBright, letterSpacing: 0.1 }}>Topic</span>
                     <span style={{ fontSize: 10, fontWeight: 700, color: "#ef4444", background: "rgba(239,68,68,0.12)", border: "1px solid rgba(239,68,68,0.25)", padding: "2px 7px", borderRadius: 5, letterSpacing: 0.4 }}>REQUIRED</span>
                   </div>
-                  <p style={{ fontSize: 15, color: C.textDim, margin: 0, lineHeight: 1.4 }}>What should your script be about? Be specific — the more focused the topic, the better the script.</p>
+                  <p style={{ fontSize: 15, color: C.textDim, margin: 0, lineHeight: 1.4 }}>What should your script be about? Be specific, the more focused the topic, the better the script.</p>
                 </div>
                 <input type="text" value={topic} onChange={e => setTopic(e.target.value)}
                   placeholder="e.g., morning routine, product review" style={inputStyle}
@@ -407,7 +407,7 @@ export default function NewScriptPage() {
                   onBlur={e => e.currentTarget.style.borderColor = C.border} />
               </div>
 
-              {/* ── Suggest Angles — between topic and angle ── */}
+              {/* ── Suggest Angles, between topic and angle ── */}
               {topic.trim().length > 3 && (
                 <div style={{ marginTop: 14 }}>
                   <button
@@ -442,7 +442,7 @@ export default function NewScriptPage() {
                   </button>
                   {angleSuggestions.length > 0 && (
                     <div style={{ marginTop: 12, display: "flex", flexDirection: "column", gap: 8 }}>
-                      <p style={{ fontSize: 11, color: "#a6c0d8", marginBottom: 2 }}>Pick one — or edit it below:</p>
+                      <p style={{ fontSize: 11, color: "#a6c0d8", marginBottom: 2 }}>Pick one, or edit it below:</p>
                       {angleSuggestions.map((s, i) => (
                         <button
                           key={i}
@@ -468,12 +468,12 @@ export default function NewScriptPage() {
               <div style={{ marginTop: 16 }}>
                 <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 15, fontWeight: 600, color: "rgba(129,140,248,0.9)", letterSpacing: 0.3, marginBottom: 7 }}>
                   <span>🎯</span> YOUR ANGLE
-                  <span style={{ fontSize: 14, fontWeight: 400, color: "#a6c0d8", marginLeft: 4 }}>— the counterintuitive truth that drives the script (optional but powerful)</span>
+                  <span style={{ fontSize: 14, fontWeight: 400, color: "#a6c0d8", marginLeft: 4 }}>,  the counterintuitive truth that drives the script (optional but it sharpens the script)</span>
                 </label>
                 <textarea
                   value={angle}
                   onChange={e => setAngle(e.target.value)}
-                  placeholder="e.g. It's not the caffeine — it's the cortisol timing. Most people drink coffee during the worst 90-minute window of their day and it silently wrecks their focus."
+                  placeholder="e.g. It's not the caffeine, it's the cortisol timing. Most people drink coffee during the worst 90-minute window of their day and it silently wrecks their focus."
                   rows={3}
                   style={{
                     width: "100%", padding: "10px 14px", borderRadius: 12,
@@ -487,7 +487,7 @@ export default function NewScriptPage() {
                 />
                 {angle && (
                   <p style={{ fontSize: 11, color: "#34d399", marginTop: 5 }}>
-                    ✓ Angle locked — our AI will build the entire script around this perspective
+                    ✓ Angle locked, our AI will build the entire script around this perspective
                   </p>
                 )}
               </div>
@@ -518,12 +518,12 @@ export default function NewScriptPage() {
                 <div style={{ marginTop: 16 }}>
                   <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 15, fontWeight: 600, color: "rgba(129,140,248,0.9)", letterSpacing: 0.3, marginBottom: 7 }}>
                     <span>🎯</span> YOUR ANGLE
-                    <span style={{ fontSize: 14, fontWeight: 400, color: "#a6c0d8", marginLeft: 4 }}>— the counterintuitive truth that drives the script (optional but powerful)</span>
+                    <span style={{ fontSize: 14, fontWeight: 400, color: "#a6c0d8", marginLeft: 4 }}>,  the counterintuitive truth that drives the script (optional but it sharpens the script)</span>
                   </label>
                   <textarea
                     value={angle}
                     onChange={e => setAngle(e.target.value)}
-                    placeholder="e.g. It's not the caffeine — it's the cortisol timing. Most people drink coffee during the worst 90-minute window of their day and it silently wrecks their focus."
+                    placeholder="e.g. It's not the caffeine, it's the cortisol timing. Most people drink coffee during the worst 90-minute window of their day and it silently wrecks their focus."
                     rows={3}
                     style={{
                       width: "100%", padding: "10px 14px", borderRadius: 12,
@@ -537,7 +537,7 @@ export default function NewScriptPage() {
                   />
                   {angle && (
                     <p style={{ fontSize: 11, color: "#34d399", marginTop: 5 }}>
-                      ✓ Angle locked — our AI will build the entire script around this perspective
+                      ✓ Angle locked, our AI will build the entire script around this perspective
                     </p>
                   )}
                 </div>
@@ -553,7 +553,7 @@ export default function NewScriptPage() {
                 <span style={{ fontSize: 11, color: C.textDim }}>·</span>
                 <span style={{ fontSize: 11, color: C.textDim }}>{transcriptWordCount.toLocaleString()} words</span>
                 {transcriptSource === "auto" && transcriptWordCount < 200 && (
-                  <span style={{ fontSize: 10, color: "#f87171", marginLeft: 4 }}>⚠ Short — consider pasting manually</span>
+                  <span style={{ fontSize: 10, color: "#f87171", marginLeft: 4 }}>⚠ Short, consider pasting manually</span>
                 )}
               </div>
             )}
@@ -602,7 +602,7 @@ export default function NewScriptPage() {
                     {magnetWords.filter(w => magnetGradeFilterScript === "all" || w.grade === magnetGradeFilterScript).length} words
                   </span>
                 </div>
-                {/* Word grid — scrollable, gated for free users */}
+                {/* Word grid, scrollable, gated for free users */}
                 <div style={{ position: "relative" }}>
                   <div style={{ display: "flex", flexWrap: "wrap", gap: 10, maxHeight: 180, overflowY: "auto", filter: userPlan === "free" ? "blur(3px)" : "none", pointerEvents: userPlan === "free" ? "none" : "auto", userSelect: userPlan === "free" ? "none" : "auto" }}>
                     {magnetWords
@@ -646,7 +646,7 @@ export default function NewScriptPage() {
                         <span style={{ fontSize: 11, color: C.textBright, maxWidth: 340, lineHeight: 1.45 }}>
                           Bake one into your title and our AI weaves it through your hook to lift click-through.
                         </span>
-                        <a href="/pricing" style={{ marginTop: 2, fontSize: 11, fontWeight: 700, padding: "6px 16px", borderRadius: 7, background: "linear-gradient(135deg,#0e6499,#4db8ff)", color: "#fff", textDecoration: "none" }}>Unlock with Starter →</a>
+                        <a href="/pricing" style={{ marginTop: 2, fontSize: 11, fontWeight: 700, padding: "6px 16px", borderRadius: 7, background: "linear-gradient(135deg,#0e6499,#4db8ff)", color: "#fff", textDecoration: "none" }}>Get Starter →</a>
                       </div>
                     );
                   })()}
@@ -659,7 +659,7 @@ export default function NewScriptPage() {
               </div>
             )}
 
-            {/* Video length slider — all modes */}
+            {/* Video length slider, all modes */}
             <div style={{ marginTop: 20, padding: "14px 16px", borderRadius: 12, background: "rgba(77,184,255,0.04)", border: "1px solid rgba(77,184,255,0.11)" }}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
                 <span style={{ fontSize: 11, fontWeight: 700, color: "#a6c0d8", letterSpacing: 0.5 }}>VIDEO LENGTH</span>
@@ -676,11 +676,11 @@ export default function NewScriptPage() {
               </div>
             </div>
 
-            {/* Hook type picker — topic mode */}
+            {/* Hook type picker, topic mode */}
             {inputMode === "topic" && (
               <div style={{ marginTop: 20 }}>
                 <div style={{ fontSize: 11, fontWeight: 700, color: "#a6c0d8", letterSpacing: 0.5, marginBottom: 10 }}>
-                  HOOK TYPE <span style={{ fontWeight: 400, color: "#a6c0d8" }}>— optional, pick a psychological approach</span>
+                  HOOK TYPE <span style={{ fontWeight: 400, color: "#a6c0d8" }}>,  optional, pick a psychological approach</span>
                 </div>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
                   {[
@@ -712,7 +712,7 @@ export default function NewScriptPage() {
               </div>
             )}
 
-            {/* Guided brief — topic only */}
+            {/* Guided brief, topic only */}
             {inputMode === "topic" && topic.trim() && (
               <button
                 onClick={() => {
@@ -730,7 +730,7 @@ export default function NewScriptPage() {
               </button>
             )}
 
-            {/* Direct generate — URL or paste modes */}
+            {/* Direct generate, URL or paste modes */}
             {inputMode !== "topic" && (
               <button onClick={handleExtractOrProceed} disabled={!canProceed || extracting}
                 style={{
@@ -838,7 +838,7 @@ export default function NewScriptPage() {
                   <p style={{ fontSize: 14, color: C.textBright, lineHeight: 1.6, margin: 0 }}>{generatedScript.hook}</p>
                   {pendingHook && (
                     <div style={{ marginTop: 12, padding: "12px 14px", borderRadius: 10, background: "rgba(77,184,255,0.09)", border: "1px solid rgba(77,184,255,0.24)" }}>
-                      <p style={{ fontSize: 11, fontWeight: 700, color: "#7ed8ff", margin: "0 0 6px 0", letterSpacing: 0.4 }}>✨ NEW HOOK — confirm to apply:</p>
+                      <p style={{ fontSize: 11, fontWeight: 700, color: "#7ed8ff", margin: "0 0 6px 0", letterSpacing: 0.4 }}>✨ NEW HOOK, confirm to apply:</p>
                       <p style={{ fontSize: 14, color: C.textBright, lineHeight: 1.6, margin: "0 0 12px 0" }}>{pendingHook}</p>
                       <div style={{ display: "flex", gap: 8 }}>
                         <button
@@ -971,7 +971,7 @@ export default function NewScriptPage() {
                           </button>
                         ) : (
                           <div style={{ width: "100%", padding: "9px", borderRadius: 9, fontSize: 12, fontWeight: 600, textAlign: "center", background: "rgba(77,184,255,0.05)", color: C.textDim, border: "1px solid rgba(77,184,255,0.11)" }}>
-                            🔒 Upgrade to Starter to unlock Viral Magnet
+                            🔒 Upgrade to Starter for Viral Magnet
                           </div>
                         )}
                       </div>
@@ -995,7 +995,7 @@ export default function NewScriptPage() {
                 <span style={{ fontSize: 11, color: "#a6c0d8", textAlign: "center" }}>Uses 1 credit</span>
               </div>
               <button onClick={saveScript} disabled={saving} style={{ flex: 2, padding: "12px 20px", borderRadius: 14, background: grad, color: "#fff", fontSize: 14, fontWeight: 600, border: "none", cursor: saving ? "wait" : "pointer", opacity: saving ? 0.6 : 1, boxShadow: "0 0 22px rgba(77,184,255,0.26)", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
-                {saving ? "Saving…" : savedId && !appliedMagnetTitle && hookRewriteCount === 0 ? "✓ Saved — View in My Scripts" : "✦ Save Script"}
+                {saving ? "Saving…" : savedId && !appliedMagnetTitle && hookRewriteCount === 0 ? "✓ Saved, View in My Scripts" : "✦ Save Script"}
               </button>
             </div>
           </div>

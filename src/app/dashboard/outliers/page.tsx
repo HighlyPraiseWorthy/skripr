@@ -65,7 +65,7 @@ export default function OutliersPage() {
             <h1 style={{ fontSize: 24, fontWeight: 700, color: C.textBright, letterSpacing: -0.4, margin: 0 }}>Outlier Finder</h1>
           </div>
           <p style={{ fontSize: 13, color: C.textDim, margin: 0 }}>
-            Scan any channel for videos massively outperforming its baseline — then remix the winners.
+            Scan any channel for videos massively outperforming its baseline, then remix the winners.
           </p>
         </div>
 

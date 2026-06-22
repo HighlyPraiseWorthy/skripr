@@ -267,7 +267,7 @@ export function ScriptEditor({
               </div>
             ))}
           </div>
-          <p style={{ fontSize: 13, color: C.textDim, margin: "10px 0 0" }}>Restoring loads the version into the editor — hit Save to make it current.</p>
+          <p style={{ fontSize: 13, color: C.textDim, margin: "10px 0 0" }}>Restoring loads the version into the editor, hit Save to make it current.</p>
         </div>
       )}
 
@@ -304,7 +304,7 @@ export function ScriptEditor({
 
       {isEditing && (
         <p style={{ fontSize: 13, color: C.textDim, marginTop: 8 }}>
-          {wordCount.toLocaleString()} words — editing. Previous version saved to history on save.
+          {wordCount.toLocaleString()} words, editing. Previous version saved to history on save.
         </p>
       )}
     </div>

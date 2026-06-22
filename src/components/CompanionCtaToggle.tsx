@@ -1,7 +1,7 @@
 "use client";
 
 // Per-script option: end the script with a "watch my related video (above this
-// one or linked in the description)" CTA. Off by default — only creators who
+// one or linked in the description)" CTA. Off by default, only creators who
 // actually have a companion video should turn it on.
 export function CompanionCtaToggle({ value, onChange }: { value: boolean; onChange: (v: boolean) => void }) {
   return (

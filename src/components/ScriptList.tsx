@@ -5,7 +5,7 @@ import type { Script } from "@/lib/types/script";
 import { NICHES } from "@/lib/data/niches";
 
 // Saved niches are freeform text; the tool pages' niche <select> uses canonical
-// NICHES ids — resolve so the prefilled niche actually preselects.
+// NICHES ids, resolve so the prefilled niche actually preselects.
 function resolveNicheId(raw?: string | null): string {
   if (!raw) return "";
   const s = raw.toLowerCase().trim();
@@ -38,7 +38,7 @@ const C = {
   inputBg: "#0a1220",
 };
 
-// Niche is freeform — sometimes a clean canonical niche, sometimes a long
+// Niche is freeform, sometimes a clean canonical niche, sometimes a long
 // audience sentence. Show the canonical name when it resolves, otherwise clamp
 // so a stray sentence can't blow up the card.
 function nicheLabel(raw?: string | null): string {

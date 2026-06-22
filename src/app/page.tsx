@@ -264,7 +264,7 @@ export default function LandingPage() {
           </p>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "center" as const, gap: 14, marginBottom: 36, flexWrap: "wrap" as const }}>
             <span style={{ fontSize: 13, fontWeight: 400, color: T.muted, padding: "8px 16px", border: `1px solid ${T.border}`, borderRadius: 40 }}>
-              The old way: 4–5 hours a video · still hit-or-miss
+              The old way: 4-5 hours a video · still hit-or-miss
             </span>
             <span style={{ color: T.accent, fontSize: 16, fontWeight: 600 }}>→</span>
             <span style={{ fontSize: 13, fontWeight: 500, color: T.text, padding: "8px 16px", border: `1px solid ${T.accent}`, borderRadius: 40, background: "rgba(77,184,255,0.06)" }}>

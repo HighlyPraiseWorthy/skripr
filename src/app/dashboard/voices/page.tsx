@@ -113,7 +113,7 @@ export default function VoicesPage() {
             <h1 style={{ fontSize: 24, fontWeight: 700, color: C.textBright, letterSpacing: -0.4, margin: 0 }}>Voice Match</h1>
           </div>
           <p style={{ fontSize: 13, color: C.textDim, margin: 0, lineHeight: 1.6 }}>
-            Save up to {max} voices from your scripts or any YouTube channel. The active voice shapes every script Skripr writes —
+            Save up to {max} voices from your scripts or any YouTube channel. The active voice shapes every script Skripr writes , 
             cover any niche in any voice you've saved.
           </p>
         </div>
@@ -165,7 +165,7 @@ export default function VoicesPage() {
                       Use this voice
                     </button>
                   )}
-                  <button onClick={() => reanalyze(v)} disabled={reanalyzingId === v.id} title="Re-analyze — refresh this voice with the latest analysis" style={{ padding: "7px 14px", borderRadius: 8, fontSize: 12, fontWeight: 600, color: C.accentDim, background: "rgba(77,184,255,0.08)", border: "1px solid rgba(77,184,255,0.2)", cursor: reanalyzingId === v.id ? "wait" : "pointer", flexShrink: 0, whiteSpace: "nowrap", opacity: reanalyzingId === v.id ? 0.6 : 1 }}>
+                  <button onClick={() => reanalyze(v)} disabled={reanalyzingId === v.id} title="Re-analyze, refresh this voice with the latest analysis" style={{ padding: "7px 14px", borderRadius: 8, fontSize: 12, fontWeight: 600, color: C.accentDim, background: "rgba(77,184,255,0.08)", border: "1px solid rgba(77,184,255,0.2)", cursor: reanalyzingId === v.id ? "wait" : "pointer", flexShrink: 0, whiteSpace: "nowrap", opacity: reanalyzingId === v.id ? 0.6 : 1 }}>
                     {reanalyzingId === v.id ? "Refreshing…" : "↻ Re-analyze"}
                   </button>
                   <button onClick={() => remove(v.id)} title="Delete voice" style={{ background: "none", border: "none", color: C.textDim, fontSize: 15, cursor: "pointer", flexShrink: 0 }}>🗑</button>
@@ -200,7 +200,7 @@ export default function VoicesPage() {
             <input
               value={name}
               onChange={e => setName(e.target.value)}
-              placeholder={mode === "channel" ? "Voice name (optional — defaults to channel name)" : "Voice name (e.g. My Voice, Hormozi Style)"}
+              placeholder={mode === "channel" ? "Voice name (optional, defaults to channel name)" : "Voice name (e.g. My Voice, Hormozi Style)"}
               style={{ width: "100%", height: 42, borderRadius: 10, border: `1px solid ${C.border}`, background: "rgba(0,0,0,0.25)", color: C.textBright, padding: "0 14px", fontSize: 13, outline: "none", boxSizing: "border-box", marginBottom: 10 }}
             />
 

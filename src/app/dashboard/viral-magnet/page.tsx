@@ -149,7 +149,7 @@ export default function ViralMagnetPage() {
           )}
           <h2 style={{ color: "#e8edf5", fontSize: 22, fontWeight: 700, margin: top.length ? "0 0 10px" : "8px 0 10px" }}>Bake proven words into every title</h2>
           <p style={{ color: "#a6c0d8", fontSize: 15, lineHeight: 1.7, margin: "0 0 26px" }}>These are the highest-performing words in your niche, graded S/A/B/C from live data. Pick up to three and our AI rewrites your title around them to lift click-through.</p>
-          <a href="/dashboard/settings" style={{ display: "inline-block", background: "linear-gradient(135deg,#0e6499,#1a8fd1)", color: "white", padding: "13px 32px", borderRadius: 10, textDecoration: "none", fontWeight: 700, fontSize: 16 }}>Unlock with Starter →</a>
+          <a href="/dashboard/settings" style={{ display: "inline-block", background: "linear-gradient(135deg,#0e6499,#1a8fd1)", color: "white", padding: "13px 32px", borderRadius: 10, textDecoration: "none", fontWeight: 700, fontSize: 16 }}>Get Starter →</a>
         </div>
       </div>
     );
@@ -195,7 +195,7 @@ export default function ViralMagnetPage() {
           <div style={{ marginBottom: 22 }}>
             <label style={{ display: "block", fontSize: 15, fontWeight: 600, color: C.text, marginBottom: 4 }}>
               Script / Description{" "}
-              <span style={{ color: C.textDim, fontWeight: 400 }}>(optional — helps AI understand your video)</span>
+              <span style={{ color: C.textDim, fontWeight: 400 }}>(optional, helps AI understand your video)</span>
             </label>
             <textarea
               value={script}
@@ -211,7 +211,7 @@ export default function ViralMagnetPage() {
             />
           </div>
 
-          {/* #2 Trending in proven titles — real occurrences from the captured pool */}
+          {/* #2 Trending in proven titles, real occurrences from the captured pool */}
           {trending.length > 0 && (
             <div style={{ marginBottom: 18, padding: "12px 14px", borderRadius: 12, background: "rgba(245,158,11,0.06)", border: "1px solid rgba(245,158,11,0.22)" }}>
               <div style={{ fontSize: 11, fontWeight: 700, color: "#fbbf24", letterSpacing: 0.5, marginBottom: 8 }}>🔥 PROVEN ON YOUTUBE</div>
@@ -260,7 +260,7 @@ export default function ViralMagnetPage() {
           <div>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
               <label style={{ fontSize: 15, fontWeight: 600, color: C.text }}>
-                Select 1–3 Viral Magnet Words <span style={{ color: "#f87171" }}>*</span>
+                Select 1-3 Viral Magnet Words <span style={{ color: "#f87171" }}>*</span>
               </label>
               <span style={{ fontSize: 13, color: selected.length === 3 ? "#fb923c" : C.textDim, fontWeight: 600 }}>
                 {selected.length}/3 selected
@@ -351,7 +351,7 @@ export default function ViralMagnetPage() {
         {/* ── Results ── */}
         {result && (
           <div>
-            {/* Original title — baseline to compare the variants against */}
+            {/* Original title, baseline to compare the variants against */}
             <div style={{ marginBottom: 14, borderRadius: 14, background: "rgba(122,155,181,0.06)", border: "1px dashed rgba(122,155,181,0.3)", padding: "12px 16px" }}>
               <div style={{ fontSize: 10, fontWeight: 700, color: C.textDim, letterSpacing: 1, marginBottom: 5 }}>YOUR ORIGINAL</div>
               <p style={{ fontSize: 16, fontWeight: 600, color: "#cbd5e1", margin: 0, lineHeight: 1.4 }}>{title}</p>
@@ -374,7 +374,7 @@ export default function ViralMagnetPage() {
 
             {sameFormula.length > 0 && (
               <div style={{ marginBottom: 14 }}>
-                <SectionDivider label="Same Formula — Upgraded" color="#1a8fd1" />
+                <SectionDivider label="Same Formula, Upgraded" color="#1a8fd1" />
                 <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                   {sameFormula.map((t, i) => <TitleCard key={i} t={t} copied={copied} onCopy={copyTitle} />)}
                 </div>
@@ -383,7 +383,7 @@ export default function ViralMagnetPage() {
 
             {newFormula.length > 0 && (
               <div>
-                <SectionDivider label="New Formulas — Fresh Angles" color="#1a8fd1" />
+                <SectionDivider label="New Formulas, Fresh Angles" color="#1a8fd1" />
                 <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                   {newFormula.map((t, i) => <TitleCard key={i} t={t} copied={copied} onCopy={copyTitle} />)}
                 </div>
@@ -421,7 +421,7 @@ function TitleCard({ t, copied, onCopy }: { t: TitleResult; copied: string | nul
             const paired = words.length >= 2;
             return (
               <span style={{ fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 5, background: paired ? "rgba(167,139,250,0.16)" : "rgba(77,184,255,0.13)", color: paired ? "#c4b5fd" : "#7ed8ff" }}>
-                🧲 {words.join(" + ") || "—"}{paired ? "  ⚡paired" : ""}
+                🧲 {words.join(" + ") || ", "}{paired ? "  ⚡paired" : ""}
               </span>
             );
           })()}

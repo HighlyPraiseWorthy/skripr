@@ -127,7 +127,7 @@ export default function ViralRemixerPage() {
           <h1 style={{ fontSize: 22, fontWeight: 700, color: C.textBright, letterSpacing: -0.3, textAlign: "center" as const }}>Viral Remixer</h1>
         </div>
         <p style={{ fontSize: 16, color: C.textDim, maxWidth: 520, lineHeight: 1.6, textAlign: "center" as const, margin: "0 auto 24px" }}>
-          Paste any YouTube URL. Get the hook type, content structure, and retention triggers that made it go viral — then script it for your own niche.
+          Paste any YouTube URL. Get the hook type, content structure, and retention triggers that made it go viral, then script it for your own niche.
         </p>
       </div>
 
@@ -219,7 +219,7 @@ export default function ViralRemixerPage() {
             </div>
           </div>
 
-          {/* Retention — full width, multi-column so the cards fill space instead of stacking in one tall column */}
+          {/* Retention, full width, multi-column so the cards fill space instead of stacking in one tall column */}
           <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 14, padding: 18, marginBottom: 14 }}>
             <div style={{ fontSize: 10, fontWeight: 700, color: C.accentDim, letterSpacing: 0.6, marginBottom: 12 }}>🔒 RETENTION TRIGGERS</div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 10, alignItems: "start" }}>
@@ -232,7 +232,7 @@ export default function ViralRemixerPage() {
             </div>
           </div>
 
-          {/* Title formula — full width */}
+          {/* Title formula, full width */}
           <div style={{ marginBottom: 20 }}>
             <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 14, padding: 18 }}>
               <div style={{ fontSize: 10, fontWeight: 700, color: C.accentDim, letterSpacing: 0.6, marginBottom: 12 }}>📋 TITLE FORMULA</div>
@@ -246,9 +246,9 @@ export default function ViralRemixerPage() {
                   {getRemixOptions(result.titleFormula).map((opt, i, all) => {
                     const wideStart = all.findIndex(o => o.scope === "wide");
                     const groupLabel = i === 0 && all.some(o => o.scope)
-                      ? "SAME LANE — adjacent to this video's topic"
+                      ? "SAME LANE, adjacent to this video's topic"
                       : i === wideStart && wideStart > 0
-                        ? "NEW NICHE — same formula, different worlds"
+                        ? "NEW NICHE, same formula, different worlds"
                         : null;
                     return (
                       <div key={i}>

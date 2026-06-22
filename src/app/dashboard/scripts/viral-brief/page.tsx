@@ -289,7 +289,7 @@ export default function ViralBriefPage() {
         <CompanionCtaToggle value={companionCta} onChange={setCompanionCta} />
 
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-          {/* The remix title the user picked — always the first selectable option */}
+          {/* The remix title the user picked, always the first selectable option */}
           {brief?.selectedTitle && (
             <div
               onClick={() => handlePickAngle({
@@ -303,7 +303,7 @@ export default function ViralBriefPage() {
               onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "rgba(77,184,255,0.07)"; }}>
               <div style={{ width: 32, height: 32, borderRadius: 8, background: "rgba(77,184,255,0.2)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, fontSize: 15, color: "#9de4ff" }}>★</div>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: 10, fontWeight: 700, color: "#7ed8ff", letterSpacing: 0.6, marginBottom: 5 }}>YOUR PICK — THE TITLE YOU CHOSE</div>
+                <div style={{ fontSize: 10, fontWeight: 700, color: "#7ed8ff", letterSpacing: 0.6, marginBottom: 5 }}>YOUR PICK, THE TITLE YOU CHOSE</div>
                 <div style={{ fontSize: 15, fontWeight: 700, color: C.textBright, marginBottom: 4, lineHeight: 1.3 }}>{brief.selectedTitle}</div>
                 {brief.selectedTitleDescription && (
                   <div style={{ fontSize: 12, color: C.textDim, lineHeight: 1.5, marginBottom: 8 }}>{brief.selectedTitleDescription}</div>

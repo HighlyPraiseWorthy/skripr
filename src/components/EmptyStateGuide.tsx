@@ -22,13 +22,13 @@ const SAMPLE_SCRIPT = {
 
 Here's what nobody tells you: the financial system wasn't designed to help you build wealth. It was designed to help banks build theirs.
 
-But there's a window. A specific gap in how compound interest actually works that most financial advisors actively avoid discussing — because understanding it would make you stop needing them.
+But there's a window. A specific gap in how compound interest actually works that most financial advisors actively avoid discussing, because understanding it would make you stop needing them.
 
 I found this gap three years ago. It took me from $800 in savings to a paid-off car and a six-month emergency fund in under 18 months. Not by earning more. By stopping one specific financial habit that 76% of millennials repeat every single week without realizing it.
 
 I'm going to show you exactly what that habit is. And the three-step system I used to replace it with something that actually compounds.
 
-Stay with me — because what I'm about to tell you changes how you think about every financial decision you make from this point forward.
+Stay with me, because what I'm about to tell you changes how you think about every financial decision you make from this point forward.
 
 The habit is called lifestyle creep. And the reason it's so dangerous isn't what you think.`,
 };
@@ -58,7 +58,7 @@ export function EmptyStateGuide() {
           Welcome to Skripr
         </h2>
         <p style={{ fontSize: 16, color: C.textDim, lineHeight: 1.7, maxWidth: 480, margin: "0 auto 24px" }}>
-          Generate full YouTube scripts optimised for retention, hooks, and the algorithm — in under 30 seconds.
+          Generate full YouTube scripts optimised for retention, hooks, and the algorithm, in under 30 seconds.
         </p>
         <div style={{ display: "flex", justifyContent: "center", gap: 10, flexWrap: "wrap" }}>
           {VALUE_PROPS.map((v, i) => (
@@ -132,7 +132,7 @@ export function EmptyStateGuide() {
         >
           <span style={{ fontSize: 18 }}>✦</span> Generate Your First Script
         </Link>
-        <p style={{ fontSize: 14, color: C.textDim, marginTop: 10 }}>Free plan includes 2 scripts — no credit card required</p>
+        <p style={{ fontSize: 14, color: C.textDim, marginTop: 10 }}>Free plan includes 2 scripts, no credit card required</p>
       </div>
 
     </div>

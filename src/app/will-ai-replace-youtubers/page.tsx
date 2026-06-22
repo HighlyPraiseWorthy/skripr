@@ -84,7 +84,7 @@ export default function WillAIReplaceYouTubers() {
         <Section kicker="What changed" title="AI already commoditized production">
           Be honest about what just happened. AI can write your script. It can edit your video. It can generate a thumbnail for less than the price of a coffee. It can pull your analytics and tell you what moved. Every part of making a video that used to take skill, time, or money is now cheap and fast.
           <br /><br />
-          That sounds amazing until you realize every other creator got the same upgrade at the same time. When production is nearly free, production stops being your advantage. Polished is the new average, and average does not get recommended.
+          That sounds great until you realize every other creator got the same upgrade at the same time. When production is nearly free, production stops being your advantage. Polished is the new average, and average does not get recommended.
         </Section>
 
         <Section kicker="The real question" title="So what is actually left?">

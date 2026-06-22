@@ -229,9 +229,9 @@ export default function ScriptBriefPage() {
                     })}
                   </div>
                   <p style={{ fontSize: 12, color: C.textDim, lineHeight: 1.6, marginBottom: 12 }}>
-                    Bake a proven word into your title — our AI rewrites it to pull more clicks.
+                    Bake a proven word into your title, our AI rewrites it to pull more clicks.
                   </p>
-                  <a href="/dashboard/settings" style={{ display: "inline-block", fontSize: 12, fontWeight: 700, padding: "8px 18px", borderRadius: 8, background: "linear-gradient(135deg,#0e6499,#1a8fd1)", color: "#fff", textDecoration: "none" }}>Unlock with Starter →</a>
+                  <a href="/dashboard/settings" style={{ display: "inline-block", fontSize: 12, fontWeight: 700, padding: "8px 18px", borderRadius: 8, background: "linear-gradient(135deg,#0e6499,#1a8fd1)", color: "#fff", textDecoration: "none" }}>Get Starter →</a>
                 </div>
               ) : (
                 <>

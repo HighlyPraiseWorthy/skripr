@@ -314,7 +314,7 @@ export default function NicheBendBriefPage() {
           <VoiceSelect value={voiceId} onChange={setVoiceId} />
           <CompanionCtaToggle value={companionCta} onChange={setCompanionCta} />
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-            {/* The bridge sub-niche the user picked — always the first selectable option */}
+            {/* The bridge sub-niche the user picked, always the first selectable option */}
             <div
               onClick={() => handlePickAngle({
                 angle: selectedNiche.name,
@@ -328,7 +328,7 @@ export default function NicheBendBriefPage() {
               onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "rgba(77,184,255,0.07)"; }}>
               <div style={{ width: 32, height: 32, borderRadius: 8, background: "rgba(77,184,255,0.2)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, fontSize: 15, color: "#9de4ff" }}>★</div>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: 10, fontWeight: 700, color: "#7ed8ff", letterSpacing: 0.6, marginBottom: 5 }}>YOUR PICK — {selectedNiche.parentNiche?.toUpperCase() || "BRIDGE"} BLEND</div>
+                <div style={{ fontSize: 10, fontWeight: 700, color: "#7ed8ff", letterSpacing: 0.6, marginBottom: 5 }}>YOUR PICK, {selectedNiche.parentNiche?.toUpperCase() || "BRIDGE"} BLEND</div>
                 <div style={{ fontSize: 15, fontWeight: 700, color: C.textBright, marginBottom: 4, lineHeight: 1.3 }}>{selectedNiche.name}</div>
                 {selectedNiche.hook && <div style={{ fontSize: 12, color: C.textDim, lineHeight: 1.5, marginBottom: 8 }}>{selectedNiche.hook}</div>}
                 {selectedNiche.titlePreview && (
@@ -406,7 +406,7 @@ export default function NicheBendBriefPage() {
         </div>
         <div style={{ background: "rgba(52,211,153,0.06)", border: "1px solid rgba(52,211,153,0.22)", borderRadius: 12, padding: "12px 16px", marginBottom: 20 }}>
           <div style={{ fontSize: 12.5, color: "#a7e8cf", lineHeight: 1.55 }}>
-            <strong style={{ color: C.green }}>Why bending works:</strong> saturated niches force you to compete on quality against thousands of channels. Intersections compete with almost no one — and pull from two recommendation pools at once.
+            <strong style={{ color: C.green }}>Why bending works:</strong> saturated niches force you to compete on quality against thousands of channels. Intersections compete with almost no one, and pull from two recommendation pools at once.
           </div>
         </div>
         {brief && (
