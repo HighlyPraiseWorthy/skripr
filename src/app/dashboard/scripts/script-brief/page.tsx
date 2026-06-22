@@ -21,7 +21,7 @@ const EMOTION_COLOR: Record<string, string> = {
 
 type Phase = "loading" | "angles" | "research" | "storytelling" | "generating" | "result";
 type Angle = { hookType: string; hookPremise: string; titleSuggestion: string; whyItWorks: string; audienceEmotion: string; };
-type Brief = { topic: string; niche: string; videoLength: string; hookTypeFilter?: string | null; angles: Angle[]; };
+type Brief = { topic: string; niche: string; videoLength: string; hookTypeFilter?: string | null; voiceProfileId?: string | null; angles: Angle[]; };
 
 const Spinner = ({ label, sub }: { label: string; sub?: string }) => (
   <div style={{ minHeight: "100vh", background: C.bg, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: 14, fontFamily: "system-ui, sans-serif" }}>
@@ -55,6 +55,7 @@ export default function ScriptBriefPage() {
       if (!stored) { window.location.href = "/dashboard/scripts/new"; return; }
       const b: Brief = JSON.parse(stored);
       setBrief(b);
+      if (b.voiceProfileId) setVoiceId(b.voiceProfileId);
       if (b.angles?.length > 0) setPhase("angles");
       else fetchAngles(b);
     } catch { window.location.href = "/dashboard/scripts/new"; }

@@ -30,7 +30,7 @@ export async function POST(req: Request) {
     const learning = [
       pickedAngles ? `ANGLES CREATORS PICKED IN THIS NICHE — lean toward this framing (never copy wording):\n${pickedAngles}` : "",
       hookExamples ? `PROVEN HOOKS IN THIS NICHE:\n${hookExamples}` : "",
-      titleFormulas ? `PROVEN TITLES IN THIS NICHE — model "titleSuggestion" on these formulas:\n${titleFormulas}` : "",
+      titleFormulas && !chosenTitle ? `PROVEN TITLES IN THIS NICHE — model "titleSuggestion" on these formulas:\n${titleFormulas}` : "",
     ].filter(Boolean).join("\n\n");
 
     const msg = await client.messages.create({
@@ -44,7 +44,9 @@ export async function POST(req: Request) {
 ${selectedTitleDescription ? `What it covers: ${String(selectedTitleDescription).slice(0, 200)}` : ""}
 ${selectedTitleAudience ? `Target audience: ${String(selectedTitleAudience).slice(0, 150)}` : ""}
 
-Generate 5 different angles INTO this exact topic — different entry points, framings, or sub-stories WITHIN "${chosenTitle}". Do NOT change the subject or jump to other niches. Every angle must still be recognizably about this chosen topic.`
+Generate 5 different angles INTO this exact topic — different entry points, framings, or sub-stories WITHIN "${chosenTitle}". Do NOT change the subject or jump to other niches. Every angle must still be recognizably about this chosen topic.
+
+TITLE LOCK (critical): Every "titleSuggestion" MUST use the exact same title formula as the chosen title. Formula: "${titleFormula?.formula || chosenTitle}". The chosen title "${chosenTitle}" is your style template. Keep that structure. Change only the variable that fits each angle. Do NOT invent a different title shape, and do NOT add tag phrases like "Here's What Happened", "Here's Why", or "(It's Insane)".`
   : `Generate 5 YouTube content angles using this viral framework.
 
 WHITE-SPACE SWAPS: Make 2 of the 5 angles SINGLE-VARIABLE SWAPS of the source title — keep the proven formula and change EXACTLY ONE variable (the subject, the timeframe, the quantity, or the outcome) to claim an under-served sibling angle. Example: "...from Mom..." -> "...from Dad...". This is how the creator differentiates from everyone copying the original video. CRITICAL: the swapped claim MUST stay genuinely true and defensible — never swap into a claim that is false or unsupported just because it's structurally neat. The other 3 angles are normal angles (no swap).`}
@@ -60,7 +62,7 @@ Output a JSON array of exactly 5 objects. Each object must have these exact keys
 - "angle": punchy topic name, max 8 words
 - "description": one sentence describing what the video covers
 - "audience": who would specifically click on this
-- "titleSuggestion": full title${chosenTitle ? ` — a refinement of the chosen title for this specific angle, keeping the formula and the chosen subject` : " using the formula above"}
+- "titleSuggestion": full title${chosenTitle ? ` — MUST follow the TITLE LOCK formula above, only the variable changed for this angle. Do not change the title shape.` : " using the formula above"}
 - "swap": ${chosenTitle ? `null (not applicable here)` : `if this angle is a single-variable swap of the source title, the change written as "X → Y" (e.g. "Mom → Dad"); otherwise null`}
 
 [`,

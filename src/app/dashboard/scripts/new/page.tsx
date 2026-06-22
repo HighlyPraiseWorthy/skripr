@@ -716,7 +716,7 @@ export default function NewScriptPage() {
             {inputMode === "topic" && topic.trim() && (
               <button
                 onClick={() => {
-                  const brief = { topic: topic.trim(), niche: niche.trim(), videoLength: videoMinutes >= 14 ? "long" : "medium", targetMinutes: videoMinutes, hookTypeFilter: selectedHookType || null, viralMagnetWord: selectedViralWord || null, angles: [] };
+                  const brief = { topic: topic.trim(), niche: niche.trim(), videoLength: videoMinutes >= 14 ? "long" : "medium", targetMinutes: videoMinutes, hookTypeFilter: selectedHookType || null, viralMagnetWord: selectedViralWord || null, voiceProfileId: voiceId || null, angles: [] };
                   sessionStorage.setItem("skripr_script_brief", JSON.stringify(brief));
                   window.location.href = "/dashboard/scripts/script-brief";
                 }}
