@@ -34,6 +34,31 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 }
 
 const articleFAQs: Record<string, { q: string; a: string }[]> = {
+  "how-to-start-a-faceless-youtube-channel": [
+    { q: "How much does it cost to start a faceless YouTube channel?", a: "You can start for very little: a script tool, a voiceover option, and free or low-cost visuals. Your biggest investment is time and consistency, not money." },
+    { q: "Do faceless channels get monetized?", a: "Yes. Faceless channels can join the YouTube Partner Program like any other, as long as the content is original and follows the guidelines." },
+    { q: "How many videos before a faceless channel grows?", a: "Plan for at least 20 to 30 consistent uploads so the algorithm has enough data to find your audience." },
+  ],
+  "how-to-script-a-youtube-video": [
+    { q: "How do you script a YouTube video step by step?", a: "Start with a hook, outline three to five points, write the body for the ear with re-hooks, plant and resolve open loops, then end with one clear call to action." },
+    { q: "Should I script every YouTube video word for word?", a: "On-camera creators often script the hook and key beats and improvise the rest. Faceless and voiceover videos are usually scripted fully, because the script is the entire video." },
+    { q: "How long should a YouTube script be?", a: "About 130 words per minute of finished video, so a 10-minute video runs around 1,300 words." },
+  ],
+  "how-to-grow-a-small-youtube-channel": [
+    { q: "How do small YouTube channels grow in 2026?", a: "By making videos people finish. Strong hooks, clear packaging, a focused niche, topics with demand, and consistent uploads drive growth more than any trick." },
+    { q: "Why is my small channel not growing?", a: "Usually weak retention, vague titles and thumbnails, an unfocused niche, or too few uploads for the algorithm to learn. Fix hooks and packaging first." },
+    { q: "How often should a small channel post?", a: "Consistently enough to gather data and stay in the algorithm's view. A steady schedule you can sustain beats a burst you cannot." },
+  ],
+  "youtube-video-ideas-when-stuck": [
+    { q: "What should I make when I have no YouTube ideas?", a: "Start from proven videos in your niche, bend formats from adjacent niches, and use simple frameworks like the mistake, the contrarian take, and the breakdown." },
+    { q: "How do YouTubers never run out of ideas?", a: "They generate ideas from what already works and from multiple angles on the same topic, rather than inventing from scratch." },
+    { q: "How do I know if a video idea is good?", a: "Check that the topic already has demand. If similar videos get real views in your niche, the idea is validated before you make it." },
+  ],
+  "how-to-avoid-demonetization-on-youtube": [
+    { q: "What causes demonetization on YouTube?", a: "Content advertisers avoid: strong profanity, graphic violence, carelessly handled sensitive topics, adult content, and reckless controversy, especially early in the video or in the title." },
+    { q: "Can you fix a demonetized video?", a: "You can edit and resubmit for review, but the strongest earning window is often at launch. Checking the script before you publish avoids the problem." },
+    { q: "How do I keep my videos advertiser-friendly?", a: "Handle sensitive topics with context and a measured tone, keep the first 30 seconds and the title clean, and review the script against YouTube's guidelines before recording. Skripr's Compliance check does this for you." },
+  ],
   "how-to-write-a-faceless-youtube-script": [
     { q: "How long should a faceless YouTube script be?", a: "Plan for roughly 130 words per minute of finished video, so a 10-minute video is about 1,300 words. Match length to the depth of the topic, not a fixed word count." },
     { q: "Do I need a script for every faceless video?", a: "Yes. A faceless video has nothing but the script and the visuals, so a tight script is the single biggest lever on retention." },

@@ -1914,6 +1914,188 @@ Small channels get tested in small batches first, so publish consistently and gi
 ## The Unfair Advantage
 
 The creators who seem to crack the algorithm are usually just nailing hooks, titles, and retention on every upload. That is a writing problem more than a luck problem. Skripr builds those exact patterns into every script and starts from videos already proven to perform in your niche, so you are working with what the algorithm already rewards.`
+  },
+  {
+    slug: "how-to-start-a-faceless-youtube-channel",
+    cluster: "Faceless YouTube",
+    title: "How to Start a Faceless YouTube Channel (2026)",
+    metaTitle: "How to Start a Faceless YouTube Channel (2026 Guide) | Skripr",
+    metaDescription: "A step-by-step guide to starting a faceless YouTube channel in 2026: pick a niche, set up your stack, and publish your first video without showing your face.",
+    targetKeyword: "how to start a faceless youtube channel",
+    schemaType: "Article",
+    content: `## What a Faceless Channel Actually Is
+
+A faceless channel grows without you ever appearing on camera. Think explainer, history, true crime, finance, and story channels: voiceover plus visuals, no host. It is the lowest-barrier way to start on YouTube, because you do not need a studio, a camera presence, or even your real name.
+
+## Step 1: Pick a Niche You Can Sustain
+
+Your niche has to clear three bars: real demand, content you can make without your face, and enough depth for a hundred videos. Do not pick by ad rate alone. Pick something you can keep producing for a year. For a full breakdown, see [our guide to the best faceless niches](/youtube-strategy/best-faceless-youtube-niches-2026).
+
+## Step 2: Set Up the Production Stack
+
+You need four things: a script, a voice, visuals, and an edit. Keep it lean to start. A script tool, an AI or recorded voiceover, stock or simple generated visuals, and a basic editor are enough for your first videos. Polish comes later. The quality of the script comes first.
+
+## Step 3: Write a Script That Holds Attention
+
+On a faceless channel the script is the show. Open with a hook in the first 30 seconds, build the body around open loops, re-hook every 30 to 45 seconds, and pay off the promise at the end. Here is the full [faceless scripting guide](/youtube-strategy/how-to-write-a-faceless-youtube-script).
+
+## Step 4: Package for the Click
+
+Even a great video dies with a weak title and thumbnail. Make a specific, curiosity-driving title and a clean thumbnail that promises a payoff. Use the words people actually search in your title and description.
+
+## Step 5: Publish Consistently and Read the Data
+
+The algorithm needs reps to learn who to show you to. Commit to 20 to 30 videos before judging the niche. Track retention and click-through, fix the weakest one, then repeat.
+
+## The Fastest Way to Start
+
+The bottleneck for most new faceless channels is the writing. Skripr turns a proven video or a topic into a full, voiceover-ready script in your chosen voice, so you can publish consistently from day one instead of staring at a blank page.`
+  },
+  {
+    slug: "how-to-script-a-youtube-video",
+    cluster: "Retention & Script Structure",
+    title: "How to Script a YouTube Video (Beginner's Guide)",
+    metaTitle: "How to Script a YouTube Video: Beginner's Guide (2026) | Skripr",
+    metaDescription: "Learn how to script a YouTube video from scratch: the structure, the hook, and the retention beats that keep viewers watching. A simple repeatable process.",
+    targetKeyword: "how to script a youtube video",
+    schemaType: "Article",
+    content: `## Why Scripting Beats Winging It
+
+Winging it feels natural, but it leaks retention. Rambling intros, lost trains of thought, and weak endings all cost watch time. A script is not about sounding robotic. It is about removing the dead air so every second earns the next.
+
+## Start With the Hook
+
+The hook is the first 30 seconds, and it opens a curiosity gap. Lead with a bold claim, a sharp question, or the middle of a story. Cut anything that sounds like a warm-up.
+
+## Outline Before You Write
+
+List the three to five points your video makes, then order them so each one raises a question the next one answers. This outline is your retention spine. If a point does not earn its place, drop it.
+
+## Write the Body for the Ear
+
+Draft each section in the voice you would actually speak. Short sentences. Contractions. Read it out loud, and if you stumble, rewrite. Open each section with a small re-hook so viewers stay through the transition, which is where most drop off.
+
+## Plant and Pay Off Open Loops
+
+Tease a payoff early and resolve it later. One or two loops across a video can lift retention more than any edit. Just be sure to close every loop you open.
+
+## End With One Clear Ask
+
+Deliver the hook's promise, tie back to the opening, then make a single call to action. One ask, at the moment of peak value.
+
+## Make Scripting Repeatable
+
+Once you have a structure that works, you should not rebuild it every time. Skripr applies this exact structure automatically, turning a topic or a proven video into a finished script, so scripting becomes a five-minute step instead of an afternoon.`
+  },
+  {
+    slug: "how-to-grow-a-small-youtube-channel",
+    cluster: "YouTube Growth & Monetization",
+    title: "How to Grow a Small YouTube Channel in 2026",
+    metaTitle: "How to Grow a Small YouTube Channel (2026) | Skripr",
+    metaDescription: "A realistic playbook for growing a small YouTube channel in 2026: focus on retention and packaging, pick topics with demand, and stay consistent.",
+    targetKeyword: "how to grow a small youtube channel",
+    schemaType: "Article",
+    content: `## Growth Is Downstream of Retention
+
+Small channels obsess over subscribers and tags. The truth is simpler: YouTube grows videos that keep people watching. Fix retention and packaging first, and growth follows. Everything else is a distraction.
+
+## Make Videos for an Audience That Exists
+
+Do not invent topics and hope. Check that people already search or watch your topic. Making content for proven demand is the difference between videos that get found and videos that disappear.
+
+## Win the Click and the First 30 Seconds
+
+Two moments decide a video's fate: the click, which is the title and thumbnail, and the first 30 seconds, which is the hook. Nail both on every upload. A strong video with weak packaging never gets seen, and strong packaging with a weak open loses them instantly.
+
+## Pick a Clear Lane
+
+If every video is about something different, YouTube cannot figure out who to recommend you to. A focused lane gives the algorithm a clear audience and gives viewers a reason to subscribe.
+
+## Be Consistent Long Enough to Learn
+
+Publish enough that you can see patterns. Twenty to thirty videos gives you real data on what works. Quitting at video eight is the most common reason small channels stay small.
+
+## Study What Already Works
+
+The fastest learners reverse-engineer videos that already perform in their niche, then bring their own angle. You do not have to guess what works when the evidence is public.
+
+## Remove the Bottleneck
+
+Most small channels are capped by how fast they can produce good videos. Skripr starts from what is already working in your niche and writes a retention-built script in your voice, so you can publish more without dropping quality.`
+  },
+  {
+    slug: "youtube-video-ideas-when-stuck",
+    cluster: "YouTube Growth & Monetization",
+    title: "YouTube Video Ideas: What to Make When You Are Stuck",
+    metaTitle: "YouTube Video Ideas When You Are Stuck (2026) | Skripr",
+    metaDescription: "Out of YouTube video ideas? Here is how to generate an endless supply from proven videos, your niche, and simple frameworks, instead of staring at a blank page.",
+    targetKeyword: "youtube video ideas when you have none",
+    schemaType: "Article",
+    content: `## The Real Problem Is Not a Lack of Ideas
+
+You are not out of ideas. You are out of validated ideas you trust. Random brainstorms feel risky because you do not know if anyone wants them. The fix is to generate ideas from things that already work, not from thin air.
+
+## Mine Proven Videos in Your Niche
+
+Find videos that overperformed in your niche, then ask what made them work and how you would do your own version. You are not copying the topic. You are borrowing the proven structure and angle.
+
+## Bend Ideas From Adjacent Niches
+
+Take a format winning in a nearby niche and bring it to yours. A finance explainer format applied to history. A true-crime structure applied to business scandals. Crossover ideas are wide open because few creators look sideways. This is the idea behind Skripr's [Niche Bend](/youtube-strategy/niche-bend-examples).
+
+## Use Simple Idea Frameworks
+
+- The mistake: "the [niche] mistake that costs you [bad outcome]"
+- The contrarian take: "everyone says X, here is why that is wrong"
+- The breakdown: "how [thing] actually works"
+- The list: "[N] [things] that [outcome]"
+- The story: a real event told as a journey
+
+## Turn One Idea Into Five
+
+Every strong topic has angles. One subject can become a beginner guide, a deep dive, a myth-buster, a story, and a list. You do not need more topics. You need more angles on the ones that work.
+
+## Never Start From Zero Again
+
+When you do sit down to make the video, Skripr takes the idea or a proven video and writes the full script for you, so the idea becomes a finished draft in minutes instead of another blank page.`
+  },
+  {
+    slug: "how-to-avoid-demonetization-on-youtube",
+    cluster: "YouTube Growth & Monetization",
+    title: "How to Avoid Demonetization on YouTube",
+    metaTitle: "How to Avoid YouTube Demonetization (2026 Guide) | Skripr",
+    metaDescription: "What gets videos demonetized on YouTube and how to avoid it: advertiser-friendly guidelines, risky language, and a way to check your script before you publish.",
+    targetKeyword: "how to avoid demonetization on youtube",
+    schemaType: "Article",
+    content: `## Demonetization vs Removal
+
+Demonetization is not a strike. It means a video stays up but earns little or no ad revenue, because advertisers do not want to run against it. The goal is to keep your content advertiser-friendly without watering it down.
+
+## What Triggers It Most
+
+- Strong profanity, especially in the first 30 seconds or the title
+- Graphic violence or injury, even when only described
+- Sensitive or tragic topics handled carelessly
+- Adult or shocking content
+- Controversial claims treated recklessly
+
+The first 30 seconds and the title carry the most weight, because that is what gets scanned first.
+
+## Handle Sensitive Topics Without Killing Reach
+
+You can cover dark or serious subjects and stay monetized if you frame them carefully. Context, a measured tone, and avoiding gratuitous detail go a long way. True crime and history channels do this every day.
+
+## Watch the Title and Thumbnail
+
+Advertiser-friendliness starts before the video plays. A shocking title or thumbnail can flag a video that would otherwise be fine. Keep the packaging strong but not reckless.
+
+## Check Before You Publish, Not After
+
+The expensive mistake is finding out after upload, once the video has already lost its best earning window. Review the script against the guidelines while you can still edit it.
+
+## A Built-In Safety Net
+
+Skripr includes a Compliance check that scans your script across the six YouTube policy dimensions, flags the exact phrases that put ad revenue at risk, and suggests fixes, so you catch problems before you record instead of after demonetization.`
   }
 ];
 
