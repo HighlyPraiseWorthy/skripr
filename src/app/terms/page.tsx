@@ -1,13 +1,13 @@
 import Link from "next/link";
 
 const C = {
-  bg: "#070711",
-  cardBg: "#12122a",
-  border: "rgba(99,102,241,0.12)",
-  accent: "#818cf8",
-  text: "#e2e8f0",
-  textDim: "#64748b",
-  textBright: "#f1f5f9",
+  bg: "#080c12",
+  cardBg: "#0d1520",
+  border: "rgba(77,184,255,0.14)",
+  accent: "#4db8ff",
+  text: "#d2e2f2",
+  textDim: "#8aa4bf",
+  textBright: "#e8edf5",
 };
 
 export default function TermsPage() {
@@ -15,7 +15,7 @@ export default function TermsPage() {
     <div style={{ minHeight: "100vh", background: C.bg, color: C.text, fontFamily: "system-ui,-apple-system,sans-serif" }}>
       <nav style={{ borderBottom: `1px solid ${C.border}`, padding: "18px 24px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
-          <div style={{ width: 32, height: 32, borderRadius: 9, background: "linear-gradient(135deg,#6366f1,#a855f7)", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, color: "#fff", fontSize: 11 }}>SK</div>
+          <div style={{ width: 32, height: 32, borderRadius: 9, background: "linear-gradient(135deg,#0e6499,#4db8ff)", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, color: "#fff", fontSize: 11 }}>SK</div>
           <span style={{ fontSize: 18, fontWeight: 700, color: C.textBright, letterSpacing: -0.4 }}>Skripr</span>
         </Link>
         <Link href="/" style={{ fontSize: 13, color: C.textDim, textDecoration: "none" }}>← Back</Link>
@@ -40,7 +40,7 @@ export default function TermsPage() {
           },
           {
             title: "4. Subscriptions and Billing",
-            body: "Paid plans are billed monthly in advance. You can cancel at any time from your account settings. Cancellation takes effect at the end of the current billing period — you retain access until then. No refunds are provided for partial billing periods. We reserve the right to change pricing with 30 days notice.",
+            body: "Paid plans are billed monthly in advance. You can cancel at any time from your account settings. Cancellation takes effect at the end of the current billing period, and you retain access until then. No refunds are provided for partial billing periods. We reserve the right to change pricing with 30 days notice.",
           },
           {
             title: "5. AI-Generated Content",
@@ -68,7 +68,7 @@ export default function TermsPage() {
           },
           {
             title: "11. Contact",
-            body: "For questions about these Terms, contact us at hello@skripr.com.",
+            body: "For questions about these Terms, contact us at skripr.app@gmail.com.",
           },
         ].map((section, i) => (
           <div key={i} style={{ marginBottom: 32 }}>
@@ -81,7 +81,8 @@ export default function TermsPage() {
       <footer style={{ borderTop: `1px solid ${C.border}`, padding: "24px", textAlign: "center" }}>
         <p style={{ fontSize: 13, color: C.textDim, margin: 0 }}>
           <Link href="/privacy" style={{ color: C.accent, textDecoration: "none", marginRight: 20 }}>Privacy Policy</Link>
-          <Link href="/" style={{ color: C.textDim, textDecoration: "none" }}>skripr.com</Link>
+          <Link href="/contact" style={{ color: C.accent, textDecoration: "none", marginRight: 20 }}>Contact</Link>
+          <Link href="/" style={{ color: C.textDim, textDecoration: "none" }}>skripr.app</Link>
         </p>
       </footer>
     </div>

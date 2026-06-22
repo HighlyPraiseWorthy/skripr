@@ -1109,6 +1109,7 @@ export default function LandingPage() {
             ["/subscribr-alternative","vs Subscribr"],
             ["/tubeai-alternative","vs TubeAI"],
             ["/pricing","Pricing"],
+            ["/contact","Contact"],
             ["/terms","Terms"],
             ["/privacy","Privacy"],
           ].map(([href, label]) => (

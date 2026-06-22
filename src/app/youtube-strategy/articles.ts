@@ -1698,6 +1698,222 @@ Skripr helps you monetize faster by:
 5. **Viral Magnet Words** = higher CTR = more views = more affiliate clicks
 
 Every feature is designed to help you earn more, faster.`
+  },
+  {
+    slug: "how-to-write-a-faceless-youtube-script",
+    cluster: "Faceless YouTube",
+    title: "How to Write a Faceless YouTube Script (Step by Step)",
+    metaTitle: "How to Write a Faceless YouTube Script (2026 Guide) | Skripr",
+    metaDescription: "A step-by-step guide to writing faceless YouTube scripts that hold attention, from hook to payoff. Includes structure, retention tips, and a faster way to do it.",
+    targetKeyword: "how to write a faceless youtube script",
+    schemaType: "Article",
+    content: `## Why the Script Is Everything for a Faceless Channel
+
+On a faceless channel there is no charismatic host carrying the weak moments. No reaction shots, no personality, no charm to lean on. The script is the entire show. If the writing sags, the viewer leaves, because there is nothing else holding them.
+
+That is the hard part. The good part is that scripting is a skill you can learn, and a strong script can outperform a channel with a famous face.
+
+## Open With a Hook That Earns the Next 30 Seconds
+
+The first 15 to 30 seconds decide whether anyone stays. Your hook has one job: open a curiosity gap the viewer needs closed. Drop them into the tension immediately. Skip the "welcome back" and the channel intro.
+
+A weak open: "Today we are going to talk about the Roman Empire." A strong open: "Rome did not fall in a day. It fell because of one decision almost nobody talks about."
+
+## Build the Body Around Open Loops
+
+Retention on faceless videos lives and dies on open loops. An open loop is a payoff you promise early and deliver later. Tease something in the first minute, then resolve it near the end. Stack two or three across the video so there is always a reason to keep watching. Close every loop you open, or you train viewers not to trust you.
+
+## Write for the Ear, Not the Eye
+
+Your script becomes a voiceover, so it has to sound natural when spoken. Use short sentences. Use contractions. Read every paragraph out loud, and if you stumble or run out of breath, cut it down. Documentary narration works best in flowing paragraphs of three to five sentences, not choppy one-liners and not dense walls of text.
+
+## Re-Hook Every 30 to 45 Seconds
+
+Viewers drop off in waves, and the biggest drops come right after a section ends. Fight this with mini-hooks: "but here is where it gets strange," or "the third reason is the one nobody expects." Each one buys you the next segment.
+
+## Land the Payoff
+
+End by delivering the promise from your hook and tying back to the opening, so the video feels complete. A satisfying ending is what earns the next click, the like, and the subscribe.
+
+## A Faster Way to Get the First Draft
+
+Writing all of this from a blank page is slow, and the blank page is where most faceless creators stall. Skripr handles the structure for you. Paste a proven video or a topic and it returns a full, voiceover-ready script with the hook, open loops, re-hooks, and payoff already built in, in the voice you choose. You edit instead of starting from nothing.`
+  },
+  {
+    slug: "best-faceless-youtube-niches-2026",
+    cluster: "Faceless YouTube",
+    title: "Best Faceless YouTube Niches in 2026",
+    metaTitle: "Best Faceless YouTube Niches in 2026 | Skripr",
+    metaDescription: "The faceless YouTube niches worth starting in 2026, why they work, and how to pick one you can sustain. Plus how to find an angle competitors miss.",
+    targetKeyword: "best faceless youtube niches 2026",
+    schemaType: "Article",
+    content: `## What Makes a Faceless Niche Worth Starting
+
+A good faceless niche has three things: steady demand, content you can produce without showing your face, and enough depth to make hundreds of videos. Chasing a niche only because it has high ad rates is a trap if you cannot sustain the output. Pick something you can keep making for a year.
+
+## The Strongest Faceless Niches Right Now
+
+- Educational explainers: science, history, space, psychology. Evergreen demand, easy to script, strong watch time.
+- True crime and mystery: high retention, loyal audiences, works entirely with voiceover and visuals.
+- Finance and money: high RPM, steady demand, broad subtopics from budgeting to investing basics.
+- Tech and AI news: fast-moving, repeat viewership, endless material.
+- Story and "what if" scenarios: immersive second-person storytelling that holds attention.
+- Motivation and self-improvement: simple production, broad appeal.
+
+## High RPM vs High Retention
+
+Some niches pay more per view, like finance, tech, and business, but they are competitive. Others are easier to grow and hold attention, like stories, history, and true crime, but pay less per view. For a new channel, the smart play is to grow on a high-retention niche first, then bend toward a higher-value audience once you have momentum.
+
+## How to Pick the One
+
+Score each candidate on three questions. Can you make 100 videos in it without burning out? Is there proven demand, which you can check by searching the topics and looking at view counts on small channels? Can you bring an angle that is not already saturated? The niche that scores highest on all three is your answer, not the one with the highest ad rate.
+
+## Find the Angle Competitors Miss
+
+The biggest mistake is entering a niche head-on against established channels. Instead, look for crossover angles: history for finance viewers, psychology for true-crime fans. That is the idea behind Skripr's Niche Bend, which takes a proven video and blends it into an adjacent niche, so you reach an audience nobody else is targeting.`
+  },
+  {
+    slug: "best-ai-tools-for-faceless-youtube",
+    cluster: "Faceless YouTube",
+    title: "The Best AI Tools for Faceless YouTube Channels",
+    metaTitle: "Best AI Tools for Faceless YouTube (2026) | Skripr",
+    metaDescription: "The AI tools faceless creators actually use in 2026, sorted by job: scripting, voiceover, visuals, and editing. Plus how to avoid the generic-AI trap.",
+    targetKeyword: "best ai tools for faceless youtube",
+    schemaType: "Article",
+    content: `## The Faceless Production Stack
+
+A faceless video is built from four jobs: the script, the voiceover, the visuals, and the edit. AI can help with all four, but the script is the one that decides whether the video gets watched. Get that right first.
+
+## Scripting, the Part That Matters Most
+
+This is where most faceless channels win or lose. A general chatbot can draft something, but it usually sounds like everyone else and lacks retention structure. A purpose-built tool like Skripr writes voiceover-ready scripts with hooks, open loops, and re-hooks built in, in the voice you choose, and it starts from videos already proven to work in your niche instead of a blank prompt.
+
+## Voiceover
+
+AI voice tools have come a long way and now sound natural enough for full narration. Look for natural pacing and clean pronunciation. Many faceless creators pair an AI voice with a well-written script for a fast, consistent pipeline.
+
+## Visuals and B-Roll
+
+Stock footage libraries, AI image generators, and simple motion tools cover most explainer and story channels. You do not need cinematic footage. You need visuals that support the narration and keep the eye busy while the script does the heavy lifting.
+
+## Editing
+
+AI-assisted editors can cut to pacing, add captions, and tighten the timeline. For faceless content, clean captions and good pacing matter far more than fancy effects.
+
+## The Trap to Avoid
+
+The mistake is grabbing one all-in-one tool and accepting a mediocre script because the same tool also does thumbnails and editing. The script is the product. Use the best tool for the writing, then assemble the rest. A great script with simple visuals beats a polished video with a flat script every time.`
+  },
+  {
+    slug: "free-youtube-script-template",
+    cluster: "Retention & Script Structure",
+    title: "Free YouTube Script Template (and How to Use It)",
+    metaTitle: "Free YouTube Script Template (2026) | Skripr",
+    metaDescription: "A free, proven YouTube script template you can copy, plus how to fill in each section so your videos hook viewers and hold retention.",
+    targetKeyword: "free youtube script template",
+    schemaType: "Article",
+    content: `## The Template
+
+Copy this structure for almost any talking or voiceover video:
+
+- Hook (0 to 30 seconds): one bold claim, question, or mid-story moment that opens a curiosity gap.
+- Setup (30 to 60 seconds): the minimum context the viewer needs, plus a promise of the payoff to come.
+- Body: three to five sections, each opening with a re-hook and delivering one idea, example, or beat.
+- Open loops: one or two teased payoffs you resolve later in the video.
+- Payoff: deliver the promise from the hook and tie back to the opening.
+- Call to action: one clear ask, tied to the value they just got.
+
+## How to Fill In the Hook
+
+The hook is most of the job. Do not warm up. Drop the viewer into the most interesting point. Use a surprising stat, a contrarian claim, a question they cannot answer, or the middle of a story.
+
+## How to Fill In the Body
+
+Each section should make one point and end with a reason to keep watching. Write in flowing paragraphs of three to five sentences for voiceover, or tighter lines for on-camera. Read it out loud, and if it sounds stiff, rewrite it the way you would actually say it.
+
+## How to Use Open Loops
+
+Plant a loop early, such as "there is one part of this that surprised even me," and pay it off near the end. This single technique can lift retention more than any editing trick.
+
+## The Payoff and CTA
+
+Close every loop and deliver the hook's promise. Then make one clear ask. One. Asking for the like, the comment, the subscribe, and the bell all at once gets you none of them.
+
+## From Template to Finished Script in Minutes
+
+A template gives you the skeleton. Filling it in well still takes time and skill. Skripr does the filling for you. Give it a topic or a proven video and it returns a full script in this exact structure, in your voice, ready to record. You start from a strong draft instead of a blank template.`
+  },
+  {
+    slug: "how-to-get-your-first-1000-subscribers",
+    cluster: "YouTube Growth & Monetization",
+    title: "How to Get Your First 1,000 Subscribers on YouTube",
+    metaTitle: "How to Get Your First 1,000 YouTube Subscribers (2026) | Skripr",
+    metaDescription: "A realistic plan to reach your first 1,000 subscribers: pick topics with demand, hook viewers, and let watch time do the work. No gimmicks.",
+    targetKeyword: "how to get your first 1000 subscribers",
+    schemaType: "Article",
+    content: `## Subscribers Are a Lagging Indicator
+
+You do not chase subscribers directly. Subscribers are what happens when enough people watch a video to the end and want more. So the real goal for your first 1,000 is simple: make videos people finish. Everything below serves that.
+
+## Pick Topics That Already Have Demand
+
+New creators waste months on topics nobody searches for. Before you make a video, check that the topic has proven interest. Search it, and look at whether small channels get real views on it. Make videos for an audience that already exists instead of hoping one appears.
+
+## Win the First 30 Seconds
+
+Most of your potential subscribers leave in the first 30 seconds, so a strong hook is the highest-leverage thing you can fix. Open with tension, a claim, or a question. Cut the intro. Give them a reason to stay before you give them context.
+
+## Be Consistent Long Enough to Get Data
+
+The algorithm needs data to learn who to show your videos to. Publish consistently for at least 20 to 30 videos before judging whether a niche works. Most people quit at video 8, right before the algorithm has enough to work with.
+
+## Make Every Video Findable
+
+Use titles and thumbnails that promise a clear payoff, and write a real description with the words people actually search. Discovery is not an afterthought. It is how strangers find you before you have an audience.
+
+## Turn Watchers Into Subscribers
+
+Ask once, at the moment of peak value, not at the start. "If this helped, subscribe so the next one finds you" works because you earned it. The best subscribe driver of all is simply a video good enough that they want the next one.
+
+## Do the Work Faster
+
+The creators who reach 1,000 fastest are not more talented. They publish more good videos in less time, and that is mostly a scripting bottleneck. Skripr turns a proven idea into a finished, retention-built script quickly, so you can keep a consistent schedule without burning out.`
+  },
+  {
+    slug: "how-to-beat-the-youtube-algorithm",
+    cluster: "YouTube Growth & Monetization",
+    title: "How to Beat the YouTube Algorithm as a Small Creator",
+    metaTitle: "How to Beat the YouTube Algorithm as a Small Creator (2026) | Skripr",
+    metaDescription: "The YouTube algorithm is not your enemy. Here is what it actually rewards in 2026 and how a small channel can use it to grow.",
+    targetKeyword: "how to beat the youtube algorithm",
+    schemaType: "Article",
+    content: `## The Algorithm Is Not Against You
+
+The YouTube algorithm has one goal: keep people watching YouTube. It is not trying to bury small channels. It is trying to find videos that satisfy viewers and show them to more of the right people. Beating it just means making videos it can confidently recommend.
+
+## What It Actually Rewards
+
+Two signals matter most: click-through rate, meaning do people click your title and thumbnail, and watch time, meaning do they stay. A great title with weak retention dies. Great retention with a weak title never gets the click. You need both.
+
+## Click-Through Rate
+
+Your title and thumbnail are a promise. Make it clear and worth clicking. Use specific, curiosity-driving titles instead of vague ones, and test different angles. The same video idea can flop or fly based on the packaging.
+
+## Retention Is the Real Game
+
+Once someone clicks, retention decides everything. Hook them in the first 30 seconds, re-hook every 30 to 45 seconds, use open loops, and cut anything that drags. A video that holds attention gets pushed to more people, which is the entire flywheel.
+
+## Help the Algorithm Understand You
+
+Pick a clear lane so YouTube knows who to show your videos to. Use real, searchable language in titles and descriptions. If every video is about something different, the algorithm cannot build an audience for you.
+
+## Give It Enough Data
+
+Small channels get tested in small batches first, so publish consistently and give the algorithm enough signal to find your audience. Do not panic over one slow video. Judge trends across 20 to 30 uploads.
+
+## The Unfair Advantage
+
+The creators who seem to crack the algorithm are usually just nailing hooks, titles, and retention on every upload. That is a writing problem more than a luck problem. Skripr builds those exact patterns into every script and starts from videos already proven to perform in your niche, so you are working with what the algorithm already rewards.`
   }
 ];
 
@@ -1706,6 +1922,11 @@ export const clusters = [
     name: "Niche Strategy & Crossover",
     description: "Find untapped audiences with niche crossover strategies and the Niche Bend Engine.",
     articles: articles.filter(a => a.cluster === "Niche Strategy & Crossover"),
+  },
+  {
+    name: "Faceless YouTube",
+    description: "Start and grow a faceless channel: niches, scripts, and the AI tools that actually help.",
+    articles: articles.filter(a => a.cluster === "Faceless YouTube"),
   },
   {
     name: "Viral Video Analysis",

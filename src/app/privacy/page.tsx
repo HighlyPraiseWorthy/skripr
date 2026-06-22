@@ -1,13 +1,13 @@
 import Link from "next/link";
 
 const C = {
-  bg: "#070711",
-  cardBg: "#12122a",
-  border: "rgba(99,102,241,0.12)",
-  accent: "#818cf8",
-  text: "#e2e8f0",
-  textDim: "#64748b",
-  textBright: "#f1f5f9",
+  bg: "#080c12",
+  cardBg: "#0d1520",
+  border: "rgba(77,184,255,0.14)",
+  accent: "#4db8ff",
+  text: "#d2e2f2",
+  textDim: "#8aa4bf",
+  textBright: "#e8edf5",
 };
 
 export default function PrivacyPage() {
@@ -15,7 +15,7 @@ export default function PrivacyPage() {
     <div style={{ minHeight: "100vh", background: C.bg, color: C.text, fontFamily: "system-ui,-apple-system,sans-serif" }}>
       <nav style={{ borderBottom: `1px solid ${C.border}`, padding: "18px 24px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
-          <div style={{ width: 32, height: 32, borderRadius: 9, background: "linear-gradient(135deg,#6366f1,#a855f7)", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, color: "#fff", fontSize: 11 }}>SK</div>
+          <div style={{ width: 32, height: 32, borderRadius: 9, background: "linear-gradient(135deg,#0e6499,#4db8ff)", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, color: "#fff", fontSize: 11 }}>SK</div>
           <span style={{ fontSize: 18, fontWeight: 700, color: C.textBright, letterSpacing: -0.4 }}>Skripr</span>
         </Link>
         <Link href="/" style={{ fontSize: 13, color: C.textDim, textDecoration: "none" }}>← Back</Link>
@@ -56,7 +56,7 @@ export default function PrivacyPage() {
           },
           {
             title: "8. Your Rights",
-            body: "You have the right to access, correct, or delete your personal data at any time. You can export your scripts from the dashboard. To request account deletion or a data export, email hello@skripr.com. We will respond within 30 days.",
+            body: "You have the right to access, correct, or delete your personal data at any time. You can export your scripts from the dashboard. To request account deletion or a data export, email skripr.app@gmail.com. We will respond within 30 days.",
           },
           {
             title: "9. Third-Party Services",
@@ -72,7 +72,7 @@ export default function PrivacyPage() {
           },
           {
             title: "12. Contact",
-            body: "For privacy-related questions or requests, contact us at hello@skripr.com.",
+            body: "For privacy-related questions or requests, contact us at skripr.app@gmail.com.",
           },
         ].map((section, i) => (
           <div key={i} style={{ marginBottom: 32 }}>
@@ -85,7 +85,8 @@ export default function PrivacyPage() {
       <footer style={{ borderTop: `1px solid ${C.border}`, padding: "24px", textAlign: "center" }}>
         <p style={{ fontSize: 13, color: C.textDim, margin: 0 }}>
           <Link href="/terms" style={{ color: C.accent, textDecoration: "none", marginRight: 20 }}>Terms of Service</Link>
-          <Link href="/" style={{ color: C.textDim, textDecoration: "none" }}>skripr.com</Link>
+          <Link href="/contact" style={{ color: C.accent, textDecoration: "none", marginRight: 20 }}>Contact</Link>
+          <Link href="/" style={{ color: C.textDim, textDecoration: "none" }}>skripr.app</Link>
         </p>
       </footer>
     </div>

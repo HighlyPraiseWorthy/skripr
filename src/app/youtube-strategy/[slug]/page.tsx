@@ -34,6 +34,36 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 }
 
 const articleFAQs: Record<string, { q: string; a: string }[]> = {
+  "how-to-write-a-faceless-youtube-script": [
+    { q: "How long should a faceless YouTube script be?", a: "Plan for roughly 130 words per minute of finished video, so a 10-minute video is about 1,300 words. Match length to the depth of the topic, not a fixed word count." },
+    { q: "Do I need a script for every faceless video?", a: "Yes. A faceless video has nothing but the script and the visuals, so a tight script is the single biggest lever on retention." },
+    { q: "Can AI write a faceless YouTube script?", a: "Yes. Tools like Skripr generate full voiceover-ready scripts with hooks and retention structure built in, then you edit for your voice and facts." },
+  ],
+  "best-faceless-youtube-niches-2026": [
+    { q: "What is the most profitable faceless niche?", a: "Finance, business, and tech tend to have the highest ad rates, but profit also depends on retention and how consistently you publish. A high-retention niche you can sustain often beats a high-RPM niche you abandon." },
+    { q: "Which faceless niche is easiest to start?", a: "Educational explainers, history, and story-based channels are among the easiest, because they rely on research, a script, and stock or simple visuals." },
+    { q: "Do faceless niches still work in 2026?", a: "Yes. Faceless channels keep growing across education, true crime, finance, and storytelling. The bar is quality scripting, not whether a niche looks saturated." },
+  ],
+  "best-ai-tools-for-faceless-youtube": [
+    { q: "What is the best AI tool for faceless YouTube scripts?", a: "A purpose-built script tool like Skripr is stronger than a general chatbot because it builds retention structure and voice matching in, rather than producing a generic draft." },
+    { q: "Can I run a faceless channel entirely with AI?", a: "You can use AI for scripting, voiceover, visuals, and editing, but you still direct it, fact-check, and edit. AI speeds the work, it does not replace judgment." },
+    { q: "Are AI voices good enough for YouTube?", a: "Yes. Modern AI voices are natural enough for full narration on faceless channels, especially when paired with a well-written script." },
+  ],
+  "free-youtube-script-template": [
+    { q: "Is there a free YouTube script template I can copy?", a: "Yes. The structure in this guide is free to copy: hook, setup, body with re-hooks, open loops, payoff, and one call to action." },
+    { q: "How do I write a YouTube script from a template?", a: "Fill each section in order, lead with a strong hook, keep one idea per body section, plant and resolve open loops, and read it out loud to keep it natural." },
+    { q: "How long should a YouTube script be?", a: "Plan for roughly 130 words per minute of finished video. A 10-minute video is about 1,300 words." },
+  ],
+  "how-to-get-your-first-1000-subscribers": [
+    { q: "How long does it take to get 1,000 subscribers?", a: "It varies widely. With consistent, well-made videos in a niche that has demand, many creators reach it in a few months. Quitting early is the most common reason people never get there." },
+    { q: "Do I need 1,000 subscribers to make money?", a: "You need 1,000 subscribers plus watch-time or Shorts thresholds to join the YouTube Partner Program. Many creators also earn through affiliates and sponsorships before then." },
+    { q: "What gets the first 1,000 subscribers fastest?", a: "Strong hooks, topics with proven demand, consistent publishing, and videos people finish. Retention drives everything." },
+  ],
+  "how-to-beat-the-youtube-algorithm": [
+    { q: "Can a small channel beat the YouTube algorithm?", a: "Yes. The algorithm favors videos that get clicks and hold attention, regardless of channel size. Strong hooks, titles, and retention let small channels get recommended." },
+    { q: "What does the YouTube algorithm reward most in 2026?", a: "Click-through rate and watch time. Together they tell YouTube your video satisfies viewers, so it shows it to more people." },
+    { q: "Why are my videos not getting views?", a: "Usually weak packaging in the title and thumbnail, weak retention, an unclear niche, or too few uploads for the algorithm to learn from. Fix hooks and titles first." },
+  ],
   "niche-crossover-strategy": [
     { q: "Is niche crossover the same as making content in multiple niches?", a: "No. Niche crossover is strategic, you're combining two adjacent niches into single videos that appeal to both audiences. Making content in multiple niches means switching between unrelated topics, which confuses the algorithm." },
     { q: "How many adjacent niches should I target?", a: "Start with 1-2 adjacent niches. Once you've validated crossover content works for your channel, expand to 3-4. Too many at once dilutes your positioning." },
@@ -156,6 +186,16 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      {faqs.length > 0 && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: faqs.map(f => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+          }) }}
+        />
+      )}
 
       {/* Breadcrumb nav */}
       <div style={{ maxWidth: 760, margin: "0 auto", padding: "24px 24px 0" }}>
