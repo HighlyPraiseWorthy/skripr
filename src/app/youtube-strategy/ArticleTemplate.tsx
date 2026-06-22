@@ -148,6 +148,10 @@ export function renderMarkdown(content: string): string {
   let inTable = false;
   let tableRows: string[][] = [];
   let tableHeaders: string[] = [];
+  let h2Count = 0;
+  const linkify = (s: string) =>
+    s.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" style="color:#4db8ff;text-decoration:underline">$1</a>');
+  const MID_CTA = `<div style="margin:36px 0;padding:24px 28px;border-radius:14px;background:rgba(77,184,255,0.06);border:1px solid rgba(77,184,255,0.22)"><p style="font-size:16px;font-weight:700;color:#e8edf5;margin:0 0 6px">Stop guessing what to make next.</p><p style="font-size:14px;color:#bcd2e8;line-height:1.7;margin:0 0 16px">Skripr turns a proven video into a ready-to-record script in your voice, in about a minute. Two scripts free, no card.</p><a href="/sign-up" style="display:inline-block;padding:11px 24px;font-size:14px;font-weight:700;border-radius:10px;background:#4db8ff;color:#080c12;text-decoration:none">Start free, 2 scripts</a><a href="/subscribr-alternative" style="display:inline-block;margin-left:16px;font-size:13px;color:#7ed8ff;text-decoration:underline">See Skripr vs Subscribr</a></div>\n`;
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
@@ -178,16 +182,18 @@ export function renderMarkdown(content: string): string {
       html += `<h3 style="font-size:18px;font-weight:700;color:#e8edf5;margin:32px 0 12px">${line.slice(4)}</h3>\n`;
     } else if (line.startsWith("## ")) {
       html += `<h2 style="font-size:24px;font-weight:800;color:#e8edf5;margin:40px 0 16px;letter-spacing:-0.02em">${line.slice(3)}</h2>\n`;
+      h2Count++;
+      if (h2Count === 2) html += MID_CTA;
     } else if (line.startsWith("- ")) {
-      html += `<li style="color:#bcd2e8;font-size:14px;line-height:1.8;padding-left:8px">${line.slice(2)}</li>\n`;
+      html += `<li style="color:#bcd2e8;font-size:14px;line-height:1.8;padding-left:8px">${linkify(line.slice(2))}</li>\n`;
     } else if (/^\d+\.\s/.test(line)) {
       const text = line.replace(/^\d+\.\s/, "");
-      html += `<li style="color:#bcd2e8;font-size:14px;line-height:1.8;padding-left:8px;list-style:decimal">${text}</li>\n`;
+      html += `<li style="color:#bcd2e8;font-size:14px;line-height:1.8;padding-left:8px;list-style:decimal">${linkify(text)}</li>\n`;
     } else if (line.trim() === "") {
       html += "\n";
     } else {
-      // Bold inline
-      let processed = line.replace(/\*\*(.+?)\*\*/g, '<strong style="color:#d2e2f2;font-weight:600">$1</strong>');
+      // Links, then bold inline
+      let processed = linkify(line).replace(/\*\*(.+?)\*\*/g, '<strong style="color:#d2e2f2;font-weight:600">$1</strong>');
       html += `<p style="color:#bcd2e8;font-size:15px;line-height:1.85;margin:0 0 16px">${processed}</p>\n`;
     }
   }
