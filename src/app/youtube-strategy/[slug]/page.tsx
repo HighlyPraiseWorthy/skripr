@@ -34,6 +34,16 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 }
 
 const articleFAQs: Record<string, { q: string; a: string }[]> = {
+  "how-to-use-ai-for-youtube": [
+    { q: "Can AI grow my YouTube channel?", a: "AI can speed up scripts, editing, thumbnails, and analysis, but growth still depends on picking the right idea and writing a script people finish. Use AI for production and keep the judgment human." },
+    { q: "Will AI make my videos sound generic?", a: "Raw AI output usually does. Feed it your voice or a creator's voice and start from proven structures to avoid the generic feel. Tools like Skripr build voice matching in." },
+    { q: "What can AI not do for YouTube?", a: "It cannot reliably tell you which idea is worth making. Idea selection, angle, and hook are still the human edge." },
+  ],
+  "youtube-storytelling": [
+    { q: "Why is storytelling important on YouTube?", a: "Because it drives retention. Techniques like stakes, open loops, and escalation are what keep viewers watching, and watch time is what the algorithm rewards." },
+    { q: "How do I tell a better story in my videos?", a: "Give clear stakes, open loops you pay off later, an emotional arc, a character to follow, and a re-hook every 30 to 45 seconds." },
+    { q: "Can a tutorial or explainer use storytelling?", a: "Yes. Even fact-based videos hold attention better with stakes, an open loop, and a single idea or person to follow through the video." },
+  ],
   "how-to-start-a-faceless-youtube-channel": [
     { q: "How much does it cost to start a faceless YouTube channel?", a: "You can start for very little: a script tool, a voiceover option, and free or low-cost visuals. Your biggest investment is time and consistency, not money." },
     { q: "Do faceless channels get monetized?", a: "Yes. Faceless channels can join the YouTube Partner Program like any other, as long as the content is original and follows the guidelines." },

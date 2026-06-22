@@ -1108,6 +1108,7 @@ export default function LandingPage() {
             ["/youtube-strategy","Guides"],
             ["/subscribr-alternative","vs Subscribr"],
             ["/tubeai-alternative","vs TubeAI"],
+            ["/skripr-vs-claude","vs Claude"],
             ["/pricing","Pricing"],
             ["/contact","Contact"],
             ["/terms","Terms"],
