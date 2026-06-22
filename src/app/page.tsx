@@ -1105,7 +1105,9 @@ export default function LandingPage() {
         <div style={{ display: "flex", gap: 24 }}>
           {[
             ["/dashboard/scripts/new","Scripts"],
-            ["/dashboard/educate","Learn"],
+            ["/youtube-strategy","Guides"],
+            ["/subscribr-alternative","vs Subscribr"],
+            ["/tubeai-alternative","vs TubeAI"],
             ["/pricing","Pricing"],
             ["/terms","Terms"],
             ["/privacy","Privacy"],

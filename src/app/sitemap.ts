@@ -26,6 +26,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     ...articleUrls,
     {
+      url: `${baseUrl}/subscribr-alternative`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/tubeai-alternative`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
       url: `${baseUrl}/pricing`,
       lastModified: new Date(),
       changeFrequency: "monthly",
