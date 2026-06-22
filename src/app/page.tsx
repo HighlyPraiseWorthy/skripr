@@ -1106,6 +1106,7 @@ export default function LandingPage() {
           {[
             ["/dashboard/scripts/new","Scripts"],
             ["/youtube-strategy","Guides"],
+            ["/will-ai-replace-youtubers","AI & YouTube"],
             ["/subscribr-alternative","vs Subscribr"],
             ["/tubeai-alternative","vs TubeAI"],
             ["/skripr-vs-claude","vs Claude"],
