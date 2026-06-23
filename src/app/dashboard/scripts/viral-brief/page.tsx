@@ -323,7 +323,7 @@ export default function ViralBriefPage() {
               <div style={{ width: 32, height: 32, borderRadius: 8, background: "rgba(77,184,255,0.11)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, fontSize: 13, fontWeight: 700, color: C.accentDim }}>{i + 1}</div>
               <div style={{ flex: 1, minWidth: 0 }}>
                 {a.swap && (
-                  <div style={{ display: "inline-block", fontSize: 10, fontWeight: 700, letterSpacing: 0.4, color: "#7c6fff", background: "rgba(124,111,255,0.12)", border: "1px solid rgba(124,111,255,0.3)", borderRadius: 6, padding: "2px 8px", marginBottom: 6 }}>
+                  <div style={{ display: "inline-block", fontSize: 10, fontWeight: 700, letterSpacing: 0.4, color: "#4db8ff", background: "rgba(77,184,255,0.12)", border: "1px solid rgba(77,184,255,0.3)", borderRadius: 6, padding: "2px 8px", marginBottom: 6 }}>
                     🔀 WHITE-SPACE SWAP · {a.swap}
                   </div>
                 )}

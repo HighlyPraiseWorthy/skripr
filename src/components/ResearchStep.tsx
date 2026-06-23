@@ -8,7 +8,7 @@ import { useState } from "react";
 
 const C = {
   bg: "#080c12", card: "#0d1520", border: "rgba(77,184,255,0.14)",
-  accent: "#4db8ff", text: "#e8edf5", dim: "#a2bcd6", green: "#34d399", purple: "#7c6fff",
+  accent: "#4db8ff", text: "#e8edf5", dim: "#a2bcd6", green: "#34d399", purple: "#4db8ff",
 };
 
 export default function ResearchStep(props: {
@@ -62,7 +62,7 @@ export default function ResearchStep(props: {
 
         {/* Header */}
         <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 6 }}>
-          <div style={{ width: 40, height: 40, borderRadius: 12, background: "linear-gradient(135deg,#5b4fd6,#7c6fff)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, flexShrink: 0, boxShadow: "0 4px 18px rgba(124,111,255,0.4)" }}>📚</div>
+          <div style={{ width: 40, height: 40, borderRadius: 12, background: "linear-gradient(135deg,#0e6499,#4db8ff)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, flexShrink: 0, boxShadow: "0 4px 18px rgba(77,184,255,0.4)" }}>📚</div>
           <div>
             <div style={{ fontSize: 21, fontWeight: 700, color: C.text }}>Ground it in real research</div>
             <div style={{ fontSize: 13, color: C.dim }}>Optional, add cited facts and Skripr states real numbers instead of hedging.</div>
@@ -81,8 +81,8 @@ export default function ResearchStep(props: {
         <button onClick={findResearch} disabled={researching}
           style={{
             width: "100%", marginTop: 16, padding: "16px 18px", borderRadius: 14, border: "none", cursor: researching ? "wait" : "pointer",
-            background: "linear-gradient(135deg,#5b4fd6 0%,#7c6fff 55%,#9b8cff 100%)", color: "#fff", textAlign: "left",
-            boxShadow: "0 6px 26px rgba(124,111,255,0.4)", display: "flex", alignItems: "center", gap: 14,
+            background: "linear-gradient(135deg,#0e6499 0%,#4db8ff 55%,#7ed8ff 100%)", color: "#fff", textAlign: "left",
+            boxShadow: "0 6px 26px rgba(77,184,255,0.4)", display: "flex", alignItems: "center", gap: 14,
           }}>
           <span style={{ fontSize: 24, flexShrink: 0 }}>{researching ? "⏳" : "✦"}</span>
           <span>
