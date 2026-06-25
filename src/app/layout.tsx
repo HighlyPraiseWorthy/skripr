@@ -27,10 +27,23 @@ const clerkAppearance = {
 };
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://skripr.app"),
   title: "Skripr | AI YouTube Script Generator",
   description: "Reverse-engineer any viral YouTube video into a ready-to-record script in 60 seconds.",
   icons: {
     icon: "/favicon.svg",
+  },
+  openGraph: {
+    type: "website",
+    siteName: "Skripr",
+    url: "https://skripr.app",
+    title: "Skripr | AI YouTube Script Generator",
+    description: "YouTube scripts built on what's already winning. In your voice, ready to record.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Skripr | AI YouTube Script Generator",
+    description: "YouTube scripts built on what's already winning. In your voice, ready to record.",
   },
 }
 

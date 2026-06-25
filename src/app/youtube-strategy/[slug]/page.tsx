@@ -207,7 +207,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
       name: "Skripr",
       logo: {
         "@type": "ImageObject",
-        url: "https://skripr.app/icon.svg",
+        url: "https://skripr.app/favicon.svg",
       },
     },
     mainEntityOfPage: `https://skripr.app/youtube-strategy/${article.slug}`,
