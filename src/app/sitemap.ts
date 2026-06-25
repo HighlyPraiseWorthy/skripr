@@ -1,5 +1,6 @@
 import { MetadataRoute } from "next";
 import { articles } from "./youtube-strategy/articles";
+import { comparisons } from "./compare/comparisons";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://skripr.app";
@@ -9,6 +10,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: new Date("2026-06-04"),
     changeFrequency: "monthly" as const,
     priority: 0.7,
+  }));
+
+  const comparisonUrls = comparisons.map((c) => ({
+    url: `${baseUrl}/compare/${c.slug}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.8,
   }));
 
   return [
@@ -25,6 +33,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     ...articleUrls,
+    {
+      url: `${baseUrl}/compare`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    ...comparisonUrls,
     {
       url: `${baseUrl}/subscribr-alternative`,
       lastModified: new Date(),
