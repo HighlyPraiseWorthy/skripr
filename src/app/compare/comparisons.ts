@@ -91,7 +91,7 @@ export const comparisons: Comparison[] = [
     ],
     related: [
       { href: "/compare/skripr-vs-tubebuddy", label: "vs TubeBuddy" },
-      { href: "/compare/skripr-vs-1of10", label: "vs 1of10" },
+      { href: "/compare/skripr-vs-chatgpt", label: "vs ChatGPT" },
       { href: "/skripr-vs-claude", label: "vs Claude" },
     ],
   },
@@ -291,72 +291,6 @@ export const comparisons: Comparison[] = [
       { href: "/compare/skripr-vs-chatgpt", label: "vs ChatGPT" },
       { href: "/skripr-vs-claude", label: "vs Claude" },
       { href: "/compare/skripr-vs-vidiq", label: "vs VidIQ" },
-    ],
-  },
-
-  {
-    slug: "skripr-vs-1of10",
-    competitor: "1of10",
-    category: "Outlier research tool",
-    intent: "commercial",
-    metaTitle: "Skripr vs 1of10 (2026): Find Outliers, Then Script Them",
-    metaDescription:
-      "1of10 finds outlier videos. It does not write your version. See why creators want research and scripting in one workflow, and where each tool fits.",
-    ogDescription:
-      "1of10 finds the outlier. Skripr finds it and writes the script. Here is the difference.",
-    eyebrow: "Skripr vs 1of10",
-    h1: "1of10 finds the outlier. Skripr finds it and writes your version.",
-    subhead:
-      "1of10 is good at one thing: surfacing videos that massively outperformed their channel, so you can spot proven ideas. But spotting the idea is only half the job. You still have to turn it into a script in your voice that holds the view. Skripr does both in one flow.",
-    competitorColumn: "1of10",
-    rows: [
-      ["Surfaces outlier videos", "Yes, built in", "Yes, its core strength"],
-      ["Explains the structure behind the win", "Yes", "Partial"],
-      ["Writes the full script", "Yes, ready to record", "No"],
-      ["Writes in your voice or a creator's", "Yes (Voice Match)", "No"],
-      ["Retention structure: hooks, re-hooks", "Yes", "No"],
-      ["Built for faceless and automation volume", "Yes", "No"],
-      ["Output", "A finished script", "A list of outliers"],
-    ],
-    beliefs: [
-      {
-        t: "Finding the idea is half the work.",
-        d: "An outlier feed shows you what worked. It does not write the hook, structure the retention, or put it in your voice. Skripr takes the proven idea the rest of the way to a recorded video.",
-      },
-      {
-        t: "Inspiration without execution is just more tabs.",
-        d: "A wall of outliers is motivating until you sit down to write. Skripr closes that gap by turning the outlier into a script, so research and creation are one step.",
-      },
-      {
-        t: "Volume needs a pipeline, not a feed.",
-        d: "If you run faceless channels or automation, you need scripts at pace, not just ideas to react to. Skripr is built to take the proven idea and produce the script, repeatedly.",
-      },
-    ],
-    bridge:
-      "1of10 is a sharp research tool, and if all you want is a feed of proven ideas it does that well. Skripr is built for the step after the idea: the script. If you would rather not jump from a research tool to a chatbot and back, Skripr is the one workflow.",
-    closingH1: "Turn the outlier into a script.",
-    faqs: [
-      {
-        q: "Is Skripr a 1of10 alternative?",
-        a: "They overlap on research but Skripr goes further. 1of10 surfaces outlier videos. Skripr surfaces proven ideas and writes the script for them, in your voice, with retention built in. It is research plus creation in one flow.",
-      },
-      {
-        q: "Does 1of10 write scripts?",
-        a: "No. 1of10 is a research and discovery tool for finding outlier videos. Writing the script is the gap Skripr fills.",
-      },
-      {
-        q: "Can I use both together?",
-        a: "You can, but you may not need to. If you like 1of10 for discovery, you can bring an idea to Skripr to script it. Many creators find Skripr's built-in research means one tool instead of two.",
-      },
-      {
-        q: "Is Skripr free to try?",
-        a: "Yes. Your first 2 scripts are free with no card required, and paid plans are flat monthly, cancel anytime.",
-      },
-    ],
-    related: [
-      { href: "/compare/skripr-vs-vidiq", label: "vs VidIQ" },
-      { href: "/compare/skripr-vs-tubebuddy", label: "vs TubeBuddy" },
-      { href: "/youtube-strategy", label: "Guides" },
     ],
   },
 ];
