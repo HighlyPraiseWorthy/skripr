@@ -35,50 +35,50 @@ export const comparisons: Comparison[] = [
     competitor: "VidIQ",
     category: "Research & keyword tool",
     intent: "commercial",
-    metaTitle: "Skripr vs VidIQ (2026): Research Tool or Script Engine?",
+    metaTitle: "Skripr vs VidIQ (2026): Which Writes Better Scripts?",
     metaDescription:
-      "VidIQ finds keywords and scores videos. It does not write the script. See why creators pair research with a purpose-built script engine, and where each tool wins.",
+      "VidIQ added AI scripts on top of its research tools. Skripr is built around the script: grounded in proven videos, in your voice, with retention structure. See the difference.",
     ogDescription:
-      "VidIQ finds the keyword. Skripr finds the winning idea and writes the video. Here is the real difference.",
+      "VidIQ can generate a script. Skripr writes the one that gets watched. Here is the real difference.",
     eyebrow: "Skripr vs VidIQ",
-    h1: "VidIQ finds the keyword. It still leaves you with a blank page.",
+    h1: "VidIQ can generate a script. Skripr writes the one that gets watched.",
     subhead:
-      "VidIQ is a strong research and optimization tool: keyword scores, tags, a browser extension, real-time view tracking. But research ends where the work begins. You still have to turn the idea into a script that gets watched. That is the one job Skripr is built for.",
+      "VidIQ is a strong research and optimization tool, and it has added AI features that can spin up a script. But that script is a side feature bolted onto a keyword tool: generic, not grounded in your voice, not built around retention. For Skripr, the script is the whole product, written from videos already proven to work in your niche.",
     competitorColumn: "VidIQ",
     rows: [
       ["Keyword and tag research", "Yes", "Yes, its core strength"],
       ["Finds outlier videos worth modeling", "Yes, built in", "Partial, view counts only"],
-      ["Writes the full script", "Yes, ready to record", "No"],
-      ["Writes in your voice or a creator's", "Yes (Voice Match)", "No"],
-      ["Retention structure: hooks, re-hooks", "Yes", "No"],
+      ["Generates a script", "Yes, the core product", "Yes, an added AI feature"],
+      ["Scripts grounded in proven videos in your niche", "Yes", "No"],
+      ["Writes in your voice or a creator's", "Yes (Voice Match)", "Generic by default"],
+      ["Retention structure: hooks, re-hooks", "Yes, built in", "Not by design"],
       ["Built for faceless and automation volume", "Yes", "No"],
-      ["Output", "A finished script", "Keywords and a score"],
     ],
     beliefs: [
       {
-        t: "Keywords are step one, not the deliverable.",
-        d: "A keyword score tells you a topic has demand. It does not tell you how to open the video, where to place the re-hook, or how to keep the viewer past thirty seconds. Skripr starts where VidIQ stops and writes the actual script.",
+        t: "A script feature is not a script engine.",
+        d: "VidIQ can generate a script, but it is one feature on a research dashboard. Skripr is built end to end around the script, so the hook, the retention beats, the voice, and the research all come from the same purpose-built pipeline.",
       },
       {
-        t: "A view count is not an outlier signal.",
-        d: "Seeing that a video did well is not the same as understanding why. Skripr surfaces the videos already outperforming in your niche and turns that structure into a script you can record.",
+        t: "Grounded beats generic.",
+        d: "A general AI script is written from nothing in particular. Skripr writes from videos already outperforming in your niche, so the structure you get is proven, not guessed. That grounding is the difference between a draft and a script you can record.",
       },
       {
-        t: "Research plus a chatbot is two tools and a copy-paste.",
-        d: "Most creators end up doing research in one tab and scripting in another, stitching it together by hand. Skripr is one flow: find what is working, then write it, in your voice, with retention built in.",
+        t: "Voice and retention are the whole game.",
+        d: "Most generated scripts sound the same and decline in attention from the first line. Skripr writes in your voice or a creator's you choose, and builds re-hooks in, because holding the view is the entire job.",
       },
     ],
     bridge:
-      "VidIQ is a genuinely useful research tool, and plenty of creators keep it for keyword checks and the extension. Skripr does not try to replace your analytics dashboard. It replaces the blank page that VidIQ leaves you staring at: the script.",
-    closingH1: "Stop researching into a blank page.",
+      "VidIQ is a genuinely useful research tool, and plenty of creators keep it for keyword checks and the extension. Skripr does not try to replace your analytics dashboard. Where it goes deeper is the script itself: grounded in proven videos, in your voice, engineered for retention, because that is the one job Skripr is built for.",
+    closingH1: "A script feature, or a script engine.",
     faqs: [
       {
         q: "Is Skripr a VidIQ alternative?",
-        a: "They overlap on research but solve different jobs. VidIQ is built for keyword and tag optimization. Skripr is built to find the winning idea and write the script for it. Many creators use VidIQ for quick keyword checks and Skripr to actually produce the video.",
+        a: "They overlap more than they used to, since VidIQ added AI script features. The difference is focus. VidIQ is a research and optimization dashboard with scripting bolted on. Skripr is built end to end around the script, grounded in proven videos, in your voice, with retention structure. Many creators keep VidIQ for keyword checks and use Skripr to actually write the video.",
       },
       {
         q: "Can VidIQ write a YouTube script?",
-        a: "No. VidIQ surfaces keywords, tags, and view data. Writing the script, the hook, the retention beats, and the voice is exactly the gap Skripr fills.",
+        a: "Yes, VidIQ has AI features that can generate a script. The gap is depth: that script is a side feature on a keyword tool, so it tends to be generic, not written in your voice, and not built around retention. Skripr is purpose-built for the script and grounds it in videos already working in your niche.",
       },
       {
         q: "Does Skripr do keyword research like VidIQ?",
