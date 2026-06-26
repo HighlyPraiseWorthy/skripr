@@ -32,8 +32,8 @@ export interface Comparison {
   dataBlock?: {
     heading: string;
     intro: string;
-    columns: [string, string, string, string];
-    rows: [channel: string, subs: string, video: string, views: string][];
+    columns: string[];
+    rows: string[][];
     caption: string;
     kicker: string;
   };
@@ -107,14 +107,14 @@ export const comparisons: Comparison[] = [
     dataBlock: {
       heading: "What \"grounded in proven videos\" actually looks like",
       intro:
-        "These are real faceless personal-finance channels in Skripr's research data. Each one had a video pull far more views than its subscriber count would predict, the kind of proven structure Skripr writes your script from. A keyword score cannot show you this.",
-      columns: ["Channel", "Subscribers", "Breakout video", "Views"],
+        "These are real faceless personal-finance channels in Skripr's research data, every one of them started in the last several months. Each had a video pull far past its subscriber count, the kind of proven structure Skripr writes your script from. A keyword score cannot show you this.",
+      columns: ["Channel", "Subscribers", "Started", "Breakout video", "Views"],
       rows: [
-        ["Fred - Money Historian", "5.1K", "The 2008 Financial Crisis Explained Like You're 5", "241K"],
-        ["Money Simplified", "24.5K", "The Psychology of People Who Quietly Escape the Rat Race", "538K"],
-        ["Weird Finance", "27.7K", "Why Roblox Lost $282M Despite 70M Daily Users", "392K"],
-        ["How Money Works Uncut", "108K", "The New \"Unemployable\" Class", "627K"],
-        ["Crayon Capital", "218K", "The Great Depression Explained Like You're 5", "2.5M"],
+        ["how really?", "10.1K", "Dec 2025", "Why $2 Trillion Vanishes Every Year", "829K"],
+        ["Backyard Bankroll", "16.5K", "Apr 2026", "13 Animals That Make $2,000/Month, Zero Acres", "476K"],
+        ["Millionaire Problems", "17.4K", "Apr 2026", "The Economics of Owning a Casino", "451K"],
+        ["Money Simplified", "24.5K", "Mar 2026", "The Psychology of People Who Quietly Escape the Rat Race", "538K"],
+        ["Six Figure Explainer", "8.6K", "Mar 2026", "Your Life As Every FAANG Rank", "235K"],
       ],
       caption:
         "Source: Skripr research data, faceless personal-finance niche, June 2026. A live example, refreshed over time.",
@@ -388,17 +388,17 @@ export const comparisons: Comparison[] = [
     dataBlock: {
       heading: "What \"grounded in proven videos\" actually looks like",
       intro:
-        "These are real faceless personal-finance channels in Skripr's research data. Each one had a video pull far more views than its subscriber count would predict, the kind of proven structure Skripr writes your script from. A general model has no idea this exists.",
-      columns: ["Channel", "Subscribers", "Breakout video", "Views"],
+        "These are real faceless space and science channels in Skripr's research data, all started within the last several months. Each had a video pull far past its subscriber count, the kind of proven structure Skripr writes your script from. A general model has no idea this exists.",
+      columns: ["Channel", "Subscribers", "Started", "Breakout video", "Views"],
       rows: [
-        ["Fred - Money Historian", "5.1K", "The 2008 Financial Crisis Explained Like You're 5", "241K"],
-        ["Money Simplified", "24.5K", "The Psychology of People Who Quietly Escape the Rat Race", "538K"],
-        ["Weird Finance", "27.7K", "Why Roblox Lost $282M Despite 70M Daily Users", "392K"],
-        ["How Money Works Uncut", "108K", "The New \"Unemployable\" Class", "627K"],
-        ["Crayon Capital", "218K", "The Great Depression Explained Like You're 5", "2.5M"],
+        ["Bluntly Explained", "9.6K", "Apr 2026", "Every Type of Black Hole Explained in 11 Minutes", "878K"],
+        ["big space explainer", "5.8K", "Feb 2026", "Every Way the Universe Could End Explained in 18 Minutes", "351K"],
+        ["Jost", "19.9K", "Dec 2025", "Why Anyone Who Goes to Mars Will Never Come Back", "1.3M"],
+        ["Cosmicus", "89.8K", "Feb 2026", "James Webb Just Saw Pluto for the First Time", "623K"],
+        ["Cosmic Lens", "97.4K", "Oct 2025", "Why Saturn is the Scariest Planet", "6.1M"],
       ],
       caption:
-        "Source: Skripr research data, faceless personal-finance niche, June 2026. A live example, refreshed over time.",
+        "Source: Skripr research data, faceless space and science niche, June 2026. A live example, refreshed over time.",
       kicker:
         "Gemini gives you a blank page. Skripr finds the videos already working in your niche, then writes your script from them.",
     },
@@ -471,14 +471,14 @@ export const comparisons: Comparison[] = [
     dataBlock: {
       heading: "Proven documentary structures, surfaced from real data",
       intro:
-        "These are real faceless documentary channels in Skripr's research data. Each one had a video pull far past its subscriber count, the kind of proven long-form structure Skripr writes your documentary script from. A general writer cannot see any of this.",
-      columns: ["Channel", "Subscribers", "Breakout video", "Views"],
+        "These are real faceless documentary channels in Skripr's research data, all started within the last several months. Each had a video pull far past its subscriber count, the kind of proven long-form structure Skripr writes your documentary script from. A general writer cannot see any of this.",
+      columns: ["Channel", "Subscribers", "Started", "Breakout video", "Views"],
       rows: [
-        ["Past Pictures", "8.5K", "Tsunamis on Tape: Episode 2", "1.6M"],
-        ["ståry.", "18.3K", "The Killdozer: How One Man Destroyed a Town in 2 Hours", "3.7M"],
-        ["CX Productions", "21.8K", "The World's Deadliest Theme Park: Action Park", "2.4M"],
-        ["Best Eps", "24.1K", "The Taxi Episode That Sent Chris Lloyd Into the Future", "930K"],
-        ["VULDAR", "146K", "Alcatraz Escape: The Overlooked Evidence", "1.7M"],
+        ["TRUE HORIZONS", "43.4K", "Oct 2025", "The Strait of Hormuz: The World's Most Dangerous Strait", "1.6M"],
+        ["Accidental Scholar", "11.3K", "Mar 2026", "AI Reconstruction of the 1900 Galveston Storm", "712K"],
+        ["Audio Point", "33.3K", "Nov 2025", "Countries That Lost Their Superpower Status (And Why)", "500K"],
+        ["Dynastypical", "5.9K", "Apr 2026", "Why You Wouldn't Survive a Day as Anne Boleyn's Servant", "99K"],
+        ["WW2 True Stories", "6.6K", "Oct 2025", "German Generals Mocked British Intelligence", "96K"],
       ],
       caption:
         "Source: Skripr research data, faceless documentary niche, June 2026. A live example, refreshed over time.",

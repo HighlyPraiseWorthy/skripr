@@ -80,11 +80,12 @@ const faqs = [
   },
 ];
 
-const dataRows: [string, string, string, string][] = [
-  ["Past Pictures", "8.5K", "Tsunamis on Tape: Episode 2", "1.6M"],
-  ["Fred - Money Historian", "5.1K", "The 2008 Financial Crisis Explained Like You're 5", "241K"],
-  ["ståry.", "18.3K", "The Killdozer: How One Man Destroyed a Town in 2 Hours", "3.7M"],
-  ["Money Simplified", "24.5K", "The Psychology of People Who Quietly Escape the Rat Race", "538K"],
+const dataColumns = ["Channel", "Subscribers", "Started", "Breakout video", "Views"];
+const dataRows: string[][] = [
+  ["Bluntly Explained", "9.6K", "Apr 2026", "Every Type of Black Hole Explained in 11 Minutes", "878K"],
+  ["Backyard Bankroll", "16.5K", "Apr 2026", "13 Animals That Make $2,000/Month, Zero Acres", "476K"],
+  ["Dynastypical", "5.9K", "Apr 2026", "Why You Wouldn't Survive a Day as Anne Boleyn's Servant", "99K"],
+  ["Accidental Scholar", "11.3K", "Mar 2026", "AI Reconstruction of the 1900 Galveston Storm", "712K"],
 ];
 
 const itemListJsonLd = {
@@ -161,20 +162,21 @@ export default function BestFacelessTools() {
         <section style={{ maxWidth: 900, margin: "0 auto", padding: "0 24px 56px" }}>
           <h2 style={{ fontSize: 24, fontWeight: 800, letterSpacing: "-0.4px", marginBottom: 10, textAlign: "center" }}>Real faceless channels winning right now</h2>
           <p style={{ fontSize: 15.5, color: T.muted, lineHeight: 1.7, maxWidth: 680, margin: "0 auto 28px", textAlign: "center" }}>
-            Across niches, small faceless channels are pulling videos far past their subscriber count. That gap is proven structure, the kind Skripr writes your script from.
+            Across niches, faceless channels that started just months ago are already pulling videos far past their subscriber count. That gap is proven structure, the kind Skripr writes your script from.
           </p>
           <div style={{ border: `1px solid ${T.border}`, borderRadius: 12, overflow: "hidden" }}>
-            <div style={{ display: "grid", gridTemplateColumns: "1.4fr 0.7fr 2.4fr 0.7fr", background: T.bg2, borderBottom: `1px solid ${T.border}` }}>
-              {["Channel", "Subscribers", "Breakout video", "Views"].map((h, i) => (
-                <div key={i} style={{ padding: "13px 16px", fontSize: 12, fontWeight: 700, letterSpacing: "0.04em", textTransform: "uppercase", color: T.dim, textAlign: i === 1 || i === 3 ? "right" : "left" }}>{h}</div>
+            <div style={{ display: "grid", gridTemplateColumns: "1.3fr 0.6fr 0.6fr 2.1fr 0.6fr", background: T.bg2, borderBottom: `1px solid ${T.border}` }}>
+              {dataColumns.map((h, i) => (
+                <div key={i} style={{ padding: "13px 14px", fontSize: 12, fontWeight: 700, letterSpacing: "0.04em", textTransform: "uppercase", color: T.dim, textAlign: i === 1 || i === 4 ? "right" : "left" }}>{h}</div>
               ))}
             </div>
             {dataRows.map((r, ri) => (
-              <div key={ri} style={{ display: "grid", gridTemplateColumns: "1.4fr 0.7fr 2.4fr 0.7fr", borderBottom: ri === dataRows.length - 1 ? "none" : `1px solid ${T.border}`, alignItems: "center" }}>
-                <div style={{ padding: "14px 16px", fontSize: 14, color: T.text, fontWeight: 600 }}>{r[0]}</div>
-                <div style={{ padding: "14px 16px", fontSize: 14, color: T.dim, textAlign: "right" }}>{r[1]}</div>
-                <div style={{ padding: "14px 16px", fontSize: 14, color: T.muted, lineHeight: 1.4 }}>{r[2]}</div>
-                <div style={{ padding: "14px 16px", fontSize: 14, color: T.green, fontWeight: 700, textAlign: "right" }}>{r[3]}</div>
+              <div key={ri} style={{ display: "grid", gridTemplateColumns: "1.3fr 0.6fr 0.6fr 2.1fr 0.6fr", borderBottom: ri === dataRows.length - 1 ? "none" : `1px solid ${T.border}`, alignItems: "center" }}>
+                <div style={{ padding: "14px 14px", fontSize: 14, color: T.text, fontWeight: 600 }}>{r[0]}</div>
+                <div style={{ padding: "14px 14px", fontSize: 14, color: T.dim, textAlign: "right" }}>{r[1]}</div>
+                <div style={{ padding: "14px 14px", fontSize: 13, color: T.dim }}>{r[2]}</div>
+                <div style={{ padding: "14px 14px", fontSize: 14, color: T.muted, lineHeight: 1.4 }}>{r[3]}</div>
+                <div style={{ padding: "14px 14px", fontSize: 14, color: T.green, fontWeight: 700, textAlign: "right" }}>{r[4]}</div>
               </div>
             ))}
           </div>

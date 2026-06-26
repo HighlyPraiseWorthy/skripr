@@ -131,17 +131,18 @@ export default async function ComparePage({ params }: { params: Promise<{ slug: 
             <h2 style={{ fontSize: 24, fontWeight: 800, letterSpacing: "-0.4px", marginBottom: 10, textAlign: "center" }}>{c.dataBlock.heading}</h2>
             <p style={{ fontSize: 15.5, color: T.muted, lineHeight: 1.7, maxWidth: 680, margin: "0 auto 28px", textAlign: "center" }}>{c.dataBlock.intro}</p>
             <div style={{ border: `1px solid ${T.border}`, borderRadius: 12, overflow: "hidden" }}>
-              <div style={{ display: "grid", gridTemplateColumns: "1.4fr 0.7fr 2.4fr 0.7fr", background: T.bg2, borderBottom: `1px solid ${T.border}` }}>
+              <div style={{ display: "grid", gridTemplateColumns: "1.3fr 0.6fr 0.6fr 2.1fr 0.6fr", background: T.bg2, borderBottom: `1px solid ${T.border}` }}>
                 {c.dataBlock.columns.map((h, i) => (
-                  <div key={i} style={{ padding: "13px 16px", fontSize: 12, fontWeight: 700, letterSpacing: "0.04em", textTransform: "uppercase", color: T.dim, textAlign: i === 1 || i === 3 ? "right" : "left" }}>{h}</div>
+                  <div key={i} style={{ padding: "13px 14px", fontSize: 12, fontWeight: 700, letterSpacing: "0.04em", textTransform: "uppercase", color: T.dim, textAlign: i === 1 || i === 4 ? "right" : "left" }}>{h}</div>
                 ))}
               </div>
               {c.dataBlock.rows.map((r, ri) => (
-                <div key={ri} style={{ display: "grid", gridTemplateColumns: "1.4fr 0.7fr 2.4fr 0.7fr", borderBottom: ri === c.dataBlock!.rows.length - 1 ? "none" : `1px solid ${T.border}`, alignItems: "center" }}>
-                  <div style={{ padding: "14px 16px", fontSize: 14, color: T.text, fontWeight: 600 }}>{r[0]}</div>
-                  <div style={{ padding: "14px 16px", fontSize: 14, color: T.dim, textAlign: "right" }}>{r[1]}</div>
-                  <div style={{ padding: "14px 16px", fontSize: 14, color: T.muted, lineHeight: 1.4 }}>{r[2]}</div>
-                  <div style={{ padding: "14px 16px", fontSize: 14, color: T.green, fontWeight: 700, textAlign: "right" }}>{r[3]}</div>
+                <div key={ri} style={{ display: "grid", gridTemplateColumns: "1.3fr 0.6fr 0.6fr 2.1fr 0.6fr", borderBottom: ri === c.dataBlock!.rows.length - 1 ? "none" : `1px solid ${T.border}`, alignItems: "center" }}>
+                  <div style={{ padding: "14px 14px", fontSize: 14, color: T.text, fontWeight: 600 }}>{r[0]}</div>
+                  <div style={{ padding: "14px 14px", fontSize: 14, color: T.dim, textAlign: "right" }}>{r[1]}</div>
+                  <div style={{ padding: "14px 14px", fontSize: 13, color: T.dim }}>{r[2]}</div>
+                  <div style={{ padding: "14px 14px", fontSize: 14, color: T.muted, lineHeight: 1.4 }}>{r[3]}</div>
+                  <div style={{ padding: "14px 14px", fontSize: 14, color: T.green, fontWeight: 700, textAlign: "right" }}>{r[4]}</div>
                 </div>
               ))}
             </div>
