@@ -27,6 +27,16 @@ export interface Comparison {
   closingH1: string;
   faqs: { q: string; a: string }[];
   related: { href: string; label: string }[];
+  // Optional proof block populated from real Skripr/NexLev research data.
+  // A point-in-time snapshot, refreshed manually. Only set where it earns its place.
+  dataBlock?: {
+    heading: string;
+    intro: string;
+    columns: [string, string, string, string];
+    rows: [channel: string, subs: string, video: string, views: string][];
+    caption: string;
+    kicker: string;
+  };
 }
 
 export const comparisons: Comparison[] = [
@@ -94,6 +104,23 @@ export const comparisons: Comparison[] = [
       { href: "/compare/skripr-vs-chatgpt", label: "vs ChatGPT" },
       { href: "/skripr-vs-claude", label: "vs Claude" },
     ],
+    dataBlock: {
+      heading: "What \"grounded in proven videos\" actually looks like",
+      intro:
+        "These are real faceless personal-finance channels in Skripr's research data. Each one had a video pull far more views than its subscriber count would predict, the kind of proven structure Skripr writes your script from. A keyword score cannot show you this.",
+      columns: ["Channel", "Subscribers", "Breakout video", "Views"],
+      rows: [
+        ["Fred - Money Historian", "5.1K", "The 2008 Financial Crisis Explained Like You're 5", "241K"],
+        ["Money Simplified", "24.5K", "The Psychology of People Who Quietly Escape the Rat Race", "538K"],
+        ["Weird Finance", "27.7K", "Why Roblox Lost $282M Despite 70M Daily Users", "392K"],
+        ["How Money Works Uncut", "108K", "The New \"Unemployable\" Class", "627K"],
+        ["Crayon Capital", "218K", "The Great Depression Explained Like You're 5", "2.5M"],
+      ],
+      caption:
+        "Source: Skripr research data, faceless personal-finance niche, June 2026. A live example, refreshed over time.",
+      kicker:
+        "VidIQ gives you a keyword and a score. Skripr finds the videos already working in your niche, then writes your script from them.",
+    },
   },
 
   {

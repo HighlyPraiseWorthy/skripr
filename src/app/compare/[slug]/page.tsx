@@ -125,6 +125,31 @@ export default async function ComparePage({ params }: { params: Promise<{ slug: 
           </div>
         </section>
 
+        {/* Proof block: real Skripr/NexLev research data */}
+        {c.dataBlock && (
+          <section style={{ maxWidth: 900, margin: "0 auto", padding: "0 24px 64px" }}>
+            <h2 style={{ fontSize: 24, fontWeight: 800, letterSpacing: "-0.4px", marginBottom: 10, textAlign: "center" }}>{c.dataBlock.heading}</h2>
+            <p style={{ fontSize: 15.5, color: T.muted, lineHeight: 1.7, maxWidth: 680, margin: "0 auto 28px", textAlign: "center" }}>{c.dataBlock.intro}</p>
+            <div style={{ border: `1px solid ${T.border}`, borderRadius: 12, overflow: "hidden" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "1.4fr 0.7fr 2.4fr 0.7fr", background: T.bg2, borderBottom: `1px solid ${T.border}` }}>
+                {c.dataBlock.columns.map((h, i) => (
+                  <div key={i} style={{ padding: "13px 16px", fontSize: 12, fontWeight: 700, letterSpacing: "0.04em", textTransform: "uppercase", color: T.dim, textAlign: i === 1 || i === 3 ? "right" : "left" }}>{h}</div>
+                ))}
+              </div>
+              {c.dataBlock.rows.map((r, ri) => (
+                <div key={ri} style={{ display: "grid", gridTemplateColumns: "1.4fr 0.7fr 2.4fr 0.7fr", borderBottom: ri === c.dataBlock!.rows.length - 1 ? "none" : `1px solid ${T.border}`, alignItems: "center" }}>
+                  <div style={{ padding: "14px 16px", fontSize: 14, color: T.text, fontWeight: 600 }}>{r[0]}</div>
+                  <div style={{ padding: "14px 16px", fontSize: 14, color: T.dim, textAlign: "right" }}>{r[1]}</div>
+                  <div style={{ padding: "14px 16px", fontSize: 14, color: T.muted, lineHeight: 1.4 }}>{r[2]}</div>
+                  <div style={{ padding: "14px 16px", fontSize: 14, color: T.green, fontWeight: 700, textAlign: "right" }}>{r[3]}</div>
+                </div>
+              ))}
+            </div>
+            <p style={{ fontSize: 12, color: T.dim, marginTop: 12, textAlign: "center", fontStyle: "italic" }}>{c.dataBlock.caption}</p>
+            <p style={{ fontSize: 16, color: T.muted, lineHeight: 1.7, maxWidth: 680, margin: "24px auto 0", textAlign: "center", fontWeight: 500 }}>{c.dataBlock.kicker}</p>
+          </section>
+        )}
+
         {/* Beliefs */}
         <section style={{ maxWidth: 900, margin: "0 auto", padding: "0 24px 64px" }}>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 1, background: T.border, border: `1px solid ${T.border}` }}>
