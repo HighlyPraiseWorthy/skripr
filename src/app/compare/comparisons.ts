@@ -320,6 +320,172 @@ export const comparisons: Comparison[] = [
       { href: "/compare/skripr-vs-vidiq", label: "vs VidIQ" },
     ],
   },
+
+  {
+    slug: "skripr-vs-gemini",
+    competitor: "Gemini",
+    category: "General AI assistant",
+    intent: "commercial",
+    metaTitle: "Skripr vs Gemini for Script Writing (2026)",
+    metaDescription:
+      "Gemini is a strong general model from Google, but it does not know what is working on YouTube, your voice, or retention. See why a purpose-built script tool wins.",
+    ogDescription:
+      "Gemini writes fluent text. Skripr writes the script that gets watched. Here is the difference.",
+    eyebrow: "Skripr vs Gemini",
+    h1: "Gemini will write you a script. It just will not write the one that gets watched.",
+    subhead:
+      "Gemini is a capable general model, and it is great for research, drafting, and a hundred other jobs. But ask it for a YouTube script and you get fluent text with no idea what is pulling views in your niche, no voice match, and no retention structure. You still have to research it, restructure it, and clean it up. Skripr does that work before it hands you the script.",
+    competitorColumn: "Gemini",
+    rows: [
+      ["Knows what is working on YouTube now", "Yes, built on real data", "No"],
+      ["Starts from proven videos in your niche", "Yes", "No, blank canvas"],
+      ["Writes in your voice or a creator's", "Yes (Voice Match)", "Generic by default"],
+      ["Retention structure: hooks, re-hooks", "Yes", "Only if you prompt it"],
+      ["Real cited research", "Yes", "Not reliably"],
+      ["Title, metadata, compliance check", "Yes, one flow", "No"],
+      ["Output", "Ready to record", "A draft you clean up"],
+    ],
+    beliefs: [
+      {
+        t: "A general model writes into the dark.",
+        d: "Gemini does not know which hooks, titles, and angles are pulling views on YouTube this week. Skripr does, because it is built on what is already working in your niche. You start from proven, not from a guess.",
+      },
+      {
+        t: "Generic gets sensed in a sentence.",
+        d: "Prompt any general model and the output sounds like every other model. Skripr learns your voice, or any creator's voice you choose, and writes every script in it, so viewers hear a real person and stay.",
+      },
+      {
+        t: "The script is a pipeline, not a paragraph.",
+        d: "A finished video needs a hook, retention beats, research, a title, metadata, and a compliance check. Skripr does all of it in one flow. A general assistant gives you raw text and leaves the rest to you.",
+      },
+    ],
+    bridge:
+      "Gemini is an excellent general tool, and we are not trying to out-reason it. For research, brainstorming, and everyday work, reach for it. But when the deliverable is a YouTube script that has to get the click and hold the view, a purpose-built tool wins. That is the one job Skripr is built for.",
+    closingH1: "Stop cleaning up generic drafts.",
+    faqs: [
+      {
+        q: "Can I just use Gemini to write YouTube scripts?",
+        a: "You can, and it writes fluent prose. The gap is that a general model does not know what is working on YouTube right now, does not write in your voice by default, and does not build retention structure in. You get a blank-canvas draft you still have to research, restructure, and clean up. Skripr is built specifically for the YouTube script, so that work is already done.",
+      },
+      {
+        q: "What does Skripr do that Gemini does not?",
+        a: "Skripr starts from videos already proven to work in your niche, writes in your voice or any creator's voice you choose, builds in hooks and retention beats, grounds claims in real cited research, and adds titles, metadata, and a demonetization check. It is a purpose-built YouTube pipeline rather than a general chat tool.",
+      },
+      {
+        q: "Is Skripr better than Gemini?",
+        a: "For general reasoning, research, and writing, Gemini is excellent and Skripr does not try to compete with it. For the specific job of writing a YouTube script that gets clicked and watched, Skripr is purpose-built and goes deeper.",
+      },
+      {
+        q: "Is Skripr free to try?",
+        a: "Yes. Your first 2 scripts are free with no card required, and paid plans are flat monthly, cancel anytime.",
+      },
+    ],
+    related: [
+      { href: "/skripr-vs-claude", label: "vs Claude" },
+      { href: "/compare/skripr-vs-chatgpt", label: "vs ChatGPT" },
+      { href: "/compare/skripr-vs-vidiq", label: "vs VidIQ" },
+    ],
+    dataBlock: {
+      heading: "What \"grounded in proven videos\" actually looks like",
+      intro:
+        "These are real faceless personal-finance channels in Skripr's research data. Each one had a video pull far more views than its subscriber count would predict, the kind of proven structure Skripr writes your script from. A general model has no idea this exists.",
+      columns: ["Channel", "Subscribers", "Breakout video", "Views"],
+      rows: [
+        ["Fred - Money Historian", "5.1K", "The 2008 Financial Crisis Explained Like You're 5", "241K"],
+        ["Money Simplified", "24.5K", "The Psychology of People Who Quietly Escape the Rat Race", "538K"],
+        ["Weird Finance", "27.7K", "Why Roblox Lost $282M Despite 70M Daily Users", "392K"],
+        ["How Money Works Uncut", "108K", "The New \"Unemployable\" Class", "627K"],
+        ["Crayon Capital", "218K", "The Great Depression Explained Like You're 5", "2.5M"],
+      ],
+      caption:
+        "Source: Skripr research data, faceless personal-finance niche, June 2026. A live example, refreshed over time.",
+      kicker:
+        "Gemini gives you a blank page. Skripr finds the videos already working in your niche, then writes your script from them.",
+    },
+  },
+
+  {
+    slug: "skripr-vs-claude-for-documentary-channels",
+    competitor: "Claude",
+    category: "Documentary scriptwriting",
+    intent: "commercial",
+    metaTitle: "Skripr vs Claude for Documentary Channels (2026)",
+    metaDescription:
+      "Documentary channels live on narration, research, and long-form retention. Claude writes fluent prose but does not know documentary formats or pace for retention. See the difference.",
+    ogDescription:
+      "Claude writes fluent narration. Skripr writes the documentary that holds a viewer for 20 minutes. Here is the difference.",
+    eyebrow: "Skripr vs Claude for Documentary Channels",
+    h1: "Claude writes beautiful narration. Skripr writes the documentary people finish.",
+    subhead:
+      "Documentary channels live or die on three things: narration that carries, research that holds up, and retention across fifteen to forty minutes. Claude writes fluent prose, but it does not know which documentary formats are working right now, it does not pace a long-form script for retention, and it does not write in your narrator voice by default. Skripr is built for exactly that job.",
+    competitorColumn: "Claude",
+    rows: [
+      ["Knows what documentary formats work now", "Yes, built on real data", "No"],
+      ["Starts from proven documentary videos", "Yes", "No, blank canvas"],
+      ["Long-form retention pacing and re-hooks", "Yes, built in", "Only if you prompt it"],
+      ["Writes in your narrator voice", "Yes (Voice Match)", "Generic by default"],
+      ["Real cited research for claims", "Yes", "Not reliably"],
+      ["Title, metadata, compliance check", "Yes, one flow", "No"],
+      ["Output", "A documentary script ready to narrate", "A draft you clean up"],
+    ],
+    beliefs: [
+      {
+        t: "A documentary is won in the first ninety seconds, then held for twenty minutes.",
+        d: "Long-form documentary retention is its own craft: the cold open, the stakes, the open loops you pay off across the whole runtime. Claude writes lovely sentences but does not pace a twenty-minute script for retention. Skripr builds that structure in.",
+      },
+      {
+        t: "Research that does not hold up sinks a documentary.",
+        d: "Documentary audiences punish sloppy facts. A general model will state things confidently that are not reliably sourced. Skripr grounds claims in real cited research, so your script is built on something you can stand behind.",
+      },
+      {
+        t: "The narrator voice is the channel.",
+        d: "Faceless documentary channels are recognized by their narration. A generic AI voice breaks that. Skripr writes in your narrator voice, or one you choose, so every script sounds like your channel.",
+      },
+    ],
+    bridge:
+      "Claude is a genuinely excellent writer, and for drafting and research it is a great tool to have open. Skripr is not trying to win general writing. It is built for the specific job of a documentary script that opens hard, paces for retention, cites real research, and sounds like your narrator. That is the work a documentary channel actually needs.",
+    closingH1: "Write the documentary people finish.",
+    faqs: [
+      {
+        q: "Can Claude write documentary scripts?",
+        a: "Claude writes fluent narration and is a strong drafting tool. The gap for documentary channels is that it does not know which documentary formats are working now, does not pace a long-form script for retention, does not reliably cite real research, and does not write in your narrator voice by default. Skripr is built around those exact needs.",
+      },
+      {
+        q: "Why does retention matter more for documentaries?",
+        a: "Documentaries are long, often fifteen to forty minutes, so a small drop in retention compounds across the runtime and starves the algorithm of watch time. Skripr structures the cold open, stakes, and open loops to hold attention across the whole video, not just the intro.",
+      },
+      {
+        q: "Does Skripr handle the research a documentary needs?",
+        a: "Skripr grounds claims in real cited research as part of the script, which matters more for documentary content than almost any other format, because the audience checks. You still verify, but you are not starting from a model that invents sources.",
+      },
+      {
+        q: "Is Skripr free to try?",
+        a: "Yes. Your first 2 scripts are free with no card required, and paid plans are flat monthly, cancel anytime.",
+      },
+    ],
+    related: [
+      { href: "/skripr-vs-claude", label: "vs Claude (general)" },
+      { href: "/compare/skripr-vs-gemini", label: "vs Gemini" },
+      { href: "/best-ai-tools-for-faceless-channels", label: "Best faceless tools" },
+    ],
+    dataBlock: {
+      heading: "Proven documentary structures, surfaced from real data",
+      intro:
+        "These are real faceless documentary channels in Skripr's research data. Each one had a video pull far past its subscriber count, the kind of proven long-form structure Skripr writes your documentary script from. A general writer cannot see any of this.",
+      columns: ["Channel", "Subscribers", "Breakout video", "Views"],
+      rows: [
+        ["Past Pictures", "8.5K", "Tsunamis on Tape: Episode 2", "1.6M"],
+        ["ståry.", "18.3K", "The Killdozer: How One Man Destroyed a Town in 2 Hours", "3.7M"],
+        ["CX Productions", "21.8K", "The World's Deadliest Theme Park: Action Park", "2.4M"],
+        ["Best Eps", "24.1K", "The Taxi Episode That Sent Chris Lloyd Into the Future", "930K"],
+        ["VULDAR", "146K", "Alcatraz Escape: The Overlooked Evidence", "1.7M"],
+      ],
+      caption:
+        "Source: Skripr research data, faceless documentary niche, June 2026. A live example, refreshed over time.",
+      kicker:
+        "Claude gives you a blank page. Skripr finds the documentaries already working in your niche, then writes your script from them.",
+    },
+  },
 ];
 
 export function getComparison(slug: string): Comparison | undefined {
