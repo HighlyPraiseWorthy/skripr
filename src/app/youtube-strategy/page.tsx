@@ -125,6 +125,48 @@ export default function YouTubeStrategyHub() {
         </div>
       </section>
 
+      {/* Pillar guides */}
+      <section style={{ maxWidth: 1100, margin: "0 auto", padding: "0 24px 64px" }}>
+        <div style={{ marginBottom: 24 }}>
+          <h2 style={{ fontSize: 24, fontWeight: 800, color: "#e8edf5", letterSpacing: "-0.02em", marginBottom: 8 }}>
+            Start here: the complete guides
+          </h2>
+          <p style={{ fontSize: 15, color: "#8aa4bf", margin: 0 }}>
+            Three deep guides that tie everything together. Each one links out to the detailed articles below.
+          </p>
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 14 }}>
+          {[
+            { href: "/youtube-scriptwriting", title: "YouTube Scriptwriting", desc: "Hooks, retention structure, open loops, and pacing, the script that gets watched." },
+            { href: "/faceless-youtube", title: "Faceless YouTube Channels", desc: "How to start, script, and scale a faceless channel, from niche to automation." },
+            { href: "/youtube-video-ideas", title: "Finding Winning Video Ideas", desc: "Outliers, reverse-engineering what works, and validating an idea before you film." },
+          ].map((p) => (
+            <Link
+              key={p.href}
+              href={p.href}
+              style={{
+                padding: "26px 26px",
+                borderRadius: 16,
+                background: "rgba(77,184,255,0.05)",
+                border: "1px solid rgba(77,184,255,0.22)",
+                textDecoration: "none",
+                display: "block",
+              }}
+            >
+              <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color: "#7ed8ff", marginBottom: 10 }}>
+                Complete guide
+              </div>
+              <div style={{ fontSize: 19, fontWeight: 700, color: "#e8edf5", letterSpacing: "-0.3px", marginBottom: 8 }}>
+                {p.title}
+              </div>
+              <div style={{ fontSize: 14, color: "#bcd2e8", lineHeight: 1.6 }}>
+                {p.desc}
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
       {/* Cluster sections */}
       <section style={{ maxWidth: 1100, margin: "0 auto", padding: "0 24px 80px" }}>
         {clusters.map((cluster, ci) => (
