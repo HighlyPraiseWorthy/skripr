@@ -466,7 +466,7 @@ export const comparisons: Comparison[] = [
     related: [
       { href: "/skripr-vs-claude", label: "vs Claude (general)" },
       { href: "/compare/skripr-vs-gemini", label: "vs Gemini" },
-      { href: "/best-ai-tools-for-faceless-channels", label: "Best faceless tools" },
+      { href: "/best/ai-tools-for-faceless-channels", label: "Best faceless tools" },
     ],
     dataBlock: {
       heading: "Proven documentary structures, surfaced from real data",
