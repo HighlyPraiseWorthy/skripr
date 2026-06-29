@@ -51,7 +51,7 @@ export default async function RoundupPage({ params }: { params: Promise<{ slug: 
     applicationCategory: "BusinessApplication",
     operatingSystem: "Web",
     url: "https://skripr.app",
-    description: "Skripr is a YouTube research and script generation tool that finds proven video ideas and writes ready-to-record scripts in your voice.",
+    description: "Skripr is a YouTube script generation tool that reverse-engineers a winning video you give it and writes ready-to-record scripts in your voice.",
     offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
   };
   const breadcrumbJsonLd = {

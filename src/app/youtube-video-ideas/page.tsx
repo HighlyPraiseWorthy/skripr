@@ -40,14 +40,14 @@ const data: PillarData = {
       heading: "Validate before you film",
       body: [
         "Before committing a week to a video, confirm the demand is real. If similar videos in your niche already pull meaningful views, the idea is validated. If nothing comparable exists or everything underperforms, treat that as a warning, not a green field.",
-        "This research, finding outliers, understanding why they worked, and validating demand, is the front half of every video. It is also exactly what Skripr automates. It surfaces the proven videos in your niche and turns that structure straight into a script, so research and creation are one step instead of hours in separate tools.",
+        "This research, finding outliers, understanding why they worked, and validating demand, is the front half of every video. It is also exactly what Skripr speeds up: drop in a channel and it surfaces that channel's outliers, then turns the proven video you pick straight into a script, so research and creation are one step instead of hours in separate tools.",
       ],
     },
   ],
   dataBlock: {
-    heading: "Real outliers, surfaced from research data",
+    heading: "Real outliers, the kind Skripr surfaces from a channel",
     intro:
-      "These recently started faceless channels each had a video pull far past their subscriber count. Spotting that gap is the whole game, and it is what Skripr's research is built to find.",
+      "These recently started faceless channels each had a video pull far past their subscriber count. Spotting that gap is the whole game, and it is what Skripr's Outlier Finder surfaces when you give it a channel.",
     columns: ["Channel", "Subscribers", "Started", "Breakout video", "Views"],
     rows: [
       ["how really?", "10.1K", "Dec 2025", "Why $2 Trillion Vanishes Every Year", "829K"],
@@ -55,9 +55,10 @@ const data: PillarData = {
       ["Millionaire Problems", "17.4K", "Apr 2026", "The Economics of Owning a Casino", "451K"],
       ["Money Simplified", "24.5K", "Mar 2026", "The Psychology of People Who Quietly Escape the Rat Race", "538K"],
     ],
-    caption: "Source: Skripr research data, faceless niches, June 2026. A live example, refreshed over time.",
+    caption: "Source: public YouTube data, faceless niches, June 2026. A live example, refreshed over time.",
   },
   moneyLinks: [
+    { href: "/youtube-video-ideas-generator", label: "Video Ideas Generator", desc: "Free tool: get click-worthy ideas for your niche in seconds, then turn one into a script." },
     { href: "/compare/skripr-vs-vidiq", label: "Skripr vs VidIQ", desc: "VidIQ finds keywords. See why creators want research that turns into a script." },
     { href: "/compare/skripr-vs-tubebuddy", label: "Skripr vs TubeBuddy", desc: "Optimization tools manage your channel; this is about finding the next video." },
     { href: "/best/ai-tools-for-faceless-channels", label: "Best Faceless Tools", desc: "The full stack for turning a proven idea into a finished faceless video." },

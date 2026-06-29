@@ -66,7 +66,7 @@ export default function CompareHub() {
             How Skripr compares to the tools creators already use.
           </h1>
           <p style={{ fontSize: 18, color: T.muted, lineHeight: 1.6, maxWidth: 640, margin: "0 auto" }}>
-            No spin. Each comparison says plainly where the other tool wins and where Skripr fits. Most of them research or optimize. Skripr finds the proven idea and writes the script.
+            No spin. Each comparison says plainly where the other tool wins and where Skripr fits. Most of them research or optimize. Skripr takes a proven video you bring and writes the script.
           </p>
         </section>
 

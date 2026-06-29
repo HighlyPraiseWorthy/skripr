@@ -15,6 +15,7 @@ Both share the hard rules. Context picks the blend.
 - Short sentences. One idea per sentence. If it needs a comma, consider breaking it into two.
 - Fifth-grade reading level. If a 12-year-old stumbles, rewrite.
 - No SaaS-marketer words. Banned: game-changing, revolutionary, amazing, unlock, supercharge, leverage, seamless, robust, powerful, streamline, cutting-edge, next-level, elevate.
+- No dated copy tropes. Banned: "blank page", "blank doc", "blank canvas", "blank prompt", "blank template", "blinking cursor". They read as 2019 copywriting. Use "from scratch", "from zero", "from nothing", or "starting cold" instead.
 - No hedging. No "might," "could potentially," "I think." State it or don't.
 - Validation before correction (community). Acknowledge what's right before redirecting.
 - One concrete insight always. Never just agree. Add something actionable.

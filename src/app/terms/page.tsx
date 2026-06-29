@@ -6,7 +6,7 @@ const C = {
   border: "rgba(77,184,255,0.14)",
   accent: "#4db8ff",
   text: "#d2e2f2",
-  textDim: "#8aa4bf",
+  textDim: "#bcd2e8",
   textBright: "#e8edf5",
 };
 

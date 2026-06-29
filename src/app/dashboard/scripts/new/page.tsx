@@ -174,6 +174,24 @@ export default function NewScriptPage() {
     }
   }, []);
 
+  // Prefill from the free Video Ideas Generator. Uses a separate `prefillTopic`
+  // param (not `topic`, which auto-fires generation) and falls back to the
+  // localStorage stash so the idea survives the sign-up redirect. Fills the
+  // Topic Only box without auto-generating.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("topic")) return; // the auto-fire path owns this case
+    let pending = params.get("prefillTopic");
+    if (!pending) {
+      try { pending = localStorage.getItem("skripr_pending_topic"); } catch {}
+    }
+    if (pending && pending.trim()) {
+      setInputMode("topic");
+      setTopic(pending.trim());
+      try { localStorage.removeItem("skripr_pending_topic"); } catch {}
+    }
+  }, []);
+
   useEffect(() => {
     fetch("/api/user/plan").then(r => r.json()).then(d => setUserPlan(d.plan || "free")).catch(() => {});
   }, []);

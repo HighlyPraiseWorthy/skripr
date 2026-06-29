@@ -40,7 +40,7 @@ const data: PillarData = {
       heading: "From one channel to a system",
       body: [
         "Faceless is also the format that scales into automation: multiple channels, each running on the same pipeline of research, script, voice, visuals, and edit. The constraint is almost never editing or uploading. It is throughput on the one thing that decides performance, the script.",
-        "This is where Skripr fits the faceless workflow precisely. It finds proven videos in each niche and writes full, retention-structured scripts in a chosen voice, fast enough to feed one channel or several. Research and scripting become one repeatable step instead of two tools and a copy-paste per video.",
+        "This is where Skripr fits the faceless workflow precisely. You give it a video already proven in each niche and it writes full, retention-structured scripts in a chosen voice, fast enough to feed one channel or several. Research and scripting become one repeatable step instead of two tools and a copy-paste per video.",
       ],
     },
   ],
@@ -55,7 +55,7 @@ const data: PillarData = {
       ["Dynastypical", "5.9K", "Apr 2026", "Why You Wouldn't Survive a Day as Anne Boleyn's Servant", "99K"],
       ["Accidental Scholar", "11.3K", "Mar 2026", "AI Reconstruction of the 1900 Galveston Storm", "712K"],
     ],
-    caption: "Source: Skripr research data, faceless niches, June 2026. A live example, refreshed over time.",
+    caption: "Source: public YouTube data, faceless niches, June 2026. A live example, refreshed over time.",
   },
   moneyLinks: [
     { href: "/best/ai-tools-for-faceless-channels", label: "Best AI Tool for Faceless Channels", desc: "The full faceless stack: research, scripts, voice, visuals, editing, and what each is best at." },

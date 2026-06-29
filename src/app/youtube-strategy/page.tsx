@@ -131,7 +131,7 @@ export default function YouTubeStrategyHub() {
           <h2 style={{ fontSize: 24, fontWeight: 800, color: "#e8edf5", letterSpacing: "-0.02em", marginBottom: 8 }}>
             Start here: the complete guides
           </h2>
-          <p style={{ fontSize: 15, color: "#8aa4bf", margin: 0 }}>
+          <p style={{ fontSize: 15, color: "#bcd2e8", margin: 0 }}>
             Three deep guides that tie everything together. Each one links out to the detailed articles below.
           </p>
         </div>
@@ -181,7 +181,7 @@ export default function YouTubeStrategyHub() {
               }}>
                 {cluster.name}
               </h2>
-              <p style={{ fontSize: 15, color: "#8aa4bf", margin: 0 }}>
+              <p style={{ fontSize: 15, color: "#bcd2e8", margin: 0 }}>
                 {cluster.description}
               </p>
             </div>
@@ -226,7 +226,7 @@ export default function YouTubeStrategyHub() {
                   </h3>
                   <p style={{
                     fontSize: 13,
-                    color: "#8aa4bf",
+                    color: "#bcd2e8",
                     lineHeight: 1.6,
                     margin: 0,
                   }}>

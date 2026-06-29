@@ -53,13 +53,13 @@ export const comparisons: Comparison[] = [
     eyebrow: "Skripr vs VidIQ",
     h1: "VidIQ can generate a script. Skripr writes the one that gets watched.",
     subhead:
-      "VidIQ is a strong research and optimization tool, and it has added AI features that can spin up a script. But that script is a side feature bolted onto a keyword tool: generic, not grounded in your voice, not built around retention. For Skripr, the script is the whole product, written from videos already proven to work in your niche.",
+      "VidIQ is a strong research and optimization tool, and it has added AI features that can spin up a script. But that script is a side feature bolted onto a keyword tool: generic, not grounded in your voice, not built around retention. For Skripr, the script is the whole product, written from a video already proven to work that you bring it.",
     competitorColumn: "VidIQ",
     rows: [
       ["Keyword and tag research", "Yes", "Yes, its core strength"],
       ["Finds outlier videos worth modeling", "Yes, built in", "Partial, view counts only"],
       ["Generates a script", "Yes, the core product", "Yes, an added AI feature"],
-      ["Scripts grounded in proven videos in your niche", "Yes", "No"],
+      ["Scripts built from a proven video you bring", "Yes", "No"],
       ["Writes in your voice or a creator's", "Yes (Voice Match)", "Generic by default"],
       ["Retention structure: hooks, re-hooks", "Yes, built in", "Not by design"],
       ["Built for faceless and automation volume", "Yes", "No"],
@@ -71,7 +71,7 @@ export const comparisons: Comparison[] = [
       },
       {
         t: "Grounded beats generic.",
-        d: "A general AI script is written from nothing in particular. Skripr writes from videos already outperforming in your niche, so the structure you get is proven, not guessed. That grounding is the difference between a draft and a script you can record.",
+        d: "A general AI script is written from nothing in particular. Skripr writes from a video already outperforming that you bring it, so the structure you get is proven, not guessed. That grounding is the difference between a draft and a script you can record.",
       },
       {
         t: "Voice and retention are the whole game.",
@@ -88,11 +88,11 @@ export const comparisons: Comparison[] = [
       },
       {
         q: "Can VidIQ write a YouTube script?",
-        a: "Yes, VidIQ has AI features that can generate a script. The gap is depth: that script is a side feature on a keyword tool, so it tends to be generic, not written in your voice, and not built around retention. Skripr is purpose-built for the script and grounds it in videos already working in your niche.",
+        a: "Yes, VidIQ has AI features that can generate a script. The gap is depth: that script is a side feature on a keyword tool, so it tends to be generic, not written in your voice, and not built around retention. Skripr is purpose-built for the script and grounds it in a proven video you bring it.",
       },
       {
         q: "Does Skripr do keyword research like VidIQ?",
-        a: "Skripr is built around finding videos and ideas already proven to work in your niche, then scripting them. If your goal is to go from a topic to a recorded video, that research is built into the workflow rather than being the end product.",
+        a: "Skripr is built around reverse-engineering a winning video you give it, or pulling real research for a topic you choose, then scripting from it. If your goal is to go from an idea to a recorded video, that research is built into the workflow rather than being the end product.",
       },
       {
         q: "Is Skripr free to try?",
@@ -107,7 +107,7 @@ export const comparisons: Comparison[] = [
     dataBlock: {
       heading: "What \"grounded in proven videos\" actually looks like",
       intro:
-        "These are real faceless personal-finance channels in Skripr's research data, every one of them started in the last several months. Each had a video pull far past its subscriber count, the kind of proven structure Skripr writes your script from. A keyword score cannot show you this.",
+        "These are real faceless personal-finance channels, every one of them started in the last several months. Each had a video pull far past its subscriber count: the kind of proven video you would hand Skripr to write your script from. A keyword score cannot show you this.",
       columns: ["Channel", "Subscribers", "Started", "Breakout video", "Views"],
       rows: [
         ["how really?", "10.1K", "Dec 2025", "Why $2 Trillion Vanishes Every Year", "829K"],
@@ -117,9 +117,9 @@ export const comparisons: Comparison[] = [
         ["Six Figure Explainer", "8.6K", "Mar 2026", "Your Life As Every FAANG Rank", "235K"],
       ],
       caption:
-        "Source: Skripr research data, faceless personal-finance niche, June 2026. A live example, refreshed over time.",
+        "Source: public YouTube data,faceless personal-finance niche, June 2026. A live example, refreshed over time.",
       kicker:
-        "VidIQ gives you a keyword and a score. Skripr finds the videos already working in your niche, then writes your script from them.",
+        "VidIQ gives you a keyword and a score. You hand Skripr a video that already works, and it writes your script from its hooks and structure.",
     },
   },
 
@@ -158,7 +158,7 @@ export const comparisons: Comparison[] = [
       },
       {
         t: "The bottleneck is usually the next script, not the next tag.",
-        d: "Most creators are not stuck on metadata. They are stuck staring at a blank doc wondering what to make and how to open it. Skripr removes that bottleneck.",
+        d: "Most creators are not stuck on metadata. They are stuck on what to make and how to open it. Skripr removes that bottleneck.",
       },
     ],
     bridge:
@@ -198,15 +198,15 @@ export const comparisons: Comparison[] = [
     metaDescription:
       "You already pay for ChatGPT, so why use Skripr? Because a general chatbot does not know what is working on YouTube, your voice, or retention structure. Here is the side-by-side.",
     ogDescription:
-      "ChatGPT guesses. Skripr knows what is working on YouTube right now. Here is the difference.",
+      "ChatGPT guesses. Skripr writes from a video that already works. Here is the difference.",
     eyebrow: "Skripr vs ChatGPT",
     h1: "ChatGPT will write you a script. It just will not write the one that gets watched.",
     subhead:
       "ChatGPT is a brilliant general tool, and you probably already pay for it. But ask it for a YouTube script and you get fluent text with no idea what is pulling views in your niche, no voice match, and no retention structure. You still have to research it, rebuild it, and clean it up. Skripr does that work before it hands you the script.",
     competitorColumn: "ChatGPT",
     rows: [
-      ["Knows what is working on YouTube now", "Yes, built on real data", "No"],
-      ["Starts from proven videos in your niche", "Yes", "No, blank canvas"],
+      ["Starts from a proven video you bring", "Yes", "No"],
+      ["Reverse-engineers why a winner worked", "Yes", "No, from scratch"],
       ["Writes in your voice or a creator's", "Yes (Voice Match)", "Generic by default"],
       ["Retention structure: hooks, re-hooks", "Yes", "Only if you prompt it"],
       ["Real cited research", "Yes", "Not reliably"],
@@ -216,7 +216,7 @@ export const comparisons: Comparison[] = [
     beliefs: [
       {
         t: "A general AI writes into the dark.",
-        d: "ChatGPT does not know which hooks, titles, and angles are pulling views on YouTube this week. Skripr does, because it is built on what is already working in your niche. You start from proven, not from a guess.",
+        d: "ChatGPT writes from nothing in particular. Skripr writes from a video that already worked, the one you bring it, so you start from proven structure, not from a guess.",
       },
       {
         t: "Generic gets sensed in a sentence.",
@@ -233,11 +233,11 @@ export const comparisons: Comparison[] = [
     faqs: [
       {
         q: "I already pay for ChatGPT Plus. Why would I pay for Skripr too?",
-        a: "Because they are not the same purchase. ChatGPT Plus is a general assistant for everything. Skripr is a YouTube script engine that knows your niche, writes in your voice, and builds retention in. If YouTube is the goal, the time you save not researching and rewriting is the value.",
+        a: "Because they are not the same purchase. ChatGPT Plus is a general assistant for everything. Skripr is a YouTube script engine that builds your script on a proven video you bring, writes in your voice, and builds retention in. If YouTube is the goal, the time you save not researching and rewriting is the value.",
       },
       {
         q: "Can I just prompt ChatGPT well enough to match Skripr?",
-        a: "You can get closer with a strong prompt, but you are still missing the live picture of what is working on YouTube and the voice and retention layers Skripr builds in by default. You would be rebuilding a slice of Skripr by hand on every script.",
+        a: "You can get closer with a strong prompt, but you are still missing the proven-video grounding and the voice and retention layers Skripr builds in by default. You would be rebuilding a slice of Skripr by hand on every script.",
       },
       {
         q: "Does Skripr use models like ChatGPT under the hood?",
@@ -268,12 +268,12 @@ export const comparisons: Comparison[] = [
     eyebrow: "Skripr vs Jasper",
     h1: "Jasper was built for blog posts and ads. Skripr was built for YouTube.",
     subhead:
-      "Jasper is a capable marketing writer with brand voices and templates for blogs, emails, and ad copy. None of that is a YouTube script. A video that gets watched needs a hook in the first seconds, retention beats, and structure pulled from what is working on YouTube right now. That is what Skripr writes.",
+      "Jasper is a capable marketing writer with brand voices and templates for blogs, emails, and ad copy. None of that is a YouTube script. A video that gets watched needs a hook in the first seconds, retention beats, and structure pulled from a video already proven to work. That is what Skripr writes.",
     competitorColumn: "Jasper",
     rows: [
       ["Blog, email, and ad copy", "No, not its focus", "Yes, its core strength"],
-      ["Knows what is working on YouTube now", "Yes, built on real data", "No"],
-      ["Starts from proven videos in your niche", "Yes", "No"],
+      ["Starts from a proven video you bring", "Yes", "No"],
+      ["Reverse-engineers why a winner worked", "Yes", "No"],
       ["Retention structure: hooks, re-hooks", "Yes", "No, written for readers not viewers"],
       ["Writes in a creator's voice", "Yes (Voice Match)", "Brand voice for marketing"],
       ["Title, metadata, compliance check", "Yes, one flow", "No"],
@@ -290,7 +290,7 @@ export const comparisons: Comparison[] = [
       },
       {
         t: "Marketing templates do not know YouTube.",
-        d: "Jasper has no view of what is pulling clicks and watch time on YouTube this week. Skripr is built on it, so the script starts from proven, not from a generic template.",
+        d: "Jasper writes from generic marketing templates. Skripr writes from a video already proven to work that you bring it, so the script starts from proven structure, not from a template.",
       },
     ],
     bridge:
@@ -337,8 +337,8 @@ export const comparisons: Comparison[] = [
       "Gemini is a capable general model, and it is great for research, drafting, and a hundred other jobs. But ask it for a YouTube script and you get fluent text with no idea what is pulling views in your niche, no voice match, and no retention structure. You still have to research it, restructure it, and clean it up. Skripr does that work before it hands you the script.",
     competitorColumn: "Gemini",
     rows: [
-      ["Knows what is working on YouTube now", "Yes, built on real data", "No"],
-      ["Starts from proven videos in your niche", "Yes", "No, blank canvas"],
+      ["Starts from a proven video you bring", "Yes", "No"],
+      ["Reverse-engineers why a winner worked", "Yes", "No, from scratch"],
       ["Writes in your voice or a creator's", "Yes (Voice Match)", "Generic by default"],
       ["Retention structure: hooks, re-hooks", "Yes", "Only if you prompt it"],
       ["Real cited research", "Yes", "Not reliably"],
@@ -348,7 +348,7 @@ export const comparisons: Comparison[] = [
     beliefs: [
       {
         t: "A general model writes into the dark.",
-        d: "Gemini does not know which hooks, titles, and angles are pulling views on YouTube this week. Skripr does, because it is built on what is already working in your niche. You start from proven, not from a guess.",
+        d: "Gemini writes from nothing in particular. Skripr writes from a video that already worked, the one you bring it, so you start from proven structure, not from a guess.",
       },
       {
         t: "Generic gets sensed in a sentence.",
@@ -365,11 +365,11 @@ export const comparisons: Comparison[] = [
     faqs: [
       {
         q: "Can I just use Gemini to write YouTube scripts?",
-        a: "You can, and it writes fluent prose. The gap is that a general model does not know what is working on YouTube right now, does not write in your voice by default, and does not build retention structure in. You get a blank-canvas draft you still have to research, restructure, and clean up. Skripr is built specifically for the YouTube script, so that work is already done.",
+        a: "You can, and it writes fluent prose. The gap is that a general model does not know what is working on YouTube right now, does not write in your voice by default, and does not build retention structure in. You get a generic draft you still have to research, restructure, and clean up. Skripr is built specifically for the YouTube script, so that work is already done.",
       },
       {
         q: "What does Skripr do that Gemini does not?",
-        a: "Skripr starts from videos already proven to work in your niche, writes in your voice or any creator's voice you choose, builds in hooks and retention beats, grounds claims in real cited research, and adds titles, metadata, and a demonetization check. It is a purpose-built YouTube pipeline rather than a general chat tool.",
+        a: "Skripr starts from a proven video you give it, writes in your voice or any creator's voice you choose, builds in hooks and retention beats, grounds claims in real cited research, and adds titles, metadata, and a demonetization check. It is a purpose-built YouTube pipeline rather than a general chat tool.",
       },
       {
         q: "Is Skripr better than Gemini?",
@@ -388,7 +388,7 @@ export const comparisons: Comparison[] = [
     dataBlock: {
       heading: "What \"grounded in proven videos\" actually looks like",
       intro:
-        "These are real faceless space and science channels in Skripr's research data, all started within the last several months. Each had a video pull far past its subscriber count, the kind of proven structure Skripr writes your script from. A general model has no idea this exists.",
+        "These are real faceless space and science channels, all started within the last several months. Each had a video pull far past its subscriber count: the kind of proven video you would hand Skripr to write your script from. A general model has no idea this exists.",
       columns: ["Channel", "Subscribers", "Started", "Breakout video", "Views"],
       rows: [
         ["Bluntly Explained", "9.6K", "Apr 2026", "Every Type of Black Hole Explained in 11 Minutes", "878K"],
@@ -398,9 +398,9 @@ export const comparisons: Comparison[] = [
         ["Cosmic Lens", "97.4K", "Oct 2025", "Why Saturn is the Scariest Planet", "6.1M"],
       ],
       caption:
-        "Source: Skripr research data, faceless space and science niche, June 2026. A live example, refreshed over time.",
+        "Source: public YouTube data,faceless space and science niche, June 2026. A live example, refreshed over time.",
       kicker:
-        "Gemini gives you a blank page. Skripr finds the videos already working in your niche, then writes your script from them.",
+        "Gemini starts from scratch. You hand Skripr a video that already works, and it writes your script from its hooks and structure.",
     },
   },
 
@@ -420,8 +420,8 @@ export const comparisons: Comparison[] = [
       "Documentary channels live or die on three things: narration that carries, research that holds up, and retention across fifteen to forty minutes. Claude writes fluent prose, but it does not know which documentary formats are working right now, it does not pace a long-form script for retention, and it does not write in your narrator voice by default. Skripr is built for exactly that job.",
     competitorColumn: "Claude",
     rows: [
-      ["Knows what documentary formats work now", "Yes, built on real data", "No"],
-      ["Starts from proven documentary videos", "Yes", "No, blank canvas"],
+      ["Starts from a proven documentary you bring", "Yes", "No"],
+      ["Reverse-engineers why a long-form winner worked", "Yes", "No, from scratch"],
       ["Long-form retention pacing and re-hooks", "Yes, built in", "Only if you prompt it"],
       ["Writes in your narrator voice", "Yes (Voice Match)", "Generic by default"],
       ["Real cited research for claims", "Yes", "Not reliably"],
@@ -469,9 +469,9 @@ export const comparisons: Comparison[] = [
       { href: "/best/ai-tools-for-faceless-channels", label: "Best faceless tools" },
     ],
     dataBlock: {
-      heading: "Proven documentary structures, surfaced from real data",
+      heading: "Proven documentary structures, the kind you bring to Skripr",
       intro:
-        "These are real faceless documentary channels in Skripr's research data, all started within the last several months. Each had a video pull far past its subscriber count, the kind of proven long-form structure Skripr writes your documentary script from. A general writer cannot see any of this.",
+        "These are real faceless documentary channels, all started within the last several months. Each had a video pull far past its subscriber count: the kind of proven documentary you would hand Skripr to write your script from. A general writer cannot see any of this.",
       columns: ["Channel", "Subscribers", "Started", "Breakout video", "Views"],
       rows: [
         ["TRUE HORIZONS", "43.4K", "Oct 2025", "The Strait of Hormuz: The World's Most Dangerous Strait", "1.6M"],
@@ -481,9 +481,9 @@ export const comparisons: Comparison[] = [
         ["WW2 True Stories", "6.6K", "Oct 2025", "German Generals Mocked British Intelligence", "96K"],
       ],
       caption:
-        "Source: Skripr research data, faceless documentary niche, June 2026. A live example, refreshed over time.",
+        "Source: public YouTube data,faceless documentary niche, June 2026. A live example, refreshed over time.",
       kicker:
-        "Claude gives you a blank page. Skripr finds the documentaries already working in your niche, then writes your script from them.",
+        "Claude starts from scratch. You hand Skripr a documentary that already works, and it writes your script from its structure.",
     },
   },
 ];

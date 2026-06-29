@@ -2,6 +2,8 @@ import { MetadataRoute } from "next";
 import { articles } from "./youtube-strategy/articles";
 import { comparisons } from "./compare/comparisons";
 import { roundups } from "./best/roundups";
+import { NAME_NICHES } from "@/lib/data/channel-name-niches";
+import { SEO_TOOLS } from "@/lib/data/seo-tools";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://skripr.app";
@@ -25,6 +27,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: new Date(),
     changeFrequency: "monthly" as const,
     priority: 0.8,
+  }));
+
+  const nameNicheUrls = NAME_NICHES.map((n) => ({
+    url: `${baseUrl}/youtube-channel-name-generator/${n.id}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.7,
+  }));
+
+  const seoToolUrls = SEO_TOOLS.map((t) => ({
+    url: `${baseUrl}/${t.slug}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.9,
   }));
 
   return [
@@ -54,6 +70,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: `${baseUrl}/youtube-video-ideas`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/youtube-video-ideas-generator`,
       lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 0.9,
@@ -98,22 +120,29 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     ...roundupUrls,
     {
-      url: `${baseUrl}/pricing`,
+      url: `${baseUrl}/youtube-channel-name-generator`,
       lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
+      changeFrequency: "weekly",
+      priority: 0.9,
     },
+    ...nameNicheUrls,
+    {
+      url: `${baseUrl}/youtube-seo-tools`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    ...seoToolUrls,
+    // /pricing intentionally redirects to /#pricing (homepage section), so it is
+    // NOT a standalone indexable page. Kept out of the sitemap to avoid GSC
+    // "redirect error". Revisit a real pricing page once the brand has search demand.
     {
       url: `${baseUrl}/contact`,
       lastModified: new Date(),
       changeFrequency: "yearly",
       priority: 0.4,
     },
-    {
-      url: `${baseUrl}/sign-up`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
+    // /sign-up is a conversion/auth page with no SEO value; kept out of the
+    // sitemap so it contains only real, indexable content.
   ];
 }

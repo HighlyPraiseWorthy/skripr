@@ -103,7 +103,7 @@ export function TableOfContents({ content }: { content: string }) {
       <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 8 }}>
         {headings.map((h, i) => (
           <li key={i}>
-            <span style={{ color: "#8aa4bf", fontSize: 13 }}>
+            <span style={{ color: "#bcd2e8", fontSize: 13 }}>
               {String(i + 1).padStart(2, "0")}. {h}
             </span>
           </li>

@@ -272,7 +272,7 @@ const lessons = [
     level: "Beginner",
     duration: "8 min",
     emoji: "🚀",
-    summary: "The full Skripr workflow in under 10 minutes, from blank page to a script ready for TTS and upload.",
+    summary: "The full Skripr workflow in under 10 minutes, from idea to a script ready for TTS and upload.",
     content: (
       <div>
         <Section title="Step 1, Choose your input mode">

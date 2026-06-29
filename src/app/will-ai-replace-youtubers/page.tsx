@@ -100,7 +100,7 @@ export default function WillAIReplaceYouTubers() {
         </Section>
 
         <Section kicker="The part AI never solved" title="Start from what already works, in your voice">
-          This is the gap Skripr was built to close. Skripr does not start from a blank prompt. It starts from videos already proven to work in your niche, then writes the full script around what is actually pulling views right now: the hook, the retention beats, the open loops, the payoff.
+          This is the gap Skripr was built to close. Skripr does not start from scratch. It starts from videos already proven to work in your niche, then writes the full script around what is actually pulling views right now: the hook, the retention beats, the open loops, the payoff.
           <br /><br />
           And it writes in your voice, or any creator's voice you point it at, so the script sounds like a real person instead of AI sludge. It even flags demonetization risk before you record. It is not a chatbot you fight. It is the idea and the script, done right, which is the part of the pipeline AI never actually solved.
         </Section>

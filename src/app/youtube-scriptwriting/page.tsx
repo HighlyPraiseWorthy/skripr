@@ -40,7 +40,7 @@ const data: PillarData = {
       heading: "Structure beats inspiration",
       body: [
         "You do not need to be a brilliant writer. You need a reliable structure: hook, setup, stakes, body delivered one idea at a time with re-hooks, a payoff, and one clear call to action. Plan roughly 130 words per minute of finished video, so a ten-minute video is about 1,300 words.",
-        "The fastest way to write a script that performs is to start from what already works. Find a video that overperformed in your niche, study its structure, and write your own version on your own topic. That is exactly what Skripr automates: it surfaces proven videos and writes a script built on that structure, in your voice.",
+        "The fastest way to write a script that performs is to start from what already works. Find a video that overperformed in your niche, study its structure, and write your own version on your own topic. That is exactly what Skripr automates: you give it a video that overperformed, it breaks down why it worked, and it writes a script built on that structure, in your voice.",
       ],
     },
   ],
@@ -55,7 +55,7 @@ const data: PillarData = {
       ["Audio Point", "33.3K", "Nov 2025", "Countries That Lost Their Superpower Status (And Why)", "500K"],
       ["Dynastypical", "5.9K", "Apr 2026", "Why You Wouldn't Survive a Day as Anne Boleyn's Servant", "99K"],
     ],
-    caption: "Source: Skripr research data, faceless documentary niche, June 2026. A live example, refreshed over time.",
+    caption: "Source: public YouTube data, faceless documentary niche, June 2026. A live example, refreshed over time.",
   },
   moneyLinks: [
     { href: "/best/ai-script-writer-for-youtube", label: "Best AI Script Writer for YouTube", desc: "How the dedicated tools compare, and which writes scripts grounded in real data." },
@@ -74,7 +74,7 @@ const data: PillarData = {
   faqs: [
     { q: "Should I script every YouTube video word for word?", a: "On-camera creators often script the hook and key beats and improvise the rest. Faceless and voiceover videos are usually scripted fully, because the script is the entire video. Either way, scripting the hook and structure is what protects retention." },
     { q: "How long should a YouTube script be?", a: "Plan for roughly 130 words per minute of finished video, so a 10-minute video runs about 1,300 words. Match length to the depth of the topic, not a fixed count." },
-    { q: "Can AI write a good YouTube script?", a: "A general chatbot writes generic text. A purpose-built tool like Skripr writes from videos already proven in your niche, in your voice, with hooks and retention built in, which is the difference between a draft you fix and a script you record." },
+    { q: "Can AI write a good YouTube script?", a: "A general chatbot writes generic text. A purpose-built tool like Skripr writes from a video already proven to work that you bring it, in your voice, with hooks and retention built in, which is the difference between a draft you fix and a script you record." },
     { q: "Is Skripr free to try?", a: "Yes. Your first 2 scripts are free with no card required, and paid plans are flat monthly, cancel anytime." },
   ],
   related: [

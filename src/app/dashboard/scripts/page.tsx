@@ -5,6 +5,7 @@ import Link from "next/link";
 import type { Script } from "@/lib/types/script";
 import { EmptyStateGuide } from "@/components/EmptyStateGuide";
 import { ScriptList } from "@/components/ScriptList";
+import PendingTopicRedirect from "@/components/PendingTopicRedirect";
 
 const C = {
   bg: "#080c12",
@@ -74,6 +75,7 @@ export default async function ScriptsPage() {
 
   return (
     <div style={{ padding: 28, minHeight: "100vh", background: C.bg }}>
+      <PendingTopicRedirect />
       <div aria-hidden style={{ position: "fixed", top: -180, right: -120, width: 520, height: 520, borderRadius: "50%", background: "radial-gradient(circle,rgba(77,184,255,0.13) 0%,transparent 70%)", pointerEvents: "none", zIndex: 0 }} />
       <div aria-hidden style={{ position: "fixed", bottom: -200, left: -140, width: 560, height: 560, borderRadius: "50%", background: "radial-gradient(circle,rgba(77,184,255,0.06) 0%,transparent 70%)", pointerEvents: "none", zIndex: 0 }} />
 

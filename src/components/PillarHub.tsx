@@ -80,7 +80,7 @@ export function PillarHub({ data }: { data: PillarData }) {
 
         {/* Hero */}
         <section style={{ maxWidth: 800, margin: "0 auto", padding: "40px 24px 24px" }}>
-          <div style={{ fontSize: 10, fontWeight: 500, letterSpacing: "0.16em", textTransform: "uppercase", color: T.dim, marginBottom: 16 }}>{data.eyebrow}</div>
+          <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: "0.16em", textTransform: "uppercase", color: T.dim, marginBottom: 16 }}>{data.eyebrow}</div>
           <h1 style={{ fontSize: 42, fontWeight: 800, letterSpacing: "-1.4px", lineHeight: 1.08, marginBottom: 20 }}>{data.h1}</h1>
           <p style={{ fontSize: 19, color: T.muted, lineHeight: 1.6, marginBottom: 8 }}>{data.intro}</p>
         </section>
@@ -162,7 +162,7 @@ export function PillarHub({ data }: { data: PillarData }) {
         <section style={{ maxWidth: 700, margin: "0 auto", padding: "0 24px 88px", textAlign: "center" }}>
           <h2 style={{ fontSize: 30, fontWeight: 700, letterSpacing: "-0.8px", lineHeight: 1.1, marginBottom: 14 }}>From idea to script in about a minute.</h2>
           <p style={{ fontSize: 16, color: T.muted, lineHeight: 1.7, marginBottom: 26 }}>
-            Two full scripts free, no card. Skripr finds a proven idea and writes the script in your voice.
+            Two full scripts free, no card. Bring a proven video and Skripr writes the script in your voice.
           </p>
           <Link href="/sign-up" style={{ display: "inline-block", fontSize: 15, fontWeight: 700, padding: "14px 34px", borderRadius: 10, background: T.accent, color: T.bg, textDecoration: "none" }}>Start free, 2 scripts</Link>
         </section>
@@ -175,8 +175,10 @@ export function PillarHub({ data }: { data: PillarData }) {
               <Link key={rel.href} href={rel.href} style={{ fontSize: 13, color: T.dim, textDecoration: "none" }}>{rel.label}</Link>
             ))}
             <Link href="/youtube-strategy" style={{ fontSize: 13, color: T.dim, textDecoration: "none" }}>All guides</Link>
+            <Link href="/youtube-channel-name-generator" style={{ fontSize: 13, color: T.dim, textDecoration: "none" }}>Name Generator</Link>
+            <Link href="/youtube-seo-tools" style={{ fontSize: 13, color: T.dim, textDecoration: "none" }}>SEO Tools</Link>
           </div>
-          <div style={{ fontSize: 10, color: T.dim }}>© 2026 Skripr. Built for creators.</div>
+          <div style={{ fontSize: 12, color: T.dim }}>© 2026 Skripr. Built for creators.</div>
         </footer>
       </main>
     </>

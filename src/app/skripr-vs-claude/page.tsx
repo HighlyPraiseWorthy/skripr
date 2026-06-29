@@ -27,7 +27,7 @@ export const metadata: Metadata = {
 const faqs = [
   {
     q: "Can I just use Claude or ChatGPT to write YouTube scripts?",
-    a: "You can, and they write fluent prose. The gap is that a general AI does not know what is working on YouTube right now, does not write in your voice by default, and does not build retention structure in. You get a blank-canvas draft you still have to research, restructure, and clean up. Skripr is built specifically for the YouTube script, so that work is already done.",
+    a: "You can, and they write fluent prose. The gap is that a general AI does not know what is working on YouTube right now, does not write in your voice by default, and does not build retention structure in. You get a generic draft you still have to research, restructure, and clean up. Skripr is built specifically for the YouTube script, so that work is already done.",
   },
   {
     q: "What does Skripr do that Claude does not?",

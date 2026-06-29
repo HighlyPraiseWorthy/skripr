@@ -551,12 +551,12 @@ export default function LandingPage() {
             It was never about talent.
           </div>
           <p style={{ fontSize: 17, fontWeight: 400, color: "#d4e4f3", lineHeight: 1.7, maxWidth: 600, margin: "0 auto 44px", textAlign: "center" as const }}>
-            The creators winning right now aren't more gifted than you. They just start from what already works instead of a blank page. So can you.
+            The creators winning right now aren't more gifted than you. They just start from what already works instead of from scratch. So can you.
           </p>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: 1, background: T.border, border: `1px solid ${T.border}` }}>
             {[
-              { t: "You don't need a blank page.", d: "Staring at a blank doc is why most videos die before they're written. Paste a video that already worked and Skripr rebuilds its proven structure in your voice: the hook, the retention beats, the title, in about a minute. You stop starting from zero and start from what's already winning." },
-              { t: "Stop writing into the dark.", d: "You're not failing for lack of talent. You're guessing. Skripr reads what's actually pulling views in your niche this week and hands you the hooks, title patterns, and angles behind it. So you stop gambling on every upload and post like you already know it'll land." },
+              { t: "You don't need to start from scratch.", d: "Starting from scratch is why most videos die before they're written. Paste a video that already worked and Skripr rebuilds its proven structure in your voice: the hook, the retention beats, the title, in about a minute. You stop starting from zero and start from what's already winning." },
+              { t: "Stop writing into the dark.", d: "You're not failing for lack of talent. You're guessing. Bring Skripr a video that already worked and it pulls apart why, the hooks, title patterns, and angles behind it, then builds your script on them. So you stop gambling on every upload and post like you already know it'll land." },
               { t: "Sound like you, or anyone you want.", d: "Generic AI gets sensed in a sentence, and viewers click off. Point Skripr at any channel, your own or a creator you admire, and it learns the rhythm, phrasing, and openings, then writes every script in that voice. Your audience hears a real creator, not a robot, and they stay." },
               { t: "No credits. No contracts. No catch.", d: "Other tools lock you into a yearly plan and meter you with credits that run dry mid-script. Skripr is flat monthly. Two scripts free, then twenty for $19, cancel anytime. No annual handcuffs, no credit math, just the freedom to create as much as you want." },
             ].map(b => (
@@ -577,7 +577,7 @@ export default function LandingPage() {
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 1, background: T.border, border: `1px solid ${T.border}` }}>
           {[
-            { n: "01", t: "Start from what works", d: "Paste a viral video or drop in a topic. Skripr finds the proven structure, hook, and pacing behind it. No blank page." },
+            { n: "01", t: "Start from what works", d: "Paste a viral video or drop in a topic. Skripr reverse-engineers the proven structure, hook, and pacing behind it. You start from a real draft." },
             { n: "02", t: "Skripr writes the script", d: "A full, voiceover-ready script in your niche and your voice, with ranked hooks, retention beats, and high-CTR title words built in." },
             { n: "03", t: "Publish-ready, not a draft", d: "Get titles, description, tags, and a demonetization check in the same flow. Paste it into your voiceover tool and upload." },
           ].map(s => (
@@ -937,7 +937,7 @@ export default function LandingPage() {
           ))}
         </div>
         <p style={{ fontSize: 15, fontWeight: 400, color: T.muted, lineHeight: 1.6, margin: "22px auto 0", maxWidth: 640, textAlign: "center" as const }}>
-          ChatGPT gives you a blank-canvas draft. Skripr gives you a performance-informed, voice-matched, publish-safe script, plus the workflow to get it live.
+          ChatGPT gives you a generic first draft. Skripr gives you a performance-informed, voice-matched, publish-safe script, plus the workflow to get it live.
         </p>
       </div>
 
@@ -1066,7 +1066,7 @@ export default function LandingPage() {
         </div>
         <div style={{ display: "flex", flexDirection: "column" as const, gap: 1, background: T.border, border: `1px solid ${T.border}` }}>
           {[
-            { q: "Do I need a big channel for this to work?", a: "No. Skripr is built for brand-new and faceless channels. You start from videos that already work in your niche, so you're not guessing what to make, even with zero subscribers." },
+            { q: "Do I need a big channel for this to work?", a: "No. Skripr is built for brand-new and faceless channels. You start from a video that already works, so you're not guessing what to make, even with zero subscribers." },
             { q: "Is it really free to try?", a: "Yes, your first 2 scripts are free, no credit card required. You only upgrade once you've seen the output for yourself." },
             { q: "Will my scripts be original and safe to post?", a: "Yes. When you remix a video, Skripr mirrors its structure and pacing, never its wording. It writes its own metaphors and lines, strips out any sponsor reads, and outputs clean voiceover-ready text, so you're not copying anyone." },
             { q: "Can it sound like me?", a: "Yes. Voice Match learns your writing style from your past scripts (or any channel you choose) and applies it to every script, so it reads like you, not a generic AI narrator." },
@@ -1098,27 +1098,56 @@ export default function LandingPage() {
       </div>
 
       {/* ── FOOTER ── */}
-      <footer style={{ padding: "24px 48px", borderTop: `1px solid ${T.border}`, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap" as const, gap: 12 }}>
-        <div style={{ fontSize: 14, fontWeight: 700, letterSpacing: "0.22em", textTransform: "uppercase" as const, color: T.muted }}>
-          SKRIP<span style={{ fontWeight: 200 }}>R</span>
+      <footer style={{ padding: "44px clamp(20px, 5vw, 48px) 28px", borderTop: `1px solid ${T.border}` }}>
+        <div style={{ maxWidth: 1120, margin: "0 auto" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: 28, marginBottom: 32 }}>
+            {[
+              { title: "Free Tools", links: [
+                ["/youtube-video-ideas-generator","Video Ideas Generator"],
+                ["/youtube-channel-name-generator","Name Generator"],
+                ["/youtube-seo-tools","SEO Tools"],
+                ["/youtube-tag-generator","Tag Generator"],
+                ["/youtube-title-generator","Title Generator"],
+                ["/youtube-hook-generator","Hook Generator"],
+                ["/youtube-description-generator","Description Generator"],
+              ] },
+              { title: "Learn", links: [
+                ["/youtube-strategy","Guides"],
+                ["/youtube-scriptwriting","Scriptwriting"],
+                ["/faceless-youtube","Faceless YouTube"],
+                ["/youtube-video-ideas","Find Video Ideas"],
+                ["/will-ai-replace-youtubers","AI & YouTube"],
+              ] },
+              { title: "Compare", links: [
+                ["/subscribr-alternative","vs Subscribr"],
+                ["/tubeai-alternative","vs TubeAI"],
+                ["/skripr-vs-claude","vs Claude"],
+              ] },
+              { title: "Company", links: [
+                ["/dashboard/scripts/new","Write a Script"],
+                ["/pricing","Pricing"],
+                ["/contact","Contact"],
+                ["/terms","Terms"],
+                ["/privacy","Privacy"],
+              ] },
+            ].map((group) => (
+              <div key={group.title}>
+                <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase" as const, color: T.dim, marginBottom: 14 }}>{group.title}</div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                  {group.links.map(([href, label]) => (
+                    <Link key={href} href={href} className="hn-foot-link">{label}</Link>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap" as const, gap: 12, paddingTop: 22, borderTop: `1px solid ${T.border}` }}>
+            <div style={{ fontSize: 14, fontWeight: 700, letterSpacing: "0.22em", textTransform: "uppercase" as const, color: T.muted }}>
+              SKRIP<span style={{ fontWeight: 200 }}>R</span>
+            </div>
+            <div style={{ fontSize: 10, color: T.dim, letterSpacing: "0.04em" }}>© 2026 Skripr. Built for creators.</div>
+          </div>
         </div>
-        <div style={{ display: "flex", gap: 24 }}>
-          {[
-            ["/dashboard/scripts/new","Scripts"],
-            ["/youtube-strategy","Guides"],
-            ["/will-ai-replace-youtubers","AI & YouTube"],
-            ["/subscribr-alternative","vs Subscribr"],
-            ["/tubeai-alternative","vs TubeAI"],
-            ["/skripr-vs-claude","vs Claude"],
-            ["/pricing","Pricing"],
-            ["/contact","Contact"],
-            ["/terms","Terms"],
-            ["/privacy","Privacy"],
-          ].map(([href, label]) => (
-            <Link key={href} href={href} className="hn-foot-link">{label}</Link>
-          ))}
-        </div>
-        <div style={{ fontSize: 10, color: T.dim, letterSpacing: "0.04em" }}>© 2026 Skripr. Built for creators.</div>
       </footer>
 
     </div>

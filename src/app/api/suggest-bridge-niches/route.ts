@@ -23,6 +23,8 @@ export async function POST(req: Request) {
     const excludeList: string[] = Array.isArray(exclude) ? exclude.filter(Boolean).slice(0, 40) : [];
     const formula = (titleFormula?.formula || "").slice(0, 200);
     const framework = (remixFramework || "").slice(0, 400);
+    // Only allow a colon in bridge titles if the source video's formula has one.
+    const formulaHasColon = formula.includes(":");
 
     // Learning loop: niches Skripr has proven frameworks for, so we can prefer
     // bridging toward them (and badge them on the card).
@@ -37,10 +39,10 @@ export async function POST(req: Request) {
 
     const msg = await client.messages.create({
       model: "claude-haiku-4-5-20251001",
-      max_tokens: 1000,
+      max_tokens: 2800,
       temperature: 1, // variety across refreshes
       system: `You output ONLY valid JSON arrays. No prose, no markdown. Start with [ and end with ].
-Each object must have EXACTLY these keys: "name", "parentNiche", "hook", "algorithmNote", "titlePreview".`,
+Each object must have EXACTLY these keys: "name", "parentNiche", "communityType", "hook", "algorithmNote", "titlePreview".`,
       messages: [{
         role: "user",
         content: `A YouTube creator made a video about: "${(videoTitle || "Unknown").slice(0, 120)}"
@@ -51,11 +53,14 @@ Framework signals: ${framework.slice(0, 150)}
 ${excludeList.length ? `\nALREADY SHOWN TO THIS USER — do NOT suggest any of these or close variants; pick 5 genuinely DIFFERENT bridge sub-niches from other communities:\n${excludeList.map(n => `- ${n}`).join("\n")}\n` : ""}${poolPref ? `\nSKRIPR'S LEARNED DATA — these niches have proven high-performing frameworks in our database. PREFER bridging toward these when it still makes a surprising, completely-different-community blend, because the script can then borrow their real retention mechanics:\n${poolPref}\n` : ""}
 STEP 1 — Detect source niche: Based on the video title, channel name, and framework keywords, determine exactly what content niche this creator is in (e.g. "health & weight loss", "personal finance", "gaming", "psychology", "fitness", "true crime", "technology", "cooking").
 
-STEP 2 — Find bridge niches that are COMPLETELY DIFFERENT from that detected niche. Each bridge's "parentNiche" MUST be EXACTLY one of these canonical niches (copy the name verbatim): ${CANONICAL_NAMES}. Pick the 5 that would create the most surprising and compelling cross-community blend. Prioritize variety — never pick 2 from the same parentNiche. Do NOT suggest anything from the same category as the detected source niche.
+STEP 2 — Find bridge niches that are COMPLETELY DIFFERENT from that detected niche. Each bridge's "parentNiche" MUST be EXACTLY one of these canonical niches (copy the name verbatim): ${CANONICAL_NAMES}. Prioritize variety — never pick 2 from the same parentNiche. Do NOT suggest anything from the same category as the detected source niche.
 
-Find 5 BRIDGE SUB-NICHES from COMPLETELY DIFFERENT content categories than this video.
+Find EXACTLY 10 BRIDGE SUB-NICHES, split into two groups of 5:
+- 5 from INTELLECTUAL / ANALYTICAL communities. Draw their parentNiche from: Psychology, Philosophy, Science, History, True Crime, Space & Astronomy, Military & Defense, News & Current Events, Education, Mental Health. Tag each with "communityType": "intellectual".
+- 5 from POP-CULTURE / FAN communities. Draw their parentNiche from: Anime & Manga, Gaming, Entertainment, Music, Comedy & Humor, Sports, Fashion & Style, Automotive, Cooking & Food, Art & Design. Tag each with "communityType": "pop-culture".
+Output all 10 in one JSON array: the 5 intellectual first, then the 5 pop-culture.
 
-CRITICAL RULE: Bridge niches must NOT be from the same niche as the source video.
+CRITICAL RULE: Bridge niches must NOT be from the same niche or category as the source video.
 
 EXAMPLES OF WRONG (too similar):
 - Ozempic/health video → "Metabolic Health", "Fitness Supplements", "Workout Routines" ✗
@@ -77,9 +82,18 @@ ${EXPERT_ATTRIBUTION_RULE}
 For each bridge sub-niche return EXACTLY these JSON fields:
 - "name": specific sub-niche name (2-4 words, e.g. "Dark Psychology")
 - "parentNiche": MUST be exactly one of the canonical niche names listed in STEP 2 (e.g. "True Crime", "Gaming", "Personal Finance") — never invent a category outside that list
+- "communityType": either "intellectual" or "pop-culture", matching which of the two STEP 2 groups this bridge belongs to
 - "hook": one sentence on how BOTH audiences connect with this blend
 - "algorithmNote": why YouTube recommends this to BOTH communities simultaneously
-- "titlePreview": apply EXACTLY this formula "${formula}" to the blended topic
+- "titlePreview": fill the formula's variable slot with a SPECIFIC, CONCRETE NEW subject that belongs to THIS bridge sub-niche, using exactly this formula shape: "${formula}"
+
+TITLE RULES for "titlePreview" (follow strictly):
+- SWAP THE SUBJECT. Put a fresh subject from the bridge sub-niche into the formula's [bracketed] slot. The subject MUST be different from the source video's subject — never reuse "${(videoTitle || "").slice(0, 120)}" or its subject. Only the formula's structure carries over, not its noun.
+${formulaHasColon
+  ? `- The source formula itself contains a colon, so a colon in the title is fine.`
+  : `- Do NOT use a colon, a dash, or any subtitle or second clause. Output ONE clean title in the exact shape of the formula, with nothing appended after it. Most top-performing titles are a single clean statement, never a "Main Title: explanation" pair.`}
+- GOOD (new subject, one clean title): for a "The Economics of Owning a [asset]" formula → "The Economics of Owning a Private Prison".
+- BAD (reuses the source subject and bolts on a subtitle): "The Economics of Owning an Oil Rig: Why Nations Fight Over Them".
 
 [`,
       }, {
@@ -97,9 +111,16 @@ For each bridge sub-niche return EXACTLY these JSON fields:
     const base = parsed.map((n: any) => ({
       name: n.name || "Unknown",
       parentNiche: n.parentNiche || "",
+      communityType: n.communityType === "pop-culture" ? "pop-culture" : "intellectual",
       hook: n.hook || "",
       algorithmNote: n.algorithmNote || "",
-      titlePreview: stripCarriedExpert(n.titlePreview || "", sourceExpert),
+      titlePreview: (() => {
+        let t = stripCarriedExpert(n.titlePreview || "", sourceExpert);
+        // Hard guard: if the source formula has no colon, never let a bridge
+        // title become a "Main title: subtitle" pair — keep the clean statement.
+        if (!formulaHasColon && t.includes(":")) t = t.split(":")[0].trim();
+        return t;
+      })(),
     }));
 
     const sourceNicheName = resolveNiche(sourceNiche)?.name || sourceNiche || "";

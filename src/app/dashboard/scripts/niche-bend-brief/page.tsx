@@ -26,6 +26,7 @@ type BridgeNiche = {
   bridgeRpm?: number | null;
   proof?: BlendProof | null;
   poolCount?: number | null;
+  communityType?: "intellectual" | "pop-culture" | string;
 };
 
 type BlendedAngle = {
@@ -419,8 +420,8 @@ export default function NicheBendBriefPage() {
           </div>
         )}
         {error && <div style={{ padding: "12px 16px", borderRadius: 10, background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.25)", color: "#fca5a5", fontSize: 13, marginBottom: 16 }}>{error}</div>}
-        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-          {niches.map((n, i) => (
+        {(() => {
+          const renderCard = (n: BridgeNiche, i: number) => (
             <div key={i} onClick={() => handlePickNiche(n)}
               style={{ background: C.card, border: "1px solid " + C.border, borderRadius: 16, padding: "20px 22px", cursor: "pointer", transition: "all 0.15s" }}
               onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = C.cardHover; (e.currentTarget as HTMLElement).style.borderColor = C.borderAccent; }}
@@ -473,8 +474,24 @@ export default function NicheBendBriefPage() {
                 </div>
               )}
             </div>
-          ))}
-        </div>
+          );
+          const intellectual = niches.filter(n => n.communityType !== "pop-culture");
+          const pop = niches.filter(n => n.communityType === "pop-culture");
+          const header = (label: string, mt: number) => (
+            <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 0.5, color: C.textDim, textTransform: "uppercase" as const, margin: `${mt}px 0 2px` }}>{label}</div>
+          );
+          if (intellectual.length && pop.length) {
+            return (
+              <>
+                {header("Intellectual blends", 0)}
+                <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>{intellectual.map(renderCard)}</div>
+                {header("Pop-culture & fan blends", 22)}
+                <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>{pop.map(renderCard)}</div>
+              </>
+            );
+          }
+          return <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>{niches.map(renderCard)}</div>;
+        })()}
         {niches.length > 0 && brief && (
           <div style={{ marginTop: 16, textAlign: "center", display: "flex", flexDirection: "column", gap: 8, alignItems: "center" }}>
             <button onClick={() => fetchBridgeNiches(brief, seenNiches)} style={{ background: "none", border: "none", color: C.textDim, fontSize: 12, cursor: "pointer", textDecoration: "underline" }}>Generate different sub-niches</button>

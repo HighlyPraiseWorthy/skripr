@@ -9,7 +9,7 @@ const C = {
 };
 
 type AnalysisResult = {
-  title: string; channelTitle: string;
+  title: string; channelTitle: string; thumbnail?: string;
   hookAnalysis: { hook: string; hookType: string; whyItWorks: string };
   structure: { timestamp: string; section: string; description: string; purpose: string }[];
   retentionTriggers: { trigger: string; example: string; timestamp: string }[];
@@ -161,8 +161,17 @@ export default function NicheBendPage() {
           <div>
             <div style={{ background: "rgba(77,184,255,0.06)", border: "1px solid rgba(99,102,241,0.2)", borderRadius: 14, padding: "18px 20px", marginBottom: 16 }}>
               <div style={{ fontSize: 10, fontWeight: 700, color: C.accentDim, letterSpacing: 0.6, marginBottom: 10 }}>VIDEO ANALYZED</div>
-              <div style={{ fontSize: 16, fontWeight: 700, color: C.textBright, marginBottom: 4, lineHeight: 1.4 }}>{result.title}</div>
-              <div style={{ fontSize: 14, color: C.textDim, marginBottom: 14 }}>{result.channelTitle}</div>
+              <div style={{ display: "flex", gap: 14, alignItems: "center", marginBottom: 14 }}>
+                {result.thumbnail && (
+                  <div style={{ width: 100, height: 56, borderRadius: 8, overflow: "hidden", background: "#0a1220", flexShrink: 0 }}>
+                    <img src={result.thumbnail} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} onError={e => (e.currentTarget.style.display = "none")} />
+                  </div>
+                )}
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: 16, fontWeight: 700, color: C.textBright, marginBottom: 4, lineHeight: 1.4 }}>{result.title}</div>
+                  <div style={{ fontSize: 14, color: C.textDim }}>{result.channelTitle}</div>
+                </div>
+              </div>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
                 <span style={{ fontSize: 10, fontWeight: 700, padding: "3px 9px", borderRadius: 5, background: "rgba(77,184,255,0.13)", color: C.accentDim }}>{result.hookAnalysis.hookType} HOOK</span>
                 <span style={{ fontSize: 10, fontWeight: 700, padding: "3px 9px", borderRadius: 5, background: "rgba(77,184,255,0.13)", color: C.accentDim }}>{result.structure?.length ?? 0} SECTIONS</span>
