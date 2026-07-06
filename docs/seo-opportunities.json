@@ -1,7 +1,7 @@
 {
   "_comment": "Skripr SEO opportunity ledger AND learning memory. /seo-page reads this before building and appends a page entry after. /seo-review pulls real outcomes (GSC + PostHog) into each page's `actual`, compares to `predicted`, writes a `verdict`, and appends durable lessons to `learnings`, then recalibrates `scoring_method`. This is how the SEO agent self-improves: predictions are scored against reality every review cycle and the heuristics update.",
-  "updated": "2026-06-29",
-  "scoring_method": "Rank candidates by: (1) combined volume, (2) tool-intent (a generator beats a blog post), (3) low competition, (4) backed by an engine Skripr already ships, (5) tight product-to-funnel fit, (6) index-likelihood on a new domain. Tool pages index within 48h but earn GSC impressions slowly (4-8wk lag expected on a new domain); guide/content pages earn impressions faster but convert less. Weight tool-intent pages higher for conversion, content pages higher for fast impression signals. /seo-review recalibrates these weights from observed outcomes; record any change here with a date and the evidence that drove it. Updated 2026-06-29: prior scoring over-pessimized indexLikelihoodWeeks for tool pages (predicted 8wk; actual <48h). Also: impression lag on tool pages is separate from indexing speed — indexed fast, ranking slowly.",
+  "updated": "2026-07-06",
+  "scoring_method": "Rank candidates by: (1) combined volume, (2) tool-intent (a generator beats a blog post), (3) low competition, (4) backed by an engine Skripr already ships, (5) tight product-to-funnel fit, (6) index-likelihood on a new domain. Tool pages index within 48h but earn GSC impressions slowly; guide/content pages earn impressions faster but convert less. Weight tool-intent pages higher for conversion, content pages higher for fast impression signals. /seo-review recalibrates these weights from observed outcomes; record any change here with a date and the evidence that drove it. Updated 2026-06-29: prior scoring over-pessimized indexLikelihoodWeeks for tool pages (predicted 8wk; actual <48h). Also: impression lag on tool pages is separate from indexing speed — indexed fast, ranking slowly. Updated 2026-07-06: impression lag for tool pages is faster than thought — first GSC signals appear in 7-10 days, not 4-8wk. Revise first-signal estimate to 1-2wk; meaningful volume still 4-8wk. New flag: any page 'unknown to Google' after 7+ days must be manually request-indexed AND given a direct inbound link from an already-indexed high-authority page (homepage or pillar). Do not rely on sitemap alone.",
   "schema": {
     "pages[]": {
       "url": "string, the live path",
@@ -51,48 +51,48 @@
       "cluster": "YouTube SEO Toolkit",
       "built": "2026-06-28",
       "predicted": { "intent": "tool", "volume": null, "competition": "high", "indexLikelihoodWeeks": 8 },
-      "actual": { "asOf": "2026-06-29", "indexedOn": "2026-06-28", "impressions": 0, "clicks": 0, "avgPosition": null, "ctr": null, "signupsAttributed": null },
-      "verdict": "indexed-not-ranking: indexed within 24h of deploy (beat the 8wk prediction by a mile), but zero GSC impressions day 1; high-competition SERP, slow ramp expected. Re-check in 4 weeks."
+      "actual": { "asOf": "2026-07-06", "indexedOn": "2026-06-28", "impressions": 0, "clicks": 0, "avgPosition": null, "ctr": null, "signupsAttributed": null },
+      "verdict": "indexed-not-ranking: indexed 2026-06-28, still zero GSC impressions at day 8 post-launch. High-competition SERP (Subscribr, ScripAI, etc.); impression lag is expected. Re-check in 3 weeks."
     },
     {
       "url": "/youtube-video-ideas-generator",
       "cluster": "Video Ideas",
       "built": "2026-06-28",
       "predicted": { "intent": "tool", "volume": null, "competition": "medium", "indexLikelihoodWeeks": 4 },
-      "actual": { "asOf": "2026-06-29", "indexedOn": null, "impressions": 0, "clicks": 0, "avgPosition": null, "ctr": null, "signupsAttributed": null },
-      "verdict": "not-indexed: URL is unknown to Google as of 2026-06-29 (URL Inspection API confirmed). Needs immediate manual request-index and internal link audit — check if sitemap entry exists and homepage/pillar links are present."
+      "actual": { "asOf": "2026-07-06", "indexedOn": null, "impressions": 0, "clicks": 0, "avgPosition": null, "ctr": null, "signupsAttributed": null },
+      "verdict": "not-indexed: URL is unknown to Google as of 2026-07-06 (URL Inspection API confirmed — NEUTRAL, coverageState: URL is unknown to Google). Still not indexed 8 days after first flagged. Sitemap and internal-link audit required; manual request-index is the top priority for this page."
     },
     {
       "url": "/youtube-tag-generator",
       "cluster": "YouTube SEO Toolkit",
       "built": "2026-06-27",
       "predicted": { "intent": "tool", "volume": 53000, "competition": "medium", "indexLikelihoodWeeks": 3 },
-      "actual": { "asOf": "2026-06-29", "indexedOn": "2026-06-28", "impressions": 0, "clicks": 0, "avgPosition": null, "ctr": null, "signupsAttributed": null },
-      "verdict": "indexed-not-ranking: indexed within ~24h of launch; zero impressions 2 days in on a brand-new domain. Too early to judge — typical impression lag is 4-8wk. Highest-volume spoke (53k), top priority to watch."
+      "actual": { "asOf": "2026-07-06", "indexedOn": "2026-06-28", "impressions": 5, "clicks": 0, "avgPosition": 77.0, "ctr": 0.0, "signupsAttributed": null },
+      "verdict": "indexed-not-ranking: 5 impressions at position 77 after ~9 days live. First GSC signals appearing; deep position expected on a new domain for a competitive keyword (53k/mo). Monitor for position improvement over next 4-6wk."
     },
     {
       "url": "/youtube-title-generator",
       "cluster": "YouTube SEO Toolkit",
       "built": "2026-06-27",
       "predicted": { "intent": "tool", "volume": 23000, "competition": "medium", "indexLikelihoodWeeks": 3 },
-      "actual": { "asOf": "2026-06-29", "indexedOn": "2026-06-28", "impressions": 0, "clicks": 0, "avgPosition": null, "ctr": null, "signupsAttributed": null },
-      "verdict": "indexed-not-ranking: indexed within ~24h; zero impressions 2 days in. Monitor next cycle."
+      "actual": { "asOf": "2026-07-06", "indexedOn": "2026-06-28", "impressions": 4, "clicks": 0, "avgPosition": 5.0, "ctr": 0.0, "signupsAttributed": null },
+      "verdict": "indexed-not-ranking (strong signal): position 5.0 with 4 impressions after ~9 days live. Position 5 is an early positive signal — likely ranking for long-tail variants. Very low volume so far but watch closely; could break into winning within 4-6wk if position holds."
     },
     {
       "url": "/youtube-description-generator",
       "cluster": "YouTube SEO Toolkit",
       "built": "2026-06-27",
       "predicted": { "intent": "tool", "volume": 20000, "competition": "medium", "indexLikelihoodWeeks": 3 },
-      "actual": { "asOf": "2026-06-29", "indexedOn": "2026-06-28", "impressions": 0, "clicks": 0, "avgPosition": null, "ctr": null, "signupsAttributed": null },
-      "verdict": "indexed-not-ranking: indexed within ~24h; zero impressions 2 days in. Monitor next cycle."
+      "actual": { "asOf": "2026-07-06", "indexedOn": "2026-06-28", "impressions": 0, "clicks": 0, "avgPosition": null, "ctr": null, "signupsAttributed": null },
+      "verdict": "indexed-not-ranking: indexed 2026-06-28, zero GSC impressions at day 8. Competitive-medium SERP (20k/mo); impression lag normal. Re-check next cycle."
     },
     {
       "url": "/youtube-channel-name-generator",
       "cluster": "Channel Name Generator",
       "built": "2026-06-27",
       "predicted": { "intent": "tool", "volume": 49000, "competition": "low", "indexLikelihoodWeeks": 3 },
-      "actual": { "asOf": "2026-06-29", "indexedOn": "2026-06-28", "impressions": 0, "clicks": 0, "avgPosition": null, "ctr": null, "signupsAttributed": null },
-      "verdict": "indexed-not-ranking: indexed within ~24h; zero impressions 2 days in. Low-competition cluster (49k/mo) — highest upside of all tool pages. Watch closely; expect first impressions 3-6wk."
+      "actual": { "asOf": "2026-07-06", "indexedOn": "2026-06-28", "impressions": 0, "clicks": 0, "avgPosition": null, "ctr": null, "signupsAttributed": null },
+      "verdict": "indexed-not-ranking: indexed 2026-06-28, zero GSC impressions at day 8. Low-competition cluster (49k/mo) — highest upside of all tool pages; absence of impressions is not a failure yet. Expect first signals 3-6wk. Priority: add more internal links from high-impression content pages to pull the crawler toward this hub."
     }
   ],
   "learnings": [
@@ -100,6 +100,10 @@
     { "date": "2026-06-28", "lesson": "Tool pages (tag/title/description/channel-name generators) had ZERO impressions while guides did, despite being live since 2026-06-27. Tool pages appear to index slower or need stronger internal links. Front-load homepage/pillar internal links AND manual GSC indexing for every new tool page; do not assume the hub link alone is enough.", "evidence": "Same pull: no /youtube-*-generator or /youtube-channel-name-generator URLs present in GSC results." },
     { "date": "2026-06-29", "lesson": "Tool pages indexed within 24-48h of deploy — much faster than the 8-week conservative prediction. URL Inspection API (Submitted and indexed) confirmed /youtube-tag-generator, /youtube-title-generator, /youtube-description-generator, /youtube-channel-name-generator, and /youtube-hook-generator all crawled 2026-06-28. Correct future indexLikelihoodWeeks for tool pages with homepage internal links from 8 to 1-2wk.", "evidence": "URL Inspection API batch check 2026-06-29; all 5 tool pages showed 'Submitted and indexed' with lastCrawlTime 2026-06-28T22:xx:xxZ." },
     { "date": "2026-06-29", "lesson": "Indexing speed and impression speed are separate. Tool pages index fast (48h) but earn zero GSC impressions while guide/content pages earn impressions within days. Indexed does not mean ranking. For a new domain, expect 4-8wk before tool pages show GSC signals; content pages earn impressions faster via long-tail crawl queries. Do not confuse 'indexed-not-ranking' for a tool page failure — it is normal and expected.", "evidence": "GSC 28d pull 2026-06-29: 20 pages with impressions, all are content/guide/comparison/standalone pages; zero generator tool pages despite URL Inspection confirming them indexed. niche-bend-examples and homepage are the only click-earners." },
-    { "date": "2026-06-29", "lesson": "Two pages are 'URL is unknown to Google' despite the site being live: /youtube-video-ideas-generator and /youtube-video-ideas (a pillar page). For any new page, verify sitemap entry AND homepage/pillar footer links exist before assuming Google will find it. The sitemap alone is not enough — the crawler follows links, and a pillar with no inbound link from an already-indexed page may be missed.", "evidence": "URL Inspection API 2026-06-29: /youtube-video-ideas-generator and /youtube-video-ideas both returned verdict=NEUTRAL, coverageState='URL is unknown to Google'." }
+    { "date": "2026-06-29", "lesson": "Two pages are 'URL is unknown to Google' despite the site being live: /youtube-video-ideas-generator and /youtube-video-ideas (a pillar page). For any new page, verify sitemap entry AND homepage/pillar footer links exist before assuming Google will find it. The sitemap alone is not enough — the crawler follows links, and a pillar with no inbound link from an already-indexed page may be missed.", "evidence": "URL Inspection API 2026-06-29: /youtube-video-ideas-generator and /youtube-video-ideas both returned verdict=NEUTRAL, coverageState='URL is unknown to Google'." },
+    { "date": "2026-07-06", "lesson": "Tool pages earn first GSC impressions within 7-10 days on a new domain (not 4-8wk). /youtube-tag-generator (5 impressions, pos 77) and /youtube-title-generator (4 impressions, pos 5.0) both showed signals by day 9. Impression lag prediction was over-pessimistic — update expectation to 1-2wk for first signals, 4-8wk for meaningful volume.", "evidence": "GSC 28d pull 2026-07-06: /youtube-tag-generator pos 77, /youtube-title-generator pos 5.0, both live since 2026-06-27." },
+    { "date": "2026-07-06", "lesson": "/youtube-title-generator at position 5 after 9 days is an anomalous strong signal — likely ranking for long-tail zero-competition variants of the keyword. When a new-domain page shows sub-10 position that early, prioritize it for internal links and watch for click data in the next cycle.", "evidence": "GSC 28d pull 2026-07-06: /youtube-title-generator avgPosition 5.0, 4 impressions, 0 clicks. Domain launched 2026-06-25, page live since 2026-06-27." },
+    { "date": "2026-07-06", "lesson": "/youtube-video-ideas-generator is STILL 'URL is unknown to Google' 8 days after it was first flagged as not-indexed (2026-06-29). A manual request-index was apparently not executed after the first review. This confirms the action list from /seo-review must be actioned the same week, not deferred. Pages not indexed after 10+ days need escalation: manual request-index AND a new inbound link from an indexed page.", "evidence": "URL Inspection API 2026-07-06: /youtube-video-ideas-generator verdict=NEUTRAL, coverageState='URL is unknown to Google'. Same result as 2026-06-29." },
+    { "date": "2026-07-06", "lesson": "/youtube-video-ideas (a core pillar) is also still 'URL is unknown to Google' as of 2026-07-06. Two high-value pages have been invisible to Google for at least 8 days. This is the highest-priority indexing failure in the current build.", "evidence": "URL Inspection API 2026-07-06: /youtube-video-ideas verdict=NEUTRAL, coverageState='URL is unknown to Google'." }
   ]
 }
