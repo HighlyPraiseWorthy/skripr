@@ -173,6 +173,15 @@ export default function LandingPage() {
         .cta-glow::after { content: ""; position: absolute; inset: 0; background: linear-gradient(115deg, transparent 42%, rgba(255,255,255,0.32) 50%, transparent 58%); background-size: 240% 100%; animation: cta-sheen 4.8s linear infinite; pointer-events: none; }
         @media (prefers-reduced-motion: reduce) { .cta-glow { animation: none; } .cta-glow::after { display: none; } }
 
+        /* Demo window: looping generation reveal */
+        @keyframes demo-reveal { 0% { opacity:0; transform:translateY(9px); } 6% { opacity:1; transform:translateY(0); } 90% { opacity:1; transform:translateY(0); } 97%,100% { opacity:0; transform:translateY(9px); } }
+        @keyframes demo-gen-press { 0%,72% { box-shadow: 0 4px 18px rgba(77,184,255,0.35); filter:brightness(1); } 78% { box-shadow: 0 0 28px rgba(77,184,255,0.75); filter:brightness(1.18); transform:translateY(1px) scale(0.985); } 84%,100% { box-shadow: 0 4px 18px rgba(77,184,255,0.35); filter:brightness(1); transform:none; } }
+        @keyframes demo-scan { 0%,72% { opacity:0; transform:translateY(0); } 74% { opacity:1; } 88% { opacity:0.9; } 92%,100% { opacity:0; transform:translateY(100%); } }
+        .demo-cycle { animation: demo-reveal 9s ease-in-out infinite; }
+        .demo-gen { animation: demo-gen-press 9s ease-in-out infinite; }
+        .demo-scan-line { position:absolute; left:0; right:0; top:0; height:2px; background:linear-gradient(90deg, transparent, ${T.accent}, transparent); animation: demo-scan 9s ease-in-out infinite; pointer-events:none; }
+        @media (prefers-reduced-motion: reduce) { .demo-cycle, .demo-gen, .demo-scan-line { animation:none; opacity:1; } }
+
         .hn-nav-link { font-size:12px; font-weight:400; letter-spacing:0.08em; color:${T.dim}; text-decoration:none; transition:color .15s; }
         .hn-nav-link:hover { color:${T.accent}; }
         .hn-ghost:hover { color:${T.accent} !important; border-color:${T.accent}44 !important; }
@@ -375,43 +384,51 @@ export default function LandingPage() {
               skripr.app/dashboard/scripts/new
             </span>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "220px 1fr", minHeight: 240 }}>
-            <div style={{ borderRight: `1px solid ${T.border}`, padding: 16, display: "flex", flexDirection: "column" as const, gap: 10 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "230px 1fr", minHeight: 240 }}>
+            <div style={{ borderRight: `1px solid ${T.border}`, padding: 16, display: "flex", flexDirection: "column" as const, gap: 11 }}>
+              <div>
+                <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase" as const, color: T.muted, marginBottom: 6 }}>Proven video in</div>
+                <div style={{ padding: 8, border: `1px solid ${T.accent}33`, background: T.bg, borderRadius: 10 }}>
+                  <img src="https://i.ytimg.com/vi/uyY9J_KY-u8/mqdefault.jpg" alt="" style={{ width: "100%", aspectRatio: "16 / 9", borderRadius: 6, objectFit: "cover", display: "block" }} />
+                  <div style={{ fontSize: 12, fontWeight: 700, color: T.text, lineHeight: 1.3, marginTop: 7 }}>America's Long War Against Soccer</div>
+                  <div style={{ fontSize: 10.5, color: T.dim, marginTop: 2 }}>Joon Lee · 416K views</div>
+                </div>
+              </div>
               {[
-                ["YouTube URL", "youtube.com/watch?v=ZpAFB3uRnME", true],
-                ["Niche", "Personal Finance", false],
-                ["Length", "8 minutes", false],
-              ].map(([lbl, val, isUrl]) => (
-                <div key={lbl as string}>
+                ["Your niche", "US Health Policy"],
+                ["Length", "10 minutes"],
+              ].map(([lbl, val]) => (
+                <div key={lbl}>
                   <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase" as const, color: T.muted, marginBottom: 4 }}>{lbl}</div>
-                  <div style={{ fontSize: isUrl ? 10 : 11, color: isUrl ? T.accent : T.text, padding: "7px 8px", border: `1px solid ${T.border}`, background: T.bg, lineHeight: 1.3, wordBreak: "break-all" as const }}>{val}</div>
+                  <div style={{ fontSize: 11, color: T.text, padding: "7px 8px", border: `1px solid ${T.border}`, background: T.bg, lineHeight: 1.3 }}>{val}</div>
                 </div>
               ))}
-              <button style={{ background: "linear-gradient(135deg,#0e6499,#1a8fd1,#4db8ff)", color: "#fff", fontSize: 12, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase" as const, padding: 11, border: "none", cursor: "pointer", marginTop: 4, borderRadius: 8, boxShadow: "0 4px 18px rgba(77,184,255,0.35)" }}>
-                ⚡ Generate
+              <button className="demo-gen" style={{ background: "linear-gradient(135deg,#0e6499,#1a8fd1,#4db8ff)", color: "#fff", fontSize: 12, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase" as const, padding: 11, border: "none", cursor: "pointer", marginTop: 4, borderRadius: 8 }}>
+                ⚡ Bend to my niche
               </button>
-              <div style={{ display: "inline-flex", alignItems: "center", gap: 4, background: `${T.accent}0c`, border: `1px solid ${T.accent}22`, fontSize: 11, fontWeight: 600, color: T.accent, padding: "5px 9px", letterSpacing: ".04em", marginTop: 6 }}>
-                Viral Magnet: "Changed" · A-tier
+              <div style={{ display: "inline-flex", alignItems: "center", gap: 4, background: `${T.accent}0c`, border: `1px solid ${T.accent}22`, fontSize: 11, fontWeight: 600, color: T.accent, padding: "5px 9px", letterSpacing: ".04em", marginTop: 2 }}>
+                Formula: "Long War Against" · A-tier
               </div>
             </div>
-            <div style={{ padding: "16px 20px" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
-                <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", color: T.green, background: `${T.green}14`, border: `1px solid ${T.green}33`, padding: "3px 8px", borderRadius: 6 }}>✓ GENERATED</span>
-                <span style={{ fontSize: 11.5, color: T.dim }}>~8 min · ready to record</span>
+            <div style={{ padding: "18px 22px", position: "relative", overflow: "hidden", display: "flex", flexDirection: "column" as const, justifyContent: "center" }}>
+              <div className="demo-scan-line" />
+              <div className="demo-cycle" style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 13 }}>
+                <span style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: "0.1em", color: T.green, background: `${T.green}14`, border: `1px solid ${T.green}33`, padding: "3px 8px", borderRadius: 6 }}>✓ GENERATED</span>
+                <span style={{ fontSize: 12, color: T.dim }}>~10 min · ready to record</span>
               </div>
-              <div style={{ fontSize: 15, fontWeight: 600, letterSpacing: "-0.3px", color: T.text, marginBottom: 9, lineHeight: 1.3 }}>
-                How I Manage My Money: The 6-Account System That Changed Everything
+              <div className="demo-cycle" style={{ fontSize: 17, fontWeight: 700, letterSpacing: "-0.4px", color: T.text, marginBottom: 11, lineHeight: 1.3, animationDelay: "0.25s" }}>
+                America's Long War Against Universal Healthcare
               </div>
-              <div style={{ fontSize: 13, color: T.accent, fontStyle: "italic", marginBottom: 11 }}>
-                "Most people manage their money wrong, and I'll show you the exact system I use instead."
+              <div className="demo-cycle" style={{ fontSize: 14, color: T.accent, fontStyle: "italic", marginBottom: 13, lineHeight: 1.5, animationDelay: "0.5s" }}>
+                "Every other wealthy country solved this decades ago. America has spent a hundred years deciding it can't, and the reason why is not what you think."
               </div>
-              <div style={{ fontSize: 13, color: T.text, lineHeight: 1.7, fontWeight: 400 }}>
-                I used to be terrible with money. Then I stumbled on a system so simple it felt almost too obvious, and it completely changed how I handle every dollar I make.
-                <span style={{ display: "inline-block", width: 1.5, height: 11, background: T.accent, marginLeft: 2, verticalAlign: "middle", animation: "blink 1s infinite" }} />
+              <div className="demo-cycle" style={{ fontSize: 14, color: T.text, lineHeight: 1.75, fontWeight: 400, animationDelay: "0.75s" }}>
+                Twelve presidents have tried. Teddy Roosevelt ran on it in 1912. Truman fought for it. Nixon proposed his own version. Every time it died the same way, and everyone learned the wrong lesson from why.
                 <br /><br />
-                It's not about earning more. It's about where the money goes the moment it hits your account. Here's the exact 6-account setup I use...
+                It was never really about the money, or whether it could work. Other countries proved it works. The real war was over something older than any of them, and once you see it, you cannot unsee it in any of the fights still happening today.
+                <span style={{ display: "inline-block", width: 1.5, height: 12, background: T.accent, marginLeft: 2, verticalAlign: "middle", animation: "blink 1s infinite" }} />
               </div>
-              <div style={{ display: "flex", flexWrap: "wrap" as const, gap: 6, marginTop: 16, paddingTop: 14, borderTop: `1px solid ${T.border}` }}>
+              <div className="demo-cycle" style={{ display: "flex", flexWrap: "wrap" as const, gap: 6, marginTop: 18, paddingTop: 15, borderTop: `1px solid ${T.border}`, animationDelay: "1s" }}>
                 {["10 ranked hooks", "SEO title", "30 tags", "Compliance ✓"].map(c => (
                   <span key={c} style={{ fontSize: 10.5, fontWeight: 500, color: T.muted, background: T.bg, border: `1px solid ${T.border}`, padding: "3px 9px", borderRadius: 20 }}>{c}</span>
                 ))}
