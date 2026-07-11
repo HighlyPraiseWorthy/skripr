@@ -17,7 +17,12 @@ and updates the heuristics so future builds are smarter. Read
 
 ## 1. Observe (real data only)
 - Run `python3 -W ignore scripts/gsc-pull.py 28` to get per-page impressions, clicks, avgPosition, CTR for the last 28 days (override days as needed). A page absent from the output has no impressions yet (treat as not-yet-ranking, not zero-by-fabrication).
-- **PostHog**: free-tool usage events and signups attributed to each page's funnel.
+- Each page now includes `topQueries` (the real search terms it appears for, with per-query position). USE THEM: (a) a page ranking top-10 for a query it does not target in its H1/title is a reinforcement candidate (suggest phrasing tweaks through the /seo-page review flow); (b) recurring query variants nobody targets are spoke candidates for the ledger; (c) a hub outranking its own spoke for the spoke's exact keyword is an internal-linking/anchor-text fix. A page with impressions but empty topQueries means Google anonymized rare queries (normal for tiny volumes, not an error).
+- **When classifying URL Inspection `coverageState`, match EXACT statuses, never substrings.** "Discovered - currently not indexed" and "Crawled - currently not indexed" both CONTAIN the word "indexed" but mean NOT indexed (this substring bug inflated an audit once). Buckets: "Submitted and indexed" / "Indexed, not submitted in sitemap" = indexed; "Discovered - currently not indexed" = queued, normal for a young domain, no fix needed; "Crawled - currently not indexed" = crawled but judged not index-worthy yet (quality signal, watch it); "URL is unknown to Google" = never seen, needs links or a manual request.
+- **PostHog** (wired 2026-07-06, key at `~/.config/skripr/posthog-key`, Query-read scope, project 444678):
+  - `python3 -W ignore scripts/posthog-pull.py attribution 28` → new signups + which public pages each signer-up viewed BEFORE their first /dashboard pageview (assisted attribution; one signup can credit several pages). Write per-page counts into `signupsAttributed` in the ledger.
+  - `python3 -W ignore scripts/posthog-pull.py pages 28` → pageviews/visitors per public path (tool usage volume).
+  - Caveats to respect: the signup proxy is "first /dashboard pageview", so an existing user on a new device counts as new; volumes are tiny early on, so report counts, not percentages. A page with traffic but zero signup touches is a conversion-copy question, not an SEO one.
 - Never invent a number. If a source is unavailable, leave the field null and say so.
 
 ## 2. Record

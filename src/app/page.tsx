@@ -1103,13 +1103,14 @@ export default function LandingPage() {
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: 28, marginBottom: 32 }}>
             {[
               { title: "Free Tools", links: [
+                ["/why-did-my-video-flop","Why Did My Video Flop?"],
                 ["/youtube-video-ideas-generator","Video Ideas Generator"],
                 ["/youtube-channel-name-generator","Name Generator"],
                 ["/youtube-seo-tools","SEO Tools"],
-                ["/youtube-tag-generator","Tag Generator"],
-                ["/youtube-title-generator","Title Generator"],
-                ["/youtube-hook-generator","Hook Generator"],
-                ["/youtube-description-generator","Description Generator"],
+                ["/youtube-tag-generator","YouTube Tag Generator"],
+                ["/youtube-title-generator","YouTube Title Generator"],
+                ["/youtube-hook-generator","YouTube Hook Generator"],
+                ["/youtube-description-generator","YouTube Description Generator"],
               ] },
               { title: "Learn", links: [
                 ["/youtube-strategy","Guides"],
@@ -1119,9 +1120,11 @@ export default function LandingPage() {
                 ["/will-ai-replace-youtubers","AI & YouTube"],
               ] },
               { title: "Compare", links: [
+                ["/compare","All comparisons"],
                 ["/subscribr-alternative","vs Subscribr"],
                 ["/tubeai-alternative","vs TubeAI"],
                 ["/skripr-vs-claude","vs Claude"],
+                ["/compare/skripr-vs-retti","vs Retti"],
               ] },
               { title: "Company", links: [
                 ["/dashboard/scripts/new","Write a Script"],

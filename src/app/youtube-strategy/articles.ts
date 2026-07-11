@@ -301,7 +301,7 @@ This means every title you get from Skripr is already optimized for maximum clic
 
 ## The Bottom Line
 
-Your title is the single biggest factor in whether someone clicks your video. The words you choose matter more than most creators realize. Use data-backed power words, follow proven title formulas, and you'll see your CTR climb, which means more views, more subscribers, and faster channel growth.`
+Your title is the single biggest factor in whether someone clicks your video. The words you choose matter more than most creators realize. Use data-backed power words, follow proven title formulas, and you'll see your CTR climb, which means more views, more subscribers, and faster channel growth. Want them applied for you? The [free YouTube title generator](/youtube-title-generator) writes click-worthy options for any topic in seconds.`
   },
   {
     slug: "retention-optimization",
@@ -480,7 +480,7 @@ This is exactly what Skripr's Niche Bend Engine does automatically, it finds the
 5. Generate your first 10 video ideas
 6. Create your first video with a retention-optimized script
 
-The best niche is the one that balances what you enjoy, what people want, and what you can actually rank for. Use data, not just gut feeling, and you'll make a decision you won't regret.`
+The best niche is the one that balances what you enjoy, what people want, and what you can actually rank for. Use data, not just gut feeling, and you'll make a decision you won't regret. Once you pick, the [free channel name generator](/youtube-channel-name-generator) gives you name ideas tuned to your niche.`
   },
   {
     slug: "niche-bend-examples",
@@ -952,7 +952,7 @@ Do this for every video for 30 days. You'll build a clear picture of what title 
 
 Skripr's Viral Magnet Words feature analyzes your topic and niche, then selects the highest-CTR power words for your titles. Every generated title is ranked by predicted CTR, so you're always choosing from optimized options.
 
-Combined with the Title Generator, you get multiple CTR-optimized title options for every script, no guesswork, no manual A/B testing required.`
+Combined with the [free title generator](/youtube-title-generator), you get multiple CTR-optimized title options for every script, no guesswork, no manual A/B testing required.`
   },
   {
     slug: "title-formulas",
@@ -1056,7 +1056,7 @@ S-tier: Secret, Proven, Mistake, Truth, Exposed, Ultimate, Guaranteed
 A-tier: Best, Top, Essential, Powerful, Surprising, Critical, Breakthrough
 B-tier: Easy, Simple, Quick, Fast, Guide, Tips, Hacks
 
-Use one or two per title. More than two feels spammy.`
+Use one or two per title. More than two feels spammy.\n\nOr skip the manual work. Paste your topic into the [free title generator](/youtube-title-generator) and get formula-built options in seconds, no signup.`
   },
   {
     slug: "power-words-youtube",
@@ -1949,7 +1949,7 @@ The algorithm needs reps to learn who to show you to. Commit to 20 to 30 videos 
 
 ## The Fastest Way to Start
 
-The bottleneck for most new faceless channels is the writing. Skripr turns a proven video or a topic into a full, voiceover-ready script in your chosen voice, so you can publish consistently from day one instead of starting from scratch.`
+Still need a name? The [free channel name generator](/youtube-channel-name-generator) has ideas for 18 niches, no signup.\n\nThe bottleneck for most new faceless channels is the writing. Skripr turns a proven video or a topic into a full, voiceover-ready script in your chosen voice, so you can publish consistently from day one instead of starting from scratch.`
   },
   {
     slug: "how-to-script-a-youtube-video",

@@ -1,5 +1,15 @@
 # Skripr indexing acceleration plan
 
+> **STATUS (2026-07-10): manual request-index phase COMPLETE.** Every real page in
+> the sitemap has been either indexed (48) or manually submitted via GSC. The 17
+> name-generator spokes intentionally ride the sitemap. Nothing left to submit by
+> hand. From here, indexing progress comes from backlinks (directory listings,
+> Reddit) and time. /seo-review tracks weekly which submissions stuck; if the
+> Jun-29/Jul-6 twice-failed set (/youtube-video-ideas, /youtube-video-ideas-generator,
+> how-to-script-a-youtube-video, free-youtube-script-template,
+> youtube-video-ideas-when-stuck) is still unknown by mid-July, investigate the
+> pages themselves rather than re-requesting a third time.
+
 > The actual bottleneck. The site launched ~2026-06-25 with ~10 impressions. It
 > does not have a content problem, it has a "Google does not know it exists yet"
 > problem. Building more pages before these are crawled wastes the work. Work

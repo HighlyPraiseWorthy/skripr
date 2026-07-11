@@ -80,6 +80,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 0.9,
     },
+    {
+      url: `${baseUrl}/why-did-my-video-flop`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
     ...articleUrls,
     {
       url: `${baseUrl}/compare`,

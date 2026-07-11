@@ -37,11 +37,31 @@ def main():
     h = {"Authorization": f"Bearer {creds.token}"}
     end = datetime.date.today()
     start = end - datetime.timedelta(days=days)
-    body = {"startDate": str(start), "endDate": str(end), "dimensions": ["page"], "rowLimit": 1000}
     url = f"https://www.googleapis.com/webmasters/v3/sites/{up.quote(SITE, safe='')}/searchAnalytics/query"
-    r = requests.post(url, headers=h, json=body)
-    r.raise_for_status()
-    rows = r.json().get("rows", [])
+
+    def query(dimensions):
+        body = {"startDate": str(start), "endDate": str(end), "dimensions": dimensions, "rowLimit": 1000}
+        r = requests.post(url, headers=h, json=body)
+        r.raise_for_status()
+        return r.json().get("rows", [])
+
+    page_rows = query(["page"])
+    # Query-level data: which actual search terms each page appears for. This is
+    # what turns "position 5" into an action (reinforce that phrasing, build that spoke).
+    pq_rows = query(["page", "query"])
+
+    by_page = {}
+    for row in pq_rows:
+        page, q = row["keys"][0], row["keys"][1]
+        by_page.setdefault(page, []).append({
+            "query": q,
+            "impressions": row.get("impressions", 0),
+            "clicks": row.get("clicks", 0),
+            "avgPosition": round(row.get("position", 0), 1),
+        })
+    for qs in by_page.values():
+        qs.sort(key=lambda x: (-x["impressions"], x["avgPosition"]))
+
     out = {
         "site": SITE,
         "range": {"start": str(start), "end": str(end), "days": days},
@@ -53,8 +73,9 @@ def main():
                 "clicks": row.get("clicks", 0),
                 "avgPosition": round(row.get("position", 0), 1),
                 "ctr": round(row.get("ctr", 0), 4),
+                "topQueries": by_page.get(row["keys"][0], [])[:8],
             }
-            for row in rows
+            for row in page_rows
         ],
     }
     print(json.dumps(out, indent=2))

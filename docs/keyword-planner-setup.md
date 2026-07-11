@@ -9,6 +9,10 @@ You need a real Google Ads account (you have the Keyword Planner bookmark, so th
 likely exists). Note the **customer ID** (top right, format `123-456-7890`). Digits
 only go in the env var later.
 
+> **Update (2026-07-06 PM):** Compliance team replied same day (ticket 7-7116000040665) asking to confirm company type. Answered: current classification "Advertiser" is correct (Google's Advertiser type = in-house API use for your own company; "internal use only" is not a company type). No API Center change made. Awaiting decision.
+>
+> **Status (2026-07-06):** Basic Access application ACTUALLY submitted 2026-07-06 (ticket confirmed by the Google Ads API Compliance team; expect ~3 business days, so a decision around Jul 9). NOTE the trap we hit: filling in Developer Details in the API Center on 2026-06-28 is NOT the application — the real application is the separate "Apply for Basic Access" form, which requires a design document attached (ours: ~/Desktop/skripr-google-ads-api-design-doc.pdf). Watch antdavids93@gmail.com incl. spam for adsapi@google.com; an unanswered reviewer email = silent stall. Everything else (OAuth, refresh token, config at ~/.config/skripr/google-ads.yaml, scripts/keyword-planner.py) is wired and tested; the token upgrade is the only missing piece.
+
 ## 2. Developer token (the slow part — start this first)
 - In Google Ads → **Tools → API Center** (visible to account admins).
 - Copy the **developer token**. New tokens start at **Test** access, which only

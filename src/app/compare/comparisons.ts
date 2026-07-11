@@ -101,8 +101,8 @@ export const comparisons: Comparison[] = [
     ],
     related: [
       { href: "/compare/skripr-vs-tubebuddy", label: "vs TubeBuddy" },
+      { href: "/compare/skripr-vs-retti", label: "vs Retti" },
       { href: "/compare/skripr-vs-chatgpt", label: "vs ChatGPT" },
-      { href: "/skripr-vs-claude", label: "vs Claude" },
     ],
     dataBlock: {
       heading: "What \"grounded in proven videos\" actually looks like",
@@ -485,6 +485,71 @@ export const comparisons: Comparison[] = [
       kicker:
         "Claude starts from scratch. You hand Skripr a documentary that already works, and it writes your script from its structure.",
     },
+  },
+  {
+    slug: "skripr-vs-retti",
+    competitor: "Retti",
+    category: "Retention analysis tool",
+    intent: "commercial",
+    metaTitle: "Skripr vs Retti (2026): Diagnose or Write?",
+    metaDescription:
+      "Retti diagnoses why your published videos lose viewers. Skripr writes the next script from a video already proven to work. See where each tool fits.",
+    ogDescription:
+      "Retti tells you why the last video lost viewers. Skripr writes the next one. Here is the difference.",
+    eyebrow: "Skripr vs Retti",
+    h1: "Retti tells you why the last video lost viewers. Skripr writes the next one.",
+    subhead:
+      "Retti is a retention analysis tool built by a YouTube strategist. It reads your published videos, scores your hooks, and shows where viewers left. That is genuinely useful, and it all happens after the video exists. Skripr works on the step that decides retention in the first place: the script, written from a video already proven to work, in your voice.",
+    competitorColumn: "Retti",
+    rows: [
+      ["Diagnoses your published videos", "No", "Yes, its core strength"],
+      ["Predicts retention curve and drop-off points", "No", "Yes"],
+      ["Writes the full script", "Yes, the core product", "Yes, one of its tools"],
+      ["Script built from a proven video you bring", "Yes", "Different approach: trained on retention patterns"],
+      ["Writes in your voice or a creator's", "Yes (Voice Match)", "Not its focus"],
+      ["Works before you have published anything", "Yes", "Best once you have videos to analyze"],
+      ["Titles, metadata, demonetization check", "Yes, one flow", "Not listed among its tools"],
+    ],
+    beliefs: [
+      {
+        t: "A diagnosis is not a script.",
+        d: "Retti can tell you the video leaked viewers at 2:14. You still have to sit down and write the next one better. Skripr does that part: it hands you the next script with the hook, re-hooks, and structure already built in.",
+      },
+      {
+        t: "The next video is the lever, not the last one.",
+        d: "A published video's retention is history. You cannot re-shoot it. Every point of watch time you will ever gain lives in the next script, which is the one job Skripr is built for.",
+      },
+      {
+        t: "Proven beats predicted.",
+        d: "A predicted retention curve is a forecast. A video that already pulled views is proof. Skripr grounds your script in a winner you bring it, so the structure you start from is validated by real viewers, not modeled.",
+      },
+    ],
+    bridge:
+      "Retti is a genuinely useful tool, and the post-publish diagnosis it does is a job Skripr does not do. If you want to know exactly why your last upload lost people, it earns its place. Skripr is not a diagnosis dashboard. It sits one step earlier, where retention is actually decided: the script for the video you have not made yet.",
+    closingH1: "Stop auditing the last video. Write the next one.",
+    faqs: [
+      {
+        q: "Is Skripr a Retti alternative?",
+        a: "They solve different halves of the same problem. Retti diagnoses retention on videos you already published. Skripr writes the next script from a video already proven to work, in your voice. If your last video flopped and you want to know why, Retti does that. If you want the next one to hold viewers, that is Skripr.",
+      },
+      {
+        q: "Can Retti write scripts too?",
+        a: "Yes, Retti includes a script writer alongside its analysis tools. The difference is the center of gravity. Retti is built around diagnosing retention, with scripting as one of its tools. Skripr is built end to end around the script: grounded in a proven video you bring, written in your voice, with titles, metadata, and a demonetization check in the same flow.",
+      },
+      {
+        q: "Does Skripr analyze my published videos' retention?",
+        a: "No, and that is an honest gap. Skripr analyzes the proven video you bring it and writes your next script from it. It does not read your channel analytics. For post-publish diagnosis, a tool like Retti is the right fit, and plenty of creators could use one for the autopsy and the other for the next script.",
+      },
+      {
+        q: "Is Skripr free to try?",
+        a: "Yes. Your first 2 scripts are free with no card required, and paid plans are flat monthly, cancel anytime.",
+      },
+    ],
+    related: [
+      { href: "/compare/skripr-vs-vidiq", label: "vs VidIQ" },
+      { href: "/subscribr-alternative", label: "vs Subscribr" },
+      { href: "/compare/skripr-vs-chatgpt", label: "vs ChatGPT" },
+    ],
   },
 ];
 

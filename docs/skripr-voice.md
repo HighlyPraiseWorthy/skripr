@@ -35,6 +35,13 @@ Warm but direct. Validates first, corrects second. Humor to soften, never sarcas
 ## Synthesized blend (no specific channel)
 Hormozi structure (short lines, bold claims, numbers) + Naval density (one truth per sentence) + Enrique warmth (validate first, peer energy) + MrBeast specificity (tangible mechanics).
 
+## Canonical origin story (use this framing everywhere)
+Confirmed by Anton 2026-07-06. Every listing, about page, founder post, and interview answer uses THIS angle, not a generic "founder noticed a pattern" version:
+
+> Every small creator has watched a channel in their niche pull millions of views and wondered what they know that I don't. The answer is rarely luck. It is hooks, structure, and pacing that most people cannot see by just watching. Skripr makes that visible. Paste a video that is winning in your niche and it reverse-engineers the playbook behind it, then writes a script on your topic in your voice that follows the same playbook.
+
+The emotional core: the small creator SEES the winners in their niche but cannot READ them. Skripr makes the invisible playbook visible. Do not drift back to "the founder kept watching channels blow up" framings; the pain belongs to the small creator, not the founder's observation.
+
 ## Brand references (marketing only)
 - Linear: opinionated confidence, no softening.
 - Beehiiv: creator-to-creator, "I built this because I needed it."

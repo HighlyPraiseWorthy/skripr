@@ -109,7 +109,7 @@ export default function SeoToolPage({ tool }: { tool: SeoTool }) {
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12 }}>
             {others.map((o) => (
               <Link key={o.id} href={`/${o.slug}`} style={{ display: "block", padding: "16px 18px", borderRadius: 12, background: "rgba(77,184,255,0.04)", border: "1px solid rgba(77,184,255,0.10)", textDecoration: "none" }}>
-                <span style={{ fontSize: 15, fontWeight: 700, color: T.text }}>{o.name}</span>
+                <span style={{ fontSize: 15, fontWeight: 700, color: T.text }}>{o.h1}</span>
                 <div style={{ fontSize: 13, color: T.dim, marginTop: 4 }}>{o.intro.split(".")[0]}.</div>
               </Link>
             ))}
