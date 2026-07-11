@@ -381,8 +381,12 @@ export default function LandingPage() {
               <div key={i} style={{ width: 9, height: 9, borderRadius: "50%", background: c }} />
             ))}
             <span style={{ fontSize: 12, color: T.muted, letterSpacing: "0.05em", fontFamily: "monospace", marginLeft: 6 }}>
-              skripr.app/dashboard/scripts/new
+              skripr.app/dashboard/niche-bend
             </span>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 16px", borderBottom: `1px solid ${T.border}`, background: `${T.accent}0a` }}>
+            <span style={{ fontSize: 10.5, fontWeight: 800, letterSpacing: "0.12em", textTransform: "uppercase" as const, color: T.accent, background: `${T.accent}18`, border: `1px solid ${T.accent}44`, padding: "3px 9px", borderRadius: 6 }}>Niche Bend</span>
+            <span style={{ fontSize: 12.5, color: T.dim, lineHeight: 1.3 }}>Take a proven video and rewrite its winning structure for your niche</span>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "230px 1fr", minHeight: 240 }}>
             <div style={{ borderRight: `1px solid ${T.border}`, padding: 16, display: "flex", flexDirection: "column" as const, gap: 11 }}>
