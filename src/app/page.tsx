@@ -167,6 +167,12 @@ export default function LandingPage() {
         .hn-star-m  { width:4px; height:4px; animation: star-pulse-1 7.1s ease-in-out infinite; background: radial-gradient(circle, #ffffff 0%, #9ce4ff 30%, #4db8ff 60%, transparent 80%); }
         @keyframes spin-border { 0% { transform: translate(-50%,-50%) rotate(0deg); } 100% { transform: translate(-50%,-50%) rotate(360deg); } }
 
+        @keyframes cta-breathe { 0%,100% { box-shadow: 0 0 14px rgba(77,184,255,0.22), 0 0 0 0 rgba(77,184,255,0); } 50% { box-shadow: 0 0 32px rgba(77,184,255,0.55), 0 0 0 3px rgba(77,184,255,0.15); } }
+        @keyframes cta-sheen { 0% { background-position: 170% 0 } 100% { background-position: -70% 0 } }
+        .cta-glow { position: relative; overflow: hidden; display: inline-block; animation: cta-breathe 3.4s ease-in-out infinite; }
+        .cta-glow::after { content: ""; position: absolute; inset: 0; background: linear-gradient(115deg, transparent 42%, rgba(255,255,255,0.32) 50%, transparent 58%); background-size: 240% 100%; animation: cta-sheen 4.8s linear infinite; pointer-events: none; }
+        @media (prefers-reduced-motion: reduce) { .cta-glow { animation: none; } .cta-glow::after { display: none; } }
+
         .hn-nav-link { font-size:12px; font-weight:400; letter-spacing:0.08em; color:${T.dim}; text-decoration:none; transition:color .15s; }
         .hn-nav-link:hover { color:${T.accent}; }
         .hn-ghost:hover { color:${T.accent} !important; border-color:${T.accent}44 !important; }
@@ -244,7 +250,7 @@ export default function LandingPage() {
           ))}
           <Link href="/sign-in" className="hn-nav-link">Sign in</Link>
         </div>
-        <Link href="/sign-up" style={{
+        <Link href="/sign-up" className="cta-glow" style={{
           background: T.accent, color: T.bg,
           fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase" as const,
           padding: "8px 18px", textDecoration: "none",
@@ -272,7 +278,7 @@ export default function LandingPage() {
             </span>
           </div>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "center" as const, gap: 14, marginBottom: 20 }}>
-            <Link href="/sign-up" style={{
+            <Link href="/sign-up" className="cta-glow" style={{
               background: T.accent, color: T.bg,
               fontSize: 12, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase" as const,
               padding: "12px 24px", textDecoration: "none",
@@ -295,106 +301,67 @@ export default function LandingPage() {
       <div style={{ overflow: "hidden", padding: "48px 0", background: T.bg, borderBottom: `1px solid ${T.border}` }}>
         <style>{`
           @keyframes scroll-left  { 0% { transform: translateX(0) } 100% { transform: translateX(-50%) } }
-          @keyframes scroll-right { 0% { transform: translateX(-50%) } 100% { transform: translateX(0) } }
-          .ticker-left  { animation: scroll-left  40s linear infinite; display: flex; gap: 14px; width: max-content; }
-          .ticker-right { animation: scroll-right 50s linear infinite; display: flex; gap: 14px; width: max-content; }
-          .ticker-left:hover, .ticker-right:hover { animation-play-state: paused; }
+          .ticker-left  { animation: scroll-left 160s linear infinite; display: flex; gap: 18px; width: max-content; align-items: flex-start; }
+          .ticker-left:hover { animation-play-state: paused; }
+          @media (prefers-reduced-motion: reduce) { .ticker-left { animation: none; } }
         `}</style>
 
-        {/* Row 1 - Script output cards, scroll left */}
-        <div style={{ overflow: "hidden", marginBottom: 14 }}>
+        {/* Retti-style breakdown wall: one scrolling track of video + note columns at staggered heights */}
+        <div style={{ overflow: "hidden", padding: "6px 0" }}>
           <div className="ticker-left">
-            {[
-              { niche: "True Crime", title: "The $47M Fraud the Media Refused to Cover", hook: "In 2019, a company stole from 200,000 people and only 3 journalists noticed.", grade: "S", word: "Uncovered" },
-              { niche: "Finance", title: "The Savings Rate That's Quietly Shrinking You", hook: "The number on your statement isn't your real balance. Here's the math they skip.", grade: "A", word: "Overlooked" },
-              { niche: "Psychology", title: "The Habit Loop That Rewired My Brain in 11 Days", hook: "I didn't quit social media. I replaced the reward. That's the piece nobody teaches.", grade: "S", word: "Reframed" },
-              { niche: "History", title: "The Decision That Built Modern America", hook: "One overlooked vote in 1947 changed how 330 million people live today.", grade: "A", word: "Shelved" },
-              { niche: "Self Improvement", title: "Stop Optimizing. Start Deciding.", hook: "Productivity culture wrecked me. Then I found the one shift that worked.", grade: "B", word: "Neglected" },
-              { niche: "Gaming", title: "The Pattern Behind Every Viral Game Launch", hook: "Steam's recommendation engine isn't random. I mapped it out.", grade: "S", word: "Decoded" },
-              { niche: "Motivation", title: "You're Not Tired. You're Running the Wrong System.", hook: "Most motivation advice targets effort. That's not the real bottleneck.", grade: "A", word: "Misjudged" },
-              { niche: "Health", title: "The Sleep Study That Rewrote 40 Years of Research", hook: "A 2021 paper in a medical journal flipped everything we thought we understood.", grade: "S", word: "Rewritten" },
-            ].concat([
-              { niche: "True Crime", title: "The $47M Fraud the Media Refused to Cover", hook: "In 2019, a company stole from 200,000 people and only 3 journalists noticed.", grade: "S", word: "Uncovered" },
-              { niche: "Finance", title: "The Savings Rate That's Quietly Shrinking You", hook: "The number on your statement isn't your real balance. Here's the math they skip.", grade: "A", word: "Overlooked" },
-              { niche: "Psychology", title: "The Habit Loop That Rewired My Brain in 11 Days", hook: "I didn't quit social media. I replaced the reward. That's the piece nobody teaches.", grade: "S", word: "Reframed" },
-              { niche: "History", title: "The Decision That Built Modern America", hook: "One overlooked vote in 1947 changed how 330 million people live today.", grade: "A", word: "Shelved" },
-              { niche: "Self Improvement", title: "Stop Optimizing. Start Deciding.", hook: "Productivity culture wrecked me. Then I found the one shift that worked.", grade: "B", word: "Neglected" },
-              { niche: "Gaming", title: "The Pattern Behind Every Viral Game Launch", hook: "Steam's recommendation engine isn't random. I mapped it out.", grade: "S", word: "Decoded" },
-              { niche: "Motivation", title: "You're Not Tired. You're Running the Wrong System.", hook: "Most motivation advice targets effort. That's not the real bottleneck.", grade: "A", word: "Misjudged" },
-              { niche: "Health", title: "The Sleep Study That Rewrote 40 Years of Research", hook: "A 2021 paper in a medical journal flipped everything we thought we understood.", grade: "S", word: "Rewritten" },
-            ]).map((card, i) => {
-              const gc: Record<string,string> = { S:"#f59e0b", A:"#4db8ff", B:"#34d399" };
-              return (
-                <div key={i} style={{ flexShrink: 0, width: 300, borderRadius: 14, background: T.bg2, border: `1px solid ${T.border}`, padding: "16px 18px" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
-                    <span style={{ fontSize: 9, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: T.bg, background: T.accent, padding: "2px 7px", borderRadius: 4 }}>{card.niche}</span>
-                    <span style={{ marginLeft: "auto", fontSize: 10, fontWeight: 700, color: gc[card.grade], background: `${gc[card.grade]}18`, padding: "2px 7px", borderRadius: 4 }}>🧲 {card.word} · {card.grade}</span>
+            {(() => {
+              const pairs = [
+                { v: { title: "Why Saturn is The Scariest Planet (It's Not Peaceful)", channel: "Cosmic Lens", views: "6.1M views", thumb: "https://i.ytimg.com/vi/0SEU_ggHdSs/mqdefault.jpg", chip: "Teaser hook · 60x its channel's size" }, n: { t: "0:00", tag: "HOOK", tone: "#34d399", text: "\"Listen to that sound. That is not a soundtrack. That is the actual radio emission of Saturn screaming into the void.\"" } },
+                { v: { title: "The Economics of Owning a Gas Station", channel: "Overhead", views: "", thumb: "https://i.ytimg.com/vi/hE-POHeAffs/mqdefault.jpg", chip: "Myth-bust hook · full breakdown" }, n: { t: "0:00", tag: "HOOK", tone: "#34d399", text: "\"Okay, so you want to own a gas station. Good news, there are 152,000 of them.\"" } },
+                { v: { title: "The Craziest Hijacking in History", channel: "Cipher", views: "", thumb: "https://i.ytimg.com/vi/1WADzGelPNg/mqdefault.jpg", chip: "Story hook · 9 retention triggers" }, n: { t: "0:12", tag: "STAKES", tone: "#4db8ff", text: "\"A man is holding a handgun and the lock pin of a live grenade between his teeth. If he lets it go, it goes off.\"" } },
+                { v: { title: "The Strait of Hormuz: How People Live in the World's Most Dangerous Strait", channel: "TRUE HORIZONS", views: "1.7M views", thumb: "https://i.ytimg.com/vi/WQjUhBWRHG8/mqdefault.jpg", chip: "Teaser hook · 39x its channel's size" }, n: { t: "2:00", tag: "STAKES", tone: "#4db8ff", text: "\"Every day around 21 million barrels of crude oil move through the strait, equal to roughly 20% of the world's total supply.\"" } },
+                { v: { title: "Why Anyone Who Goes to Mars Will NEVER Come Back", channel: "Jost", views: "1.3M views", thumb: "https://i.ytimg.com/vi/mBBDQClA_kg/mqdefault.jpg", chip: "Teaser hook · 65x its channel's size" }, n: { t: "5:10", tag: "PERSONAL STAKES", tone: "#34d399", text: "\"A Mars astronaut in their 30s could have the skeleton of a seriously ill elderly person after the mission.\"" } },
+                { v: { title: "AI Surveillance Is Creating Two Classes of Humans", channel: "After Skool", views: "", thumb: "https://i.ytimg.com/vi/k7JWIhJG5Xw/mqdefault.jpg", chip: "Story hook · 9 retention triggers" }, n: { t: "", tag: "TITLE FORMULA", tone: "#7ed8ff", text: "[Technology] Is Creating Two Classes of [People]" } },
+                { v: { title: "The CIA's Most Valuable Spy", channel: "fern", views: "", thumb: "https://i.ytimg.com/vi/vcUGp_94uBk/mqdefault.jpg", chip: "Story hook · 9 retention triggers" }, n: { t: "1:10", tag: "OPEN LOOP", tone: "#4db8ff", text: "\"After every exchange, Carter knows exactly what the Iranians are saying behind closed doors. How is that possible?\"" } },
+                { v: { title: "Every Type Of Black Hole Explained in 11 Minutes", channel: "Bluntly Explained", views: "1.1M views", thumb: "https://i.ytimg.com/vi/GprjiFSsLOI/mqdefault.jpg", chip: "Stat hook · 100x its channel's size" }, n: { t: "3:00", tag: "STAKES", tone: "#4db8ff", text: "\"If it appeared close enough to Earth, you would never finish watching this video.\"" } },
+                { v: { title: "The Economics of Owning a Casino", channel: "Millionaire Problems", views: "533K views", thumb: "https://i.ytimg.com/vi/HE5xgQS53gc/mqdefault.jpg", chip: "Myth-bust hook · 30x its channel's size" }, n: { t: "3:45", tag: "SUBVERTED EXPECTATION", tone: "#34d399", text: "\"Per dollar wagered, Grandma is statistically the most profitable customer in the entire building.\"" } },
+                { v: { title: "YOU Are IMMORTAL in Minecraft", channel: "Checkpoint", views: "", thumb: "https://i.ytimg.com/vi/jJhUzIkvZrg/mqdefault.jpg", chip: "Story hook · 9 retention triggers" }, n: { t: "", tag: "TITLE FORMULA", tone: "#7ed8ff", text: "YOU Are [Extraordinary State] in [Game/World]" } },
+                { v: { title: "Why $2 Trillion vanishes every year", channel: "how really?", views: "890K views", thumb: "https://i.ytimg.com/vi/6M_RPR7gHuA/mqdefault.jpg", chip: "Story hook · 88x its channel's size" }, n: { t: "0:00", tag: "HOOK", tone: "#34d399", text: "\"Imagine you just robbed a bank. Congratulations, you are holding $2 million in cash. There is just one tiny problem, you can't spend it.\"" } },
+                { v: { title: "How London Built A Utopia", channel: "Hoog", views: "", thumb: "https://i.ytimg.com/vi/de-WP-LiO7o/mqdefault.jpg", chip: "Teaser hook · 9 retention triggers" }, n: { t: "0:10", tag: "SUBVERTED EXPECTATION", tone: "#34d399", text: "\"While most postwar housing estates were considered failures, the Barbican is some of the most sought-after real estate in the entire city.\"" } },
+                { v: { title: "America's Long War Against Soccer", channel: "Joon Lee", views: "", thumb: "https://i.ytimg.com/vi/uyY9J_KY-u8/mqdefault.jpg", chip: "Teaser hook · 9 retention triggers" }, n: { t: "0:05", tag: "HOOK", tone: "#34d399", text: "\"For decades, America treated soccer like a joke. And then, something changed.\"" } },
+                { v: { title: "Could L Catch Epstein?", channel: "AnimeAddicts", views: "", thumb: "https://i.ytimg.com/vi/SXub-BR4GWE/mqdefault.jpg", chip: "Result hook · 9 retention triggers" }, n: { t: "0:00", tag: "HOOK", tone: "#34d399", text: "\"It would take L less than 5 minutes to solve the Epstein case. And that's me being generous.\"" } },
+                { v: { title: "The Mind of a Strategist", channel: "Bygone Philosophy", views: "", thumb: "https://i.ytimg.com/vi/9QgV_3gGBjE/mqdefault.jpg", chip: "Teaser hook · 9 retention triggers" }, n: { t: "0:00", tag: "HOOK", tone: "#34d399", text: "\"While the average person reacts to the storm, the strategist maps the wind.\"" } },
+                { v: { title: "The Psychology of L: Why a Genius Chose to Lose", channel: "Satori Shinri", views: "", thumb: "https://i.ytimg.com/vi/gd_Q7u5BeDU/mqdefault.jpg", chip: "Myth-bust hook · 9 retention triggers" }, n: { t: "0:05", tag: "MYTH-BUST", tone: "#34d399", text: "\"What if I told you that L, the man who's never lost a case in his life, wasn't outsmarted at all?\"" } },
+              ];
+              return pairs.concat(pairs).map((p, i) => {
+                const videoCard = (
+                  <div key="v" style={{ display: "flex", alignItems: "center", gap: 12, padding: 10, borderRadius: 16, background: T.bg2, border: `1px solid ${T.accent}3a`, boxShadow: "0 8px 32px rgba(0,0,0,0.45)" }}>
+                    <img src={p.v.thumb} alt="" style={{ width: 118, height: 66, borderRadius: 10, objectFit: "cover", display: "block", flexShrink: 0 }} />
+                    <div style={{ minWidth: 0 }}>
+                      <div style={{ fontSize: 13, fontWeight: 700, color: T.text, lineHeight: 1.3, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" as const, overflow: "hidden" }}>{p.v.title}</div>
+                      <div style={{ fontSize: 11.5, color: T.muted, marginTop: 4 }}>{p.v.channel}{p.v.views && <span> · {p.v.views}</span>}</div>
+                      <div style={{ fontSize: 11, color: T.accent, marginTop: 3 }}>{p.v.chip}</div>
+                    </div>
                   </div>
-                  <div style={{ fontSize: 13, fontWeight: 700, color: T.text, lineHeight: 1.35, marginBottom: 8 }}>{card.title}</div>
-                  <div style={{ fontSize: 11, color: T.muted, lineHeight: 1.6, fontStyle: "italic" }}>"{card.hook}"</div>
-                </div>
-              );
-            })}
+                );
+                const noteCard = (
+                  <div key="n" style={{ borderRadius: 14, padding: "12px 14px", background: `${p.n.tone}0f`, border: `1px solid ${p.n.tone}38` }}>
+                    <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 5 }}>
+                      <span style={{ width: 17, height: 17, borderRadius: 5, background: p.n.tone, color: T.bg, fontSize: 10, fontWeight: 800, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>✓</span>
+                      {p.n.t && <span style={{ fontSize: 11, fontWeight: 700, color: T.text, fontFamily: "monospace" }}>{p.n.t}</span>}
+                      <span style={{ fontSize: 9, fontWeight: 700, letterSpacing: "0.08em", color: p.n.tone, background: `${p.n.tone}1f`, padding: "2px 7px", borderRadius: 4 }}>{p.n.tag}</span>
+                    </div>
+                    <div style={{ fontSize: 12, color: T.muted, lineHeight: 1.5, fontFamily: p.n.tag === "TITLE FORMULA" ? "monospace" : "inherit" }}>{p.n.text}</div>
+                  </div>
+                );
+                return (
+                  <div key={i} style={{ flexShrink: 0, width: 360, display: "flex", flexDirection: "column" as const, gap: 10, marginTop: [0, 34, 68][i % 3], marginBottom: [68, 34, 0][i % 3] }}>
+                    {[videoCard, noteCard]}
+                  </div>
+                );
+              });
+            })()}
           </div>
         </div>
-
-        {/* Row 2 - Viral Magnet word pills + CTR stats, scroll right */}
-        <div style={{ overflow: "hidden" }}>
-          <div className="ticker-right">
-            {[
-              { word: "Uncovered",   grade: "S", lift: "+418%", cat: "Revelation" },
-              { word: "Reframed",    grade: "S", lift: "+382%", cat: "Contrast" },
-              { word: "Decoded",     grade: "S", lift: "+401%", cat: "Discovery" },
-              { word: "Overlooked",  grade: "A", lift: "+212%", cat: "Exclusivity" },
-              { word: "Neglected",   grade: "A", lift: "+185%", cat: "Problem" },
-              { word: "Rewritten",   grade: "S", lift: "+366%", cat: "Stakes" },
-              { word: "Misjudged",   grade: "A", lift: "+193%", cat: "Contrast" },
-              { word: "Shelved",      grade: "A", lift: "+220%", cat: "Intrigue" },
-              { word: "Suppressed",  grade: "A", lift: "+205%", cat: "Controversy" },
-              { word: "Underused",   grade: "B", lift: "+91%",  cat: "Opportunity" },
-              { word: "Overdue",     grade: "B", lift: "+79%",  cat: "Relief" },
-              { word: "Rediscovered",grade: "A", lift: "+238%", cat: "Emotion" },
-              { word: "Sidelined",   grade: "B", lift: "+108%", cat: "Stakes" },
-              { word: "Dismissed",   grade: "A", lift: "+198%", cat: "Intensity" },
-              { word: "Unpublished", grade: "A", lift: "+168%", cat: "Exclusivity" },
-              { word: "Derailed",    grade: "A", lift: "+177%", cat: "Stakes" },
-              { word: "Unverified",  grade: "A", lift: "+158%", cat: "Intrigue" },
-              { word: "Restricted",  grade: "A", lift: "+207%", cat: "Risk" },
-              { word: "Reassessed",  grade: "B", lift: "+76%",  cat: "Authenticity" },
-              { word: "Concealed",   grade: "B", lift: "+86%",  cat: "Intrigue" },
-            ].concat([
-              { word: "Uncovered",   grade: "S", lift: "+418%", cat: "Revelation" },
-              { word: "Reframed",    grade: "S", lift: "+382%", cat: "Contrast" },
-              { word: "Decoded",     grade: "S", lift: "+401%", cat: "Discovery" },
-              { word: "Overlooked",  grade: "A", lift: "+212%", cat: "Exclusivity" },
-              { word: "Neglected",   grade: "A", lift: "+185%", cat: "Problem" },
-              { word: "Rewritten",   grade: "S", lift: "+366%", cat: "Stakes" },
-              { word: "Misjudged",   grade: "A", lift: "+193%", cat: "Contrast" },
-              { word: "Shelved",      grade: "A", lift: "+220%", cat: "Intrigue" },
-              { word: "Suppressed",  grade: "A", lift: "+205%", cat: "Controversy" },
-              { word: "Underused",   grade: "B", lift: "+91%",  cat: "Opportunity" },
-              { word: "Overdue",     grade: "B", lift: "+79%",  cat: "Relief" },
-              { word: "Rediscovered",grade: "A", lift: "+238%", cat: "Emotion" },
-              { word: "Sidelined",   grade: "B", lift: "+108%", cat: "Stakes" },
-              { word: "Dismissed",   grade: "A", lift: "+198%", cat: "Intensity" },
-              { word: "Unpublished", grade: "A", lift: "+168%", cat: "Exclusivity" },
-              { word: "Derailed",    grade: "A", lift: "+177%", cat: "Stakes" },
-              { word: "Unverified",  grade: "A", lift: "+158%", cat: "Intrigue" },
-              { word: "Restricted",  grade: "A", lift: "+207%", cat: "Risk" },
-              { word: "Reassessed",  grade: "B", lift: "+76%",  cat: "Authenticity" },
-              { word: "Concealed",   grade: "B", lift: "+86%",  cat: "Intrigue" },
-            ]).map((w, i) => {
-              const gc: Record<string,string> = { S:"#f59e0b", A:"#4db8ff", B:"#34d399" };
-              const c = gc[w.grade] || T.accent;
-              return (
-                <div key={i} style={{ flexShrink: 0, display: "flex", alignItems: "center", gap: 10, padding: "10px 16px", borderRadius: 40, background: T.bg2, border: `1px solid ${T.border}` }}>
-                  <span style={{ fontSize: 13, fontWeight: 700, color: c }}>{w.word}</span>
-                  <span style={{ fontSize: 9, fontWeight: 700, color: T.bg, background: c, padding: "1px 5px", borderRadius: 3 }}>{w.grade}</span>
-                  <span style={{ fontSize: 11, color: T.muted }}>{w.cat}</span>
-                </div>
-              );
-            })}
-          </div>
+        {/* Paste-to-playbook labels */}
+        <div style={{ maxWidth: 1000, margin: "22px auto 0", padding: "0 24px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap" as const, gap: 10 }}>
+          <span style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: T.accent }}>● Paste a video that already won</span>
+          <span style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: T.accent }}>Get the playbook that made it work ●</span>
         </div>
       </div>
 
@@ -1089,7 +1056,7 @@ export default function LandingPage() {
         <p style={{ fontSize: 18, fontWeight: 400, color: "#d4e4f3", maxWidth: 540, lineHeight: 1.6, margin: "0 auto 32px" }}>
           Start from what's already working, write it in your voice, and walk away with an upload-ready script, in one sitting.
         </p>
-        <Link href="/sign-up" style={{
+        <Link href="/sign-up" className="cta-glow" style={{
           display: "inline-block", background: T.accent, color: T.bg,
           fontSize: 13, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase" as const,
           padding: "14px 32px", textDecoration: "none",
