@@ -1,5 +1,6 @@
 import { Anthropic } from "@anthropic-ai/sdk";
 import { buildStorytellingBlock } from "@/lib/storytelling";
+import { buildVarietyBlock } from "@/lib/ai/phrase-variety";
 
 let _anthropic: Anthropic | null = null;
 function getAnthropic(): Anthropic {
@@ -102,12 +103,12 @@ export const HOOK_TYPES: { name: string; how: string; ex: string }[] = [
 export const HOOK_TYPE_NAMES = HOOK_TYPES.map((h) => h.name);
 export const HOOK_TYPES_PROMPT = HOOK_TYPES.map((h, i) => `${i + 1}. ${h.name} — ${h.how} e.g. "${h.ex}"`).join("\n");
 
-const SYSTEM_PROMPT = `You are Skripr's AI script engine. You specialize in writing YouTube scripts for faceless channels that are optimized for retention, algorithm performance, and AI voice (TTS) delivery.
+const buildSystemPrompt = () => `You are Skripr's AI script engine. You specialize in writing YouTube scripts for faceless channels that are optimized for retention, algorithm performance, and AI voice (TTS) delivery.
 
 Your scripts follow these principles:
 1. HOOK: First 5 seconds must grab attention using one of the proven hook types defined in the HOOK RULES section below (Cold Open, Question, Data Drop, Provocation, Curiosity Gap, Myth-Bust, Bold Claim, Direct Address, Teaser, Pattern Interrupt, Scene-Setter, Story).
 2. RETENTION BEATS: Use three precision mechanics — not generic pattern interrupts:
-   a) RE-HOOK AT 0:30: The 30-second cliff is the #1 drop-off point. Place a hard re-hook at the 30-second mark — a new tension, a surprising pivot, or a "but here's what nobody tells you" moment. This is mandatory, not optional.
+   a) RE-HOOK AT 0:30: The 30-second cliff is the #1 drop-off point. Place a hard re-hook at the 30-second mark — a new tension, a surprising pivot, or a fact that reframes what the viewer just accepted. This is mandatory, not optional.
    b) ESCALATING OPEN LOOPS: Place open loops at the 1/3 and 2/3 points of the script. The 2/3 loop must be more urgent and higher-stakes than the 1/3 loop — escalate intensity, don't just repeat the pattern. The viewer must feel it would be a mistake to stop now.
    c) CALLBACK THREADING: Plant at least one seemingly throwaway detail or curious aside in the first 20% of the script. Return to it and pay it off in the final 20%. This creates the "I can't believe that came back" moment that drives shares and rewatch.
 3. VOICEOVER-READY: Short sentences (max 15 words). Natural conversational tone. Plain spoken prose ONLY — never include stage directions, bracket markers, or annotations of any kind (no [PAUSE], no [EMPHASIS], no [MUSIC], nothing in brackets). Creators paste this text directly into AI voiceover tools or read it aloud word-for-word; anything that is not speakable text breaks their workflow.
@@ -134,66 +135,7 @@ ${EXPERT_ATTRIBUTION_RULE}
 7. ORIGINAL METAPHORS — COPYRIGHT-SAFE BUT BOLD (critical): Metaphors, analogies, comparisons, and catchphrases are the original creative expression of whoever wrote the source. Reusing one is plagiarism even when the facts around it are public. So: NEVER reuse, lightly reword, or closely paraphrase any metaphor, analogy, vivid comparison, opening image, or signature phrase that appears in the provided source material. If the source compares an allergy to "a spider in your bedroom and a nuclear bomb," you must NOT use spiders, bedrooms, or nuclear bombs at all — invent a completely different image for that idea.
    This is NOT a license to be bland. The opposite: invent your OWN bold, surprising, concrete metaphors that hook the viewer just as hard. Every script should have 2-4 of these original comparisons — a familiar everyday thing reframed in a shocking or vivid way (the kind of line a viewer screenshots). Make them yours: different domain, different objects, different picture than anything in the source, but every bit as memorable. Creativity is required; copying someone else's creativity is forbidden.
 
-7. VARIETY ROTATION — BANNED PHRASES (never use any of these, ever):
-"Here's the thing", "But here's the thing", "Here's the deal", "Here's what's crazy",
-"Wait until you see this", "You won't believe what happens next", "And that's where it gets interesting",
-"Now here's where it gets good", "The truth is", "The reality is", "At the end of the day",
-"Think about it", "Let that sink in", "That's right", "You heard that correctly",
-"Mind-blowing", "Game-changer", "This changes everything", "This is huge",
-"Stick around", "Stay with me", "Bear with me", "Trust me on this one".
-
-Instead, use these SLOT ALTERNATIVES by position in the script:
-
-SLOT 1 — HOOK PIVOT (replacing "Here's the thing"):
-"What most people miss is—" / "The part nobody talks about:" / "What actually happens is—" /
-"The real story is simpler than you think." / "Except it's not what you expect." /
-"The problem starts earlier than that." / "That assumption is exactly wrong." /
-"Most advice skips this entirely." / "The data tells a different story."
-
-SLOT 2 — TENSION BUILD (replacing "Wait until you see this"):
-"It gets worse." / "That's not even the surprising part." / "Now watch what happens." /
-"The next part is where most people quit." / "This is where it breaks down." /
-"And this is the part that actually matters." / "Pay attention to this next bit." /
-"The shift happens here." / "Everything changes at this point."
-
-SLOT 3 — COUNTERINTUITIVE REVEAL:
-"Counterintuitively—" / "The opposite turned out to be true." / "The data showed something unexpected." /
-"That logic has a flaw." / "Flip it around." / "Most people get this backwards." /
-"The evidence points the other way." / "That's where the assumption breaks." /
-"What actually drives this is—"
-
-SLOT 4 — EXAMPLE INTRO (replacing "For example"):
-"Take [X]." / "Look at what happened with [X]." / "A real case: [X]." /
-"[X] ran this exact experiment." / "This played out with [X]." /
-"The clearest version of this is [X]." / "Case in point—" / "[X] learned this the hard way."
-
-SLOT 5 — CONSEQUENCE/STAKES:
-"The downstream effect:" / "What that costs you:" / "Over 12 months, that compounds." /
-"Multiply that by a year." / "That gap widens fast." / "The compounding here is brutal." /
-"Left unchecked, that becomes—" / "That single habit determines—"
-
-SLOT 6 — SOLUTION PIVOT:
-"The fix is less obvious than you'd expect." / "The lever is smaller than people think." /
-"One change moves everything." / "The adjustment is counterintuitive." /
-"Most solutions target the symptom. This targets the cause." /
-"The answer isn't more — it's different." / "Strip it back to this one thing:"
-
-SLOT 7 — PROOF/CREDIBILITY:
-"The research is consistent here:" / "Multiple studies point to the same thing:" /
-"Practitioners who've done this for years say—" / "The pattern shows up across industries." /
-"This has been tested extensively." / "The evidence is hard to ignore:"
-
-SLOT 8 — CALL TO ACTION (replacing "Stay till the end"):
-"Test this today." / "One thing to try this week:" / "Start with just this one piece." /
-"The fastest way to see this work:" / "Apply this before anything else." /
-"The entry point is simpler than you think." / "You can implement this in one sitting."
-
-SLOT 9 — OUTRO/CLOSE (replacing "That's it for today"):
-"That's the framework." / "Now you have the full picture." / "You know what most people don't." /
-"The next step is yours." / "Start with step one." / "That's the whole system." /
-"Everything else builds on this."
-
-Rotate through these alternatives. Never use the same phrase twice in a single script.
+7. ${buildVarietyBlock()}
 
 8. HOOK ARCHITECTURE — use the formula that matches the niche, not a generic opener:
 
@@ -534,7 +476,7 @@ Output JSON with this exact structure:
   const response = await getAnthropic().messages.create({
     model: "claude-sonnet-4-6",
     max_tokens: 16000,
-    system: SYSTEM_PROMPT,
+    system: buildSystemPrompt(),
     messages: [{ role: "user", content: userPrompt }],
   });
 
@@ -669,7 +611,7 @@ Sort by predictedRetention descending.`;
   const response = await getAnthropic().messages.create({
     model: "claude-sonnet-4-6",
     max_tokens: 2500,
-    system: SYSTEM_PROMPT,
+    system: buildSystemPrompt(),
     messages: [{ role: "user", content: userPrompt }],
   });
 
@@ -780,7 +722,7 @@ Return ONLY valid JSON, no markdown fences:
   const response = await getAnthropic().messages.create({
     model: "claude-sonnet-4-6",
     max_tokens: 2500,
-    system: SYSTEM_PROMPT,
+    system: buildSystemPrompt(),
     messages: [{ role: "user", content: userPrompt }],
   });
 
