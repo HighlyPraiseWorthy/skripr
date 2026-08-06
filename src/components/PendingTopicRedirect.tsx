@@ -10,7 +10,7 @@ export default function PendingTopicRedirect() {
   const router = useRouter();
   useEffect(() => {
     try {
-      const t = localStorage.getItem("skripr_pending_topic");
+      const t = localStorage.getItem("skripr_pending_topic") || localStorage.getItem("skripr_pending_url");
       if (t && t.trim()) router.replace("/dashboard/scripts/new");
     } catch {}
   }, [router]);

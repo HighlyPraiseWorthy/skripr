@@ -189,6 +189,17 @@ export default function NewScriptPage() {
       setInputMode("topic");
       setTopic(pending.trim());
       try { localStorage.removeItem("skripr_pending_topic"); } catch {}
+      return;
+    }
+    // From the free transcript tool: carry the proven video's URL into URL mode.
+    let pendingUrl = params.get("prefillUrl");
+    if (!pendingUrl) {
+      try { pendingUrl = localStorage.getItem("skripr_pending_url"); } catch {}
+    }
+    if (pendingUrl && pendingUrl.trim()) {
+      setInputMode("url");
+      setYoutubeUrl(pendingUrl.trim());
+      try { localStorage.removeItem("skripr_pending_url"); } catch {}
     }
   }, []);
 

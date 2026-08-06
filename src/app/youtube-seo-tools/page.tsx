@@ -88,7 +88,7 @@ export default function SeoToolsHub() {
             It is easy to overrate metadata. Tags, titles, and descriptions help YouTube understand and surface your video, but they sit on top of the two things that actually decide whether it grows: the title and thumbnail that earn the click, and the first 30 seconds that keep the viewer.
           </p>
           <p style={{ fontSize: 16.5, color: T.muted, lineHeight: 1.8, margin: 0 }}>
-            So use these to clean up your metadata fast, then put your real energy into the script. That is the part most creators skip, and the part that decides the video. If you came here for one thing, the most used tool is the <Link href="/youtube-tag-generator" style={{ color: T.accent, textDecoration: "underline" }}>free YouTube tag generator</Link>.
+            So use these to clean up your metadata fast, then put your real energy into the script. That is the part most creators skip, and the part that decides the video. If you came here for one thing, the most used tool is the <Link href="/youtube-tag-generator" style={{ color: T.accent, textDecoration: "underline" }}>free YouTube tag generator</Link>. To study a video that already works, grab its text with the <Link href="/youtube-transcript-generator" style={{ color: T.accent, textDecoration: "underline" }}>free YouTube transcript generator</Link>.
           </p>
         </section>
 

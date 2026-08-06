@@ -1091,6 +1091,7 @@ export default function LandingPage() {
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: 28, marginBottom: 32 }}>
             {[
               { title: "Free Tools", links: [
+                ["/youtube-transcript-generator","YouTube Transcript Generator"],
                 ["/why-did-my-video-flop","Why Did My Video Flop?"],
                 ["/youtube-video-ideas-generator","Video Ideas Generator"],
                 ["/youtube-channel-name-generator","Name Generator"],
