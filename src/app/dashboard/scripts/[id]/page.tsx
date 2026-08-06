@@ -3,6 +3,7 @@ import { supabaseAdmin } from "@/lib/db/supabase";
 import Link from "next/link";
 import type { Script } from "@/lib/types/script";
 import { ScriptEditor } from "@/components/ScriptEditor";
+import { TECHNIQUES, getMode } from "@/lib/storytelling";
 
 const C = {
   bg: "#080c12",
@@ -98,6 +99,42 @@ export default async function ScriptDetailPage({ params }: { params: Promise<{ i
           {script.topic && <p style={{ color: C.textDim, fontSize: 14, marginBottom: script.niche ? 2 : 0 }}>Topic: {script.topic}</p>}
           {script.niche && <p style={{ color: "#7ed8ff", fontSize: 13, fontWeight: 500 }}>✦ Niche Bend: {script.niche}</p>}
         </div>
+
+        {/* ── Storytelling techniques used ── */}
+        {(() => {
+          const ids = Array.isArray(script.storytelling_techniques) ? script.storytelling_techniques : [];
+          const mode = getMode(script.storytelling_mode);
+          if (!ids.length && !mode) return null;
+          const used = TECHNIQUES.filter((t) => ids.includes(t.id));
+          return (
+            <div style={{ borderRadius: 18, background: C.cardBg, border: `1px solid ${C.border}`, padding: "22px 28px", marginBottom: 14 }}>
+              <div style={{ display: "flex", alignItems: "baseline", gap: 10, flexWrap: "wrap", marginBottom: 4 }}>
+                <h2 style={{ fontSize: 15, fontWeight: 700, color: C.textBright, letterSpacing: -0.2 }}>How this script holds attention</h2>
+                {mode && (
+                  <span style={{ padding: "3px 10px", borderRadius: 7, fontSize: 11, fontWeight: 600, background: "rgba(77,184,255,0.11)", color: "#7ed8ff" }}>
+                    {mode.name} mode
+                  </span>
+                )}
+              </div>
+              <p style={{ fontSize: 13, color: C.textDim, lineHeight: 1.6, marginBottom: used.length ? 16 : 0 }}>
+                {mode ? mode.blurb : "The storytelling techniques built into this script."}
+              </p>
+              {used.length > 0 && (
+                <div style={{ display: "grid", gap: 10 }}>
+                  {used.map((t) => (
+                    <div key={t.id} style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
+                      <span style={{ width: 16, height: 16, borderRadius: 5, background: "rgba(0,212,160,0.15)", border: "1px solid rgba(0,212,160,0.4)", color: "#00d4a0", fontSize: 10, fontWeight: 800, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 2 }}>✓</span>
+                      <div>
+                        <div style={{ fontSize: 13.5, fontWeight: 600, color: C.textBright }}>{t.name}</div>
+                        <div style={{ fontSize: 12.5, color: C.textDim, lineHeight: 1.6, marginTop: 1 }}>{t.value}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        })()}
 
         {/* ── Script editor card ── */}
         <div style={{ borderRadius: 18, background: C.cardBg, border: `1px solid ${C.border}`, padding: "22px 28px" }}>

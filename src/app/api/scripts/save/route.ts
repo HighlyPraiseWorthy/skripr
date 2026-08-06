@@ -1,13 +1,14 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { supabaseAdmin } from "@/lib/db/supabase";
+import { resolveTechniques } from "@/lib/storytelling";
 
 export async function POST(req: Request) {
   const { userId } = await auth();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
-    const { title, content, niche, topic, wordCount, estimatedDuration, sourceVideoId, structurePattern } = await req.json();
+    const { title, content, niche, topic, wordCount, estimatedDuration, sourceVideoId, structurePattern, storytellingMode, storytellingTechniques } = await req.json();
     if (!title || !content) return NextResponse.json({ error: "Title and content are required" }, { status: 400 });
     if (!supabaseAdmin) return NextResponse.json({ error: "Database not configured" }, { status: 500 });
 
@@ -23,6 +24,10 @@ export async function POST(req: Request) {
         estimated_duration: estimatedDuration || null,
         source_video_id: sourceVideoId || null,
         structure_pattern: structurePattern || null,
+        storytelling_mode: storytellingMode || null,
+        storytelling_techniques: Array.isArray(storytellingTechniques) && storytellingTechniques.length
+          ? resolveTechniques(storytellingTechniques)
+          : null,
       })
       .select("id")
       .single();

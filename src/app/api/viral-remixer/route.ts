@@ -50,6 +50,13 @@ export async function POST(req: Request) {
     const msg = await client.messages.create({
       model: "claude-sonnet-4-6",
       max_tokens: 5000,
+      // The same video must read back the same way every time. Without this the
+      // API samples at its default temperature, so re-running one URL rewrote the
+      // hook type, structure labels, and trigger wording on each pass and users
+      // could not trust or re-find the analysis. The remix TITLES are the only
+      // part meant to be creative, and 10 of them from one formula stay varied
+      // enough at t=0.
+      temperature: 0,
       messages: [{
         role: "user",
         content: `You are a YouTube strategy expert. Analyze this video and extract the exact framework that made it perform.

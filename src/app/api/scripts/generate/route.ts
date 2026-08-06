@@ -9,7 +9,7 @@ import { getNicheFrameworksBlock, getBendFrameworksBlock, getNicheHookExamplesBl
 import { detectNiche } from "@/lib/niche-detect";
 import { getKeptHooksBlock } from "@/lib/hook-picks";
 import { saveAnglePick } from "@/lib/angle-picks";
-import { autoSelectMode } from "@/lib/storytelling";
+import { autoSelectMode, resolveTechniques } from "@/lib/storytelling";
 import { getActiveVoiceMeta, getVoiceMetaById } from "@/lib/voice-profile";
 import { captureFrameworkInBackground } from "@/lib/framework-capture";
 
@@ -153,6 +153,13 @@ export async function POST(req: Request) {
         })
       : Promise.resolve();
 
+    // Storytelling craft layer: resolve once so the same values drive the prompt
+    // AND get persisted with the script (the detail page shows them back).
+    const resolvedStoryMode = storytellingMode || autoSelectMode(resolvedNiche, topic).id;
+    const resolvedStoryTechniques = resolveTechniques(
+      Array.isArray(storytellingTechniques) && storytellingTechniques.length ? storytellingTechniques : null
+    );
+
     const scriptPromise = generateScript({
       sourceTranscript: truncated,
       targetTopic: topic || "",
@@ -173,7 +180,7 @@ export async function POST(req: Request) {
       // Storytelling engine: honor the user's picks; auto-select the mode when
       // none was sent (old clients / one-click generate). buildStorytellingBlock
       // resolves coherence + core techniques downstream.
-      storytellingMode: storytellingMode || autoSelectMode(resolvedNiche, topic).id,
+      storytellingMode: resolvedStoryMode,
       storytellingTechniques: Array.isArray(storytellingTechniques) ? storytellingTechniques : undefined,
       sourceMaterial: typeof sourceMaterial === "string" && sourceMaterial.trim() ? sourceMaterial.trim() : undefined,
       selectedTitle: typeof selectedTitle === "string" && selectedTitle.trim() ? selectedTitle.trim() : undefined,
@@ -266,6 +273,8 @@ export async function POST(req: Request) {
             estimated_duration: targetMinutes ? targetMinutes * 60 : null,
             voice_name: voiceName,
             source_video_id: sourceVideoId || null,
+            storytelling_mode: resolvedStoryMode,
+            storytelling_techniques: resolvedStoryTechniques,
           })
           .select("id")
           .single();

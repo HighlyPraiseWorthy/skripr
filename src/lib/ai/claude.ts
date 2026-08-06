@@ -758,6 +758,15 @@ Thumbnail text drives CTR on Browse and Suggested. Each option should:
 ━━━ HASHTAGS (exactly 10, each prefixed with #) ━━━
 Mix: 3 niche-specific, 4 topic-specific, 3 broad discovery
 
+━━━ VOICE: WRITE LIKE A PERSON, NOT A MARKETING BOT (critical) ━━━
+This metadata is published under the creator's name, so it has to sound like they typed it.
+- NEVER use an em dash or en dash anywhere (— or –). Use a comma, or start a new sentence. This applies to titles, the description, thumbnail text, everything.
+- No exclamation points. No emojis. No ALL-CAPS words for hype.
+- Banned hype words: unlock, unleash, supercharge, revolutionary, game-changer, ultimate guide, dive in, delve, elevate, harness, leverage, seamless, effortless, transform your, secrets revealed.
+- Contractions always (don't, you'll, it's). Plain everyday words over corporate ones.
+- No fabricated numbers. Never invent a statistic, dollar figure, study, or percentage that is not in the script above.
+- Write the description in short blocks of 2 to 3 sentences, the way a creator actually writes, not one dense keyword paragraph.
+
 ━━━ OUTPUT FORMAT ━━━
 Return ONLY valid JSON, no markdown fences:
 {
@@ -781,6 +790,31 @@ Return ONLY valid JSON, no markdown fences:
 
   // Post-process: strip any # prefixes
   metadata.tags = metadata.tags.map(tag => tag.replace(/^#+/, "").trim());
+
+  // Belt-and-suspenders over the voice rules above, same as the script pass does.
+  // Metadata is published under the creator's name, so a stray em dash is a tell.
+  // Dashes become commas (their usual job is a clause break), then the cleanup
+  // passes fix the fallout: doubled commas, a comma stranded before punctuation,
+  // and a dash that ended the line.
+  const deDash = (s: string) => s
+    .replace(/\s*[—–]\s*/g, ", ")
+    .replace(/\s+,/g, ",")
+    .replace(/,\s*,/g, ",")
+    .replace(/,\s*([.!?,;:])/g, "$1")
+    .replace(/[ \t]{2,}/g, " ")
+    .trim()
+    .replace(/,$/, "");
+
+  metadata.titles = (metadata.titles || []).map(deDash);
+  metadata.thumbnailText = (metadata.thumbnailText || []).map(deDash);
+  metadata.tags = metadata.tags.map(deDash);
+  if (typeof metadata.description === "string") {
+    // Preserve the blank-line structure of the description, clean each line.
+    metadata.description = metadata.description
+      .split("\n")
+      .map((line) => (line.trim() ? deDash(line) : ""))
+      .join("\n");
+  }
 
   return metadata;
 }

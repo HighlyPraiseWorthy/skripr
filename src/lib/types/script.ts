@@ -28,6 +28,8 @@ export interface Script {
   compliance_score: number | null;
   status: string | null;
   voice_name?: string | null;
+  storytelling_mode?: string | null;
+  storytelling_techniques?: string[] | null;
   created_at: string;
   updated_at: string;
   versions?: ScriptVersion[];
