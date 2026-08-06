@@ -40,6 +40,9 @@ export interface ScriptGenerationInput {
   // the prompt via buildStorytellingBlock.
   storytellingMode?: string;
   storytellingTechniques?: string[];
+  // Opt-in second CTA around the 60-70% retention dip. Off by default: it used
+  // to be forced on, which produced two full subscribe+comment asks per script.
+  softCta?: boolean;
   // Creator-provided research / source material (pasted articles, notes, or
   // auto-sourced facts). The script MAY state specific facts/numbers/studies
   // that appear here; anything not in it still obeys the anti-fabrication rule.
@@ -103,7 +106,7 @@ export const HOOK_TYPES: { name: string; how: string; ex: string }[] = [
 export const HOOK_TYPE_NAMES = HOOK_TYPES.map((h) => h.name);
 export const HOOK_TYPES_PROMPT = HOOK_TYPES.map((h, i) => `${i + 1}. ${h.name} — ${h.how} e.g. "${h.ex}"`).join("\n");
 
-const buildSystemPrompt = () => `You are Skripr's AI script engine. You specialize in writing YouTube scripts for faceless channels that are optimized for retention, algorithm performance, and AI voice (TTS) delivery.
+const buildSystemPrompt = ({ softCta = false }: { softCta?: boolean } = {}) => `You are Skripr's AI script engine. You specialize in writing YouTube scripts for faceless channels that are optimized for retention, algorithm performance, and AI voice (TTS) delivery.
 
 Your scripts follow these principles:
 1. HOOK: First 5 seconds must grab attention using one of the proven hook types defined in the HOOK RULES section below (Cold Open, Question, Data Drop, Provocation, Curiosity Gap, Myth-Bust, Bold Claim, Direct Address, Teaser, Pattern Interrupt, Scene-Setter, Story).
@@ -123,7 +126,9 @@ Your scripts follow these principles:
    - Avoid: "In conclusion", "Furthermore", "It is worth noting", "Delve", "Crucial", "Leverage", "It's important to"
    - Never use em-dashes mid-sentence — use commas or just end the sentence
    - No bullet-point-style lists read aloud. Flow naturally instead.
-4. CTA PLACEMENT: Don't wait until the end. Place a soft CTA at the 60-70% mark where retention typically drops, then a hard CTA at the end.
+4. CTA PLACEMENT: ${softCta
+  ? `Place ONE soft CTA at the 60-70% mark (where retention typically dips), then the hard CTA at the end. "SOFT" IS A HARD CONSTRAINT: exactly one sentence, and it may contain AT MOST a single subscribe ask. It must NOT ask for a comment, must NOT stack a second request, and must NOT restate what the ending will ask for. Only the final CTA may ask for both a subscribe and a comment. If you cannot make the early one a single unobtrusive sentence, leave it out entirely.`
+  : `Place exactly ONE CTA, at the very end. Do NOT put a subscribe, comment, like, or "stick around" ask anywhere earlier in the script. A second earlier ask makes the video feel like it ends twice.`}
 5. STRUCTURE: Follow the exact structural pattern of the source viral video but apply it to the new topic.
 6. ANTI-REPETITION: Never start two consecutive sentences with the same word. Vary sentence length — mix short punchy sentences with longer ones. Never repeat a key point already made; build forward only.
 7. NO FABRICATED FACTS: Never state a specific statistic, percentage, dollar figure, year, named study, or named survey unless it appears in the provided source material. Use soft framing instead: "research suggests", "studies have shown", "experts estimate". Never attribute a quote or claim to a named real person unless it was in the source material. A creator will read this on camera — an invented number destroys their credibility.
@@ -476,7 +481,7 @@ Output JSON with this exact structure:
   const response = await getAnthropic().messages.create({
     model: "claude-sonnet-4-6",
     max_tokens: 16000,
-    system: buildSystemPrompt(),
+    system: buildSystemPrompt({ softCta: !!input.softCta }),
     messages: [{ role: "user", content: userPrompt }],
   });
 

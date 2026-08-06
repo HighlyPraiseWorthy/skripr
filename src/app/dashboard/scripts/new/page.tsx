@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import GenerationProgress from "@/components/GenerationProgress";
 import { VoiceSelect } from "@/components/VoiceSelect";
-import { CompanionCtaToggle } from "@/components/CompanionCtaToggle";
+import { CompanionCtaToggle, SoftCtaToggle } from "@/components/CompanionCtaToggle";
 import StorytellingPicker from "@/components/StorytellingPicker";
 import ResearchStep from "@/components/ResearchStep";
 
@@ -80,6 +80,7 @@ export default function NewScriptPage() {
   const [savedId, setSavedId] = useState<string | null>(null);
   const [voiceId, setVoiceId] = useState<string | null>(null);
   const [companionCta, setCompanionCta] = useState(false);
+  const [softCta, setSoftCta] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [userPlan, setUserPlan] = useState<string>("free");
@@ -157,7 +158,7 @@ export default function NewScriptPage() {
       fetch("/api/scripts/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ transcript: "", topic: topicVal, niche: nicheVal, videoLength: videoMinutes >= 14 ? "long" : "medium", targetMinutes: videoMinutes, viralMagnetWord: selectedViralWord || undefined, voiceProfileId: voiceId || undefined, companionCta, angle: undefined, remixFramework: rfParam || undefined, hookType: htParam || undefined, titleFormula: tfParam || undefined }),
+        body: JSON.stringify({ transcript: "", topic: topicVal, niche: nicheVal, videoLength: videoMinutes >= 14 ? "long" : "medium", targetMinutes: videoMinutes, viralMagnetWord: selectedViralWord || undefined, voiceProfileId: voiceId || undefined, companionCta, softCta, angle: undefined, remixFramework: rfParam || undefined, hookType: htParam || undefined, titleFormula: tfParam || undefined }),
       })
         .then(r => r.json().catch(() => null))
         .then(data => {
@@ -263,7 +264,7 @@ export default function NewScriptPage() {
     try {
       const res = await fetch("/api/scripts/generate", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ transcript, niche: niche || undefined, topic: topic || undefined, videoLength: videoMinutes >= 14 ? "long" : "medium", targetMinutes: videoMinutes, voiceProfileId: voiceId || undefined, companionCta,
+        body: JSON.stringify({ transcript, niche: niche || undefined, topic: topic || undefined, videoLength: videoMinutes >= 14 ? "long" : "medium", targetMinutes: videoMinutes, voiceProfileId: voiceId || undefined, companionCta, softCta,
           sourceVideoId: youtubeUrl ? youtubeUrl.match(/[?&]v=([^&]+)/)?.[1] : undefined, viralMagnetWord: selectedViralWord || undefined, angle: angle || undefined, remixFramework: viralFramework?.remixFramework || undefined, hookType: viralFramework?.hookType || undefined, titleFormula: viralFramework?.selectedTitle || viralFramework?.titleFormula || undefined,
           storytellingMode, storytellingTechniques, sourceMaterial: sourceMaterial || undefined }),
       });
@@ -591,6 +592,7 @@ export default function NewScriptPage() {
             <div style={{ marginTop: 16 }}>
               <VoiceSelect value={voiceId} onChange={setVoiceId} />
               <CompanionCtaToggle value={companionCta} onChange={setCompanionCta} />
+              <SoftCtaToggle value={softCta} onChange={setSoftCta} />
             </div>
 
             {/* ─── Viral Magnet Picker (pre-gen) ─── */}

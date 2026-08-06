@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import GenerationProgress from "@/components/GenerationProgress";
 import { joinHookBody, bodyStartsWithHook } from "@/lib/script-text";
 import { VoiceSelect } from "@/components/VoiceSelect";
-import { CompanionCtaToggle } from "@/components/CompanionCtaToggle";
+import { CompanionCtaToggle, SoftCtaToggle } from "@/components/CompanionCtaToggle";
 import StorytellingPicker from "@/components/StorytellingPicker";
 import ResearchStep from "@/components/ResearchStep";
 
@@ -75,6 +75,7 @@ export default function NicheBendBriefPage() {
   const [saving, setSaving] = useState(false);
   const [voiceId, setVoiceId] = useState<string | null>(null);
   const [companionCta, setCompanionCta] = useState(false);
+  const [softCta, setSoftCta] = useState(false);
 
   useEffect(() => {
     try {
@@ -149,6 +150,7 @@ export default function NicheBendBriefPage() {
           sourceNiche: brief.sourceNiche || undefined,
           bridgeNiche: selectedNiche.parentNiche || undefined,
           companionCta,
+          softCta,
           storytellingMode, storytellingTechniques, sourceMaterial: sourceMaterial || undefined,
           selectedTitle: angle.titleSuggestion || undefined,
         }),
@@ -314,6 +316,7 @@ export default function NicheBendBriefPage() {
           {error && <div style={{ padding: "12px 16px", borderRadius: 10, background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.25)", color: "#fca5a5", fontSize: 13, marginBottom: 16 }}>{error}</div>}
           <VoiceSelect value={voiceId} onChange={setVoiceId} />
           <CompanionCtaToggle value={companionCta} onChange={setCompanionCta} />
+              <SoftCtaToggle value={softCta} onChange={setSoftCta} />
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             {/* The bridge sub-niche the user picked, always the first selectable option */}
             <div

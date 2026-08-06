@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import GenerationProgress from "@/components/GenerationProgress";
 import { joinHookBody, bodyStartsWithHook } from "@/lib/script-text";
 import { VoiceSelect } from "@/components/VoiceSelect";
-import { CompanionCtaToggle } from "@/components/CompanionCtaToggle";
+import { CompanionCtaToggle, SoftCtaToggle } from "@/components/CompanionCtaToggle";
 import StorytellingPicker from "@/components/StorytellingPicker";
 import ResearchStep from "@/components/ResearchStep";
 
@@ -44,6 +44,7 @@ export default function ViralBriefPage() {
   const [saving, setSaving] = useState(false);
   const [voiceId, setVoiceId] = useState<string | null>(null);
   const [companionCta, setCompanionCta] = useState(false);
+  const [softCta, setSoftCta] = useState(false);
 
   useEffect(() => {
     try {
@@ -88,6 +89,7 @@ export default function ViralBriefPage() {
           contentStructure: brief.structure, retentionTriggers: brief.retentionTriggers,
           voiceProfileId: voiceId || undefined,
           companionCta,
+          softCta,
           storytellingMode, storytellingTechniques, sourceMaterial: sourceMaterial || undefined,
           selectedTitle: angle.titleSuggestion || undefined,
         }),
@@ -287,6 +289,7 @@ export default function ViralBriefPage() {
         )}
         <VoiceSelect value={voiceId} onChange={setVoiceId} />
         <CompanionCtaToggle value={companionCta} onChange={setCompanionCta} />
+              <SoftCtaToggle value={softCta} onChange={setSoftCta} />
 
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
           {/* The remix title the user picked, always the first selectable option */}

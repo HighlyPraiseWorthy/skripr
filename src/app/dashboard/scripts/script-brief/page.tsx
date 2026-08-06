@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import GenerationProgress from "@/components/GenerationProgress";
 import { joinHookBody, bodyStartsWithHook } from "@/lib/script-text";
 import { VoiceSelect } from "@/components/VoiceSelect";
-import { CompanionCtaToggle } from "@/components/CompanionCtaToggle";
+import { CompanionCtaToggle, SoftCtaToggle } from "@/components/CompanionCtaToggle";
 import StorytellingPicker from "@/components/StorytellingPicker";
 import ResearchStep from "@/components/ResearchStep";
 
@@ -46,6 +46,7 @@ export default function ScriptBriefPage() {
   const [appliedMagnetTitle, setAppliedMagnetTitle] = useState<string | null>(null);
   const [voiceId, setVoiceId] = useState<string | null>(null);
   const [companionCta, setCompanionCta] = useState(false);
+  const [softCta, setSoftCta] = useState(false);
   const [userPlan, setUserPlan] = useState<string>("free");
 
   useEffect(() => {
@@ -99,6 +100,7 @@ export default function ScriptBriefPage() {
           viralMagnetWord: (brief as any).viralMagnetWord || undefined,
           voiceProfileId: voiceId || undefined,
           companionCta,
+          softCta,
           hookType: angle.hookType,
           angle: `Hook type: ${angle.hookType}. Opening hook to adapt: "${angle.hookPremise}". Suggested title: ${angle.titleSuggestion}`,
           storytellingMode, storytellingTechniques, sourceMaterial: sourceMaterial || undefined,
@@ -337,6 +339,7 @@ export default function ScriptBriefPage() {
 
         <VoiceSelect value={voiceId} onChange={setVoiceId} />
         <CompanionCtaToggle value={companionCta} onChange={setCompanionCta} />
+              <SoftCtaToggle value={softCta} onChange={setSoftCta} />
 
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           {(brief?.angles ?? []).map((a, i) => {
