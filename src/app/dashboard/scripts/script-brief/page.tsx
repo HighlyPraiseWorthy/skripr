@@ -19,7 +19,7 @@ const EMOTION_COLOR: Record<string, string> = {
   excitement: "#34d399", surprise: "#9de4ff",
 };
 
-type Phase = "loading" | "angles" | "research" | "storytelling" | "generating" | "result";
+type Phase = "loading" | "pick-case" | "angles" | "research" | "storytelling" | "generating" | "result";
 type Angle = { hookType: string; hookPremise: string; titleSuggestion: string; whyItWorks: string; audienceEmotion: string; };
 type Brief = { topic: string; niche: string; videoLength: string; hookTypeFilter?: string | null; voiceProfileId?: string | null; angles: Angle[]; };
 
@@ -49,6 +49,13 @@ export default function ScriptBriefPage() {
   const [softCta, setSoftCta] = useState(false);
   const [sourceVerdict, setSourceVerdict] = useState<string | null>(null);
   const [topicKind, setTopicKind] = useState<string | null>(null);
+  // Grounding resolved BEFORE the hook cards are written. Without this the cards
+  // are composed with no knowledge of the real case and hedge ("someone who
+  // allegedly sold satellite technology") instead of naming it.
+  const [grounding, setGrounding] = useState<any | null>(null);
+  const [groundCases, setGroundCases] = useState<any[]>([]);
+  const [groundedOn, setGroundedOn] = useState<any | null>(null);
+  const [groundNote, setGroundNote] = useState("");
   const [userPlan, setUserPlan] = useState<string>("free");
 
   useEffect(() => {
@@ -59,25 +66,80 @@ export default function ScriptBriefPage() {
       const b: Brief = JSON.parse(stored);
       setBrief(b);
       if (b.voiceProfileId) setVoiceId(b.voiceProfileId);
+      // Restore grounding so a reload does not lose the case the cards were built on.
+      const gb = (b as any).grounding;
+      if (gb) { setGrounding(gb); if (gb.caseName) setGroundedOn({ name: gb.caseName, summary: gb.caseSummary, when: gb.when, sources: gb.sources || [] }); }
+      if ((b as any).topicKind) setTopicKind((b as any).topicKind);
+      if ((b as any).sourceVerdict) setSourceVerdict((b as any).sourceVerdict);
       if (b.angles?.length > 0) setPhase("angles");
-      else fetchAngles(b);
+      else groundThenAngles(b);
     } catch { window.location.href = "/dashboard/scripts/new"; }
   }, []);
 
-  async function fetchAngles(b: Brief) {
+  // Look it up first, then write the cards. If several real cases fit the title,
+  // ask which one before writing anything, since composing five cards about the
+  // wrong case wastes the call and misleads the creator.
+  async function groundThenAngles(b: Brief) {
+    setPhase("loading");
+    let g: any = null;
+    try {
+      const gr = await fetch("/api/research/find", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ topic: b.topic, niche: b.niche }),
+      });
+      const gd = await gr.json();
+      if (gr.ok) {
+        g = {
+          kind: gd.kind, verdict: gd.verdict,
+          facts: (gd.facts || []).map((f: any) => f?.source ? `${f.fact} (source: ${f.source})` : f?.fact).filter(Boolean),
+        };
+        setTopicKind(gd.kind || null);
+        setSourceVerdict(gd.verdict || null);
+        setGroundNote(typeof gd.verdictNote === "string" ? gd.verdictNote : "");
+        const cands = Array.isArray(gd.candidates) ? gd.candidates : [];
+        if (gd.kind === "event" && cands.length > 1) {
+          setGrounding(g); setGroundCases(cands); setPhase("pick-case");
+          return;
+        }
+        if (gd.kind === "event" && cands.length === 1) {
+          const c = cands[0];
+          setGroundedOn(c);
+          g = { ...g, caseName: c.name, caseSummary: c.summary, when: c.when, sources: c.sources || [] };
+        }
+        setGrounding(g);
+      }
+    } catch { /* grounding is best effort, the cards still get written */ }
+    await fetchAngles(b, g);
+  }
+
+  async function fetchAngles(b: Brief, g?: any) {
     setPhase("loading");
     try {
       const res = await fetch("/api/suggest-script-angles", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ topic: b.topic, niche: b.niche, videoLength: b.videoLength, hookTypeFilter: b.hookTypeFilter || null, viralMagnetWord: (b as any).viralMagnetWord || null }),
+        body: JSON.stringify({ topic: b.topic, niche: b.niche, videoLength: b.videoLength, hookTypeFilter: b.hookTypeFilter || null, viralMagnetWord: (b as any).viralMagnetWord || null, grounding: (g ?? grounding) || undefined }),
       });
       const data = await res.json();
       if (data.error) throw new Error(data.error);
-      const updated = { ...b, angles: data.angles ?? [] };
+      const updated = { ...b, angles: data.angles ?? [], grounding: (g ?? grounding) || undefined, topicKind: topicKind || undefined, sourceVerdict: sourceVerdict || undefined };
       sessionStorage.setItem("skripr_script_brief", JSON.stringify(updated));
       setBrief(updated);
       setPhase("angles");
     } catch (e: any) { setError(e?.message || "Failed to generate angles"); setPhase("angles"); }
+  }
+
+  // The grounded case, formatted for the script prompt, so skipping the research
+  // step does not discard the grounding the hook cards were built on.
+  function buildUpstreamSourceMaterial(): string {
+    if (!groundedOn && !grounding?.facts?.length) return "";
+    const parts: string[] = [];
+    if (groundedOn) {
+      parts.push(`REAL CASE THIS VIDEO IS ABOUT: ${groundedOn.name}${groundedOn.when ? ` (${groundedOn.when})` : ""}`);
+      if (groundedOn.summary) parts.push(groundedOn.summary);
+      if (Array.isArray(groundedOn.sources) && groundedOn.sources.length) parts.push(`(sources: ${groundedOn.sources.join(", ")})`);
+    }
+    if (grounding?.facts?.length) parts.push(grounding.facts.map((f: string) => `- ${f}`).join("\n"));
+    return parts.join("\n");
   }
 
   // Pick an angle → research step → storytelling step → generate.
@@ -107,7 +169,8 @@ export default function ScriptBriefPage() {
           topicKind: topicKind || undefined,
           hookType: angle.hookType,
           angle: `Hook type: ${angle.hookType}. Opening hook to adapt: "${angle.hookPremise}". Suggested title: ${angle.titleSuggestion}`,
-          storytellingMode, storytellingTechniques, sourceMaterial: sourceMaterial || undefined,
+          storytellingMode, storytellingTechniques,
+          sourceMaterial: [buildUpstreamSourceMaterial(), sourceMaterial].filter(Boolean).join("\n\n") || undefined,
           selectedTitle: angle.titleSuggestion || undefined,
         }),
       });
@@ -175,7 +238,45 @@ export default function ScriptBriefPage() {
     />
   );
 
-  if (phase === "loading") return <Spinner label="Finding your best hook angles..." sub="Analyzing topic, audience psychology, and hook strategies" />;
+  if (phase === "loading") return <Spinner label="Reading up on your topic..." sub="Finding the real case, then building hook angles around it" />;
+
+  // Several real cases fit this title, so ask before writing five cards about the
+  // wrong one. This runs BEFORE the hook cards exist, which is the whole point.
+  if (phase === "pick-case") return (
+    <div style={{ padding: 28, minHeight: "100vh", background: C.bg }}>
+      <div style={{ maxWidth: 620, margin: "0 auto" }}>
+        <h1 style={{ fontSize: 22, fontWeight: 700, color: C.textBright, letterSpacing: -0.3, marginBottom: 6 }}>Which real case is this about?</h1>
+        <p style={{ fontSize: 13.5, color: C.textDim, lineHeight: 1.6, marginBottom: 4 }}>
+          Your topic matches more than one documented story. Pick one and every hook angle will be built on it, with its real names and dates.
+        </p>
+        {groundNote && <p style={{ fontSize: 12.5, color: C.textDim, lineHeight: 1.6, marginBottom: 16 }}>{groundNote}</p>}
+        <div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 14 }}>
+          {groundCases.map((c: any, i: number) => (
+            <button key={i}
+              onClick={() => {
+                setGroundedOn(c);
+                setSourceVerdict("documented");
+                const g = { ...(grounding || {}), caseName: c.name, caseSummary: c.summary, when: c.when, sources: c.sources || [] };
+                setGrounding(g);
+                if (brief) void fetchAngles(brief, g);
+              }}
+              style={{ textAlign: "left", cursor: "pointer", padding: "14px 16px", borderRadius: 14, background: C.card, border: `1px solid ${C.border}`, color: C.textBright }}>
+              <div style={{ fontSize: 15, fontWeight: 700 }}>{c.name}{c.when && <span style={{ color: C.textDim, fontWeight: 500 }}> · {c.when}</span>}</div>
+              {c.summary && <div style={{ fontSize: 13, color: C.textDim, lineHeight: 1.6, marginTop: 4 }}>{c.summary}</div>}
+              {c.whyItFits && <div style={{ fontSize: 12.5, color: C.accent, lineHeight: 1.5, marginTop: 5 }}>Fits your title: {c.whyItFits}</div>}
+              {Array.isArray(c.sources) && c.sources.length > 0 && (
+                <div style={{ fontSize: 11, color: "#7ed8ff", marginTop: 5, wordBreak: "break-all" }}>{c.sources.slice(0, 2).join("  ")}</div>
+              )}
+            </button>
+          ))}
+        </div>
+        <button onClick={() => { if (brief) void fetchAngles(brief, grounding); }}
+          style={{ marginTop: 16, background: "none", border: "none", padding: 0, cursor: "pointer", fontSize: 12.5, color: C.textDim }}>
+          None of these, continue without a specific case
+        </button>
+      </div>
+    </div>
+  );
   if (phase === "generating") return (
     <GenerationProgress
       label="Building your script..."
@@ -336,6 +437,21 @@ export default function ScriptBriefPage() {
             </div>
             <div style={{ fontSize: 13, fontWeight: 600, color: C.textBright }}>{brief.topic}</div>
             {brief.niche && <div style={{ fontSize: 11, color: C.textDim, marginTop: 2 }}>{brief.niche}</div>}
+            {/* What these cards were actually built on. */}
+            {groundedOn && (
+              <div style={{ marginTop: 9, paddingTop: 9, borderTop: `1px solid ${C.border}` }}>
+                <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 0.4, color: C.green }}>GROUNDED ON A REAL CASE</div>
+                <div style={{ fontSize: 12.5, color: C.textBright, marginTop: 2 }}>
+                  {groundedOn.name}{groundedOn.when ? ` · ${groundedOn.when}` : ""}
+                </div>
+                {groundCases.length > 1 && (
+                  <button onClick={() => setPhase("pick-case")}
+                    style={{ marginTop: 4, background: "none", border: "none", padding: 0, cursor: "pointer", fontSize: 11, color: C.accent, fontWeight: 600 }}>
+                    change
+                  </button>
+                )}
+              </div>
+            )}
           </div>
         )}
 
