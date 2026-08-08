@@ -110,7 +110,12 @@ IF "event":
    - "partial": the surrounding subject is real but this specific event, framing, or causal claim is not something you can source.
    - "unverified": nothing describes this specific event. Sounding plausible is not evidence.
   Be strict; if you are reaching, choose "partial" or "unverified". A wrong "documented" puts fabrication in a creator's mouth on camera.
-  ALSO fill "candidates": the real, documented cases this title could actually be about, most likely first, up to 4. A creator types a TITLE, not a claim, so naming the real story is more useful than rejecting the title. Never invent a case to fill a slot. If the event is already fully identified, a single candidate is correct.
+  ALSO fill "candidates": the real, documented cases this title could actually be about, best match FIRST, up to 4. A creator types a TITLE, not a claim, so naming the real story is more useful than rejecting the title.
+  Rules for candidates, all of them strict:
+  - ONLY include a case that genuinely fits the title. If you would have to explain that it does not really fit, LEAVE IT OUT. Returning one strong candidate is better than padding to four with near misses, and a candidate whose own description says it is not really this story is worse than no candidate.
+  - Search the WHOLE historical record, not just recent or heavily indexed events. The definitive case for a title like this is often decades old and may predate most web coverage. Do not let recency bias push a minor recent case above the famous one.
+  - Read every word of the title as a constraint. If it says "the hunt", a case involving an actual manhunt, escape, or pursuit fits better than one that ended in a routine arrest. If it says "the man", prefer a single identified individual over a policy debate or a corporate transaction.
+  - Never invent a case to fill a slot. If the event is already fully identified, a single candidate is correct.
 
 IF "explainer":
   Do NOT try to verify it as an event; there is no incident to confirm. Set "verdict" to "documented" when the subject genuinely exists, and return the most useful SPECIFIC sourced facts a script could state (real numbers, scales, mechanisms, named findings). Leave "candidates" empty.

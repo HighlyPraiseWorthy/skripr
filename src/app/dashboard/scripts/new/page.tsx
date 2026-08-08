@@ -496,8 +496,15 @@ export default function NewScriptPage() {
                             // than asking.
                             if (gd.kind === "event" && cands.length === 1) {
                               setGroundedOn(cands[0]);
-                              g = { ...g, caseName: cands[0].name, caseSummary: cands[0].summary, when: cands[0].when };
+                              g = { ...g, caseName: cands[0].name, caseSummary: cands[0].summary, when: cands[0].when, sources: cands[0].sources || [] };
                               setGrounding(g);
+                            }
+                            // Several real cases fit: wait for the pick. Writing the
+                            // angles now would build them on whichever case happened
+                            // to be first and make the picker decorative.
+                            if (gd.kind === "event" && cands.length > 1) {
+                              setSuggestingAngles(false);
+                              return;
                             }
                           }
                         } catch { /* grounding is best effort, angles still work */ }
@@ -554,10 +561,33 @@ export default function NewScriptPage() {
                       <div style={{ display: "flex", flexDirection: "column", gap: 7, marginTop: 9 }}>
                         {groundCases.map((c: any, i: number) => (
                           <button key={i}
-                            onClick={() => {
+                            onClick={async () => {
                               setGroundedOn(c);
-                              setGrounding((g: any) => ({ ...(g || {}), caseName: c.name, caseSummary: c.summary, when: c.when }));
                               setSourceVerdict("documented");
+                              setSuggestingAngles(true);
+                              setAngleSuggestions([]);
+                              let g: any = { ...(grounding || {}), caseName: c.name, caseSummary: c.summary, when: c.when, sources: c.sources || [] };
+                              // Re-research the chosen case so the facts belong to IT.
+                              try {
+                                const rr = await fetch("/api/research/find", {
+                                  method: "POST", headers: { "Content-Type": "application/json" },
+                                  body: JSON.stringify({ topic: `${c.name}. ${c.summary}`, niche }),
+                                });
+                                const rd = await rr.json();
+                                if (rr.ok && Array.isArray(rd.facts) && rd.facts.length) {
+                                  g.facts = rd.facts.map((f: any) => f?.source ? `${f.fact} (source: ${f.source})` : f?.fact).filter(Boolean);
+                                }
+                              } catch { /* keep the topic-level facts */ }
+                              setGrounding(g);
+                              try {
+                                const res = await fetch("/api/suggest-angles", {
+                                  method: "POST", headers: { "Content-Type": "application/json" },
+                                  body: JSON.stringify({ topic, niche, grounding: g }),
+                                });
+                                const data = await res.json();
+                                if (data.angles) setAngleSuggestions(data.angles);
+                              } catch {}
+                              setSuggestingAngles(false);
                             }}
                             style={{ textAlign: "left", cursor: "pointer", padding: "9px 11px", borderRadius: 9, border: "1px solid rgba(77,184,255,0.16)", background: "rgba(255,255,255,0.03)", color: "#e8edf5" }}>
                             <div style={{ fontSize: 13, fontWeight: 700 }}>{c.name}{c.when && <span style={{ color: "#a6c0d8", fontWeight: 500 }}> · {c.when}</span>}</div>
@@ -817,12 +847,12 @@ export default function NewScriptPage() {
                   {[
                     { type: "CONTROVERSY", label: "Controversy", emoji: "⚡" },
                     { type: "CURIOSITY GAP", label: "Curiosity Gap", emoji: "🧠" },
-                    { type: "AUTHORITY", label: "Authority", emoji: "📊" },
+                    { type: "REFRAME", label: "Reframe", emoji: "🪞" },
                     { type: "MYTH-BUST", label: "Myth-Bust", emoji: "💥" },
                     { type: "STORY", label: "Story", emoji: "🎬" },
                     { type: "PATTERN INTERRUPT", label: "Pattern Interrupt", emoji: "🔄" },
                     { type: "FEAR/STAKES", label: "Fear / Stakes", emoji: "🔥" },
-                    { type: "INSIDER SECRET", label: "Insider Secret", emoji: "🔑" },
+                    { type: "OVERLOOKED MECHANISM", label: "Overlooked Mechanism", emoji: "🔑" },
                   ].map(({ type, label, emoji }) => {
                     const active = selectedHookType === type;
                     return (
