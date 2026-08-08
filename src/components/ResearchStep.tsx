@@ -8,6 +8,10 @@ import { useState } from "react";
 
 export type Verdict = "documented" | "partial" | "unverified";
 
+export interface SubjectCandidate {
+  name: string; summary: string; when: string; whyItFits: string; sources: string[];
+}
+
 const C = {
   bg: "#080c12", card: "#0d1520", border: "rgba(77,184,255,0.14)",
   accent: "#4db8ff", text: "#e8edf5", dim: "#a2bcd6", green: "#34d399", purple: "#4db8ff",
@@ -26,6 +30,9 @@ export default function ResearchStep(props: {
   const [verdict, setVerdict] = useState<Verdict | null>(null);
   const [verdictNote, setVerdictNote] = useState("");
   const [facts, setFacts] = useState<{ fact: string; source: string | null }[]>([]);
+  const [candidates, setCandidates] = useState<SubjectCandidate[] | null>(null);
+  const [pickedSubject, setPickedSubject] = useState<SubjectCandidate | null>(null);
+  const [resolving, setResolving] = useState(false);
   const [picked, setPicked] = useState<Set<number>>(new Set());
   const [error, setError] = useState<string | null>(null);
 
@@ -41,9 +48,49 @@ export default function ResearchStep(props: {
       if (!res.ok) throw new Error(d?.error || "Research lookup failed");
       const fs = Array.isArray(d.facts) ? d.facts : [];
       setFacts(fs); setPicked(new Set(fs.map((_: any, i: number) => i)));
-      setVerdict(d.verdict === "documented" || d.verdict === "partial" ? d.verdict : "unverified");
+      const v = d.verdict === "documented" || d.verdict === "partial" ? d.verdict : "unverified";
+      setVerdict(v);
       setVerdictNote(typeof d.verdictNote === "string" ? d.verdictNote : "");
+      if (v !== "documented") void resolveSubjects();
     } catch (e: any) { setError(e?.message || "Research lookup failed"); }
+    finally { setResearching(false); }
+  }
+
+  // The topic is usually a TITLE, not a claim ("The Hunt for the Man Who Sold
+  // America's Satellites" is a real story, it just needs naming). So when the
+  // premise is not documented, offer the real cases it maps to rather than
+  // stopping at "unverified".
+  async function resolveSubjects() {
+    if (resolving) return;
+    setResolving(true);
+    try {
+      const res = await fetch("/api/research/find", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ topic: props.topic, niche: props.niche, action: "resolve" }),
+      });
+      const d = await res.json();
+      if (res.ok && Array.isArray(d.candidates)) setCandidates(d.candidates);
+    } catch { /* non-blocking: the verdict banner still stands on its own */ }
+    finally { setResolving(false); }
+  }
+
+  // Picking a real case grounds the script on it: its sourced summary becomes
+  // source material, and a focused research pass replaces the vague topic-level
+  // one, which is what finally gives the script real names and dates to use.
+  async function pickSubject(c: SubjectCandidate) {
+    setPickedSubject(c);
+    setVerdict("documented");
+    setVerdictNote(`Grounded on a real documented case: ${c.name}${c.when ? ` (${c.when})` : ""}.`);
+    setResearching(true);
+    try {
+      const res = await fetch("/api/research/find", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ topic: `${c.name}. ${c.summary}`, niche: props.niche }),
+      });
+      const d = await res.json();
+      const fs = Array.isArray(d?.facts) ? d.facts : [];
+      if (fs.length) { setFacts(fs); setPicked(new Set(fs.map((_: any, i: number) => i))); }
+    } catch { /* keep the candidate's own summary as grounding */ }
     finally { setResearching(false); }
   }
 
@@ -54,8 +101,11 @@ export default function ResearchStep(props: {
       .filter((_, i) => picked.has(i))
       .map((f) => `- ${f.fact}${f.source ? ` (source: ${f.source})` : ""}`)
       .join("\n");
+    const subject = pickedSubject
+      ? `REAL CASE THIS VIDEO IS ABOUT: ${pickedSubject.name}${pickedSubject.when ? ` (${pickedSubject.when})` : ""}\n${pickedSubject.summary}${pickedSubject.sources.length ? `\n(sources: ${pickedSubject.sources.join(", ")})` : ""}`
+      : "";
     const manual = sourceMaterial.trim();
-    return [chosen, manual].filter(Boolean).join("\n\n") || undefined;
+    return [subject, chosen, manual].filter(Boolean).join("\n\n") || undefined;
   }
 
   const includedCount = facts.filter((_, i) => picked.has(i)).length;
@@ -119,6 +169,36 @@ export default function ResearchStep(props: {
             </div>
           );
         })()}
+
+        {/* Real cases this title maps to. A creator types a TITLE, and a title is
+            not a claim to verify, it is a story to identify. */}
+        {(resolving || (candidates && candidates.length > 0)) && !pickedSubject && (
+          <div style={{ marginTop: 12, borderRadius: 12, padding: "13px 14px", background: "rgba(77,184,255,0.06)", border: `1px solid ${C.border}` }}>
+            <div style={{ fontSize: 12.5, fontWeight: 700, color: C.accent }}>
+              {resolving ? "Finding the real cases this could be about…" : "Which real case is this video about?"}
+            </div>
+            {!resolving && (
+              <div style={{ fontSize: 11.5, color: C.dim, marginTop: 3, lineHeight: 1.5 }}>
+                Pick one and Skripr builds the script on that documented story, with its real names and dates.
+              </div>
+            )}
+            <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 11 }}>
+              {(candidates || []).map((c, i) => (
+                <button key={i} onClick={() => pickSubject(c)}
+                  style={{ textAlign: "left", cursor: "pointer", padding: "11px 12px", borderRadius: 10, border: `1px solid ${C.border}`, background: "rgba(255,255,255,0.03)", color: C.text }}>
+                  <div style={{ fontSize: 13.5, fontWeight: 700, color: C.text }}>
+                    {c.name}{c.when && <span style={{ color: C.dim, fontWeight: 500 }}> · {c.when}</span>}
+                  </div>
+                  {c.summary && <div style={{ fontSize: 12.5, color: C.dim, lineHeight: 1.55, marginTop: 3 }}>{c.summary}</div>}
+                  {c.whyItFits && <div style={{ fontSize: 11.5, color: C.accent, lineHeight: 1.5, marginTop: 4 }}>Fits your title: {c.whyItFits}</div>}
+                  {c.sources.length > 0 && (
+                    <div style={{ fontSize: 10.5, color: "#7ed8ff", marginTop: 4, wordBreak: "break-all" }}>{c.sources.slice(0, 2).join("  ")}</div>
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Found facts */}
         {facts.length > 0 && (

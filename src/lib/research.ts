@@ -15,6 +15,23 @@ export type ResearchResult =
   | { ok: true; verdict: ResearchVerdict; verdictNote: string; facts: ResearchFact[]; citations: string[] }
   | { ok: false; error: string };
 
+// A real, documented case that a proposed video title could actually be about.
+// Creators type titles ("The Hunt for the Man Who Sold America's Satellites"),
+// not claims, and a title is not a falsifiable statement — so verifying it as one
+// is the wrong question. The right question is "which real story is this?", which
+// for that title is Christopher Boyce or William Kampiles. Resolving the subject
+// turns an unsourced premise into a documented one instead of a dead end.
+export interface SubjectCandidate {
+  name: string;        // the person, case, or event
+  summary: string;     // one or two sentences on what actually happened
+  when: string;        // year or range, "" when genuinely unclear
+  whyItFits: string;   // how it matches the creator's title
+  sources: string[];   // citable URLs
+}
+export type ResolveResult =
+  | { ok: true; candidates: SubjectCandidate[] }
+  | { ok: false; error: string };
+
 export async function findResearch(input: { topic: string; angle?: string; niche?: string }): Promise<ResearchResult> {
   const key = process.env.PERPLEXITY_API_KEY;
   if (!key) return { ok: false, error: "Research sourcing isn't set up yet." };
@@ -105,5 +122,80 @@ Only include a fact you can attribute to a real source URL. Output ONLY this JSO
     return { ok: true, verdict, verdictNote, facts, citations };
   } catch (e: any) {
     return { ok: false, error: e?.name === "TimeoutError" ? "Research lookup timed out." : (e?.message || "Research lookup failed.") };
+  }
+}
+
+/**
+ * Given a proposed video topic or title, find the REAL documented cases it could
+ * be about. This is the counterpart to findResearch: verification asks "is this
+ * claim true", resolution asks "which true story is this". A creator typing
+ * "The Hunt for the Man Who Sold America's Satellites" has not invented
+ * anything, they have described Christopher Boyce (TRW satellite ciphers sold to
+ * the KGB, escaped Lompoc in 1980, recaptured after a 19-month manhunt) or
+ * William Kampiles (sold the KH-11 manual to the Soviets in 1978). Refusing that
+ * premise as unverified would be the wrong answer; naming the real case is the
+ * right one.
+ */
+export async function resolveSubjects(input: { topic: string; niche?: string }): Promise<ResolveResult> {
+  const key = process.env.PERPLEXITY_API_KEY;
+  if (!key) return { ok: false, error: "Research sourcing isn't set up yet." };
+  const topic = (input.topic || "").slice(0, 200);
+  if (!topic.trim()) return { ok: false, error: "Add a topic first." };
+
+  const prompt = `A creator wants to make a documentary video with this title or topic:
+"${topic}"${input.niche ? `\nNICHE: ${input.niche}` : ""}
+
+This is a TITLE, not a factual claim, so do not judge whether it is "true". Identify the REAL, DOCUMENTED people, cases, or events this title could actually be about, so the creator can build the video on a real story instead of an invented one.
+
+Rules:
+- Return 1 to 4 candidates, MOST LIKELY FIRST.
+- Each must be a genuinely documented case you can cite. Never invent a case, a name, or a date to fill a slot.
+- Prefer the case a viewer would consider the definitive match for this title.
+- If the title is broad, include the strongest specific cases that fit it.
+- If you truly cannot find any real case matching this title, return an empty array. An empty array is a valid, useful answer.
+
+Output ONLY this JSON, no prose:
+{"candidates":[{"name":"the person, case, or event","summary":"1-2 sentences on what actually happened","when":"year or range","whyItFits":"one sentence on how it matches the title","sources":["url"]}]}`;
+
+  try {
+    const res = await fetch("https://api.perplexity.ai/chat/completions", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ model: "sonar", temperature: 0.2, messages: [{ role: "user", content: prompt }] }),
+      signal: AbortSignal.timeout(25000),
+    });
+    if (!res.ok) return { ok: false, error: `Subject lookup failed (${res.status}).` };
+    const data = await res.json();
+    const content: string = data?.choices?.[0]?.message?.content || "";
+    const fallbackCitations: string[] = Array.isArray(data?.citations) ? data.citations.filter((c: any) => typeof c === "string") : [];
+
+    let candidates: SubjectCandidate[] = [];
+    try {
+      const m = content.match(/\{[\s\S]*\}/);
+      const parsed = JSON.parse(m ? m[0] : content);
+      const raw = Array.isArray(parsed) ? parsed : parsed?.candidates;
+      if (Array.isArray(raw)) {
+        candidates = raw
+          .filter((c: any) => c && typeof c.name === "string" && c.name.trim())
+          .map((c: any) => ({
+            name: String(c.name).trim().slice(0, 160),
+            summary: typeof c.summary === "string" ? c.summary.trim().slice(0, 500) : "",
+            when: typeof c.when === "string" ? c.when.trim().slice(0, 40) : "",
+            whyItFits: typeof c.whyItFits === "string" ? c.whyItFits.trim().slice(0, 300) : "",
+            sources: (Array.isArray(c.sources) ? c.sources : [])
+              .filter((u: any) => typeof u === "string" && /^https?:\/\//.test(u))
+              .slice(0, 4),
+          }))
+          // A candidate with no citable source is exactly what this feature exists
+          // to prevent, so drop it rather than offering an unsourced "real" case.
+          .filter((c: SubjectCandidate) => c.sources.length > 0 || fallbackCitations.length > 0)
+          .map((c: SubjectCandidate) => ({ ...c, sources: c.sources.length ? c.sources : fallbackCitations.slice(0, 2) }))
+          .slice(0, 4);
+      }
+    } catch { /* unparseable — no candidates */ }
+
+    return { ok: true, candidates };
+  } catch (e: any) {
+    return { ok: false, error: e?.name === "TimeoutError" ? "Subject lookup timed out." : (e?.message || "Subject lookup failed.") };
   }
 }
