@@ -248,3 +248,43 @@ Output ONLY this JSON, no prose:
     return { ok: false, error: e?.name === "TimeoutError" ? "Subject lookup timed out." : (e?.message || "Subject lookup failed.") };
   }
 }
+
+// Grounding carried from the topic stage into the ANGLE prompts. Angles used to be
+// written before any research ran, so they had no idea Boyce existed and came back
+// as "there's a story about someone who allegedly sold satellite technology". The
+// specificity has to be available at the angle stage or the cards stay vague.
+export interface GroundingContext {
+  kind: TopicKind;
+  verdict: ResearchVerdict;
+  caseName?: string;
+  caseSummary?: string;
+  when?: string;
+  facts?: string[];
+}
+
+export function buildGroundingBlock(g?: GroundingContext | null): string {
+  if (!g) return "";
+  const lines: string[] = [];
+
+  if (g.caseName) {
+    lines.push(`GROUNDED IN A REAL, DOCUMENTED CASE — this is what the video is actually about:`);
+    lines.push(`CASE: ${g.caseName}${g.when ? ` (${g.when})` : ""}`);
+    if (g.caseSummary) lines.push(`WHAT HAPPENED: ${g.caseSummary}`);
+  }
+  if (g.facts?.length) {
+    lines.push(g.caseName ? "SOURCED FACTS:" : "RESEARCHED FACTS (real, sourced):");
+    lines.push(...g.facts.slice(0, 8).map((f) => `- ${f}`));
+  }
+  if (!lines.length) return "";
+
+  // What to DO with it, which differs by topic kind. Without this the model treats
+  // grounding as background colour instead of the substance of the angle.
+  const use =
+    g.kind === "hypothetical"
+      ? `Use these real mechanisms as the engine of each angle. The scenario is a thought experiment, so never claim it happened, but DO reason concretely from the real science above.`
+      : g.kind === "explainer"
+        ? `Build each angle on a specific mechanism or number above, not on a general observation. "Most people assume X" is a weak angle; a concrete sourced detail is a strong one.`
+        : `Every angle must be about THIS case and may use its real names, dates, and figures. Do not retreat into "someone allegedly did X" or "a person with access" when you have been given the actual name. Vagueness here reads as not having done the research.`;
+
+  return `${lines.join("\n")}\n\n${use}`;
+}

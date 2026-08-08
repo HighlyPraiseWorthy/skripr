@@ -83,6 +83,13 @@ export default function NewScriptPage() {
   const [softCta, setSoftCta] = useState(false);
   const [sourceVerdict, setSourceVerdict] = useState<string | null>(null);
   const [topicKind, setTopicKind] = useState<string | null>(null);
+  // Grounding resolved at the TOPIC stage, before angles, so the angle cards can
+  // name the real case. Cached per topic: one lookup feeds the angles, the script,
+  // and the research step.
+  const [grounding, setGrounding] = useState<any | null>(null);
+  const [groundCases, setGroundCases] = useState<any[]>([]);
+  const [groundedOn, setGroundedOn] = useState<any | null>(null);
+  const [groundNote, setGroundNote] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [userPlan, setUserPlan] = useState<string>("free");
@@ -260,6 +267,21 @@ export default function NewScriptPage() {
     setStep("research");
   }
 
+  // The grounded case resolved at the topic stage, formatted for the script prompt.
+  // Without this, skipping the research step would throw away the grounding the
+  // angles were already built on.
+  function buildUpstreamSourceMaterial(): string {
+    if (!groundedOn && !grounding?.facts?.length) return "";
+    const parts: string[] = [];
+    if (groundedOn) {
+      parts.push(`REAL CASE THIS VIDEO IS ABOUT: ${groundedOn.name}${groundedOn.when ? ` (${groundedOn.when})` : ""}`);
+      if (groundedOn.summary) parts.push(groundedOn.summary);
+      if (Array.isArray(groundedOn.sources) && groundedOn.sources.length) parts.push(`(sources: ${groundedOn.sources.join(", ")})`);
+    }
+    if (grounding?.facts?.length) parts.push(grounding.facts.map((f: string) => `- ${f}`).join("\n"));
+    return parts.join("\n");
+  }
+
   async function doGenerate(transcript: string, storytellingMode: string, storytellingTechniques: string[], sourceMaterial?: string) {
     setLastUsedTranscript(transcript);
     setStep("generating");
@@ -267,8 +289,9 @@ export default function NewScriptPage() {
       const res = await fetch("/api/scripts/generate", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ transcript, niche: niche || undefined, topic: topic || undefined, videoLength: videoMinutes >= 14 ? "long" : "medium", targetMinutes: videoMinutes, voiceProfileId: voiceId || undefined, companionCta, softCta, sourceVerdict: sourceVerdict || undefined, topicKind: topicKind || undefined,
+          sourceMaterial: [buildUpstreamSourceMaterial(), sourceMaterial].filter(Boolean).join("\n\n") || undefined,
           sourceVideoId: youtubeUrl ? youtubeUrl.match(/[?&]v=([^&]+)/)?.[1] : undefined, viralMagnetWord: selectedViralWord || undefined, angle: angle || undefined, remixFramework: viralFramework?.remixFramework || undefined, hookType: viralFramework?.hookType || undefined, titleFormula: viralFramework?.selectedTitle || viralFramework?.titleFormula || undefined,
-          storytellingMode, storytellingTechniques, sourceMaterial: sourceMaterial || undefined }),
+          storytellingMode, storytellingTechniques }),
       });
       const data = await res.json().catch(() => null);
       if (!res.ok || !data) throw new Error(data?.error || "The connection dropped while generating. Please try again.");
@@ -446,11 +469,44 @@ export default function NewScriptPage() {
                     onClick={async () => {
                       setSuggestingAngles(true);
                       setAngleSuggestions([]);
+                      // Ground FIRST, then ask for angles. Angles used to be written
+                      // blind, which is why they came back naming nobody. Reuse a
+                      // cached lookup so pressing this twice does not pay twice.
+                      let g = grounding;
+                      if (!g) {
+                        try {
+                          const gr = await fetch("/api/research/find", {
+                            method: "POST", headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ topic, niche }),
+                          });
+                          const gd = await gr.json();
+                          if (gr.ok) {
+                            g = {
+                              kind: gd.kind, verdict: gd.verdict,
+                              facts: (gd.facts || []).map((f: any) => f?.source ? `${f.fact} (source: ${f.source})` : f?.fact).filter(Boolean),
+                            };
+                            setGrounding(g);
+                            setTopicKind(gd.kind || null);
+                            setSourceVerdict(gd.verdict || null);
+                            setGroundNote(typeof gd.verdictNote === "string" ? gd.verdictNote : "");
+                            const cands = Array.isArray(gd.candidates) ? gd.candidates : [];
+                            setGroundCases(cands);
+                            // One clear match: ground on it silently. Several: let the
+                            // creator choose, since picking the wrong case is worse
+                            // than asking.
+                            if (gd.kind === "event" && cands.length === 1) {
+                              setGroundedOn(cands[0]);
+                              g = { ...g, caseName: cands[0].name, caseSummary: cands[0].summary, when: cands[0].when };
+                              setGrounding(g);
+                            }
+                          }
+                        } catch { /* grounding is best effort, angles still work */ }
+                      }
                       try {
                         const res = await fetch("/api/suggest-angles", {
                           method: "POST",
                           headers: { "Content-Type": "application/json" },
-                          body: JSON.stringify({ topic, niche }),
+                          body: JSON.stringify({ topic, niche, grounding: g || undefined }),
                         });
                         const data = await res.json();
                         if (data.angles) setAngleSuggestions(data.angles);
@@ -470,8 +526,50 @@ export default function NewScriptPage() {
                     }}
                   >
                     <span style={{ fontSize: 16 }}>{suggestingAngles ? "⟳" : "✦"}</span>
-                    {suggestingAngles ? "Finding angles…" : "✦ Suggest Angles for me"}
+                    {suggestingAngles ? "Reading up on this first…" : "✦ Find the real story and suggest angles"}
                   </button>
+                  {/* Grounded-on line: what the script will actually be about.
+                      One line when a single real case fits, a picker when several do. */}
+                  {groundedOn && (
+                    <div style={{ marginTop: 12, padding: "10px 12px", borderRadius: 10, background: "rgba(52,211,153,0.08)", border: "1px solid rgba(52,211,153,0.28)" }}>
+                      <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 0.4, color: "#34d399" }}>GROUNDED ON A REAL CASE</div>
+                      <div style={{ fontSize: 13, color: "#e8edf5", lineHeight: 1.5, marginTop: 3 }}>
+                        {groundedOn.name}{groundedOn.when ? ` · ${groundedOn.when}` : ""}
+                      </div>
+                      {groundedOn.summary && <div style={{ fontSize: 12, color: "#a6c0d8", lineHeight: 1.55, marginTop: 3 }}>{groundedOn.summary}</div>}
+                      {groundCases.length > 1 && (
+                        <button onClick={() => setGroundedOn(null)}
+                          style={{ marginTop: 6, background: "none", border: "none", padding: 0, cursor: "pointer", fontSize: 11.5, color: "#4db8ff", fontWeight: 600 }}>
+                          change
+                        </button>
+                      )}
+                    </div>
+                  )}
+                  {!groundedOn && groundCases.length > 0 && (
+                    <div style={{ marginTop: 12, padding: "11px 12px", borderRadius: 10, background: "rgba(77,184,255,0.06)", border: "1px solid rgba(77,184,255,0.2)" }}>
+                      <div style={{ fontSize: 12.5, fontWeight: 700, color: "#4db8ff" }}>Which real case is this about?</div>
+                      <div style={{ fontSize: 11.5, color: "#a6c0d8", marginTop: 2, lineHeight: 1.5 }}>
+                        Pick one and the angles and script use its real names and dates.
+                      </div>
+                      <div style={{ display: "flex", flexDirection: "column", gap: 7, marginTop: 9 }}>
+                        {groundCases.map((c: any, i: number) => (
+                          <button key={i}
+                            onClick={() => {
+                              setGroundedOn(c);
+                              setGrounding((g: any) => ({ ...(g || {}), caseName: c.name, caseSummary: c.summary, when: c.when }));
+                              setSourceVerdict("documented");
+                            }}
+                            style={{ textAlign: "left", cursor: "pointer", padding: "9px 11px", borderRadius: 9, border: "1px solid rgba(77,184,255,0.16)", background: "rgba(255,255,255,0.03)", color: "#e8edf5" }}>
+                            <div style={{ fontSize: 13, fontWeight: 700 }}>{c.name}{c.when && <span style={{ color: "#a6c0d8", fontWeight: 500 }}> · {c.when}</span>}</div>
+                            {c.summary && <div style={{ fontSize: 12, color: "#a6c0d8", lineHeight: 1.5, marginTop: 2 }}>{c.summary}</div>}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {groundNote && !groundedOn && groundCases.length === 0 && (
+                    <p style={{ fontSize: 11.5, color: "#a6c0d8", marginTop: 10, lineHeight: 1.5 }}>{groundNote}</p>
+                  )}
                   {angleSuggestions.length > 0 && (
                     <div style={{ marginTop: 12, display: "flex", flexDirection: "column", gap: 8 }}>
                       <p style={{ fontSize: 11, color: "#a6c0d8", marginBottom: 2 }}>Pick one, or edit it below:</p>

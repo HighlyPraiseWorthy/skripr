@@ -4,6 +4,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import { getNicheHookExamplesBlock, getNicheTitleFormulasBlock } from "@/lib/viral-frameworks";
 import { getPickedAnglesBlock } from "@/lib/angle-picks";
 import { EXPERT_ATTRIBUTION_RULE, PROVENANCE_RULE } from "@/lib/ai/claude";
+import { buildGroundingBlock, type GroundingContext } from "@/lib/research";
 
 const client = new Anthropic();
 export const maxDuration = 120;
@@ -13,8 +14,10 @@ export async function POST(req: Request) {
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
-    const { topic, niche, videoLength = "medium", hookTypeFilter, viralMagnetWord } = await req.json();
+    const { topic, niche, videoLength = "medium", hookTypeFilter, viralMagnetWord, grounding } = await req.json();
     if (!topic) return NextResponse.json({ error: "Topic is required" }, { status: 400 });
+
+    const groundingBlock = buildGroundingBlock(grounding as GroundingContext | undefined);
 
     // Self-improving layer: ground suggestions in proven hooks + title formulas
     // for the niche, and lean toward angles creators actually picked. All three
@@ -64,11 +67,11 @@ ${EXPERT_ATTRIBUTION_RULE}
 
 ${PROVENANCE_RULE}
 
-GROUNDING (critical): this topic is a string the creator typed. You have NO source document and NO confirmation that the event, case, or person it describes is real. So:
+${groundingBlock || `GROUNDING (critical): this topic is a string the creator typed. You have NO source document and NO confirmation that the event, case, or person it describes is real. So:
 - Do NOT invent a documented incident, a date, a name, a dollar figure, an agency, a court case, or a leaked/declassified document to make an angle sound concrete.
 - Do NOT write a "hookPremise" whose credibility depends on a source you cannot show. An angle that only works if a fake document exists is a bad angle, not a strong one.
 - Build each angle on the mechanism, the incentive, the stakes, or the question, all of which are honest with no source. A sharp question beats a fabricated revelation.
-- If the topic reads like a specific real event you cannot verify, angle toward the verifiable system around it instead of asserting the event happened.
+- If the topic reads like a specific real event you cannot verify, angle toward the verifiable system around it instead of asserting the event happened.`}
 
 [`,
       }, {
