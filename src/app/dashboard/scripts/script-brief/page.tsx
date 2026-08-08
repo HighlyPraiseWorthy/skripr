@@ -101,6 +101,11 @@ export default function ScriptBriefPage() {
           setGrounding(g); setGroundCases(cands); setPhase("pick-case");
           return;
         }
+        // No case identified: drop the facts rather than build cards on material
+        // that may describe a different story than the title.
+        if (gd.kind === "event" && cands.length === 0) {
+          g = { ...g, facts: [] };
+        }
         if (gd.kind === "event" && cands.length === 1) {
           const c = cands[0];
           setGroundedOn(c);

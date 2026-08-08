@@ -229,6 +229,14 @@ Only include a fact you can attribute to a real source URL. Output ONLY this JSO
     if (verdict === "unverified" && facts.length === 0 && citations.length === 0 && !verdictNote && candidates.length === 0) {
       return { ok: false, error: "Nothing came back for this topic. Try more specific wording, or paste your own sources below." };
     }
+    // A single-purpose prompt resolves cases far better than the combined one, so
+    // when an event comes back with nothing usable, ask the focused question
+    // instead of giving up. Only fires on failure, so the extra call is rare.
+    if (kind === "event" && candidates.length === 0) {
+      const retry = await resolveSubjects({ topic: input.topic, niche: input.niche }).catch(() => null);
+      if (retry?.ok && retry.candidates.length) candidates = retry.candidates;
+    }
+
     return { ok: true, kind, verdict, verdictNote, facts, citations, candidates };
   } catch (e: any) {
     return { ok: false, error: e?.name === "TimeoutError" ? "Research lookup timed out." : (e?.message || "Research lookup failed.") };
@@ -257,8 +265,14 @@ export async function resolveSubjects(input: { topic: string; niche?: string }):
 
 This is a TITLE, not a factual claim, so do not judge whether it is "true". Identify the REAL, DOCUMENTED people, cases, or events this title could actually be about, so the creator can build the video on a real story instead of an invented one.
 
+FIRST, break the title into its required elements, then find a case satisfying ALL of them. For "The Hunt for the Man Who Sold America's Satellites" the elements are: one identified individual (not a company, not a policy), who sold or passed satellite material to a foreign power, plus a pursuit, manhunt, escape, or investigation. A corporate technology transfer satisfies only the subject matter and fails every other element, so it is not a match.
+
+Ask yourself which case a well-read viewer would name on reading this title, and make sure that case is in your list. The definitive case is often decades old and predates most web coverage, so do not let recent, heavily indexed material crowd it out.
+
 Rules:
 - Return 1 to 4 candidates, MOST LIKELY FIRST.
+- A candidate must satisfy EVERY element of the title, not just the subject area.
+- Never return a case while explaining that it does not really fit. If it does not fit, omit it.
 - Each must be a genuinely documented case you can cite. Never invent a case, a name, or a date to fill a slot.
 - Prefer the case a viewer would consider the definitive match for this title.
 - If the title is broad, include the strongest specific cases that fit it.

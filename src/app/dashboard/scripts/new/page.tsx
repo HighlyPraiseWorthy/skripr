@@ -90,6 +90,7 @@ export default function NewScriptPage() {
   const [groundCases, setGroundCases] = useState<any[]>([]);
   const [groundedOn, setGroundedOn] = useState<any | null>(null);
   const [groundNote, setGroundNote] = useState("");
+  const [groundUnresolved, setGroundUnresolved] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [userPlan, setUserPlan] = useState<string>("free");
@@ -469,6 +470,7 @@ export default function NewScriptPage() {
                     onClick={async () => {
                       setSuggestingAngles(true);
                       setAngleSuggestions([]);
+                      setGroundUnresolved(false);
                       // Ground FIRST, then ask for angles. Angles used to be written
                       // blind, which is why they came back naming nobody. Reuse a
                       // cached lookup so pressing this twice does not pay twice.
@@ -517,6 +519,15 @@ export default function NewScriptPage() {
                             // angles now would build them on whichever case happened
                             // to be first and make the picker decorative.
                             if (gd.kind === "event" && cands.length > 1) {
+                              setSuggestingAngles(false);
+                              return;
+                            }
+                            // No case identified for an EVENT: the topic-level facts
+                            // may describe a different story than the title, so
+                            // grounding angles in them yields confident angles about
+                            // the wrong subject. Stop and let the creator decide.
+                            if (gd.kind === "event" && cands.length === 0) {
+                              setGroundUnresolved(true);
                               setSuggestingAngles(false);
                               return;
                             }
@@ -611,7 +622,35 @@ export default function NewScriptPage() {
                       </div>
                     </div>
                   )}
-                  {groundNote && !groundedOn && groundCases.length === 0 && (
+                  {groundUnresolved && !groundedOn && (
+                    <div style={{ marginTop: 12, padding: "12px 14px", borderRadius: 10, background: "rgba(251,191,36,0.08)", border: "1px solid rgba(251,191,36,0.3)" }}>
+                      <div style={{ fontSize: 12.5, fontWeight: 700, color: "#fbbf24" }}>Could not pin this to one real case</div>
+                      {groundNote && <div style={{ fontSize: 12.5, color: "#e8edf5", lineHeight: 1.55, marginTop: 4 }}>{groundNote}</div>}
+                      <div style={{ fontSize: 12, color: "#a6c0d8", lineHeight: 1.55, marginTop: 5 }}>
+                        The research came back about the subject area rather than one story, so building angles on it risks a video about the wrong thing. Name the person or case in your topic, or continue and write your own angle below.
+                      </div>
+                      <button
+                        onClick={async () => {
+                          setGroundUnresolved(false);
+                          setSuggestingAngles(true);
+                          try {
+                            // Deliberately WITHOUT grounding: unpinned facts would
+                            // ground the angles in a story we cannot vouch for.
+                            const res = await fetch("/api/suggest-angles", {
+                              method: "POST", headers: { "Content-Type": "application/json" },
+                              body: JSON.stringify({ topic, niche }),
+                            });
+                            const data = await res.json();
+                            if (data.angles) setAngleSuggestions(data.angles);
+                          } catch {}
+                          setSuggestingAngles(false);
+                        }}
+                        style={{ marginTop: 9, background: "none", border: "1px solid rgba(251,191,36,0.35)", borderRadius: 8, padding: "6px 12px", cursor: "pointer", fontSize: 12, color: "#fbbf24", fontWeight: 600 }}>
+                        Suggest angles anyway
+                      </button>
+                    </div>
+                  )}
+                  {groundNote && !groundUnresolved && !groundedOn && groundCases.length === 0 && (
                     <p style={{ fontSize: 11.5, color: "#a6c0d8", marginTop: 10, lineHeight: 1.5 }}>{groundNote}</p>
                   )}
                   {angleSuggestions.length > 0 && (
