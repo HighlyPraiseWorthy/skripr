@@ -495,8 +495,22 @@ export default function NewScriptPage() {
                             // creator choose, since picking the wrong case is worse
                             // than asking.
                             if (gd.kind === "event" && cands.length === 1) {
-                              setGroundedOn(cands[0]);
-                              g = { ...g, caseName: cands[0].name, caseSummary: cands[0].summary, when: cands[0].when, sources: cands[0].sources || [] };
+                              const c = cands[0];
+                              setGroundedOn(c);
+                              g = { ...g, caseName: c.name, caseSummary: c.summary, when: c.when, sources: c.sources || [] };
+                              // Re-research the identified case. The angles may now only
+                              // use facts they are given, so richer case-specific facts
+                              // directly raise the ceiling on how concrete they can be.
+                              try {
+                                const rr = await fetch("/api/research/find", {
+                                  method: "POST", headers: { "Content-Type": "application/json" },
+                                  body: JSON.stringify({ topic: `${c.name}. ${c.summary}`, niche }),
+                                });
+                                const rd = await rr.json();
+                                if (rr.ok && Array.isArray(rd.facts) && rd.facts.length) {
+                                  g.facts = rd.facts.map((f: any) => f?.source ? `${f.fact} (source: ${f.source})` : f?.fact).filter(Boolean);
+                                }
+                              } catch { /* keep the topic-level facts */ }
                               setGrounding(g);
                             }
                             // Several real cases fit: wait for the pick. Writing the

@@ -105,6 +105,18 @@ export default function ScriptBriefPage() {
           const c = cands[0];
           setGroundedOn(c);
           g = { ...g, caseName: c.name, caseSummary: c.summary, when: c.when, sources: c.sources || [] };
+          // Re-research the identified case: the hook cards may only use facts they
+          // are given, so case-specific facts raise the ceiling on their concreteness.
+          try {
+            const rr = await fetch("/api/research/find", {
+              method: "POST", headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ topic: `${c.name}. ${c.summary}`, niche: b.niche }),
+            });
+            const rd = await rr.json();
+            if (rr.ok && Array.isArray(rd.facts) && rd.facts.length) {
+              g.facts = rd.facts.map((f: any) => f?.source ? `${f.fact} (source: ${f.source})` : f?.fact).filter(Boolean);
+            }
+          } catch { /* keep the topic-level facts */ }
         }
         setGrounding(g);
       }
@@ -256,9 +268,26 @@ export default function ScriptBriefPage() {
               onClick={() => {
                 setGroundedOn(c);
                 setSourceVerdict("documented");
-                const g = { ...(grounding || {}), caseName: c.name, caseSummary: c.summary, when: c.when, sources: c.sources || [] };
+                const g: any = { ...(grounding || {}), caseName: c.name, caseSummary: c.summary, when: c.when, sources: c.sources || [] };
                 setGrounding(g);
-                if (brief) void fetchAngles(brief, g);
+                if (brief) {
+                  const b = brief;
+                  void (async () => {
+                    setPhase("loading");
+                    try {
+                      const rr = await fetch("/api/research/find", {
+                        method: "POST", headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ topic: `${c.name}. ${c.summary}`, niche: b.niche }),
+                      });
+                      const rd = await rr.json();
+                      if (rr.ok && Array.isArray(rd.facts) && rd.facts.length) {
+                        g.facts = rd.facts.map((f: any) => f?.source ? `${f.fact} (source: ${f.source})` : f?.fact).filter(Boolean);
+                        setGrounding({ ...g });
+                      }
+                    } catch { /* keep the topic-level facts */ }
+                    await fetchAngles(b, g);
+                  })();
+                }
               }}
               style={{ textAlign: "left", cursor: "pointer", padding: "14px 16px", borderRadius: 14, background: C.card, border: `1px solid ${C.border}`, color: C.textBright }}>
               <div style={{ fontSize: 15, fontWeight: 700 }}>{c.name}{c.when && <span style={{ color: C.textDim, fontWeight: 500 }}> · {c.when}</span>}</div>

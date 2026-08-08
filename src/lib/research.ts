@@ -289,7 +289,21 @@ export function buildGroundingBlock(g?: GroundingContext | null): string {
       ? `Use these real mechanisms as the engine of each angle. The scenario is a thought experiment, so never claim it happened, but DO reason concretely from the real science above.`
       : g.kind === "explainer"
         ? `Build each angle on a specific mechanism or number above, not on a general observation. "Most people assume X" is a weak angle; a concrete sourced detail is a strong one.`
-        : `Every angle must be about THIS case and may use its real names, dates, and figures. Do not retreat into "someone allegedly did X" or "a person with access" when you have been given the actual name. Vagueness here reads as not having done the research.`;
+        : `Every angle must be about THIS case and should use its real names, dates, and figures. Do not retreat into "someone allegedly did X" or "a person with access" when you have been given the actual name. Vagueness reads as not having done the research.`;
 
-  return `${lines.join("\n")}\n\n${use}`;
+  // CLOSED WORLD. Handing over a real case does not stop invention, it relocates
+  // it: with Boyce and Lee correctly identified, the model still produced "Lee
+  // only received $15,000" (the split actually ran the other way) and invented a
+  // reason for his arrest (he was picked up on an unrelated suspicion and found
+  // carrying microfilm). Those errors are MORE dangerous than vague ones, because
+  // they arrive wrapped in verifiable names and dates, so a reader who checks one
+  // detail trusts the rest. Argument stays free; new specifics do not.
+  const closedWorld = `USE ONLY THE FACTS ABOVE (critical). Everything factual in your angles must come from the material above. You may interpret it, argue from it, question it, and draw out what it implies. You may NOT add:
+- a number, amount, percentage, date, or duration that does not appear above
+- a name, place, job title, agency, or document that does not appear above
+- a motive, intention, or cause stated as fact when the material above does not state it
+
+If a point needs a figure you were not given, make the point without the figure. If you do not know why someone acted, say the record does not say, or build the angle on something you do know. Where the material above is thin, the honest move is a sharper reading of what IS there, never a plausible-sounding detail that fills the gap. An invented specific inside an otherwise accurate angle is the worst possible outcome: it inherits the credibility of everything true around it.`;
+
+  return `${lines.join("\n")}\n\n${use}\n\n${closedWorld}`;
 }
