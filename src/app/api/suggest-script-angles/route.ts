@@ -5,6 +5,7 @@ import { getNicheHookExamplesBlock, getNicheTitleFormulasBlock } from "@/lib/vir
 import { getPickedAnglesBlock } from "@/lib/angle-picks";
 import { EXPERT_ATTRIBUTION_RULE, PROVENANCE_RULE } from "@/lib/ai/claude";
 import { buildGroundingBlock, type GroundingContext } from "@/lib/research";
+import { vetAngles, groundingToSourceText } from "@/lib/ai/angle-vet";
 
 const client = new Anthropic();
 export const maxDuration = 120;
@@ -57,6 +58,8 @@ ${hookTypeFilter
 - OVERLOOKED MECHANISM: The unglamorous way this actually works, which nobody bothers to explain`}
 
 ${lockedTitle ? `\nTITLE LOCK: the creator has chosen their title and it is FIXED. Set "titleSuggestion" to EXACTLY this string for every angle, unchanged, do not invent alternatives: "${String(lockedTitle).slice(0,150)}". Vary only the "hookPremise" across the 5 angles. The hooks must all work UNDER this one title.\n` : ""}
+NUMBERS IN ANGLES (strict): do not put a specific number, salary, wage, dollar amount, date, or count in a "hookPremise" or "titleSuggestion" unless that exact figure is in the facts above. If the facts give none, make the point without one.
+
 For each angle return EXACTLY:
 - "hookType": hook type (ALL CAPS)
 - "hookPremise": opening hook sentence (1-2 sentences, punchy, specific)
@@ -86,7 +89,11 @@ ${groundingBlock || `GROUNDING (critical): this topic is a string the creator ty
         const lockedOut = lockedTitle
       ? angles.map((a: any) => ({ ...a, titleSuggestion: String(lockedTitle).slice(0, 150) }))
       : angles;
-    return NextResponse.json({ angles: lockedOut, topic, niche, hookTypeFilter: hookTypeFilter || null });
+    // Vet each angle's hook + title against the grounding facts before returning.
+    const vetText = lockedOut.map((a: any) => `${a?.hookPremise || ""} ${a?.titleSuggestion || ""}`.trim());
+    const warnings = await vetAngles(vetText, groundingToSourceText(grounding)).catch(() => lockedOut.map(() => []));
+    const withWarnings = lockedOut.map((a: any, i: number) => ({ ...a, warnings: warnings[i] || [] }));
+    return NextResponse.json({ angles: withWarnings, topic, niche, hookTypeFilter: hookTypeFilter || null });
   } catch (e: any) {
     console.error("[suggest-script-angles]", e?.message);
     return NextResponse.json({ error: e?.message || "Failed to generate angles" }, { status: 500 });

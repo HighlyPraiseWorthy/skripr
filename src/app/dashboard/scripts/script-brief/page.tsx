@@ -20,7 +20,7 @@ const EMOTION_COLOR: Record<string, string> = {
 };
 
 type Phase = "loading" | "pick-case" | "angles" | "research" | "storytelling" | "generating" | "result";
-type Angle = { hookType: string; hookPremise: string; titleSuggestion: string; whyItWorks: string; audienceEmotion: string; };
+type Angle = { hookType: string; hookPremise: string; titleSuggestion: string; whyItWorks: string; audienceEmotion: string; warnings?: string[]; };
 type Brief = { topic: string; niche: string; videoLength: string; hookTypeFilter?: string | null; voiceProfileId?: string | null; angles: Angle[]; };
 
 const Spinner = ({ label, sub }: { label: string; sub?: string }) => (
@@ -549,6 +549,13 @@ export default function ScriptBriefPage() {
                   </div>
                 )}
                 <div style={{ fontSize: 11, color: C.textDim, fontStyle: "italic" }}>{a.whyItWorks}</div>
+                {Array.isArray(a.warnings) && a.warnings.length > 0 && (
+                  <div style={{ marginTop: 9, paddingTop: 9, borderTop: "1px solid rgba(251,191,36,0.2)" }}>
+                    {a.warnings.map((w, j) => (
+                      <div key={j} style={{ fontSize: 11, color: "#fbbf24", lineHeight: 1.5 }}>&#9888; {w}</div>
+                    ))}
+                  </div>
+                )}
               </div>
             );
           })}

@@ -116,6 +116,7 @@ export default function NewScriptPage() {
   const [sourceMaterial, setSourceMaterial] = useState<string>("");
   const [suggestingAngles, setSuggestingAngles] = useState(false);
   const [angleSuggestions, setAngleSuggestions] = useState<string[]>([]);
+  const [angleWarnings, setAngleWarnings] = useState<string[][]>([]);
   const [selectedHookType, setSelectedHookType] = useState<string | null>(null);
   const [lockTitle, setLockTitle] = useState(false);
 
@@ -311,7 +312,7 @@ export default function NewScriptPage() {
         body: JSON.stringify({ topic, niche, grounding: g }),
       });
       const data = await res.json();
-      if (data.angles) setAngleSuggestions(data.angles);
+      if (data.angles) { setAngleSuggestions(data.angles); setAngleWarnings(Array.isArray(data.warnings) ? data.warnings : []); }
     } catch {}
     setSuggestingAngles(false);
   }
@@ -586,7 +587,7 @@ export default function NewScriptPage() {
                           body: JSON.stringify({ topic, niche, grounding: g || undefined }),
                         });
                         const data = await res.json();
-                        if (data.angles) setAngleSuggestions(data.angles);
+                        if (data.angles) { setAngleSuggestions(data.angles); setAngleWarnings(Array.isArray(data.warnings) ? data.warnings : []); }
                       } catch {}
                       setSuggestingAngles(false);
                     }}
@@ -712,7 +713,7 @@ export default function NewScriptPage() {
                               body: JSON.stringify({ topic, niche }),
                             });
                             const data = await res.json();
-                            if (data.angles) setAngleSuggestions(data.angles);
+                            if (data.angles) { setAngleSuggestions(data.angles); setAngleWarnings(Array.isArray(data.warnings) ? data.warnings : []); }
                           } catch {}
                           setSuggestingAngles(false);
                         }}
@@ -741,6 +742,13 @@ export default function NewScriptPage() {
                         >
                           {angle === s && <span style={{ color: "#34d399", marginRight: 6 }}>✓</span>}
                           {s}
+                          {Array.isArray(angleWarnings[i]) && angleWarnings[i].length > 0 && (
+                            <span style={{ display: "block", marginTop: 7, fontSize: 11, color: "#fbbf24", lineHeight: 1.5 }}>
+                              {angleWarnings[i].map((w, j) => (
+                                <span key={j} style={{ display: "block" }}>&#9888; {w}</span>
+                              ))}
+                            </span>
+                          )}
                         </button>
                       ))}
                     </div>
