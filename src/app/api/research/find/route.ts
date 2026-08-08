@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import { findResearch, resolveSubjects } from "@/lib/research";
+import { findResearch, resolveSubjects, deepenCaseFacts } from "@/lib/research";
 
 export const maxDuration = 30;
 
@@ -9,7 +9,14 @@ export async function POST(req: Request) {
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
-    const { topic, angle, niche, action } = await req.json();
+    const { topic, angle, niche, action, caseName, caseSummary } = await req.json();
+
+    // "deepen": a case is already chosen; fetch the documentary-critical named
+    // specifics (Claude questions -> Perplexity sourced answers).
+    if (action === "deepen") {
+      const result = await deepenCaseFacts({ caseName, summary: caseSummary, niche });
+      return NextResponse.json({ facts: result.facts });
+    }
 
     // "resolve": the topic is a video TITLE, not a claim. Find the real documented
     // cases it could be about, so an unsourced premise becomes a sourced one

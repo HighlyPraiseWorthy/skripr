@@ -381,3 +381,89 @@ If a point needs a figure you were not given, make the point without the figure.
     : "";
   return `${lines.join("\n")}\n\n${use}\n\n${closedWorld}${caveat}`;
 }
+
+/**
+ * Deepen the facts for a chosen case. The plain fact fetch returns the surface of
+ * a story (who, what, when); a documentary also needs the NAMED specifics that
+ * make it credible: the program or system involved, the person's stated motive,
+ * how they got their access, the settings by name, the precise outcome. Perplexity
+ * on a broad query misses these. So Claude, which knows famous cases in depth,
+ * generates the targeted QUESTIONS, and Perplexity answers them WITH CITATIONS.
+ * Claude never supplies a fact directly: only sourced answers reach the script, so
+ * the anti-fabrication guarantee holds while the grounding gets much richer.
+ */
+export async function deepenCaseFacts(input: { caseName: string; summary?: string; niche?: string }): Promise<{ facts: ResearchFact[] }> {
+  const caseName = (input.caseName || "").slice(0, 200);
+  if (!caseName.trim()) return { facts: [] };
+  const pkey = process.env.PERPLEXITY_API_KEY;
+  // No Perplexity means no citable answers, and Claude-only facts would be
+  // unsourced, which is exactly what must not reach the script. Return nothing.
+  if (!pkey) return { facts: [] };
+
+  // 1) Claude generates the targeted questions.
+  let questions: string[] = [];
+  try {
+    const msg = await anthropic().messages.create({
+      model: "claude-sonnet-4-6",
+      max_tokens: 700,
+      temperature: 0,
+      messages: [{
+        role: "user",
+        content: `You are a documentary researcher preparing a script about this real case:
+CASE: ${caseName}${input.summary ? `\nCONTEXT: ${input.summary}` : ""}
+
+List the 6 to 8 most important SPECIFIC, NAMED, VERIFIABLE details a strong documentary on this case must include, phrased as research questions each seeking ONE citable fact. Target these gaps specifically, because they are what makes a script credible and are the first thing a viewer checks:
+- the NAMED programs, systems, documents, or operations at the center of the case
+- the person's STATED motive (what they said drove them, attributed to them)
+- HOW they obtained their access, position, or clearance
+- specific SETTINGS or locations by their real names
+- the precise OUTCOME: exact charges, key dates, sentences
+- what remains DISPUTED, sealed, or unknown
+
+Each question must seek a single concrete fact that can carry a citation. Do not ask open-ended or interpretive questions. Output ONLY a JSON array of question strings, no prose.`,
+      }],
+    });
+    const text = msg.content[0]?.type === "text" ? msg.content[0].text : "";
+    const m = text.match(/\[[\s\S]*\]/);
+    const arr = JSON.parse(m ? m[0] : text);
+    if (Array.isArray(arr)) questions = arr.filter((q) => typeof q === "string" && q.trim()).slice(0, 8);
+  } catch { /* no questions — nothing to deepen */ }
+  if (!questions.length) return { facts: [] };
+
+  // 2) Perplexity answers each question with a real source.
+  const prompt = `Case: ${caseName}.${input.summary ? ` ${input.summary}` : ""}
+
+Answer each question below with ONE specific, citable fact and its source URL. If you cannot find a real source for a question, OMIT that question entirely rather than guessing. Accuracy matters more than completeness: a documentary reads these on camera.
+
+QUESTIONS:
+${questions.map((q, i) => `${i + 1}. ${q}`).join("\n")}
+
+Output ONLY a JSON array, no prose:
+[{"fact":"the specific fact, including any exact name, number, or date","source":"the source URL"}]`;
+
+  try {
+    const res = await fetch("https://api.perplexity.ai/chat/completions", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${pkey}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ model: "sonar", temperature: 0, messages: [{ role: "user", content: prompt }] }),
+      signal: AbortSignal.timeout(25000),
+    });
+    if (!res.ok) return { facts: [] };
+    const data = await res.json();
+    const content: string = data?.choices?.[0]?.message?.content || "";
+    const citations: string[] = Array.isArray(data?.citations) ? data.citations.filter((c: any) => typeof c === "string") : [];
+    const m = content.match(/\[[\s\S]*\]/);
+    const arr = JSON.parse(m ? m[0] : content);
+    if (!Array.isArray(arr)) return { facts: [] };
+    const facts: ResearchFact[] = arr
+      .filter((x: any) => x && typeof x.fact === "string" && x.fact.trim())
+      .map((x: any, i: number) => ({
+        fact: String(x.fact).trim().slice(0, 400),
+        source: (typeof x.source === "string" && /^https?:\/\//.test(x.source)) ? x.source : (citations[i] || null),
+      }))
+      // A fact with no source cannot be vouched for, so it does not reach the script.
+      .filter((f: ResearchFact) => !!f.source)
+      .slice(0, 10);
+    return { facts };
+  } catch { return { facts: [] }; }
+}

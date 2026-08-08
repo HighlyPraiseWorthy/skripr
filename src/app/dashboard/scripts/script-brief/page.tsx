@@ -72,6 +72,9 @@ export default function ScriptBriefPage() {
       if ((b as any).topicKind) setTopicKind((b as any).topicKind);
       if ((b as any).sourceVerdict) setSourceVerdict((b as any).sourceVerdict);
       if (b.angles?.length > 0) setPhase("angles");
+      // A case was already chosen on the previous screen: honor it, do not
+      // re-resolve and ask again. Just write the hook cards on that case.
+      else if (gb?.caseName) fetchAngles(b, gb);
       else groundThenAngles(b);
     } catch { window.location.href = "/dashboard/scripts/new"; }
   }, []);
@@ -115,7 +118,7 @@ export default function ScriptBriefPage() {
           try {
             const rr = await fetch("/api/research/find", {
               method: "POST", headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ topic: `${c.name}. ${c.summary}`, niche: b.niche }),
+              body: JSON.stringify({ action: "deepen", caseName: c.name, caseSummary: c.summary || "", niche: b.niche }),
             });
             const rd = await rr.json();
             if (rr.ok && Array.isArray(rd.facts) && rd.facts.length) {
@@ -282,7 +285,7 @@ export default function ScriptBriefPage() {
                     try {
                       const rr = await fetch("/api/research/find", {
                         method: "POST", headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ topic: `${c.name}. ${c.summary}`, niche: b.niche }),
+                        body: JSON.stringify({ action: "deepen", caseName: c.name, caseSummary: c.summary || "", niche: b.niche }),
                       });
                       const rd = await rr.json();
                       if (rr.ok && Array.isArray(rd.facts) && rd.facts.length) {

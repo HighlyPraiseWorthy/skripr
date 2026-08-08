@@ -291,19 +291,16 @@ export default function NewScriptPage() {
     // are filled ONLY from research about THIS case.
     const g: any = { kind: "event", verdict: "documented", caseName: c.name, caseSummary: c.summary || "", when: c.when || "", sources: c.sources || [], facts: [] };
     try {
+      // Deepen: Claude names the documentary-critical questions, Perplexity sources
+      // the answers, so the angles get real programs, motives, and settings instead
+      // of hedging around them.
       const rr = await fetch("/api/research/find", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ topic: `${c.name}. ${c.summary || ""}`.trim(), niche }),
+        body: JSON.stringify({ action: "deepen", caseName: c.name, caseSummary: c.summary || "", niche }),
       });
       const rd = await rr.json();
-      if (rr.ok && Array.isArray(rd.facts)) {
+      if (rr.ok && Array.isArray(rd.facts) && rd.facts.length) {
         g.facts = rd.facts.map((f: any) => f?.source ? `${f.fact} (source: ${f.source})` : f?.fact).filter(Boolean);
-      }
-      // Carry the research caveat into the angle prompt so angles do not build
-      // load-bearing theses on fields the research flagged as uncertain.
-      if (rr.ok && typeof rd.verdictNote === "string" && rd.verdictNote) {
-        g.caveat = rd.verdictNote;
-        if (!c.summary) setGroundedOn((prev: any) => prev ? { ...prev, summary: rd.verdictNote } : prev);
       }
     } catch { /* fresh research failed: ground on the case name + summary only, no borrowed facts */ }
     setGrounding(g);
@@ -553,13 +550,12 @@ export default function NewScriptPage() {
                               try {
                                 const rr = await fetch("/api/research/find", {
                                   method: "POST", headers: { "Content-Type": "application/json" },
-                                  body: JSON.stringify({ topic: `${c.name}. ${c.summary}`, niche }),
+                                  body: JSON.stringify({ action: "deepen", caseName: c.name, caseSummary: c.summary || "", niche }),
                                 });
                                 const rd = await rr.json();
                                 if (rr.ok && Array.isArray(rd.facts) && rd.facts.length) {
                                   g.facts = rd.facts.map((f: any) => f?.source ? `${f.fact} (source: ${f.source})` : f?.fact).filter(Boolean);
                                 }
-                                if (rr.ok && typeof rd.verdictNote === "string" && rd.verdictNote) g.caveat = rd.verdictNote;
                               } catch { /* keep the topic-level facts */ }
                               setGrounding(g);
                             }
@@ -1004,7 +1000,14 @@ export default function NewScriptPage() {
             {inputMode === "topic" && topic.trim() && (
               <button
                 onClick={() => {
-                  const brief = { topic: topic.trim(), niche: niche.trim(), videoLength: videoMinutes >= 14 ? "long" : "medium", targetMinutes: videoMinutes, hookTypeFilter: selectedHookType || null, viralMagnetWord: selectedViralWord || null, voiceProfileId: voiceId || null, angles: [] };
+                  // Carry any case already grounded on this screen so script-brief
+                  // does not re-resolve and ask "which real case" a second time.
+                  const brief: any = { topic: topic.trim(), niche: niche.trim(), videoLength: videoMinutes >= 14 ? "long" : "medium", targetMinutes: videoMinutes, hookTypeFilter: selectedHookType || null, viralMagnetWord: selectedViralWord || null, voiceProfileId: voiceId || null, angles: [] };
+                  if (grounding || groundedOn) {
+                    brief.grounding = { ...(grounding || {}), ...(groundedOn ? { caseName: groundedOn.name, caseSummary: groundedOn.summary, when: groundedOn.when, sources: groundedOn.sources || [] } : {}) };
+                    brief.topicKind = topicKind || undefined;
+                    brief.sourceVerdict = sourceVerdict || undefined;
+                  }
                   sessionStorage.setItem("skripr_script_brief", JSON.stringify(brief));
                   window.location.href = "/dashboard/scripts/script-brief";
                 }}
