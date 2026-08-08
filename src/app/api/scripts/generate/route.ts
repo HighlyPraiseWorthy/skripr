@@ -11,6 +11,7 @@ import { getKeptHooksBlock } from "@/lib/hook-picks";
 import { saveAnglePick } from "@/lib/angle-picks";
 import { autoSelectMode, resolveTechniques } from "@/lib/storytelling";
 import { factCheckAgainstSource } from "@/lib/fact-check";
+import { reviewAndCorrectScript } from "@/lib/ai/self-review";
 import { getActiveVoiceMeta, getVoiceMetaById } from "@/lib/voice-profile";
 import { captureFrameworkInBackground } from "@/lib/framework-capture";
 
@@ -247,6 +248,30 @@ export async function POST(req: Request) {
       .map((s: any) => ({ ...s, title: cleanText(s.title), content: cleanText(s.content) }));
     console.log(`[generate] done in ${elapsed}ms`);
 
+    // Self-review: a dedicated accuracy + consistency pass over the finished draft
+    // (see src/lib/ai/self-review.ts). Runs BEFORE autosave and the fact scan so
+    // the saved, scanned, and returned script is the corrected one. Never blocks:
+    // on any failure it returns the draft unchanged.
+    let reviewChanges: string[] = [];
+    try {
+      const reviewBody = (script as any).fullScript || (script as any).script || (script as any).body || (script as any).content || "";
+      const reviewed = await reviewAndCorrectScript({
+        hook: (script as any).hook || "",
+        body: reviewBody,
+        title: (script as any).title || undefined,
+        sourceMaterial: typeof sourceMaterial === "string" ? sourceMaterial : undefined,
+      });
+      reviewChanges = reviewed.changes;
+      if (reviewed.changes.length) {
+        (script as any).hook = reviewed.hook;
+        // Write the corrected body into every body field that exists, since render
+        // and autosave read them in different precedence orders.
+        for (const k of ["fullScript", "script", "body", "content"]) {
+          if ((script as any)[k]) (script as any)[k] = reviewed.body;
+        }
+      }
+    } catch (e) { console.error("[self-review] failed:", e); }
+
     let magnetSuggestions: import("@/lib/magnet-word").MagnetSuggestion[] = [];
     try {
       magnetSuggestions = await getMagnetSuggestions(script.title || "", niche || "general");
@@ -299,7 +324,7 @@ export async function POST(req: Request) {
       .filter((x: any) => typeof x === "string").join("\n\n");
     const factCheck = factCheckAgainstSource(scannedText, typeof sourceMaterial === "string" ? sourceMaterial : "");
 
-    return NextResponse.json({ ...script, magnetSuggestions, savedId, factCheck });
+    return NextResponse.json({ ...script, magnetSuggestions, savedId, factCheck, reviewChanges });
   } catch (error: any) {
     console.error("Script generation error:", error.message);
     // Refund the credit — user shouldn't pay for our failure

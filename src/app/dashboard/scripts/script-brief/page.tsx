@@ -347,6 +347,18 @@ export default function ScriptBriefPage() {
             </div>
           )}
 
+          {/* Self-review corrections: what the accuracy pass changed before you saw it. */}
+          {Array.isArray(script.reviewChanges) && script.reviewChanges.length > 0 && (
+            <div style={{ background: "rgba(52,211,153,0.07)", border: "1px solid rgba(52,211,153,0.25)", borderRadius: 12, padding: "14px 18px", marginBottom: 16 }}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: C.green, letterSpacing: 0.4, marginBottom: 7 }}>AUTO-CORRECTED FOR ACCURACY</div>
+              <ul style={{ margin: 0, paddingLeft: 18, display: "flex", flexDirection: "column", gap: 4 }}>
+                {script.reviewChanges.map((c: string, i: number) => (
+                  <li key={i} style={{ fontSize: 12.5, color: C.textDim, lineHeight: 1.5 }}>{c}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
           {/* Deterministic fact scan: dates and dollar figures in the script that
               were not in the researched source material. Verify these before voice. */}
           {Array.isArray(script.factCheck?.unverified) && script.factCheck.unverified.length > 0 && (

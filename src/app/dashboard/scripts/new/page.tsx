@@ -1095,7 +1095,17 @@ export default function NewScriptPage() {
                 <span style={{ padding: "3px 10px", borderRadius: 7, fontSize: 11, fontWeight: 600, background: "rgba(77,184,255,0.07)", color: C.textDim }}>~{Math.round((generatedScript.estimatedDuration || 0) / 60) || 1} min</span>
               </div>
               <h2 style={{ fontSize: 21, fontWeight: 700, color: C.textBright, letterSpacing: -0.3, marginBottom: 16 }}>{generatedScript.title}</h2>
-              {Array.isArray((generatedScript as any).factCheck?.unverified) && (generatedScript as any).factCheck.unverified.length > 0 && (
+              {Array.isArray((generatedScript as any).reviewChanges) && (generatedScript as any).reviewChanges.length > 0 && (
+                <div style={{ background: "rgba(52,211,153,0.07)", border: "1px solid rgba(52,211,153,0.25)", borderRadius: 12, padding: "13px 16px", marginBottom: 16 }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: "#34d399", letterSpacing: 0.4, marginBottom: 7 }}>AUTO-CORRECTED FOR ACCURACY</div>
+                  <ul style={{ margin: 0, paddingLeft: 18, display: "flex", flexDirection: "column", gap: 4 }}>
+                    {(generatedScript as any).reviewChanges.map((c: string, i: number) => (
+                      <li key={i} style={{ fontSize: 12.5, color: C.textDim, lineHeight: 1.5 }}>{c}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+                            {Array.isArray((generatedScript as any).factCheck?.unverified) && (generatedScript as any).factCheck.unverified.length > 0 && (
                 <div style={{ background: "rgba(251,191,36,0.08)", border: "1px solid rgba(251,191,36,0.3)", borderRadius: 12, padding: "13px 16px", marginBottom: 16 }}>
                   <div style={{ fontSize: 11, fontWeight: 700, color: "#fbbf24", letterSpacing: 0.4, marginBottom: 5 }}>VERIFY BEFORE PUBLISHING</div>
                   <div style={{ fontSize: 12.5, color: C.textDim, lineHeight: 1.6, marginBottom: 9 }}>
