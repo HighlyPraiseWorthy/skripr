@@ -321,6 +321,10 @@ export interface GroundingContext {
   caseSummary?: string;
   when?: string;
   facts?: string[];
+  // What the research itself flagged as uncertain ("sources vary on some sentence
+  // details"). Fed to the angle prompt so it does not build a load-bearing thesis
+  // on a field the research just warned about.
+  caveat?: string;
 }
 
 export function buildGroundingBlock(g?: GroundingContext | null): string {
@@ -361,5 +365,8 @@ export function buildGroundingBlock(g?: GroundingContext | null): string {
 
 If a point needs a figure you were not given, make the point without the figure. If you do not know why someone acted, say the record does not say, or build the angle on something you do know. Where the material above is thin, the honest move is a sharper reading of what IS there, never a plausible-sounding detail that fills the gap. An invented specific inside an otherwise accurate angle is the worst possible outcome: it inherits the credibility of everything true around it.`;
 
-  return `${lines.join("\n")}\n\n${use}\n\n${closedWorld}`;
+  const caveat = g.caveat
+    ? `\n\nRESEARCH CAVEAT (respect this): ${g.caveat} Do NOT build an angle's central claim on any detail this caveat flags as uncertain or disputed. You may still tell the story; just do not hinge a thesis, a title, or a "the real question is..." turn on a shaky specific. Lead with what is solid.`
+    : "";
+  return `${lines.join("\n")}\n\n${use}\n\n${closedWorld}${caveat}`;
 }

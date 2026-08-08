@@ -284,22 +284,28 @@ export default function NewScriptPage() {
     setSourceVerdict("documented");
     setSuggestingAngles(true);
     setAngleSuggestions([]);
-    const g: any = { ...(grounding || {}), kind: "event", verdict: "documented", caseName: c.name, caseSummary: c.summary || "", when: c.when || "", sources: c.sources || [] };
+    // Build grounding CLEAN for this case. Do NOT spread the previous grounding:
+    // it still holds the prior case's facts, and if the fresh research returns
+    // nothing, those stale facts would ship under this case's name and the angle
+    // generator would build a video about the wrong story. Facts start empty and
+    // are filled ONLY from research about THIS case.
+    const g: any = { kind: "event", verdict: "documented", caseName: c.name, caseSummary: c.summary || "", when: c.when || "", sources: c.sources || [], facts: [] };
     try {
       const rr = await fetch("/api/research/find", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ topic: `${c.name}. ${c.summary || ""}`.trim(), niche }),
       });
       const rd = await rr.json();
-      if (rr.ok && Array.isArray(rd.facts) && rd.facts.length) {
+      if (rr.ok && Array.isArray(rd.facts)) {
         g.facts = rd.facts.map((f: any) => f?.source ? `${f.fact} (source: ${f.source})` : f?.fact).filter(Boolean);
       }
-      // If the manual case had no summary, borrow the researched note so the
-      // grounded-on line is not bare.
-      if (!c.summary && rr.ok && typeof rd.verdictNote === "string" && rd.verdictNote) {
-        setGroundedOn((prev: any) => prev ? { ...prev, summary: rd.verdictNote } : prev);
+      // Carry the research caveat into the angle prompt so angles do not build
+      // load-bearing theses on fields the research flagged as uncertain.
+      if (rr.ok && typeof rd.verdictNote === "string" && rd.verdictNote) {
+        g.caveat = rd.verdictNote;
+        if (!c.summary) setGroundedOn((prev: any) => prev ? { ...prev, summary: rd.verdictNote } : prev);
       }
-    } catch { /* keep whatever grounding we have */ }
+    } catch { /* fresh research failed: ground on the case name + summary only, no borrowed facts */ }
     setGrounding(g);
     try {
       const res = await fetch("/api/suggest-angles", {
@@ -553,6 +559,7 @@ export default function NewScriptPage() {
                                 if (rr.ok && Array.isArray(rd.facts) && rd.facts.length) {
                                   g.facts = rd.facts.map((f: any) => f?.source ? `${f.fact} (source: ${f.source})` : f?.fact).filter(Boolean);
                                 }
+                                if (rr.ok && typeof rd.verdictNote === "string" && rd.verdictNote) g.caveat = rd.verdictNote;
                               } catch { /* keep the topic-level facts */ }
                               setGrounding(g);
                             }
