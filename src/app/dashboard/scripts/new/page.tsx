@@ -91,6 +91,8 @@ export default function NewScriptPage() {
   const [groundedOn, setGroundedOn] = useState<any | null>(null);
   const [groundNote, setGroundNote] = useState("");
   const [groundUnresolved, setGroundUnresolved] = useState(false);
+  const [manualCase, setManualCase] = useState("");
+  const [manualOpen, setManualOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [userPlan, setUserPlan] = useState<string>("free");
@@ -271,6 +273,45 @@ export default function NewScriptPage() {
   // The grounded case resolved at the topic stage, formatted for the script prompt.
   // Without this, skipping the research step would throw away the grounding the
   // angles were already built on.
+  // Ground on ONE specific case: research it, set it as the grounding, and rewrite
+  // the angles from it. Shared so the picker and the manual override behave
+  // identically. The manual path is the deterministic escape hatch when live
+  // search keeps drifting: type "Christopher Boyce" and you get Boyce, every time.
+  async function groundOnCase(c: { name: string; summary?: string; when?: string; sources?: string[] }) {
+    setGroundedOn({ name: c.name, summary: c.summary || "", when: c.when || "", sources: c.sources || [] });
+    setGroundUnresolved(false);
+    setManualOpen(false);
+    setSourceVerdict("documented");
+    setSuggestingAngles(true);
+    setAngleSuggestions([]);
+    const g: any = { ...(grounding || {}), kind: "event", verdict: "documented", caseName: c.name, caseSummary: c.summary || "", when: c.when || "", sources: c.sources || [] };
+    try {
+      const rr = await fetch("/api/research/find", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ topic: `${c.name}. ${c.summary || ""}`.trim(), niche }),
+      });
+      const rd = await rr.json();
+      if (rr.ok && Array.isArray(rd.facts) && rd.facts.length) {
+        g.facts = rd.facts.map((f: any) => f?.source ? `${f.fact} (source: ${f.source})` : f?.fact).filter(Boolean);
+      }
+      // If the manual case had no summary, borrow the researched note so the
+      // grounded-on line is not bare.
+      if (!c.summary && rr.ok && typeof rd.verdictNote === "string" && rd.verdictNote) {
+        setGroundedOn((prev: any) => prev ? { ...prev, summary: rd.verdictNote } : prev);
+      }
+    } catch { /* keep whatever grounding we have */ }
+    setGrounding(g);
+    try {
+      const res = await fetch("/api/suggest-angles", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ topic, niche, grounding: g }),
+      });
+      const data = await res.json();
+      if (data.angles) setAngleSuggestions(data.angles);
+    } catch {}
+    setSuggestingAngles(false);
+  }
+
   function buildUpstreamSourceMaterial(): string {
     if (!groundedOn && !grounding?.facts?.length) return "";
     const parts: string[] = [];
@@ -569,11 +610,32 @@ export default function NewScriptPage() {
                         {groundedOn.name}{groundedOn.when ? ` · ${groundedOn.when}` : ""}
                       </div>
                       {groundedOn.summary && <div style={{ fontSize: 12, color: "#a6c0d8", lineHeight: 1.55, marginTop: 3 }}>{groundedOn.summary}</div>}
-                      {groundCases.length > 1 && (
-                        <button onClick={() => setGroundedOn(null)}
-                          style={{ marginTop: 6, background: "none", border: "none", padding: 0, cursor: "pointer", fontSize: 11.5, color: "#4db8ff", fontWeight: 600 }}>
-                          change
+                      <div style={{ display: "flex", gap: 14, marginTop: 6 }}>
+                        {groundCases.length > 1 && (
+                          <button onClick={() => setGroundedOn(null)}
+                            style={{ background: "none", border: "none", padding: 0, cursor: "pointer", fontSize: 11.5, color: "#4db8ff", fontWeight: 600 }}>
+                            other matches
+                          </button>
+                        )}
+                        <button onClick={() => setManualOpen((v) => !v)}
+                          style={{ background: "none", border: "none", padding: 0, cursor: "pointer", fontSize: 11.5, color: "#4db8ff", fontWeight: 600 }}>
+                          wrong case? name it
                         </button>
+                      </div>
+                      {manualOpen && (
+                        <div style={{ marginTop: 10, display: "flex", gap: 7, flexWrap: "wrap" as const }}>
+                          <input
+                            value={manualCase}
+                            onChange={(e) => setManualCase(e.target.value)}
+                            onKeyDown={(e) => { if (e.key === "Enter" && manualCase.trim()) groundOnCase({ name: manualCase.trim() }); }}
+                            placeholder="Name the person or case, e.g. Christopher Boyce"
+                            style={{ flex: 1, minWidth: 200, padding: "8px 11px", borderRadius: 8, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(77,184,255,0.25)", color: "#e8edf5", fontSize: 13, outline: "none" }}
+                          />
+                          <button onClick={() => manualCase.trim() && groundOnCase({ name: manualCase.trim() })}
+                            style={{ padding: "8px 14px", borderRadius: 8, border: "none", background: "linear-gradient(135deg,#0e6499,#1a8fd1)", color: "#fff", fontSize: 12.5, fontWeight: 700, cursor: "pointer" }}>
+                            Use this
+                          </button>
+                        </div>
                       )}
                     </div>
                   )}
@@ -586,40 +648,32 @@ export default function NewScriptPage() {
                       <div style={{ display: "flex", flexDirection: "column", gap: 7, marginTop: 9 }}>
                         {groundCases.map((c: any, i: number) => (
                           <button key={i}
-                            onClick={async () => {
-                              setGroundedOn(c);
-                              setSourceVerdict("documented");
-                              setSuggestingAngles(true);
-                              setAngleSuggestions([]);
-                              let g: any = { ...(grounding || {}), caseName: c.name, caseSummary: c.summary, when: c.when, sources: c.sources || [] };
-                              // Re-research the chosen case so the facts belong to IT.
-                              try {
-                                const rr = await fetch("/api/research/find", {
-                                  method: "POST", headers: { "Content-Type": "application/json" },
-                                  body: JSON.stringify({ topic: `${c.name}. ${c.summary}`, niche }),
-                                });
-                                const rd = await rr.json();
-                                if (rr.ok && Array.isArray(rd.facts) && rd.facts.length) {
-                                  g.facts = rd.facts.map((f: any) => f?.source ? `${f.fact} (source: ${f.source})` : f?.fact).filter(Boolean);
-                                }
-                              } catch { /* keep the topic-level facts */ }
-                              setGrounding(g);
-                              try {
-                                const res = await fetch("/api/suggest-angles", {
-                                  method: "POST", headers: { "Content-Type": "application/json" },
-                                  body: JSON.stringify({ topic, niche, grounding: g }),
-                                });
-                                const data = await res.json();
-                                if (data.angles) setAngleSuggestions(data.angles);
-                              } catch {}
-                              setSuggestingAngles(false);
-                            }}
+                            onClick={() => groundOnCase(c)}
                             style={{ textAlign: "left", cursor: "pointer", padding: "9px 11px", borderRadius: 9, border: "1px solid rgba(77,184,255,0.16)", background: "rgba(255,255,255,0.03)", color: "#e8edf5" }}>
                             <div style={{ fontSize: 13, fontWeight: 700 }}>{c.name}{c.when && <span style={{ color: "#a6c0d8", fontWeight: 500 }}> · {c.when}</span>}</div>
                             {c.summary && <div style={{ fontSize: 12, color: "#a6c0d8", lineHeight: 1.5, marginTop: 2 }}>{c.summary}</div>}
                           </button>
                         ))}
                       </div>
+                      <button onClick={() => setManualOpen((v) => !v)}
+                        style={{ marginTop: 10, background: "none", border: "none", padding: 0, cursor: "pointer", fontSize: 11.5, color: "#4db8ff", fontWeight: 600 }}>
+                        None of these? Name the case
+                      </button>
+                      {manualOpen && (
+                        <div style={{ marginTop: 10, display: "flex", gap: 7, flexWrap: "wrap" as const }}>
+                          <input
+                            value={manualCase}
+                            onChange={(e) => setManualCase(e.target.value)}
+                            onKeyDown={(e) => { if (e.key === "Enter" && manualCase.trim()) groundOnCase({ name: manualCase.trim() }); }}
+                            placeholder="Name the person or case, e.g. Christopher Boyce"
+                            style={{ flex: 1, minWidth: 200, padding: "8px 11px", borderRadius: 8, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(77,184,255,0.25)", color: "#e8edf5", fontSize: 13, outline: "none" }}
+                          />
+                          <button onClick={() => manualCase.trim() && groundOnCase({ name: manualCase.trim() })}
+                            style={{ padding: "8px 14px", borderRadius: 8, border: "none", background: "linear-gradient(135deg,#0e6499,#1a8fd1)", color: "#fff", fontSize: 12.5, fontWeight: 700, cursor: "pointer" }}>
+                            Use this
+                          </button>
+                        </div>
+                      )}
                     </div>
                   )}
                   {groundUnresolved && !groundedOn && (
@@ -627,7 +681,20 @@ export default function NewScriptPage() {
                       <div style={{ fontSize: 12.5, fontWeight: 700, color: "#fbbf24" }}>Could not pin this to one real case</div>
                       {groundNote && <div style={{ fontSize: 12.5, color: "#e8edf5", lineHeight: 1.55, marginTop: 4 }}>{groundNote}</div>}
                       <div style={{ fontSize: 12, color: "#a6c0d8", lineHeight: 1.55, marginTop: 5 }}>
-                        The research came back about the subject area rather than one story, so building angles on it risks a video about the wrong thing. Name the person or case in your topic, or continue and write your own angle below.
+                        The research came back about the subject area rather than one story, so building angles on it risks a video about the wrong thing. Name the exact person or case and Skripr grounds on that, or continue and write your own angle below.
+                      </div>
+                      <div style={{ marginTop: 9, display: "flex", gap: 7, flexWrap: "wrap" as const }}>
+                        <input
+                          value={manualCase}
+                          onChange={(e) => setManualCase(e.target.value)}
+                          onKeyDown={(e) => { if (e.key === "Enter" && manualCase.trim()) groundOnCase({ name: manualCase.trim() }); }}
+                          placeholder="Name the person or case, e.g. Christopher Boyce"
+                          style={{ flex: 1, minWidth: 200, padding: "8px 11px", borderRadius: 8, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(251,191,36,0.35)", color: "#e8edf5", fontSize: 13, outline: "none" }}
+                        />
+                        <button onClick={() => manualCase.trim() && groundOnCase({ name: manualCase.trim() })}
+                          style={{ padding: "8px 14px", borderRadius: 8, border: "none", background: "linear-gradient(135deg,#0e6499,#1a8fd1)", color: "#fff", fontSize: 12.5, fontWeight: 700, cursor: "pointer" }}>
+                          Ground on this
+                        </button>
                       </div>
                       <button
                         onClick={async () => {
