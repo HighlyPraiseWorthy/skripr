@@ -54,6 +54,29 @@ export type ResolveResult =
   | { ok: true; candidates: SubjectCandidate[] }
   | { ok: false; error: string };
 
+// A candidate that argues against itself. The model is asked to omit cases that do
+// not fit the title and instead returns them with an explanation attached ("this
+// was a corporate acquisition, not the sale of America's satellites in the sense
+// implied by the title"). That admission is a reliable signal, so it is enforced
+// here rather than left to the prompt, which demonstrably does not hold.
+function selfNegating(c: SubjectCandidate): boolean {
+  const text = `${c.summary} ${c.whyItFits}`.toLowerCase();
+  return [
+    /\bnot a (crime|manhunt|criminal|murder|theft|sale|case of)\b/,
+    /\bnot the (sale|story|case|event)\b/,
+    /\bnot in the sense\b/,
+    /\bnot about\b/,
+    /\bnot directly (related|connected|about)\b/,
+    /\brather than a\b/,
+    /\bdoes not (match|fit|involve|describe)\b/,
+    /\bis a business (origin )?story\b/,
+    /\bnot an? (espionage|spy|criminal)\b/,
+    /\bthis is (a )?(policy|corporate|business|legal) (story|matter|dispute|debate)\b/,
+    /\bonly loosely\b/,
+    /\bnot the same as\b/,
+  ].some((re) => re.test(text));
+}
+
 // Shared by findResearch and resolveSubjects. A candidate with no citable source
 // is exactly what this feature exists to prevent, so it is dropped rather than
 // offered as a "real" case the creator might trust.
@@ -70,6 +93,7 @@ function normalizeCandidates(raw: any, fallbackCitations: string[]): SubjectCand
         .filter((u: any) => typeof u === "string" && /^https?:\/\//.test(u))
         .slice(0, 4),
     }))
+    .filter((c: SubjectCandidate) => !selfNegating(c))
     .filter((c: SubjectCandidate) => c.sources.length > 0 || fallbackCitations.length > 0)
     .map((c: SubjectCandidate) => ({ ...c, sources: c.sources.length ? c.sources : fallbackCitations.slice(0, 2) }))
     .slice(0, 4);
@@ -118,10 +142,13 @@ IF "event":
    - "unverified": nothing describes this specific event. Sounding plausible is not evidence.
   Be strict; if you are reaching, choose "partial" or "unverified". A wrong "documented" puts fabrication in a creator's mouth on camera.
   ALSO fill "candidates": the real, documented cases this title could actually be about, best match FIRST, up to 4. A creator types a TITLE, not a claim, so naming the real story is more useful than rejecting the title.
+  HOW TO FIND THEM: do not just search the title as a keyword string. That surfaces recent, heavily indexed, loosely related material and misses the famous case. Instead, first BREAK THE TITLE INTO ITS REQUIRED ELEMENTS, then look for a case that satisfies ALL of them. For "The Hunt for the Man Who Sold America's Satellites" the elements are: one identified individual (not a company or a policy), who sold or passed satellite material to a foreign power, plus a pursuit, manhunt, escape, or investigation. A corporate technology transfer satisfies the "satellites" element and fails every other one, so it is NOT a match.
+
   Rules for candidates, all of them strict:
-  - ONLY include a case that genuinely fits the title. If you would have to explain that it does not really fit, LEAVE IT OUT. Returning one strong candidate is better than padding to four with near misses, and a candidate whose own description says it is not really this story is worse than no candidate.
-  - Search the WHOLE historical record, not just recent or heavily indexed events. The definitive case for a title like this is often decades old and may predate most web coverage. Do not let recency bias push a minor recent case above the famous one.
-  - Read every word of the title as a constraint. If it says "the hunt", a case involving an actual manhunt, escape, or pursuit fits better than one that ended in a routine arrest. If it says "the man", prefer a single identified individual over a policy debate or a corporate transaction.
+  - A candidate must satisfy EVERY element of the title, not just the subject matter. Matching only the topic area is the most common way to get this wrong.
+  - ONLY include a case that genuinely fits. If you would have to explain that it does not really fit, LEAVE IT OUT. One strong candidate beats four near misses, and a candidate whose own description concedes it is not really this story is worse than no candidate at all. Do NOT write summaries containing phrases like "this is not a crime or manhunt" or "not in the sense implied by the title": if that is true, the case does not belong in the list.
+  - Returning an EMPTY candidates array is a valid and useful answer when nothing genuinely fits. It is much better than padding.
+  - Search the WHOLE historical record, not just recent or heavily indexed events. The definitive case for a title like this is often decades old and predates most web coverage. Do not let recency bias push a minor recent case above the famous one. Ask yourself which case a well-read viewer would name if they read this title, and make sure that case is present.
   - Never invent a case to fill a slot. If the event is already fully identified, a single candidate is correct.
 
 IF "explainer":
@@ -140,7 +167,11 @@ Only include a fact you can attribute to a real source URL. Output ONLY this JSO
     const res = await fetch("https://api.perplexity.ai/chat/completions", {
       method: "POST",
       headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
-      body: JSON.stringify({ model: "sonar", temperature: 0.2, messages: [{ role: "user", content: prompt }] }),
+      // temperature 0: the same topic should not resolve to different cases on
+      // different runs. This only pins the language step, not retrieval, since
+      // Sonar searches live and the retrieved pages themselves vary, which is why
+      // the code below also enforces fit rather than trusting the prompt.
+      body: JSON.stringify({ model: "sonar", temperature: 0, messages: [{ role: "user", content: prompt }] }),
       signal: AbortSignal.timeout(20000),
     });
     if (!res.ok) return { ok: false, error: `Research lookup failed (${res.status}).` };
@@ -240,7 +271,11 @@ Output ONLY this JSON, no prose:
     const res = await fetch("https://api.perplexity.ai/chat/completions", {
       method: "POST",
       headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
-      body: JSON.stringify({ model: "sonar", temperature: 0.2, messages: [{ role: "user", content: prompt }] }),
+      // temperature 0: the same topic should not resolve to different cases on
+      // different runs. This only pins the language step, not retrieval, since
+      // Sonar searches live and the retrieved pages themselves vary, which is why
+      // the code below also enforces fit rather than trusting the prompt.
+      body: JSON.stringify({ model: "sonar", temperature: 0, messages: [{ role: "user", content: prompt }] }),
       signal: AbortSignal.timeout(25000),
     });
     if (!res.ok) return { ok: false, error: `Subject lookup failed (${res.status}).` };
