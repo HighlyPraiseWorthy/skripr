@@ -17,7 +17,7 @@ export async function POST(req: Request) {
     if (action === "resolve") {
       const result = await resolveSubjects({ topic, niche });
       if (!result.ok) return NextResponse.json({ error: result.error }, { status: 422 });
-      return NextResponse.json({ candidates: result.candidates });
+      return NextResponse.json({ kind: result.kind, candidates: result.candidates });
     }
 
     const result = await findResearch({ topic, angle, niche });

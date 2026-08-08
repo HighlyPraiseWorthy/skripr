@@ -1,3 +1,11 @@
+import { Anthropic } from "@anthropic-ai/sdk";
+
+let _anthropic: Anthropic | null = null;
+function anthropic(): Anthropic {
+  if (!_anthropic) _anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY || "placeholder" });
+  return _anthropic;
+}
+
 // Auto-sourcing via Perplexity Sonar. Given a topic/angle, fetch real,
 // citable facts so the script can be grounded in verifiable numbers. Returns
 // facts each paired with a source URL for the user to approve/verify. Dormant
@@ -51,7 +59,7 @@ export interface SubjectCandidate {
   sources: string[];   // citable URLs
 }
 export type ResolveResult =
-  | { ok: true; candidates: SubjectCandidate[] }
+  | { ok: true; kind: TopicKind; candidates: SubjectCandidate[] }
   | { ok: false; error: string };
 
 // A candidate that argues against itself. The model is asked to omit cases that do
@@ -80,7 +88,7 @@ function selfNegating(c: SubjectCandidate): boolean {
 // Shared by findResearch and resolveSubjects. A candidate with no citable source
 // is exactly what this feature exists to prevent, so it is dropped rather than
 // offered as a "real" case the creator might trust.
-function normalizeCandidates(raw: any, fallbackCitations: string[]): SubjectCandidate[] {
+function normalizeCandidates(raw: any, fallbackCitations: string[], allowSourceless = false): SubjectCandidate[] {
   if (!Array.isArray(raw)) return [];
   return raw
     .filter((c: any) => c && typeof c.name === "string" && c.name.trim())
@@ -94,7 +102,9 @@ function normalizeCandidates(raw: any, fallbackCitations: string[]): SubjectCand
         .slice(0, 4),
     }))
     .filter((c: SubjectCandidate) => !selfNegating(c))
-    .filter((c: SubjectCandidate) => c.sources.length > 0 || fallbackCitations.length > 0)
+    // Claude-named candidates carry no URLs; sourcing is enforced downstream when
+    // the chosen case's facts are fetched from Perplexity, so allow them through.
+    .filter((c: SubjectCandidate) => allowSourceless || c.sources.length > 0 || fallbackCitations.length > 0)
     .map((c: SubjectCandidate) => ({ ...c, sources: c.sources.length ? c.sources : fallbackCitations.slice(0, 2) }))
     .slice(0, 4);
 }
@@ -204,7 +214,6 @@ Only include a fact you can attribute to a real source URL. Output ONLY this JSO
         const k = String(parsed?.kind || "").toLowerCase();
         kind = k === "explainer" || k === "hypothetical" || k === "claim" ? k : "event";
         verdictNote = typeof parsed?.verdictNote === "string" ? parsed.verdictNote.trim().slice(0, 400) : "";
-        candidates = normalizeCandidates(parsed?.candidates, citations);
       }
       if (Array.isArray(rawFacts)) {
         facts = rawFacts
@@ -230,11 +239,17 @@ Only include a fact you can attribute to a real source URL. Output ONLY this JSO
       return { ok: false, error: "Nothing came back for this topic. Try more specific wording, or paste your own sources below." };
     }
     // A single-purpose prompt resolves cases far better than the combined one, so
-    // when an event comes back with nothing usable, ask the focused question
-    // instead of giving up. Only fires on failure, so the extra call is rare.
-    if (kind === "event" && candidates.length === 0) {
-      const retry = await resolveSubjects({ topic: input.topic, niche: input.niche }).catch(() => null);
-      if (retry?.ok && retry.candidates.length) candidates = retry.candidates;
+    // Candidate resolution ALWAYS runs on Claude (see resolveSubjects), because
+    // Perplexity searches live and buries famous historical cases under recent
+    // coverage. Perplexity here only supplies kind, verdict, and facts.
+    if (kind === "event") {
+      const resolved = await resolveSubjects({ topic: input.topic, niche: input.niche }).catch(() => null);
+      if (resolved?.ok) {
+        candidates = resolved.candidates;
+        // Claude's classification is also more reliable; if it says this is not an
+        // event after all, trust that and drop the (now irrelevant) event verdict.
+        if (resolved.kind !== "event") kind = resolved.kind;
+      }
     }
 
     return { ok: true, kind, verdict, verdictNote, facts, citations, candidates };
@@ -255,58 +270,54 @@ Only include a fact you can attribute to a real source URL. Output ONLY this JSO
  * right one.
  */
 export async function resolveSubjects(input: { topic: string; niche?: string }): Promise<ResolveResult> {
-  const key = process.env.PERPLEXITY_API_KEY;
-  if (!key) return { ok: false, error: "Research sourcing isn't set up yet." };
   const topic = (input.topic || "").slice(0, 200);
   if (!topic.trim()) return { ok: false, error: "Add a topic first." };
 
-  const prompt = `A creator wants to make a documentary video with this title or topic:
+  // Resolution runs on CLAUDE, not Perplexity. A video title is a recall question
+  // ("which famous documented case is this?"), and Perplexity searches the live web
+  // first, so it surfaces recent, heavily indexed coverage (a corporate tech-transfer
+  // controversy) and buries a famous decades-old case. Claude knows these cases from
+  // training and names the definitive one reliably. Sourcing is not lost: when the
+  // creator picks a case, its facts are fetched from Perplexity with real citations.
+  const prompt = `A creator wants to make a video with this title or topic:
 "${topic}"${input.niche ? `\nNICHE: ${input.niche}` : ""}
 
-This is a TITLE, not a factual claim, so do not judge whether it is "true". Identify the REAL, DOCUMENTED people, cases, or events this title could actually be about, so the creator can build the video on a real story instead of an invented one.
+First classify it as one "kind": "event" (a specific real thing that happened, or a specific person/case), "explainer" (how something works), "hypothetical" (a what-if), or "claim" (an assertion about people or trends).
 
-FIRST, break the title into its required elements, then find a case satisfying ALL of them. For "The Hunt for the Man Who Sold America's Satellites" the elements are: one identified individual (not a company, not a policy), who sold or passed satellite material to a foreign power, plus a pursuit, manhunt, escape, or investigation. A corporate technology transfer satisfies only the subject matter and fails every other element, so it is not a match.
+Then, if it is an "event", identify the REAL, DOCUMENTED people or cases this title is most likely about, so the creator builds on a real story instead of an invented one. Use your own knowledge of history, true crime, espionage, and current events. The definitive case is often decades old, so do not assume the title refers to a recent story just because recent stories are easier to recall.
 
-Ask yourself which case a well-read viewer would name on reading this title, and make sure that case is in your list. The definitive case is often decades old and predates most web coverage, so do not let recent, heavily indexed material crowd it out.
+Break the title into its required elements and match ALL of them. For "The Hunt for the Man Who Sold America's Satellites" the elements are: one identified individual (not a company, not a policy debate), who sold or passed satellite material to a foreign power, plus a pursuit, manhunt, escape, or investigation. The definitive match is Christopher Boyce (with Andrew Daulton Lee), the TRW case behind "The Falcon and the Snowman". A corporate technology-transfer controversy matches only the subject area and fails the "one man" and "hunt" elements, so it is NOT a match.
 
 Rules:
-- Return 1 to 4 candidates, MOST LIKELY FIRST.
+- Best match FIRST. Return 1 to 4 candidates for an event, empty for the other kinds.
+- Only name a case you are genuinely confident is real and documented. Never invent a case, a name, or a date. If you are not confident any real case fits, return an empty list.
 - A candidate must satisfy EVERY element of the title, not just the subject area.
-- Never return a case while explaining that it does not really fit. If it does not fit, omit it.
-- Each must be a genuinely documented case you can cite. Never invent a case, a name, or a date to fill a slot.
-- Prefer the case a viewer would consider the definitive match for this title.
-- If the title is broad, include the strongest specific cases that fit it.
-- If you truly cannot find any real case matching this title, return an empty array. An empty array is a valid, useful answer.
+- Never include a case while noting it does not really fit. If it does not fit, omit it.
+- Ask which case a well-read viewer would name on reading this title, and make sure it is present.
 
-Output ONLY this JSON, no prose:
-{"candidates":[{"name":"the person, case, or event","summary":"1-2 sentences on what actually happened","when":"year or range","whyItFits":"one sentence on how it matches the title","sources":["url"]}]}`;
+Output ONLY this JSON, no prose, no markdown:
+{"kind":"event|explainer|hypothetical|claim","candidates":[{"name":"the person or case","summary":"1-2 sentences on what actually happened","when":"year or range","whyItFits":"one sentence on how it matches the title"}]}`;
 
   try {
-    const res = await fetch("https://api.perplexity.ai/chat/completions", {
-      method: "POST",
-      headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
-      // temperature 0: the same topic should not resolve to different cases on
-      // different runs. This only pins the language step, not retrieval, since
-      // Sonar searches live and the retrieved pages themselves vary, which is why
-      // the code below also enforces fit rather than trusting the prompt.
-      body: JSON.stringify({ model: "sonar", temperature: 0, messages: [{ role: "user", content: prompt }] }),
-      signal: AbortSignal.timeout(25000),
+    const msg = await anthropic().messages.create({
+      model: "claude-sonnet-4-6",
+      max_tokens: 900,
+      temperature: 0,
+      messages: [{ role: "user", content: prompt }],
     });
-    if (!res.ok) return { ok: false, error: `Subject lookup failed (${res.status}).` };
-    const data = await res.json();
-    const content: string = data?.choices?.[0]?.message?.content || "";
-    const fallbackCitations: string[] = Array.isArray(data?.citations) ? data.citations.filter((c: any) => typeof c === "string") : [];
-
+    const content = msg.content[0]?.type === "text" ? msg.content[0].text : "";
+    let kind: TopicKind = "event";
     let candidates: SubjectCandidate[] = [];
     try {
       const m = content.match(/\{[\s\S]*\}/);
       const parsed = JSON.parse(m ? m[0] : content);
-      candidates = normalizeCandidates(Array.isArray(parsed) ? parsed : parsed?.candidates, fallbackCitations);
+      const k = String(parsed?.kind || "").toLowerCase();
+      kind = k === "explainer" || k === "hypothetical" || k === "claim" ? k : "event";
+      candidates = normalizeCandidates(parsed?.candidates, [], true);
     } catch { /* unparseable — no candidates */ }
-
-    return { ok: true, candidates };
+    return { ok: true, kind, candidates };
   } catch (e: any) {
-    return { ok: false, error: e?.name === "TimeoutError" ? "Subject lookup timed out." : (e?.message || "Subject lookup failed.") };
+    return { ok: false, error: e?.message || "Subject lookup failed." };
   }
 }
 
