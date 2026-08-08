@@ -6,6 +6,8 @@ import { useState } from "react";
 // step. Optional: the user can auto-source cited facts (Perplexity) or paste
 // their own, or skip. Whatever they keep grounds real numbers in the script.
 
+export type Verdict = "documented" | "partial" | "unverified";
+
 const C = {
   bg: "#080c12", card: "#0d1520", border: "rgba(77,184,255,0.14)",
   accent: "#4db8ff", text: "#e8edf5", dim: "#a2bcd6", green: "#34d399", purple: "#4db8ff",
@@ -16,11 +18,13 @@ export default function ResearchStep(props: {
   niche?: string;
   angle?: string;
   angleLabel?: string;
-  onContinue: (sourceMaterial?: string) => void;
+  onContinue: (sourceMaterial?: string, verdict?: Verdict) => void;
   onBack?: () => void;
 }) {
   const [sourceMaterial, setSourceMaterial] = useState("");
   const [researching, setResearching] = useState(false);
+  const [verdict, setVerdict] = useState<Verdict | null>(null);
+  const [verdictNote, setVerdictNote] = useState("");
   const [facts, setFacts] = useState<{ fact: string; source: string | null }[]>([]);
   const [picked, setPicked] = useState<Set<number>>(new Set());
   const [error, setError] = useState<string | null>(null);
@@ -37,7 +41,8 @@ export default function ResearchStep(props: {
       if (!res.ok) throw new Error(d?.error || "Research lookup failed");
       const fs = Array.isArray(d.facts) ? d.facts : [];
       setFacts(fs); setPicked(new Set(fs.map((_: any, i: number) => i)));
-      if (fs.length === 0) setError("No citable facts found, try a more specific topic, or paste your own below.");
+      setVerdict(d.verdict === "documented" || d.verdict === "partial" ? d.verdict : "unverified");
+      setVerdictNote(typeof d.verdictNote === "string" ? d.verdictNote : "");
     } catch (e: any) { setError(e?.message || "Research lookup failed"); }
     finally { setResearching(false); }
   }
@@ -92,6 +97,29 @@ export default function ResearchStep(props: {
         </button>
         {error && <p style={{ fontSize: 12, color: "#fca5a5", marginTop: 8 }}>{error}</p>}
 
+        {/* Verdict on the premise itself. Shown BEFORE generation so the creator
+            can change course while it is still cheap, rather than discovering a
+            fabricated case after the script reads as researched. */}
+        {verdict && (() => {
+          const V = {
+            documented: { tone: "#34d399", icon: "✓", label: "Sources describe this", body: "The record supports this premise. Verify the specifics before publishing anyway." },
+            partial: { tone: "#fbbf24", icon: "!", label: "Subject is real, this specific claim is not sourced", body: "Sources exist for the broader subject, but not for this exact event or framing. Skripr will write it without asserting specifics it cannot source. Paste real sources below to state them." },
+            unverified: { tone: "#f87171", icon: "✕", label: "No sources found for this specific claim", body: "Nothing found describing this event. If it is real, paste your sources below. If it is not, change the topic, because a script written on this would sound researched while inventing the case." },
+          }[verdict];
+          return (
+            <div style={{ marginTop: 12, borderRadius: 12, padding: "12px 14px", background: `${V.tone}12`, border: `1px solid ${V.tone}50` }}>
+              <div style={{ display: "flex", gap: 9, alignItems: "flex-start" }}>
+                <span style={{ flexShrink: 0, width: 18, height: 18, borderRadius: 5, background: V.tone, color: "#08131f", fontSize: 11, fontWeight: 800, display: "flex", alignItems: "center", justifyContent: "center", marginTop: 1 }}>{V.icon}</span>
+                <div style={{ minWidth: 0 }}>
+                  <div style={{ fontSize: 12.5, fontWeight: 700, color: V.tone }}>{V.label}</div>
+                  {verdictNote && <div style={{ fontSize: 12.5, color: C.text, lineHeight: 1.55, marginTop: 4 }}>{verdictNote}</div>}
+                  <div style={{ fontSize: 12, color: C.dim, lineHeight: 1.55, marginTop: 4 }}>{V.body}</div>
+                </div>
+              </div>
+            </div>
+          );
+        })()}
+
         {/* Found facts */}
         {facts.length > 0 && (
           <div style={{ marginTop: 12, border: `1px solid ${C.purple}45`, borderRadius: 12, padding: 14, background: `${C.purple}0e` }}>
@@ -136,7 +164,7 @@ export default function ResearchStep(props: {
               Back
             </button>
           )}
-          <button onClick={() => props.onContinue(buildSourceMaterial())}
+          <button onClick={() => props.onContinue(buildSourceMaterial(), verdict ?? undefined)}
             style={{ flex: 1, padding: "12px 18px", borderRadius: 12, border: "none", background: "linear-gradient(135deg,#0e6499,#1a8fd1,#4db8ff)", color: "#fff", fontSize: 15, fontWeight: 700, cursor: "pointer", boxShadow: "0 0 22px rgba(77,184,255,0.26)" }}>
             {includedCount > 0 ? `Continue with ${includedCount} fact${includedCount === 1 ? "" : "s"} →` : grounded ? "Continue →" : "Skip, continue →"}
           </button>

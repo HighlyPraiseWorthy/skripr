@@ -43,7 +43,7 @@ export async function POST(req: Request) {
   const startTime = Date.now();
 
   try {
-    const { transcript, niche, topic, sourceVideoId, videoLength = "long", targetMinutes, viralMagnetWord, angle, remixFramework, hookType, titleFormula, hookScript, contentStructure, retentionTriggers, voiceProfileId, sourceNiche, bridgeNiche, companionCta, storytellingMode, storytellingTechniques, sourceMaterial, selectedTitle, softCta } = await req.json();
+    const { transcript, niche, topic, sourceVideoId, videoLength = "long", targetMinutes, viralMagnetWord, angle, remixFramework, hookType, titleFormula, hookScript, contentStructure, retentionTriggers, voiceProfileId, sourceNiche, bridgeNiche, companionCta, storytellingMode, storytellingTechniques, sourceMaterial, selectedTitle, softCta, sourceVerdict } = await req.json();
 
     // Free plan: scripts capped at 10 minutes — longer scripts are a paid feature
     if (plan === "free" && targetMinutes && targetMinutes > 10) {
@@ -178,6 +178,7 @@ export async function POST(req: Request) {
       voiceProfile: voiceProfile || undefined,
       companionCta: !!companionCta,
       softCta: !!softCta,
+      sourceVerdict: sourceVerdict === "documented" || sourceVerdict === "partial" || sourceVerdict === "unverified" ? sourceVerdict : undefined,
       // Storytelling engine: honor the user's picks; auto-select the mode when
       // none was sent (old clients / one-click generate). buildStorytellingBlock
       // resolves coherence + core techniques downstream.

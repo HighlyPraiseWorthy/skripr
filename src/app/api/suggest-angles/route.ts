@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { Anthropic } from "@anthropic-ai/sdk";
-import { EXPERT_ATTRIBUTION_RULE } from "@/lib/ai/claude";
+import { EXPERT_ATTRIBUTION_RULE, PROVENANCE_RULE } from "@/lib/ai/claude";
 
 export const maxDuration = 120;
 
@@ -35,7 +35,7 @@ Each angle must be:
 Bad example: "Coffee has surprising health effects"
 Good example: "Most people drink coffee during the 90-minute cortisol window after waking — the exact window where caffeine has zero effect and just builds tolerance"
 
-${EXPERT_ATTRIBUTION_RULE}
+${EXPERT_ATTRIBUTION_RULE}\n\n${PROVENANCE_RULE}\n\nGROUNDING: you have no source document here, so do NOT invent a documented incident, date, name, agency, dollar figure, or leaked/declassified document to make an angle sound concrete. Build angles on mechanism, incentive, stakes, or question instead.
 
 Respond with ONLY a JSON array of 4 strings. No preamble, no markdown.
 ["angle 1", "angle 2", "angle 3", "angle 4"]`,

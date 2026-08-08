@@ -43,6 +43,10 @@ export interface ScriptGenerationInput {
   // Opt-in second CTA around the 60-70% retention dip. Off by default: it used
   // to be forced on, which produced two full subscribe+comment asks per script.
   softCta?: boolean;
+  // Result of the pre-generation source check (src/lib/research.ts). "partial" or
+  // "unverified" means the premise is not documented, so the script is barred
+  // from inventing specifics to make it feel concrete.
+  sourceVerdict?: "documented" | "partial" | "unverified";
   // Creator-provided research / source material (pasted articles, notes, or
   // auto-sourced facts). The script MAY state specific facts/numbers/studies
   // that appear here; anything not in it still obeys the anti-fabrication rule.
@@ -86,6 +90,21 @@ export interface TTSTiming {
 // can't drift between routes.
 export const EXPERT_ATTRIBUTION_RULE = `NAMED-EXPERT / ATTRIBUTION RULE (critical): Never attach a real named person or expert to a title, hook, or claim unless that person is genuinely and verifiably tied to THIS specific topic. If a source or reference (e.g. a title formula like "... - [Named Expert]") carries an expert's name, that name belongs ONLY to the source's original topic. When the topic, niche, or angle changes you MUST NOT keep it — use a real expert who genuinely fits the new topic, or drop the named-expert reference entirely and end cleanly. NEVER reuse the source's expert on an unrelated topic, and NEVER invent a fake, generic, or unverifiable name.`;
 
+// Shared by the script generator and the angle/hook suggesters. Invented
+// PROVENANCE is worse than an invented fact: a wrong number can be corrected,
+// but "a declassified document reveals" cannot be checked at all, and it is the
+// thing that makes a fabricated premise read as researched. This rule exists
+// because the old anti-fabrication rule banned fake numbers while explicitly
+// prescribing vague attribution ("research suggests", "studies have shown") as
+// the safe fallback, which is invented provenance by another name.
+export const PROVENANCE_RULE = `SOURCING / PROVENANCE RULE (critical, no exceptions): You may NEVER invent the existence of a source, document, or authority. All of the following are BANNED unless the specific item appears in the provided source material:
+- Documents: "a declassified document", "internal memos show", "leaked files reveal", "court records show", "a sealed indictment", "the report found".
+- Officials and insiders: "officials admitted", "a former analyst revealed", "an engineer who worked on it said", "insiders confirm", "sources familiar with the matter".
+- Vague research authority: "research suggests", "studies have shown", "experts estimate", "data indicates", "scientists agree". These are NOT a safe hedge. They assert that evidence exists, which is a factual claim about the world, and an unfalsifiable one.
+- Any named person, agency, company, study, court case, or dated event presented as connected to this specific story when you cannot source it.
+
+WHAT TO DO WHEN YOU DO NOT HAVE A SOURCE: do not reach for a vaguer version of the claim. Either drop the claim, or state the reasoning openly as reasoning ("if that pattern held here, it would mean...", "there is no public accounting of this, which is itself the problem"). Owning a gap is credible. Papering over it with an unnamed authority is not, and a creator reads this on camera under their own name.`;
+
 // Canonical hook-type taxonomy — single source of truth, used by the script
 // generator, the hook generator, the niche→hook mapping, and (as labels) the
 // framework capture. Consolidates the three older lists that had drifted apart.
@@ -106,10 +125,10 @@ export const HOOK_TYPES: { name: string; how: string; ex: string }[] = [
 export const HOOK_TYPE_NAMES = HOOK_TYPES.map((h) => h.name);
 export const HOOK_TYPES_PROMPT = HOOK_TYPES.map((h, i) => `${i + 1}. ${h.name} — ${h.how} e.g. "${h.ex}"`).join("\n");
 
-const buildSystemPrompt = ({ softCta = false }: { softCta?: boolean } = {}) => `You are Skripr's AI script engine. You specialize in writing YouTube scripts for faceless channels that are optimized for retention, algorithm performance, and AI voice (TTS) delivery.
+const buildSystemPrompt = ({ softCta = false, sourceVerdict }: { softCta?: boolean; sourceVerdict?: "documented" | "partial" | "unverified" } = {}) => `You are Skripr's AI script engine. You specialize in writing YouTube scripts for faceless channels that are optimized for retention, algorithm performance, and AI voice (TTS) delivery.
 
 Your scripts follow these principles:
-1. HOOK: First 5 seconds must grab attention using one of the proven hook types defined in the HOOK RULES section below (Cold Open, Question, Data Drop, Provocation, Curiosity Gap, Myth-Bust, Bold Claim, Direct Address, Teaser, Pattern Interrupt, Scene-Setter, Story).
+1. HOOK: First 5 seconds must grab attention using one of the proven hook types defined in the HOOK RULES section below. Hook types built on a specific statistic (Data Drop, and the numeric form of Curiosity Gap) are only available when that number appears in the provided source material; with no source, pick a hook type that does not require inventing one (Cold Open, Question, Data Drop, Provocation, Curiosity Gap, Myth-Bust, Bold Claim, Direct Address, Teaser, Pattern Interrupt, Scene-Setter, Story).
 2. RETENTION BEATS: Use three precision mechanics — not generic pattern interrupts:
    a) RE-HOOK AT 0:30: The 30-second cliff is the #1 drop-off point. Place a hard re-hook at the 30-second mark — a new tension, a surprising pivot, or a fact that reframes what the viewer just accepted. This is mandatory, not optional.
    b) ESCALATING OPEN LOOPS: Place open loops at the 1/3 and 2/3 points of the script. The 2/3 loop must be more urgent and higher-stakes than the 1/3 loop — escalate intensity, don't just repeat the pattern. The viewer must feel it would be a mistake to stop now.
@@ -131,7 +150,11 @@ Your scripts follow these principles:
   : `Place exactly ONE CTA, at the very end. Do NOT put a subscribe, comment, like, or "stick around" ask anywhere earlier in the script. A second earlier ask makes the video feel like it ends twice.`}
 5. STRUCTURE: Follow the exact structural pattern of the source viral video but apply it to the new topic.
 6. ANTI-REPETITION: Never start two consecutive sentences with the same word. Vary sentence length — mix short punchy sentences with longer ones. Never repeat a key point already made; build forward only.
-7. NO FABRICATED FACTS: Never state a specific statistic, percentage, dollar figure, year, named study, or named survey unless it appears in the provided source material. Use soft framing instead: "research suggests", "studies have shown", "experts estimate". Never attribute a quote or claim to a named real person unless it was in the source material. A creator will read this on camera — an invented number destroys their credibility.
+7. NO FABRICATED FACTS: Never state a specific statistic, percentage, dollar figure, year, date, named study, or named survey unless it appears in the provided source material. Never attribute a quote or claim to a named real person unless it was in the source material. A creator will read this on camera — an invented number destroys their credibility. Do NOT downgrade an unsourced number into a vague claim of evidence; write the sentence without the number, or cut it.
+
+${PROVENANCE_RULE}${sourceVerdict === "unverified" || sourceVerdict === "partial" ? `
+
+PREMISE NOT VERIFIED (critical): a source check could NOT confirm ${sourceVerdict === "partial" ? "this specific event, case, or framing (only the broader subject area is documented)" : "that this specific event, case, or claim is documented anywhere"}. Therefore this script MUST NOT present it as an established, reported incident. You are FORBIDDEN from inventing a specific date, year, name, place, agency, job title, court case, document, or dollar figure to make it feel concrete. Do not invent an anonymous stand-in either ("a technician", "a contractor in 1987") to imply a real person exists. Write the video on what is genuinely known: explain the real mechanism, the real system, the real stakes, and state plainly where the public record goes quiet. If the topic cannot be made into an honest video without inventing a case, say so in the script's own framing rather than filling the gap.` : ""}
 
 ${EXPERT_ATTRIBUTION_RULE}
 
@@ -481,7 +504,7 @@ Output JSON with this exact structure:
   const response = await getAnthropic().messages.create({
     model: "claude-sonnet-4-6",
     max_tokens: 16000,
-    system: buildSystemPrompt({ softCta: !!input.softCta }),
+    system: buildSystemPrompt({ softCta: !!input.softCta, sourceVerdict: input.sourceVerdict }),
     messages: [{ role: "user", content: userPrompt }],
   });
 

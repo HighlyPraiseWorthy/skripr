@@ -3,7 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { getNicheHookExamplesBlock, getNicheTitleFormulasBlock } from "@/lib/viral-frameworks";
 import { getPickedAnglesBlock } from "@/lib/angle-picks";
-import { EXPERT_ATTRIBUTION_RULE } from "@/lib/ai/claude";
+import { EXPERT_ATTRIBUTION_RULE, PROVENANCE_RULE } from "@/lib/ai/claude";
 import { extractTrailingExpert, stripCarriedExpert } from "@/lib/title-utils";
 
 const client = new Anthropic();
@@ -38,7 +38,7 @@ export async function POST(req: Request) {
       system: "You output ONLY valid JSON arrays. No prose, no markdown. Start with [ and end with ].",
       messages: [{
         role: "user",
-        content: `Generate 5 YouTube angles that blend a creator’s niche with a bridge sub-niche.\n\nCREATOR VIDEO: "${(videoTitle || "").slice(0, 120)}"\nBRIDGE SUB-NICHE: ${bridgeSubNiche?.name || "Unknown"} (under ${bridgeSubNiche?.parentNiche || "Unknown"})\nHOOK TYPE: ${hookType}\nTITLE FORMULA: ${formula}\nVIDEO FRAMEWORK: ${framework}\n${learning ? `\n${learning}\n` : ""}\nEach angle must explicitly BLEND BOTH niches together. Not just one or the other.\nThe title must apply the formula above to the blended topic.\n${EXPERT_ATTRIBUTION_RULE}\n\nRequired JSON keys per item:\n- "angle": punchy 8-word name showing the blend\n- "description": one sentence on exactly how both niches fuse\n- "audience": who from BOTH communities would click\n- "titleSuggestion": full title using the formula above\n- "blendExplained": "X audience discovers it through Y lens" (one short sentence)\n\n[`,
+        content: `Generate 5 YouTube angles that blend a creator’s niche with a bridge sub-niche.\n\nCREATOR VIDEO: "${(videoTitle || "").slice(0, 120)}"\nBRIDGE SUB-NICHE: ${bridgeSubNiche?.name || "Unknown"} (under ${bridgeSubNiche?.parentNiche || "Unknown"})\nHOOK TYPE: ${hookType}\nTITLE FORMULA: ${formula}\nVIDEO FRAMEWORK: ${framework}\n${learning ? `\n${learning}\n` : ""}\nEach angle must explicitly BLEND BOTH niches together. Not just one or the other.\nThe title must apply the formula above to the blended topic.\n${EXPERT_ATTRIBUTION_RULE}\n\n${PROVENANCE_RULE}\n\nGROUNDING: you have no source document here, so do NOT invent a documented incident, date, name, agency, dollar figure, or leaked/declassified document to make an angle sound concrete. Build angles on mechanism, incentive, stakes, or question instead.\n\nRequired JSON keys per item:\n- "angle": punchy 8-word name showing the blend\n- "description": one sentence on exactly how both niches fuse\n- "audience": who from BOTH communities would click\n- "titleSuggestion": full title using the formula above\n- "blendExplained": "X audience discovers it through Y lens" (one short sentence)\n\n[`,
       }, {
         role: "assistant",
         content: "[",

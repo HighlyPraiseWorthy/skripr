@@ -3,7 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { getNicheHookExamplesBlock, getNicheTitleFormulasBlock } from "@/lib/viral-frameworks";
 import { getPickedAnglesBlock } from "@/lib/angle-picks";
-import { EXPERT_ATTRIBUTION_RULE } from "@/lib/ai/claude";
+import { EXPERT_ATTRIBUTION_RULE, PROVENANCE_RULE } from "@/lib/ai/claude";
 
 const client = new Anthropic();
 export const maxDuration = 120;
@@ -46,12 +46,12 @@ ${hookTypeFilter
   : `Generate 5 completely different hook angles. Each must use a DIFFERENT psychological hook:
 - CONTROVERSY: Challenge a sacred belief
 - CURIOSITY GAP: Create an itch they must scratch
-- AUTHORITY: Lead with surprising data that reframes everything
+- REFRAME: Recast something the viewer already knows so it means the opposite
 - MYTH-BUST: Destroy the most common wrong assumption
 - STORY: Open with a specific moment that makes stakes visceral
 - PATTERN INTERRUPT: Violate expectations immediately
 - FEAR/STAKES: Make the cost of NOT knowing feel immediate
-- INSIDER SECRET: What the industry doesn't want you to know`}
+- OVERLOOKED MECHANISM: The unglamorous way this actually works, which nobody bothers to explain`}
 
 For each angle return EXACTLY:
 - "hookType": hook type (ALL CAPS)
@@ -61,6 +61,14 @@ For each angle return EXACTLY:
 - "audienceEmotion": primary emotion (curiosity / fear / anger / excitement / surprise)
 
 ${EXPERT_ATTRIBUTION_RULE}
+
+${PROVENANCE_RULE}
+
+GROUNDING (critical): this topic is a string the creator typed. You have NO source document and NO confirmation that the event, case, or person it describes is real. So:
+- Do NOT invent a documented incident, a date, a name, a dollar figure, an agency, a court case, or a leaked/declassified document to make an angle sound concrete.
+- Do NOT write a "hookPremise" whose credibility depends on a source you cannot show. An angle that only works if a fake document exists is a bad angle, not a strong one.
+- Build each angle on the mechanism, the incentive, the stakes, or the question, all of which are honest with no source. A sharp question beats a fabricated revelation.
+- If the topic reads like a specific real event you cannot verify, angle toward the verifiable system around it instead of asserting the event happened.
 
 [`,
       }, {

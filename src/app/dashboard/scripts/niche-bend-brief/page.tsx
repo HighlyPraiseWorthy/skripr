@@ -76,6 +76,7 @@ export default function NicheBendBriefPage() {
   const [voiceId, setVoiceId] = useState<string | null>(null);
   const [companionCta, setCompanionCta] = useState(false);
   const [softCta, setSoftCta] = useState(false);
+  const [sourceVerdict, setSourceVerdict] = useState<string | null>(null);
 
   useEffect(() => {
     try {
@@ -151,6 +152,7 @@ export default function NicheBendBriefPage() {
           bridgeNiche: selectedNiche.parentNiche || undefined,
           companionCta,
           softCta,
+          sourceVerdict: sourceVerdict || undefined,
           storytellingMode, storytellingTechniques, sourceMaterial: sourceMaterial || undefined,
           selectedTitle: angle.titleSuggestion || undefined,
         }),
@@ -202,7 +204,7 @@ export default function NicheBendBriefPage() {
       niche={selectedNiche?.parentNiche || selectedAngle.audience}
       angle={selectedAngle.titleSuggestion || selectedAngle.angle}
       angleLabel={selectedAngle.titleSuggestion || selectedAngle.angle}
-      onContinue={(sm) => { setSourceMaterial(sm || ""); setPhase("storytelling"); }}
+      onContinue={(sm, v) => { setSourceMaterial(sm || ""); setSourceVerdict(v || null); setPhase("storytelling"); }}
       onBack={() => setPhase("angles")}
     />
   );

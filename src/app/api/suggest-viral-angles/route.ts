@@ -4,6 +4,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import { getNicheHookExamplesBlock, getNicheTitleFormulasBlock } from "@/lib/viral-frameworks";
 import { getPickedAnglesBlock } from "@/lib/angle-picks";
 import { extractTrailingExpert, stripCarriedExpert } from "@/lib/title-utils";
+import { PROVENANCE_RULE } from "@/lib/ai/claude";
 
 const client = new Anthropic();
 export const maxDuration = 30;
@@ -57,6 +58,10 @@ HOOK PSYCHOLOGY: ${whyItWorks}
 TITLE FORMULA: ${titleFormula?.formula || ""}
 FRAMEWORK SUMMARY: ${framework}
 ${learning ? `\n${learning}\n` : ""}
+
+${PROVENANCE_RULE}
+
+The source video grounds the ORIGINAL topic only. It is not evidence for the new topic you are angling toward, so never carry its documents, figures, or named sources onto a different subject, and never invent new ones.
 
 Output a JSON array of exactly 5 objects. Each object must have these exact keys:
 - "angle": punchy topic name, max 8 words

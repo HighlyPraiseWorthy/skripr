@@ -4,8 +4,15 @@
 // until PERPLEXITY_API_KEY is set — callers surface the error gracefully.
 
 export interface ResearchFact { fact: string; source: string | null }
+
+// Whether the record actually supports the premise the script is about to assert.
+//   documented  a real, citable source describes THIS specific event or claim
+//   partial     the subject area is real, but this specific framing is not documented
+//   unverified  nothing found describing this specific event or claim
+export type ResearchVerdict = "documented" | "partial" | "unverified";
+
 export type ResearchResult =
-  | { ok: true; facts: ResearchFact[]; citations: string[] }
+  | { ok: true; verdict: ResearchVerdict; verdictNote: string; facts: ResearchFact[]; citations: string[] }
   | { ok: false; error: string };
 
 export async function findResearch(input: { topic: string; angle?: string; niche?: string }): Promise<ResearchResult> {
@@ -15,25 +22,31 @@ export async function findResearch(input: { topic: string; angle?: string; niche
   if (!topic.trim()) return { ok: false, error: "Add a topic first." };
   const angle = (input.angle || "").slice(0, 220);
 
-  // Angle-led: the hook creates the curiosity gap; the body must pay it off, so
-  // bias the research toward facts that substantiate the chosen angle, using the
-  // topic only as the domain to stay within. Falls back to topic-wide when no
-  // angle is provided.
-  const lead = angle
-    ? `Find verified, citable facts that SUBSTANTIATE this specific video angle — so the script can deliver on the curiosity its hook creates.
+  // VERIFY BEFORE SUBSTANTIATING. This used to ask for facts that "SUBSTANTIATE
+  // this specific angle", which is confirmation-seeking: given a premise that is
+  // not a real documented event, the search returns the nearest real material in
+  // the topic area, and the script then wraps genuine citations around an
+  // invented story. That is the most damaging failure mode for a documentary
+  // channel, because the verifiable part lends its credibility to the invented
+  // part. So step one is always "does the record describe this at all", and the
+  // verdict travels with the facts.
+  const subject = angle ? `CLAIM / ANGLE the video intends to assert: "${angle}"\nTOPIC AREA: ${topic}` : `CLAIM / TOPIC the video intends to assert: "${topic}"`;
 
-ANGLE (what the video promises): "${angle}"
-TOPIC (stay within this domain): ${topic}${input.niche ? `\nNICHE: ${input.niche}` : ""}
+  const prompt = `You are fact-checking a premise BEFORE a script is written about it. Work in two steps and do not skip step 1.
 
-Return the 5-8 most useful SPECIFIC facts that DIRECTLY support, prove, or deepen THIS angle (real numbers, percentages, dollar figures, dates, or named study findings). Prioritize facts relevant to the angle; include a broader topic fact only when it reinforces the angle.`
-    : `Find verified, citable facts for a YouTube video.
-TOPIC: ${topic}${input.niche ? `\nNICHE: ${input.niche}` : ""}
+${subject}${input.niche ? `\nNICHE: ${input.niche}` : ""}
 
-Return the 5-8 most useful SPECIFIC facts a creator could state on camera (real numbers, percentages, dollar figures, dates, or named study findings).`;
+STEP 1 — VERIFY THE PREMISE. Search for sources that describe THIS SPECIFIC event, case, person, or claim. Do NOT assume it is real. Do NOT substitute loosely related material from the same subject area and treat it as confirmation. Decide one verdict:
+- "documented": real citable sources describe this specific event or claim.
+- "partial": the general subject is real and documented, but this SPECIFIC event, case, framing, or causal claim is NOT something you can find sources for.
+- "unverified": you cannot find any source describing this specific event or claim. Sounding plausible is not evidence. If it appears to be invented, fictional, or a mashup of unrelated real things, this is the correct verdict.
 
-  const prompt = `${lead}
-Only include facts you can attribute to a real source. Output ONLY a JSON array, no prose:
-[{"fact":"the specific fact, including the exact number","source":"the source URL it comes from"}]`;
+Be strict. If you are reaching, choose "partial" or "unverified". A wrong "documented" leads to a creator stating fabrication on camera as fact.
+
+STEP 2 — FACTS. If the verdict is "documented", return the 5-8 most useful specific facts (real numbers, dates, named findings) with sources. If "partial", return only facts about the REAL surrounding subject that you can genuinely source, and never facts that imply the unverified specific claim is true. If "unverified", return an empty facts array.
+
+Only include a fact you can attribute to a real source URL. Output ONLY this JSON, no prose:
+{"verdict":"documented|partial|unverified","verdictNote":"one plain sentence stating what the record does and does not show about this specific claim","facts":[{"fact":"the specific fact, including the exact number","source":"the source URL it comes from"}]}`;
 
   try {
     const res = await fetch("https://api.perplexity.ai/chat/completions", {
@@ -48,11 +61,30 @@ Only include facts you can attribute to a real source. Output ONLY a JSON array,
     const citations: string[] = Array.isArray(data?.citations) ? data.citations.filter((c: any) => typeof c === "string") : [];
 
     let facts: ResearchFact[] = [];
+    let verdict: ResearchVerdict = "unverified";
+    let verdictNote = "";
     try {
-      const m = content.match(/\[[\s\S]*\]/);
-      const arr = JSON.parse(m ? m[0] : content);
-      if (Array.isArray(arr)) {
-        facts = arr
+      // Object shape now (verdict + facts). Fall back to a bare array so an older
+      // response shape still parses rather than throwing the whole lookup away.
+      // Pick by whichever delimiter comes FIRST: a greedy {...} match would
+      // otherwise grab the first element out of a bare array and lose the rest.
+      const objAt = content.indexOf("{");
+      const arrAt = content.indexOf("[");
+      const useArray = arrAt !== -1 && (objAt === -1 || arrAt < objAt);
+      const m = useArray ? content.match(/\[[\s\S]*\]/) : content.match(/\{[\s\S]*\}/);
+      const parsed = JSON.parse(m ? m[0] : content);
+      const rawFacts = Array.isArray(parsed) ? parsed : parsed?.facts;
+      if (Array.isArray(parsed)) {
+        // No verdict in a bare array: unknown, not confirmed.
+        verdict = "partial";
+        verdictNote = "";
+      } else {
+        const v = String(parsed?.verdict || "").toLowerCase();
+        verdict = v === "documented" || v === "partial" ? v : "unverified";
+        verdictNote = typeof parsed?.verdictNote === "string" ? parsed.verdictNote.trim().slice(0, 400) : "";
+      }
+      if (Array.isArray(rawFacts)) {
+        facts = rawFacts
           .filter((x: any) => x && typeof x.fact === "string" && x.fact.trim())
           .map((x: any, i: number) => ({
             fact: String(x.fact).trim().slice(0, 400),
@@ -61,12 +93,16 @@ Only include facts you can attribute to a real source. Output ONLY a JSON array,
           }))
           .slice(0, 8);
       }
-    } catch { /* unparseable — facts stays empty, citations still returned */ }
+    } catch { /* unparseable — treat as unverified, citations still returned */ }
 
-    if (facts.length === 0 && citations.length === 0) {
-      return { ok: false, error: "No citable facts found for this topic." };
+    // An unverified premise is a RESULT worth reporting, not a failure. The old
+    // code only failed when facts AND citations were both empty, which for any
+    // plausible-sounding topic never happened, so the failure branch was
+    // effectively dead and every premise looked grounded.
+    if (verdict === "unverified" && facts.length === 0 && citations.length === 0 && !verdictNote) {
+      return { ok: false, error: "Nothing came back for this topic. Try more specific wording, or paste your own sources below." };
     }
-    return { ok: true, facts, citations };
+    return { ok: true, verdict, verdictNote, facts, citations };
   } catch (e: any) {
     return { ok: false, error: e?.name === "TimeoutError" ? "Research lookup timed out." : (e?.message || "Research lookup failed.") };
   }

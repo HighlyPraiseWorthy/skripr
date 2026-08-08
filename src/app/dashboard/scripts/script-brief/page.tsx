@@ -47,6 +47,7 @@ export default function ScriptBriefPage() {
   const [voiceId, setVoiceId] = useState<string | null>(null);
   const [companionCta, setCompanionCta] = useState(false);
   const [softCta, setSoftCta] = useState(false);
+  const [sourceVerdict, setSourceVerdict] = useState<string | null>(null);
   const [userPlan, setUserPlan] = useState<string>("free");
 
   useEffect(() => {
@@ -101,6 +102,7 @@ export default function ScriptBriefPage() {
           voiceProfileId: voiceId || undefined,
           companionCta,
           softCta,
+          sourceVerdict: sourceVerdict || undefined,
           hookType: angle.hookType,
           angle: `Hook type: ${angle.hookType}. Opening hook to adapt: "${angle.hookPremise}". Suggested title: ${angle.titleSuggestion}`,
           storytellingMode, storytellingTechniques, sourceMaterial: sourceMaterial || undefined,
@@ -155,7 +157,7 @@ export default function ScriptBriefPage() {
       niche={brief?.niche}
       angle={selectedAngle.hookPremise || selectedAngle.titleSuggestion}
       angleLabel={selectedAngle.titleSuggestion || selectedAngle.hookPremise}
-      onContinue={(sm) => { setSourceMaterial(sm || ""); setPhase("storytelling"); }}
+      onContinue={(sm, v) => { setSourceMaterial(sm || ""); setSourceVerdict(v || null); setPhase("storytelling"); }}
       onBack={() => setPhase("angles")}
     />
   );

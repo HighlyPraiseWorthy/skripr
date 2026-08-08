@@ -81,6 +81,7 @@ export default function NewScriptPage() {
   const [voiceId, setVoiceId] = useState<string | null>(null);
   const [companionCta, setCompanionCta] = useState(false);
   const [softCta, setSoftCta] = useState(false);
+  const [sourceVerdict, setSourceVerdict] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [userPlan, setUserPlan] = useState<string>("free");
@@ -264,7 +265,7 @@ export default function NewScriptPage() {
     try {
       const res = await fetch("/api/scripts/generate", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ transcript, niche: niche || undefined, topic: topic || undefined, videoLength: videoMinutes >= 14 ? "long" : "medium", targetMinutes: videoMinutes, voiceProfileId: voiceId || undefined, companionCta, softCta,
+        body: JSON.stringify({ transcript, niche: niche || undefined, topic: topic || undefined, videoLength: videoMinutes >= 14 ? "long" : "medium", targetMinutes: videoMinutes, voiceProfileId: voiceId || undefined, companionCta, softCta, sourceVerdict: sourceVerdict || undefined,
           sourceVideoId: youtubeUrl ? youtubeUrl.match(/[?&]v=([^&]+)/)?.[1] : undefined, viralMagnetWord: selectedViralWord || undefined, angle: angle || undefined, remixFramework: viralFramework?.remixFramework || undefined, hookType: viralFramework?.hookType || undefined, titleFormula: viralFramework?.selectedTitle || viralFramework?.titleFormula || undefined,
           storytellingMode, storytellingTechniques, sourceMaterial: sourceMaterial || undefined }),
       });
@@ -785,7 +786,7 @@ export default function NewScriptPage() {
             niche={niche}
             angle={angle}
             angleLabel={angle || undefined}
-            onContinue={(sm) => { setSourceMaterial(sm || ""); setStep("storytelling"); }}
+            onContinue={(sm, v) => { setSourceMaterial(sm || ""); setSourceVerdict(v || null); setStep("storytelling"); }}
             onBack={() => setStep("input")}
           />
         )}
