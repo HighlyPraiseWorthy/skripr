@@ -57,6 +57,8 @@ Flag an angle when it:
 - makes an unsupported superlative claim ("the greatest", "the first ever", "the biggest") the facts do not establish
 - misstates a documented event (contradicts the facts)
 - asserts a RELATIONSHIP the facts contradict, for example calling two things "unrelated" or "two different things" when the facts connect them, or claiming a link the facts do not support
+- uses an ANACHRONISTIC or wrong-era name for a country, agency, or entity, for example "Russian Embassy" or "Russia" for an event during the USSR (it was the Soviet Embassy / the Soviet Union), or any name that did not exist at the time of the events
+- MISCHARACTERIZES THE CHARGE OR VERDICT, for example saying someone was convicted of or prosecuted on a "lesser charge" when the facts say they were convicted of the top charge (espionage), or calling a documented legal outcome a cover-up the facts do not establish
 
 APPROVED FACTS:
 """
