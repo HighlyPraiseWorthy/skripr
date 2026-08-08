@@ -1084,6 +1084,19 @@ export default function NewScriptPage() {
                 <span style={{ padding: "3px 10px", borderRadius: 7, fontSize: 11, fontWeight: 600, background: "rgba(77,184,255,0.07)", color: C.textDim }}>~{Math.round((generatedScript.estimatedDuration || 0) / 60) || 1} min</span>
               </div>
               <h2 style={{ fontSize: 21, fontWeight: 700, color: C.textBright, letterSpacing: -0.3, marginBottom: 16 }}>{generatedScript.title}</h2>
+              {Array.isArray((generatedScript as any).factCheck?.unverified) && (generatedScript as any).factCheck.unverified.length > 0 && (
+                <div style={{ background: "rgba(251,191,36,0.08)", border: "1px solid rgba(251,191,36,0.3)", borderRadius: 12, padding: "13px 16px", marginBottom: 16 }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: "#fbbf24", letterSpacing: 0.4, marginBottom: 5 }}>VERIFY BEFORE PUBLISHING</div>
+                  <div style={{ fontSize: 12.5, color: C.textDim, lineHeight: 1.6, marginBottom: 9 }}>
+                    These dates or figures are in the script but were not in the sourced research, so they may be the model&apos;s own recall. Check each before you record.
+                  </div>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
+                    {(generatedScript as any).factCheck.unverified.map((u: string, i: number) => (
+                      <span key={i} style={{ fontSize: 12, fontWeight: 600, color: "#fbbf24", background: "rgba(251,191,36,0.12)", border: "1px solid rgba(251,191,36,0.3)", borderRadius: 7, padding: "4px 10px" }}>{u}</span>
+                    ))}
+                  </div>
+                </div>
+              )}
               {generatedScript.hook && (
                 <div style={{ borderRadius: 14, padding: "14px 16px", marginBottom: 16, background: "rgba(77,184,255,0.07)", border: "1px solid rgba(77,184,255,0.14)" }}>
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>

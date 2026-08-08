@@ -347,6 +347,22 @@ export default function ScriptBriefPage() {
             </div>
           )}
 
+          {/* Deterministic fact scan: dates and dollar figures in the script that
+              were not in the researched source material. Verify these before voice. */}
+          {Array.isArray(script.factCheck?.unverified) && script.factCheck.unverified.length > 0 && (
+            <div style={{ background: "rgba(251,191,36,0.08)", border: "1px solid rgba(251,191,36,0.3)", borderRadius: 12, padding: "14px 18px", marginBottom: 16 }}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: "#fbbf24", letterSpacing: 0.4, marginBottom: 5 }}>VERIFY BEFORE PUBLISHING</div>
+              <div style={{ fontSize: 12.5, color: C.textDim, lineHeight: 1.6, marginBottom: 9 }}>
+                These dates or figures are in the script but were not in the sourced research, so they may be the model&apos;s own recall. Check each against a source before you record.
+              </div>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
+                {script.factCheck.unverified.map((u: string, i: number) => (
+                  <span key={i} style={{ fontSize: 12, fontWeight: 600, color: "#fbbf24", background: "rgba(251,191,36,0.12)", border: "1px solid rgba(251,191,36,0.3)", borderRadius: 7, padding: "4px 10px" }}>{u}</span>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Viral Magnet */}
           {script.magnetSuggestions && script.magnetSuggestions.length > 0 && (
             <div style={{ marginBottom: 16, borderRadius: 14, border: "1px solid rgba(77,184,255,0.18)", background: "rgba(77,184,255,0.04)", padding: "16px 18px" }}>

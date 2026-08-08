@@ -10,6 +10,7 @@ import { detectNiche } from "@/lib/niche-detect";
 import { getKeptHooksBlock } from "@/lib/hook-picks";
 import { saveAnglePick } from "@/lib/angle-picks";
 import { autoSelectMode, resolveTechniques } from "@/lib/storytelling";
+import { factCheckAgainstSource } from "@/lib/fact-check";
 import { getActiveVoiceMeta, getVoiceMetaById } from "@/lib/voice-profile";
 import { captureFrameworkInBackground } from "@/lib/framework-capture";
 
@@ -291,7 +292,14 @@ export async function POST(req: Request) {
     await capturePromise.catch(() => {}); // already overlapped generation; ensure it lands
     await anglePromise.catch(() => {});   // bank the picked angle (overlapped generation)
     console.log(`[generate] total ${Date.now() - startTime}ms`);
-    return NextResponse.json({ ...script, magnetSuggestions, savedId });
+    // Deterministic fact scan: flag dates/dollar figures in the finished script
+    // that are not in the source material it was allowed to use. Catches the
+    // date/number confabulation a prompt rule cannot fully prevent.
+    const scannedText = [script.hook, script.fullScript, script.script, script.body, script.content, script.cta]
+      .filter((x: any) => typeof x === "string").join("\n\n");
+    const factCheck = factCheckAgainstSource(scannedText, typeof sourceMaterial === "string" ? sourceMaterial : "");
+
+    return NextResponse.json({ ...script, magnetSuggestions, savedId, factCheck });
   } catch (error: any) {
     console.error("Script generation error:", error.message);
     // Refund the credit — user shouldn't pay for our failure
