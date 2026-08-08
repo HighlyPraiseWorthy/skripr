@@ -11,8 +11,30 @@ export interface ResearchFact { fact: string; source: string | null }
 //   unverified  nothing found describing this specific event or claim
 export type ResearchVerdict = "documented" | "partial" | "unverified";
 
+// What KIND of question the topic is. This has to be settled before grounding,
+// because "is this claim true" is only the right question for one of them.
+//   event        a specific real thing that happened (documentary, true crime, history)
+//   explainer    how something works, no single incident (the Kurzgesagt lane)
+//   hypothetical a counterfactual, deliberately not something that happened
+//   claim        an assertion about people, markets, or trends
+//
+// Without this, a topic like "What If the Earth Stopped Spinning" gets fact-checked
+// as an event, comes back unverified because the Earth has not stopped spinning,
+// and the script is then barred from stating specifics — which guts a science
+// explainer, since specifics are the whole product. The no-invented-specifics gate
+// applies to unresolved EVENTS only.
+export type TopicKind = "event" | "explainer" | "hypothetical" | "claim";
+
 export type ResearchResult =
-  | { ok: true; verdict: ResearchVerdict; verdictNote: string; facts: ResearchFact[]; citations: string[] }
+  | {
+      ok: true;
+      kind: TopicKind;
+      verdict: ResearchVerdict;
+      verdictNote: string;
+      facts: ResearchFact[];
+      citations: string[];
+      candidates: SubjectCandidate[];
+    }
   | { ok: false; error: string };
 
 // A real, documented case that a proposed video title could actually be about.
@@ -32,6 +54,27 @@ export type ResolveResult =
   | { ok: true; candidates: SubjectCandidate[] }
   | { ok: false; error: string };
 
+// Shared by findResearch and resolveSubjects. A candidate with no citable source
+// is exactly what this feature exists to prevent, so it is dropped rather than
+// offered as a "real" case the creator might trust.
+function normalizeCandidates(raw: any, fallbackCitations: string[]): SubjectCandidate[] {
+  if (!Array.isArray(raw)) return [];
+  return raw
+    .filter((c: any) => c && typeof c.name === "string" && c.name.trim())
+    .map((c: any) => ({
+      name: String(c.name).trim().slice(0, 160),
+      summary: typeof c.summary === "string" ? c.summary.trim().slice(0, 500) : "",
+      when: typeof c.when === "string" ? c.when.trim().slice(0, 40) : "",
+      whyItFits: typeof c.whyItFits === "string" ? c.whyItFits.trim().slice(0, 300) : "",
+      sources: (Array.isArray(c.sources) ? c.sources : [])
+        .filter((u: any) => typeof u === "string" && /^https?:\/\//.test(u))
+        .slice(0, 4),
+    }))
+    .filter((c: SubjectCandidate) => c.sources.length > 0 || fallbackCitations.length > 0)
+    .map((c: SubjectCandidate) => ({ ...c, sources: c.sources.length ? c.sources : fallbackCitations.slice(0, 2) }))
+    .slice(0, 4);
+}
+
 export async function findResearch(input: { topic: string; angle?: string; niche?: string }): Promise<ResearchResult> {
   const key = process.env.PERPLEXITY_API_KEY;
   if (!key) return { ok: false, error: "Research sourcing isn't set up yet." };
@@ -49,21 +92,37 @@ export async function findResearch(input: { topic: string; angle?: string; niche
   // verdict travels with the facts.
   const subject = angle ? `CLAIM / ANGLE the video intends to assert: "${angle}"\nTOPIC AREA: ${topic}` : `CLAIM / TOPIC the video intends to assert: "${topic}"`;
 
-  const prompt = `You are fact-checking a premise BEFORE a script is written about it. Work in two steps and do not skip step 1.
+  const prompt = `You are preparing research for a video script. Do two steps in order and do not skip step 1.
 
 ${subject}${input.niche ? `\nNICHE: ${input.niche}` : ""}
 
-STEP 1 — VERIFY THE PREMISE. Search for sources that describe THIS SPECIFIC event, case, person, or claim. Do NOT assume it is real. Do NOT substitute loosely related material from the same subject area and treat it as confirmation. Decide one verdict:
-- "documented": real citable sources describe this specific event or claim.
-- "partial": the general subject is real and documented, but this SPECIFIC event, case, framing, or causal claim is NOT something you can find sources for.
-- "unverified": you cannot find any source describing this specific event or claim. Sounding plausible is not evidence. If it appears to be invented, fictional, or a mashup of unrelated real things, this is the correct verdict.
+STEP 1 — CLASSIFY the topic as exactly one "kind":
+- "event": a specific real thing that happened, or a specific person, case, or organisation's actions. Documentaries, true crime, history, investigations.
+- "explainer": how something works or what something is, with no single incident at its centre. Science and technology explainers.
+- "hypothetical": a counterfactual or thought experiment, deliberately NOT something that happened ("what if the Earth stopped spinning", "what happens if every glacier melts").
+- "claim": an assertion about people, behaviour, markets, or trends rather than one incident ("why nobody can focus any more").
 
-Be strict. If you are reaching, choose "partial" or "unverified". A wrong "documented" leads to a creator stating fabrication on camera as fact.
+STEP 2 — ground it according to that kind. This matters: applying the wrong one produces a useless answer.
 
-STEP 2 — FACTS. If the verdict is "documented", return the 5-8 most useful specific facts (real numbers, dates, named findings) with sources. If "partial", return only facts about the REAL surrounding subject that you can genuinely source, and never facts that imply the unverified specific claim is true. If "unverified", return an empty facts array.
+IF "event":
+  Search for sources describing THIS SPECIFIC event, case, or person. Do NOT assume it is real and do NOT substitute loosely related material from the same subject area as confirmation. Set "verdict":
+   - "documented": real citable sources describe this specific event.
+   - "partial": the surrounding subject is real but this specific event, framing, or causal claim is not something you can source.
+   - "unverified": nothing describes this specific event. Sounding plausible is not evidence.
+  Be strict; if you are reaching, choose "partial" or "unverified". A wrong "documented" puts fabrication in a creator's mouth on camera.
+  ALSO fill "candidates": the real, documented cases this title could actually be about, most likely first, up to 4. A creator types a TITLE, not a claim, so naming the real story is more useful than rejecting the title. Never invent a case to fill a slot. If the event is already fully identified, a single candidate is correct.
+
+IF "explainer":
+  Do NOT try to verify it as an event; there is no incident to confirm. Set "verdict" to "documented" when the subject genuinely exists, and return the most useful SPECIFIC sourced facts a script could state (real numbers, scales, mechanisms, named findings). Leave "candidates" empty.
+
+IF "hypothetical":
+  Do NOT judge whether the scenario happened. It is counterfactual ON PURPOSE, and marking it unverified would be wrong. Set "verdict" to "documented" when the underlying science or mechanism is real, and return real sourced facts about the mechanisms needed to reason through the scenario (the physics, biology, or economics it depends on). Leave "candidates" empty.
+
+IF "claim":
+  Return sourced evidence bearing on the claim, including evidence that complicates it. Set "verdict" by whether real evidence exists: "documented" when it does, "partial" when only adjacent evidence exists, "unverified" when none does. Leave "candidates" empty.
 
 Only include a fact you can attribute to a real source URL. Output ONLY this JSON, no prose:
-{"verdict":"documented|partial|unverified","verdictNote":"one plain sentence stating what the record does and does not show about this specific claim","facts":[{"fact":"the specific fact, including the exact number","source":"the source URL it comes from"}]}`;
+{"kind":"event|explainer|hypothetical|claim","verdict":"documented|partial|unverified","verdictNote":"one plain sentence on what the record does and does not show","facts":[{"fact":"the specific fact, including the exact number","source":"url"}],"candidates":[{"name":"person, case, or event","summary":"1-2 sentences on what actually happened","when":"year or range","whyItFits":"how it matches the title","sources":["url"]}]}`;
 
   try {
     const res = await fetch("https://api.perplexity.ai/chat/completions", {
@@ -80,11 +139,13 @@ Only include a fact you can attribute to a real source URL. Output ONLY this JSO
     let facts: ResearchFact[] = [];
     let verdict: ResearchVerdict = "unverified";
     let verdictNote = "";
+    let kind: TopicKind = "event";
+    let candidates: SubjectCandidate[] = [];
     try {
-      // Object shape now (verdict + facts). Fall back to a bare array so an older
-      // response shape still parses rather than throwing the whole lookup away.
-      // Pick by whichever delimiter comes FIRST: a greedy {...} match would
-      // otherwise grab the first element out of a bare array and lose the rest.
+      // Object shape now. Fall back to a bare array so an older response shape
+      // still parses rather than throwing the whole lookup away. Pick by whichever
+      // delimiter comes FIRST: a greedy {...} match would otherwise grab the first
+      // element out of a bare array and lose the rest.
       const objAt = content.indexOf("{");
       const arrAt = content.indexOf("[");
       const useArray = arrAt !== -1 && (objAt === -1 || arrAt < objAt);
@@ -94,11 +155,13 @@ Only include a fact you can attribute to a real source URL. Output ONLY this JSO
       if (Array.isArray(parsed)) {
         // No verdict in a bare array: unknown, not confirmed.
         verdict = "partial";
-        verdictNote = "";
       } else {
         const v = String(parsed?.verdict || "").toLowerCase();
         verdict = v === "documented" || v === "partial" ? v : "unverified";
+        const k = String(parsed?.kind || "").toLowerCase();
+        kind = k === "explainer" || k === "hypothetical" || k === "claim" ? k : "event";
         verdictNote = typeof parsed?.verdictNote === "string" ? parsed.verdictNote.trim().slice(0, 400) : "";
+        candidates = normalizeCandidates(parsed?.candidates, citations);
       }
       if (Array.isArray(rawFacts)) {
         facts = rawFacts
@@ -112,14 +175,18 @@ Only include a fact you can attribute to a real source URL. Output ONLY this JSO
       }
     } catch { /* unparseable — treat as unverified, citations still returned */ }
 
+    // A hypothetical or explainer is never "unverified" for the purposes of the
+    // script gate: there is no event to confirm. Only an EVENT can fail to resolve.
+    if (kind !== "event" && verdict === "unverified" && facts.length > 0) verdict = "partial";
+
     // An unverified premise is a RESULT worth reporting, not a failure. The old
     // code only failed when facts AND citations were both empty, which for any
     // plausible-sounding topic never happened, so the failure branch was
     // effectively dead and every premise looked grounded.
-    if (verdict === "unverified" && facts.length === 0 && citations.length === 0 && !verdictNote) {
+    if (verdict === "unverified" && facts.length === 0 && citations.length === 0 && !verdictNote && candidates.length === 0) {
       return { ok: false, error: "Nothing came back for this topic. Try more specific wording, or paste your own sources below." };
     }
-    return { ok: true, verdict, verdictNote, facts, citations };
+    return { ok: true, kind, verdict, verdictNote, facts, citations, candidates };
   } catch (e: any) {
     return { ok: false, error: e?.name === "TimeoutError" ? "Research lookup timed out." : (e?.message || "Research lookup failed.") };
   }
@@ -173,25 +240,7 @@ Output ONLY this JSON, no prose:
     try {
       const m = content.match(/\{[\s\S]*\}/);
       const parsed = JSON.parse(m ? m[0] : content);
-      const raw = Array.isArray(parsed) ? parsed : parsed?.candidates;
-      if (Array.isArray(raw)) {
-        candidates = raw
-          .filter((c: any) => c && typeof c.name === "string" && c.name.trim())
-          .map((c: any) => ({
-            name: String(c.name).trim().slice(0, 160),
-            summary: typeof c.summary === "string" ? c.summary.trim().slice(0, 500) : "",
-            when: typeof c.when === "string" ? c.when.trim().slice(0, 40) : "",
-            whyItFits: typeof c.whyItFits === "string" ? c.whyItFits.trim().slice(0, 300) : "",
-            sources: (Array.isArray(c.sources) ? c.sources : [])
-              .filter((u: any) => typeof u === "string" && /^https?:\/\//.test(u))
-              .slice(0, 4),
-          }))
-          // A candidate with no citable source is exactly what this feature exists
-          // to prevent, so drop it rather than offering an unsourced "real" case.
-          .filter((c: SubjectCandidate) => c.sources.length > 0 || fallbackCitations.length > 0)
-          .map((c: SubjectCandidate) => ({ ...c, sources: c.sources.length ? c.sources : fallbackCitations.slice(0, 2) }))
-          .slice(0, 4);
-      }
+      candidates = normalizeCandidates(Array.isArray(parsed) ? parsed : parsed?.candidates, fallbackCitations);
     } catch { /* unparseable — no candidates */ }
 
     return { ok: true, candidates };

@@ -7,6 +7,7 @@ import { useState } from "react";
 // their own, or skip. Whatever they keep grounds real numbers in the script.
 
 export type Verdict = "documented" | "partial" | "unverified";
+export type TopicKind = "event" | "explainer" | "hypothetical" | "claim";
 
 export interface SubjectCandidate {
   name: string; summary: string; when: string; whyItFits: string; sources: string[];
@@ -22,7 +23,7 @@ export default function ResearchStep(props: {
   niche?: string;
   angle?: string;
   angleLabel?: string;
-  onContinue: (sourceMaterial?: string, verdict?: Verdict) => void;
+  onContinue: (sourceMaterial?: string, verdict?: Verdict, kind?: TopicKind) => void;
   onBack?: () => void;
 }) {
   const [sourceMaterial, setSourceMaterial] = useState("");
@@ -32,7 +33,7 @@ export default function ResearchStep(props: {
   const [facts, setFacts] = useState<{ fact: string; source: string | null }[]>([]);
   const [candidates, setCandidates] = useState<SubjectCandidate[] | null>(null);
   const [pickedSubject, setPickedSubject] = useState<SubjectCandidate | null>(null);
-  const [resolving, setResolving] = useState(false);
+  const [kind, setKind] = useState<TopicKind | null>(null);
   const [picked, setPicked] = useState<Set<number>>(new Set());
   const [error, setError] = useState<string | null>(null);
 
@@ -49,29 +50,14 @@ export default function ResearchStep(props: {
       const fs = Array.isArray(d.facts) ? d.facts : [];
       setFacts(fs); setPicked(new Set(fs.map((_: any, i: number) => i)));
       const v = d.verdict === "documented" || d.verdict === "partial" ? d.verdict : "unverified";
-      setVerdict(v);
+      const k: TopicKind = d.kind === "explainer" || d.kind === "hypothetical" || d.kind === "claim" ? d.kind : "event";
+      setVerdict(v); setKind(k);
       setVerdictNote(typeof d.verdictNote === "string" ? d.verdictNote : "");
-      if (v !== "documented") void resolveSubjects();
+      // Candidates ride along with the same call now, so no second lookup. Only an
+      // EVENT has a real case to pick; the other kinds have no incident to resolve.
+      if (k === "event" && Array.isArray(d.candidates)) setCandidates(d.candidates);
     } catch (e: any) { setError(e?.message || "Research lookup failed"); }
     finally { setResearching(false); }
-  }
-
-  // The topic is usually a TITLE, not a claim ("The Hunt for the Man Who Sold
-  // America's Satellites" is a real story, it just needs naming). So when the
-  // premise is not documented, offer the real cases it maps to rather than
-  // stopping at "unverified".
-  async function resolveSubjects() {
-    if (resolving) return;
-    setResolving(true);
-    try {
-      const res = await fetch("/api/research/find", {
-        method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ topic: props.topic, niche: props.niche, action: "resolve" }),
-      });
-      const d = await res.json();
-      if (res.ok && Array.isArray(d.candidates)) setCandidates(d.candidates);
-    } catch { /* non-blocking: the verdict banner still stands on its own */ }
-    finally { setResolving(false); }
   }
 
   // Picking a real case grounds the script on it: its sourced summary becomes
@@ -151,11 +137,23 @@ export default function ResearchStep(props: {
             can change course while it is still cheap, rather than discovering a
             fabricated case after the script reads as researched. */}
         {verdict && (() => {
-          const V = {
-            documented: { tone: "#34d399", icon: "✓", label: "Sources describe this", body: "The record supports this premise. Verify the specifics before publishing anyway." },
-            partial: { tone: "#fbbf24", icon: "!", label: "Subject is real, this specific claim is not sourced", body: "Sources exist for the broader subject, but not for this exact event or framing. Skripr will write it without asserting specifics it cannot source. Paste real sources below to state them." },
-            unverified: { tone: "#f87171", icon: "✕", label: "No sources found for this specific claim", body: "Nothing found describing this event. If it is real, paste your sources below. If it is not, change the topic, because a script written on this would sound researched while inventing the case." },
-          }[verdict];
+          // Only an EVENT can fail to check out. For an explainer or a thought
+          // experiment there is no incident to confirm, so the banner reports what
+          // was found rather than casting doubt on the premise.
+          const nonEvent = kind && kind !== "event";
+          const V = nonEvent
+            ? {
+                tone: "#34d399", icon: "✓",
+                label: kind === "hypothetical" ? "Grounded in the real science behind the scenario" : "Grounded in real sources",
+                body: kind === "hypothetical"
+                  ? "This is a thought experiment, so the scenario itself is not something to confirm. Skripr will reason from the real mechanisms below and will not claim it happened."
+                  : "Facts below are sourced. Skripr can state these specifics instead of hedging.",
+              }
+            : {
+                documented: { tone: "#34d399", icon: "✓", label: "Sources describe this", body: "The record supports this premise. Verify the specifics before publishing anyway." },
+                partial: { tone: "#fbbf24", icon: "!", label: "Subject is real, this specific claim is not sourced", body: "Sources exist for the broader subject, but not for this exact event or framing. Pick the real case below, or paste sources, and Skripr can name specifics." },
+                unverified: { tone: "#f87171", icon: "✕", label: "No sources found for this specific claim", body: "Nothing found describing this event. Pick the real case below if one fits, or paste your sources. Otherwise Skripr will write it without inventing names or dates." },
+              }[verdict];
           return (
             <div style={{ marginTop: 12, borderRadius: 12, padding: "12px 14px", background: `${V.tone}12`, border: `1px solid ${V.tone}50` }}>
               <div style={{ display: "flex", gap: 9, alignItems: "flex-start" }}>
@@ -172,16 +170,14 @@ export default function ResearchStep(props: {
 
         {/* Real cases this title maps to. A creator types a TITLE, and a title is
             not a claim to verify, it is a story to identify. */}
-        {(resolving || (candidates && candidates.length > 0)) && !pickedSubject && (
+        {kind === "event" && candidates && candidates.length > 0 && !pickedSubject && (
           <div style={{ marginTop: 12, borderRadius: 12, padding: "13px 14px", background: "rgba(77,184,255,0.06)", border: `1px solid ${C.border}` }}>
             <div style={{ fontSize: 12.5, fontWeight: 700, color: C.accent }}>
-              {resolving ? "Finding the real cases this could be about…" : "Which real case is this video about?"}
+              Which real case is this video about?
             </div>
-            {!resolving && (
-              <div style={{ fontSize: 11.5, color: C.dim, marginTop: 3, lineHeight: 1.5 }}>
-                Pick one and Skripr builds the script on that documented story, with its real names and dates.
-              </div>
-            )}
+            <div style={{ fontSize: 11.5, color: C.dim, marginTop: 3, lineHeight: 1.5 }}>
+              Pick one and Skripr builds the script on that documented story, with its real names and dates.
+            </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 11 }}>
               {(candidates || []).map((c, i) => (
                 <button key={i} onClick={() => pickSubject(c)}
@@ -244,7 +240,7 @@ export default function ResearchStep(props: {
               Back
             </button>
           )}
-          <button onClick={() => props.onContinue(buildSourceMaterial(), verdict ?? undefined)}
+          <button onClick={() => props.onContinue(buildSourceMaterial(), verdict ?? undefined, kind ?? undefined)}
             style={{ flex: 1, padding: "12px 18px", borderRadius: 12, border: "none", background: "linear-gradient(135deg,#0e6499,#1a8fd1,#4db8ff)", color: "#fff", fontSize: 15, fontWeight: 700, cursor: "pointer", boxShadow: "0 0 22px rgba(77,184,255,0.26)" }}>
             {includedCount > 0 ? `Continue with ${includedCount} fact${includedCount === 1 ? "" : "s"} →` : grounded ? "Continue →" : "Skip, continue →"}
           </button>

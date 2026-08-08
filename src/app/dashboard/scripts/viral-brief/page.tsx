@@ -46,6 +46,7 @@ export default function ViralBriefPage() {
   const [companionCta, setCompanionCta] = useState(false);
   const [softCta, setSoftCta] = useState(false);
   const [sourceVerdict, setSourceVerdict] = useState<string | null>(null);
+  const [topicKind, setTopicKind] = useState<string | null>(null);
 
   useEffect(() => {
     try {
@@ -92,6 +93,7 @@ export default function ViralBriefPage() {
           companionCta,
           softCta,
           sourceVerdict: sourceVerdict || undefined,
+          topicKind: topicKind || undefined,
           storytellingMode, storytellingTechniques, sourceMaterial: sourceMaterial || undefined,
           selectedTitle: angle.titleSuggestion || undefined,
         }),
@@ -147,7 +149,7 @@ export default function ViralBriefPage() {
       niche={selectedAngle.audience || brief?.niche}
       angle={selectedAngle.titleSuggestion || selectedAngle.angle}
       angleLabel={selectedAngle.titleSuggestion || selectedAngle.angle}
-      onContinue={(sm, v) => { setSourceMaterial(sm || ""); setSourceVerdict(v || null); setPhase("storytelling"); }}
+      onContinue={(sm, v, k) => { setSourceMaterial(sm || ""); setSourceVerdict(v || null); setTopicKind(k || null); setPhase("storytelling"); }}
       onBack={() => setPhase("angles")}
     />
   );

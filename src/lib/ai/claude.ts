@@ -47,6 +47,10 @@ export interface ScriptGenerationInput {
   // "unverified" means the premise is not documented, so the script is barred
   // from inventing specifics to make it feel concrete.
   sourceVerdict?: "documented" | "partial" | "unverified";
+  // What KIND of topic this is (src/lib/research.ts). The no-invented-specifics
+  // gate applies to unresolved EVENTS only: an explainer or a thought experiment
+  // has no incident to confirm, and gagging its specifics would gut it.
+  topicKind?: "event" | "explainer" | "hypothetical" | "claim";
   // Creator-provided research / source material (pasted articles, notes, or
   // auto-sourced facts). The script MAY state specific facts/numbers/studies
   // that appear here; anything not in it still obeys the anti-fabrication rule.
@@ -125,7 +129,7 @@ export const HOOK_TYPES: { name: string; how: string; ex: string }[] = [
 export const HOOK_TYPE_NAMES = HOOK_TYPES.map((h) => h.name);
 export const HOOK_TYPES_PROMPT = HOOK_TYPES.map((h, i) => `${i + 1}. ${h.name} — ${h.how} e.g. "${h.ex}"`).join("\n");
 
-const buildSystemPrompt = ({ softCta = false, sourceVerdict }: { softCta?: boolean; sourceVerdict?: "documented" | "partial" | "unverified" } = {}) => `You are Skripr's AI script engine. You specialize in writing YouTube scripts for faceless channels that are optimized for retention, algorithm performance, and AI voice (TTS) delivery.
+const buildSystemPrompt = ({ softCta = false, sourceVerdict, topicKind = "event" }: { softCta?: boolean; sourceVerdict?: "documented" | "partial" | "unverified"; topicKind?: "event" | "explainer" | "hypothetical" | "claim" } = {}) => `You are Skripr's AI script engine. You specialize in writing YouTube scripts for faceless channels that are optimized for retention, algorithm performance, and AI voice (TTS) delivery.
 
 Your scripts follow these principles:
 1. HOOK: First 5 seconds must grab attention using one of the proven hook types defined in the HOOK RULES section below. Hook types built on a specific statistic (Data Drop, and the numeric form of Curiosity Gap) are only available when that number appears in the provided source material; with no source, pick a hook type that does not require inventing one (Cold Open, Question, Data Drop, Provocation, Curiosity Gap, Myth-Bust, Bold Claim, Direct Address, Teaser, Pattern Interrupt, Scene-Setter, Story).
@@ -152,7 +156,7 @@ Your scripts follow these principles:
 6. ANTI-REPETITION: Never start two consecutive sentences with the same word. Vary sentence length — mix short punchy sentences with longer ones. Never repeat a key point already made; build forward only.
 7. NO FABRICATED FACTS: Never state a specific statistic, percentage, dollar figure, year, date, named study, or named survey unless it appears in the provided source material. Never attribute a quote or claim to a named real person unless it was in the source material. A creator will read this on camera — an invented number destroys their credibility. Do NOT downgrade an unsourced number into a vague claim of evidence; write the sentence without the number, or cut it.
 
-${PROVENANCE_RULE}${sourceVerdict === "unverified" || sourceVerdict === "partial" ? `
+${PROVENANCE_RULE}${topicKind === "event" && (sourceVerdict === "unverified" || sourceVerdict === "partial") ? `
 
 PREMISE NOT VERIFIED (critical): a source check could NOT confirm ${sourceVerdict === "partial" ? "this specific event, case, or framing (only the broader subject area is documented)" : "that this specific event, case, or claim is documented anywhere"}. Therefore this script MUST NOT present it as an established, reported incident. You are FORBIDDEN from inventing a specific date, year, name, place, agency, job title, court case, document, or dollar figure to make it feel concrete. Do not invent an anonymous stand-in either ("a technician", "a contractor in 1987") to imply a real person exists. Write the video on what is genuinely known: explain the real mechanism, the real system, the real stakes, and state plainly where the public record goes quiet. If the topic cannot be made into an honest video without inventing a case, say so in the script's own framing rather than filling the gap.` : ""}
 
@@ -504,7 +508,7 @@ Output JSON with this exact structure:
   const response = await getAnthropic().messages.create({
     model: "claude-sonnet-4-6",
     max_tokens: 16000,
-    system: buildSystemPrompt({ softCta: !!input.softCta, sourceVerdict: input.sourceVerdict }),
+    system: buildSystemPrompt({ softCta: !!input.softCta, sourceVerdict: input.sourceVerdict, topicKind: input.topicKind }),
     messages: [{ role: "user", content: userPrompt }],
   });
 

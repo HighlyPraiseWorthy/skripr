@@ -23,10 +23,12 @@ export async function POST(req: Request) {
     const result = await findResearch({ topic, angle, niche });
     if (!result.ok) return NextResponse.json({ error: result.error }, { status: 422 });
     return NextResponse.json({
+      kind: result.kind,
       verdict: result.verdict,
       verdictNote: result.verdictNote,
       facts: result.facts,
       citations: result.citations,
+      candidates: result.candidates,
     });
   } catch (e: any) {
     return NextResponse.json({ error: e?.message || "Research lookup failed" }, { status: 500 });
