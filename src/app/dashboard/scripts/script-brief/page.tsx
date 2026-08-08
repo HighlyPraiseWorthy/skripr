@@ -137,7 +137,7 @@ export default function ScriptBriefPage() {
     try {
       const res = await fetch("/api/suggest-script-angles", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ topic: b.topic, niche: b.niche, videoLength: b.videoLength, hookTypeFilter: b.hookTypeFilter || null, viralMagnetWord: (b as any).viralMagnetWord || null, grounding: (g ?? grounding) || undefined }),
+        body: JSON.stringify({ topic: b.topic, niche: b.niche, videoLength: b.videoLength, hookTypeFilter: b.hookTypeFilter || null, viralMagnetWord: (b as any).viralMagnetWord || null, grounding: (g ?? grounding) || undefined, lockedTitle: (b as any).lockTitle ? b.topic : undefined }),
       });
       const data = await res.json();
       if (data.error) throw new Error(data.error);
@@ -191,7 +191,7 @@ export default function ScriptBriefPage() {
           angle: `Hook type: ${angle.hookType}. Opening hook to adapt: "${angle.hookPremise}". Suggested title: ${angle.titleSuggestion}`,
           storytellingMode, storytellingTechniques,
           sourceMaterial: [buildUpstreamSourceMaterial(), sourceMaterial].filter(Boolean).join("\n\n") || undefined,
-          selectedTitle: angle.titleSuggestion || undefined,
+          selectedTitle: ((brief as any)?.lockTitle ? brief?.topic : angle.titleSuggestion) || undefined,
         }),
       });
       const data = await res.json().catch(() => null);
@@ -530,10 +530,12 @@ export default function ScriptBriefPage() {
                   <div style={{ flexShrink: 0, width: 32, height: 32, borderRadius: 8, background: "linear-gradient(135deg, #0e6499 0%, #1a8fd1 100%)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, color: "#fff" }}>&#8594;</div>
                 </div>
                 <div style={{ fontSize: 14, fontWeight: 600, color: C.textBright, lineHeight: 1.5, marginBottom: 10 }}>&#8220;{a.hookPremise}&#8221;</div>
-                <div style={{ background: "rgba(77,184,255,0.06)", border: "1px solid rgba(77,184,255,0.13)", borderRadius: 8, padding: "8px 12px", marginBottom: 10 }}>
-                  <div style={{ fontSize: 10, fontWeight: 700, color: C.accentDim, marginBottom: 4 }}>TITLE</div>
-                  <div style={{ fontSize: 13, fontWeight: 600, color: "#9de4ff", lineHeight: 1.4 }}>{a.titleSuggestion}</div>
-                </div>
+                {!(brief as any)?.lockTitle && (
+                  <div style={{ background: "rgba(77,184,255,0.06)", border: "1px solid rgba(77,184,255,0.13)", borderRadius: 8, padding: "8px 12px", marginBottom: 10 }}>
+                    <div style={{ fontSize: 10, fontWeight: 700, color: C.accentDim, marginBottom: 4 }}>TITLE</div>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: "#9de4ff", lineHeight: 1.4 }}>{a.titleSuggestion}</div>
+                  </div>
+                )}
                 <div style={{ fontSize: 11, color: C.textDim, fontStyle: "italic" }}>{a.whyItWorks}</div>
               </div>
             );

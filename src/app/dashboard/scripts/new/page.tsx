@@ -117,6 +117,7 @@ export default function NewScriptPage() {
   const [suggestingAngles, setSuggestingAngles] = useState(false);
   const [angleSuggestions, setAngleSuggestions] = useState<string[]>([]);
   const [selectedHookType, setSelectedHookType] = useState<string | null>(null);
+  const [lockTitle, setLockTitle] = useState(false);
 
   // ── Persist state across navigation ───────────────────────────────────────
   useEffect(() => {
@@ -336,7 +337,7 @@ export default function NewScriptPage() {
         body: JSON.stringify({ transcript, niche: niche || undefined, topic: topic || undefined, videoLength: videoMinutes >= 14 ? "long" : "medium", targetMinutes: videoMinutes, voiceProfileId: voiceId || undefined, companionCta, softCta, sourceVerdict: sourceVerdict || undefined, topicKind: topicKind || undefined,
           sourceMaterial: [buildUpstreamSourceMaterial(), sourceMaterial].filter(Boolean).join("\n\n") || undefined,
           sourceVideoId: youtubeUrl ? youtubeUrl.match(/[?&]v=([^&]+)/)?.[1] : undefined, viralMagnetWord: selectedViralWord || undefined, angle: angle || undefined, remixFramework: viralFramework?.remixFramework || undefined, hookType: viralFramework?.hookType || undefined, titleFormula: viralFramework?.selectedTitle || viralFramework?.titleFormula || undefined,
-          storytellingMode, storytellingTechniques }),
+          storytellingMode, storytellingTechniques, selectedTitle: lockTitle && topic.trim() ? topic.trim() : undefined }),
       });
       const data = await res.json().catch(() => null);
       if (!res.ok || !data) throw new Error(data?.error || "The connection dropped while generating. Please try again.");
@@ -996,13 +997,23 @@ export default function NewScriptPage() {
               </div>
             )}
 
+            {/* Keep the typed topic as the title. When the topic already IS the
+                title the creator wants, the hook cards should vary the hook, not
+                invent competing titles. */}
+            {inputMode === "topic" && topic.trim() && (
+              <label style={{ display: "flex", alignItems: "center", gap: 9, marginTop: 12, cursor: "pointer", fontSize: 13, color: C.textDim }}>
+                <input type="checkbox" checked={lockTitle} onChange={(e) => setLockTitle(e.target.checked)} style={{ width: 15, height: 15, accentColor: "#4db8ff", cursor: "pointer" }} />
+                <span>Use my topic as the title. The hook angles will keep <span style={{ color: C.textBright }}>&#8220;{topic.trim()}&#8221;</span> and vary only the hook.</span>
+              </label>
+            )}
+
             {/* Guided brief, topic only */}
             {inputMode === "topic" && topic.trim() && (
               <button
                 onClick={() => {
                   // Carry any case already grounded on this screen so script-brief
                   // does not re-resolve and ask "which real case" a second time.
-                  const brief: any = { topic: topic.trim(), niche: niche.trim(), videoLength: videoMinutes >= 14 ? "long" : "medium", targetMinutes: videoMinutes, hookTypeFilter: selectedHookType || null, viralMagnetWord: selectedViralWord || null, voiceProfileId: voiceId || null, angles: [] };
+                  const brief: any = { topic: topic.trim(), niche: niche.trim(), videoLength: videoMinutes >= 14 ? "long" : "medium", targetMinutes: videoMinutes, hookTypeFilter: selectedHookType || null, lockTitle, viralMagnetWord: selectedViralWord || null, voiceProfileId: voiceId || null, angles: [] };
                   if (grounding || groundedOn) {
                     brief.grounding = { ...(grounding || {}), ...(groundedOn ? { caseName: groundedOn.name, caseSummary: groundedOn.summary, when: groundedOn.when, sources: groundedOn.sources || [] } : {}) };
                     brief.topicKind = topicKind || undefined;

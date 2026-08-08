@@ -14,7 +14,7 @@ export async function POST(req: Request) {
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
-    const { topic, niche, videoLength = "medium", hookTypeFilter, viralMagnetWord, grounding } = await req.json();
+    const { topic, niche, videoLength = "medium", hookTypeFilter, viralMagnetWord, grounding, lockedTitle } = await req.json();
     if (!topic) return NextResponse.json({ error: "Topic is required" }, { status: 400 });
 
     const groundingBlock = buildGroundingBlock(grounding as GroundingContext | undefined);
@@ -56,6 +56,7 @@ ${hookTypeFilter
 - FEAR/STAKES: Make the cost of NOT knowing feel immediate
 - OVERLOOKED MECHANISM: The unglamorous way this actually works, which nobody bothers to explain`}
 
+${lockedTitle ? `\nTITLE LOCK: the creator has chosen their title and it is FIXED. Set "titleSuggestion" to EXACTLY this string for every angle, unchanged, do not invent alternatives: "${String(lockedTitle).slice(0,150)}". Vary only the "hookPremise" across the 5 angles. The hooks must all work UNDER this one title.\n` : ""}
 For each angle return EXACTLY:
 - "hookType": hook type (ALL CAPS)
 - "hookPremise": opening hook sentence (1-2 sentences, punchy, specific)
@@ -82,7 +83,10 @@ ${groundingBlock || `GROUNDING (critical): this topic is a string the creator ty
 
     const raw = "[" + (msg.content[0].type === "text" ? msg.content[0].text : "");
     const angles = JSON.parse(raw.replace(/```json|```/g, "").trim());
-    return NextResponse.json({ angles, topic, niche, hookTypeFilter: hookTypeFilter || null });
+        const lockedOut = lockedTitle
+      ? angles.map((a: any) => ({ ...a, titleSuggestion: String(lockedTitle).slice(0, 150) }))
+      : angles;
+    return NextResponse.json({ angles: lockedOut, topic, niche, hookTypeFilter: hookTypeFilter || null });
   } catch (e: any) {
     console.error("[suggest-script-angles]", e?.message);
     return NextResponse.json({ error: e?.message || "Failed to generate angles" }, { status: 500 });
