@@ -417,7 +417,8 @@ List the 6 to 8 most important SPECIFIC, NAMED, VERIFIABLE details a strong docu
 - the person's STATED motive (what they said drove them, attributed to them)
 - HOW they obtained their access, position, or clearance
 - specific SETTINGS or locations by their real names
-- the precise OUTCOME: exact charges, key dates, sentences
+- the precise OUTCOME: exact charges and key dates
+- the SENTENCE EACH person received, as a separate question per person (do not bundle them). When a case has more than one defendant, ask what sentence EACH one got by name, because the contrast between them is often the most striking fact in the story
 - what remains DISPUTED, sealed, or unknown
 
 Each question must seek a single concrete fact that can carry a citation. Do not ask open-ended or interpretive questions. Output ONLY a JSON array of question strings, no prose.`,
