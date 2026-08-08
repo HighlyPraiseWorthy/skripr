@@ -133,5 +133,13 @@ export function buildStorytellingBlock(
     return `- ${t.name}: ${t.directive}`;
   });
   return `STORYTELLING DIRECTION — write this script in the "${mode.name}" mode: ${mode.blurb} Weave the following techniques into the narration so the script builds tension and flows. Apply them naturally as spoken word — NEVER label them, announce them, or break the fourth wall:
-${lines.join("\n")}`;
+${lines.join("\n")}
+
+NEVER NARRATE THE DEVICE (critical). A technique only works while the viewer cannot see it operating. Saying it out loud converts a story beat into stage directions read aloud, and it is the single most common way these techniques get ruined. All of these are BANNED:
+- Announcing a plant or a callback: "Remember that detail, it matters later." / "Hold onto that number." / "Keep that in mind, we'll come back to it." / "That will be important."
+- Announcing a loop or a delay: "We'll get to that in a moment." / "More on that shortly." / "But first, some context." / "Park that thought."
+- Announcing structure: "Now here's the part that matters." / "This is the important bit." / "Here's where it gets interesting." / "That's the setup, now the payoff."
+- Announcing your own intent: "I want you to notice..." / "The reason I'm telling you this is..." / "This is where the stakes come in."
+
+Do the thing instead of describing it. Plant the detail by simply stating it as part of the story and moving on, and trust the payoff to land when it returns. If a detail is vivid and specific enough to matter later, the viewer will remember it without being told to, and if it is not, the fix is a better detail rather than an instruction to remember it.`;
 }

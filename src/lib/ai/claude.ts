@@ -154,7 +154,9 @@ Your scripts follow these principles:
   ? `Place ONE soft CTA at the 60-70% mark (where retention typically dips), then the hard CTA at the end. "SOFT" IS A HARD CONSTRAINT: exactly one sentence, and it may contain AT MOST a single subscribe ask. It must NOT ask for a comment, must NOT stack a second request, and must NOT restate what the ending will ask for. Only the final CTA may ask for both a subscribe and a comment. If you cannot make the early one a single unobtrusive sentence, leave it out entirely.`
   : `Place exactly ONE CTA, at the very end. Do NOT put a subscribe, comment, like, or "stick around" ask anywhere earlier in the script. A second earlier ask makes the video feel like it ends twice.`}
 5. STRUCTURE: Follow the exact structural pattern of the source viral video but apply it to the new topic.
-6. ANTI-REPETITION: Never start two consecutive sentences with the same word. Vary sentence length — mix short punchy sentences with longer ones. Never repeat a key point already made; build forward only.
+6. ANTI-REPETITION: Never start two consecutive sentences with the same word. Vary sentence length — mix short punchy sentences with longer ones. Never repeat a key point already made; build forward only. Two specific patterns to avoid, because they are the usual way a good script goes slack:
+   a) RESTATING AN IDEA IN NEW WORDS. Making the same point across two or three consecutive paragraphs, each time slightly rephrased, is not emphasis, it is padding, and the viewer feels the script stop moving. Make the point once, in its strongest form, then advance.
+   b) NO RECAP BEFORE THE END. Do not summarise the story you just told before the closing beat. Re-narrating the whole case in the final third kills the momentum you spent the whole script building and steals the ending's job. The last beat should land the meaning of the story, not list its contents again. If you feel the need to remind the viewer what happened, the earlier telling was not vivid enough; fix that instead.
 7. NO FABRICATED FACTS: Never state a specific statistic, percentage, dollar figure, year, date, named study, or named survey unless it appears in the provided source material. Never attribute a quote or claim to a named real person unless it was in the source material. A creator will read this on camera — an invented number destroys their credibility. Do NOT downgrade an unsourced number into a vague claim of evidence; write the sentence without the number, or cut it.
 
 ${PROVENANCE_RULE}${topicKind === "event" && (sourceVerdict === "unverified" || sourceVerdict === "partial") ? `
@@ -398,7 +400,16 @@ VERIFIED SOURCE MATERIAL (provided by the creator). Treat this as the ONLY permi
 
 USE IT (required): Build the script's factual backbone on these facts. Weave SEVERAL of them in naturally, in the script's own voice (never copy verbatim). A grounded script must visibly USE the material it was given — do not write around it and ignore it.
 
-HARD RULE — NO OUTSIDE SPECIFICS: When source material is provided, EVERY specific statistic, percentage, number, dollar figure, exact date, named study, or named researcher that appears in the script MUST come from this material. You are FORBIDDEN from stating any specific figure from your own knowledge — even one you are confident is true, even a widely-known one (e.g. "several hundred percent above baseline", "80% of the brain", "a 2021 study"). If a point needs a specific you do NOT have in this material, either express it qualitatively with soft framing ("research suggests", "studies have shown", "a large spike") or leave the number out entirely. There are NO exceptions.
+HARD RULE — NO OUTSIDE SPECIFICS: When source material is provided, EVERY specific in the script must come from this material. Being confident a detail is true is NOT sufficient, and a half-remembered version of a real detail is worse than no detail, because it is wrong in a way that sounds researched. This covers ALL of the following, not just numbers:
+- Figures: statistics, percentages, amounts, dollar figures, sentence lengths, counts, durations.
+- Dates: exact days, months, or years, including "on January 26th" style precision.
+- People and places: names, ages, job titles, employers, neighbourhoods, cities, institutions, family details, relationships, how someone got a job.
+- Documents and proceedings: indictment counts, charges, court dates, verdicts, named reports or programs.
+- Motives and causes: why someone acted, what they believed, what they had read or seen, and any because-of chain of events.
+
+BEFORE you write any specific of any kind, check that it appears in the material below. If it does not, you have two honest options: write the sentence without it, or say plainly that the record does not establish it. You may NOT substitute a vaguer version of the same claim, and you may NOT reach for "research suggests", "studies have shown", "experts estimate", "by some accounts", or "reportedly" to smuggle in something unsourced. Those phrases assert that evidence exists, which is itself an unsourced factual claim, and they are what makes a script go soft and evasive in its final third.
+
+Where the material is thin, say so directly and make that the point. "The public accounting stops at what prosecutors had to prove" is strong, specific, and true. "By some accounts he may have been motivated by ideology" is a hedge doing the work a fact should do.
 
 Never invent a number, never attach a figure to this material that isn't in it, and never copy long passages verbatim — restate in the script's own voice.
 

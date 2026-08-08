@@ -105,6 +105,13 @@ STEP 1 — CLASSIFY the topic as exactly one "kind":
 STEP 2 — ground it according to that kind. This matters: applying the wrong one produces a useless answer.
 
 IF "event":
+  COVER THE WHOLE STORY, not just the triggering incident. A script needs facts for every act, and research that returns only the arrest leaves the writer nothing to stand on for the setup or the aftermath, so those parts come out hedged or invented. Deliberately spread the facts across:
+   - the PEOPLE: who they were, ages, jobs, employers, how they got their access, background and family details where documented
+   - the MECHANISM: how it actually worked, named programs, documents, or systems involved
+   - the MONEY or stakes: amounts, and who received what
+   - the OUTCOME: charges, dates, verdicts, sentences
+   - the AFTERMATH and what remains unknown or disputed
+  A stated MOTIVE counts as a fact worth sourcing when the record documents the person claiming it, so include it and attribute it to who said it.
   Search for sources describing THIS SPECIFIC event, case, or person. Do NOT assume it is real and do NOT substitute loosely related material from the same subject area as confirmation. Set "verdict":
    - "documented": real citable sources describe this specific event.
    - "partial": the surrounding subject is real but this specific event, framing, or causal claim is not something you can source.
@@ -176,7 +183,7 @@ Only include a fact you can attribute to a real source URL. Output ONLY this JSO
             // prefer the model's per-fact source; fall back to the citations list by index
             source: (typeof x.source === "string" && /^https?:\/\//.test(x.source)) ? x.source : (citations[i] || null),
           }))
-          .slice(0, 8);
+          .slice(0, 12);
       }
     } catch { /* unparseable — treat as unverified, citations still returned */ }
 
