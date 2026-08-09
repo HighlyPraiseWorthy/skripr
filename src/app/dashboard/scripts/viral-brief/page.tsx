@@ -218,6 +218,7 @@ export default function ViralBriefPage() {
       onBack={() => setPhase("angles")}
       presetCase={groundedCase || undefined}
       sourcePayoff={brief?.hookAnalysis?.whyItWorks || brief?.remixFramework || undefined}
+      sourceSubject={brief?.videoTitle || undefined}
     />
   );
 

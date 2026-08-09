@@ -399,7 +399,7 @@ If a point needs a figure you were not given, make the point without the figure.
  * Claude never supplies a fact directly: only sourced answers reach the script, so
  * the anti-fabrication guarantee holds while the grounding gets much richer.
  */
-export async function deepenCaseFacts(input: { caseName: string; summary?: string; niche?: string; sourcePayoff?: string }): Promise<{ facts: ResearchFact[] }> {
+export async function deepenCaseFacts(input: { caseName: string; summary?: string; niche?: string; sourcePayoff?: string; sourceSubject?: string }): Promise<{ facts: ResearchFact[] }> {
   const caseName = (input.caseName || "").slice(0, 200);
   if (!caseName.trim()) return { facts: [] };
   const pkey = process.env.PERPLEXITY_API_KEY;
@@ -426,7 +426,8 @@ List the 6 to 8 most important SPECIFIC, NAMED, VERIFIABLE details a strong docu
 - specific SETTINGS or locations by their real names
 - the precise OUTCOME: exact charges and key dates
 - the SENTENCE EACH person received, as a separate question per person (do not bundle them). When a case has more than one defendant, ask what sentence EACH one got by name, because the contrast between them is often the most striking fact in the story
-- what remains DISPUTED, sealed, or unknown
+- what remains DISPUTED, sealed, or unknown${input.sourceSubject ? `
+- THE BRIDGE (highest value): this script remixes a video about "${input.sourceSubject}". Include 1 or 2 questions hunting for a DOCUMENTED, real connection between THIS case and that subject, a shared event, a crossover, a moment where the two worlds touched. A true connection like that is the single strongest cold open a remix can have. Only ask it if such a link might genuinely exist; a fabricated bridge is worse than none.` : ""}
 
 Each question must seek a single concrete fact that can carry a citation. Do not ask open-ended or interpretive questions. Output ONLY a JSON array of question strings, no prose.`,
       }],

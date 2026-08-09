@@ -32,6 +32,9 @@ export default function ResearchStep(props: {
   // What made the source video work, used to bias which facts to fetch so the
   // remix reproduces the payoff, not just the structure.
   sourcePayoff?: string;
+  // What the source video was ABOUT, so deepen can hunt for a documented bridge
+  // between this case and that subject, the strongest possible cold open.
+  sourceSubject?: string;
 }) {
   const [sourceMaterial, setSourceMaterial] = useState("");
   const [researching, setResearching] = useState(false);
@@ -78,7 +81,7 @@ export default function ResearchStep(props: {
     try {
       const res = await fetch("/api/research/find", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "deepen", caseName: c.name, caseSummary: c.summary, niche: props.niche, sourcePayoff: props.sourcePayoff }),
+        body: JSON.stringify({ action: "deepen", caseName: c.name, caseSummary: c.summary, niche: props.niche, sourcePayoff: props.sourcePayoff, sourceSubject: props.sourceSubject }),
       });
       const d = await res.json();
       const fs = Array.isArray(d?.facts) ? d.facts : [];
