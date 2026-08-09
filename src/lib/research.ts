@@ -243,7 +243,14 @@ Only include a fact you can attribute to a real source URL. Output ONLY this JSO
     // Perplexity searches live and buries famous historical cases under recent
     // coverage. Perplexity here only supplies kind, verdict, and facts.
     if (kind === "event") {
-      const resolved = await resolveSubjects({ topic: input.topic, niche: input.niche }).catch(() => null);
+      // Anchor case resolution on the ANGLE when there is one, not just the topic.
+      // The angle is the real subject ("How a Mobster Infiltrated the FBI for 30
+      // Years"); the topic is often the angle's framing ("The Double Life Nobody
+      // Suspected"). Passing topic alone made Claude resolve the framing and return
+      // psychological-profile cases while Perplexity, which got the angle, returned
+      // the correct mob-informant facts. The two must key off the same subject.
+      const resolveSubject = input.angle ? `${input.angle}. ${input.topic}` : input.topic;
+      const resolved = await resolveSubjects({ topic: resolveSubject, niche: input.niche }).catch(() => null);
       if (resolved?.ok) {
         candidates = resolved.candidates;
         // Claude's classification is also more reliable; if it says this is not an
