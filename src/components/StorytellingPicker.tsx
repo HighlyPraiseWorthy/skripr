@@ -31,7 +31,7 @@ export default function StorytellingPicker(props: {
   sourceTranscript?: string;
   busy?: boolean;
   angleLabel?: string;
-  onGenerate: (mode: string, techniqueIds: string[]) => void;
+  onGenerate: (mode: string, techniqueIds: string[], directorNote?: string) => void;
   onBack?: () => void;
 }) {
   const [data, setData] = useState<RecResponse | null>(null);
@@ -39,6 +39,7 @@ export default function StorytellingPicker(props: {
   const [error, setError] = useState<string | null>(null);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [choice, setChoice] = useState<"recommended" | "original" | "custom">("recommended");
+  const [directorNote, setDirectorNote] = useState("");
 
   useEffect(() => {
     (async () => {
@@ -164,7 +165,17 @@ export default function StorytellingPicker(props: {
             </div>
 
             {/* Actions */}
-            <div style={{ display: "flex", gap: 10, marginTop: 20 }}>
+            <div style={{ marginTop: 18 }}>
+              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: C.dim, marginBottom: 6 }}>Director&apos;s notes (optional)</div>
+              <textarea
+                value={directorNote}
+                onChange={(e) => setDirectorNote(e.target.value)}
+                placeholder="Anything the script must DO or AVOID: casting (&ldquo;treat the twins as two distinct people&rdquo;), where to aim the climax (&ldquo;stage it on the wire call&rdquo;), tone (&ldquo;no Narcos glamour, open on the decision&rdquo;). These shape how the story is told, never what counts as true."
+                rows={3}
+                style={{ width: "100%", padding: "10px 12px", borderRadius: 10, background: "#0a1220", color: C.text, fontSize: 13, border: `1px solid ${C.border}`, outline: "none", resize: "vertical", lineHeight: 1.5, fontFamily: "inherit", boxSizing: "border-box" }}
+              />
+            </div>
+            <div style={{ display: "flex", gap: 10, marginTop: 14 }}>
               {props.onBack && (
                 <button onClick={props.onBack} disabled={props.busy}
                   style={{ padding: "12px 18px", borderRadius: 12, border: `1px solid ${C.border}`, background: "transparent", color: C.dim, fontSize: 14, fontWeight: 600, cursor: "pointer" }}>
@@ -172,7 +183,7 @@ export default function StorytellingPicker(props: {
                 </button>
               )}
               <button
-                onClick={() => props.onGenerate(data.mode.id, [...selected])}
+                onClick={() => props.onGenerate(data.mode.id, [...selected], directorNote.trim() || undefined)}
                 disabled={props.busy}
                 style={{
                   flex: 1, padding: "12px 18px", borderRadius: 12, border: "none",

@@ -171,7 +171,7 @@ export default function ScriptBriefPage() {
     setPhase("research");
   }
 
-  async function generateWithStory(storytellingMode: string, storytellingTechniques: string[]) {
+  async function generateWithStory(storytellingMode: string, storytellingTechniques: string[], directorNote?: string) {
     const angle = selectedAngle;
     if (!brief || !angle) return;
     setPhase("generating"); setError(null);
@@ -190,7 +190,7 @@ export default function ScriptBriefPage() {
           topicKind: topicKind || undefined,
           hookType: angle.hookType,
           angle: `Hook type: ${angle.hookType}. Opening hook to adapt: "${angle.hookPremise}". Suggested title: ${angle.titleSuggestion}`,
-          storytellingMode, storytellingTechniques,
+          storytellingMode, storytellingTechniques, directorNote: directorNote || undefined,
           sourceMaterial: [buildUpstreamSourceMaterial(), sourceMaterial].filter(Boolean).join("\n\n") || undefined,
           selectedTitle: ((brief as any)?.lockTitle ? brief?.topic : angle.titleSuggestion) || undefined,
         }),

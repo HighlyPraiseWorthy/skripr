@@ -58,6 +58,9 @@ export interface ScriptGenerationInput {
   // The title the user explicitly chose (e.g. by picking an angle card). When
   // set, it LOCKS the title — generation must use it as-is, not invent its own.
   selectedTitle?: string;
+  // Freeform creator instruction on HOW the story is told (casting, staging, tone,
+  // where to aim the climax). Shapes craft only; it can never override accuracy.
+  directorNote?: string;
 }
 
 export interface GeneratedScript {
@@ -519,11 +522,19 @@ Output JSON with this exact structure:
   // 16000, not 8000: long scripts are written twice in the JSON (sections + fullScript),
   // so a 2600-word script needs ~7500+ output tokens and truncates the JSON mid-string at 8000.
   // 16K is the non-streaming-safe ceiling for the SDK.
+  // Director's note: creator guidance on HOW to tell it. Placed last so it is the
+  // final instruction the model reads, but explicitly subordinate to accuracy.
+  const directorNoteBlock = input.directorNote && input.directorNote.trim()
+    ? `
+
+DIRECTOR'S NOTES from the creator (shape the TELLING, never the truth): ${input.directorNote.trim().slice(0, 600)}
+Follow these for casting, staging, tone, pacing, and where to aim the climax. They do NOT override any accuracy rule: never assert as fact anything the source material does not support, no matter what the note asks. If a note conflicts with the facts, honor the facts and apply the note only where it does not.`
+    : "";
   const response = await getAnthropic().messages.create({
     model: "claude-sonnet-4-6",
     max_tokens: 16000,
     system: buildSystemPrompt({ softCta: !!input.softCta, sourceVerdict: input.sourceVerdict, topicKind: input.topicKind }),
-    messages: [{ role: "user", content: userPrompt }],
+    messages: [{ role: "user", content: userPrompt + directorNoteBlock }],
   });
 
   const content = response.content[0];

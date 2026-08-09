@@ -347,7 +347,7 @@ export default function NewScriptPage() {
     finally { setVerifyingScript(false); }
   }
 
-  async function doGenerate(transcript: string, storytellingMode: string, storytellingTechniques: string[], sourceMaterial?: string) {
+  async function doGenerate(transcript: string, storytellingMode: string, storytellingTechniques: string[], sourceMaterial?: string, directorNote?: string) {
     setLastUsedTranscript(transcript);
     setStep("generating");
     try {
@@ -1095,7 +1095,7 @@ export default function NewScriptPage() {
             angle={angle}
             angleLabel={angle || undefined}
             sourceTranscript={inputMode !== "topic" ? pendingTranscript : undefined}
-            onGenerate={(mode, techniques) => doGenerate(pendingTranscript, mode, techniques, sourceMaterial)}
+            onGenerate={(mode, techniques, note) => doGenerate(pendingTranscript, mode, techniques, sourceMaterial, note)}
             onBack={() => setStep("research")}
           />
         )}

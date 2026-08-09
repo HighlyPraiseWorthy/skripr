@@ -428,6 +428,7 @@ List the 6 to 8 most important SPECIFIC, NAMED, VERIFIABLE details a strong docu
 - specific SETTINGS or locations by their real names
 - the precise OUTCOME: exact charges and key dates
 - the SENTENCE EACH person received, as a separate question per person (do not bundle them). When a case has more than one defendant, ask what sentence EACH one got by name, because the contrast between them is often the most striking fact in the story
+- the DOCUMENTED ENDING: how the story actually resolved (the verdict, the capture, the trial outcome, the final fate of the key people). This is what a climax must build toward and land on, so it is essential, ask for the specific resolution with its date
 - what remains DISPUTED, sealed, or unknown${input.sourceSubject ? `
 - THE BRIDGE (highest value): this script remixes a video about "${input.sourceSubject}". Include 1 or 2 questions hunting for a DOCUMENTED, real connection between THIS case and that subject, a shared event, a crossover, a moment where the two worlds touched. A true connection like that is the single strongest cold open a remix can have. Only ask it if such a link might genuinely exist; a fabricated bridge is worse than none.` : ""}
 

@@ -135,7 +135,7 @@ export default function NicheBendBriefPage() {
     setSelectedAngle(angle); setError(null); setPhase("research");
   }
 
-  async function generateWithStory(storytellingMode: string, storytellingTechniques: string[]) {
+  async function generateWithStory(storytellingMode: string, storytellingTechniques: string[], directorNote?: string) {
     const angle = selectedAngle;
     if (!brief || !selectedNiche || !angle) return;
     setPhase("generating"); setError(null);
@@ -155,7 +155,7 @@ export default function NicheBendBriefPage() {
           softCta,
           sourceVerdict: sourceVerdict || undefined,
           topicKind: topicKind || undefined,
-          storytellingMode, storytellingTechniques, sourceMaterial: sourceMaterial || undefined,
+          storytellingMode, storytellingTechniques, directorNote: directorNote || undefined, sourceMaterial: sourceMaterial || undefined,
           selectedTitle: angle.titleSuggestion || undefined,
         }),
       });

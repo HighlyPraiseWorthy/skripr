@@ -41,7 +41,7 @@ export const TECHNIQUES: Technique[] = [
     directive: "Engineer an emotional arc by position: curiosity at the open, rising tension through the middle, anticipation at the peak, satisfaction (and optional relief or disbelief) at the close. Match the feeling to the moment." },
   { id: "climax", name: "The Climax",
     value: "Gives the script one peak payoff moment worth waiting for.",
-    directive: "Structure the script around one peak moment that feels inevitable and worth the wait. Tease it early, build to the highest tension there, then resolve it (the payoff to everything built up — not the same as the outro).",
+    directive: "Structure the script around one peak moment that feels inevitable and worth the wait. Tease it early, build to the highest tension there, then resolve it (the payoff to everything built up — not the same as the outro). STAGE the peak, do not merely refer back to it: when the peak arrives, slow down and put the viewer inside the moment (the room, the sound, the specific action, the line), rather than summarizing that it happened. If the source material contains a documented ending or resolution (a verdict, a capture, an outcome), the climax must BUILD TOWARD that real ending and land on it, not stop just short and describe it in passing. Peak first, then the documented payoff.",
     requires: ["escalation", "stakes"] },
   { id: "escalation", name: "Escalation",
     value: "Makes each beat bigger than the last so momentum never sags in the middle.",
