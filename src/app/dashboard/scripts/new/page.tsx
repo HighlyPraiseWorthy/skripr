@@ -77,6 +77,7 @@ export default function NewScriptPage() {
   const [extraSeconds, setExtraSeconds] = useState<number>(26);
   const [transcriptText, setTranscriptText] = useState("");
   const [generatedScript, setGeneratedScript] = useState<GeneratedScript | null>(null);
+  const [verifyingScript, setVerifyingScript] = useState(false);
   const [savedId, setSavedId] = useState<string | null>(null);
   const [voiceId, setVoiceId] = useState<string | null>(null);
   const [companionCta, setCompanionCta] = useState(false);
@@ -327,6 +328,23 @@ export default function NewScriptPage() {
     }
     if (grounding?.facts?.length) parts.push(grounding.facts.map((f: string) => `- ${f}`).join("\n"));
     return parts.join("\n");
+  }
+
+  async function runVerifyScript() {
+    if (!generatedScript || verifyingScript) return;
+    setVerifyingScript(true);
+    try {
+      const b = generatedScript.fullScript || generatedScript.content || "";
+      const res = await fetch("/api/scripts/verify", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ hook: generatedScript.hook || "", body: b, title: appliedMagnetTitle || generatedScript.title || "" }),
+      });
+      const d = await res.json();
+      setGeneratedScript((prev: any) => prev ? (d && d.ran
+        ? { ...prev, hook: d.hook ?? prev.hook, fullScript: d.body ?? prev.fullScript, content: d.body ?? prev.content, factVerify: d }
+        : { ...prev, factVerify: { ran: false } }) : prev);
+    } catch { /* leave untouched */ }
+    finally { setVerifyingScript(false); }
   }
 
   async function doGenerate(transcript: string, storytellingMode: string, storytellingTechniques: string[], sourceMaterial?: string) {
@@ -1103,7 +1121,37 @@ export default function NewScriptPage() {
                 <span style={{ padding: "3px 10px", borderRadius: 7, fontSize: 11, fontWeight: 600, background: "rgba(77,184,255,0.07)", color: C.textDim }}>~{Math.round((generatedScript.estimatedDuration || 0) / 60) || 1} min</span>
               </div>
               <h2 style={{ fontSize: 21, fontWeight: 700, color: C.textBright, letterSpacing: -0.3, marginBottom: 16 }}>{generatedScript.title}</h2>
-              {Array.isArray((generatedScript as any).reviewChanges) && (generatedScript as any).reviewChanges.length > 0 && (
+              <div style={{ marginBottom: 16 }}>
+                <button onClick={runVerifyScript} disabled={verifyingScript}
+                  style={{ padding: "8px 16px", borderRadius: 9, background: "rgba(52,211,153,0.10)", border: "1px solid rgba(52,211,153,0.35)", color: "#34d399", fontSize: 12, fontWeight: 600, cursor: verifyingScript ? "wait" : "pointer" }}>
+                  {verifyingScript ? "Verifying against sources..." : (generatedScript as any).factVerify?.ran ? "Re-verify facts" : "Verify facts against sources"}
+                </button>
+              </div>
+              {(generatedScript as any).factVerify?.ran && (
+                <div style={{ background: "rgba(52,211,153,0.06)", border: "1px solid rgba(52,211,153,0.28)", borderRadius: 12, padding: "13px 16px", marginBottom: 16 }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: "#34d399", letterSpacing: 0.4, marginBottom: 7 }}>FACT-CHECKED AGAINST SOURCES</div>
+                  {Array.isArray((generatedScript as any).factVerify.changes) && (generatedScript as any).factVerify.changes.length > 0 && (
+                    <div style={{ marginBottom: (generatedScript as any).factVerify.stillVerify?.length ? 12 : 0 }}>
+                      <div style={{ fontSize: 12, fontWeight: 600, color: C.textBright, marginBottom: 4 }}>Corrected in the script:</div>
+                      <ul style={{ margin: 0, paddingLeft: 18 }}>
+                        {(generatedScript as any).factVerify.changes.map((c: string, i: number) => (<li key={i} style={{ fontSize: 12.5, color: C.textDim, lineHeight: 1.5 }}>{c}</li>))}
+                      </ul>
+                    </div>
+                  )}
+                  {Array.isArray((generatedScript as any).factVerify.stillVerify) && (generatedScript as any).factVerify.stillVerify.length > 0 && (
+                    <div>
+                      <div style={{ fontSize: 12, fontWeight: 600, color: "#fbbf24", marginBottom: 4 }}>Could not confirm, check these yourself:</div>
+                      <ul style={{ margin: 0, paddingLeft: 18 }}>
+                        {(generatedScript as any).factVerify.stillVerify.map((c: string, i: number) => (<li key={i} style={{ fontSize: 12.5, color: C.textDim, lineHeight: 1.5 }}>{c}</li>))}
+                      </ul>
+                    </div>
+                  )}
+                  {(!(generatedScript as any).factVerify.changes?.length && !(generatedScript as any).factVerify.stillVerify?.length) && (
+                    <div style={{ fontSize: 12.5, color: C.textDim, lineHeight: 1.5 }}>Every checkable claim confirmed against a source. Nothing to fix.</div>
+                  )}
+                </div>
+              )}
+                            {Array.isArray((generatedScript as any).reviewChanges) && (generatedScript as any).reviewChanges.length > 0 && (
                 <div style={{ background: "rgba(52,211,153,0.07)", border: "1px solid rgba(52,211,153,0.25)", borderRadius: 12, padding: "13px 16px", marginBottom: 16 }}>
                   <div style={{ fontSize: 11, fontWeight: 700, color: "#34d399", letterSpacing: 0.4, marginBottom: 7 }}>AUTO-CORRECTED FOR ACCURACY</div>
                   <ul style={{ margin: 0, paddingLeft: 18, display: "flex", flexDirection: "column", gap: 4 }}>

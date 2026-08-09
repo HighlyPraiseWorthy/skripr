@@ -48,6 +48,7 @@ export default function ScriptBriefPage() {
   const [companionCta, setCompanionCta] = useState(false);
   const [softCta, setSoftCta] = useState(false);
   const [sourceVerdict, setSourceVerdict] = useState<string | null>(null);
+  const [verifying, setVerifying] = useState(false);
   const [topicKind, setTopicKind] = useState<string | null>(null);
   // Grounding resolved BEFORE the hook cards are written. Without this the cards
   // are composed with no knowledge of the real case and hedge ("someone who
@@ -224,6 +225,33 @@ export default function ScriptBriefPage() {
     finally { setSaving(false); }
   }
 
+  async function runVerify() {
+    if (!script || verifying) return;
+    setVerifying(true);
+    try {
+      const b = script.fullScript || script.script || script.body || script.content || "";
+      const res = await fetch("/api/scripts/verify", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ hook: script.hook || "", body: b, title: appliedMagnetTitle || script.title || "" }),
+      });
+      const d = await res.json();
+      if (d && d.ran) {
+        // Write the corrected text into every body field so copy + display both use
+        // it, and stash the report for the panel.
+        setScript((prev: any) => prev ? {
+          ...prev,
+          hook: d.hook ?? prev.hook,
+          fullScript: d.body ?? prev.fullScript, script: d.body ?? prev.script,
+          body: d.body ?? prev.body, content: d.body ?? prev.content,
+          factVerify: d,
+        } : prev);
+      } else {
+        setScript((prev: any) => prev ? { ...prev, factVerify: { ran: false } } : prev);
+      }
+    } catch { /* leave script untouched */ }
+    finally { setVerifying(false); }
+  }
+
   function copyScript() {
     if (!script) return;
     const parts: string[] = [];
@@ -335,15 +363,57 @@ export default function ScriptBriefPage() {
               <h1 style={{ fontSize: 20, fontWeight: 700, color: C.textBright, letterSpacing: -0.3 }}>Your Script</h1>
               {selectedAngle && <span style={{ fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 6, background: "rgba(77,184,255,0.11)", color: C.accentDim, border: "1px solid rgba(77,184,255,0.22)" }}>{selectedAngle.hookType}</span>}
             </div>
-            <button onClick={copyScript} style={{ padding: "8px 16px", borderRadius: 9, background: copied ? "rgba(52,211,153,0.12)" : "rgba(77,184,255,0.11)", border: "1px solid " + (copied ? "rgba(52,211,153,0.4)" : "rgba(99,102,241,0.3)"), color: copied ? C.green : C.accentDim, fontSize: 12, fontWeight: 600, cursor: "pointer" }}>
-              {copied ? "Copied!" : "Copy Script"}
-            </button>
+            <div style={{ display: "flex", gap: 8 }}>
+              <button onClick={runVerify} disabled={verifying} style={{ padding: "8px 16px", borderRadius: 9, background: "rgba(52,211,153,0.10)", border: "1px solid rgba(52,211,153,0.35)", color: C.green, fontSize: 12, fontWeight: 600, cursor: verifying ? "wait" : "pointer" }}>
+                {verifying ? "Verifying against sources..." : script.factVerify?.ran ? "Re-verify facts" : "Verify facts"}
+              </button>
+              <button onClick={copyScript} style={{ padding: "8px 16px", borderRadius: 9, background: copied ? "rgba(52,211,153,0.12)" : "rgba(77,184,255,0.11)", border: "1px solid " + (copied ? "rgba(52,211,153,0.4)" : "rgba(99,102,241,0.3)"), color: copied ? C.green : C.accentDim, fontSize: 12, fontWeight: 600, cursor: "pointer" }}>
+                {copied ? "Copied!" : "Copy Script"}
+              </button>
+            </div>
           </div>
 
           {title && (
             <div style={{ background: "rgba(77,184,255,0.07)", border: "1px solid rgba(99,102,241,0.2)", borderRadius: 12, padding: "14px 18px", marginBottom: 16 }}>
               <div style={{ fontSize: 10, fontWeight: 700, color: C.accentDim, letterSpacing: 0.6, marginBottom: 6 }}>TITLE</div>
               <div style={{ fontSize: 15, fontWeight: 700, color: C.textBright, lineHeight: 1.4 }}>{title}</div>
+            </div>
+          )}
+
+          {/* Fact verification report: results of the on-demand web check. */}
+          {script.factVerify?.ran && (
+            <div style={{ background: "rgba(52,211,153,0.06)", border: "1px solid rgba(52,211,153,0.28)", borderRadius: 12, padding: "14px 18px", marginBottom: 16 }}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: C.green, letterSpacing: 0.4, marginBottom: 7 }}>
+                FACT-CHECKED AGAINST SOURCES
+              </div>
+              {Array.isArray(script.factVerify.changes) && script.factVerify.changes.length > 0 && (
+                <div style={{ marginBottom: script.factVerify.stillVerify?.length ? 12 : 0 }}>
+                  <div style={{ fontSize: 12, fontWeight: 600, color: C.textBright, marginBottom: 4 }}>Corrected in the script:</div>
+                  <ul style={{ margin: 0, paddingLeft: 18 }}>
+                    {script.factVerify.changes.map((c: string, i: number) => (
+                      <li key={i} style={{ fontSize: 12.5, color: C.textDim, lineHeight: 1.5 }}>{c}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {Array.isArray(script.factVerify.stillVerify) && script.factVerify.stillVerify.length > 0 && (
+                <div>
+                  <div style={{ fontSize: 12, fontWeight: 600, color: "#fbbf24", marginBottom: 4 }}>Could not confirm, check these yourself:</div>
+                  <ul style={{ margin: 0, paddingLeft: 18 }}>
+                    {script.factVerify.stillVerify.map((c: string, i: number) => (
+                      <li key={i} style={{ fontSize: 12.5, color: C.textDim, lineHeight: 1.5 }}>{c}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {(!script.factVerify.changes?.length && !script.factVerify.stillVerify?.length) && (
+                <div style={{ fontSize: 12.5, color: C.textDim, lineHeight: 1.5 }}>Every checkable claim in the script confirmed against a source. Nothing to fix.</div>
+              )}
+            </div>
+          )}
+          {script.factVerify && !script.factVerify.ran && (
+            <div style={{ background: "rgba(251,191,36,0.08)", border: "1px solid rgba(251,191,36,0.3)", borderRadius: 12, padding: "12px 18px", marginBottom: 16, fontSize: 12.5, color: C.textDim }}>
+              Fact verification could not run right now. Your script is unchanged.
             </div>
           )}
 
