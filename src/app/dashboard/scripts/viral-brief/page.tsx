@@ -53,6 +53,7 @@ export default function ViralBriefPage() {
   const [caseChoices, setCaseChoices] = useState<any[]>([]);
   const [resolving, setResolving] = useState(false);
   const [verifying, setVerifying] = useState(false);
+  const [manualCase, setManualCase] = useState("");
 
   useEffect(() => {
     try {
@@ -246,8 +247,38 @@ export default function ViralBriefPage() {
             </button>
           ))}
         </div>
+        <div style={{ marginTop: 18, paddingTop: 16, borderTop: `1px solid ${C.border}` }}>
+          <div style={{ fontSize: 12.5, fontWeight: 600, color: C.textBright, marginBottom: 7 }}>Know the exact case you want? Name it.</div>
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" as const }}>
+            <input
+              value={manualCase}
+              onChange={(e) => setManualCase(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && manualCase.trim() && brief) {
+                  const c = { name: manualCase.trim(), summary: "", when: "", sources: [] as string[] };
+                  setGroundedCase(c);
+                  setPhase("loading");
+                  void fetchAngles(brief, { kind: "event", verdict: "documented", caseName: c.name, sources: [] });
+                }
+              }}
+              placeholder="e.g. Greg Scarpa Sr."
+              style={{ flex: 1, minWidth: 240, padding: "9px 12px", borderRadius: 9, background: "rgba(255,255,255,0.04)", border: `1px solid ${C.borderAccent}`, color: C.textBright, fontSize: 13, outline: "none" }}
+            />
+            <button onClick={() => {
+                if (manualCase.trim() && brief) {
+                  const c = { name: manualCase.trim(), summary: "", when: "", sources: [] as string[] };
+                  setGroundedCase(c);
+                  setPhase("loading");
+                  void fetchAngles(brief, { kind: "event", verdict: "documented", caseName: c.name, sources: [] });
+                }
+              }}
+              style={{ padding: "9px 16px", borderRadius: 9, border: "none", background: "linear-gradient(135deg,#0e6499,#1a8fd1)", color: "#fff", fontSize: 12.5, fontWeight: 700, cursor: "pointer" }}>
+              Use this case
+            </button>
+          </div>
+        </div>
         <button onClick={() => { setPhase("loading"); if (brief) void fetchAngles(brief, null); }}
-          style={{ marginTop: 16, background: "none", border: "none", padding: 0, cursor: "pointer", fontSize: 12.5, color: C.textDim }}>
+          style={{ marginTop: 14, background: "none", border: "none", padding: 0, cursor: "pointer", fontSize: 12.5, color: C.textDim }}>
           None of these, continue without a specific case
         </button>
       </div>

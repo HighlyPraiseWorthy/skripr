@@ -156,6 +156,7 @@ IF "event":
 
   Rules for candidates, all of them strict:
   - A candidate must satisfy EVERY element of the title, not just the subject matter. Matching only the topic area is the most common way to get this wrong.
+  - A NUMBER in the title is a HARD FILTER. If the title says "30 years", a case that lasted 6 years does not qualify no matter how famous it is; drop it. Do not let a well-known case that fails the number crowd out a lesser-known case that matches it. The specific constraint outranks fame every time.
   - ONLY include a case that genuinely fits. If you would have to explain that it does not really fit, LEAVE IT OUT. One strong candidate beats four near misses, and a candidate whose own description concedes it is not really this story is worse than no candidate at all. Do NOT write summaries containing phrases like "this is not a crime or manhunt" or "not in the sense implied by the title": if that is true, the case does not belong in the list.
   - Returning an EMPTY candidates array is a valid and useful answer when nothing genuinely fits. It is much better than padding.
   - Search the WHOLE historical record, not just recent or heavily indexed events. The definitive case for a title like this is often decades old and predates most web coverage. Do not let recency bias push a minor recent case above the famous one. Ask yourself which case a well-read viewer would name if they read this title, and make sure that case is present.
@@ -299,6 +300,7 @@ Rules:
 - Best match FIRST. Return 1 to 4 candidates for an event, empty for the other kinds.
 - Only name a case you are genuinely confident is real and documented. Never invent a case, a name, or a date. If you are not confident any real case fits, return an empty list.
 - A candidate must satisfy EVERY element of the title, not just the subject area.
+- A NUMBER in the title (like "30 years") is a HARD FILTER: a case that does not match it is disqualified even if it is more famous than the ones that do. The specific constraint outranks fame.
 - Never include a case while noting it does not really fit. If it does not fit, omit it.
 - Ask which case a well-read viewer would name on reading this title, and make sure it is present.
 
