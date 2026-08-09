@@ -5,6 +5,7 @@ import { getNicheHookExamplesBlock, getNicheTitleFormulasBlock } from "@/lib/vir
 import { getPickedAnglesBlock } from "@/lib/angle-picks";
 import { extractTrailingExpert, stripCarriedExpert } from "@/lib/title-utils";
 import { PROVENANCE_RULE } from "@/lib/ai/claude";
+import { buildGroundingBlock, type GroundingContext } from "@/lib/research";
 
 const client = new Anthropic();
 export const maxDuration = 30;
@@ -14,7 +15,8 @@ export async function POST(req: Request) {
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
-    const { hookType, hookAnalysis, remixFramework, selectedTitle, selectedTitleDescription, selectedTitleAudience, titleFormula, videoTitle, niche } = await req.json();
+    const { hookType, hookAnalysis, remixFramework, selectedTitle, selectedTitleDescription, selectedTitleAudience, titleFormula, videoTitle, niche, grounding } = await req.json();
+    const groundingBlock = buildGroundingBlock(grounding as GroundingContext | undefined);
 
     // Trim remixFramework to prevent transcript bleed into prompt
     const framework = (remixFramework || "").slice(0, 600);
@@ -62,6 +64,7 @@ ${learning ? `\n${learning}\n` : ""}
 ${PROVENANCE_RULE}
 
 The source video grounds the ORIGINAL topic only. It is not evidence for the new topic you are angling toward, so never carry its documents, figures, or named sources onto a different subject, and never invent new ones.
+${groundingBlock ? `\nTHIS VIDEO IS ABOUT A REAL, RESOLVED CASE. Every angle must be about it and use only its facts:\n${groundingBlock}` : ""}
 
 Output a JSON array of exactly 5 objects. Each object must have these exact keys:
 - "angle": punchy topic name, max 8 words

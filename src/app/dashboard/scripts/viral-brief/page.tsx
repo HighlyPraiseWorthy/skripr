@@ -14,7 +14,7 @@ const C = {
   textDim: "#a6c0d8", green: "#34d399",
 };
 
-type Phase = "loading" | "angles" | "research" | "storytelling" | "generating" | "result";
+type Phase = "loading" | "pick-case" | "angles" | "research" | "storytelling" | "generating" | "result";
 type Angle = { angle: string; description: string; audience: string; titleSuggestion: string; swap?: string | null; };
 type Brief = {
   hookAnalysis: { hook: string; hookType: string; whyItWorks: string };
@@ -47,6 +47,11 @@ export default function ViralBriefPage() {
   const [softCta, setSoftCta] = useState(false);
   const [sourceVerdict, setSourceVerdict] = useState<string | null>(null);
   const [topicKind, setTopicKind] = useState<string | null>(null);
+  // Case resolved BEFORE angles, so the angles, the facts, and the script all
+  // descend from one settled case instead of being reconciled after the fact.
+  const [groundedCase, setGroundedCase] = useState<any | null>(null);
+  const [caseChoices, setCaseChoices] = useState<any[]>([]);
+  const [resolving, setResolving] = useState(false);
 
   useEffect(() => {
     try {
@@ -54,15 +59,49 @@ export default function ViralBriefPage() {
       if (!stored) { window.location.href = "/dashboard/viral-remixer"; return; }
       const b: Brief = JSON.parse(stored);
       setBrief(b);
-      fetchAngles(b);
+      groundThenAngles(b);
     } catch { window.location.href = "/dashboard/viral-remixer"; }
   }, []);
 
-  async function fetchAngles(b: Brief) {
+  // Resolve the real case the remix title is about, THEN write angles on it. A
+  // single clear case grounds silently; several show a picker; none (or an
+  // explainer) proceeds ungated.
+  function groundedGroundingFrom(): any | null {
+    if (!groundedCase) return null;
+    return { kind: "event", verdict: "documented", caseName: groundedCase.name, caseSummary: groundedCase.summary, when: groundedCase.when, sources: groundedCase.sources || [] };
+  }
+
+  async function groundThenAngles(b: Brief) {
+    setResolving(true);
+    let g: any = null;
+    try {
+      const r = await fetch("/api/research/find", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ topic: b.selectedTitle, angle: b.selectedTitle, niche: b.niche }),
+      });
+      const d = await r.json();
+      if (r.ok) {
+        setTopicKind(d.kind || null);
+        setSourceVerdict(d.verdict || null);
+        const cands = Array.isArray(d.candidates) ? d.candidates : [];
+        if (d.kind === "event" && cands.length > 1) {
+          setCaseChoices(cands); setResolving(false); setPhase("pick-case"); return;
+        }
+        if (d.kind === "event" && cands.length === 1) {
+          setGroundedCase(cands[0]);
+          g = { kind: "event", verdict: "documented", caseName: cands[0].name, caseSummary: cands[0].summary, when: cands[0].when, sources: cands[0].sources || [] };
+        }
+      }
+    } catch { /* best effort: fall through to ungrounded angles */ }
+    setResolving(false);
+    await fetchAngles(b, g);
+  }
+
+  async function fetchAngles(b: Brief, g?: any) {
     try {
       const res = await fetch("/api/suggest-viral-angles", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ hookType: b.hookAnalysis.hookType, hookAnalysis: b.hookAnalysis, remixFramework: b.remixFramework, selectedTitle: b.selectedTitle, selectedTitleDescription: b.selectedTitleDescription, selectedTitleAudience: b.selectedTitleAudience, titleFormula: b.titleFormula, videoTitle: b.videoTitle, niche: b.niche }),
+        body: JSON.stringify({ hookType: b.hookAnalysis.hookType, hookAnalysis: b.hookAnalysis, remixFramework: b.remixFramework, selectedTitle: b.selectedTitle, selectedTitleDescription: b.selectedTitleDescription, selectedTitleAudience: b.selectedTitleAudience, titleFormula: b.titleFormula, videoTitle: b.videoTitle, niche: b.niche, grounding: (g ?? groundedGroundingFrom()) || undefined }),
       });
       const data = await res.json();
       if (data.error) throw new Error(data.error);
@@ -151,7 +190,41 @@ export default function ViralBriefPage() {
       angleLabel={selectedAngle.titleSuggestion || selectedAngle.angle}
       onContinue={(sm, v, k) => { setSourceMaterial(sm || ""); setSourceVerdict(v || null); setTopicKind(k || null); setPhase("storytelling"); }}
       onBack={() => setPhase("angles")}
+      presetCase={groundedCase || undefined}
+      sourcePayoff={brief?.hookAnalysis?.whyItWorks || brief?.remixFramework || undefined}
     />
+  );
+
+  // Several real cases fit the remix title. Pick one BEFORE angles, so the angles
+  // are written about it.
+  if (phase === "pick-case") return (
+    <div style={{ minHeight: "100vh", background: C.bg, padding: "32px 40px", fontFamily: "system-ui, sans-serif" }}>
+      <div style={{ maxWidth: 620, margin: "0 auto" }}>
+        <h1 style={{ fontSize: 22, fontWeight: 700, color: C.textBright, marginBottom: 6 }}>Which real case is this about?</h1>
+        <p style={{ fontSize: 13.5, color: C.textDim, lineHeight: 1.6, marginBottom: 16 }}>
+          Your remix title matches more than one documented story. Pick one and every angle and the script will be built on it, with its real names and dates.
+        </p>
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          {caseChoices.map((c: any, i: number) => (
+            <button key={i}
+              onClick={() => {
+                setGroundedCase(c); setSourceVerdict("documented");
+                const g = { kind: "event", verdict: "documented", caseName: c.name, caseSummary: c.summary, when: c.when, sources: c.sources || [] };
+                setPhase("loading"); if (brief) void fetchAngles(brief, g);
+              }}
+              style={{ textAlign: "left", cursor: "pointer", padding: "14px 16px", borderRadius: 14, background: C.card, border: `1px solid ${C.border}`, color: C.textBright }}>
+              <div style={{ fontSize: 15, fontWeight: 700 }}>{c.name}{c.when && <span style={{ color: C.textDim, fontWeight: 500 }}> · {c.when}</span>}</div>
+              {c.summary && <div style={{ fontSize: 13, color: C.textDim, lineHeight: 1.6, marginTop: 4 }}>{c.summary}</div>}
+              {c.whyItFits && <div style={{ fontSize: 12.5, color: C.accentDim, lineHeight: 1.5, marginTop: 5 }}>Fits your title: {c.whyItFits}</div>}
+            </button>
+          ))}
+        </div>
+        <button onClick={() => { setPhase("loading"); if (brief) void fetchAngles(brief, null); }}
+          style={{ marginTop: 16, background: "none", border: "none", padding: 0, cursor: "pointer", fontSize: 12.5, color: C.textDim }}>
+          None of these, continue without a specific case
+        </button>
+      </div>
+    </div>
   );
 
   if (phase === "storytelling" && selectedAngle) return (

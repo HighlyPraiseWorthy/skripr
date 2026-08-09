@@ -399,7 +399,7 @@ If a point needs a figure you were not given, make the point without the figure.
  * Claude never supplies a fact directly: only sourced answers reach the script, so
  * the anti-fabrication guarantee holds while the grounding gets much richer.
  */
-export async function deepenCaseFacts(input: { caseName: string; summary?: string; niche?: string }): Promise<{ facts: ResearchFact[] }> {
+export async function deepenCaseFacts(input: { caseName: string; summary?: string; niche?: string; sourcePayoff?: string }): Promise<{ facts: ResearchFact[] }> {
   const caseName = (input.caseName || "").slice(0, 200);
   if (!caseName.trim()) return { facts: [] };
   const pkey = process.env.PERPLEXITY_API_KEY;
@@ -417,7 +417,7 @@ export async function deepenCaseFacts(input: { caseName: string; summary?: strin
       messages: [{
         role: "user",
         content: `You are a documentary researcher preparing a script about this real case:
-CASE: ${caseName}${input.summary ? `\nCONTEXT: ${input.summary}` : ""}
+CASE: ${caseName}${input.summary ? `\nCONTEXT: ${input.summary}` : ""}${input.sourcePayoff ? `\n\nPAYOFF TO REPRODUCE: this video is modeled on one that worked because of this: "${input.sourcePayoff}". PRIORITIZE questions whose answers would let the script deliver that same kind of payoff on this case. Still cover the basics, but lead with the facts that serve this payoff.` : ""}
 
 List the 6 to 8 most important SPECIFIC, NAMED, VERIFIABLE details a strong documentary on this case must include, phrased as research questions each seeking ONE citable fact. Target these gaps specifically, because they are what makes a script credible and are the first thing a viewer checks:
 - the NAMED programs, systems, documents, or operations at the center of the case

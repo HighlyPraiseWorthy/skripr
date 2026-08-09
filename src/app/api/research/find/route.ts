@@ -9,12 +9,13 @@ export async function POST(req: Request) {
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
-    const { topic, angle, niche, action, caseName, caseSummary } = await req.json();
+    const { topic, angle, niche, action, caseName, caseSummary, sourcePayoff } = await req.json();
 
     // "deepen": a case is already chosen; fetch the documentary-critical named
-    // specifics (Claude questions -> Perplexity sourced answers).
+    // specifics (Claude questions -> Perplexity sourced answers). sourcePayoff, when
+    // present, biases the questions toward reproducing what made a source video work.
     if (action === "deepen") {
-      const result = await deepenCaseFacts({ caseName, summary: caseSummary, niche });
+      const result = await deepenCaseFacts({ caseName, summary: caseSummary, niche, sourcePayoff: typeof sourcePayoff === "string" ? sourcePayoff : undefined });
       return NextResponse.json({ facts: result.facts });
     }
 

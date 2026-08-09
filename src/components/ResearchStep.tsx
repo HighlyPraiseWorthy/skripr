@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 // Dedicated step shown AFTER the angle is picked and BEFORE the storytelling
 // step. Optional: the user can auto-source cited facts (Perplexity) or paste
@@ -25,6 +25,13 @@ export default function ResearchStep(props: {
   angleLabel?: string;
   onContinue: (sourceMaterial?: string, verdict?: Verdict, kind?: TopicKind) => void;
   onBack?: () => void;
+  // When the case was already resolved upstream (the reordered Remixer flow), pass
+  // it here: the step deepens that case's facts instead of re-resolving, so the
+  // whole flow stays anchored to one case.
+  presetCase?: SubjectCandidate;
+  // What made the source video work, used to bias which facts to fetch so the
+  // remix reproduces the payoff, not just the structure.
+  sourcePayoff?: string;
 }) {
   const [sourceMaterial, setSourceMaterial] = useState("");
   const [researching, setResearching] = useState(false);
@@ -71,7 +78,7 @@ export default function ResearchStep(props: {
     try {
       const res = await fetch("/api/research/find", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ topic: `${c.name}. ${c.summary}`, niche: props.niche }),
+        body: JSON.stringify({ action: "deepen", caseName: c.name, caseSummary: c.summary, niche: props.niche, sourcePayoff: props.sourcePayoff }),
       });
       const d = await res.json();
       const fs = Array.isArray(d?.facts) ? d.facts : [];
@@ -79,6 +86,13 @@ export default function ResearchStep(props: {
     } catch { /* keep the candidate's own summary as grounding */ }
     finally { setResearching(false); }
   }
+
+  // Reordered flow: a case was already resolved upstream. Deepen it on mount and
+  // skip the picker, so this step just confirms it and lets the creator review facts.
+  useEffect(() => {
+    if (props.presetCase) { setKind("event"); void pickSubject(props.presetCase); }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Checked facts are included automatically, no separate "add" step. Combine
   // them with any pasted text into the final source material on Continue.
