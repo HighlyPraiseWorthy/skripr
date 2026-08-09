@@ -52,6 +52,7 @@ export default function ViralBriefPage() {
   const [groundedCase, setGroundedCase] = useState<any | null>(null);
   const [caseChoices, setCaseChoices] = useState<any[]>([]);
   const [resolving, setResolving] = useState(false);
+  const [verifying, setVerifying] = useState(false);
 
   useEffect(() => {
     try {
@@ -144,6 +145,31 @@ export default function ViralBriefPage() {
       }
       setScript(data); setSavedId(data.savedId ?? null); setPhase("result");
     } catch (e: any) { setError(e?.message || "Failed to generate script"); setPhase("angles"); }
+  }
+
+  async function runVerify() {
+    if (!script || verifying) return;
+    setVerifying(true);
+    try {
+      const b = script.fullScript || script.script || script.body || script.content || "";
+      const res = await fetch("/api/scripts/verify", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ hook: script.hook || "", body: b, title: script.title || selectedAngle?.titleSuggestion || "" }),
+      });
+      const d = await res.json();
+      if (d && d.ran) {
+        setScript((prev: any) => prev ? {
+          ...prev,
+          hook: d.hook ?? prev.hook,
+          fullScript: d.body ?? prev.fullScript, script: d.body ?? prev.script,
+          body: d.body ?? prev.body, content: d.body ?? prev.content,
+          factVerify: d,
+        } : prev);
+      } else {
+        setScript((prev: any) => prev ? { ...prev, factVerify: { ran: false } } : prev);
+      }
+    } catch { /* leave untouched */ }
+    finally { setVerifying(false); }
   }
 
   function copyScript() {
@@ -281,6 +307,10 @@ export default function ViralBriefPage() {
                 style={{ padding: "8px 14px", borderRadius: 9, background: "rgba(77,184,255,0.07)", border: "1px solid rgba(99,102,241,0.2)", color: C.accentDim, fontSize: 12, fontWeight: 600, cursor: "pointer" }}>
                 ← Try another angle
               </button>
+              <button onClick={runVerify} disabled={verifying}
+                style={{ padding: "8px 14px", borderRadius: 9, background: "rgba(52,211,153,0.10)", border: "1px solid rgba(52,211,153,0.35)", color: C.green, fontSize: 12, fontWeight: 600, cursor: verifying ? "wait" : "pointer" }}>
+                {verifying ? "Verifying against sources..." : script.factVerify?.ran ? "Re-verify facts" : "Verify facts"}
+              </button>
               <button onClick={copyScript}
                 style={{ padding: "8px 16px", borderRadius: 9, background: copied ? "rgba(52,211,153,0.12)" : "rgba(77,184,255,0.11)", border: "1px solid " + (copied ? "rgba(52,211,153,0.4)" : "rgba(99,102,241,0.3)"), color: copied ? C.green : C.accentDim, fontSize: 12, fontWeight: 600, cursor: "pointer", transition: "all 0.2s" }}>
                 {copied ? "✓ Copied!" : "Copy Script"}
@@ -291,6 +321,35 @@ export default function ViralBriefPage() {
             <div style={{ background: "rgba(77,184,255,0.07)", border: "1px solid rgba(99,102,241,0.2)", borderRadius: 12, padding: "14px 18px", marginBottom: 16 }}>
               <div style={{ fontSize: 10, fontWeight: 700, color: C.accentDim, letterSpacing: 0.6, marginBottom: 6 }}>TITLE</div>
               <div style={{ fontSize: 15, fontWeight: 700, color: C.textBright, lineHeight: 1.4 }}>{title}</div>
+            </div>
+          )}
+          {script.factVerify?.ran && (
+            <div style={{ background: "rgba(52,211,153,0.06)", border: "1px solid rgba(52,211,153,0.28)", borderRadius: 12, padding: "14px 18px", marginBottom: 16 }}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: C.green, letterSpacing: 0.4, marginBottom: 7 }}>FACT-CHECKED AGAINST SOURCES</div>
+              {Array.isArray(script.factVerify.changes) && script.factVerify.changes.length > 0 && (
+                <div style={{ marginBottom: script.factVerify.stillVerify?.length ? 12 : 0 }}>
+                  <div style={{ fontSize: 12, fontWeight: 600, color: C.textBright, marginBottom: 4 }}>Corrected in the script:</div>
+                  <ul style={{ margin: 0, paddingLeft: 18 }}>
+                    {script.factVerify.changes.map((c: string, i: number) => (<li key={i} style={{ fontSize: 12.5, color: C.textDim, lineHeight: 1.5 }}>{c}</li>))}
+                  </ul>
+                </div>
+              )}
+              {Array.isArray(script.factVerify.stillVerify) && script.factVerify.stillVerify.length > 0 && (
+                <div>
+                  <div style={{ fontSize: 12, fontWeight: 600, color: "#fbbf24", marginBottom: 4 }}>Could not confirm, check these yourself:</div>
+                  <ul style={{ margin: 0, paddingLeft: 18 }}>
+                    {script.factVerify.stillVerify.map((c: string, i: number) => (<li key={i} style={{ fontSize: 12.5, color: C.textDim, lineHeight: 1.5 }}>{c}</li>))}
+                  </ul>
+                </div>
+              )}
+              {(!script.factVerify.changes?.length && !script.factVerify.stillVerify?.length) && (
+                <div style={{ fontSize: 12.5, color: C.textDim, lineHeight: 1.5 }}>Every checkable claim confirmed against a source. Nothing to fix.</div>
+              )}
+            </div>
+          )}
+          {script.factVerify && !script.factVerify.ran && (
+            <div style={{ background: "rgba(251,191,36,0.08)", border: "1px solid rgba(251,191,36,0.3)", borderRadius: 12, padding: "12px 18px", marginBottom: 16, fontSize: 12.5, color: C.textDim }}>
+              Fact verification could not run right now. Your script is unchanged.
             </div>
           )}
           {hook && (

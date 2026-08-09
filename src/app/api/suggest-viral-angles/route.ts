@@ -70,7 +70,7 @@ Output a JSON array of exactly 5 objects. Each object must have these exact keys
 - "angle": punchy topic name, max 8 words
 - "description": one sentence describing what the video covers
 - "audience": who would specifically click on this
-- "titleSuggestion": full title${chosenTitle ? ` — MUST follow the TITLE LOCK formula above, only the variable changed for this angle. Do not change the title shape.` : " using the formula above"}
+- "titleSuggestion": full title${chosenTitle ? ` — MUST follow the TITLE LOCK formula above, only the variable changed for this angle. Do not change the title shape.` : " using the formula above"}. TITLE MUST BE COHERENT ENGLISH FIRST, formula second. Apply the formula's SPIRIT (the "How [subject] [verb] [target]" curiosity structure), but choose a verb and phrasing that are ACCURATE and read naturally. Never jam the source's key word in backwards if it produces nonsense: "How the FBI Infiltrated Its Own Informant" is broken because the FBI did not infiltrate its own informant. If the exact formula word does not fit, use a true verb that keeps the same click ("How the FBI Ran a Killer for 30 Years", "How the FBI Protected a Mob Hitman"). A title a viewer cannot parse gets no clicks, so coherence and accuracy beat literal formula-matching every time.
 - "swap": ${chosenTitle ? `null (not applicable here)` : `if this angle is a single-variable swap of the source title, the change written as "X → Y" (e.g. "Mom → Dad"); otherwise null`}
 
 [`,
