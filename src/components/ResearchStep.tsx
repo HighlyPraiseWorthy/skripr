@@ -136,7 +136,12 @@ export default function ResearchStep(props: {
         {/* Verdict on the premise itself. Shown BEFORE generation so the creator
             can change course while it is still cheap, rather than discovering a
             fabricated case after the script reads as researched. */}
-        {verdict && (() => {
+        {/* One resolved case must drive the verdict, the picker, and the facts.
+            While an event has candidate cases and none is picked yet, the picker
+            IS the answer: hide the verdict note (it may name a case the picker
+            does not offer) and the topic-level facts (they span several unrelated
+            people and would build a composite that never existed). */}
+        {verdict && !(kind === "event" && candidates && candidates.length > 0 && !pickedSubject) && (() => {
           // Only an EVENT can fail to check out. For an explainer or a thought
           // experiment there is no incident to confirm, so the banner reports what
           // was found rather than casting doubt on the premise.
@@ -197,7 +202,7 @@ export default function ResearchStep(props: {
         )}
 
         {/* Found facts */}
-        {facts.length > 0 && (
+        {facts.length > 0 && (pickedSubject || !(kind === "event" && candidates && candidates.length > 0)) && (
           <div style={{ marginTop: 12, border: `1px solid ${C.purple}45`, borderRadius: 12, padding: 14, background: `${C.purple}0e` }}>
             <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 0.4, color: "#b9adff", marginBottom: 3 }}>✓ {includedCount} FACTS WILL BE USED IN YOUR SCRIPT</div>
             <div style={{ fontSize: 11.5, color: C.dim, marginBottom: 10 }}>These are added automatically, uncheck any you don't want. A citation isn't a guarantee, so verify before publishing.</div>
