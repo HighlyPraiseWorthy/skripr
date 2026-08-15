@@ -1,4 +1,7 @@
 import { Anthropic } from "@anthropic-ai/sdk";
+import { caseKey, getCachedFactSet, getBestAcrossVersions, putCachedFactSet, unionFacts, CACHE_GOOD_ENOUGH } from "@/lib/case-cache";
+import { getContaminationWatchlist, recordCaseEntities } from "@/lib/contamination";
+import { addToLibrary, activeFacts } from "@/lib/fact-library";
 
 let _anthropic: Anthropic | null = null;
 function anthropic(): Anthropic {
@@ -12,6 +15,12 @@ function anthropic(): Anthropic {
 // until PERPLEXITY_API_KEY is set — callers surface the error gracefully.
 
 export interface ResearchFact { fact: string; source: string | null }
+
+// Bump whenever the deepen question brief changes materially. It is part of the
+// fact-cache key, so incrementing it invalidates every previously cached fact set and
+// forces a re-derive under the new brief. v2 added: verbatim quotes, physical
+// description + nickname, and one vivid scene in full.
+export const RESEARCH_BRIEF_VERSION = 2;
 
 // Whether the record actually supports the premise the script is about to assert.
 //   documented  a real, citable source describes THIS specific event or claim
@@ -88,13 +97,99 @@ function selfNegating(c: SubjectCandidate): boolean {
 // Shared by findResearch and resolveSubjects. A candidate with no citable source
 // is exactly what this feature exists to prevent, so it is dropped rather than
 // offered as a "real" case the creator might trust.
-function normalizeCandidates(raw: any, fallbackCitations: string[], allowSourceless = false): SubjectCandidate[] {
+// Distinctive tokens for same-case detection: lowercase alphanumerics, length >= 4,
+// minus generic words that show up in every true-crime blurb.
+const CAND_STOP = new Set(["operation", "case", "story", "documentary", "federal", "agent", "special", "member", "members", "motorcycle", "club", "chapter", "undercover", "infiltration", "infiltrated", "charges", "including", "which", "that", "with", "from", "into", "were", "their", "this", "about"]);
+function candTokens(c: SubjectCandidate): Set<string> {
+  const toks = `${c.name} ${c.summary}`.toLowerCase().match(/[a-z0-9]{4,}/g) || [];
+  return new Set(toks.filter((t) => !CAND_STOP.has(t)));
+}
+// Prefer the candidate that reads like the canonical name: an "Operation X" without
+// an alias slash, then the shorter/cleaner name. This is what lets Black Biscuit win
+// over "Rough Rider / Dobyns infiltration ..." when the two collapse into one.
+function moreCanonical(a: SubjectCandidate, b: SubjectCandidate): SubjectCandidate {
+  const score = (c: SubjectCandidate) => (/\boperation\b/i.test(c.name) ? 2 : 0) + (c.name.includes("/") ? -2 : 0) + (c.name.length <= 60 ? 1 : 0);
+  return score(b) > score(a) ? b : a;
+}
+// Merge candidates that describe the same underlying case under different names or
+// nicknames, so the picker never offers a wrong label as a separate, selectable
+// option beside the right one. Same event = strong token overlap AND an overlapping
+// date, which is conservative enough not to merge genuinely distinct cases.
+export function dedupeCandidates(cands: SubjectCandidate[]): SubjectCandidate[] {
+  const kept: { c: SubjectCandidate; toks: Set<string> }[] = [];
+  for (const c of cands) {
+    const toks = candTokens(c);
+    const yearsC: string[] = c.when.match(/\d{4}/g) || [];
+    const dup = kept.find((k) => {
+      const shared = [...toks].filter((t) => k.toks.has(t)).length;
+      const union = new Set([...toks, ...k.toks]).size || 1;
+      const jaccard = shared / union;
+      const yearsK: string[] = k.c.when.match(/\d{4}/g) || [];
+      const yearsOverlap = !yearsC.length || !yearsK.length || yearsC.some((y) => yearsK.includes(y));
+      return (shared >= 3 || jaccard >= 0.5) && yearsOverlap;
+    });
+    if (dup) {
+      // Keep the more canonical of the two, but preserve the richer summary/sources.
+      const winner = moreCanonical(dup.c, c);
+      const loser = winner === dup.c ? c : dup.c;
+      winner.summary = winner.summary.length >= loser.summary.length ? winner.summary : loser.summary;
+      winner.sources = Array.from(new Set([...winner.sources, ...loser.sources])).slice(0, 4);
+      dup.c = winner;
+      dup.toks = candTokens(winner);
+    } else {
+      kept.push({ c, toks });
+    }
+  }
+  return kept.map((k) => k.c);
+}
+
+// Deterministic duration/date-range consistency. A card that says "1998-2000" in the
+// header and "nearly three years undercover" in the body contradicts itself; the span
+// is two years. No model call is needed to catch it: parse the range, parse any stated
+// year-count, and if the words claim MORE years than the range allows, strip the
+// bogus duration phrase and let the dated range stand as the single source of truth.
+const NUM_WORDS: Record<string, number> = { one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10 };
+export function reconcileDuration(summary: string, when: string): string {
+  const years = (when.match(/\d{4}/g) || []).map(Number);
+  if (years.length < 2) return summary; // no range to check against
+  const span = Math.max(...years) - Math.min(...years);
+  if (span <= 0) return summary;
+  // "nearly three years", "over 3 years", "almost two-year", "18 months"
+  const re = /\b(nearly|almost|about|roughly|over|more than|around)?\s*(one|two|three|four|five|six|seven|eight|nine|ten|\d{1,2})[\s-]+(years?|year-?long)\b/gi;
+  return summary.replace(re, (match, _mod, num) => {
+    const n = NUM_WORDS[String(num).toLowerCase()] ?? Number(num);
+    if (!Number.isFinite(n)) return match;
+    // A stated count that exceeds the dated span is the fabrication; drop the phrase.
+    // Equal or fewer years is fine ("two years" for a 2-year span, "18 months" etc.).
+    return n > span ? "" : match;
+  }).replace(/\s{2,}/g, " ").replace(/\s+([.,])/g, "$1").trim();
+}
+
+// Derive the case's date range from the SOURCED facts rather than the resolver's guess.
+// The resolver can be confidently wrong about years (1999-2001 when it was 1998-2000),
+// and a confidence check can't catch a confident falsehood. But the fetched facts carry
+// real dates from real sources. This reads only an EXPLICIT range ("1998 to 2000",
+// "1998-2000", "from 1998 until 2000") — high precision, so it never manufactures a
+// range from scattered years (a memoir's 2005 publication date, a 20-year career, etc.).
+export function deriveWhenFromFacts(facts: { fact: string }[]): string | undefined {
+  const re = /\b((?:19|20)\d{2})\s*(?:[-–—]|to|through|until|and)\s*((?:19|20)\d{2})\b/;
+  for (const f of facts) {
+    const m = (f.fact || "").match(re);
+    if (m) {
+      const a = Number(m[1]), b = Number(m[2]);
+      if (b >= a && b - a <= 15) return `${a}-${b}`; // sane span; discard typos/outliers
+    }
+  }
+  return undefined;
+}
+
+function normalizeCandidates(raw: any, fallbackCitations: string[], allowSourceless = false, dedupe = true): SubjectCandidate[] {
   if (!Array.isArray(raw)) return [];
-  return raw
+  const deduped = raw
     .filter((c: any) => c && typeof c.name === "string" && c.name.trim())
     .map((c: any) => ({
       name: String(c.name).trim().slice(0, 160),
-      summary: typeof c.summary === "string" ? c.summary.trim().slice(0, 500) : "",
+      summary: reconcileDuration(typeof c.summary === "string" ? c.summary.trim().slice(0, 500) : "", typeof c.when === "string" ? c.when.trim() : ""),
       when: typeof c.when === "string" ? c.when.trim().slice(0, 40) : "",
       whyItFits: typeof c.whyItFits === "string" ? c.whyItFits.trim().slice(0, 300) : "",
       sources: (Array.isArray(c.sources) ? c.sources : [])
@@ -105,8 +200,11 @@ function normalizeCandidates(raw: any, fallbackCitations: string[], allowSourcel
     // Claude-named candidates carry no URLs; sourcing is enforced downstream when
     // the chosen case's facts are fetched from Perplexity, so allow them through.
     .filter((c: SubjectCandidate) => allowSourceless || c.sources.length > 0 || fallbackCitations.length > 0)
-    .map((c: SubjectCandidate) => ({ ...c, sources: c.sources.length ? c.sources : fallbackCitations.slice(0, 2) }))
-    .slice(0, 4);
+    .map((c: SubjectCandidate) => ({ ...c, sources: c.sources.length ? c.sources : fallbackCitations.slice(0, 2) }));
+  // Case candidates get merged when two labels describe one case. SCOPE questions for
+  // an explainer are deliberately about the same topic and share its vocabulary, so
+  // merging them on token overlap would collapse the whole picker into one option.
+  return (dedupe ? dedupeCandidates(deduped) : deduped).slice(0, 4);
 }
 
 export async function findResearch(input: { topic: string; angle?: string; niche?: string }): Promise<ResearchResult> {
@@ -296,12 +394,19 @@ Then, if it is an "event", identify the REAL, DOCUMENTED people or cases this ti
 
 Break the title into its required elements and match ALL of them. For "The Hunt for the Man Who Sold America's Satellites" the elements are: one identified individual (not a company, not a policy debate), who sold or passed satellite material to a foreign power, plus a pursuit, manhunt, escape, or investigation. The definitive match is Christopher Boyce (with Andrew Daulton Lee), the TRW case behind "The Falcon and the Snowman". A corporate technology-transfer controversy matches only the subject area and fails the "one man" and "hunt" elements, so it is NOT a match.
 
+If it is an "explainer", a "hypothetical", or a "claim", there is no case to identify — but the topic is still too broad to research well as stated, and a CLAIM in particular needs evidence more than any other kind, because an unexamined claim about people or trends is exactly where a script states a disputed finding as settled. Instead return 2 to 4 SCOPE QUESTIONS: the specific, distinct sub-questions this title could be answering, so the creator picks the one video they are actually making. For "What If the Earth Stopped Spinning" good scopes are: "The physics of the stop itself — momentum, the atmosphere, what happens in the first seconds", "The aftermath for life and climate over the following years", "Why it cannot actually happen, and what that reveals about angular momentum". Each scope must be genuinely different in what it would research and explain, not three phrasings of the same video. Put the scope question in "name", what it covers in "summary", leave "when" empty, and use "whyItFits" to say what a viewer gets from that framing.
+
 Rules:
-- Best match FIRST. Return 1 to 4 candidates for an event, empty for the other kinds.
+- Best match FIRST. Return 1 to 4 candidates for an event, and 2 to 4 SCOPE QUESTIONS for an explainer, hypothetical, or claim. Never return an empty list for those three kinds — a topic with no grounding is how a script ends up asserting contested findings as fact.
 - Only name a case you are genuinely confident is real and documented. Never invent a case, a name, or a date. If you are not confident any real case fits, return an empty list.
 - A candidate must satisfy EVERY element of the title, not just the subject area.
 - A NUMBER in the title (like "30 years") is a HARD FILTER: a case that does not match it is disqualified even if it is more famous than the ones that do. The specific constraint outranks fame.
 - Never include a case while noting it does not really fit. If it does not fit, omit it.
+- ONE case, ONE candidate. If the same underlying events could be named two ways (an official operation name and a nickname or a "the X affair" phrasing), return it ONCE under its canonical name, and mention the alias inside the summary. Never list the same case twice under different labels — that lets a user pick the wrong name.
+- NEVER INVENT AN OPERATION CODENAME. Do not attach an "Operation X" codename unless you are certain it is the real, documented name of this operation. A fabricated codename ("Operation Ivan", "Operation Rough Rider") is worse than none, because the user confirms it as the case identity. When you are not certain of the official codename, name the case by the PERSON and ORGANIZATION instead (e.g. "Billy Queen — ATF infiltration of the Mongols MC"), never a guessed codename.
+- INTERNAL CONSISTENCY: the "when" range and any duration you state in the summary must agree. If "when" is 1998-2000, do not write "nearly three years"; two years and a 1998-2000 range must match. Get the duration and the dates consistent before returning.
+- DATES: only give a "when" range you are genuinely confident is correct. A guessed range that is off by a year (1999-2001 when it was really 1998-2000) becomes the confirmed identity and misleads. If you are not sure of the exact years, return "when" as an EMPTY STRING and let the sourced facts settle the dates later. An omitted date beats a wrong one.
+- Use canonical VOCABULARY, not just canonical names. Rank and status terms are facts: "prospect", "hang-around", and "full-patch member" are distinct stages and must not be blended (never write something like "fully patched prospect"). If a person reached full membership, say full-patch member.
 - Ask which case a well-read viewer would name on reading this title, and make sure it is present.
 
 Output ONLY this JSON, no prose, no markdown:
@@ -322,7 +427,7 @@ Output ONLY this JSON, no prose, no markdown:
       const parsed = JSON.parse(m ? m[0] : content);
       const k = String(parsed?.kind || "").toLowerCase();
       kind = k === "explainer" || k === "hypothetical" || k === "claim" ? k : "event";
-      candidates = normalizeCandidates(parsed?.candidates, [], true);
+      candidates = normalizeCandidates(parsed?.candidates, [], true, kind === "event");
     } catch { /* unparseable — no candidates */ }
     return { ok: true, kind, candidates };
   } catch (e: any) {
@@ -358,7 +463,7 @@ export function buildGroundingBlock(g?: GroundingContext | null): string {
   }
   if (g.facts?.length) {
     lines.push(g.caseName ? "SOURCED FACTS:" : "RESEARCHED FACTS (real, sourced):");
-    lines.push(...g.facts.slice(0, 8).map((f) => `- ${f}`));
+    lines.push(...g.facts.slice(0, 12).map((f) => `- ${f}`));
   }
   if (!lines.length) return "";
 
@@ -391,6 +496,234 @@ If a point needs a figure you were not given, make the point without the figure.
   return `${lines.join("\n")}\n\n${use}\n\n${closedWorld}${caveat}`;
 }
 
+export interface DeepenResult {
+  facts: ResearchFact[];
+  // Answers Claude's review flagged as contradicting ANOTHER answer in the set
+  // (one run said 42 defendants, another said 16). Surfaced to the creator to
+  // decide, never silently resolved by shipping whichever one came back.
+  conflicts: { fact: string; source: string | null; note: string }[];
+  // Three states the UI must never blur into one another. "no-key" means the
+  // Perplexity leg could not run (prod-only key) — a service outage, NOT a case
+  // with no findable facts. "no-facts" means research ran and genuinely found
+  // nothing citable. A creator who cannot tell these apart regenerates forever.
+  status: "ok" | "no-key" | "no-facts";
+  // Entity locking AT THE SOURCE. resolveSubjects sometimes names the wrong
+  // operation ("Rough Rider" for what is really "Black Biscuit") or a drifting date.
+  // That label flows into the grounding and the finished script, where a Director's
+  // note cannot override it. When the canonical resolution corrects the label, we
+  // hand the corrected name/date back so the caller can relabel the case everywhere.
+  caseName?: string;
+  when?: string;
+}
+
+// One Perplexity round: number the questions, get sourced answers, pair each answer
+// back to its question, and drop refusals-with-citations by reading the text. Pulled
+// out so retry-on-refusal can run it a second time on reformulated questions.
+async function fetchPerplexityAnswers(
+  pkey: string,
+  caseName: string,
+  summary: string | undefined,
+  canonical: string[],
+  qs: string[],
+): Promise<{ question: string; fact: string; source: string | null }[]> {
+  if (!qs.length) return [];
+  const prompt = `Case: ${caseName}.${summary ? ` ${summary}` : ""}${canonical.length ? `
+
+CANONICAL ENTITIES (use these exact names; if a question's premise conflicts with these, trust these): ${canonical.join("; ")}.` : ""}
+
+Answer each numbered question below with ONE specific, citable fact and its source URL. If you cannot find a real source for a question, OMIT that question entirely rather than guessing or explaining why you could not. Do NOT return a sentence about what you could not find. Accuracy matters more than completeness: a documentary reads these on camera.
+
+QUESTIONS:
+${qs.map((q, i) => `${i + 1}. ${q}`).join("\n")}
+
+Output ONLY a JSON array, no prose. "q" is the question number the fact answers:
+[{"q":1,"fact":"the specific fact, including any exact name, number, or date","source":"the source URL"}]`;
+  try {
+    const res = await fetch("https://api.perplexity.ai/chat/completions", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${pkey}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ model: "sonar", temperature: 0, messages: [{ role: "user", content: prompt }] }),
+      signal: AbortSignal.timeout(22000),
+    });
+    if (!res.ok) return [];
+    const data = await res.json();
+    const content: string = data?.choices?.[0]?.message?.content || "";
+    const citations: string[] = Array.isArray(data?.citations) ? data.citations.filter((c: any) => typeof c === "string") : [];
+    return parsePerplexityAnswers(content, citations, qs);
+  } catch { return []; }
+}
+
+// Pure parse + pairing + filter, split out from the network call so the retry-prone
+// path can be tested offline (the Perplexity key is prod-only, so the live fetch
+// cannot run locally — see scripts/research-parse.test.ts). Pairs each answer to its
+// question by the returned index, resolves the source URL, and drops sourceless
+// answers and refusals-with-citations by reading the fact text.
+export function parsePerplexityAnswers(
+  content: string,
+  citations: string[],
+  qs: string[],
+): { question: string; fact: string; source: string | null }[] {
+  let arr: any;
+  try {
+    const m = content.match(/\[[\s\S]*\]/);
+    arr = JSON.parse(m ? m[0] : content);
+  } catch { return []; }
+  if (!Array.isArray(arr)) return [];
+  return arr
+    .filter((x: any) => x && typeof x.fact === "string" && x.fact.trim())
+    .map((x: any, i: number) => {
+      const fact = String(x.fact).trim().slice(0, 400);
+      const qn = Number(x?.q) - 1;
+      const question = Number.isInteger(qn) && qn >= 0 && qn < qs.length ? qs[qn] : (qs[i] || "");
+      const source = (typeof x.source === "string" && /^https?:\/\//.test(x.source)) ? x.source : (citations[i] || null);
+      return { question, fact, source };
+    })
+    .filter((p: { fact: string; source: string | null }) => !!p.source && !isNonAnswer(p.fact));
+}
+
+// Retry-on-refusal. A closed question that presupposes an artifact ("the patch
+// ceremony date") often comes back empty even when the case has a bestselling
+// memoir and federal records behind it. Rather than give up at two facts, take the
+// questions that produced NOTHING and reformulate them broader, then ask once more.
+async function reformulateQuestions(caseName: string, unanswered: string[]): Promise<string[]> {
+  if (!unanswered.length) return [];
+  try {
+    const msg = await anthropic().messages.create({
+      model: "claude-sonnet-4-6",
+      max_tokens: 500,
+      temperature: 0,
+      messages: [{
+        role: "user",
+        content: `These research questions about the real case "${caseName}" each returned NO sourced answer, usually because they were phrased too narrowly and presupposed a specific artifact that was never separately reported. Rewrite each one BROADER and more open so it surfaces whatever IS documented, while still aiming at the same underlying fact. For example "what was the exact date of the patching ceremony?" becomes "what does the record say about when and how the infiltration ended?".
+
+QUESTIONS:
+${unanswered.map((q, i) => `${i + 1}. ${q}`).join("\n")}
+
+Output ONLY a JSON array of the rewritten question strings, no prose.`,
+      }],
+    });
+    const text = msg.content[0]?.type === "text" ? msg.content[0].text : "";
+    const m = text.match(/\[[\s\S]*\]/);
+    const arr = JSON.parse(m ? m[0] : text);
+    if (Array.isArray(arr)) return arr.filter((q: any) => typeof q === "string" && q.trim()).slice(0, 8);
+  } catch { /* no reformulation — keep what round one found */ }
+  return [];
+}
+
+// A sourced fact is a third-person statement of something documented. Perplexity
+// sometimes ignores the "omit what you can't source" instruction and returns a
+// REFUSAL with a citation for the query it ran ("I could not verify a source for
+// the patch ceremony date" + a URL). A URL-presence check waves that straight
+// through, so the refusal has to be caught by reading the TEXT. This deterministic
+// pass is the first line; the Claude review pass below is the second.
+export function isNonAnswer(text: string): boolean {
+  const t = (text || "").trim();
+  if (t.length < 40) return true; // too short to be a documentary fact
+  // First person = the model narrating, not a fact. Matched as "I <verb>" and
+  // contractions so it does not trip on "World War I" or a lone Roman numeral.
+  if (/\bI (?:could|can|cannot|couldn|was|am|have|had|did|do|found|note|believe|see|think|need|apolog|was unable)/i.test(t)) return true;
+  if (/\bI['’](?:m|ve|d|ll)\b/i.test(t)) return true;
+  const refusal = /(?:could|couldn['’]?t|can(?:not|['’]t)|unable|failed) (?:to )?(?:verify|find|locate|confirm|determine|identify)|no (?:documented|verifiable|reliable|specific|direct|known|clear|public|exact|precise) (?:source|sources|record|records|information|evidence|connection|link|answer|date|details?)|not (?:documented|found|available|specified|reported|verifiable|mentioned) (?:in|within|among|by)|no (?:such )?(?:connection|link|relationship|evidence|record|documentation) (?:exists|existed|was found|is documented|could be found)|there (?:is|was) no (?:documented|verifiable|known|direct|clear|public|evidence|record)|insufficient (?:information|sources?|evidence)|the (?:provided )?(?:search )?results? (?:do|did) not/i;
+  return refusal.test(t);
+}
+
+// Source tiering. The URL-presence check let a motorcycle merch blog and a free
+// blogspot stand behind biographical claims about a federal agent. "low" domains are
+// self-published or commercial-SEO and should not carry a load-bearing documentary
+// fact when anything better is available; "high" are wire/records/reference; the vast
+// neutral middle (regional papers, trade press) is kept as-is.
+export function sourceTier(url: string | null): "high" | "low" | "neutral" {
+  if (!url) return "low";
+  let host = "";
+  try { host = new URL(url).hostname.replace(/^www\./, "").toLowerCase(); } catch { return "low"; }
+  const low = ["blogspot.com", "wordpress.com", "medium.com", "substack.com", "tumblr.com", "quora.com", "reddit.com", "pinterest.com", "facebook.com", "answers.com", "ranker.com", "bobberbrothers.com", "youtube.com", "youtu.be", "tiktok.com", "x.com", "twitter.com"];
+  if (low.some((d) => host === d || host.endsWith("." + d))) return "low";
+  if (/\.gov$|\.gov\.|\.mil$|\.edu$|\.edu\.|(^|\.)wikipedia\.org$|(^|\.)courtlistener\.com$|(^|\.)justice\.gov$|(^|\.)fbi\.gov$/.test(host)) return "high";
+  const majors = ["nytimes.com", "washingtonpost.com", "latimes.com", "apnews.com", "reuters.com", "bbc.com", "bbc.co.uk", "npr.org", "pbs.org", "theguardian.com", "wsj.com", "nypost.com", "cnn.com", "nbcnews.com", "cbsnews.com", "abcnews.go.com", "propublica.org", "themobmuseum.org", "smithsonianmag.com", "history.com", "azcentral.com"];
+  if (majors.some((d) => host === d || host.endsWith("." + d))) return "high";
+  return "neutral";
+}
+
+// Second line of defence, and the one that catches what a regex cannot: a fluent,
+// well-formed answer that is about the WRONG thing (asks a date, answers with a
+// club name), quietly reconciles a bad premise in the question (entity drift), or
+// contradicts a sibling answer. Claude never wrote a fact here — it only judges the
+// pairing of its own question against Perplexity's answer.
+async function reviewDeepenedFacts(
+  caseName: string,
+  pairs: { question: string; fact: string; source: string | null }[],
+  caseSummary?: string,
+  watchlist?: string[],
+): Promise<{ keep: ResearchFact[]; conflicts: DeepenResult["conflicts"] }> {
+  const keepAll = () => ({ keep: pairs.map((p) => ({ fact: p.fact, source: p.source })), conflicts: [] as DeepenResult["conflicts"] });
+  if (!pairs.length) return { keep: [], conflicts: [] };
+  try {
+    const msg = await anthropic().messages.create({
+      model: "claude-sonnet-4-6",
+      max_tokens: 900,
+      temperature: 0,
+      messages: [{
+        role: "user",
+        content: `You are fact-checking research answers before they go into a documentary script about this real case:
+CASE: ${caseName}${caseSummary ? `\nWHAT THIS CASE IS: ${caseSummary}` : ""}${watchlist && watchlist.length ? `\n\nDO-NOT-CONFUSE WATCHLIST — these names belong to DIFFERENT cases the user recently worked on, NOT this one. Any answer whose subject is one of these is cross-case contamination and must be dropped: ${watchlist.join(", ")}.` : ""}
+
+Each item is a QUESTION that was asked and the ANSWER that came back with a citation. Assign each a status:
+- "drop": the answer refuses or does not answer ("could not verify", "no documented source"); is NON-RESPONSIVE (asks a date, answers about a different subject); states a NEGATIVE or absence (no connection exists); shows ENTITY DRIFT (silently swaps in a different operation, person, or org than the question named); or is CROSS-CASE CONTAMINATION — a well-formed fact that is actually about a DIFFERENT case, person, place, or operation than the CASE above. This is the most dangerous kind because it reads perfectly: an answer about a different undercover agent, a different infiltrator's aftermath, or the wrong chapter/city/operation must be dropped even though it is fluent and sourced. If a fact's central person, location, or operation does not match this specific case, drop it.
+- "temporal": the two answers give DIFFERENT VALUES FOR THE SAME METRIC because they describe it at DIFFERENT POINTS IN TIME, so BOTH are true — e.g. "13 officers were charged" (initial indictment) and "27 officers were charged" (after later indictments), or a casualty/arrest/damage count that grew as the case developed. This is the SINGLE MOST COMMON false conflict on a legal case: a number that rose over time is not a contradiction, it is a timeline. Use "temporal" whenever a figure differs but both figures can be true at their own moment. Put a short note naming the two moments on BOTH items (e.g. "13 at first indictment, 27 after later charges"). Both items are KEPT.
+- "conflict": this answer states an INCOMPATIBLE VALUE FOR THE SAME FACT AT THE SAME TIME as another answer in this set — e.g. one says 42 defendants and another says 16 for the same indictment, or two different dates for the same single event. Two answers about DIFFERENT aspects (one about how many were indicted, one about whether the case was later dismissed on appeal) are NOT a conflict; they are both keepers. And a figure that simply GREW OVER TIME is "temporal", NOT "conflict". Only use "conflict" when the two answers cannot both be true at any point in time. When you do, put the SAME note on BOTH items.
+- "keep": a specific, responsive fact safe to read on camera. This is the default; most items should be "keep".
+
+Be strict about drops, but do not invent conflicts. If two facts are simply about different things, keep them both. If they differ only because time passed, that is "temporal", not "conflict".
+
+The "note" is shown verbatim to a non-technical user. It MUST be a single short human-readable phrase under 12 words describing what to check (e.g. "Sources give 16 vs 42 for the number indicted"). It must NOT contain your reasoning, deliberation, self-instructions, the word "status", or any mention of a "flag". Leave it empty for "keep".
+
+ITEMS:
+${pairs.map((p, i) => `${i + 1}. Q: ${p.question}\n   A: ${p.fact}`).join("\n\n")}
+
+Output ONLY a JSON array, no prose: [{"i":1,"status":"keep|drop|conflict|temporal","note":""}]`,
+      }],
+    });
+    const text = msg.content[0]?.type === "text" ? msg.content[0].text : "";
+    const m = text.match(/\[[\s\S]*\]/);
+    const arr = JSON.parse(m ? m[0] : text);
+    if (!Array.isArray(arr)) return keepAll();
+    const keep: ResearchFact[] = [];
+    const conflicts: DeepenResult["conflicts"] = [];
+    for (const v of arr) {
+      const i = Number(v?.i) - 1;
+      if (!Number.isInteger(i) || i < 0 || i >= pairs.length) continue;
+      const p = pairs[i];
+      const status = String(v?.status || "").toLowerCase();
+      if (status === "drop") continue;
+      // The note is shown verbatim to the user, so never let the model's
+      // deliberation leak through: take the first clause only, cap it, and if it
+      // reads like reasoning or self-instruction, replace it with a neutral line.
+      let note = (typeof v?.note === "string" ? v.note : "").split(/[\n]|(?<=\.)\s/)[0].trim().slice(0, 120);
+      const leaked = /\b(flag|status|keep .*(on|off)|actually consistent|item \d|i (would|will|think|note)|let me|because)\b/i.test(note);
+      // Safety net for the inverted verdict: if the model filed a "conflict" but its
+      // own note concludes the answers are actually consistent, trust the conclusion
+      // and keep the fact rather than dropping a real one on a mislabelled status.
+      const selfConsistent = /\b(consistent|not a conflict|no conflict|actually the same|agree)\b/i.test(note);
+      if (status === "temporal") {
+        // Same metric at two points in time — both true, so KEEP both rather than flag a
+        // false conflict. Fold a clean, non-leaked time qualifier into the fact so the
+        // downstream self-contradiction check reads "13 (at indictment)" and "27 (later)"
+        // as a timeline, not a 13-vs-27 contradiction.
+        const qualifier = note && !leaked && note.length <= 80 ? ` (${note})` : "";
+        keep.push({ fact: qualifier && !p.fact.includes(note) ? `${p.fact}${qualifier}` : p.fact, source: p.source });
+      } else if (status === "conflict" && !selfConsistent) {
+        conflicts.push({ fact: p.fact, source: p.source, note: leaked ? "Sources give different figures for this detail." : note });
+      } else {
+        keep.push({ fact: p.fact, source: p.source });
+      }
+    }
+    // A malformed judgement that kept nothing is more likely a parse miss than a
+    // real "everything is bad", so fall back to the deterministically-filtered set.
+    if (!keep.length && !conflicts.length) return keepAll();
+    return { keep, conflicts };
+  } catch { return keepAll(); }
+}
+
 /**
  * Deepen the facts for a chosen case. The plain fact fetch returns the surface of
  * a story (who, what, when); a documentary also needs the NAMED specifics that
@@ -401,81 +734,192 @@ If a point needs a figure you were not given, make the point without the figure.
  * Claude never supplies a fact directly: only sourced answers reach the script, so
  * the anti-fabrication guarantee holds while the grounding gets much richer.
  */
-export async function deepenCaseFacts(input: { caseName: string; summary?: string; niche?: string; sourcePayoff?: string; sourceSubject?: string }): Promise<{ facts: ResearchFact[] }> {
+export async function deepenCaseFacts(input: { caseName: string; summary?: string; niche?: string; sourcePayoff?: string; sourceSubject?: string; userId?: string; kind?: TopicKind; topicAnchor?: string }): Promise<DeepenResult> {
   const caseName = (input.caseName || "").slice(0, 200);
-  if (!caseName.trim()) return { facts: [] };
+  if (!caseName.trim()) return { facts: [], conflicts: [], status: "no-facts" };
   const pkey = process.env.PERPLEXITY_API_KEY;
   // No Perplexity means no citable answers, and Claude-only facts would be
-  // unsourced, which is exactly what must not reach the script. Return nothing.
-  if (!pkey) return { facts: [] };
+  // unsourced, which is exactly what must not reach the script. This is an OUTAGE,
+  // not an empty case — report it as such so the UI shows a different state.
+  if (!pkey) return { facts: [], conflicts: [], status: "no-key" };
 
-  // 1) Claude generates the targeted questions.
+  // 1) Claude corrects the case label AND locks the canonical entities AND writes
+  // the questions, in one call. Entity locking kills a whole failure class: if the
+  // label says "Operation Rough Rider" but the real case is "Operation Black
+  // Biscuit", every question inherits the wrong name, Perplexity papers over it,
+  // and the wrong name reaches the finished script where a Director's note cannot
+  // override it. Correcting it here, at the source, fixes it everywhere downstream.
+  // An explainer/hypothetical grounds on a BODY OF EVIDENCE about a subject, not a
+  // dated case: there is no operation codename to correct, no defendants, no aftermath.
+  // The mechanism, the real numbers, and what is still unsettled are what a science
+  // script actually runs on, so the brief swaps to those.
+  const isExplainer = input.kind === "explainer" || input.kind === "hypothetical" || input.kind === "claim";
   let questions: string[] = [];
+  let canonical: string[] = [];
+  let correctedName = "";
+  let correctedWhen = "";
   try {
     const msg = await anthropic().messages.create({
       model: "claude-sonnet-4-6",
-      max_tokens: 700,
+      max_tokens: 1300,
       temperature: 0,
       messages: [{
         role: "user",
-        content: `You are a documentary researcher preparing a script about this real case:
-CASE: ${caseName}${input.summary ? `\nCONTEXT: ${input.summary}` : ""}${input.sourcePayoff ? `\n\nPAYOFF TO REPRODUCE: this video is modeled on one that worked because of this: "${input.sourcePayoff}". PRIORITIZE questions whose answers would let the script deliver that same kind of payoff on this case. Still cover the basics, but lead with the facts that serve this payoff.` : ""}
+        content: `You are a documentary researcher preparing a script about this ${isExplainer ? "subject" : "real case"}:
+${isExplainer ? "SUBJECT / SCOPE" : "CASE"}: ${caseName}${input.summary ? `\nCONTEXT: ${input.summary}` : ""}${input.sourcePayoff ? `\n\nPAYOFF TO REPRODUCE: this video is modeled on one that worked because of this: "${input.sourcePayoff}". PRIORITIZE questions whose answers would let the script deliver that same kind of payoff on this case. Still cover the basics, but lead with the facts that serve this payoff.` : ""}
 
-List the 6 to 8 most important SPECIFIC, NAMED, VERIFIABLE details a strong documentary on this case must include, phrased as research questions each seeking ONE citable fact. Target these gaps specifically, because they are what makes a script credible and are the first thing a viewer checks:
-- the NAMED programs, systems, documents, or operations at the center of the case
-- the person's STATED motive (what they said drove them, attributed to them)
-- HOW they obtained their access, position, or clearance
-- specific SETTINGS or locations by their real names
-- the precise OUTCOME: exact charges and key dates
-- the SENTENCE EACH person received, as a separate question per person (do not bundle them). When a case has more than one defendant, ask what sentence EACH one got by name, because the contrast between them is often the most striking fact in the story
-- the DOCUMENTED ENDING: how the story actually resolved (the verdict, the capture, the trial outcome, the final fate of the key people). This is what a climax must build toward and land on, so it is essential, ask for the specific resolution with its date
-- what remains DISPUTED, sealed, or unknown${input.sourceSubject ? `
-- THE BRIDGE (highest value): this script remixes a video about "${input.sourceSubject}". Include 1 or 2 questions hunting for a DOCUMENTED, real connection between THIS case and that subject, a shared event, a crossover, a moment where the two worlds touched. A true connection like that is the single strongest cold open a remix can have. Only ask it if such a link might genuinely exist; a fabricated bridge is worse than none.` : ""}
+${isExplainer ? `FIRST, restate the subject precisely. Give the standard scientific/technical name for what this video is actually about in "caseName", and leave "when" as an EMPTY STRING (a phenomenon has no date range). Do not invent a project or program name.
 
-Each question must seek a single concrete fact that can carry a citation. Do not ask open-ended or interpretive questions. Output ONLY a JSON array of question strings, no prose.`,
+SECOND, lock the canonical TERMINOLOGY: the correct technical terms, units, and named effects/laws/models for this subject. Every question must use them exactly — a wrong term returns the wrong literature.` : `FIRST, correct the case identity. From your own knowledge, give the CANONICAL name of the operation/case and its correct date range. If the CASE label above names the wrong operation, uses a nickname, or has a wrong or drifting date, fix it — this becomes the name and date the finished script uses, so it must be right. IMPORTANT no-op rule: if the label already looks correct, OR you are not genuinely confident of the canonical name, return an EMPTY STRING for caseName and we keep the original untouched. A confident wrong rename is worse than leaving the original label, because it looks authoritative. Only return a corrected name when you are sure.
+
+SECOND, lock the canonical entities: the CORRECT official strings for the key people, organizations, and the central program or document. This is the ground truth every question must use.`}
+
+THIRD, write the 8 to 10 most important research questions a strong documentary must answer, each seeking ONE citable fact. Use ONLY the canonical strings above — never a variant, nickname, or the possibly-wrong label. Phrase them OPEN, not closed: an open question returns what exists, a closed one that presupposes a specific artifact ("the exact verbatim threat", "each defendant's sentence separately") forces a refusal or a confabulation when that artifact was never separately reported. Cover:
+${isExplainer ? `- the CORE MECHANISM: how the thing actually works, step by step, in causal order. This is the spine of the whole video and deserves 2 or 3 separate questions on its own — the specific process, what drives it, and what would change it
+- REAL NUMBERS WITH UNITS: the measured quantities that make the topic concrete (masses, speeds, temperatures, timescales, energies, probabilities). Ask for the figure AND its unit AND what was measured
+- SCALE COMPARISONS: a documented comparison that makes a number feel real (how it compares to something a viewer knows). Ask for published comparisons, never invent one
+- THE STACKED-COMPARISON HOOK FACT (highest value for the opening): the single most striking figure measured against TWO OR THREE FAMILIAR THINGS people already have a scale for, so it can carry a "more than X, Y and Z combined" hook. This is the exact ingredient a Kurzgesagt-style cold open is built on ("kills more people than terrorism, wars, homicides and car accidents combined"). Ask specifically for the biggest number in the story set beside a few recognizable reference points that make it land as shocking — only if such a documented comparison genuinely exists
+- WHAT WOULD ACTUALLY HAPPEN, in order: the documented sequence of consequences, earliest first, with timescales
+- THE COUNTERINTUITIVE PART: the finding that most people get wrong, or that surprised researchers
+- WHERE THE SCIENCE IS UNSETTLED: what is genuinely debated, modelled rather than observed, or still unknown. This must be marked as such, never smoothed into consensus
+- WHAT IS RULED OUT: the common assumption the evidence actually contradicts` : `- the named programs, systems, documents, or operations at the center of the case
+- the person's stated motive, attributed to them, and relevant biography (real background, prior career)`}
+${isExplainer ? "" : `- how they obtained their access, position, or clearance, including any named front or cover
+- the real names of the key settings or locations
+- the case outcomes for the named defendants (ask broadly, not one presupposing question per person)
+- the documented procedural history and how the story actually RESOLVED, with dates
+- the DOCUMENTED AFTERMATH for the central figure (threats, retaliation, litigation, personal cost) — this is often the strongest material
+- the KEY HUMAN RELATIONSHIP: the specific, named person the central figure grew closest to, trusted, befriended, or ultimately betrayed — the emotional core a documentary lives on. Ask for it by name where the record supports it
+- DIRECT VERBATIM QUOTES (high value): 2 or 3 of the most striking things the central figure (or a key figure) actually SAID, word for word, with a source. Ask for quotes from PUBLISHED INTERVIEWS, PRESS PIECES, or COURT TESTIMONY FIRST — those transcripts are indexed and searchable (an NPR segment, a newspaper interview) — and only fall back to a memoir. A memoir's interior lines are poorly indexed and hard to retrieve, so lead the question at interviews and reporting. A real quote is what a strong cold open and a payoff are built on; narration cannot do the same work.
+- PHYSICAL DESCRIPTION AND NICKNAME: what the central figure looked like (build, height, distinctive features) and any documented nickname or moniker they went by. This makes the person real on screen in the first 30 seconds.
+- THE ONE VIVID SCENE: the single most vividly documented episode of the story, with everything the sources record about it — the sequence of actions, the sensory detail, what was said. Ask for the fullest account of that one scene, because one scene told in full carries more than five summarized.`}
+- what remains disputed, sealed, or unknown${input.sourceSubject ? `
+- THE BRIDGE (highest value): this script remixes a video about "${input.sourceSubject}". Ask 1 question hunting for a DOCUMENTED, real connection between THIS case and that subject, a shared event or crossover. Only ask if such a link might genuinely exist; a fabricated bridge is worse than none, and a "no connection" answer will be dropped rather than shown.` : ""}
+
+Each question seeks a single concrete, citable fact. Output ONLY this JSON, no prose:
+{"caseName":"the canonical operation/case name","when":"YYYY or YYYY-YYYY","canonical":["key person full name","organization","named front or program",...],"questions":["...","..."]}`,
       }],
     });
     const text = msg.content[0]?.type === "text" ? msg.content[0].text : "";
-    const m = text.match(/\[[\s\S]*\]/);
-    const arr = JSON.parse(m ? m[0] : text);
-    if (Array.isArray(arr)) questions = arr.filter((q) => typeof q === "string" && q.trim()).slice(0, 8);
+    const m = text.match(/\{[\s\S]*\}/);
+    const parsed = JSON.parse(m ? m[0] : text);
+    if (Array.isArray(parsed?.questions)) questions = parsed.questions.filter((q: any) => typeof q === "string" && q.trim()).slice(0, 10);
+    if (Array.isArray(parsed?.canonical)) canonical = parsed.canonical.filter((c: any) => typeof c === "string" && c.trim()).slice(0, 12);
+    if (typeof parsed?.caseName === "string" && parsed.caseName.trim()) correctedName = parsed.caseName.trim().slice(0, 200);
+    if (typeof parsed?.when === "string" && parsed.when.trim()) correctedWhen = parsed.when.trim().slice(0, 40);
   } catch { /* no questions — nothing to deepen */ }
-  if (!questions.length) return { facts: [] };
+  // The corrected name is what the script must use. Prefer it for the Perplexity
+  // anchor too, and pass it back to the caller to relabel the case everywhere.
+  const canonicalCaseName = correctedName || caseName;
+  // The library must key on something STABLE across runs. For a real case, the canonical
+  // name is stable. For a claim/explainer, the resolver returns a fresh scope question
+  // each run, so canonicalCaseName drifts and the library never accumulates — key on the
+  // user's chosen remix TITLE instead, which is constant for the same video.
+  const libraryAnchor = (input.topicAnchor && input.topicAnchor.trim()) ? input.topicAnchor.trim() : canonicalCaseName;
+  if (correctedName && !canonical.some((c) => c.toLowerCase() === correctedName.toLowerCase())) canonical.unshift(correctedName);
+  const correction = { caseName: correctedName || undefined, when: correctedWhen || undefined };
 
-  // 2) Perplexity answers each question with a real source.
-  const prompt = `Case: ${caseName}.${input.summary ? ` ${input.summary}` : ""}
+  // Fact-set cache. Keyed on the CANONICAL name (so a picker pick and a "Name it" pin
+  // for the same case collide), and only consulted once the name is canonicalized. A
+  // rich cached set is reused verbatim — this is what makes the same case deterministic
+  // across runs and stops the pin path from re-deriving a worse set. A thin cache does
+  // NOT short-circuit; we still deepen and keep whichever ends up richer.
+  //
+  // The key carries RESEARCH_BRIEF_VERSION so that changing what we ask for (adding
+  // quotes, a nickname, a vivid scene) INVALIDATES old cached sets. Without this, every
+  // brief improvement silently fails on already-researched cases — exactly the cases
+  // you test on. Bump the version whenever the deepen question brief changes materially.
+  const baseKey = caseKey(canonicalCaseName);
+  const key = `${baseKey}::v${RESEARCH_BRIEF_VERSION}`;
+  const cached = await getCachedFactSet(key);
+  if (cached && cached.facts.length >= CACHE_GOOD_ENOUGH) {
+    // A cache HIT must still union across brief versions. Returning the current
+    // version's row verbatim was why the union "didn't land": once v2 had cached, every
+    // later run short-circuited here and never reached the merge at the bottom, so the
+    // v1 facts (54 indicted, 28 months, full patch) stayed invisible.
+    const priorHit = await getBestAcrossVersions(baseKey);
+    const mergedHit = unionFacts([...cached.facts, ...(priorHit?.facts || [])]).slice(0, 12);
+    const whenHit = deriveWhenFromFacts(mergedHit) || cached.when || correction.when;
+    if (mergedHit.length > cached.facts.length) {
+      await putCachedFactSet(key, { caseName: cached.caseName || correction.caseName, when: whenHit, facts: mergedHit, conflicts: cached.conflicts });
+    }
+    // Cache hits feed the library too, and return it — otherwise a cached run would
+    // hand back a smaller set than the user has already accumulated for this topic.
+    if (input.userId) {
+      const lib = await addToLibrary(input.userId, libraryAnchor, mergedHit, { topicLabel: canonicalCaseName });
+      const all = activeFacts(lib);
+      if (all.length) {
+        return { facts: all.map((f) => ({ fact: f.fact, source: f.source })).slice(0, 16), conflicts: cached.conflicts, status: "ok", caseName: cached.caseName || correction.caseName, when: whenHit };
+      }
+    }
+    return { facts: mergedHit, conflicts: cached.conflicts, status: "ok", caseName: cached.caseName || correction.caseName, when: whenHit };
+  }
 
-Answer each question below with ONE specific, citable fact and its source URL. If you cannot find a real source for a question, OMIT that question entirely rather than guessing. Accuracy matters more than completeness: a documentary reads these on camera.
+  if (!questions.length) return { facts: [], conflicts: [], status: "no-facts", ...correction };
 
-QUESTIONS:
-${questions.map((q, i) => `${i + 1}. ${q}`).join("\n")}
+  // 2) Perplexity answers, paired back to each question.
+  let pairs = await fetchPerplexityAnswers(pkey, canonicalCaseName, input.summary, canonical, questions);
 
-Output ONLY a JSON array, no prose:
-[{"fact":"the specific fact, including any exact name, number, or date","source":"the source URL"}]`;
+  // 3) Retry-on-refusal. Any question that produced NO surviving answer gets
+  // reformulated broader and asked once more, so a case with a memoir and court
+  // records behind it does not bottom out at two facts because the questions were
+  // phrased too narrowly the first time.
+  const answered = new Set(pairs.map((p) => p.question));
+  const unanswered = questions.filter((q) => !answered.has(q));
+  if (unanswered.length) {
+    const reworded = await reformulateQuestions(canonicalCaseName, unanswered);
+    if (reworded.length) {
+      const more = await fetchPerplexityAnswers(pkey, canonicalCaseName, input.summary, canonical, reworded);
+      pairs = pairs.concat(more);
+    }
+  }
+  pairs = pairs.slice(0, 16);
+  if (!pairs.length) return { facts: [], conflicts: [], status: "no-facts", ...correction };
 
-  try {
-    const res = await fetch("https://api.perplexity.ai/chat/completions", {
-      method: "POST",
-      headers: { Authorization: `Bearer ${pkey}`, "Content-Type": "application/json" },
-      body: JSON.stringify({ model: "sonar", temperature: 0, messages: [{ role: "user", content: prompt }] }),
-      signal: AbortSignal.timeout(25000),
-    });
-    if (!res.ok) return { facts: [] };
-    const data = await res.json();
-    const content: string = data?.choices?.[0]?.message?.content || "";
-    const citations: string[] = Array.isArray(data?.citations) ? data.citations.filter((c: any) => typeof c === "string") : [];
-    const m = content.match(/\[[\s\S]*\]/);
-    const arr = JSON.parse(m ? m[0] : content);
-    if (!Array.isArray(arr)) return { facts: [] };
-    const facts: ResearchFact[] = arr
-      .filter((x: any) => x && typeof x.fact === "string" && x.fact.trim())
-      .map((x: any, i: number) => ({
-        fact: String(x.fact).trim().slice(0, 400),
-        source: (typeof x.source === "string" && /^https?:\/\//.test(x.source)) ? x.source : (citations[i] || null),
-      }))
-      // A fact with no source cannot be vouched for, so it does not reach the script.
-      .filter((f: ResearchFact) => !!f.source)
-      .slice(0, 10);
-    return { facts };
-  } catch { return { facts: [] }; }
+  // 4) Claude reads its own questions against the answers: drops non-responsive
+  // answers, entity drift, and CROSS-CASE CONTAMINATION (an aftermath that belongs to a
+  // different infiltrator). The watchlist is the proper nouns from the user's other
+  // recent cases, so the review can name exactly what must not bleed in.
+  const watchlist = input.userId ? await getContaminationWatchlist(input.userId, canonicalCaseName) : [];
+  const { keep, conflicts } = await reviewDeepenedFacts(canonicalCaseName, pairs, input.summary, watchlist);
+
+  // 5) Source tiering. Drop facts carried only by a low-tier (self-published /
+  // merch-SEO) source WHEN better-sourced facts remain, so a blogspot page never
+  // stands behind a claim while a wire story is available. If low-tier is all we
+  // have, keep it rather than return nothing — the fact card already warns to verify.
+  const strong = keep.filter((f) => sourceTier(f.source) !== "low");
+  const freshFacts = (strong.length >= 2 ? strong : keep).slice(0, 12);
+
+  // Union with the case's best prior fact set (any brief version) rather than
+  // overwriting it. A version bump re-fetches to add new asks (quotes, a scene), but the
+  // earlier run's hard facts — 54 indicted, 53 convicted, 28 months, full patch — must
+  // NOT be lost. Fresh facts lead (they carry the new material); prior uniques fill in.
+  const prior = await getBestAcrossVersions(caseKey(canonicalCaseName));
+  const facts = unionFacts([...freshFacts, ...(prior?.facts || [])]).slice(0, 12);
+
+  // Prefer a date range the SOURCED FACTS state explicitly over the resolver's guess,
+  // so a confidently-wrong 1999-2001 gives way to the 1998-2000 the record actually says.
+  const factWhen = deriveWhenFromFacts(facts);
+  const finalWhen = factWhen || correction.when;
+
+  // Persist: cache this set if it beats the stored one (keeps the case's best), and
+  // record its entities so later generations of OTHER cases can diff against them.
+  // Both are best-effort and no-op when their tables are absent.
+  if (facts.length) {
+    await putCachedFactSet(key, { caseName: correction.caseName, when: finalWhen, facts, conflicts });
+    if (input.userId) await recordCaseEntities(input.userId, canonicalCaseName, facts.map((f) => f.fact).join(" "));
+  }
+
+  // FACT LIBRARY. This run's findings are added to the user's accumulating library for
+  // the topic, and what we RETURN is the library — not just this retrieval. That is what
+  // stops the fact set shrinking between runs: a thin retrieval can only ever add to what
+  // is already known, never replace it.
+  if (input.userId && facts.length) {
+    const lib = await addToLibrary(input.userId, libraryAnchor, facts, { topicLabel: canonicalCaseName });
+    const all = activeFacts(lib);
+    if (all.length) {
+      return { facts: all.map((f) => ({ fact: f.fact, source: f.source })).slice(0, 16), conflicts, status: "ok", caseName: correction.caseName, when: finalWhen };
+    }
+  }
+  return { facts, conflicts, status: "ok", caseName: correction.caseName, when: finalWhen };
 }

@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { checkCompliance, complianceScore, sourceSectionRatio } from "@/lib/script-compliance";
 import GenerationProgress from "@/components/GenerationProgress";
 import { joinHookBody, bodyStartsWithHook } from "@/lib/script-text";
 import { VoiceSelect } from "@/components/VoiceSelect";
@@ -15,7 +16,48 @@ const C = {
 };
 
 type Phase = "loading" | "pick-case" | "angles" | "research" | "storytelling" | "generating" | "result";
-type Angle = { angle: string; description: string; audience: string; titleSuggestion: string; swap?: string | null; };
+type Angle = { angle: string; description: string; audience: string; titleSuggestion: string; swap?: string | null; slot?: string; factRefs?: number[]; 
+  // Short label for the progress screen. The composite outline sent to generation runs
+  // to several hundred words, which swamped the box it was displayed in.
+  displayLabel?: string; };
+// Structural slots (research-before-cards). Each card fills one, so the picker
+// reads as distinct entry points instead of five variations on the same beat.
+const SLOT_LABELS: Record<string, string> = {
+  // Case shape (documentary / true crime)
+  setup: "SETUP", mechanism: "MECHANISM", climax: "CLIMAX", aftermath: "AFTERMATH", contested: "CONTESTED",
+  // Explainer shape (science / Kurzgesagt): a mechanism and a sense of scale, not a climax
+  premise: "PREMISE", scale: "SCALE", consequence: "CONSEQUENCE", "open-question": "OPEN QUESTION",
+};
+// The slots are a RUNNING ORDER, not a menu. Read in sequence they are the video, which
+// is why picking one card and discarding the rest threw away most of the research.
+const SLOT_ORDER = ["setup", "premise", "mechanism", "scale", "climax", "consequence", "aftermath", "contested", "open-question"];
+const orderedSlots = (as: Angle[]) =>
+  [...as].sort((a, b) => SLOT_ORDER.indexOf(a.slot || "") - SLOT_ORDER.indexOf(b.slot || ""));
+
+// Which section should carry the weight, derived from the SOURCE video rather than
+// guessed: find its longest section, take that section's position as a fraction of the
+// runtime, and pick the slot sitting at the same relative position in our running order.
+function derivePeakSlot(structure: { timestamp?: string }[] | undefined, cards: Angle[]): string | null {
+  const withSlots = orderedSlots(cards.filter((c) => c.slot));
+  if (!withSlots.length) return null;
+  const toSec = (t?: string) => {
+    const m = String(t || "").match(/^(?:(\d+):)?(\d+):(\d{2})$/);
+    return m ? Number(m[1] || 0) * 3600 + Number(m[2]) * 60 + Number(m[3]) : null;
+  };
+  const secs = (structure || []).map((s) => toSec(s?.timestamp)).filter((n): n is number => n !== null);
+  if (secs.length >= 3) {
+    let bestIdx = 0, bestSpan = 0;
+    for (let i = 0; i < secs.length - 1; i++) {
+      const span = secs[i + 1] - secs[i];
+      if (span > bestSpan) { bestSpan = span; bestIdx = i; }
+    }
+    const frac = bestIdx / Math.max(1, secs.length - 1);
+    return withSlots[Math.min(withSlots.length - 1, Math.round(frac * (withSlots.length - 1)))].slot || null;
+  }
+  // No usable timestamps: fall back to the natural peak of each shape.
+  const preferred = ["climax", "scale", "mechanism"];
+  return preferred.find((p) => withSlots.some((c) => c.slot === p)) || withSlots[withSlots.length - 1].slot || null;
+}
 type Brief = {
   hookAnalysis: { hook: string; hookType: string; whyItWorks: string };
   structure: { timestamp: string; section: string; description: string; purpose: string }[];
@@ -53,7 +95,28 @@ export default function ViralBriefPage() {
   const [caseChoices, setCaseChoices] = useState<any[]>([]);
   const [resolving, setResolving] = useState(false);
   const [verifying, setVerifying] = useState(false);
+  const [groundingRunning, setGroundingRunning] = useState(false);
   const [manualCase, setManualCase] = useState("");
+  // Research-before-cards: the case is deepened at confirm time, and the resulting
+  // facts feed BOTH the slot cards and the research step (no re-fetch). Held here so
+  // both downstream phases read the same fact set.
+  const [deepFacts, setDeepFacts] = useState<{ fact: string; source: string | null }[]>([]);
+  const [deepConflicts, setDeepConflicts] = useState<{ fact: string; source: string | null; note: string }[]>([]);
+  // How heavily YouTube already covers each candidate case, shown ON the confirm card so
+  // "47 videos, top one 2.3M views" (or "this is really a Spike Lee film") changes the
+  // decision while it is still free to change.
+  const [saturation, setSaturation] = useState<Record<string, any>>({});
+  // Titles from the OTHER angle cards, kept so the creator can publish under a different
+  // card's title than the angle they built on — those are natural A/B variants.
+  const [altTitles, setAltTitles] = useState<string[]>([]);
+  // Both result-page panels collapse by default. People land here to read the script;
+  // the alternate titles and the framework check are reference, not the main event.
+  const [showAltTitles, setShowAltTitles] = useState(false);
+  const [showCompliance, setShowCompliance] = useState(false);
+  // Which section carries the weight. Defaults from the source video's longest section,
+  // so a new user gets a well-shaped video with zero decisions and an experienced one
+  // has a single meaningful lever.
+  const [peakSlot, setPeakSlot] = useState<string | null>(null);
 
   useEffect(() => {
     try {
@@ -65,12 +128,76 @@ export default function ViralBriefPage() {
     } catch { window.location.href = "/dashboard/viral-remixer"; }
   }, []);
 
+  // Saturation for each candidate, fetched as soon as the confirm screen appears.
+  // Best-effort and non-blocking: the card renders immediately and the coverage line
+  // fills in, so a slow YouTube call never holds up the decision.
+  useEffect(() => {
+    if (phase !== "pick-case" || !caseChoices.length) return;
+    let cancelled = false;
+    (async () => {
+      // Only the top candidates. A YouTube search costs 100 quota units against a
+      // 10,000/day default, so fetching coverage for every candidate on every confirm
+      // screen burns the same quota the Voice Match channel scan needs.
+      for (const c of caseChoices.slice(0, 2)) {
+        if (cancelled || !c?.name || saturation[c.name]) continue;
+        try {
+          const r = await fetch("/api/research/find", {
+            method: "POST", headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ action: "saturation", caseName: c.name }),
+          });
+          const d = await r.json();
+          if (!cancelled && d?.saturation) setSaturation((p) => ({ ...p, [c.name]: d.saturation }));
+        } catch { /* coverage is a bonus signal, never a blocker */ }
+      }
+    })();
+    return () => { cancelled = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase, caseChoices]);
+
   // Resolve the real case the remix title is about, THEN write angles on it. A
   // single clear case grounds silently; several show a picker; none (or an
   // explainer) proceeds ungated.
+  // Deepen the confirmed case FIRST, then build slot cards from the facts. This is
+  // the research-before-cards path: the deepen that used to run at the research step
+  // runs here instead, so the cards are grounded in the real fact set (endings that
+  // actually happened, an aftermath slot, etc.) rather than a 2-sentence blurb.
+  async function groundAndAngles(c: any, kindOverride?: string, briefOverride?: Brief) {
+    const kind = kindOverride || topicKind || "event";
+    // On the mount path setBrief() has not flushed yet, so the caller passes the brief
+    // directly. Reading it from state here would silently skip the whole deepen.
+    const b = briefOverride || brief;
+    setGroundedCase(c);
+    setSourceVerdict("documented");
+    setPhase("loading");
+    let facts: { fact: string; source: string | null }[] = [];
+    let conflicts: { fact: string; source: string | null; note: string }[] = [];
+    let caseName = c.name, when = c.when;
+    if (b) {
+      try {
+        const rr = await fetch("/api/research/find", {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "deepen", caseName: c.name, caseSummary: c.summary, niche: b.niche, sourcePayoff: b.hookAnalysis?.whyItWorks, sourceSubject: b.videoTitle, kind, topicAnchor: b.selectedTitle }),
+        });
+        const rd = await rr.json();
+        if (rr.ok) {
+          facts = Array.isArray(rd.facts) ? rd.facts : [];
+          conflicts = Array.isArray(rd.conflicts) ? rd.conflicts : [];
+          setDeepFacts(facts);
+          setDeepConflicts(conflicts);
+          if (typeof rd.caseName === "string" && rd.caseName.trim()) caseName = rd.caseName.trim();
+          if (typeof rd.when === "string" && rd.when.trim()) when = rd.when.trim();
+          if (caseName !== c.name || when !== c.when) setGroundedCase({ ...c, name: caseName, when });
+        }
+      } catch { /* fall through to blurb-grounded angles */ }
+    }
+    const factStrings = facts.map((f) => (f.source ? `${f.fact} (source: ${f.source})` : f.fact));
+    const g = { kind, verdict: "documented", caseName, caseSummary: c.summary, when, sources: c.sources || [], facts: factStrings, hasConflict: conflicts.length > 0 };
+    if (b) await fetchAngles(b, g);
+  }
+
   function groundedGroundingFrom(): any | null {
     if (!groundedCase) return null;
-    return { kind: "event", verdict: "documented", caseName: groundedCase.name, caseSummary: groundedCase.summary, when: groundedCase.when, sources: groundedCase.sources || [] };
+    return { kind: topicKind || "event", verdict: "documented", caseName: groundedCase.name, caseSummary: groundedCase.summary, when: groundedCase.when, sources: groundedCase.sources || [], facts: deepFacts.map((f) => (f.source ? `${f.fact} (source: ${f.source})` : f.fact)) };
   }
 
   async function groundThenAngles(b: Brief) {
@@ -86,12 +213,30 @@ export default function ViralBriefPage() {
         setTopicKind(d.kind || null);
         setSourceVerdict(d.verdict || null);
         const cands = Array.isArray(d.candidates) ? d.candidates : [];
-        if (d.kind === "event" && cands.length > 1) {
+        // Always confirm the case for an event, even when only one resolved. The
+        // pick-case screen doubles as the approval + override step, so the creator
+        // always sees and signs off on what the script will be grounded in rather
+        // than a case being chosen silently on their behalf.
+        // Events confirm a CASE; explainers and hypotheticals confirm a SCOPE question.
+        // Both need the same discipline — ground on something specific before writing
+        // angles — so both stop here rather than only the event path.
+        if ((d.kind === "event" || d.kind === "explainer" || d.kind === "hypothetical" || d.kind === "claim") && cands.length >= 1) {
           setCaseChoices(cands); setResolving(false); setPhase("pick-case"); return;
         }
-        if (d.kind === "event" && cands.length === 1) {
-          setGroundedCase(cands[0]);
-          g = { kind: "event", verdict: "documented", caseName: cands[0].name, caseSummary: cands[0].summary, when: cands[0].when, sources: cands[0].sources || [] };
+        // FAIL-SAFE: unknown kind, or a kind that produced no candidates, must route
+        // TO grounding rather than around it. Skipping produced the worst possible
+        // combination — an ungrounded script on a contested literature, where none of
+        // the correlation or consensus rules can fire because there are no facts. When
+        // there is nothing to confirm, treat the chosen title itself as the scope and
+        // research that, so a script is never written on zero evidence.
+        if (d.kind !== "event") {
+          setResolving(false);
+          await groundAndAngles(
+            { name: b.selectedTitle, summary: b.selectedTitleDescription || "", when: "", sources: [] as string[] },
+            d.kind || "claim",
+            b,
+          );
+          return;
         }
       }
     } catch { /* best effort: fall through to ungrounded angles */ }
@@ -100,21 +245,99 @@ export default function ViralBriefPage() {
   }
 
   async function fetchAngles(b: Brief, g?: any) {
+    let grounding = (g ?? groundedGroundingFrom()) || undefined;
+    // LAST-LINE GUARANTEE: slot cards need at least 3 facts. Several routes reach this
+    // function (fail-safe, scope pick, regenerate, ungrounded fall-through) and any one
+    // of them arriving without facts silently produces legacy free-form cards with no
+    // slot badges and no fact panel. Rather than trust every caller, deepen here when
+    // the facts are missing, so the cards are grounded no matter how we got here.
+    if (!Array.isArray(grounding?.facts) || grounding.facts.length < 3) {
+      try {
+        const subject = grounding?.caseName || b.selectedTitle;
+        const rr = await fetch("/api/research/find", {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            action: "deepen", caseName: subject, caseSummary: grounding?.caseSummary || b.selectedTitleDescription || "",
+            niche: b.niche, sourcePayoff: b.hookAnalysis?.whyItWorks, sourceSubject: b.videoTitle,
+            kind: grounding?.kind || topicKind || "claim", topicAnchor: b.selectedTitle,
+          }),
+        });
+        const rd = await rr.json();
+        const fs = Array.isArray(rd?.facts) ? rd.facts : [];
+        if (fs.length) {
+          setDeepFacts(fs);
+          if (Array.isArray(rd.conflicts)) setDeepConflicts(rd.conflicts);
+          grounding = {
+            ...(grounding || {}),
+            kind: grounding?.kind || topicKind || "claim",
+            verdict: "documented",
+            caseName: (typeof rd.caseName === "string" && rd.caseName.trim()) || subject,
+            caseSummary: grounding?.caseSummary || b.selectedTitleDescription || "",
+            when: (typeof rd.when === "string" && rd.when.trim()) || grounding?.when || "",
+            sources: grounding?.sources || [],
+            facts: fs.map((f: any) => (f?.source ? `${f.fact} (source: ${f.source})` : f?.fact)).filter(Boolean),
+            hasConflict: Array.isArray(rd.conflicts) && rd.conflicts.length > 0,
+          };
+        }
+      } catch { /* proceed ungrounded rather than block the flow */ }
+    }
     try {
       const res = await fetch("/api/suggest-viral-angles", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ hookType: b.hookAnalysis.hookType, hookAnalysis: b.hookAnalysis, remixFramework: b.remixFramework, selectedTitle: b.selectedTitle, selectedTitleDescription: b.selectedTitleDescription, selectedTitleAudience: b.selectedTitleAudience, titleFormula: b.titleFormula, videoTitle: b.videoTitle, niche: b.niche, grounding: (g ?? groundedGroundingFrom()) || undefined }),
+        body: JSON.stringify({ hookType: b.hookAnalysis.hookType, hookAnalysis: b.hookAnalysis, remixFramework: b.remixFramework, selectedTitle: b.selectedTitle, selectedTitleDescription: b.selectedTitleDescription, selectedTitleAudience: b.selectedTitleAudience, titleFormula: b.titleFormula, videoTitle: b.videoTitle, niche: b.niche, grounding }),
       });
       const data = await res.json();
       if (data.error) throw new Error(data.error);
-      setAngles(data.angles ?? []);
+      const got: Angle[] = data.angles ?? [];
+      setAngles(got);
+      setPeakSlot(derivePeakSlot(b.structure, got));
       setPhase("angles");
     } catch (e: any) { setError(e?.message || "Failed to generate angles"); setPhase("angles"); }
   }
 
   // Pick an angle → go to the storytelling step (don't generate yet).
+  // THE DEFAULT PATH: use every researched section, in running order, with one of them
+  // weighted as the peak. Picking a single card discarded three quarters of the research
+  // that was just paid for, and the slots read in sequence ARE the video.
+  function handleUseOutline() {
+    if (!brief) return;
+    const cards = orderedSlots(angles.filter((a) => a.slot));
+    if (!cards.length) return;
+    const peak = peakSlot && cards.some((c) => c.slot === peakSlot) ? peakSlot : cards[cards.length - 1].slot;
+    const outline = cards
+      .map((c, i) => {
+        const label = SLOT_LABELS[c.slot || ""] || (c.slot || "").toUpperCase();
+        const isPeak = c.slot === peak;
+        return `${i + 1}. ${label}${isPeak ? " — THE PEAK, this section must be the longest by a wide margin and slow right down" : ""}: ${c.description || c.angle}`;
+      })
+      .join("\n");
+    const composite: Angle = {
+      displayLabel: `${cards.map((c) => SLOT_LABELS[c.slot || ""] || c.slot).join(" → ")}${peak ? `  ·  peak: ${SLOT_LABELS[peak] || peak}` : ""}`,
+      angle: `Build ONE video that runs through these sections in this exact order, each one leading into the next:\n${outline}`,
+      description: cards.map((c) => c.angle).join(" · "),
+      audience: cards[0]?.audience || "",
+      titleSuggestion: brief.selectedTitle,
+      slot: peak || undefined,
+      factRefs: Array.from(new Set(cards.flatMap((c) => c.factRefs || []))),
+    };
+    setAltTitles([]);
+    setSelectedAngle(composite);
+    setError(null);
+    setPhase("research");
+  }
+
   function handlePickAngle(angle: Angle) {
     if (!brief) return;
+    // The angle you build on and the title you publish under do not have to come from
+    // the same card. Keep the other cards' titles as A/B variants instead of discarding
+    // three good titles the moment one card is picked.
+    // Only offer alternates when the cards genuinely proposed different titles. With a
+    // locked remix title every card carries the same string, so there is nothing to A/B.
+    setAltTitles(
+      Array.from(new Set(angles.map((a) => a.titleSuggestion)))
+        .filter((t) => t && t !== angle.titleSuggestion)
+        .slice(0, 4)
+    );
     setSelectedAngle(angle); setError(null); setPhase("research");
   }
 
@@ -122,12 +345,24 @@ export default function ViralBriefPage() {
     const angle = selectedAngle;
     if (!brief || !angle) return;
     setPhase("generating"); setError(null);
+    // Scope the facts the SCRIPT may use to the selected sections, not the whole library.
+    // The library accumulates across runs so a script could otherwise reach for a fact no
+    // chosen section carries (the different-population DataReportal figure). Fall back to
+    // whatever the research step assembled when the angle carries no fact refs.
+    const scopedSource = (Array.isArray(angle.factRefs) && angle.factRefs.length)
+      ? angle.factRefs.map((r) => deepFacts[r - 1]).filter(Boolean)
+          .map((f) => (f.source ? `- ${f.fact} (source: ${f.source})` : `- ${f.fact}`)).join("\n")
+      : sourceMaterial;
     try {
       const res = await fetch("/api/scripts/generate", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           transcript: "", topic: angle.angle, niche: angle.audience, videoLength: (brief as any).targetMinutes >= 14 ? "long" : "medium", targetMinutes: (brief as any).targetMinutes ?? 15,
           hookType: brief.hookAnalysis.hookType, hookScript: brief.hookAnalysis.hook,
+          // WHY the source's hook works is the actual instruction; the archetype name
+          // alone ("Controversy/Stat") says nothing about execution. This was extracted,
+          // displayed in the UI, and never reached generation.
+          hookWhyItWorks: brief.hookAnalysis.whyItWorks,
           titleFormula: angle.titleSuggestion, remixFramework: brief.remixFramework,
           contentStructure: brief.structure, retentionTriggers: brief.retentionTriggers,
           voiceProfileId: voiceId || undefined,
@@ -135,7 +370,7 @@ export default function ViralBriefPage() {
           softCta,
           sourceVerdict: sourceVerdict || undefined,
           topicKind: topicKind || undefined,
-          storytellingMode, storytellingTechniques, directorNote: directorNote || undefined, sourceMaterial: sourceMaterial || undefined,
+          storytellingMode, storytellingTechniques, directorNote: directorNote || undefined, sourceMaterial: scopedSource || undefined,
           selectedTitle: angle.titleSuggestion || undefined,
         }),
       });
@@ -146,6 +381,31 @@ export default function ViralBriefPage() {
       }
       setScript(data); setSavedId(data.savedId ?? null); setPhase("result");
     } catch (e: any) { setError(e?.message || "Failed to generate script"); setPhase("angles"); }
+  }
+
+  // Facts the SELECTED sections are allowed to draw on, so the grounding check judges the
+  // script against its own scope, not the whole accumulated library.
+  function scopedFactStrings(): string[] {
+    const refs = selectedAngle?.factRefs;
+    return (Array.isArray(refs) && refs.length)
+      ? refs.map((r) => deepFacts[r - 1]?.fact).filter(Boolean) as string[]
+      : deepFacts.map((f) => f.fact);
+  }
+
+  async function runGroundingCheck() {
+    if (!script || groundingRunning) return;
+    setGroundingRunning(true);
+    try {
+      const b = script.fullScript || script.script || script.body || script.content || "";
+      const res = await fetch("/api/scripts/grounding", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ script: joinHookBody(script.hook || "", b), facts: scopedFactStrings() }),
+      });
+      const d = await res.json();
+      setScript((prev: any) => prev ? { ...prev, semanticGrounding: d?.ran ? d : { ran: false } } : prev);
+    } catch {
+      setScript((prev: any) => prev ? { ...prev, semanticGrounding: { ran: false } } : prev);
+    } finally { setGroundingRunning(false); }
   }
 
   async function runVerify() {
@@ -212,12 +472,15 @@ export default function ViralBriefPage() {
   if (phase === "research" && selectedAngle) return (
     <ResearchStep
       topic={selectedAngle.angle}
+      topicAnchor={brief?.selectedTitle}
       niche={selectedAngle.audience || brief?.niche}
       angle={selectedAngle.titleSuggestion || selectedAngle.angle}
       angleLabel={selectedAngle.titleSuggestion || selectedAngle.angle}
       onContinue={(sm, v, k) => { setSourceMaterial(sm || ""); setSourceVerdict(v || null); setTopicKind(k || null); setPhase("storytelling"); }}
       onBack={() => setPhase("angles")}
       presetCase={groundedCase || undefined}
+      presetFacts={deepFacts.length ? deepFacts : undefined}
+      presetConflicts={deepConflicts.length ? deepConflicts : undefined}
       sourcePayoff={brief?.hookAnalysis?.whyItWorks || brief?.remixFramework || undefined}
       sourceSubject={brief?.videoTitle || undefined}
     />
@@ -228,22 +491,44 @@ export default function ViralBriefPage() {
   if (phase === "pick-case") return (
     <div style={{ minHeight: "100vh", background: C.bg, padding: "32px 40px", fontFamily: "system-ui, sans-serif" }}>
       <div style={{ maxWidth: 620, margin: "0 auto" }}>
-        <h1 style={{ fontSize: 22, fontWeight: 700, color: C.textBright, marginBottom: 6 }}>Which real case is this about?</h1>
+        <h1 style={{ fontSize: 22, fontWeight: 700, color: C.textBright, marginBottom: 6 }}>
+          {topicKind === "explainer" || topicKind === "hypothetical" || topicKind === "claim"
+            ? (caseChoices.length > 1 ? "Which version of this are you making?" : "Confirm the scope")
+            : (caseChoices.length > 1 ? "Which real case is this about?" : "Confirm the case")}
+        </h1>
         <p style={{ fontSize: 13.5, color: C.textDim, lineHeight: 1.6, marginBottom: 16 }}>
-          Your remix title matches more than one documented story. Pick one and every angle and the script will be built on it, with its real names and dates.
+          {topicKind === "explainer" || topicKind === "hypothetical" || topicKind === "claim"
+            ? "This topic could be several different videos. Pick the one you're actually making and Skripr researches that specific question, so the script explains one thing properly instead of skimming all of them."
+            : caseChoices.length > 1
+              ? "Your remix title matches more than one documented story. Pick one and every angle and the script will be built on it, with its real names and dates."
+              : "This is the real case your title points to. Confirm it and every angle and the script will be built on it, with its real names and dates — or name a different case below."}
         </p>
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           {caseChoices.map((c: any, i: number) => (
             <button key={i}
-              onClick={() => {
-                setGroundedCase(c); setSourceVerdict("documented");
-                const g = { kind: "event", verdict: "documented", caseName: c.name, caseSummary: c.summary, when: c.when, sources: c.sources || [] };
-                setPhase("loading"); if (brief) void fetchAngles(brief, g);
-              }}
+              onClick={() => void groundAndAngles(c)}
               style={{ textAlign: "left", cursor: "pointer", padding: "14px 16px", borderRadius: 14, background: C.card, border: `1px solid ${C.border}`, color: C.textBright }}>
-              <div style={{ fontSize: 15, fontWeight: 700 }}>{c.name}{c.when && <span style={{ color: C.textDim, fontWeight: 500 }}> · {c.when}</span>}</div>
+              {/* No date shown here on purpose: the resolver's guessed range fluctuates
+                  run to run and can be confidently wrong. The real range is derived from
+                  the sourced facts after you continue, and shown on the grounded case. */}
+              <div style={{ fontSize: 15, fontWeight: 700 }}>{c.name}</div>
               {c.summary && <div style={{ fontSize: 13, color: C.textDim, lineHeight: 1.6, marginTop: 4 }}>{c.summary}</div>}
               {c.whyItFits && <div style={{ fontSize: 12.5, color: C.accentDim, lineHeight: 1.5, marginTop: 5 }}>Fits your title: {c.whyItFits}</div>}
+              {/* Competition signal. Knowing a case is saturated (or is really a famous
+                  film) changes the decision while changing it is still free. */}
+              {saturation[c.name] && (() => {
+                const s = saturation[c.name];
+                const tone = s.tier === "saturated" ? "#e6b45a" : s.tier === "covered" ? "#9fb6cc" : s.tier === "unknown" ? "#9fb6cc" : "#7ee6b0";
+                return (
+                  <div style={{ marginTop: 8, paddingTop: 8, borderTop: `1px solid ${C.border}` }}>
+                    <div style={{ fontSize: 12, color: tone, lineHeight: 1.5 }}>
+                      {s.tier === "saturated" ? "▲" : s.tier === "covered" ? "•" : s.tier === "unknown" ? "?" : "✦"} {s.label}
+                    </div>
+                    {s.topTitle && <div style={{ fontSize: 11, color: C.textDim, marginTop: 3 }}>Top video: {s.topTitle}</div>}
+                    {s.adaptationWarning && <div style={{ fontSize: 11.5, color: "#e6b45a", marginTop: 4, lineHeight: 1.45 }}>⚠ {s.adaptationWarning}</div>}
+                  </div>
+                );
+              })()}
             </button>
           ))}
         </div>
@@ -255,10 +540,13 @@ export default function ViralBriefPage() {
               onChange={(e) => setManualCase(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === "Enter" && manualCase.trim() && brief) {
-                  const c = { name: manualCase.trim(), summary: "", when: "", sources: [] as string[] };
-                  setGroundedCase(c);
-                  setPhase("loading");
-                  void fetchAngles(brief, { kind: "event", verdict: "documented", caseName: c.name, sources: [] });
+                  // Naming a specific case IS an override of the resolver's guess. A title
+                  // the resolver classified as a claim/explainer ("Alcohol is bad for you")
+                  // becomes a concrete case study the moment the creator names the person
+                  // or incident — so reset the kind to "event", or a stale "claim" drives
+                  // the wrong notes (science-accuracy, correlational) and wrong technique
+                  // suppressions (Main Character, Villain) all the way to the script.
+                  void groundAndAngles({ name: manualCase.trim(), summary: "", when: "", sources: [] as string[] }, "event");
                 }
               }}
               placeholder="e.g. Greg Scarpa Sr."
@@ -266,10 +554,9 @@ export default function ViralBriefPage() {
             />
             <button onClick={() => {
                 if (manualCase.trim() && brief) {
-                  const c = { name: manualCase.trim(), summary: "", when: "", sources: [] as string[] };
-                  setGroundedCase(c);
-                  setPhase("loading");
-                  void fetchAngles(brief, { kind: "event", verdict: "documented", caseName: c.name, sources: [] });
+                  // See the Enter handler above: a named case is always an "event", never
+                  // the resolver's original claim/explainer classification.
+                  void groundAndAngles({ name: manualCase.trim(), summary: "", when: "", sources: [] as string[] }, "event");
                 }
               }}
               style={{ padding: "9px 16px", borderRadius: 9, border: "none", background: "linear-gradient(135deg,#0e6499,#1a8fd1)", color: "#fff", fontSize: 12.5, fontWeight: 700, cursor: "pointer" }}>
@@ -292,6 +579,9 @@ export default function ViralBriefPage() {
       angle={selectedAngle.titleSuggestion || selectedAngle.angle}
       angleLabel={selectedAngle.titleSuggestion || selectedAngle.angle}
       sourceTitle={brief?.videoTitle}
+      sourceMaterial={sourceMaterial || undefined}
+      caseName={groundedCase?.name}
+      slot={selectedAngle.slot}
       onGenerate={generateWithStory}
       onBack={() => setPhase("research")}
     />
@@ -315,7 +605,9 @@ export default function ViralBriefPage() {
       {selectedAngle && (
         <div style={{ textAlign: "center", padding: "12px 20px", borderRadius: 10, background: "rgba(77,184,255,0.07)", border: "1px solid rgba(99,102,241,0.2)" }}>
           <div style={{ fontSize: 11, color: C.textDim, marginBottom: 4 }}>ANGLE</div>
-          <div style={{ fontSize: 13, fontWeight: 600, color: C.textBright }}>{selectedAngle.angle}</div>
+          <div style={{ fontSize: 13, fontWeight: 600, color: C.textBright, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" as const, overflow: "hidden" }}>
+            {selectedAngle.displayLabel || selectedAngle.angle}
+          </div>
         </div>
       )}
       <div style={{ fontSize: 12, color: C.textDim }}>Applying viral hook · structure · retention triggers</div>
@@ -339,6 +631,10 @@ export default function ViralBriefPage() {
                 style={{ padding: "8px 14px", borderRadius: 9, background: "rgba(77,184,255,0.07)", border: "1px solid rgba(99,102,241,0.2)", color: C.accentDim, fontSize: 12, fontWeight: 600, cursor: "pointer" }}>
                 ← Try another angle
               </button>
+              <button onClick={runGroundingCheck} disabled={groundingRunning}
+                style={{ padding: "8px 14px", borderRadius: 9, background: "rgba(126,230,176,0.10)", border: "1px solid rgba(126,230,176,0.35)", color: "#7ee6b0", fontSize: 12, fontWeight: 600, cursor: groundingRunning ? "wait" : "pointer" }}>
+                {groundingRunning ? "Reading every claim..." : script.semanticGrounding?.ran ? "Re-check claims" : "Check claims vs facts"}
+              </button>
               <button onClick={runVerify} disabled={verifying}
                 style={{ padding: "8px 14px", borderRadius: 9, background: "rgba(52,211,153,0.10)", border: "1px solid rgba(52,211,153,0.35)", color: C.green, fontSize: 12, fontWeight: 600, cursor: verifying ? "wait" : "pointer" }}>
                 {verifying ? "Verifying against sources..." : script.factVerify?.ran ? "Re-verify facts" : "Verify facts"}
@@ -353,8 +649,122 @@ export default function ViralBriefPage() {
             <div style={{ background: "rgba(77,184,255,0.07)", border: "1px solid rgba(99,102,241,0.2)", borderRadius: 12, padding: "14px 18px", marginBottom: 16 }}>
               <div style={{ fontSize: 10, fontWeight: 700, color: C.accentDim, letterSpacing: 0.6, marginBottom: 6 }}>TITLE</div>
               <div style={{ fontSize: 15, fontWeight: 700, color: C.textBright, lineHeight: 1.4 }}>{title}</div>
+              {/* The angle you built on and the title you publish under are separate
+                  decisions. The other cards' titles are natural A/B variants for this
+                  same script, so offer them instead of discarding them at pick time. */}
+              {/* Collapsed by default: most of the time the creator is here to read the
+                  script, not to shop for an alternate title. */}
+              {altTitles.length > 0 && (
+                <div style={{ marginTop: 10, paddingTop: 10, borderTop: `1px solid ${C.border}` }}>
+                  <button onClick={() => setShowAltTitles((v) => !v)}
+                    style={{ display: "flex", alignItems: "center", gap: 6, width: "100%", background: "none", border: "none", padding: 0, cursor: "pointer", textAlign: "left" }}>
+                    <span style={{ fontSize: 10, color: C.textDim, transform: showAltTitles ? "rotate(90deg)" : "none", transition: "transform .12s" }}>▶</span>
+                    <span style={{ fontSize: 10, fontWeight: 700, color: C.textDim, letterSpacing: 0.5 }}>
+                      {altTitles.length} ALTERNATE {altTitles.length === 1 ? "TITLE" : "TITLES"} (A/B VARIANTS)
+                    </span>
+                  </button>
+                  {showAltTitles && (
+                    <div style={{ display: "flex", flexDirection: "column", gap: 5, marginTop: 8 }}>
+                      {altTitles.map((t, i) => (
+                        <button key={i} onClick={() => setScript((s: any) => ({ ...s, title: t }))}
+                          style={{ textAlign: "left", cursor: "pointer", background: "rgba(255,255,255,0.03)", border: `1px solid ${C.border}`, borderRadius: 8, padding: "7px 10px", color: C.textBright, fontSize: 12.5 }}>
+                          {t} <span style={{ color: C.textDim, fontSize: 11 }}>· {t.length} chars</span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           )}
+
+          {/* Post-generation compliance: the script measured against the spec extracted
+              from the source video. This is the loop that was open all session — the
+              flattened climax was detectable here every time. */}
+          {(() => {
+            // SCOPE THE CHECK TO THE SELECTED SECTIONS, not the whole accumulated library.
+            // The library is what's available to draw on; the chosen angle's facts are what
+            // THIS script may use. Validating against the library let a figure from an old
+            // run (DataReportal) pass even though no selected section carried it.
+            const refs = selectedAngle?.factRefs;
+            const scopedFacts = (Array.isArray(refs) && refs.length)
+              ? refs.map((r) => deepFacts[r - 1]?.fact).filter(Boolean) as string[]
+              : deepFacts.map((f) => f.fact);
+            const checks = checkCompliance({
+              fullScript: body, hook,
+              sections: Array.isArray(script.sections) ? script.sections : undefined,
+              sourceHookType: brief?.hookAnalysis?.hookType,
+              sourceHookText: brief?.hookAnalysis?.hook,
+              sourceSectionCount: brief?.structure?.length,
+              targetWords: (brief as any)?.targetMinutes ? (brief as any).targetMinutes * 150 : undefined,
+              facts: scopedFacts,
+              topicKind: (topicKind as any) || undefined,
+              sourceWeightRatio: sourceSectionRatio(brief?.structure),
+              voiceProhibitions: script.voiceProhibitions,
+            });
+            if (!checks.length) return null;
+            const { passed, total } = complianceScore(checks);
+            const misses = checks.filter((c) => !c.pass);
+            return (
+              // Collapsed by default. The score and the count of issues are enough to
+              // tell you whether to look; the detail is one click away when you care.
+              <div style={{ background: "rgba(77,184,255,0.05)", border: `1px solid ${C.border}`, borderRadius: 12, padding: "12px 18px", marginBottom: 16 }}>
+                <button onClick={() => setShowCompliance((v) => !v)}
+                  style={{ display: "flex", alignItems: "center", gap: 8, width: "100%", background: "none", border: "none", padding: 0, cursor: "pointer", textAlign: "left" }}>
+                  <span style={{ fontSize: 10, color: C.textDim, transform: showCompliance ? "rotate(90deg)" : "none", transition: "transform .12s" }}>▶</span>
+                  <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: 0.4, color: passed === total ? C.green : "#e6b45a" }}>
+                    FRAMEWORK CHECK · {passed}/{total}
+                  </span>
+                  <span style={{ fontSize: 11.5, color: C.textDim, fontWeight: 500 }}>
+                    {misses.length === 0 ? "matches the video it was modeled on" : `${misses.length} thing${misses.length === 1 ? "" : "s"} to look at`}
+                  </span>
+                </button>
+                {showCompliance && (
+                  <div style={{ display: "flex", flexDirection: "column", gap: 5, marginTop: 10 }}>
+                    {[...misses, ...checks.filter((c) => c.pass)].map((c) => (
+                      <div key={c.id} style={{ display: "flex", gap: 8, alignItems: "flex-start" }}>
+                        <span style={{ flexShrink: 0, fontSize: 12, color: c.pass ? C.green : "#e6b45a" }}>{c.pass ? "✓" : "!"}</span>
+                        <span style={{ minWidth: 0 }}>
+                          <span style={{ fontSize: 12.5, color: C.textBright, fontWeight: 600 }}>{c.label}</span>
+                          <span style={{ display: "block", fontSize: 11.5, color: C.textDim, lineHeight: 1.45 }}>{c.detail}</span>
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })()}
+
+          {/* Semantic grounding — the "vivid + true" check. Vivid retellings of real facts
+              are kept; only claims that assert something the facts don't carry are named.
+              This is the sentence-level grounding the deterministic checks can't see. */}
+          {script.semanticGrounding && (
+            <div style={{ background: script.semanticGrounding.ran && script.semanticGrounding.findings?.length ? "rgba(224,102,102,0.06)" : "rgba(126,230,176,0.06)", border: `1px solid ${script.semanticGrounding.ran && script.semanticGrounding.findings?.length ? "rgba(224,102,102,0.3)" : "rgba(126,230,176,0.3)"}`, borderRadius: 12, padding: "14px 18px", marginBottom: 16 }}>
+              {!script.semanticGrounding.ran ? (
+                <div style={{ fontSize: 12.5, color: C.textDim }}>Couldn&apos;t read the claims right now — try again in a moment.</div>
+              ) : !script.semanticGrounding.findings?.length ? (
+                <div>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: "#7ee6b0", letterSpacing: 0.4 }}>EVERY CLAIM STANDS ON A FACT</div>
+                  <div style={{ fontSize: 12, color: C.textDim, marginTop: 4, lineHeight: 1.5 }}>The vivid lines are dressed-up versions of your sourced facts, not new claims. Nothing asserts more than the evidence supports.</div>
+                </div>
+              ) : (
+                <div>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: "#f0a3a3", letterSpacing: 0.4, marginBottom: 3 }}>⚠ {script.semanticGrounding.findings.length} CATCHY LINE{script.semanticGrounding.findings.length === 1 ? "" : "S"} THAT GO{script.semanticGrounding.findings.length === 1 ? "ES" : ""} BEYOND YOUR FACTS</div>
+                  <div style={{ fontSize: 11.5, color: C.textDim, marginBottom: 10, lineHeight: 1.5 }}>These sound great, but they assert something no fact backs. Keep them if you want the punch, but you&apos;re choosing it on purpose, not by accident.</div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                    {script.semanticGrounding.findings.map((f: any, i: number) => (
+                      <div key={i} style={{ paddingLeft: 10, borderLeft: `2px solid ${f.verdict === "contradicts" ? "#e06666" : f.verdict === "narrative" ? "#d98cff" : "#e6b45a"}` }}>
+                        <div style={{ fontSize: 12.5, color: C.textBright, lineHeight: 1.45 }}>&ldquo;{f.claim}&rdquo;</div>
+                        <div style={{ fontSize: 11.5, color: f.verdict === "contradicts" ? "#f0a3a3" : f.verdict === "narrative" ? "#d98cff" : "#e6b45a", marginTop: 2 }}>{f.verdict === "contradicts" ? "Contradicts a fact" : f.verdict === "narrative" ? "Unsupported argument across the script" : "Not in your facts"}: {f.note}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
           {script.factVerify?.ran && (
             <div style={{ background: "rgba(52,211,153,0.06)", border: "1px solid rgba(52,211,153,0.28)", borderRadius: 12, padding: "14px 18px", marginBottom: 16 }}>
               <div style={{ fontSize: 11, fontWeight: 700, color: C.green, letterSpacing: 0.4, marginBottom: 7 }}>FACT-CHECKED AGAINST SOURCES</div>
@@ -423,6 +833,12 @@ export default function ViralBriefPage() {
     );
   }
 
+  // Slot mode = the grounded, fact-derived cards. In that mode the slot cards are
+  // the real options and the raw-title card is demoted to a link below; the two-fact
+  // floor also decides whether we even have enough sourced material to proceed.
+  const slotMode = angles.some((a) => a.slot);
+  const underSourced = slotMode && angles.length <= 1;
+  const suppressed = slotMode ? Math.max(0, 5 - angles.length) : 0;
   return (
     <div style={{ minHeight: "100vh", background: C.bg, padding: "32px 40px", fontFamily: "system-ui, sans-serif" }}>
       <div style={{ maxWidth: 800, margin: "0 auto" }}>
@@ -434,7 +850,18 @@ export default function ViralBriefPage() {
             <span style={{ fontSize: 22 }}>✦</span>
             <h1 style={{ fontSize: 22, fontWeight: 700, color: C.textBright, letterSpacing: -0.3 }}>Choose Your Angle</h1>
           </div>
-          <p style={{ fontSize: 13, color: C.textDim, margin: 0 }}>Pick the angle that fits your niche. Script builds around it using the viral framework.</p>
+          {/* The title is decided upstream and pinned here, so it is visually obvious
+              that picking an angle is a sub-selection, not a replacement. */}
+          {brief?.selectedTitle && (
+            <div style={{ marginTop: 10, marginBottom: 10, padding: "10px 14px", borderRadius: 10, background: "rgba(52,211,153,0.07)", border: "1px solid rgba(52,211,153,0.28)" }}>
+              <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: 0.5, color: C.green }}>YOUR TITLE, LOCKED</span>
+              <div style={{ fontSize: 14.5, fontWeight: 700, color: C.textBright, marginTop: 3 }}>{brief.selectedTitle}</div>
+              <div style={{ fontSize: 11.5, color: C.textDim, marginTop: 3 }}>Every angle below builds this video. Picking one changes what the script focuses on, never the title.</div>
+            </div>
+          )}
+          <p style={{ fontSize: 13, color: C.textDim, margin: 0 }}>{angles.some((a) => a.slot)
+            ? "This is your video's outline, built from the facts you researched. Read top to bottom, the sections are the running order. Click a section to make it the peak — the one that gets told at length — then build."
+            : "Pick the angle that fits your niche. Script builds around it using the viral framework."}</p>
         </div>
         {brief && (
           <div style={{ background: "rgba(77,184,255,0.06)", border: "1px solid rgba(99,102,241,0.2)", borderRadius: 12, padding: "14px 18px", marginBottom: 24 }}>
@@ -459,9 +886,21 @@ export default function ViralBriefPage() {
         <CompanionCtaToggle value={companionCta} onChange={setCompanionCta} />
               <SoftCtaToggle value={softCta} onChange={setSoftCta} />
 
+        {/* Under-sourced floor: too little sourced material for even two grounded
+            cards. Don't render a sparse list that reads as broken — name the state
+            and offer the two real remedies. */}
+        {underSourced && (
+          <div style={{ marginBottom: 16, padding: "18px 20px", borderRadius: 14, background: "rgba(217,160,69,0.07)", border: "1px solid #d9a04540" }}>
+            <div style={{ fontSize: 14, fontWeight: 700, color: "#e6b45a", marginBottom: 4 }}>Not enough sourced material for this case yet</div>
+            <div style={{ fontSize: 12.5, color: C.textDim, lineHeight: 1.55 }}>Skripr only builds angle cards on facts it can cite, and it couldn&apos;t find enough here. Two ways forward: go back and <strong style={{ color: C.textBright }}>name a more specific case</strong>, or continue and <strong style={{ color: C.textBright }}>paste your own facts</strong> at the research step.</div>
+          </div>
+        )}
+
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-          {/* The remix title the user picked, always the first selectable option */}
-          {brief?.selectedTitle && (
+          {/* Legacy (non-slot) mode: the raw remix title leads. In slot mode it is
+              demoted to a link below the grounded cards, so the guarded, fact-checked
+              cards are the primary options and the unguarded title is the fallback. */}
+          {brief?.selectedTitle && !slotMode && (
             <div
               onClick={() => handlePickAngle({
                 angle: brief.selectedTitle,
@@ -486,33 +925,126 @@ export default function ViralBriefPage() {
               <div style={{ flexShrink: 0, width: 32, height: 32, borderRadius: 8, background: "linear-gradient(135deg, #0e6499 0%, #1a8fd1 100%)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, color: "#fff", boxShadow: "0 2px 8px rgba(99,102,241,0.3)" }}>→</div>
             </div>
           )}
-          {angles.map((a, i) => (
-            <div key={i} onClick={() => handlePickAngle(a)}
-              style={{ background: C.card, border: "1px solid " + C.border, borderRadius: 14, padding: "18px 20px", cursor: "pointer", transition: "all 0.15s", display: "flex", alignItems: "flex-start", gap: 16 }}
-              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = C.cardHover; (e.currentTarget as HTMLElement).style.borderColor = C.borderAccent; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = C.card; (e.currentTarget as HTMLElement).style.borderColor = C.border; }}>
-              <div style={{ width: 32, height: 32, borderRadius: 8, background: "rgba(77,184,255,0.11)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, fontSize: 13, fontWeight: 700, color: C.accentDim }}>{i + 1}</div>
+          {(slotMode ? orderedSlots(angles) : angles).map((a, i) => (
+            <div key={i} onClick={() => { if (slotMode) { setPeakSlot(a.slot || null); } else { handlePickAngle(a); } }}
+              style={{ background: slotMode && a.slot === peakSlot ? "rgba(52,211,153,0.07)" : C.card, border: `1px solid ${slotMode && a.slot === peakSlot ? "rgba(52,211,153,0.45)" : C.border}`, borderRadius: 14, padding: "18px 20px", cursor: "pointer", transition: "all 0.15s", display: "flex", alignItems: "flex-start", gap: 16 }}
+              onMouseEnter={e => { if (!(slotMode && a.slot === peakSlot)) { (e.currentTarget as HTMLElement).style.background = C.cardHover; (e.currentTarget as HTMLElement).style.borderColor = C.borderAccent; } }}
+              onMouseLeave={e => { if (!(slotMode && a.slot === peakSlot)) { (e.currentTarget as HTMLElement).style.background = C.card; (e.currentTarget as HTMLElement).style.borderColor = C.border; } }}>
+              <div style={{ width: 32, height: 32, borderRadius: 8, background: slotMode && a.slot === peakSlot ? "rgba(52,211,153,0.22)" : "rgba(77,184,255,0.11)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, fontSize: 13, fontWeight: 700, color: slotMode && a.slot === peakSlot ? "#7ee6b0" : C.accentDim }}>{i + 1}</div>
               <div style={{ flex: 1, minWidth: 0 }}>
+                {a.slot && SLOT_LABELS[a.slot] && (
+                  <div style={{ display: "inline-block", fontSize: 10, fontWeight: 700, letterSpacing: 0.5, color: "#7ee6b0", background: "rgba(52,211,153,0.12)", border: "1px solid rgba(52,211,153,0.3)", borderRadius: 6, padding: "2px 8px", marginBottom: 6 }}>
+                    {SLOT_LABELS[a.slot]}{a.factRefs && a.factRefs.length > 0 && <span style={{ color: "#a6c0d8", fontWeight: 600 }}> · {a.factRefs.length} facts</span>}
+                  </div>
+                )}
+                {slotMode && a.slot === peakSlot && (
+                  <div style={{ display: "inline-block", fontSize: 10, fontWeight: 800, letterSpacing: 0.5, color: "#0b2018", background: "#7ee6b0", borderRadius: 6, padding: "2px 8px", marginBottom: 6, marginLeft: 6 }}>
+                    ★ THE PEAK
+                  </div>
+                )}
                 {a.swap && (
-                  <div style={{ display: "inline-block", fontSize: 10, fontWeight: 700, letterSpacing: 0.4, color: "#4db8ff", background: "rgba(77,184,255,0.12)", border: "1px solid rgba(77,184,255,0.3)", borderRadius: 6, padding: "2px 8px", marginBottom: 6 }}>
+                  <div style={{ display: "inline-block", fontSize: 10, fontWeight: 700, letterSpacing: 0.4, color: "#4db8ff", background: "rgba(77,184,255,0.12)", border: "1px solid rgba(77,184,255,0.3)", borderRadius: 6, padding: "2px 8px", marginBottom: 6, marginLeft: a.slot ? 6 : 0 }}>
                     🔀 WHITE-SPACE SWAP · {a.swap}
                   </div>
                 )}
                 <div style={{ fontSize: 15, fontWeight: 700, color: C.textBright, marginBottom: 4, lineHeight: 1.3 }}>{a.angle}</div>
                 <div style={{ fontSize: 12, color: C.textDim, lineHeight: 1.5, marginBottom: 8 }}>{a.description}</div>
-                <div style={{ background: "rgba(77,184,255,0.06)", border: "1px solid rgba(77,184,255,0.13)", borderRadius: 7, padding: "6px 10px", marginBottom: 8 }}>
-                  <span style={{ fontSize: 10, fontWeight: 700, color: C.accentDim, marginRight: 6 }}>TITLE →</span>
-                  <span style={{ fontSize: 11, color: "#9de4ff", fontWeight: 600 }}>{a.titleSuggestion}</span>
-                </div>
+                {/* Only show a per-card title when it actually differs from the locked
+                    one. Repeating the same title on every card is noise, and showing a
+                    DIFFERENT one is the bug that let an angle replace the user's choice. */}
+                {a.titleSuggestion && a.titleSuggestion !== brief?.selectedTitle && (
+                  <div style={{ background: "rgba(77,184,255,0.06)", border: "1px solid rgba(77,184,255,0.13)", borderRadius: 7, padding: "6px 10px", marginBottom: 8 }}>
+                    <span style={{ fontSize: 10, fontWeight: 700, color: C.accentDim, marginRight: 6 }}>TITLE →</span>
+                    <span style={{ fontSize: 11, color: "#9de4ff", fontWeight: 600 }}>{a.titleSuggestion}</span>
+                  </div>
+                )}
+                {/* The facts this card rests on, shown so you can catch a wrong or
+                    contaminated fact BEFORE building a script on it. "2 facts" is a
+                    number to trust; the facts themselves are checkable. */}
+                {a.slot && a.factRefs && a.factRefs.length > 0 && deepFacts.length > 0 && (
+                  <div style={{ marginBottom: 8, borderLeft: "2px solid rgba(52,211,153,0.35)", paddingLeft: 10 }}>
+                    <div style={{ fontSize: 9.5, fontWeight: 700, letterSpacing: 0.4, color: "#7ee6b0", marginBottom: 4 }}>BUILT ON THESE FACTS — CHECK THEM</div>
+                    {a.factRefs.map((r) => deepFacts[r - 1]).filter(Boolean).map((f, k) => (
+                      <div key={k} style={{ fontSize: 11, color: C.textDim, lineHeight: 1.45, marginBottom: 3 }}>
+                        • {f.fact}
+                        {f.source && <a href={f.source} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} style={{ color: "#7ed8ff", marginLeft: 4, wordBreak: "break-all" }}>[{(() => { try { return new URL(f.source).hostname.replace(/^www\./, ""); } catch { return "source"; } })()}]</a>}
+                      </div>
+                    ))}
+                  </div>
+                )}
                 <div style={{ fontSize: 11, color: C.textDim }}><span style={{ color: "#a6c0d8" }}>Audience: </span>{a.audience}</div>
+                {/* Secondary control: some videos genuinely should be narrow. Kept, but
+                    demoted, because the default now uses everything that was researched. */}
+                {slotMode && (
+                  <button onClick={(e) => { e.stopPropagation(); handlePickAngle(a); }}
+                    style={{ marginTop: 8, background: "none", border: "none", padding: 0, cursor: "pointer", fontSize: 11.5, color: C.textDim, textDecoration: "underline" }}>
+                    Or make a whole video about just this section
+                  </button>
+                )}
               </div>
-              <div style={{ flexShrink: 0, width: 32, height: 32, borderRadius: 8, background: "linear-gradient(135deg, #0e6499 0%, #1a8fd1 100%)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, color: "#fff", boxShadow: "0 2px 8px rgba(99,102,241,0.3)" }}>→</div>
+              <div style={{ flexShrink: 0, width: 32, height: 32, borderRadius: 8, background: slotMode ? "transparent" : "linear-gradient(135deg, #0e6499 0%, #1a8fd1 100%)", border: slotMode ? `1px solid ${a.slot === peakSlot ? "#7ee6b0" : C.border}` : "none", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, color: slotMode ? (a.slot === peakSlot ? "#7ee6b0" : C.textDim) : "#fff", boxShadow: slotMode ? "none" : "0 2px 8px rgba(99,102,241,0.3)" }}>
+                {slotMode ? (a.slot === peakSlot ? "★" : "☆") : "→"}
+              </div>
             </div>
           ))}
+
+          {/* FACT SUFFICIENCY. Length is chosen before research runs, so this is the first
+              screen where both are known. A long target on a thin fact set does not make a
+              longer video, it makes a padded one — and every fabrication this session
+              appeared in the gap between what the evidence supported and what the word
+              count demanded. Surfaced where the user can still act on it. */}
+          {slotMode && !underSourced && (() => {
+            const targetWords = ((brief as any)?.targetMinutes ?? 15) * 150;
+            // ~180 words of honest script per sourced fact, measured across this session.
+            const supported = deepFacts.length * 180;
+            if (supported >= targetWords * 0.85) return null;
+            const supportedMins = Math.max(1, Math.round(supported / 150));
+            return (
+              <div style={{ marginTop: 4, marginBottom: 4, padding: "12px 16px", borderRadius: 12, background: "rgba(217,160,69,0.07)", border: "1px solid #d9a04540" }}>
+                <div style={{ fontSize: 12.5, fontWeight: 700, color: "#e6b45a" }}>Your target is longer than your evidence supports</div>
+                <div style={{ fontSize: 12, color: C.textDim, marginTop: 3, lineHeight: 1.55 }}>
+                  You set {(brief as any)?.targetMinutes ?? 15} minutes (~{targetWords.toLocaleString()} words). {deepFacts.length} facts across {angles.filter((a) => a.slot).length} sections supports about {supportedMins} minutes of honest script. Add facts at the next step, or the script will pad — and padding is where unsupported claims come from.
+                </div>
+              </div>
+            );
+          })()}
+
+          {/* PRIMARY ACTION: build the whole video from every researched section. This
+              is the default because the slots in order ARE the video — picking one card
+              threw away most of the research that was just paid for. */}
+          {slotMode && !underSourced && (
+            <button onClick={handleUseOutline}
+              style={{ width: "100%", marginTop: 6, padding: "16px 20px", borderRadius: 14, border: "none", cursor: "pointer", background: "linear-gradient(135deg,#0e6499,#1a8fd1,#4db8ff)", color: "#fff", textAlign: "left", boxShadow: "0 6px 26px rgba(77,184,255,0.32)" }}>
+              <span style={{ display: "block", fontSize: 16, fontWeight: 700 }}>Build the full video from all {angles.filter((a) => a.slot).length} sections →</span>
+              <span style={{ display: "block", fontSize: 12.5, color: "rgba(255,255,255,0.85)", marginTop: 3 }}>
+                In order, using every fact you researched{peakSlot ? `, with ${SLOT_LABELS[peakSlot] || peakSlot} as the peak` : ""}.
+              </span>
+            </button>
+          )}
+
+          {/* Slot mode: explain any suppressed slots so fewer-than-five doesn't read
+              as breakage, then offer the raw title as a demoted fallback link. */}
+          {slotMode && suppressed > 0 && !underSourced && (
+            <div style={{ fontSize: 11.5, color: C.textDim, textAlign: "center", padding: "2px 0" }}>
+              {suppressed} {suppressed === 1 ? "angle" : "angles"} suppressed — not enough sourced material to build them honestly.
+            </div>
+          )}
+          {slotMode && brief?.selectedTitle && (
+            <button
+              onClick={() => handlePickAngle({
+                angle: brief.selectedTitle,
+                description: brief.selectedTitleDescription || "Build the script exactly as this remix title promises.",
+                audience: brief.selectedTitleAudience || "",
+                titleSuggestion: brief.selectedTitle,
+              })}
+              style={{ background: "none", border: `1px dashed ${C.border}`, borderRadius: 10, padding: "10px 14px", cursor: "pointer", color: C.textDim, fontSize: 12.5, textAlign: "center" }}>
+              Or skip the grounded angles and use your exact title: <span style={{ color: "#9de4ff" }}>{brief.selectedTitle}</span>
+            </button>
+          )}
         </div>
         {angles.length > 0 && brief && (
           <div style={{ marginTop: 16, textAlign: "center" }}>
-            <button onClick={() => { setPhase("loading"); fetchAngles(brief); }}
+            <button onClick={() => { setPhase("loading"); fetchAngles(brief, groundedGroundingFrom() || undefined); }}
               style={{ background: "none", border: "none", color: C.textDim, fontSize: 12, cursor: "pointer", textDecoration: "underline" }}>
               Generate different angles
             </button>
