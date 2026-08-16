@@ -86,15 +86,22 @@ Return ONLY valid JSON, no markdown fences, with this exact shape:
     { "trigger": "Stakes escalation", "example": "Quote or moment", "timestamp": "X:XX" }
   ],
   "titleFormula": {
-    "formula": "The reusable template e.g. I [did X] In [time] With [constraint] (Full Breakdown)",
+    "formula": "The reusable template derived from the TITLE STRING ITSELF, e.g. I [did X] In [time] With [constraint] (Full Breakdown)",
     "psychology": "One sentence on why this title formula converts clicks",
     "remixTitles": [
       { "title": "Full title using the formula", "description": "One sentence: what this video would actually cover and why it hooks", "audience": "Who specifically clicks this", "scope": "close" }
     ]
   },
   "remixFramework": "3 sentence summary: how to replicate this video's success for any topic in any niche",
-  "niche": "Exactly one id from this list that best fits the video: ${NICHES.map(n => n.id).join(", ")}"
+  "niche": "Exactly one id from this list that best fits the video: ${NICHES.map(n => n.id).join(", ")}",
+  "sourceEntities": ["distinctive terms specific to THIS video's content"]
 }
+
+SOURCE ENTITIES REQUIREMENT (critical for not copying content): "sourceEntities" is 8 to 20 of the DISTINCTIVE nouns, proper names, places, brands, named events, and concrete objects that belong to THIS video's specific story — the things a remix on a DIFFERENT topic must never accidentally import. Include people's names, company/brand names, city/place names, named operations or events, and any vivid concrete object the video is built around (e.g. for a sneaker-counterfeiting video: "Nike", "Memphis", "sneaker stores", "shipping labels", "raids", "seized accounts"). Do NOT include generic words that belong to any video ("story", "money", "people", "system"). These are used ONLY to detect leakage; the remix must reproduce the STRUCTURE of this video, never its content.
+
+TITLE FORMULA REQUIREMENT (critical — this is the most commonly botched field): the formula must be abstracted from the TITLE STRING ITSELF, never from what the video turns out to be about. Run this test before you answer: fill your formula's slots with this video's own subject. It MUST reproduce the actual title almost exactly. If the real title is "Alcohol is AMAZING", the formula is "[Thing People Enjoy] is [Enthusiastic Positive Superlative]" — filling it gives back "Alcohol is AMAZING". A formula like "[Loved Thing] is [Shocking Negative Superlative]" FAILS this test, because it yields "Alcohol is DEVASTATING", which is not the title. That formula describes the video's ARGUMENT, not its title, and every remix built on it will invert the hook.
+
+IRONY AND CONTRADICTION ARE PART OF THE TITLE, NOT A MISTAKE TO CORRECT. When a title praises something the video then criticizes, the dissonance IS the hook: the viewer clicks to resolve the contradiction. Preserve that shape in the formula and in every remixTitle. A remix that states the video's conclusion in the title ("Social Media is ADDICTIVE") destroys the mechanism, because it agrees with what the viewer already believes and leaves nothing to resolve. If the source title is positive about its subject, EVERY remixTitle must be positive about its subject too.
 
 RETENTION TRIGGERS REQUIREMENT — "retentionTriggers" must contain 6 to 9 distinct entries covering the ENTIRE runtime (early, middle, AND late timestamps). Vary the types: open loops, pattern interrupts, stakes escalation, callbacks, curiosity gaps, personal implication, subverted expectations. Each needs a real quote or moment from the transcript.
 
@@ -139,7 +146,10 @@ ${EXPERT_ATTRIBUTION_RULE}`,
       source_views: await fetchSourceViews(videoId),
     }).catch(() => {});
 
-    return NextResponse.json({ videoId, ...meta, ...analysis });
+    // Carry a trimmed transcript back so the brief can score the SOURCE video against the
+    // same framework checks as the generated script (the fidelity comparison). Capped to
+    // keep sessionStorage light; the structural checks read the opening and the close.
+    return NextResponse.json({ videoId, ...meta, ...analysis, sourceTranscript: (transcript || "").slice(0, 20000) });
   } catch (e: any) {
     console.error("[viral-remixer]", e?.message);
     return NextResponse.json({ error: e?.message || "Analysis failed" }, { status: 500 });

@@ -1,0 +1,16 @@
+{
+  "note": "Representative Perplexity round-one 'sonar' response for the Dobyns / Operation Black Biscuit case, shaped like the refusal-heavy run the reviewer flagged (9 answers, 7 non-answers). Used by scripts/research-parse.test.ts to exercise the parse+filter offline, since PERPLEXITY_API_KEY is production-only and the live call cannot run locally.",
+  "questions": [
+    "What real background or prior career did Jay Dobyns have before the ATF?",
+    "What named front club did the ATF create to approach the Hells Angels?",
+    "Where was the operation's undercover activity centered?",
+    "What was the exact date of the patching ceremony?",
+    "What was the exact verbatim threat made to Dobyns during the operation?",
+    "What documented aftermath did Dobyns face after the operation?",
+    "What were the documented outcomes for the named defendants?",
+    "What is the canonical name of the operation?",
+    "Is there a documented connection between the Hells Angels and the KKK?"
+  ],
+  "content": "[{\"q\":1,\"fact\":\"Jay Dobyns was a University of Arizona football player before joining the ATF in 1987, and had survived being shot on his first day as an agent.\",\"source\":\"https://www.latimes.com/archives/la-xpm-2003-dec-05-me-hells5-story.html\"},{\"q\":2,\"fact\":\"The ATF created a fake charter of the Solo Angeles Nomads, a real Mexican motorcycle club, as the front Dobyns used to approach the Hells Angels.\",\"source\":\"https://en.wikipedia.org/wiki/Operation_Black_Biscuit\"},{\"q\":3,\"fact\":\"The operation's undercover activity and arrests were centered in Arizona, coordinated across five states.\",\"source\":\"https://www.latimes.com/archives/la-xpm-2003-dec-05-me-hells5-story.html\"},{\"q\":4,\"fact\":\"I could not verify a specific documented date for the patching ceremony in the available sources.\",\"source\":\"https://www.google.com/search?q=dobyns+patch+ceremony\"},{\"q\":5,\"fact\":\"No verifiable source was found for an exact verbatim threat quoted during the operation.\",\"source\":\"https://www.google.com/search?q=dobyns+threat\"},{\"q\":6,\"fact\":\"After the operation, Dobyns's house was burned down in an arson, and he later sued the ATF over how it handled threats against him and his family.\",\"source\":\"https://www.azcentral.com/story/news/local/arizona-investigations/2014/dobyns-atf.html\"},{\"q\":7,\"fact\":\"The prosecution largely collapsed; many defendants pleaded to far lesser charges than the operation was built around.\",\"source\":\"https://en.wikipedia.org/wiki/Operation_Black_Biscuit\"},{\"q\":8,\"fact\":\"Unknown.\",\"source\":\"https://en.wikipedia.org/wiki/Operation_Black_Biscuit\"},{\"q\":9,\"fact\":\"There is no documented connection between the Hells Angels and the KKK in the available records.\",\"source\":\"https://en.wikipedia.org/wiki/Hells_Angels\"}]",
+  "citations": []
+}

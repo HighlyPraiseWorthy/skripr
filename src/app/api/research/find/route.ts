@@ -15,13 +15,13 @@ export async function POST(req: Request) {
 
   try {
     const body = await req.json();
-    const { topic, angle, niche, action, caseName, caseSummary, sourcePayoff, sourceSubject, kind, topicAnchor } = body;
+    const { topic, angle, niche, action, caseName, caseSummary, sourcePayoff, sourceSubject, kind, topicAnchor, targetFacts } = body;
 
     // "deepen": a case is already chosen; fetch the documentary-critical named
     // specifics (Claude questions -> Perplexity sourced answers). sourcePayoff, when
     // present, biases the questions toward reproducing what made a source video work.
     if (action === "deepen") {
-      const result = await deepenCaseFacts({ caseName, summary: caseSummary, niche, sourcePayoff: typeof sourcePayoff === "string" ? sourcePayoff : undefined, sourceSubject: typeof sourceSubject === "string" ? sourceSubject : undefined, userId, kind, topicAnchor: typeof topicAnchor === "string" ? topicAnchor : undefined });
+      const result = await deepenCaseFacts({ caseName, summary: caseSummary, niche, sourcePayoff: typeof sourcePayoff === "string" ? sourcePayoff : undefined, sourceSubject: typeof sourceSubject === "string" ? sourceSubject : undefined, userId, kind, topicAnchor: typeof topicAnchor === "string" ? topicAnchor : undefined, targetFacts: typeof targetFacts === "number" ? targetFacts : undefined });
       return NextResponse.json({ facts: result.facts, conflicts: result.conflicts, status: result.status, caseName: result.caseName, when: result.when });
     }
 

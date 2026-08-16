@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { checkCompliance, complianceScore, sourceSectionRatio } from "@/lib/script-compliance";
+import { checkCompliance, sourceSectionRatio, structuralScore, checkSourceStructural, accuracyChecks, STRUCTURAL_SET, scoreKindOf } from "@/lib/script-compliance";
 import GenerationProgress from "@/components/GenerationProgress";
 import { joinHookBody, bodyStartsWithHook } from "@/lib/script-text";
 import { VoiceSelect } from "@/components/VoiceSelect";
@@ -64,6 +64,8 @@ type Brief = {
   retentionTriggers: { trigger: string; example: string; timestamp: string }[];
   titleFormula: { formula: string; psychology: string; remixExamples?: string[] };
   remixFramework: string; selectedTitle: string; selectedTitleDescription?: string; selectedTitleAudience?: string; videoTitle: string; channelTitle: string; niche?: string;
+  sourceTranscript?: string;
+  sourceEntities?: string[];
 };
 
 const Spinner = () => (
@@ -72,6 +74,13 @@ const Spinner = () => (
     <style>{"@keyframes spin { to { transform: rotate(360deg); } }"}</style>
   </>
 );
+
+// The resolved case-flow is otherwise transient React state, so a reload or a back
+// navigation loses the confirm screen and the picked case, and a fresh (often different)
+// resolution takes its place. Persisting it keyed to the remix title makes the case the
+// user picked a durable artifact they own, not something re-rolled on every navigation.
+const FLOW_KEY = "skripr_viral_flow";
+const RESUMABLE_PHASES: Phase[] = ["pick-case", "angles", "research", "storytelling"];
 
 export default function ViralBriefPage() {
   const [phase, setPhase] = useState<Phase>("loading");
@@ -124,9 +133,45 @@ export default function ViralBriefPage() {
       if (!stored) { window.location.href = "/dashboard/viral-remixer"; return; }
       const b: Brief = JSON.parse(stored);
       setBrief(b);
+      // Resume an in-progress flow for THIS remix so a reload or back-navigation returns to
+      // the same case-confirm screen (or angles) instead of re-resolving from scratch and
+      // losing the picked case. Keyed to the remix title so a different remix starts fresh.
+      const savedFlow = sessionStorage.getItem(FLOW_KEY);
+      if (savedFlow) {
+        const f = JSON.parse(savedFlow);
+        if (f && f.titleKey === b.selectedTitle && RESUMABLE_PHASES.includes(f.phase)) {
+          setCaseChoices(Array.isArray(f.caseChoices) ? f.caseChoices : []);
+          setGroundedCase(f.groundedCase ?? null);
+          setTopicKind(f.topicKind ?? null);
+          setSourceVerdict(f.sourceVerdict ?? null);
+          setDeepFacts(Array.isArray(f.deepFacts) ? f.deepFacts : []);
+          setDeepConflicts(Array.isArray(f.deepConflicts) ? f.deepConflicts : []);
+          setAngles(Array.isArray(f.angles) ? f.angles : []);
+          setSelectedAngle(f.selectedAngle ?? null);
+          setPeakSlot(f.peakSlot ?? null);
+          setSourceMaterial(typeof f.sourceMaterial === "string" ? f.sourceMaterial : "");
+          setPhase(f.phase);
+          return; // resumed — do NOT re-resolve and overwrite the picked case
+        }
+      }
       groundThenAngles(b);
     } catch { window.location.href = "/dashboard/viral-remixer"; }
   }, []);
+
+  // Snapshot the case-flow whenever it changes, but only in resumable phases (never the
+  // transient "loading"/"generating" or the "result" phase whose script isn't persisted),
+  // so a reload restores the last stable step rather than a half-written one.
+  useEffect(() => {
+    if (!brief || !RESUMABLE_PHASES.includes(phase)) return;
+    try {
+      sessionStorage.setItem(FLOW_KEY, JSON.stringify({
+        titleKey: brief.selectedTitle, phase,
+        caseChoices, groundedCase, topicKind, sourceVerdict,
+        deepFacts, deepConflicts, angles, selectedAngle, peakSlot, sourceMaterial,
+      }));
+    } catch { /* storage unavailable — the flow just won't resume, no worse than before */ }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase, brief, caseChoices, groundedCase, topicKind, sourceVerdict, deepFacts, deepConflicts, angles, selectedAngle, peakSlot, sourceMaterial]);
 
   // Saturation for each candidate, fetched as soon as the confirm screen appears.
   // Best-effort and non-blocking: the card renders immediately and the coverage line
@@ -176,7 +221,7 @@ export default function ViralBriefPage() {
       try {
         const rr = await fetch("/api/research/find", {
           method: "POST", headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ action: "deepen", caseName: c.name, caseSummary: c.summary, niche: b.niche, sourcePayoff: b.hookAnalysis?.whyItWorks, sourceSubject: b.videoTitle, kind, topicAnchor: b.selectedTitle }),
+          body: JSON.stringify({ action: "deepen", caseName: c.name, caseSummary: c.summary, niche: b.niche, sourcePayoff: b.hookAnalysis?.whyItWorks, sourceSubject: b.videoTitle, kind, topicAnchor: b.selectedTitle, targetFacts: (b as any).targetMinutes ? Math.min(12, Math.round(((b as any).targetMinutes * 150) / 180)) : undefined }),
         });
         const rd = await rr.json();
         if (rr.ok) {
@@ -260,6 +305,7 @@ export default function ViralBriefPage() {
             action: "deepen", caseName: subject, caseSummary: grounding?.caseSummary || b.selectedTitleDescription || "",
             niche: b.niche, sourcePayoff: b.hookAnalysis?.whyItWorks, sourceSubject: b.videoTitle,
             kind: grounding?.kind || topicKind || "claim", topicAnchor: b.selectedTitle,
+            targetFacts: (b as any).targetMinutes ? Math.min(12, Math.round(((b as any).targetMinutes * 150) / 180)) : undefined,
           }),
         });
         const rd = await rr.json();
@@ -514,6 +560,14 @@ export default function ViralBriefPage() {
               <div style={{ fontSize: 15, fontWeight: 700 }}>{c.name}</div>
               {c.summary && <div style={{ fontSize: 13, color: C.textDim, lineHeight: 1.6, marginTop: 4 }}>{c.summary}</div>}
               {c.whyItFits && <div style={{ fontSize: 12.5, color: C.accentDim, lineHeight: 1.5, marginTop: 5 }}>Fits your title: {c.whyItFits}</div>}
+              {c.authorityTier && (
+                <div style={{ fontSize: 11, color: c.authorityTier === "high" ? "#7ee6b0" : c.authorityTier === "medium" ? "#9fb6cc" : "#e6b45a", marginTop: 5, fontWeight: 600 }}>
+                  {c.authorityTier === "high" ? "◆ Well documented (DOJ / major outlets)" : c.authorityTier === "medium" ? "◇ Some reliable coverage" : "△ Thinly sourced — verify before committing"}
+                </div>
+              )}
+              {c.guardWarning && (
+                <div style={{ fontSize: 11.5, color: "#e6b45a", marginTop: 5, lineHeight: 1.45 }}>⚠ {c.guardWarning}</div>
+              )}
               {/* Competition signal. Knowing a case is saturated (or is really a famous
                   film) changes the decision while changing it is still free. */}
               {saturation[c.name] && (() => {
@@ -524,7 +578,15 @@ export default function ViralBriefPage() {
                     <div style={{ fontSize: 12, color: tone, lineHeight: 1.5 }}>
                       {s.tier === "saturated" ? "▲" : s.tier === "covered" ? "•" : s.tier === "unknown" ? "?" : "✦"} {s.label}
                     </div>
-                    {s.topTitle && <div style={{ fontSize: 11, color: C.textDim, marginTop: 3 }}>Top video: {s.topTitle}</div>}
+                    {Array.isArray(s.topTitles) && s.topTitles.length > 0 ? (
+                      <div style={{ marginTop: 4 }}>
+                        <div style={{ fontSize: 10.5, color: C.textDim, fontWeight: 600 }}>Top videos on this case:</div>
+                        {s.topTitles.map((t: string, ti: number) => (
+                          <div key={ti} style={{ fontSize: 11, color: C.textDim, lineHeight: 1.45, marginTop: 2 }}>• {t}</div>
+                        ))}
+                        <div style={{ fontSize: 10.5, color: C.accentDim, marginTop: 3, lineHeight: 1.4 }}>If all three tell the same story, the obvious angle is taken — find the one they miss.</div>
+                      </div>
+                    ) : s.topTitle && <div style={{ fontSize: 11, color: C.textDim, marginTop: 3 }}>Top video: {s.topTitle}</div>}
                     {s.adaptationWarning && <div style={{ fontSize: 11.5, color: "#e6b45a", marginTop: 4, lineHeight: 1.45 }}>⚠ {s.adaptationWarning}</div>}
                   </div>
                 );
@@ -582,6 +644,7 @@ export default function ViralBriefPage() {
       sourceMaterial={sourceMaterial || undefined}
       caseName={groundedCase?.name}
       slot={selectedAngle.slot}
+      topicKind={(topicKind as any) || undefined}
       onGenerate={generateWithStory}
       onBack={() => setPhase("research")}
     />
@@ -701,35 +764,88 @@ export default function ViralBriefPage() {
               topicKind: (topicKind as any) || undefined,
               sourceWeightRatio: sourceSectionRatio(brief?.structure),
               voiceProhibitions: script.voiceProhibitions,
+              sourceEntities: brief?.sourceEntities,
             });
             if (!checks.length) return null;
-            const { passed, total } = complianceScore(checks);
-            const misses = checks.filter((c) => !c.pass);
+            // FIDELITY (fixed per-kind structural set), scored against the SAME set on the
+            // source video, so the target is "as close to the source as the source itself
+            // scores" — not an abstract 11/11 nobody can hit.
+            const fid = structuralScore(checks, topicKind as any);
+            const sourceChecks = brief?.sourceTranscript && brief.sourceTranscript.length > 200
+              ? checkSourceStructural({ sourceText: brief.sourceTranscript, topicKind: topicKind as any, sourceHookType: brief?.hookAnalysis?.hookType, voiceProhibitions: script.voiceProhibitions })
+              : null;
+            const srcFid = sourceChecks ? structuralScore(sourceChecks, topicKind as any) : null;
+            const srcPassById = new Map((sourceChecks || []).map((c) => [c.id, c.pass] as const));
+            // Publish-safety checks, always shown, never folded into the fidelity number.
+            const safety = accuracyChecks(checks);
+            const safetyMisses = safety.filter((c) => !c.pass);
+            const setIdSet = new Set(STRUCTURAL_SET[scoreKindOf(topicKind as any)]);
+            const otherStructural = checks.filter((c) => c.kind === "structure" && !setIdSet.has(c.id));
+            const fidMisses = fid.items.filter((c) => !c.pass);
+            // Green when the script matches or beats the source on fidelity; amber otherwise.
+            const meetsSource = srcFid ? fid.passed >= srcFid.passed : fidMisses.length === 0;
             return (
-              // Collapsed by default. The score and the count of issues are enough to
-              // tell you whether to look; the detail is one click away when you care.
               <div style={{ background: "rgba(77,184,255,0.05)", border: `1px solid ${C.border}`, borderRadius: 12, padding: "12px 18px", marginBottom: 16 }}>
                 <button onClick={() => setShowCompliance((v) => !v)}
-                  style={{ display: "flex", alignItems: "center", gap: 8, width: "100%", background: "none", border: "none", padding: 0, cursor: "pointer", textAlign: "left" }}>
+                  style={{ display: "flex", alignItems: "center", gap: 8, width: "100%", background: "none", border: "none", padding: 0, cursor: "pointer", textAlign: "left", flexWrap: "wrap" as const }}>
                   <span style={{ fontSize: 10, color: C.textDim, transform: showCompliance ? "rotate(90deg)" : "none", transition: "transform .12s" }}>▶</span>
-                  <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: 0.4, color: passed === total ? C.green : "#e6b45a" }}>
-                    FRAMEWORK CHECK · {passed}/{total}
+                  <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: 0.4, color: meetsSource ? C.green : "#e6b45a" }}>
+                    FRAMEWORK FIDELITY · your script {fid.passed}/{fid.total}{srcFid ? ` · source video ${srcFid.passed}/${srcFid.total}` : ""}
                   </span>
                   <span style={{ fontSize: 11.5, color: C.textDim, fontWeight: 500 }}>
-                    {misses.length === 0 ? "matches the video it was modeled on" : `${misses.length} thing${misses.length === 1 ? "" : "s"} to look at`}
+                    {srcFid
+                      ? (fid.passed >= srcFid.passed ? "matches the video it was modeled on" : `${srcFid.passed - fid.passed} behind the source`)
+                      : (fidMisses.length === 0 ? "matches the video it was modeled on" : `${fidMisses.length} to look at`)}
+                    {safetyMisses.length > 0 ? ` · ⚠ ${safetyMisses.length} safety` : ""}
                   </span>
                 </button>
                 {showCompliance && (
                   <div style={{ display: "flex", flexDirection: "column", gap: 5, marginTop: 10 }}>
-                    {[...misses, ...checks.filter((c) => c.pass)].map((c) => (
-                      <div key={c.id} style={{ display: "flex", gap: 8, alignItems: "flex-start" }}>
+                    {/* Fidelity set: your pass, and whether the SOURCE passes it too. A check
+                        the source ALSO fails is measuring preference, not what works. */}
+                    {[...fidMisses, ...fid.items.filter((c) => c.pass)].map((c) => {
+                      const srcPass = srcPassById.get(c.id);
+                      const sourceAlsoFails = srcPass === false && !c.pass;
+                      return (
+                        <div key={c.id} style={{ display: "flex", gap: 8, alignItems: "flex-start" }}>
+                          <span style={{ flexShrink: 0, fontSize: 12, color: c.pass ? C.green : "#e6b45a" }}>{c.pass ? "✓" : "!"}</span>
+                          <span style={{ minWidth: 0 }}>
+                            <span style={{ fontSize: 12.5, color: C.textBright, fontWeight: 600 }}>{c.label}</span>
+                            {srcPass !== undefined && (
+                              <span style={{ fontSize: 10.5, fontWeight: 700, marginLeft: 7, color: srcPass ? C.green : "#e6b45a" }}>SOURCE {srcPass ? "✓" : "✗"}</span>
+                            )}
+                            <span style={{ display: "block", fontSize: 11.5, color: C.textDim, lineHeight: 1.45 }}>
+                              {c.detail}{sourceAlsoFails ? " The source video doesn't do this either, so it may not be worth chasing." : ""}
+                            </span>
+                          </span>
+                        </div>
+                      );
+                    })}
+                    {/* Extra structural checks that aren't part of the pinned score. */}
+                    {otherStructural.map((c) => (
+                      <div key={c.id} style={{ display: "flex", gap: 8, alignItems: "flex-start", opacity: 0.75 }}>
                         <span style={{ flexShrink: 0, fontSize: 12, color: c.pass ? C.green : "#e6b45a" }}>{c.pass ? "✓" : "!"}</span>
                         <span style={{ minWidth: 0 }}>
-                          <span style={{ fontSize: 12.5, color: C.textBright, fontWeight: 600 }}>{c.label}</span>
+                          <span style={{ fontSize: 12.5, color: C.textBright, fontWeight: 600 }}>{c.label}<span style={{ fontSize: 10, color: C.textDim, fontWeight: 500, marginLeft: 6 }}>(not scored)</span></span>
                           <span style={{ display: "block", fontSize: 11.5, color: C.textDim, lineHeight: 1.45 }}>{c.detail}</span>
                         </span>
                       </div>
                     ))}
+                    {/* SAFETY — the publish guards, always shown, separate from fidelity. */}
+                    {safety.length > 0 && (
+                      <div style={{ marginTop: 8, paddingTop: 8, borderTop: `1px solid ${C.border}` }}>
+                        <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 0.4, color: safetyMisses.length ? "#f0a3a3" : C.textDim, marginBottom: 5 }}>SAFETY {safety.length - safetyMisses.length}/{safety.length}</div>
+                        {[...safetyMisses, ...safety.filter((c) => c.pass)].map((c) => (
+                          <div key={c.id} style={{ display: "flex", gap: 8, alignItems: "flex-start", marginBottom: 3 }}>
+                            <span style={{ flexShrink: 0, fontSize: 12, color: c.pass ? C.green : "#f0a3a3" }}>{c.pass ? "✓" : "⚠"}</span>
+                            <span style={{ minWidth: 0 }}>
+                              <span style={{ fontSize: 12.5, color: C.textBright, fontWeight: 600 }}>{c.label}</span>
+                              <span style={{ display: "block", fontSize: 11.5, color: C.textDim, lineHeight: 1.45 }}>{c.detail}</span>
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 )}
               </div>

@@ -59,7 +59,7 @@ const CASE_TYPES: { test: RegExp; label: string; note: string }[] = [
  * (most specific to this script), then case-type vocabulary, then the angle-derived
  * climax cue, then standing channel defaults.
  */
-export function deriveDirectorNotes(input: { sourceMaterial?: string; angle?: string; caseName?: string; slot?: string }): DirectorNote[] {
+export function deriveDirectorNotes(input: { sourceMaterial?: string; angle?: string; caseName?: string; slot?: string; topicKind?: "event" | "explainer" | "hypothetical" | "claim" }): DirectorNote[] {
   const notes: DirectorNote[] = [];
   const t = factText(input.sourceMaterial);
   const hasFacts = t.trim().length > 0;
@@ -84,7 +84,15 @@ export function deriveDirectorNotes(input: { sourceMaterial?: string; angle?: st
       notes.push({ source: "From your facts", on: true, note: "The cause of that incident was investigated and never proven. Narrate the event but do not name a culprit." });
     }
     // Living person tied to an unproven allegation. Name the outcome, don't assert.
-    if (/\b(alleged|accused|suspected of)\b|claimed (?:he|she|they|\w+) (?:snorted|used|committed|did|killed|smuggl|trafficked|dealt|stole|took)|reportedly (?:committed|did)/.test(t)) {
+    // BUT a plea or conviction IS the documented outcome — the allegation is no longer
+    // "unproven", so this note (and the Villain suppression it drives) must NOT fire. It
+    // was disabling the Villain for Tavon White and Michael Smith, both of whom pleaded
+    // guilty. Proven guilt clears it.
+    // Narrow to INDIVIDUAL verdicts (a plea, a guilty finding, an admission). Deliberately
+    // NOT bare "conviction(s)": an aggregate takedown count ("53 convictions") is usually
+    // co-defendants, and must not clear an allegation about the central figure.
+    const provenGuilt = /\b(pleaded|pled|plead) (?:guilty|no contest)|guilty plea|found guilty|admitted (?:guilt|to (?:the )?(?:charge|crime|scheme|fraud|allegation))/i.test(t);
+    if (!provenGuilt && (/\b(alleged|accused|suspected of)\b|claimed (?:he|she|they|\w+) (?:snorted|used|committed|did|killed|smuggl|trafficked|dealt|stole|took)|reportedly (?:committed|did)/.test(t))) {
       notes.push({ source: "From your facts", on: true, note: "Don't assert unproven allegations about a named, living person. Name the documented outcome instead." });
     }
     // Outcome that did NOT hold. Don't imply a clean win.
@@ -140,13 +148,23 @@ export function deriveDirectorNotes(input: { sourceMaterial?: string; angle?: st
   const scaleNote = hasComparison
     ? "Build the peak around making the numbers FELT — the documented comparison, walked through slowly, is the payoff. Do not rush past the figure."
     : "Build the peak around making the numbers FELT — sit on the key figure, restate what it means. Use a documented comparison only if the facts contain one; do not invent one.";
+  // The "mechanism" slot exists in BOTH shapes, but its peak is different. An EXPLAINER's
+  // mechanism is explained patiently in causal order (a pharmacology video has no scene
+  // that "nearly came apart" and no takedown); an EVENT's mechanism is a scene. Pick by
+  // the fact set's shape so a science explainer never gets the crime-story note.
+  // Content/kind signal, NOT the slot name: "mechanism" is a slot in both shapes, so
+  // keying on the slot list misfired a crime-story note onto a pharmacology explainer.
+  const explainerShape = (!!input.topicKind && input.topicKind !== "event") || looksScientific;
+  const mechanismNote = explainerShape
+    ? "Build the peak on the mechanism itself, explained patiently and in causal order — the clearest step-by-step walkthrough of how it works IS the payoff. Do not stage it as a dramatic scene or a takedown; an explainer has no such moment."
+    : "Stage the climax on the peak moment of the mechanism itself — the scene where it nearly came apart — beat by beat, as the longest section. Not the takedown.";
   const SLOT_PEAK: Record<string, string> = {
     // Explainer shape: the "peak" is the mechanism explained patiently, not a scene.
     premise: "Spend the length on making the question feel urgent and concrete before answering it. Do not resolve it early.",
     scale: scaleNote,
     consequence: consequenceNote,
     "open-question": "Weight the peak on what is genuinely unsettled. State clearly what is measured versus modelled, and do not resolve what the evidence leaves open.",
-    mechanism: "Stage the climax on the peak moment of the mechanism itself — the scene where it nearly came apart — beat by beat, as the longest section. Not the takedown.",
+    mechanism: mechanismNote,
     setup: "Stage the climax on the moment access was finally won, beat by beat, as the longest section. Not the takedown.",
     climax: "Stage the climax on the peak documented moment this angle is built on, beat by beat, as the longest section by a wide margin. Slow it down.",
     aftermath: "Stage the peak on the moment the cost lands, beat by beat, as the longest section. The ending is what it did to the person, not the verdict.",

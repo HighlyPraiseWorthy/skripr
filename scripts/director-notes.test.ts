@@ -54,6 +54,27 @@ check("open-question slot refuses to resolve what is open", has(openNotes, "meas
 // Notes must read the FACT SET, not just the slot. A "consequence" peak should only ask
 // for an ordered timeline-with-timescales when the facts actually carry one — otherwise
 // it sent the writer hunting for a sequence that isn't there (misfired four times).
+// Proven guilt clears the "unproven allegation" note (and the Villain suppression it
+// drives). Tavon White / Michael Smith pleaded guilty; the note must NOT fire.
+console.log("proven guilt clears the unproven-allegation note:");
+const guiltyPlea = `- Tavon White was accused of running a contraband scheme inside the jail.
+- White pleaded guilty to racketeering and was sentenced.`;
+check("no unproven-allegation note when the subject pleaded guilty", !has(deriveDirectorNotes({ sourceMaterial: guiltyPlea, caseName: "Tavon White" }), "don't assert unproven"));
+const stillAlleged = `- He is accused of orchestrating the fraud, an allegation he denies.
+- No charges have been filed and the claim remains unproven.`;
+check("note still fires when the allegation is genuinely unproven", has(deriveDirectorNotes({ sourceMaterial: stillAlleged, caseName: "A living person" }), "don't assert unproven"));
+// An aggregate "53 convictions" of co-defendants must NOT clear an allegation about the agent.
+check("aggregate co-defendant convictions do not clear the note", has(qn, "don't assert unproven"));
+
+// A "mechanism" slot on an EXPLAINER gets the patient-explanation note, not the crime one.
+console.log("mechanism slot is kind-aware:");
+const pharm = `- The compound binds the mu-opioid receptor with high affinity.
+- It is roughly 40 times more potent than morphine by mass.`;
+const pharmMech = deriveDirectorNotes({ sourceMaterial: pharm, caseName: "A potent opioid", slot: "mechanism", topicKind: "explainer" });
+check("explainer mechanism note is patient, not a takedown scene", has(pharmMech, "explained patiently"));
+check("explainer mechanism note does NOT say 'Not the takedown'", !has(pharmMech, "not the takedown"));
+check("crime mechanism note is unchanged (scene, not the takedown)", has(mech, "Not the takedown"));
+
 console.log("notes read the fact set, not just the slot:");
 const noSeq = `- The compound is roughly 40 times more potent than morphine by mass.
 - It binds the mu-opioid receptor with very high affinity.`;

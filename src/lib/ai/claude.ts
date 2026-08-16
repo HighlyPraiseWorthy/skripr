@@ -1,4 +1,5 @@
 import { Anthropic } from "@anthropic-ai/sdk";
+import { fingerprintToBrief, readProhibitions, stripStandaloneTics, type VoiceFingerprint } from "@/lib/voice-metrics";
 import { buildStorytellingBlock } from "@/lib/storytelling";
 import { buildVarietyBlock } from "@/lib/ai/phrase-variety";
 
@@ -34,6 +35,19 @@ export interface ScriptGenerationInput {
   // are analyzed.
   nicheTitleFormulas?: string;
   voiceProfile?: string;
+  // Per-section plan measured from the source video's structure. When present, the body
+  // is written section by section against it instead of in one drifting pass.
+  sectionPlan?: SectionSpec[];
+  // Hook inputs, so the hook can be written and validated as its own first step.
+  hookArchetype?: string;
+  hookWhyItWorks?: string;
+  hookScript?: string;
+  // The source video's extracted recipe, handed to each section writer for context.
+  remixRecipe?: string;
+  // Numeric voice targets measured from the creator's own transcripts, so the voice
+  // pass aims at checkable numbers instead of adjectives.
+  voiceFingerprint?: VoiceFingerprint;
+  voiceName?: string;
   companionCta?: boolean;
   // Storytelling engine: narrative mode id + the resolved technique ids the
   // script should weave in. When omitted, the route auto-selects. Rendered into
@@ -110,8 +124,50 @@ export const PROVENANCE_RULE = `SOURCING / PROVENANCE RULE (critical, no excepti
 - Vague research authority: "research suggests", "studies have shown", "experts estimate", "data indicates", "scientists agree". These are NOT a safe hedge. They assert that evidence exists, which is a factual claim about the world, and an unfalsifiable one.
 - Any named person, agency, company, study, court case, or dated event presented as connected to this specific story when you cannot source it.
 - A MOTIVE, INTENTION, OR CAUSE stated as established fact when the source material does not state it. This is the easiest one to miss: writing "he did it because he needed the money" or "she was arrested because they had been watching her for months" invents the inside of a real person's head, or a chain of events, and presents it as reporting. If the record does not give the reason, either say it does not, or write the beat without a reason. Speculation is allowed only when it is openly marked as speculation.
+- DRAMATIZED SCENES, QUOTED DIALOGUE, AND NAMED PLACES not traceable to a supplied fact. Do NOT stage a specific scene, put words in a real person's mouth (even hedged as "something to the effect of" or "words like"), or name a location as the setting of an event unless the source material establishes that scene, that line, or that place. Reconstructing "a Hells Angel looked him in the eye and said we know who the rats are" when no such quote was sourced is fabrication wearing the costume of reporting — it reads as an account of something that happened, and it did not. You may write ABOUT a documented dynamic in the abstract ("informants inside the club lived under constant suspicion") without inventing a specific exchange to illustrate it.
+- ATTRIBUTE TO THE NAMED AUTHORITY WHEN THE FACT HAS ONE (encouraged — this is the rigor texture). When a supplied fact carries an authoritative source — the DOJ, the FBI, the court, or a named news outlet (shown in its "(source: …)" tag) — you SHOULD attribute the fact to that ACTOR in the narration: "the DOJ charged him with…", "The New York Times reported…", "the court ordered an $8 million forfeiture". A named actor stating a fact is exactly the attribution the rules below REQUIRE, and it signals real research to the viewer. This is DISTINCT from — and never licenses — the banned meta-talk about "the record", "the sources", or "what is documented": attribute to the ACTOR, never to the machinery. Do not attribute to an actor a fact whose source is not that actor.
+- PRESERVE ATTRIBUTION AND CONTESTED CAUSE (critical). When a supplied fact is attributed or hedged — "Dobyns SAID his home was burned down", "prosecutors ALLEGED", "he CLAIMS" — the script must keep that framing. Do NOT promote "X said Y happened" into "Y happened", and never assign a cause the source does not establish. If a fact states an event but not who caused it (an arson whose perpetrator was investigated, disputed, or never proven), you may narrate the event but you may NOT name a culprit for narrative closure. Writing "the people he investigated tried to burn his family alive" or "the club made sure of it" when the source only says the house burned and the cause was contested is an accusation the record does not support. State what was reported and what was and was not established, and let the sequence speak.
+- BLENDED RANK OR STATUS TERMS. Ranks are facts: "hang-around", "prospect", and "full-patch member" are distinct stages. Never merge them into an incoherent hybrid like "fully patched prospect". Use the exact status the source gives.
+- INVENTED PROPER NOUNS, especially OPERATION CODENAMES. Never attach an official-sounding NAME that is not in the supplied facts: an operation codename ("Operation Ivan"), a program name, a task-force name, a case number, or a unit designation. The urge to give the operation a codename is strong and it produces fabrications that read as authoritative. If the facts do not name the operation, call it "the operation" or "the investigation" — never a name you supplied. Same for any place, agency division, or document title not in the facts.
+- QUOTE LENGTH — COPYRIGHT SAFETY (hard cap). A sourced verbatim quote is a powerful cold open and payoff, but the richest source for these cases is a copyrighted memoir, and the creator publishes this script under their own name. So: any verbatim quote you use must be AT MOST one or two sentences, always attributed to the speaker (and ideally the source), and you may use NO MORE THAN TWO verbatim quotes in the entire script. Never reproduce a paragraph, a passage, or a run of copyrighted text — a couple of attributed sentences is fair use; a paragraph is a claim risk. If a quote in the facts is long, use only its sharpest sentence.
+- CLAIMS BROADER THAN THE FACTS' SCOPE (critical, and the subtlest failure of all). Your conclusions must stay at the same SCOPE as your evidence. If every supplied fact is about a narrow mathematical property of networks, the script may explain that property brilliantly — but it may NOT conclude things about loneliness epidemics, how societies build institutions, what evolution designed the brain for, or what people have stopped investing in. Those are broader claims that need their own sources. This is the most dangerous shape of fabrication because the base is real: genuine citations at the bottom, an entire sociology extrapolated on top, all delivered in one confident voice so a viewer cannot tell where the evidence stopped. Test each claim: is there a supplied fact at THIS level of generality? If not, either cut it, or mark it openly as your own reasoning ("if that holds beyond the math, it would suggest…"). Never let an unsourced general conclusion inherit the authority of a sourced specific one.
+- CORRELATION NARRATED AS CAUSATION. This is the science equivalent of naming a culprit for a contested cause, and it is the single most common error in social-science and health topics. If the material says a study found an ASSOCIATION, a LINK, a CORRELATION, or that heavy users "were more likely to" report something, you may NOT write that the thing CAUSES, DRIVES, CREATES, REWIRES, or LEADS TO the outcome. Keep the shape the evidence has: "people who use it heavily report more of X" is honest; "it makes you X" is a claim the study did not make. Where researchers actively disagree about effect sizes or whether an effect exists at all, SAY SO — never present one side of a live scientific disagreement as the settled finding, and never round a contested small effect up into a crisis.
+- INVENTED LINKS BETWEEN TWO SEPARATE FACTS. Two facts sitting near each other are not evidence of a relationship. If one fact says likes activate reward-related brain regions, and another says persuasive-design research influenced how notifications were built, you may NOT chain them into "researchers told designers to target those brain regions" — nothing establishes that designers were aiming at the nucleus accumbens. Do not fuse two figures into an implied trade-off ("time on the platform rather than time spent socializing"). State each fact on its own. A connective word between two facts ("because", "in order to", "which is why", "a response that X targeted", "rather than") is a claim about their relationship, and it needs its own source, not just proximity.
+- INVENTED SEQUENCING. Do not assert that one event happened BEFORE or AFTER another unless the facts establish that order. "A moment that came after the interrogation" is a fabrication when neither fact dates either event. Order is a factual claim exactly like a number is: if the record does not give you the sequence, narrate each event without claiming when it sat relative to the other.
+- NEVER REFERENCE SOURCING IN THE SCRIPT'S VOICE (principle, not a phrase list). The viewer must never hear the machinery. Banned in the narrator's voice: any sentence whose SUBJECT is the evidence rather than the story — "that's the sourced version", "what the facts establish is", "what the record shows/establishes", "according to the facts we have", "what is documented is", "the sources don't say", "this part is well documented". Also banned: narrating your own refusal to elaborate ("how exactly that resolved isn't something that gets cleaner with more words"). When the record has a GAP, stay inside the story and write around it — "Whatever he said in that moment, it worked. The gun came down." is correct; stepping outside to discuss the evidence is not. (Attributing a claim to a real named person — "Queen said", "prosecutors alleged" — is REQUIRED and is not what this bans; what is banned is making sources, documentation, or the research itself the subject.)
+- INVENTED CAUSAL EXPLANATIONS FOR A GAP IN THE NUMBERS. When two figures in the facts differ (e.g. 54 arrests but 53 convictions), do NOT manufacture a reason for the difference ("one defendant took the fall for a brother"). You noticed a gap; the record did not explain it, so neither do you. State both figures and move on. Inventing the connective reason is the same failure as inventing a source — a plausible story filling a hole the facts left open.
+
+NARROW ALLOWANCE — ESTABLISHED DOMAIN VOCABULARY (this is permitted, and it is good): you MAY use the standard, widely-documented vocabulary of the world the story takes place in, even when that word is not in the supplied facts, as long as you are only NAMING a general practice — not asserting a specific event. Outlaw motorcycle clubs call their meetings "church"; the mob has "made men" and "sit-downs"; espionage has "dead drops" and "handlers"; prisons have "shot callers". Using such a term to explain the world ("their membership meetings, which the club calls church") adds texture a viewer recognizes as authentic. What remains BANNED is using domain vocabulary to smuggle in a specific claim: you may say the club calls its meetings church, but you may NOT assert that a particular church meeting happened on a particular night, who was there, or what was decided, unless the facts say so. General practice: allowed. Specific event, dialogue, place, date, or number: still requires a fact.
 
 WHAT TO DO WHEN YOU DO NOT HAVE A SOURCE: do not reach for a vaguer version of the claim. Either drop the claim, or state the reasoning openly as reasoning ("if that pattern held here, it would mean...", "there is no public accounting of this, which is itself the problem"). Owning a gap is credible. Papering over it with an unnamed authority is not, and a creator reads this on camera under their own name.`;
+
+// EXPLAINER CRAFT — the science-explainer form (the Kurzgesagt shape). Applied to any
+// non-event topic. A documentary runs on a story with people in it; an explainer runs on
+// an idea, and its whole job is making one abstract mechanism feel enormous and personal
+// without a protagonist. These are the specific moves that produce that feeling.
+export const EXPLAINER_CRAFT = `EXPLAINER CRAFT — THIS IS A SCIENCE EXPLAINER, NOT A DOCUMENTARY.
+
+PRECEDENCE (read first): these are DEFAULTS describing the form in general. If this script is a REMIX, the measured structure of the source video — its section order, its section weighting, its beat positions, its hook type — is the template and OUTRANKS everything below. Use these rules to fill in what the source analysis does not specify, never to override what it does. Never let a generic rule here flatten a shape that was measured from a real video.
+
+1. THE SCALE LADDER IS THE SPINE. Do not explain the idea once at one size. Climb it: start at ONE unit the viewer can picture (one person, one cell, one house, one dollar), show the mechanism there, then step up an order of magnitude, then again, and again, until the number stops being imaginable and the viewer feels the vertigo. Each rung must restate the SAME mechanism at a bigger size, not introduce a new topic. The rungs must be built from real supplied figures — if you only have numbers for two rungs, build two rungs and stop, never invent a third.
+
+2. MAKE EVERY BIG NUMBER PHYSICAL. A figure the viewer cannot picture does no work. Immediately convert it into something bodily: a distance walked, a stadium filled, a stack of objects, a length of time lived. Invent the COMPARISON freely (that is your craft), but never invent the NUMBER. If a supplied fact gives a comparison, prefer expressing the same idea a different way rather than reusing the source's image.
+
+3. SECOND PERSON, ONE PERSON — UNLESS THE VOICE PROFILE FORBIDS IT. By default, address the viewer directly as "you", and enter the idea through a single ordinary person's experience before widening out. "You" is the entry point, not a character — do NOT give the viewer a fictional biography, name, or backstory. BUT: if a creator voice profile is supplied and its "never-does" says this creator never addresses the viewer as "you", that wins absolutely. Carry the same intimacy through close third person and concrete specifics instead. A documentary voice that never says "you" is not a flaw to correct.
+
+4. NO PROTAGONIST, NO VILLAIN. There is no hero and no enemy. The subject is a system, a mechanism, or an incentive structure. Never assign intent to an institution, a technology, or a species ("the algorithm wants", "evolution decided", "the company set out to"). Systems have effects, not motives. If something bad happens, it happens because of how the mechanism works, and that is a more interesting and more honest explanation than a culprit.
+
+5. CALM AND CURIOUS, NEVER OUTRAGED OR PREACHY. The tone is a fascinated friend explaining something remarkable, not an activist warning you. No moralising, no scolding, no "we need to wake up", no doom. Wonder outperforms alarm, and it is what makes a hard subject watchable.
+
+6. BUILD ONE IDEA. An explainer is not a list of facts about a topic. Every section must depend on the one before it, so removing a section would break the next. If a section could be moved anywhere without damage, it is a list item and it should be cut or folded in.
+
+7. PLAIN WORDS, SHORT SENTENCES. Define a technical term the first time you use it, in the same sentence, without breaking rhythm. Never use jargon to sound authoritative. If a sentence needs a comma to survive, consider two sentences.
+
+8. THE TURN IS STRUCTURAL, NOT MORAL. When the script pivots from the upside to the cost, the pivot must be a mechanism, not a betrayal: the SAME property that produces the benefit produces the harm at a different scale. Never resolve into "so this thing is bad". The honest, more interesting landing is that a real benefit and a real cost come from one cause.
+
+9. OWN THE UNCERTAINTY, DON'T HIDE IT. Say plainly when something is modelled rather than measured, contested rather than settled, or simply unknown. In an explainer, admitting the edge of knowledge INCREASES authority — it is the difference between a science channel and a content channel. "Nobody knows yet" is a legitimate and satisfying beat.
+
+10. END ON PERSPECTIVE, NOT A CALL TO ARMS. Close by re-framing what the viewer now understands, ideally zooming back down to the one person you opened on. Not a demand, not a warning, not a list of tips. Humane and a little hopeful is the register — the feeling should be "I see this differently now", not "I should do something".`;
 
 // Canonical hook-type taxonomy — single source of truth, used by the script
 // generator, the hook generator, the niche→hook mapping, and (as labels) the
@@ -136,7 +192,7 @@ export const HOOK_TYPES_PROMPT = HOOK_TYPES.map((h, i) => `${i + 1}. ${h.name} �
 const buildSystemPrompt = ({ softCta = false, sourceVerdict, topicKind = "event" }: { softCta?: boolean; sourceVerdict?: "documented" | "partial" | "unverified"; topicKind?: "event" | "explainer" | "hypothetical" | "claim" } = {}) => `You are Skripr's AI script engine. You specialize in writing YouTube scripts for faceless channels that are optimized for retention, algorithm performance, and AI voice (TTS) delivery.
 
 Your scripts follow these principles:
-1. HOOK: First 5 seconds must grab attention using one of the proven hook types defined in the HOOK RULES section below. Hook types built on a specific statistic (Data Drop, and the numeric form of Curiosity Gap) are only available when that number appears in the provided source material; with no source, pick a hook type that does not require inventing one (Cold Open, Question, Data Drop, Provocation, Curiosity Gap, Myth-Bust, Bold Claim, Direct Address, Teaser, Pattern Interrupt, Scene-Setter, Story).
+1. HOOK: First 5 seconds must grab attention using one of the proven hook types defined in the HOOK RULES section below. Hook types built on a specific statistic (Data Drop, and the numeric form of Curiosity Gap) are only available when that number appears in the provided source material; with no source, pick a hook type that does not require inventing one (Cold Open, Question, Data Drop, Provocation, Curiosity Gap, Myth-Bust, Bold Claim, Direct Address, Teaser, Pattern Interrupt, Scene-Setter, Story). QUOTE-FIRST HOOK (strongly prefer when available): if the source material contains a striking VERBATIM quote — something a real person actually said or wrote, with a source — opening ON that quote, word for word, is one of the strongest possible cold opens. A real voice with real words in it lands harder than any narration describing the scene. Use the quote exactly as sourced; never invent or embellish one.
 2. RETENTION BEATS: Use three precision mechanics — not generic pattern interrupts:
    a) RE-HOOK AT 0:30: The 30-second cliff is the #1 drop-off point. Place a hard re-hook at the 30-second mark — a new tension, a surprising pivot, or a fact that reframes what the viewer just accepted. This is mandatory, not optional.
    b) ESCALATING OPEN LOOPS: Place open loops at the 1/3 and 2/3 points of the script. The 2/3 loop must be more urgent and higher-stakes than the 1/3 loop — escalate intensity, don't just repeat the pattern. The viewer must feel it would be a mistake to stop now.
@@ -157,15 +213,18 @@ Your scripts follow these principles:
   ? `Place ONE soft CTA at the 60-70% mark (where retention typically dips), then the hard CTA at the end. "SOFT" IS A HARD CONSTRAINT: exactly one sentence, and it may contain AT MOST a single subscribe ask. It must NOT ask for a comment, must NOT stack a second request, and must NOT restate what the ending will ask for. Only the final CTA may ask for both a subscribe and a comment. If you cannot make the early one a single unobtrusive sentence, leave it out entirely.`
   : `Place exactly ONE CTA, at the very end. Do NOT put a subscribe, comment, like, or "stick around" ask anywhere earlier in the script. A second earlier ask makes the video feel like it ends twice.`}
 5. STRUCTURE: Follow the exact structural pattern of the source viral video but apply it to the new topic.
+6a. BANNED NARRATOR TICS (hard rule — these belong to no creator and mark a script as machine-written). Never use, in any variation: "pause on that for a second", "sit with that", "think about what that means", "read that again", "let that sink in", "here's the thing", "now slow down", "that's not a metaphor", "the uncomfortable truth", or the construction "That's not X. That's Y." These are the loudest thing in a generic AI script. If you feel the urge to tell the viewer that something is significant, make the sentence itself carry the weight instead — show the thing, do not instruct the viewer how to feel about it.
+
 6. ANTI-REPETITION: Never start two consecutive sentences with the same word. Vary sentence length — mix short punchy sentences with longer ones. Never repeat a key point already made; build forward only. Two specific patterns to avoid, because they are the usual way a good script goes slack:
    a) RESTATING AN IDEA IN NEW WORDS. Making the same point across two or three consecutive paragraphs, each time slightly rephrased, is not emphasis, it is padding, and the viewer feels the script stop moving. Make the point once, in its strongest form, then advance.
    b) NO RECAP BEFORE THE END. Do not summarise the story you just told before the closing beat. Re-narrating the whole case in the final third kills the momentum you spent the whole script building and steals the ending's job. The last beat should land the meaning of the story, not list its contents again. If you feel the need to remind the viewer what happened, the earlier telling was not vivid enough; fix that instead.
+   c) STOP ON YOUR STRONGEST LINE (closing discipline — a formatting constraint, not a suggestion). The final narrative beat must be SHORT and hard: land it in one or two sentences and stop. Do NOT explain, soften, or add a reflective paragraph after your best line — every sentence that follows your strongest one is weaker than it and drains the ending. If the beat is a quote, END on the quote: no trailing gloss after it. The only thing allowed to follow the closing beat is the single required CTA, and that CTA must itself be brief (one or two sentences). Concretely: the last block of the script — closing beat plus CTA together — should be well under 60 words. A long final paragraph is the single most common way a strong script fumbles its ending.
 7. NO FABRICATED FACTS: Never state a specific statistic, percentage, dollar figure, year, date, named study, or named survey unless it appears in the provided source material. Never attribute a quote or claim to a named real person unless it was in the source material. A creator will read this on camera — an invented number destroys their credibility. Do NOT downgrade an unsourced number into a vague claim of evidence; write the sentence without the number, or cut it.
 
 ${PROVENANCE_RULE}${topicKind === "event" && (sourceVerdict === "unverified" || sourceVerdict === "partial") ? `
 
 PREMISE NOT VERIFIED (critical): a source check could NOT confirm ${sourceVerdict === "partial" ? "this specific event, case, or framing (only the broader subject area is documented)" : "that this specific event, case, or claim is documented anywhere"}. Therefore this script MUST NOT present it as an established, reported incident. You are FORBIDDEN from inventing a specific date, year, name, place, agency, job title, court case, document, or dollar figure to make it feel concrete. Do not invent an anonymous stand-in either ("a technician", "a contractor in 1987") to imply a real person exists. Write the video on what is genuinely known: explain the real mechanism, the real system, the real stakes, and state plainly where the public record goes quiet. If the topic cannot be made into an honest video without inventing a case, say so in the script's own framing rather than filling the gap.` : ""}
-
+${topicKind !== "event" ? `\n${EXPLAINER_CRAFT}\n` : ""}
 ${EXPERT_ATTRIBUTION_RULE}
 
 7. NO SPONSORS, ADS, OR PROMOS (critical): The source transcript may contain sponsor reads, ad segments, or promotions for a product, app, brand, charity, newsletter, course, Patreon, donation match, or affiliate offer (e.g. "this video's sponsor", "use code X", "go to brand.com", "first-time donors", "link in the description"). These are NOT part of the video's content — they are a paid insertion belonging to a different creator's deal. Completely ignore and exclude them. Never name the sponsor, never reproduce the ad slot, never write a "and that's why I want to mention [brand]" segment, never invent your own sponsor read. Treat the transcript as if the sponsored portions were never there. The script you output must contain ZERO brand names, products, or promotional asks other than the channel's own subscribe/like CTA.
@@ -228,7 +287,68 @@ Output valid JSON matching the specified schema. Be specific and actionable. No 
  * Claude often wraps JSON in ```json code blocks or appends
  * explanatory text (with { } characters) before/after the JSON block.
  */
-function extractJSON(text: string, kind: "object" | "array"): unknown {
+// A 1,500-word prose block containing quotation marks is the most fragile thing you can
+// put inside a JSON string, and we now actively ask for verbatim quotes — so this failure
+// gets MORE likely over time, not less. Repair the common cause: a `"` inside a string
+// value that was never escaped. We walk the text tracking string state, and any quote
+// that is not followed by a valid JSON structural character is treated as content and
+// escaped rather than as a terminator.
+export function repairScriptJSON(text: string): unknown | null {
+  const start = text.indexOf("{");
+  const end = text.lastIndexOf("}");
+  if (start === -1 || end <= start) return null;
+  const raw = text.slice(start, end + 1);
+
+  let out = "";
+  let inString = false;
+  let escaped = false;
+  for (let i = 0; i < raw.length; i++) {
+    const ch = raw[i];
+    if (escaped) { out += ch; escaped = false; continue; }
+    if (ch === "\\") { out += ch; escaped = true; continue; }
+    if (ch === '"') {
+      if (!inString) { inString = true; out += ch; continue; }
+      // Closing quote only if the next non-space char legitimately follows a string.
+      const rest = raw.slice(i + 1);
+      const next = rest.match(/^\s*([,:}\]])/);
+      if (next) { inString = false; out += ch; continue; }
+      // Otherwise it is content inside the value — escape it.
+      out += '\\"';
+      continue;
+    }
+    // Raw newlines are illegal inside JSON strings; the model emits them in prose.
+    if (inString && (ch === "\n" || ch === "\r")) { out += "\\n"; continue; }
+    if (inString && ch === "\t") { out += "\\t"; continue; }
+    out += ch;
+  }
+  // Trailing commas before a closer are the other common break.
+  out = out.replace(/,(\s*[}\]])/g, "$1");
+  try { return JSON.parse(out); } catch { return null; }
+}
+
+// Last resort: the JSON is beyond repair but the WORDS are in there. Pull the prose out
+// with permissive matching so the creator still gets the script they waited for, minus
+// the structured extras.
+export function salvageScriptText(text: string): { title?: string; hook?: string; fullScript: string } | null {
+  const grab = (key: string): string | undefined => {
+    const m = new RegExp(`"${key}"\\s*:\\s*"([\\s\\S]*?)"\\s*(?:,\\s*"[a-zA-Z]|\\s*[}\\]])`).exec(text);
+    return m ? m[1].replace(/\\n/g, "\n").replace(/\\"/g, '"').trim() : undefined;
+  };
+  const body = grab("fullScript") || grab("script") || grab("body") || grab("content");
+  if (body && body.split(/\s+/).length > 80) {
+    return { title: grab("title"), hook: grab("hook"), fullScript: body };
+  }
+  // No usable field: take the longest run of prose paragraphs in the raw output.
+  const prose = text
+    .replace(/^[\s\S]*?\{/, "")
+    .split(/\\n\\n|\n\n/)
+    .map((p) => p.replace(/^[\s"',{}\[\]]+|[\s"',{}\[\]]+$/g, "").trim())
+    .filter((p) => p.split(/\s+/).length > 12);
+  const joined = prose.join("\n\n");
+  return joined.split(/\s+/).length > 120 ? { fullScript: joined } : null;
+}
+
+export function extractJSON(text: string, kind: "object" | "array"): unknown {
   // First try: pull JSON from a markdown code block
   const codeBlock = text.match(/```(?:json)?\s*\n([\s\S]*?)\n```/);
   if (codeBlock) {
@@ -266,6 +386,280 @@ function extractJSON(text: string, kind: "object" | "array"): unknown {
 // Single extension pass only: each pass is a full Sonnet call (60-90s), and the
 // base generation already uses one. Stacking passes risks the Vercel function limit,
 // and a dead function loses everything — a slightly-short script beats no script.
+// Heal paragraph breaks that land INSIDE a sentence. A blank line after an
+// abbreviation ("...and then a U.S." / "Border Patrol agent.") reads as a formatting
+// bug and, worse, a TTS tool pauses there. Deterministic repair applied to the final
+// body, so it fixes the break whichever layer introduced it (model output or a
+// continuation pass) rather than guessing at the cause.
+export function healMidSentenceBreaks(text: string): string {
+  if (!text) return text;
+  // Case 1: the paragraph ends with a known abbreviation, so the period was not a
+  // sentence end. Rejoin with a single space.
+  const ABBR = String.raw`(?:U\.S|U\.K|U\.N|Mr|Mrs|Ms|Dr|Prof|Sgt|Lt|Capt|Det|Gen|Sen|Rep|Gov|St|Jr|Sr|vs|etc|Inc|Co|Ltd|No|Ave|Blvd|approx|a\.m|p\.m|[A-Z])`;
+  let out = text.replace(new RegExp(String.raw`(\b${ABBR}\.)\n\n+(?=\S)`, "g"), "$1 ");
+  // Case 2: the paragraph ends WITHOUT terminal punctuation (mid-clause split) and the
+  // next line starts lowercase or with a conjunction — clearly one sentence torn in two.
+  out = out.replace(/([^\s.!?:;"'”’)\]])\n\n+(?=[a-z]|and\b|then\b|but\b|or\b)/g, "$1 ");
+  return out;
+}
+
+// HOOK-FIRST GENERATION.
+//
+// The hook field and the script body were two independent generations with nothing
+// joining them: the displayed hook opened on a stacked stat, while the body opened by
+// restating the title. Both were "the opening", and they disagreed. Generating the hook
+// FIRST and passing it verbatim gives one source of truth — and because it is a tiny
+// call, an archetype failure can be retried for a few hundred tokens instead of
+// discovering it after a full script has been written.
+export async function generateHookFirst(input: {
+  title: string;
+  topic: string;
+  hookType?: string;
+  hookWhyItWorks?: string;
+  hookScript?: string;
+  sourceMaterial?: string;
+  voiceProfile?: string;
+}): Promise<string | null> {
+  const wantsStat = /stat|data|number|controvers|figure/i.test(input.hookType || "");
+  const wantsQuote = /quote|line|said/i.test(input.hookType || "");
+
+  const ask = async (retryNote?: string): Promise<string> => {
+    const msg = await getAnthropic().messages.create({
+      model: "claude-sonnet-4-6",
+      max_tokens: 400,
+      temperature: 0.9,
+      system: "You write the opening lines of a YouTube script. Output ONLY the hook itself as plain speakable prose — 2 to 4 sentences, no label, no quotes around it, no commentary.",
+      messages: [{
+        role: "user",
+        content: `VIDEO TITLE: "${input.title}"
+TOPIC: ${input.topic}
+${input.hookType ? `\nHOOK ARCHETYPE (required): ${input.hookType}. ${wantsStat ? `A stat/controversy hook is not just "has a number". Its engine is: a SUPERLATIVE CLAIM about the subject, then a STACKED COMPARISON that proves it — the figure set against two or three familiar things people already fear or understand, combined ("more than terrorism, wars and car accidents combined"). Keep it to two sentences, roughly 25-30 words. If the facts contain a stacked comparison, build the hook on it. If they do not, make the strongest single superlative claim the facts support and prove it with the biggest documented figure — do NOT invent a comparison.` : wantsQuote ? "Real quoted speech must open it." : ""}` : ""}
+${input.hookWhyItWorks ? `\nWHY THE SOURCE'S HOOK WORKED (reproduce this mechanism, not its wording): ${String(input.hookWhyItWorks).slice(0, 400)}` : ""}
+${input.hookScript ? `\nThe source's own opening, for shape only — never reuse its wording: "${String(input.hookScript).slice(0, 200)}"` : ""}
+${input.sourceMaterial ? `\nSOURCED FACTS — any number or specific you use must come from here, exactly as stated:\n${input.sourceMaterial.slice(0, 2500)}` : ""}
+${input.voiceProfile ? `\nWRITE IT IN THIS CREATOR'S VOICE:\n${input.voiceProfile.slice(0, 900)}` : ""}
+${retryNote ? `\nYOUR PREVIOUS ATTEMPT FAILED: ${retryNote} Fix that.` : ""}
+
+Rules:
+- Do NOT restate the title or the thesis. The viewer just read the title; repeating it carries zero new information.
+- Say something about the WORLD, not about the video.
+- No invented numbers. Every figure must appear in the facts above.
+- No em dashes. Plain speakable prose.
+
+Write the hook now.`,
+      }],
+    });
+    const c = msg.content[0];
+    return c.type === "text" ? c.text.trim().replace(/^["“']|["”']$/g, "") : "";
+  };
+
+  try {
+    let hook = await ask();
+    // Validate against the archetype and retry ONCE — cheap here, expensive later.
+    const firstTwo = hook.split(/(?<=[.!?])\s+/).slice(0, 2).join(" ");
+    if (wantsStat && !/\d/.test(firstTwo)) {
+      hook = await ask("The source used a statistic hook but your opening had no number in the first two sentences.");
+    } else if (wantsQuote && !/["“'‘]/.test(firstTwo)) {
+      hook = await ask("The source used a quote hook but your opening contained no quoted speech.");
+    }
+    return hook || null;
+  } catch (e) {
+    console.error("[hook] hook-first generation failed, falling back to inline hook:", (e as any)?.message);
+    return null;
+  }
+}
+
+// SECTION-BY-SECTION GENERATION.
+//
+// One pass produces one blob, and the extracted structure becomes a suggestion the model
+// drifts from: the climax flattens, sections come out evenly weighted, and nothing owns a
+// word budget so the script runs 46% over. Generating each section against its OWN brief
+// — its function, its share of the runtime, the beats that land inside it — turns the
+// source's structure from a hint into a template. It also makes length arithmetic rather
+// than hope, because each section is asked for a specific size.
+export interface SectionSpec {
+  name: string;
+  purpose: string;
+  targetWords: number;
+  isPeak: boolean;
+  triggers: string[];
+}
+
+// Build the per-section plan from the source's measured structure, scaled to the user's
+// chosen length. The SHAPE is preserved: if the source's peak runs 2.3x its median, it
+// still runs 2.3x at a longer target — a bigger median, not a flatter video.
+export function buildSectionPlan(
+  structure: { section?: string; purpose?: string; description?: string; timestamp?: string }[] | undefined,
+  triggers: { trigger?: string; example?: string; timestamp?: string }[] | undefined,
+  targetWords: number,
+): SectionSpec[] {
+  const toSec = (t?: string) => {
+    const m = String(t || "").match(/^(?:(\d+):)?(\d+):(\d{2})$/);
+    return m ? Number(m[1] || 0) * 3600 + Number(m[2]) * 60 + Number(m[3]) : null;
+  };
+  const rows = (structure || []).filter((s) => s?.section);
+  if (rows.length < 2) return [];
+  const starts = rows.map((s) => toSec(s.timestamp));
+  if (starts.some((s) => s === null)) return [];
+  const runtime = Math.max(...(starts as number[])) * 1.12;
+  const spans = rows.map((s, i) => {
+    const start = starts[i] as number;
+    const end = i + 1 < rows.length ? (starts[i + 1] as number) : runtime;
+    return Math.max(1, end - start);
+  });
+  const totalSpan = spans.reduce((a, b) => a + b, 0) || 1;
+  const peakIdx = spans.indexOf(Math.max(...spans));
+
+  return rows.map((s, i) => {
+    // Triggers whose timestamp falls inside this section belong to it.
+    const secStart = starts[i] as number;
+    const secEnd = i + 1 < rows.length ? (starts[i + 1] as number) : runtime;
+    const mine = (triggers || [])
+      .filter((t) => {
+        const ts = toSec(t?.timestamp);
+        return ts !== null && ts >= secStart && ts < secEnd;
+      })
+      .map((t) => `${t.trigger}${t.example ? ` — the source did it like this: "${String(t.example).slice(0, 120)}"` : ""}`);
+    return {
+      name: String(s.section).slice(0, 80),
+      purpose: String(s.purpose || s.description || "").slice(0, 200),
+      targetWords: Math.max(80, Math.round((spans[i] / totalSpan) * targetWords)),
+      isPeak: i === peakIdx,
+      triggers: mine,
+    };
+  });
+}
+
+// Write one section against its own brief. Small, focused calls: the model has one job,
+// one word budget, and the beats that belong here — nothing to trade the structure against.
+async function writeSection(
+  spec: SectionSpec,
+  index: number,
+  total: number,
+  context: { topic: string; title: string; sourceMaterial?: string; previousTail: string; recipe?: string; voice?: string },
+): Promise<string> {
+  const msg = await getAnthropic().messages.create({
+    model: "claude-sonnet-4-6",
+    max_tokens: Math.min(8000, spec.targetWords * 3 + 800),
+    temperature: 0.8,
+    system: `You write one section of a YouTube voiceover script IN A SPECIFIC CREATOR'S VOICE. The voice is not a finishing touch — it is how you write every sentence from the first word. Output ONLY that section's prose — no headings, no labels, no commentary, no JSON. Plain speakable text. NEVER use these generic narrator tics, in any variation: "read that again", "pause on that", "sit with that", "let that sink in", "think about what that means", "here's the thing", "that's not a metaphor", or "That's not X. That's Y." They belong to no creator and mark writing as machine-made.`,
+    messages: [{
+      role: "user",
+      content: `VIDEO: "${context.title}"
+TOPIC/ANGLE: ${context.topic}
+${context.recipe ? `\nTHE SOURCE VIDEO'S RECIPE (this remix follows it): ${context.recipe}\n` : ""}
+YOU ARE WRITING SECTION ${index + 1} OF ${total}: "${spec.name}"
+ITS JOB IN THE VIDEO: ${spec.purpose || "advance the argument"}
+LENGTH: about ${spec.targetWords} words. This is a budget, not a suggestion — stay within about 10%.
+${spec.isPeak ? `THIS IS THE PEAK OF THE VIDEO. It is the longest section by design. Slow down, go beat by beat, and let it breathe. Do not summarize what happens here — render it.\n` : ""}
+${spec.triggers.length ? `RETENTION BEATS THAT BELONG IN THIS SECTION (place them here, reproduce the MECHANIC not the wording):\n${spec.triggers.map((t) => `- ${t}`).join("\n")}\n` : ""}
+${context.previousTail ? `THE SECTION BEFORE THIS ONE ENDED LIKE THIS (continue naturally, never repeat it):\n"...${context.previousTail}"\n` : "This is the OPENING section — it carries the hook.\n"}
+${context.sourceMaterial ? `\nSOURCE MATERIAL — every specific you state must come from here. Do not add a number, name, date, or claim that is not present:\n${context.sourceMaterial.slice(0, 5000)}\n` : ""}
+${context.voice ? `\nWRITE THIS ENTIRE SECTION IN THIS CREATOR'S VOICE — their sentence rhythm, fragment use, diction, energy and way of addressing (or not addressing) the viewer. Obey their never-does absolutely:\n${context.voice.slice(0, 1600)}\n` : ""}
+
+Write only this section's prose now.`,
+    }],
+  });
+  const c = msg.content[0];
+  return c.type === "text" ? c.text.trim() : "";
+}
+
+// Generate the whole body section by section, in order, each against its own brief.
+export async function generateBySections(
+  plan: SectionSpec[],
+  context: { topic: string; title: string; sourceMaterial?: string; recipe?: string; voice?: string },
+  startedAt: number,
+): Promise<{ body: string; sections: { title: string; content: string }[] } | null> {
+  if (plan.length < 2) return null;
+  const written: { title: string; content: string }[] = [];
+  let previousTail = "";
+  for (let i = 0; i < plan.length; i++) {
+    // Leave headroom so a slow run degrades to what we have rather than timing out.
+    if (Date.now() - startedAt > 210_000) {
+      console.error(`[sections] time budget reached after ${i} of ${plan.length}`);
+      break;
+    }
+    try {
+      const text = await writeSection(plan[i], i, plan.length, { ...context, previousTail });
+      if (!text) continue;
+      written.push({ title: plan[i].name, content: text });
+      previousTail = text.split(/\s+/).slice(-40).join(" ");
+    } catch (e) {
+      console.error(`[sections] section ${i + 1} failed:`, (e as any)?.message);
+    }
+  }
+  if (written.length < Math.max(2, Math.ceil(plan.length * 0.6))) return null;
+  return { body: written.map((w) => w.content).join("\n\n"), sections: written };
+}
+
+// VOICE AS ITS OWN PASS.
+//
+// During generation the model juggles facts, structure, slot weighting, techniques and
+// six director's notes. Voice is the last thing it optimizes and the first thing it
+// drops — which is why the same narrator showed up across every profile. Same insight as
+// the climax pass: give the hard thing its own turn, with nothing else to trade against.
+// Structure is locked; only the prose changes.
+export async function applyVoicePass(
+  fullScript: string,
+  voiceBrief: string,
+  styleGuide: string,
+  startedAt: number,
+): Promise<string> {
+  const words = fullScript.split(/\s+/).filter(Boolean).length;
+  // Not worth a call on a stub. The time guard was 200s, but section-by-section routinely
+  // spends more than that before we get here, so the pass was being SILENTLY skipped on
+  // exactly the long scripts that need it. The route allows 300s, so leave ~40s of buffer
+  // (skip only past 258s) and LOG the skip so this can never be silent again.
+  if (words < 200) return fullScript;
+  const elapsed = Date.now() - startedAt;
+  if (elapsed > 258_000) {
+    console.error(`[voice] SKIPPED — only ${Math.round((300000 - elapsed) / 1000)}s of budget left after ${Math.round(elapsed / 1000)}s. The deterministic tic strip still runs.`);
+    return fullScript;
+  }
+  try {
+    const msg = await getAnthropic().messages.create({
+      model: "claude-sonnet-4-6",
+      max_tokens: Math.min(16000, Math.round(words * 2.6) + 1200),
+      temperature: 0.7,
+      system: "You rewrite scripts in a specific creator's voice. You output ONLY the rewritten script as plain text — no preamble, no JSON, no headings, no commentary.",
+      messages: [{
+        role: "user",
+        content: `Rewrite the script below in this creator's voice.
+
+${voiceBrief}
+
+${styleGuide ? `HOW THIS CREATOR SOUNDS (their own style guide):\n${styleGuide.slice(0, 2000)}\n` : ""}
+
+ABSOLUTE CONSTRAINTS — breaking any of these makes the rewrite useless:
+- Do NOT change the structure. Same sections, same order, same paragraph breaks, same beats in the same places.
+- Do NOT change, add, or remove a single FACT, number, date, name, quote, or claim. This script was fact-checked; you are changing HOW it is said, never WHAT it says.
+- Do NOT change the opening beat's function or the final line. If it ends on a quote, it still ends on that quote.
+- Keep the length within about 10% of the original.
+- Never use these stock narrator tics: "pause on that for a second", "sit with that", "think about what that means", "read that again", "let that sink in", "here's the thing", "that's not a metaphor", or "That's not X. That's Y." They belong to no creator.
+- Plain speakable prose only. No stage directions, no bracketed markers, no em dashes.
+
+Rewrite for rhythm, diction, sentence length, and address so it sounds like this specific person read it aloud.
+
+SCRIPT:
+${fullScript}`,
+      }],
+    });
+    const c = msg.content[0];
+    if (c.type !== "text" || !c.text.trim()) return fullScript;
+    const rewritten = c.text.trim();
+    const newWords = rewritten.split(/\s+/).filter(Boolean).length;
+    // A rewrite that lost a third of the script dropped content, not just style.
+    if (newWords < words * 0.7) {
+      console.error(`[voice] rewrite too short (${newWords} vs ${words}) — keeping original`);
+      return fullScript;
+    }
+    return rewritten;
+  } catch (e) {
+    console.error("[voice] pass failed, keeping original:", (e as any)?.message);
+    return fullScript;
+  }
+}
+
 async function extendScriptToLength(fullScript: string, targetWords: number, topic: string, niche: string, startedAt: number): Promise<string> {
   const count = (s: string) => s.split(/\s+/).filter(Boolean).length;
   const words = count(fullScript);
@@ -348,6 +742,20 @@ export async function generateScript(input: ScriptGenerationInput): Promise<Gene
 
   const hasTranscript = input.sourceTranscript && input.sourceTranscript.trim().length > 10;
 
+  // HOOK FIRST. Written and archetype-validated on its own before the body exists, then
+  // handed to the body generation verbatim. Previously the hook field and the script's
+  // opening were two independent generations that disagreed with each other — the hook
+  // led on a stacked stat while the body restated the title.
+  const presetHook = await generateHookFirst({
+    title: input.selectedTitle || input.targetTopic || input.sourceTitle || "",
+    topic: input.targetTopic || input.sourceTitle || "",
+    hookType: input.hookArchetype,
+    hookWhyItWorks: input.hookWhyItWorks,
+    hookScript: input.hookScript,
+    sourceMaterial: input.sourceMaterial,
+    voiceProfile: input.voiceProfile,
+  });
+
   const sourceSection = hasTranscript
     ? `REFERENCE TRANSCRIPT TO REVERSE-ENGINEER:
 Title: "${input.sourceTitle}"
@@ -376,10 +784,19 @@ ${hasTranscript
     : `Recreate this reference script faithfully — same topic, same niche, same key arguments. Improve only the hook strength, title, section structure, and retention beats. Do NOT change what the video is about.`)
   : `Generate a highly engaging original script about: "${input.targetTopic || "the requested topic"}"`}${input.angle ? `\n\nCREATOR ANGLE (most important — build the entire script around this):\n"${input.angle}"\nDo NOT write a generic overview. Use this angle as the spine. Every section must prove, demonstrate, or build toward this specific perspective.` : ""}
 Target niche: ${input.targetNiche}
-Video length: ${targetWords ? `${input.targetMinutes} minutes (~${targetWords} words spoken aloud)` : lengthGuide[input.videoLength]}
+${presetHook ? `THE HOOK IS ALREADY WRITTEN — USE IT VERBATIM (critical):
+The script's opening has been generated and validated separately. Your "hook" field MUST be this text exactly as written, character for character, and the body MUST begin with this same text. Do NOT rewrite it, paraphrase it, shorten it, or "improve" it. It is the single source of truth for how this video opens.
+
+${presetHook}
+
+THE PARAGRAPH AFTER THE HOOK MUST ADVANCE, NOT RECAP. Do not re-explain, restate, or summarise what the hook just said. The hook has landed; move the story forward from there.
+
+` : ""}Video length: ${targetWords ? `${input.targetMinutes} minutes (~${targetWords} words spoken aloud)` : lengthGuide[input.videoLength]}
 ${targetWords && targetWords >= 1200 ? `
 CRITICAL LENGTH REQUIREMENT — scripts shorter than ${targetWords} words are FAILURES:
-- Structure the body as ${Math.max(4, Math.ceil((input.targetMinutes || 10) / 3))} distinct segments of roughly ${Math.round(targetWords / Math.max(4, Math.ceil((input.targetMinutes || 10) / 3)))} words EACH.
+- Structure the body as ${Math.max(4, Math.ceil((input.targetMinutes || 10) / 3))} distinct segments totaling at least ${targetWords} words.
+- SECTIONS ARE NOT EQUAL WEIGHT (critical — this is what separates a flat script from a gripping one). Do NOT give every segment the same length. Pick the ONE most vividly documented scene in the source material (the peak moment the story builds to — a raid, a confrontation, a ritual, the moment of exposure) and TELL THAT ONE SCENE AT LENGTH: roughly THREE TO FOUR TIMES a normal segment, walked through beat by beat, in the fullest sensory and sequential detail the facts support. Everything else — connective setup, transitions, context — stays TIGHT and moves fast. A documentary lives on one scene told in full, not five scenes summarized evenly.
+- Structure the arc like the proven framework, not as equal blocks: hook hard, make the central figure physically real early (their build, look, nickname if the facts give one), TEASE the big scene, then jump away from it and build back to it, and finally DELIVER that scene at full length as the climax. The tease-interrupt-payoff of one specific scene is the spine.
 - Open every segment with a re-hook: an open loop, a pattern interrupt, or raised stakes.
 - Inside every segment, go deep before moving on: one concrete example, one story beat, AND one piece of evidence or specific detail. Never compress or summarize a point you can expand.
 - Do NOT begin any conclusion, callback, or wrap-up until the cumulative word count has reached ${targetWords} words.
@@ -391,11 +808,22 @@ ${input.companionCta
   ? `COMPANION VIDEO CTA: End the script with a brief, natural call to action that points viewers to a RELATED video on this channel, phrased so it is true whether the creator places it on the end screen or in the description — e.g. "that video is either above this one right now or linked in the description." Keep the reference GENERAL — do NOT invent a specific title or topic for that video.`
   : `NO COMPANION VIDEO: The creator may not have a related video to point to. Do NOT reference, tease, or claim that another video exists on this channel — no "watch my other video", "the next video is already waiting", "the video right after this", "above this one", or "linked in the description". Close instead with only a subscribe / comment / apply-this-now style CTA.`}
 ${input.voiceProfile ? `
-CREATOR VOICE PROFILE — this creator's audience knows their voice; the script must sound like THEM, not like a generic narrator. Follow this profile for rhythm, diction, energy, humor, address, transitions, and CTA style. It overrides the generic Tone setting AND the default paragraph/sentence-rhythm formatting above: match THIS creator's sentence length, fragments, pacing, and pattern interrupts even if that means short punches and choppy lines. Sounding like this creator is the priority. It NEVER overrides the banned-phrases list, the anti-fabrication rule, the no-sponsor rule, or the voiceover-only rule (plain speakable prose, no bracketed markers):
+CREATOR VOICE PROFILE — this creator's audience knows their voice; the script must sound like THEM, not like a generic narrator. Follow this profile for rhythm, diction, energy, humor, address, transitions, and CTA style. It overrides the generic Tone setting AND the default paragraph/sentence-rhythm formatting above: match THIS creator's sentence length, fragments, pacing, and pattern interrupts even if that means short punches and choppy lines. Sounding like this creator is the priority. THE PROFILE'S "NEVER-DOES" LIST IS ABSOLUTE and outranks every generic craft rule in this prompt, including the explainer-form defaults: if it says this creator never addresses the viewer as "you", never opens on a rhetorical question, or never editorializes, then your script does not do those things either, no matter what a general rule above recommends. Negative space is what makes a voice recognisable. It NEVER overrides the banned-phrases list, the anti-fabrication rule, the no-sponsor rule, or the voiceover-only rule (plain speakable prose, no bracketed markers):
 
 ${input.voiceProfile}
 
-VOICE-DRIVEN HOOK: If this voice profile favors metaphors, analogies, or vivid sensory comparisons, strongly PREFER opening the hook with a bold, original metaphor or analogy in that style — it's the channel's signature and makes the opening punchier and more catchy. Keep it fresh and specific (never a cliché), still obey the hook anti-patterns and fact rules, and only choose a different hook type when it clearly hits harder for this topic.
+WHAT THE VOICE PROFILE GOVERNS, AND WHAT IT DOES NOT (read carefully — this is the most misread part of the whole prompt):
+- It governs HOW the script SOUNDS: sentence rhythm, fragment use, diction, energy, humor, person and address, transitions, and everything in its never-does list.
+- It does NOT govern WHAT the video is about, its genre, its subject matter, or its structure. A creator's voice is portable — you can write a true-crime story in a science channel's voice, or an explainer in a documentary channel's voice. When a source video's structure or a topic's form has been supplied above, THAT decides the running order, the section weighting, the hook archetype and the beats; the voice profile only decides how those sections read on the page. Never let a voice profile pull the script back toward the subject matter or the format of the channel it was measured from.
+
+CTA — THE PROFILE DESCRIBES A STYLE, NOT ASSETS THIS CREATOR HAS (critical, this is a fabrication risk):
+A profile's "CTA style" is an observation about the channel it was measured from — "products woven into the narrative", "Patreon and Discord acknowledgment mid-video", "merch mentioned in the outro". Those belong to THAT channel. The creator writing THIS script may have no product, no Patreon, no Discord, no sponsor, and no merch.
+So: NEVER invent, reference, thank, or weave in a sponsor, product, Patreon, Discord, membership, newsletter, course, merch line, or community that has not been explicitly supplied to you. Do not write a dedication to patrons. Do not name a brand. Do not imply the creator sells anything.
+Take only the MANNER from the profile's CTA style — how gently or bluntly they ask, where they place it, how it is phrased — and apply that manner to the CTA this script is actually configured to make (a subscribe/comment ask, or the companion-video ask when one is enabled). If the profile's CTA style depends on an asset that has not been supplied, ignore that part of the profile entirely rather than inventing the asset.
+
+VOICE-DRIVEN HOOK: If this voice profile favors metaphors, analogies, vivid sensory comparisons, or a signature opening move, PREFER opening in that style — it's the channel's signature and makes the opening punchier and more catchy. Keep it fresh and specific (never a cliché), and still obey the hook anti-patterns and fact rules. Precedence, which depends on whether a hook archetype was specified above:
+- A HOOK ARCHETYPE WAS SPECIFIED (this is a remix of a source video, or the creator picked a hook angle): that archetype is a STRUCTURAL decision and wins. Open in that archetype, and let the voice profile shape the WORDING of it — a stat hook written in this creator's rhythm and diction is the goal, not a different hook type.
+- NO HOOK ARCHETYPE WAS SPECIFIED (a from-scratch topic): there is nothing to defer to, so the voice profile's own opening move IS the primary guide. Use this creator's signature opening — their metaphor, their cold scene, their bold claim — rather than defaulting to a generic hook.
 ` : ""}
 ${buildStorytellingBlock(input.storytellingMode, input.storytellingTechniques)}
 ${input.sourceMaterial ? `
@@ -528,7 +956,11 @@ Output JSON with this exact structure:
     ? `
 
 DIRECTOR'S NOTES from the creator (shape the TELLING, never the truth): ${input.directorNote.trim().slice(0, 600)}
-Follow these for casting, staging, tone, pacing, and where to aim the climax. They do NOT override any accuracy rule: never assert as fact anything the source material does not support, no matter what the note asks. If a note conflicts with the facts, honor the facts and apply the note only where it does not.`
+Follow these for casting, staging, tone, pacing, and where to aim the climax. They do NOT override any accuracy rule: never assert as fact anything the source material does not support, no matter what the note asks. If a note conflicts with the facts, honor the facts and apply the note only where it does not.
+
+CLOSING-LINE DIRECTIVE (obey exactly when a note names a final line, quote, or beat): that line is the LAST thing in the script. Use it EXACTLY ONCE, at the very end — never earlier as well, because using your best line twice halves it. After it, write NOTHING: no reflection, no explanation of what it meant, no summary, no "that is what this work looks like", no restating the thesis. A great closing line explains itself, and every sentence after it is weaker than it. The CTA (if any) follows only as the separate outro field, never as narration continuing past the closing line.
+
+ANGLE OUTRANKS A CONFLICTING NOTE: if a note aims the climax at a moment that is NOT the peak of the chosen angle, the ANGLE wins. The peak of the story you were asked to tell is the climax; a note pointing elsewhere is applied only where it does not fight the angle.`
     : "";
   const response = await getAnthropic().messages.create({
     model: "claude-sonnet-4-6",
@@ -552,7 +984,23 @@ Follow these for casting, staging, tone, pacing, and where to aim the climax. Th
     if (response.stop_reason === "max_tokens") {
       throw new Error("The script came out longer than expected and was cut off. Please try again — if it keeps happening, try a slightly shorter video length.");
     }
-    throw e;
+    // The model FINISHED — we have the words. A parse failure is a formatting problem
+    // in the metadata layer, and it must never cost the user a completed generation.
+    // Most of these are one unescaped quote inside a long prose value, which gets more
+    // likely the more verbatim quotes we ask for. Repair, then salvage.
+    const repaired = repairScriptJSON(content.text);
+    if (repaired) {
+      console.error("[generate] JSON repair recovered the script after:", (e as any)?.message);
+      script = repaired as GeneratedScript;
+    } else {
+      const salvaged = salvageScriptText(content.text);
+      if (salvaged) {
+        console.error("[generate] JSON unparseable; salvaged raw prose after:", (e as any)?.message);
+        script = salvaged as GeneratedScript;
+      } else {
+        throw new Error("The script was written but came back in a format we couldn't read. Please generate again.");
+      }
+    }
   }
 
   if (input.viralMagnetWord) {
@@ -569,7 +1017,35 @@ Follow these for casting, staging, tone, pacing, and where to aim the climax. Th
   const bodyKey = ["fullScript", "script", "body", "content"].find(
     (k) => typeof (script as any)[k] === "string" && (script as any)[k].trim().length > 0
   );
-  if (targetWords && targetWords >= 1200 && bodyKey) {
+  // SECTION-BY-SECTION takes precedence over the continuation pass when we have a real
+  // plan measured from the source. Each section is written against its own function,
+  // beats and word budget, which is what turns the extracted structure into a template
+  // instead of a suggestion — and it makes length arithmetic rather than hope, so the
+  // one-blob overrun stops happening.
+  let sectionsWritten = false;
+  if (input.sectionPlan?.length && targetWords && bodyKey) {
+    try {
+      const built = await generateBySections(input.sectionPlan, {
+        topic: input.targetTopic || input.sourceTitle || "",
+        title: (script as any).title || input.selectedTitle || input.targetTopic || "",
+        sourceMaterial: input.sourceMaterial,
+        recipe: input.remixRecipe,
+        voice: input.voiceProfile,
+      }, startedAt);
+      if (built) {
+        const before = (script as any)[bodyKey].split(/\s+/).filter(Boolean).length;
+        (script as any)[bodyKey] = built.body;
+        (script as any).sections = built.sections;
+        (script as any).sectionwise = true;
+        sectionsWritten = true;
+        console.log(`[sections] wrote ${built.sections.length} sections, ${built.body.split(/\s+/).length} words (was ${before}, target ${targetWords})`);
+      }
+    } catch (e) {
+      console.error("[sections] failed, keeping single-pass script:", e);
+    }
+  }
+
+  if (!sectionsWritten && targetWords && targetWords >= 1200 && bodyKey) {
     try {
       const before = (script as any)[bodyKey].split(/\s+/).filter(Boolean).length;
       (script as any)[bodyKey] = await extendScriptToLength((script as any)[bodyKey], targetWords, input.targetTopic, input.targetNiche, startedAt);
@@ -582,7 +1058,114 @@ Follow these for casting, staging, tone, pacing, and where to aim the climax. Th
     console.error("[extend] no body field found on script object; keys:", Object.keys(script || {}));
   }
 
+  // ONE SOURCE OF TRUTH for the opening. The prompt asks for the preset hook verbatim;
+  // this guarantees it, and guarantees the body actually STARTS with it — the exact
+  // mismatch a user could see (hook field said one thing, script opened with another).
+  if (presetHook) {
+    (script as any).hook = presetHook;
+    const bk = ["fullScript", "script", "body", "content"].find(
+      (k) => typeof (script as any)[k] === "string" && (script as any)[k].trim().length > 0
+    );
+    if (bk) {
+      const body = (script as any)[bk] as string;
+      const norm = (t: string) => t.toLowerCase().replace(/[^a-z0-9 ]/g, " ").replace(/\s+/g, " ").trim();
+      const first = norm(presetHook).split(" ").slice(0, 8).join(" ");
+      if (first && !norm(body).startsWith(first)) {
+        (script as any)[bk] = `${presetHook}\n\n${body}`;
+      }
+    }
+  }
+
+  // Carry the voice's NEVER-DOES rules back to the client so the compliance panel can
+  // stand down the generic checks they override — otherwise a correctly-voiced script
+  // (Fern never says "you") gets marked wrong by a rule its own voice forbids.
+  if (input.voiceProfile) {
+    (script as any).voiceProhibitions = readProhibitions(input.voiceProfile);
+  }
+
+  // VOICE PASS — runs LAST, after the content and length are settled, so the rewrite has
+  // nothing to trade voice against. Structure and facts are locked; only the prose moves.
+  if (input.voiceProfile && bodyKey) {
+    try {
+      const before = (script as any)[bodyKey];
+      const brief = input.voiceFingerprint
+        ? fingerprintToBrief(input.voiceFingerprint, input.voiceName)
+        : "Match this creator's rhythm, sentence length, diction and way of addressing the viewer.";
+      const after = await applyVoicePass(before, brief, input.voiceProfile, startedAt);
+      if (after && after !== before) {
+        (script as any)[bodyKey] = after;
+        (script as any).voicePassApplied = true;
+        console.log(`[voice] pass applied (${before.split(/\s+/).length} -> ${after.split(/\s+/).length} words)`);
+      }
+    } catch (e) {
+      console.error("[voice] pass errored, keeping original:", e);
+    }
+  }
+
+  // DETERMINISTIC TIC STRIP — runs UNCONDITIONALLY, so the stock narrator tics can never
+  // ship even when the LLM voice pass was skipped for budget. This is the guaranteed half
+  // of the voice fix; the LLM pass is the aspirational half.
+  for (const k of ["fullScript", "script", "body", "content", "hook", "outro"]) {
+    if (typeof (script as any)[k] === "string") (script as any)[k] = stripStandaloneTics((script as any)[k]);
+  }
+  if (Array.isArray((script as any).sections)) {
+    (script as any).sections = (script as any).sections.map((s: any) =>
+      s && typeof s.content === "string" ? { ...s, content: stripStandaloneTics(s.content) } : s
+    );
+  }
+
+  // Final formatting repair: rejoin any paragraph break that landed mid-sentence
+  // (after "U.S.", "Mr.", or a torn clause). Runs last so it also covers text a
+  // continuation pass appended.
+  for (const k of ["fullScript", "script", "body", "content", "hook", "outro"]) {
+    if (typeof (script as any)[k] === "string") (script as any)[k] = healMidSentenceBreaks((script as any)[k]);
+  }
+  if (Array.isArray((script as any).sections)) {
+    (script as any).sections = (script as any).sections.map((s: any) =>
+      s && typeof s.content === "string" ? { ...s, content: healMidSentenceBreaks(s.content) } : s
+    );
+  }
+
+  // HOOK RE-STAMP (runs LAST, after every pass). The section writer, voice pass, and tic
+  // strip can each quietly paraphrase the opening, so the displayed hook and the script's
+  // first line drift apart — a visible bug the hook-matches-script check flags. Overwrite
+  // the body's opening sentence(s) with the hook verbatim, making the guarantee
+  // deterministic instead of hoped for.
+  const hookText = typeof (script as any).hook === "string" ? (script as any).hook.trim() : "";
+  if (hookText) {
+    for (const k of ["fullScript", "script", "body", "content"]) {
+      const cur = (script as any)[k];
+      if (typeof cur === "string" && cur.trim()) (script as any)[k] = restampHook(cur, hookText);
+    }
+    if (Array.isArray((script as any).sections) && (script as any).sections.length) {
+      const s0 = (script as any).sections[0];
+      if (s0 && typeof s0.content === "string" && s0.content.trim()) {
+        (script as any).sections[0] = { ...s0, content: restampHook(s0.content, hookText) };
+      }
+    }
+  }
+
   return script;
+}
+
+// Force the body to OPEN on the hook verbatim. Peels as many leading sentences off the
+// body as the hook contains (so a paraphrased 1- or 2-sentence opening is replaced, not
+// duplicated) and prepends the hook. No-op when the body already starts with the hook.
+export function restampHook(body: string, hook: string): string {
+  const h = (hook || "").trim();
+  if (!h) return body;
+  const lead = body.replace(/^\s+/, "");
+  if (lead.toLowerCase().startsWith(h.toLowerCase())) return body;
+  const hookSentences = (h.match(/[^.!?]+[.!?]["'”’)]?/g) || [h]).length;
+  const sentRe = /^\s*[^.!?]*[.!?]["'”’)]?/;
+  let rest = lead;
+  for (let i = 0; i < hookSentences; i++) {
+    const m = rest.match(sentRe);
+    if (!m || !m[0].trim()) break;
+    rest = rest.slice(m[0].length);
+  }
+  rest = rest.replace(/^\s+/, "");
+  return rest ? `${h} ${rest}` : h;
 }
 
 export interface HookGenerationInput {
@@ -753,6 +1336,10 @@ Thumbnail text drives CTR on Browse and Suggested. Each option should:
 - Create an open loop or strong emotion
 - Work WITHOUT seeing the video
 - Be specific over generic (numbers beat adjectives)
+
+QUOTE-FIRST THUMBNAIL TEXT (do this whenever the script allows it): the single best thumbnail text is a SHORT VERBATIM QUOTE spoken by someone in the story, taken word for word from the script above. Three words in someone's actual voice ("YOU A COP?") beats any phrase you could write, because it is real, it is specific, and it makes the viewer hear a person rather than read a label. Scan the script for quoted speech and lead your options with the sharpest one that fits in four words. Never invent a quote or alter its wording to fit; if the script has no quoted speech, write normal thumbnail text instead.
+
+THUMBNAIL AND TITLE MUST NOT SAY THE SAME THING. They are two halves of one information gap: the title names the ordeal ("How an ATF Agent Survived the Mongols' Loyalty Test"), the thumbnail shows the sharpest moment ("YOU A COP?"). Together they pose a question the video answers. If an option merely restates words already in the title, replace it.
 
 ━━━ HASHTAGS (exactly 10, each prefixed with #) ━━━
 Mix: 3 niche-specific, 4 topic-specific, 3 broad discovery

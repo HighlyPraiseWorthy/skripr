@@ -22,6 +22,12 @@ interface Analysis {
   retentionTriggers: { trigger: string; example: string; timestamp: string }[];
   titleFormula: { formula: string; psychology: string; remixExamples?: string[]; remixTitles?: RemixTitle[] };
   remixFramework: string;
+  // Trimmed source transcript, carried so the brief can score the source video against
+  // the same framework checks (the fidelity comparison).
+  sourceTranscript?: string;
+  // Distinctive terms from the source's own story, so a remix on a different topic can be
+  // checked for accidentally importing the source's content instead of its structure.
+  sourceEntities?: string[];
 }
 
 type RemixTitle = { title: string; description?: string; audience?: string; scope?: string };
@@ -36,6 +42,23 @@ export default function ViralRemixerPage() {
   const [url, setUrl] = useState("");
   const [selectedRemix, setSelectedRemix] = useState<number>(0);
   const [loading, setLoading] = useState(false);
+  // Approximate the source video's runtime from the last section timestamp the analysis
+  // extracted ("3:30" -> 3.5 min). Rounded up a little because the final section runs
+  // past its own start, and clamped so a bad parse can't produce an absurd target.
+  function sourceMinutesFrom(structure?: { timestamp?: string }[]): number | null {
+    if (!Array.isArray(structure) || !structure.length) return null;
+    let maxSec = 0;
+    for (const s of structure) {
+      const m = String(s?.timestamp || "").match(/^(?:(\d+):)?(\d+):(\d{2})$/);
+      if (!m) continue;
+      const sec = (Number(m[1] || 0) * 3600) + (Number(m[2]) * 60) + Number(m[3]);
+      if (sec > maxSec) maxSec = sec;
+    }
+    if (!maxSec) return null;
+    const mins = Math.round((maxSec / 60) * 1.15); // last section extends past its start
+    return Math.max(5, Math.min(45, mins));
+  }
+
   const [videoMinutes, setVideoMinutes] = useState<number>(15);
   const [extraSeconds, setExtraSeconds] = useState<number>(26);
 
@@ -91,6 +114,11 @@ export default function ViralRemixerPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Analysis failed");
       setResult(data);
+      // Match the source video's length instead of always defaulting to 15 minutes. A
+      // remix of a 40-minute video and a remix of a 10-minute one should not come out
+      // the same length. The last extracted section timestamp is the source duration.
+      const srcMinutes = sourceMinutesFrom(data?.structure);
+      if (srcMinutes) setVideoMinutes(srcMinutes);
     } catch (e: any) {
       setError(e.message);
     } finally {
@@ -113,6 +141,8 @@ export default function ViralRemixerPage() {
       channelTitle: result.channelTitle,
       niche: (result as any).niche || null,
       targetMinutes: videoMinutes,
+      sourceTranscript: result.sourceTranscript || "",
+      sourceEntities: Array.isArray(result.sourceEntities) ? result.sourceEntities : [],
     };
     sessionStorage.setItem("skripr_viral_brief", JSON.stringify(brief));
     window.location.href = "/dashboard/scripts/viral-brief";

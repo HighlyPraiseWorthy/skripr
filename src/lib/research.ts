@@ -66,6 +66,12 @@ export interface SubjectCandidate {
   when: string;        // year or range, "" when genuinely unclear
   whyItFits: string;   // how it matches the creator's title
   sources: string[];   // citable URLs
+  // Set by the authority-ranking pass (move #1). How authoritatively the web documents this
+  // case, used to sort the DOJ/major-outlet case to the top of the confirm card.
+  authorityTier?: "high" | "medium" | "low";
+  // A living-person / named-company warning surfaced AT suggestion time, so the creator
+  // sees "this centers an uncharged living individual" before they pick, not after.
+  guardWarning?: string;
 }
 export type ResolveResult =
   | { ok: true; kind: TopicKind; candidates: SubjectCandidate[] }
@@ -318,7 +324,7 @@ Only include a fact you can attribute to a real source URL. Output ONLY this JSO
         facts = rawFacts
           .filter((x: any) => x && typeof x.fact === "string" && x.fact.trim())
           .map((x: any, i: number) => ({
-            fact: String(x.fact).trim().slice(0, 400),
+            fact: capFact(cleanFact(String(x.fact))),
             // prefer the model's per-fact source; fall back to the citations list by index
             source: (typeof x.source === "string" && /^https?:\/\//.test(x.source)) ? x.source : (citations[i] || null),
           }))
@@ -375,6 +381,89 @@ Only include a fact you can attribute to a real source URL. Output ONLY this JSO
  * premise as unverified would be the wrong answer; naming the real case is the
  * right one.
  */
+// MOVE #1 — authority ranking + living-person/company guard, at suggestion time.
+//
+// Resolution names candidates from Claude's training memory only (no web, no ranking), so
+// "best match first" is just Claude's output order and a Chilean musician can outrank the
+// most-documented streaming-fraud case. This runs ONE Perplexity pass that RANKS the
+// candidates Claude already produced by authoritative coverage and flags a candidate that
+// centers a living private individual (uncharged) or names a company as the perpetrator.
+// It ranks, it does not re-research — a single call over <=4 candidates, so resolution stays
+// fast. Perplexity-absent or any error returns the candidates untouched (no regression).
+async function rankAndGuardCandidates(topic: string, candidates: SubjectCandidate[]): Promise<SubjectCandidate[]> {
+  const pkey = process.env.PERPLEXITY_API_KEY;
+  if (!pkey || candidates.length === 0) return candidates;
+  const list = candidates.map((c, i) => `${i + 1}. ${c.name}${c.when ? ` (${c.when})` : ""} — ${c.summary}`).join("\n");
+  const prompt = `A video title points to a real documented case. Title: "${topic}".
+
+Candidate cases:
+${list}
+
+Using AUTHORITATIVE sources (DOJ / federal court records, major news outlets), for EACH candidate return:
+- "i": its number
+- "authority": "high" if documented by DOJ/court records or multiple major outlets; "medium" if one reliable outlet; "low" if only blogs/obscure sources or you cannot verify it is a real documented case
+- "topSource": the single most authoritative source URL you found, or ""
+- "guard": a SHORT warning ONLY IF this candidate centers a LIVING private individual who has no stated criminal charge or conviction, OR names a COMPANY as the perpetrator when that company itself was not charged/convicted. Otherwise "".
+
+ALSO: if the title clearly points to a MORE DEFINITIVE, better-documented real case that is NOT listed, return it as "missing". Only when you are confident it is the canonical case for this exact title; otherwise "missing": null.
+
+Output ONLY JSON: {"ranked":[{"i":1,"authority":"high","topSource":"","guard":""}],"missing":null_or_{"name":"","summary":"","when":"","topSource":""}}`;
+  try {
+    const res = await fetch("https://api.perplexity.ai/chat/completions", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${pkey}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ model: "sonar", temperature: 0, messages: [{ role: "user", content: prompt }] }),
+      signal: AbortSignal.timeout(18000),
+    });
+    if (!res.ok) return candidates;
+    const data = await res.json();
+    const content: string = data?.choices?.[0]?.message?.content || "";
+    const m = content.match(/\{[\s\S]*\}/);
+    if (!m) return candidates;
+    const parsed = JSON.parse(m[0]);
+    const tierRank = (t: any) => (t === "high" ? 0 : t === "medium" ? 1 : 2);
+    const byIdx = new Map<number, { authority?: string; topSource?: string; guard?: string }>();
+    if (Array.isArray(parsed?.ranked)) {
+      for (const r of parsed.ranked) {
+        const i = Number(r?.i) - 1;
+        if (Number.isInteger(i) && i >= 0 && i < candidates.length) byIdx.set(i, r);
+      }
+    }
+    // Attach authority + guard to each candidate, and fold a discovered authoritative URL
+    // into its sources (Claude-named candidates otherwise carry none).
+    let ranked: SubjectCandidate[] = candidates.map((c, i) => {
+      const r = byIdx.get(i);
+      const tier = r?.authority === "high" || r?.authority === "medium" || r?.authority === "low" ? r.authority : undefined;
+      const guard = typeof r?.guard === "string" ? r.guard.trim().slice(0, 200) : "";
+      const topSource = typeof r?.topSource === "string" && /^https?:\/\//.test(r.topSource) ? r.topSource : "";
+      return {
+        ...c,
+        authorityTier: tier as SubjectCandidate["authorityTier"],
+        guardWarning: guard || undefined,
+        sources: topSource && !c.sources.includes(topSource) ? [topSource, ...c.sources].slice(0, 4) : c.sources,
+      };
+    });
+    // A confidently-canonical case Claude omitted (Michael Smith when the list has only a
+    // musician) gets prepended so it can win the ranking rather than being unreachable.
+    const miss = parsed?.missing;
+    if (miss && typeof miss?.name === "string" && miss.name.trim() && !ranked.some((c) => c.name.toLowerCase() === String(miss.name).toLowerCase())) {
+      const topSource = typeof miss?.topSource === "string" && /^https?:\/\//.test(miss.topSource) ? [miss.topSource] : [];
+      ranked.unshift({
+        name: String(miss.name).trim().slice(0, 160),
+        summary: typeof miss.summary === "string" ? miss.summary.trim().slice(0, 500) : "",
+        when: typeof miss.when === "string" ? miss.when.trim().slice(0, 40) : "",
+        whyItFits: "Surfaced as the most authoritatively documented case for this title.",
+        sources: topSource,
+        authorityTier: "high",
+      });
+    }
+    // Stable sort by authority tier: the DOJ/major-outlet case rises to the top, ties keep
+    // Claude's original order.
+    ranked = ranked.map((c, i) => ({ c, i })).sort((a, b) => tierRank(a.c.authorityTier) - tierRank(b.c.authorityTier) || a.i - b.i).map((x) => x.c);
+    return ranked.slice(0, 4);
+  } catch { return candidates; }
+}
+
 export async function resolveSubjects(input: { topic: string; niche?: string }): Promise<ResolveResult> {
   const topic = (input.topic || "").slice(0, 200);
   if (!topic.trim()) return { ok: false, error: "Add a topic first." };
@@ -429,6 +518,12 @@ Output ONLY this JSON, no prose, no markdown:
       kind = k === "explainer" || k === "hypothetical" || k === "claim" ? k : "event";
       candidates = normalizeCandidates(parsed?.candidates, [], true, kind === "event");
     } catch { /* unparseable — no candidates */ }
+    // MOVE #1: rank the event candidates by authoritative coverage and attach the
+    // living-person/company guard, so the confirm card leads with the DOJ-documented case
+    // and flags an uncharged individual. Scope questions (other kinds) are not ranked.
+    if (kind === "event" && candidates.length) {
+      candidates = await rankAndGuardCandidates(topic, candidates);
+    }
     return { ok: true, kind, candidates };
   } catch (e: any) {
     return { ok: false, error: e?.message || "Subject lookup failed." };
@@ -558,6 +653,42 @@ Output ONLY a JSON array, no prose. "q" is the question number the fact answers:
 // cannot run locally — see scripts/research-parse.test.ts). Pairs each answer to its
 // question by the returned index, resolves the source URL, and drops sourceless
 // answers and refusals-with-citations by reading the fact text.
+// Strip research-framing that describes the RECORD instead of stating the fact, and
+// never truncate mid-word. "The most vividly documented episode in the public record
+// is X" is metadata about our own search, not a fact — the script must receive "X".
+// A case identity is a NAME, not prose. Free-text input (a whole chat message pasted into
+// the "Name it" box) ended up inside the retrieval anchor and made every question drift.
+// Reduce arbitrary input to a short identity: first line, first sentence, capped — so the
+// anchor stays stable and Perplexity searches the case, not the user's commentary.
+export function toCaseIdentity(raw: string): string {
+  let s = (raw || "").replace(/\s+/g, " ").trim();
+  s = s.split(/[\n\r]/)[0];
+  // If it reads like prose (long, multiple sentences), keep only the first clause.
+  if (s.length > 90) {
+    const firstSentence = s.match(/^[^.!?]{3,90}/);
+    if (firstSentence) s = firstSentence[0];
+  }
+  // Drop a trailing dangling connective left by the cut.
+  s = s.replace(/\s+(?:and|but|which|because|that|so|where|when|who)\s*$/i, "").trim();
+  return s.slice(0, 100).trim();
+}
+
+export function cleanFact(raw: string): string {
+  let f = (raw || "").trim();
+  f = f.replace(/^(?:the (?:single )?most (?:vividly |thoroughly |extensively )?(?:documented|detailed|striking|notable|vivid) (?:episode|moment|scene|account|example|incident)[^.:]{0,80}?(?:\bis\b|\bwas\b|:)\s*)/i, "");
+  f = f.replace(/^(?:according to (?:the )?(?:public )?record,?\s*|in the (?:public )?record,?\s*|the (?:public )?record (?:shows|states|indicates|reflects) that\s*|sources (?:indicate|show|say|state|report) that\s*|it is (?:well[- ])?documented that\s*|documented (?:accounts|sources) (?:say|show|indicate) that\s*)/i, "");
+  f = f.trim();
+  if (f) f = f[0].toUpperCase() + f.slice(1);
+  return f;
+}
+// Cap length without cutting a word in half (a mid-word truncation shipped in a script).
+export function capFact(f: string, max = 400): string {
+  if (f.length <= max) return f;
+  const cut = f.slice(0, max);
+  const lastSpace = cut.lastIndexOf(" ");
+  return (lastSpace > max * 0.6 ? cut.slice(0, lastSpace) : cut).trim();
+}
+
 export function parsePerplexityAnswers(
   content: string,
   citations: string[],
@@ -572,7 +703,7 @@ export function parsePerplexityAnswers(
   return arr
     .filter((x: any) => x && typeof x.fact === "string" && x.fact.trim())
     .map((x: any, i: number) => {
-      const fact = String(x.fact).trim().slice(0, 400);
+      const fact = capFact(cleanFact(String(x.fact)));
       const qn = Number(x?.q) - 1;
       const question = Number.isInteger(qn) && qn >= 0 && qn < qs.length ? qs[qn] : (qs[i] || "");
       const source = (typeof x.source === "string" && /^https?:\/\//.test(x.source)) ? x.source : (citations[i] || null);
@@ -642,6 +773,106 @@ export function sourceTier(url: string | null): "high" | "low" | "neutral" {
   const majors = ["nytimes.com", "washingtonpost.com", "latimes.com", "apnews.com", "reuters.com", "bbc.com", "bbc.co.uk", "npr.org", "pbs.org", "theguardian.com", "wsj.com", "nypost.com", "cnn.com", "nbcnews.com", "cbsnews.com", "abcnews.go.com", "propublica.org", "themobmuseum.org", "smithsonianmag.com", "history.com", "azcentral.com"];
   if (majors.some((d) => host === d || host.endsWith("." + d))) return "high";
   return "neutral";
+}
+
+// In-voice attribution phrase for an authoritative source, so the narration can say WHERE a
+// fact comes from ("according to the DOJ indictment", "court records show") — the rigor
+// texture the well-researched channels have. Only high-authority sources earn one; a blog
+// gets none, so the script never fabricates authority it does not have.
+export function attributionFor(url: string | null): string | undefined {
+  if (!url) return undefined;
+  let host = "";
+  try { host = new URL(url).hostname.replace(/^www\./, "").toLowerCase(); } catch { return undefined; }
+  // Return a named ACTOR only ("the DOJ", "the court", "The New York Times") — the kind of
+  // attribution the voice rules REQUIRE. Never return machinery ("court records", "the
+  // report"), which the same rules BAN in the narrator's voice.
+  if (/(^|\.)justice\.gov$/.test(host)) return "the DOJ";
+  if (/(^|\.)courtlistener\.com$/.test(host) || /\.uscourts\.gov$/.test(host)) return "the court";
+  if (/(^|\.)fbi\.gov$/.test(host)) return "the FBI";
+  const named: Record<string, string> = {
+    "apnews.com": "the Associated Press", "reuters.com": "Reuters", "nytimes.com": "The New York Times",
+    "washingtonpost.com": "The Washington Post", "propublica.org": "ProPublica", "bbc.com": "the BBC", "bbc.co.uk": "the BBC",
+    "npr.org": "NPR", "theguardian.com": "The Guardian", "wsj.com": "The Wall Street Journal",
+  };
+  for (const d in named) if (host === d || host.endsWith("." + d)) return named[d];
+  return undefined; // no identifiable actor — do not invent one ("reporting", "records")
+}
+
+// MOVE #2 — reconciliation / supersession. Pure application: drop the facts a higher-
+// authority or more-recent fact supersedes, so the script states ONE number, never
+// "$10M... actually $8M." Split from the LLM call so the drop logic is testable offline.
+export function dropSuperseded(facts: ResearchFact[], superseded: number[]): ResearchFact[] {
+  const drop = new Set(superseded.filter((n) => Number.isInteger(n) && n >= 1 && n <= facts.length).map((n) => n - 1));
+  return facts.filter((_, i) => !drop.has(i));
+}
+
+// MOVE #3 — generic-mechanism detection. A "how it worked" that names the machinery but
+// carries NO specific numbers ("thousands of bot accounts") is an empty section: it reads
+// as amateur and forces the user to paste the real figure (1,040 bots -> 661,440 streams a
+// day). Detect it so the pipeline digs for the quantities automatically instead of shipping
+// vague filler. True only when the mechanism is PRESENT but UNQUANTIFIED.
+export function mechanismIsGeneric(facts: ResearchFact[]): boolean {
+  const blob = facts.map((f) => f.fact).join(" ");
+  const MECH = /\b(bots?|accounts?|schemes?|operations?|networks?|algorithms?|laundered|routed|funnel\w*|generat\w+|streams?|transactions?|frauds?|scams?|rings?|servers?|nodes?|shell compan\w+|proxies|proxy|automat\w+|inflat\w+|manipulat\w+)\b/i;
+  if (!MECH.test(blob)) return false; // no mechanism to quantify — a different failure mode
+  // A quantified mechanism fact: a substantial number sitting next to the machinery.
+  const QUANT = /\b\d[\d,]{2,}\b[^.]{0,45}\b(bots?|accounts?|streams?|transactions?|servers?|nodes?|proxies|proxy|per day|per second|a day|times)\b|\b(bots?|accounts?|streams?|transactions?|servers?|nodes?|proxies|proxy)\b[^.]{0,45}\b\d[\d,]{2,}\b/i;
+  return !QUANT.test(blob);
+}
+
+// The "editor who knows the case": ranks the gathered facts by authority + recency and marks
+// the LOSERS of a genuine supersession (a final $8M forfeiture beats a $10M allegation; a
+// current age beats an age from a 2-year-old indictment). It ADJUDICATES the facts already
+// held — it does NOT go back to the web. Temporal pairs (both true at different times) are
+// preserved, not dropped. Graceful: <2 facts or any error returns the set untouched.
+export async function reconcileFacts(facts: ResearchFact[]): Promise<{ facts: ResearchFact[]; superseded: { fact: string; reason: string }[] }> {
+  if (!Array.isArray(facts) || facts.length < 2) return { facts, superseded: [] };
+  try {
+    const numbered = facts.map((f, i) => `${i + 1}. ${f.fact} [source: ${f.source ? (() => { try { return new URL(f.source!).hostname.replace(/^www\./, ""); } catch { return "unknown"; } })() : "none"} · tier: ${sourceTier(f.source)}]`).join("\n");
+    const msg = await anthropic().messages.create({
+      model: "claude-sonnet-4-6",
+      max_tokens: 700,
+      temperature: 0,
+      messages: [{
+        role: "user",
+        content: `You are the fact-checking editor for a documentary script. Below are researched facts, each with its source domain and authority tier. Some CONTRADICT each other where one fact SUPERSEDES the other — a more authoritative or more current value that REPLACES a stale or weaker one. Mark the LOSERS so the script states one authoritative number and never contradicts itself.
+
+SUPERSESSION — mark the loser to DROP when:
+- A FINAL / OFFICIAL outcome replaces an ALLEGATION or ESTIMATE of the SAME metric (a court-ordered $8M forfeiture supersedes a $10M alleged loss; a conviction supersedes the charge).
+- A HIGHER-tier source contradicts a lower one on the SAME fact (high beats neutral beats low).
+- A CURRENT attribute replaces a stale one (a person's current age vs their age at an indictment years ago; a final total vs an early count).
+
+DO NOT DROP when:
+- The two are TEMPORAL — both true at different points in time ("13 charged initially, 27 after later indictments"). Keep both.
+- They measure DIFFERENT things. Keep both.
+- Nothing else in the list supersedes the fact. Keep it.
+
+Only mark a genuine, confident supersession. When unsure, keep both.
+
+FACTS:
+${numbered}
+
+Output ONLY JSON: {"superseded":[{"i":2,"by":5,"reason":"short: $10M alleged, $8M is the final court-ordered forfeiture"}]}`,
+      }],
+    });
+    const text = msg.content[0]?.type === "text" ? msg.content[0].text : "";
+    const m = text.match(/\{[\s\S]*\}/);
+    if (!m) return { facts, superseded: [] };
+    const parsed = JSON.parse(m[0]);
+    const arr = Array.isArray(parsed?.superseded) ? parsed.superseded : [];
+    const idxs: number[] = [];
+    const dropped: { fact: string; reason: string }[] = [];
+    for (const s of arr) {
+      const i = Number(s?.i);
+      if (!Number.isInteger(i) || i < 1 || i > facts.length) continue;
+      // Never let the model drop MORE than half the set — a runaway response would gut the
+      // research; that is a parse/model failure, not a real cascade of supersessions.
+      if (idxs.length >= Math.floor(facts.length / 2)) break;
+      idxs.push(i);
+      dropped.push({ fact: facts[i - 1].fact, reason: typeof s?.reason === "string" ? s.reason.slice(0, 160) : "superseded" });
+    }
+    return { facts: dropSuperseded(facts, idxs), superseded: dropped };
+  } catch { return { facts, superseded: [] }; }
 }
 
 // Second line of defence, and the one that catches what a regex cannot: a fluent,
@@ -734,8 +965,10 @@ Output ONLY a JSON array, no prose: [{"i":1,"status":"keep|drop|conflict|tempora
  * Claude never supplies a fact directly: only sourced answers reach the script, so
  * the anti-fabrication guarantee holds while the grounding gets much richer.
  */
-export async function deepenCaseFacts(input: { caseName: string; summary?: string; niche?: string; sourcePayoff?: string; sourceSubject?: string; userId?: string; kind?: TopicKind; topicAnchor?: string }): Promise<DeepenResult> {
-  const caseName = (input.caseName || "").slice(0, 200);
+export async function deepenCaseFacts(input: { caseName: string; summary?: string; niche?: string; sourcePayoff?: string; sourceSubject?: string; userId?: string; kind?: TopicKind; topicAnchor?: string; targetFacts?: number }): Promise<DeepenResult> {
+  const t0 = Date.now();
+  // Sanitize the case identity first: arbitrary prose in this field drifts retrieval.
+  const caseName = toCaseIdentity(input.caseName || "");
   if (!caseName.trim()) return { facts: [], conflicts: [], status: "no-facts" };
   const pkey = process.env.PERPLEXITY_API_KEY;
   // No Perplexity means no citable answers, and Claude-only facts would be
@@ -845,14 +1078,17 @@ Each question seeks a single concrete, citable fact. Output ONLY this JSON, no p
     }
     // Cache hits feed the library too, and return it — otherwise a cached run would
     // hand back a smaller set than the user has already accumulated for this topic.
+    let returnHit: ResearchFact[] = mergedHit;
     if (input.userId) {
       const lib = await addToLibrary(input.userId, libraryAnchor, mergedHit, { topicLabel: canonicalCaseName });
       const all = activeFacts(lib);
-      if (all.length) {
-        return { facts: all.map((f) => ({ fact: f.fact, source: f.source })).slice(0, 16), conflicts: cached.conflicts, status: "ok", caseName: cached.caseName || correction.caseName, when: whenHit };
-      }
+      if (all.length) returnHit = all.map((f) => ({ fact: f.fact, source: f.source }));
     }
-    return { facts: mergedHit, conflicts: cached.conflicts, status: "ok", caseName: cached.caseName || correction.caseName, when: whenHit };
+    // MOVE #2: supersede stale/weaker facts before returning — including any the LIBRARY
+    // accumulated on an earlier run (the $10M the safety-gate TTL couldn't shed), so the
+    // angle page and script never see a superseded number.
+    const reconciledHit = (await reconcileFacts(returnHit)).facts.slice(0, 16);
+    return { facts: reconciledHit, conflicts: cached.conflicts, status: "ok", caseName: cached.caseName || correction.caseName, when: whenHit };
   }
 
   if (!questions.length) return { facts: [], conflicts: [], status: "no-facts", ...correction };
@@ -888,7 +1124,47 @@ Each question seeks a single concrete, citable fact. Output ONLY this JSON, no p
   // stands behind a claim while a wire story is available. If low-tier is all we
   // have, keep it rather than return nothing — the fact card already warns to verify.
   const strong = keep.filter((f) => sourceTier(f.source) !== "low");
-  const freshFacts = (strong.length >= 2 ? strong : keep).slice(0, 12);
+  let freshFacts = (strong.length >= 2 ? strong : keep).slice(0, 12);
+
+  // MOVE #3 — GENERIC-MECHANISM DIG. When the "how" is present but number-free, dig
+  // specifically for the quantities FIRST, with targeted questions (not broad reformulations
+  // that return more of the same colour). This is what turns "thousands of bots" into
+  // "1,040 bots generating 661,440 streams a day" without waiting for the user to paste it.
+  if (mechanismIsGeneric(freshFacts) && Date.now() - t0 < 60_000) {
+    const mechQs = [
+      `Exactly how did ${canonicalCaseName} work, in concrete numbers: how many bots, accounts, units, servers, or transactions were involved, and at what rate — per day or in total?`,
+      `What are the precise quantities behind the mechanism of ${canonicalCaseName}: the specific counts, totals, and rates that show how the scheme actually operated and scaled?`,
+    ];
+    const mechPairs = await fetchPerplexityAnswers(pkey, canonicalCaseName, input.summary, canonical, mechQs);
+    if (mechPairs.length) {
+      const reviewed = await reviewDeepenedFacts(canonicalCaseName, mechPairs, input.summary, watchlist);
+      freshFacts = unionFacts([...freshFacts, ...reviewed.keep]).slice(0, 12);
+    }
+  }
+
+  // DEPTH LOOP — run MORE retrieval when the set is thin OR conflicting, not only when the
+  // video is long. The original trigger (facts-vs-word-count) let a case with "enough" vague
+  // facts for the runtime never dig; the real trigger is research quality, period. A floor of
+  // MIN_FACTS means even a short video digs when genuinely thin, and a live conflict earns one
+  // reconciling round. The gap between evidence and demand is where fabrication is born.
+  //
+  // Retrieval gravity is the caveat: on a topic that is 95% the same suspect material
+  // (Tylenol), "fetch more" returns more of the same. So this is CAPPED at two extra rounds,
+  // time-guarded, and STOPS EARLY when a round adds nothing genuinely new (fact overlap).
+  const MIN_FACTS = 6;
+  const target = Math.min(12, Math.max(input.targetFacts && input.targetFacts > 0 ? Math.round(input.targetFacts) : 0, MIN_FACTS));
+  let askPool = [...questions];
+  for (let round = 0; (freshFacts.length < target || (conflicts.length > 0 && round === 0)) && round < 2 && Date.now() - t0 < 60_000; round++) {
+    const gaps = (await reformulateQuestions(canonicalCaseName, askPool.slice(0, 8))).filter((q) => !askPool.includes(q));
+    if (!gaps.length) break;
+    askPool = askPool.concat(gaps);
+    const morePairs = await fetchPerplexityAnswers(pkey, canonicalCaseName, input.summary, canonical, gaps);
+    if (!morePairs.length) break;
+    const reviewed = await reviewDeepenedFacts(canonicalCaseName, morePairs, input.summary, watchlist);
+    const before = freshFacts.length;
+    freshFacts = unionFacts([...freshFacts, ...reviewed.keep]).slice(0, 12);
+    if (freshFacts.length <= before) break; // nothing new — retrieval gravity; stop rather than loop
+  }
 
   // Union with the case's best prior fact set (any brief version) rather than
   // overwriting it. A version bump re-fetches to add new asks (quotes, a scene), but the
@@ -914,12 +1190,15 @@ Each question seeks a single concrete, citable fact. Output ONLY this JSON, no p
   // the topic, and what we RETURN is the library — not just this retrieval. That is what
   // stops the fact set shrinking between runs: a thin retrieval can only ever add to what
   // is already known, never replace it.
+  let returnFacts: ResearchFact[] = facts;
   if (input.userId && facts.length) {
     const lib = await addToLibrary(input.userId, libraryAnchor, facts, { topicLabel: canonicalCaseName });
     const all = activeFacts(lib);
-    if (all.length) {
-      return { facts: all.map((f) => ({ fact: f.fact, source: f.source })).slice(0, 16), conflicts, status: "ok", caseName: correction.caseName, when: finalWhen };
-    }
+    if (all.length) returnFacts = all.map((f) => ({ fact: f.fact, source: f.source }));
   }
-  return { facts, conflicts, status: "ok", caseName: correction.caseName, when: finalWhen };
+  // MOVE #2: reconcile before returning, so a superseded number (this run's or one the
+  // library accumulated earlier) is dropped and the angle page states one authoritative
+  // figure — the "$8M beats $10M, age-52 drops" adjudication, with zero human intervention.
+  const reconciled = (await reconcileFacts(returnFacts)).facts.slice(0, 16);
+  return { facts: reconciled, conflicts, status: "ok", caseName: correction.caseName, when: finalWhen };
 }

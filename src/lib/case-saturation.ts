@@ -14,6 +14,10 @@ export interface CaseSaturation {
   videoCount: number;
   topViews: number;
   topTitle: string;
+  // The top few real titles already on this case. Three retellings that all say the same
+  // thing reveal at a glance that the obvious angle is taken and a different one is open —
+  // the Tylenol case where every top result was the same suspect.
+  topTitles?: string[];
   // "wide open" | "covered" | "saturated" — what the creator should actually do.
   // "unknown" = the lookup returned no usable signal (failed query, or zero views/
   // videos). This is NOT the same as an uncovered case, and must never read as "wide
@@ -85,6 +89,7 @@ export async function fetchCaseSaturation(caseName: string): Promise<CaseSaturat
     const ids = items.map((i: any) => i.id?.videoId).filter(Boolean);
     let topViews = 0;
     let topTitle = "";
+    let topTitles: string[] = [];
     if (ids.length) {
       const vRes = await fetch(`${YT}/videos?part=statistics,snippet&id=${ids.join(",")}&key=${key}`, { signal: AbortSignal.timeout(6000) });
       if (vRes.ok) {
@@ -93,6 +98,7 @@ export async function fetchCaseSaturation(caseName: string): Promise<CaseSaturat
         rows.sort((a: any, b: any) => b.views - a.views);
         topViews = rows[0]?.views ?? 0;
         topTitle = rows[0]?.title ?? "";
+        topTitles = rows.map((r: any) => r.title).filter(Boolean).slice(0, 3);
       }
     }
     // Zero views (no stats retrieved) or zero videos means we got no usable read, not a
@@ -103,7 +109,7 @@ export async function fetchCaseSaturation(caseName: string): Promise<CaseSaturat
       ? "unknown"
       : topViews >= 1_000_000 || videoCount >= 200 ? "saturated" : topViews >= 100_000 || videoCount >= 40 ? "covered" : "open";
     const result: CaseSaturation = {
-      videoCount, topViews, topTitle, tier,
+      videoCount, topViews, topTitle, topTitles, tier,
       label: labelForSaturation(tier, videoCount, topViews),
       adaptationWarning: adaptationFor(q),
     };
