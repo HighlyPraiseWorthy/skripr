@@ -43,8 +43,10 @@ export function honestMinutes(factCount: number): number {
 // Bump whenever the deepen question brief changes materially. It is part of the
 // fact-cache key, so incrementing it invalidates every previously cached fact set and
 // forces a re-derive under the new brief. v2 added: verbatim quotes, physical
-// description + nickname, and one vivid scene in full.
-export const RESEARCH_BRIEF_VERSION = 2;
+// description + nickname, and one vivid scene in full. v3 (move #7): active primary-source
+// QUOTE hunting — the subject's own words, plea/court statements, indictment language, and
+// named-official quotes — as the highest-value target, each with its speaker and source.
+export const RESEARCH_BRIEF_VERSION = 3;
 
 // Whether the record actually supports the premise the script is about to assert.
 //   documented  a real, citable source describes THIS specific event or claim
@@ -852,6 +854,10 @@ export function isHighValueFact(fact: string): boolean {
   if (/[$£€]\s?\d|\b\d[\d,]*(?:\.\d+)?\s*(?:million|billion|thousand)\s*(?:dollars|usd)?\b|\b(?:forfeit\w*|settlement|restitution|penalty|damages|seiz\w+|embezzl\w+|defraud\w+)\b[^.]{0,40}?\d/i.test(f)) return true;
   // A quantified mechanism — a substantial number sitting next to the machinery.
   if (/\b\d[\d,]{2,}\b[^.]{0,45}\b(bots?|accounts?|streams?|transactions?|servers?|nodes?|songs?|per day|per second|a day)\b|\b(bots?|accounts?|streams?|transactions?|servers?|nodes?)\b[^.]{0,45}\b\d[\d,]{2,}\b/i.test(f)) return true;
+  // MOVE #7 — a VERBATIM PRIMARY-SOURCE QUOTE: a real quoted line (the subject's own words, a
+  // plea statement, an official's statement) is the strongest researched texture, so pin it so
+  // the cap never drops it. A quotation span of several words, or a "said/wrote …" quote lead.
+  if (/["“][^"”\n]{15,}["”]|\b(said|wrote|told|stated|testified|declared|boasted|admitted|announced)\b[^.]{0,40}["“][^"”\n]{6,}/i.test(f)) return true;
   return false;
 }
 // Cap a fact list, but pin high-value facts to the FRONT so the slice can never drop them.
@@ -1089,7 +1095,7 @@ ${isExplainer ? "" : `- how they obtained their access, position, or clearance, 
 - the documented procedural history and how the story actually RESOLVED, with dates
 - the DOCUMENTED AFTERMATH for the central figure (threats, retaliation, litigation, personal cost) — this is often the strongest material
 - the KEY HUMAN RELATIONSHIP: the specific, named person the central figure grew closest to, trusted, befriended, or ultimately betrayed — the emotional core a documentary lives on. Ask for it by name where the record supports it
-- DIRECT VERBATIM QUOTES (high value): 2 or 3 of the most striking things the central figure (or a key figure) actually SAID, word for word, with a source. Ask for quotes from PUBLISHED INTERVIEWS, PRESS PIECES, or COURT TESTIMONY FIRST — those transcripts are indexed and searchable (an NPR segment, a newspaper interview) — and only fall back to a memoir. A memoir's interior lines are poorly indexed and hard to retrieve, so lead the question at interviews and reporting. A real quote is what a strong cold open and a payoff are built on; narration cannot do the same work.
+- DIRECT VERBATIM QUOTES / PRIMARY-SOURCE LINES (HIGHEST VALUE — dedicate 2 SEPARATE questions to this). The single strongest texture of a well-researched script is a real primary-source line quoted word for word, then analyzed. Actively hunt the quotable lines a viewer could not get anywhere else, each WITH the SPEAKER named and a SOURCE: (a) the SUBJECT'S OWN WORDS — a documented email, text, social post, or interview line they actually wrote or said (e.g. an incriminating email boast); (b) COURT / PLEA statements — what a defendant said in a plea allocution or on the stand; (c) INDICTMENT or complaint LANGUAGE — a striking phrase prosecutors actually used; (d) a NAMED OFFICIAL'S statement — the U.S. Attorney, an FBI agent, a judge, quoted from the press release or hearing. Phrase these to return the EXACT words plus who said them and where. Lead at indexed, searchable sources (DOJ press releases, court filings, news interviews) over a memoir's interior lines. A real quote honestly extends length and carries a cold open and a payoff that narration cannot.
 - PHYSICAL DESCRIPTION AND NICKNAME: what the central figure looked like (build, height, distinctive features) and any documented nickname or moniker they went by. This makes the person real on screen in the first 30 seconds.
 - THE ONE VIVID SCENE: the single most vividly documented episode of the story, with everything the sources record about it — the sequence of actions, the sensory detail, what was said. Ask for the fullest account of that one scene, because one scene told in full carries more than five summarized.`}
 - what remains disputed, sealed, or unknown${input.sourceSubject ? `

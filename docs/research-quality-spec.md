@@ -173,7 +173,28 @@ One-line rule: never force length onto thin evidence — fill with more real fac
 context), and when you can't, tell the truth about the supportable length. Test: ask the
 Michael Smith case for 20 minutes and see whether it pads or says "this supports ~12."
 
-## Move #7 — verbatim quote hunting (OPEN, after #6)
+## Move #7 — verbatim quote hunting (SHIPPED to branch; live result PENDING)
+
+Built:
+- **Deepen brief (v3).** The quote target is now the HIGHEST-value ask, with 2 dedicated
+  questions actively hunting primary-source lines by TYPE: the subject's own words (email/post/
+  interview), plea/courtroom statements, indictment language, and named-official statements —
+  each returned with its speaker and source. `RESEARCH_BRIEF_VERSION` bumped 2→3 so cached cases
+  re-derive with quote hunting.
+- **Quotes are pinned.** `isHighValueFact` now flags a verbatim quote, so move #6's `capFacts`
+  keeps it and the honest-length math counts it like any other fact.
+- **Quote grounding check.** New `quote-grounding` compliance check: a verbatim quotation in the
+  script must trace to a sourced quote in the facts, else it is flagged as invented/paraphrased.
+- **Generation.** A "quote then analyze" nudge (reusing move #2 `attributionFor`) tells the
+  writer to drop a real sourced quote, attribute it to the speaker, then interpret it — never
+  invent or paraphrase into quotation marks.
+
+`tsc`-clean; new tests (`isHighValueFact` quote case, `quote-grounding`) green. Live proof
+PENDING: the Michael Smith case should surface ≥1 real quoted primary-source line (his own email,
+the plea, or the U.S. Attorney's statement) with a source, and the honest-length number should
+rise vs the current ~13 min because real quotable material was added. No fabricated quotes.
+
+### Original write-up (for reference)
 
 Source of the idea: three reference scripts Anton flagged as the quality bar (a Miami-influencer
 true-crime piece, a Carl Jung explainer, and Brew's "How 1 Man Ruined Airports"). A shared reason

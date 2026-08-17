@@ -478,6 +478,30 @@ export function checkCompliance(input: ComplianceInput): ComplianceCheck[] {
         ? "Every figure in a section heading traces to your sourced facts."
         : `A section heading states ${uniqHeadings.map((h) => `"${h}"`).join(", ")}, which your facts do not support. A heading is the first claim a viewer reads; fix or cut that number before publishing.`,
     });
+
+    // MOVE #7 — QUOTE GROUNDING. A verbatim quotation is the strongest researched texture AND
+    // the most dangerous to fake: a viewer takes it as the subject's actual words. So a quoted
+    // line in the script must trace to a real sourced quote in the facts, never be invented or
+    // paraphrased into quotation marks. Flag a quoted span with no match in the facts.
+    const normQ = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, "");
+    const factNorm = normQ(factBlob);
+    const quoteMiss: string[] = [];
+    for (const m of script.matchAll(/["“]([^"”\n]{20,200})["”]/g)) {
+      const q = m[1].trim();
+      const nq = normQ(q);
+      if (nq.length < 16) continue;
+      // A genuine quote shares a solid run with its fact even if trimmed; probe both ends.
+      if (!factNorm.includes(nq.slice(0, 24)) && !factNorm.includes(nq.slice(-24))) quoteMiss.push(q.slice(0, 60));
+    }
+    const uniqQuotes = [...new Set(quoteMiss)].slice(0, 5);
+    out.push({
+      id: "quote-grounding", kind: "accuracy",
+      label: "Every quoted line traces to your facts",
+      pass: uniqQuotes.length === 0,
+      detail: uniqQuotes.length === 0
+        ? "Every verbatim quotation in the script matches a sourced quote in your facts."
+        : `${uniqQuotes.length} quoted line${uniqQuotes.length === 1 ? "" : "s"} in the script ${uniqQuotes.length === 1 ? "does" : "do"} not match a sourced quote in your facts: ${uniqQuotes.map((q) => `"${q}…"`).join(", ")}. A quote must be real and sourced, never invented or paraphrased into quotation marks. Trace it to a source or remove the quotation marks.`,
+    });
   }
 
   // 5f) REPETITION / PADDING. A thin fact set stretched to a fixed length says everything

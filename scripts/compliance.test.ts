@@ -236,5 +236,16 @@ check("ignores small counts in a heading",
 check("passes when headings carry no numbers",
   hg([{ title: "How the scheme unraveled", content: "x" }]).pass);
 
+// Move #7 — quote grounding. A verbatim quote in the script must trace to a sourced quote fact.
+console.log("quote grounding:");
+const qFacts = ['In a February 2024 email, Smith wrote: "we need to get more plays on the songs to make more money" (source: justice.gov)'];
+const qg = (s: string) => get(checkCompliance({ fullScript: s + " " + "and the analysis continues from there. ".repeat(10), facts: qFacts }), "quote-grounding");
+check("passes a quote that matches a sourced fact",
+  qg('He put it plainly. "We need to get more plays on the songs to make more money," he wrote.').pass);
+check("flags a quote that appears in no fact",
+  !qg('He grinned and said, "I built the perfect crime and no one will ever catch me here."').pass);
+check("passes when the script has no verbatim quotes",
+  qg("The scheme relied on automated accounts that streamed songs around the clock.").pass);
+
 console.log(failures === 0 ? "\nALL PASS" : `\n${failures} FAILURE(S)`);
 process.exit(failures === 0 ? 0 : 1);

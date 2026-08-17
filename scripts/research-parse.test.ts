@@ -154,6 +154,7 @@ console.log("high-value fact pin:");
 check("a forfeiture figure is high-value", isHighValueFact("The court ordered an $8,091,843.64 forfeiture."));
 check("a quantified mechanism is high-value", isHighValueFact("He ran 1,040 bot accounts generating 661,440 streams a day."));
 check("a plain biographical fact is not high-value", isHighValueFact("He grew up in Michigan and studied music.") === false);
+check("a verbatim primary-source quote is high-value (move #7)", isHighValueFact('In a February 2024 email, Smith wrote: "We need to get more plays on the songs."'));
 const many = [
   { fact: "Filler one about background.", source: null },
   { fact: "Filler two about background.", source: null },
