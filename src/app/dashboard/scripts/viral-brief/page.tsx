@@ -1125,9 +1125,24 @@ export default function ViralBriefPage() {
             const asked = honesty.requestedMinutes!;
             const ctx = honesty.contextCount || 0;
             const applyHonest = () => {
+              // Re-target to the honest length AND rebuild the plan at N, exactly as if the
+              // slider had been set to N. Without the rebuild + the honesty re-target this was
+              // a dead click: the ceiling reads honesty.requestedMinutes (from the server), so
+              // changing only brief.targetMinutes left the warning up and nothing regenerated.
               const nb = { ...(brief as any), targetMinutes: supp };
               setBrief(nb);
               try { sessionStorage.setItem("skripr_viral_brief", JSON.stringify(nb)); } catch { /* best effort */ }
+              setHonesty((h) => (h ? { ...h, requestedMinutes: supp } : h));
+              // Rebuild the angle plan from the facts already researched — pass them in so
+              // fetchAngles does NOT re-deepen (facts are unchanged; only the target shrank).
+              const g = {
+                kind: topicKind || "event", verdict: "documented",
+                caseName: groundedCase?.name, caseSummary: groundedCase?.summary, when: groundedCase?.when,
+                sources: groundedCase?.sources || [],
+                facts: deepFacts.map((f) => (f.source ? `${f.fact} (source: ${f.source})` : f.fact)),
+              };
+              setPhase("loading");
+              void fetchAngles(nb, g);
             };
             return (
               <div style={{ marginTop: 4, marginBottom: 4, padding: "12px 16px", borderRadius: 12, background: "rgba(217,160,69,0.07)", border: "1px solid #d9a04540" }}>
