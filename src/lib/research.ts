@@ -842,6 +842,28 @@ export function dropSuperseded(facts: ResearchFact[], superseded: number[]): Res
 // as amateur and forces the user to paste the real figure (1,040 bots -> 661,440 streams a
 // day). Detect it so the pipeline digs for the quantities automatically instead of shipping
 // vague filler. True only when the mechanism is PRESENT but UNQUANTIFIED.
+// MOVE #6(2) — HIGH-VALUE FACT PIN. The facts a run must never silently lose: the settled
+// money outcome (a forfeiture/settlement figure) and the quantified mechanism (numbers next to
+// the machinery). Run-to-run retrieval variance and the factCap slice were dropping exactly
+// these, so a later run came back weaker than an earlier one on the same case.
+export function isHighValueFact(fact: string): boolean {
+  const f = fact || "";
+  // A money / financial outcome — the figure a viewer repeats.
+  if (/[$£€]\s?\d|\b\d[\d,]*(?:\.\d+)?\s*(?:million|billion|thousand)\s*(?:dollars|usd)?\b|\b(?:forfeit\w*|settlement|restitution|penalty|damages|seiz\w+|embezzl\w+|defraud\w+)\b[^.]{0,40}?\d/i.test(f)) return true;
+  // A quantified mechanism — a substantial number sitting next to the machinery.
+  if (/\b\d[\d,]{2,}\b[^.]{0,45}\b(bots?|accounts?|streams?|transactions?|servers?|nodes?|songs?|per day|per second|a day)\b|\b(bots?|accounts?|streams?|transactions?|servers?|nodes?)\b[^.]{0,45}\b\d[\d,]{2,}\b/i.test(f)) return true;
+  return false;
+}
+// Cap a fact list, but pin high-value facts to the FRONT so the slice can never drop them.
+// Order among facts is not narrative order (the generator orders the script), so pinning is safe.
+export function capFacts(facts: ResearchFact[], cap: number): ResearchFact[] {
+  if (facts.length <= cap) return facts;
+  const hv: ResearchFact[] = [];
+  const rest: ResearchFact[] = [];
+  for (const f of facts) (isHighValueFact(f.fact) ? hv : rest).push(f);
+  return [...hv, ...rest].slice(0, cap);
+}
+
 export function mechanismIsGeneric(facts: ResearchFact[]): boolean {
   const blob = facts.map((f) => f.fact).join(" ");
   const MECH = /\b(bots?|accounts?|schemes?|operations?|networks?|algorithms?|laundered|routed|funnel\w*|generat\w+|streams?|transactions?|frauds?|scams?|rings?|servers?|nodes?|shell compan\w+|proxies|proxy|automat\w+|inflat\w+|manipulat\w+)\b/i;
@@ -1106,7 +1128,14 @@ Each question seeks a single concrete, citable fact. Output ONLY this JSON, no p
   // quotes, a nickname, a vivid scene) INVALIDATES old cached sets. Without this, every
   // brief improvement silently fails on already-researched cases — exactly the cases
   // you test on. Bump the version whenever the deepen question brief changes materially.
-  const baseKey = caseKey(canonicalCaseName);
+  // MOVE #6(1) — STABLE CACHE KEY. The cache used to key on caseKey(canonicalCaseName), but
+  // canonicalCaseName DRIFTS run to run (Claude's canonical label varies), so the cache missed
+  // and each run re-researched a non-deterministic set. Key on the STABLE topicAnchor (the
+  // remix title, constant for the same video) when we have it, exactly like the per-user
+  // library does, so cache hits are as reliable as library hits and the known-best set is
+  // re-surfaced instead of re-rolled.
+  const stableAnchor = (input.topicAnchor && input.topicAnchor.trim()) ? input.topicAnchor.trim() : canonicalCaseName;
+  const baseKey = caseKey(stableAnchor);
   const key = `${baseKey}::v${RESEARCH_BRIEF_VERSION}`;
   const cached = await getCachedFactSet(key);
   if (cached && cached.facts.length >= CACHE_GOOD_ENOUGH) {
@@ -1115,7 +1144,7 @@ Each question seeks a single concrete, citable fact. Output ONLY this JSON, no p
     // later run short-circuited here and never reached the merge at the bottom, so the
     // v1 facts (54 indicted, 28 months, full patch) stayed invisible.
     const priorHit = await getBestAcrossVersions(baseKey);
-    const mergedHit = unionFacts([...cached.facts, ...(priorHit?.facts || [])]).slice(0, factCap);
+    const mergedHit = capFacts(unionFacts([...cached.facts, ...(priorHit?.facts || [])]), factCap);
     const whenHit = deriveWhenFromFacts(mergedHit) || cached.when || correction.when;
     if (mergedHit.length > cached.facts.length) {
       await putCachedFactSet(key, { caseName: cached.caseName || correction.caseName, when: whenHit, facts: mergedHit, conflicts: cached.conflicts });
@@ -1131,7 +1160,7 @@ Each question seeks a single concrete, citable fact. Output ONLY this JSON, no p
     // MOVE #2: supersede stale/weaker facts before returning — including any the LIBRARY
     // accumulated on an earlier run (the $10M the safety-gate TTL couldn't shed), so the
     // angle page and script never see a superseded number.
-    const reconciledHit = (await reconcileFacts(returnHit)).facts.slice(0, factCap);
+    const reconciledHit = capFacts((await reconcileFacts(returnHit)).facts, factCap);
     return withHonesty({ facts: reconciledHit, conflicts: cached.conflicts, status: "ok", caseName: cached.caseName || correction.caseName, when: whenHit });
   }
 
@@ -1168,7 +1197,7 @@ Each question seeks a single concrete, citable fact. Output ONLY this JSON, no p
   // stands behind a claim while a wire story is available. If low-tier is all we
   // have, keep it rather than return nothing — the fact card already warns to verify.
   const strong = keep.filter((f) => sourceTier(f.source) !== "low");
-  let freshFacts = (strong.length >= 2 ? strong : keep).slice(0, factCap);
+  let freshFacts = capFacts(strong.length >= 2 ? strong : keep, factCap);
 
   // MOVE #3 — GENERIC-MECHANISM DIG. When the "how" is present but number-free, dig
   // specifically for the quantities FIRST, with targeted questions (not broad reformulations
@@ -1182,7 +1211,7 @@ Each question seeks a single concrete, citable fact. Output ONLY this JSON, no p
     const mechPairs = await fetchPerplexityAnswers(pkey, canonicalCaseName, input.summary, canonical, mechQs);
     if (mechPairs.length) {
       const reviewed = await reviewDeepenedFacts(canonicalCaseName, mechPairs, input.summary, watchlist);
-      freshFacts = unionFacts([...freshFacts, ...reviewed.keep]).slice(0, factCap);
+      freshFacts = capFacts(unionFacts([...freshFacts, ...reviewed.keep]), factCap);
     }
   }
 
@@ -1208,7 +1237,7 @@ Each question seeks a single concrete, citable fact. Output ONLY this JSON, no p
     if (!morePairs.length) break;
     const reviewed = await reviewDeepenedFacts(canonicalCaseName, morePairs, input.summary, watchlist);
     const before = freshFacts.length;
-    freshFacts = unionFacts([...freshFacts, ...reviewed.keep]).slice(0, factCap);
+    freshFacts = capFacts(unionFacts([...freshFacts, ...reviewed.keep]), factCap);
     if (freshFacts.length <= before) break; // nothing new — retrieval gravity; stop rather than loop
   }
 
@@ -1235,7 +1264,7 @@ Each question seeks a single concrete, citable fact. Output ONLY this JSON, no p
       const reviewed = await reviewDeepenedFacts(canonicalCaseName, cPairs, input.summary, watchlist);
       const ctx = reviewed.keep.map((f) => ({ ...f, context: true as const }));
       const before = freshFacts.length;
-      freshFacts = unionFacts([...freshFacts, ...ctx]).slice(0, factCap);
+      freshFacts = capFacts(unionFacts([...freshFacts, ...ctx]), factCap);
       if (freshFacts.length <= before) break; // context well is dry too — honesty ceiling will speak
     }
   }
@@ -1244,8 +1273,8 @@ Each question seeks a single concrete, citable fact. Output ONLY this JSON, no p
   // overwriting it. A version bump re-fetches to add new asks (quotes, a scene), but the
   // earlier run's hard facts — 54 indicted, 53 convicted, 28 months, full patch — must
   // NOT be lost. Fresh facts lead (they carry the new material); prior uniques fill in.
-  const prior = await getBestAcrossVersions(caseKey(canonicalCaseName));
-  const facts = unionFacts([...freshFacts, ...(prior?.facts || [])]).slice(0, factCap);
+  const prior = await getBestAcrossVersions(baseKey);
+  const facts = capFacts(unionFacts([...freshFacts, ...(prior?.facts || [])]), factCap);
 
   // Prefer a date range the SOURCED FACTS state explicitly over the resolver's guess,
   // so a confidently-wrong 1999-2001 gives way to the 1998-2000 the record actually says.
@@ -1273,6 +1302,6 @@ Each question seeks a single concrete, citable fact. Output ONLY this JSON, no p
   // MOVE #2: reconcile before returning, so a superseded number (this run's or one the
   // library accumulated earlier) is dropped and the angle page states one authoritative
   // figure — the "$8M beats $10M, age-52 drops" adjudication, with zero human intervention.
-  const reconciled = (await reconcileFacts(returnFacts)).facts.slice(0, factCap);
+  const reconciled = capFacts((await reconcileFacts(returnFacts)).facts, factCap);
   return withHonesty({ facts: reconciled, conflicts, status: "ok", caseName: correction.caseName, when: finalWhen });
 }

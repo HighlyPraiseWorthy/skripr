@@ -5,7 +5,7 @@
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
-import { parsePerplexityAnswers, isNonAnswer, dedupeCandidates, sourceTier, reconcileDuration, deriveWhenFromFacts, cleanFact, capFact, toCaseIdentity, dropSuperseded, attributionFor, mechanismIsGeneric, factBudgetForMinutes, honestMinutes, FACTS_PER_MINUTE, MAX_FACTS } from "../src/lib/research.ts";
+import { parsePerplexityAnswers, isNonAnswer, dedupeCandidates, sourceTier, reconcileDuration, deriveWhenFromFacts, cleanFact, capFact, toCaseIdentity, dropSuperseded, attributionFor, mechanismIsGeneric, factBudgetForMinutes, honestMinutes, FACTS_PER_MINUTE, MAX_FACTS, isHighValueFact, capFacts } from "../src/lib/research.ts";
 
 const here = dirname(fileURLToPath(import.meta.url));
 let failures = 0;
@@ -147,6 +147,23 @@ check("12 facts honestly supports about 5 minutes", honestMinutes(12) === 5);
 check("50 facts supports about 20 minutes", honestMinutes(50) === 20);
 // The ceiling case: a 20-min ask on a 12-fact case must report ~5, never claim 20.
 check("thin case reports its honest length, not the ask", honestMinutes(12) < 20);
+
+// Move #6 — high-value fact pin. Money outcomes and quantified mechanisms must never fall off
+// the end of the cap.
+console.log("high-value fact pin:");
+check("a forfeiture figure is high-value", isHighValueFact("The court ordered an $8,091,843.64 forfeiture."));
+check("a quantified mechanism is high-value", isHighValueFact("He ran 1,040 bot accounts generating 661,440 streams a day."));
+check("a plain biographical fact is not high-value", isHighValueFact("He grew up in Michigan and studied music.") === false);
+const many = [
+  { fact: "Filler one about background.", source: null },
+  { fact: "Filler two about background.", source: null },
+  { fact: "The court ordered an $8,091,843.64 forfeiture.", source: "https://justice.gov/x" },
+  { fact: "Filler three about background.", source: null },
+];
+const capped = capFacts(many, 2);
+check("capFacts keeps the high-value fact even when it would be sliced off", capped.some((f) => /8,091,843/.test(f.fact)));
+check("capFacts still respects the cap", capped.length === 2);
+check("capFacts is a no-op when under the cap", capFacts(many, 10).length === 4);
 
 console.log(failures === 0 ? "\nALL PASS" : `\n${failures} FAILURE(S)`);
 process.exit(failures === 0 ? 0 : 1);

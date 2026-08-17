@@ -130,10 +130,19 @@ Built in `src/lib/research.ts` + the deepen route + the viral-brief confirm/angl
   not M … padding is where invented facts come from," with a one-click "Set the target to N
   minutes." Mirrors the existing "angles suppressed" honesty line. The message IS the feature.
 
-`tsc`-clean; new pure-helper tests (`factBudgetForMinutes`, `honestMinutes`) green. The
-Perplexity/LLM paths are prod-only, so the live proof is: on the Michael Smith case, set the
-length to 20 min and confirm it EITHER fills with real context OR says "supports ~N," never pads.
-Live result: PENDING.
+`tsc`-clean; new pure-helper tests (`factBudgetForMinutes`, `honestMinutes`) green.
+
+**Live result: PROVEN on preview (both bugs fixed).** Michael Smith / Spotify at 20 min: the
+ceiling fired ("supports about 7 minutes, not 20"; 17 facts ≈ 7 min), it did NOT pad, and after
+the Bug 1 fix the "Set the target to 7 minutes" button re-targets, rebuilds the angle page at 7,
+and clears the ceiling. Bug 1 (`4354c91`): the button updated only `brief.targetMinutes` while
+the ceiling reads `honesty.requestedMinutes`, so it was a dead click; now it re-targets both and
+rebuilds via `fetchAngles` with the existing facts (no re-deepen). Promotion to production pending
+a `vercel --prod` (ships the whole working tree, not move #5 in isolation).
+
+Known follow-up → **move #6 (fact consistency)**: run-to-run retrieval variance means the
+known-best facts (the $8,091,843.64 forfeiture, the 1,040-bots/661,440-streams mechanism) are not
+reliably re-surfaced. See the move #6 section below.
 
 ### Original write-up (for reference)
 
@@ -164,8 +173,56 @@ One-line rule: never force length onto thin evidence — fill with more real fac
 context), and when you can't, tell the truth about the supportable length. Test: ask the
 Michael Smith case for 20 minutes and see whether it pads or says "this supports ~12."
 
+## Move #7 — verbatim quote hunting (OPEN, after #6)
+
+Source of the idea: three reference scripts Anton flagged as the quality bar (a Miami-influencer
+true-crime piece, a Carl Jung explainer, and Brew's "How 1 Man Ruined Airports"). A shared reason
+they read as authoritative is **reproduced primary-source quotes, then analysis** — e.g. a
+defendant's own courtroom words, a subject's own email/post, an official's statement — quoted
+verbatim and immediately interpreted.
+
+Add **"pull direct quotes / primary-source lines" as an explicit research target** in the deepen
+question set (`deepenCaseFacts`), alongside the mechanism/quantity targets. The pipeline should
+actively retrieve quotable primary-source lines (court statements, indictment language, the
+subject's own words, named-official statements) and carry them as facts with their source, so the
+generator can drop a real quote and analyze it. Same discipline as everything else: only real,
+sourced quotes — never fabricated or paraphrased-into-quotes. Michael Smith example: his own
+February 2024 email boast is exactly this kind of quotable primary line.
+
+(Deferred / not building now: "certainty-labeling as a first-class texture" — grading
+allegedly/unconfirmed/one-outlet by source tier. The pieces exist via move #2 attribution; left
+out of scope per Anton.)
+
 ## Holding every change against the bar
 
 For each move, the test is: *would this have produced a right, complete fact without a human
 who knows the case intervening?* Ferreira, `$10M`, and the missing mechanism all fail that bar
 today; moves #1–#3 are the adjudication steps that make them pass.
+
+## Move #6 — fact consistency (SHIPPED to branch; live result PENDING)
+
+Problem: run-to-run retrieval variance. The identical case/title surfaces different fact sets
+across runs — one run had the $8,091,843.64 forfeiture AND the 1,040-bots/661,440-streams
+mechanism; the next lost both and $10M reappeared. Neither is false, but unstable quality breaks
+the zero-edit bar. Four fixes, same "adjudicate/floor, don't fabricate" discipline:
+
+1. **Stable cache key.** `deepenCaseFacts` keyed the cache on `caseKey(canonicalCaseName)`, which
+   drifts run to run; now it keys on the STABLE `topicAnchor` (the remix title) when present, like
+   the per-user library, so cache hits are as reliable as library hits and the known-best set is
+   re-surfaced instead of re-rolled.
+2. **High-value pin.** `isHighValueFact` tags money/forfeiture/settlement figures and quantified
+   mechanisms; `capFacts` pins them to the front of every cap so the `factCap` slice can never
+   silently drop them. This floors them at the CASE level (the cache is cross-user) — the correct
+   home, because the per-user library can't cross the dev-Clerk-preview → live-Clerk-prod userId
+   boundary.
+3. **Heading claim-check.** New `heading-grounding` compliance check: a figure in a section
+   HEADING ("streams 661k songs daily") must trace to the facts, catching a number that leaked
+   from memory into a heading even when the body grounding missed it.
+4. **Relaxed cache TTL.** `CACHE_TTL_MS` 20h → 14 days. The TTL was a pre-supersession band-aid;
+   now that move #2 drops stale numbers on read, good facts should persist rather than age out and
+   force a non-deterministic re-research.
+
+`tsc`-clean; new pure-helper tests (`isHighValueFact`, `capFacts`, `heading-grounding`) green.
+Live proof PENDING: run the Michael Smith / Spotify case twice under the same preview user — run 1
+warms the store, run 2 must re-surface the $8M forfeiture and the 1,040/661,440 mechanism, not a
+weaker set.

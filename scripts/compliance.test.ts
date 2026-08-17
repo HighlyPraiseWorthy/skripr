@@ -222,5 +222,19 @@ check("does NOT flag a future pending date",
 check("does NOT flag a normal past-tense historical date",
   sd("He was sentenced on July 29, 2019, to twenty years.").pass);
 
+// Move #6 — heading claim-check. A number in a SECTION HEADING must trace to the facts, even
+// when the body grounding misses it.
+console.log("heading claim-check:");
+const hFacts = ["The scheme relied on roughly 1,040 bot accounts.", "It generated about 661,440 streams a day."];
+const hg = (sections: any[]) => get(checkCompliance({ fullScript: "Body text here that is long enough. ".repeat(10), sections, facts: hFacts }), "heading-grounding");
+check("flags a heading figure that is not in the facts",
+  !hg([{ title: "The empire that made 9,000,000 a month", content: "x" }]).pass);
+check("passes a heading whose figure is in the facts",
+  hg([{ title: "The bot army streaming 661k songs", content: "x" }]).pass);
+check("ignores small counts in a heading",
+  hg([{ title: "3 ways it stayed hidden", content: "x" }]).pass);
+check("passes when headings carry no numbers",
+  hg([{ title: "How the scheme unraveled", content: "x" }]).pass);
+
 console.log(failures === 0 ? "\nALL PASS" : `\n${failures} FAILURE(S)`);
 process.exit(failures === 0 ? 0 : 1);

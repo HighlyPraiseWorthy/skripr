@@ -450,6 +450,34 @@ export function checkCompliance(input: ComplianceInput): ComplianceCheck[] {
         ? "Every checkable figure, number and quantity in the script appears in your sourced facts. (Non-numeric claims like a named mechanism are checked by the deeper claim check.)"
         : `${uniq.length} figure${uniq.length === 1 ? "" : "s"}/quantit${uniq.length === 1 ? "y" : "ies"} in the script ${uniq.length === 1 ? "has" : "have"} no counterpart in your facts: ${uniq.slice(0, 6).map((u) => `"${u.text}"`).join(", ")}. Each is either invented or recalled from memory — check it before publishing.`,
     });
+
+    // MOVE #6(3) — HEADING CLAIM-CHECK. A section HEADING is the first claim a viewer reads and
+    // the one they repeat, so an unsupported number there is worse than one buried in the body.
+    // The body grounding above missed a heading like "The bot army that streams 661k songs daily"
+    // when 661k was never in the facts — it leaked from memory. Check each heading's figures
+    // against the facts directly.
+    const headingMiss: string[] = [];
+    for (const s of input.sections || []) {
+      const title = (s?.title || "").trim();
+      if (!title) continue;
+      for (const m of title.matchAll(/\d[\d,]*(?:\.\d+)?(?:k|m|bn|b)?/gi)) {
+        const raw = m[0];
+        const dstr = (raw.match(/\d[\d,]*(?:\.\d+)?/) || [""])[0].replace(/,/g, "");
+        if (!dstr) continue;
+        const d = String(Number(dstr));
+        if (Number(d) < 10) continue; // small counts ("3 ways") are narration, not claims
+        if (!factDigits.has(d) && !factLc.includes(raw.toLowerCase())) headingMiss.push(raw);
+      }
+    }
+    const uniqHeadings = [...new Set(headingMiss)].slice(0, 6);
+    out.push({
+      id: "heading-grounding", kind: "accuracy",
+      label: "Section headings are backed by your facts",
+      pass: uniqHeadings.length === 0,
+      detail: uniqHeadings.length === 0
+        ? "Every figure in a section heading traces to your sourced facts."
+        : `A section heading states ${uniqHeadings.map((h) => `"${h}"`).join(", ")}, which your facts do not support. A heading is the first claim a viewer reads; fix or cut that number before publishing.`,
+    });
   }
 
   // 5f) REPETITION / PADDING. A thin fact set stretched to a fixed length says everything

@@ -30,7 +30,13 @@ export const CACHE_GOOD_ENOUGH = 5;
 // research or dominate the union, so the pipeline re-checks the web at least daily and the
 // current number ($8M forfeiture) is at least fetched and present alongside the stale one.
 // This does NOT touch the per-user fact LIBRARY (topic_fact_library) — that shed is move #2.
-export const CACHE_TTL_MS = 1000 * 60 * 60 * 20; // 20h — a cached set can't outlive the day
+// MOVE #6(4): the TTL was a 20h band-aid from before supersession existed — it kept a stale
+// number from being served frozen, but at the cost of good facts aging out and forcing a fresh,
+// non-deterministic re-research (the fact-consistency problem). Now that move #2 supersession is
+// PROVEN to fire on read, staleness is handled by adjudication, so the cache can persist far
+// longer and re-surface the known-best set. Extended to 14 days: good facts stick; a superseded
+// number is dropped by reconcileFacts when read, not by aging the whole row out.
+export const CACHE_TTL_MS = 1000 * 60 * 60 * 24 * 14; // 14 days
 const isFresh = (updatedAt?: string | null): boolean =>
   !!updatedAt && Date.now() - new Date(updatedAt).getTime() < CACHE_TTL_MS;
 
