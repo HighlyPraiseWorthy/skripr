@@ -109,7 +109,10 @@ export default function ViralBriefPage() {
   // Research-before-cards: the case is deepened at confirm time, and the resulting
   // facts feed BOTH the slot cards and the research step (no re-fetch). Held here so
   // both downstream phases read the same fact set.
-  const [deepFacts, setDeepFacts] = useState<{ fact: string; source: string | null }[]>([]);
+  const [deepFacts, setDeepFacts] = useState<{ fact: string; source: string | null; context?: boolean }[]>([]);
+  // MOVE #5 — what the research honestly supports vs what the length slider asked for, so the
+  // confirm/angle step can tell the truth about supportable length instead of padding.
+  const [honesty, setHonesty] = useState<{ honestMinutes?: number; requestedMinutes?: number; factCount?: number; contextCount?: number; budget?: number } | null>(null);
   const [deepConflicts, setDeepConflicts] = useState<{ fact: string; source: string | null; note: string }[]>([]);
   // How heavily YouTube already covers each candidate case, shown ON the confirm card so
   // "47 videos, top one 2.3M views" (or "this is really a Spike Lee film") changes the
@@ -221,7 +224,7 @@ export default function ViralBriefPage() {
       try {
         const rr = await fetch("/api/research/find", {
           method: "POST", headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ action: "deepen", caseName: c.name, caseSummary: c.summary, niche: b.niche, sourcePayoff: b.hookAnalysis?.whyItWorks, sourceSubject: b.videoTitle, kind, topicAnchor: b.selectedTitle, targetFacts: (b as any).targetMinutes ? Math.min(12, Math.round(((b as any).targetMinutes * 150) / 180)) : undefined }),
+          body: JSON.stringify({ action: "deepen", caseName: c.name, caseSummary: c.summary, niche: b.niche, sourcePayoff: b.hookAnalysis?.whyItWorks, sourceSubject: b.videoTitle, kind, topicAnchor: b.selectedTitle, targetMinutes: (b as any).targetMinutes }),
         });
         const rd = await rr.json();
         if (rr.ok) {
@@ -229,6 +232,7 @@ export default function ViralBriefPage() {
           conflicts = Array.isArray(rd.conflicts) ? rd.conflicts : [];
           setDeepFacts(facts);
           setDeepConflicts(conflicts);
+          setHonesty({ honestMinutes: rd.honestMinutes, requestedMinutes: rd.requestedMinutes, factCount: rd.factCount, contextCount: rd.contextCount, budget: rd.budget });
           if (typeof rd.caseName === "string" && rd.caseName.trim()) caseName = rd.caseName.trim();
           if (typeof rd.when === "string" && rd.when.trim()) when = rd.when.trim();
           if (caseName !== c.name || when !== c.when) setGroundedCase({ ...c, name: caseName, when });
@@ -305,7 +309,7 @@ export default function ViralBriefPage() {
             action: "deepen", caseName: subject, caseSummary: grounding?.caseSummary || b.selectedTitleDescription || "",
             niche: b.niche, sourcePayoff: b.hookAnalysis?.whyItWorks, sourceSubject: b.videoTitle,
             kind: grounding?.kind || topicKind || "claim", topicAnchor: b.selectedTitle,
-            targetFacts: (b as any).targetMinutes ? Math.min(12, Math.round(((b as any).targetMinutes * 150) / 180)) : undefined,
+            targetMinutes: (b as any).targetMinutes,
           }),
         });
         const rd = await rr.json();
@@ -313,6 +317,7 @@ export default function ViralBriefPage() {
         if (fs.length) {
           setDeepFacts(fs);
           if (Array.isArray(rd.conflicts)) setDeepConflicts(rd.conflicts);
+          setHonesty({ honestMinutes: rd.honestMinutes, requestedMinutes: rd.requestedMinutes, factCount: rd.factCount, contextCount: rd.contextCount, budget: rd.budget });
           grounding = {
             ...(grounding || {}),
             kind: grounding?.kind || topicKind || "claim",
@@ -1109,18 +1114,31 @@ export default function ViralBriefPage() {
               longer video, it makes a padded one — and every fabrication this session
               appeared in the gap between what the evidence supported and what the word
               count demanded. Surfaced where the user can still act on it. */}
-          {slotMode && !underSourced && (() => {
-            const targetWords = ((brief as any)?.targetMinutes ?? 15) * 150;
-            // ~180 words of honest script per sourced fact, measured across this session.
-            const supported = deepFacts.length * 180;
-            if (supported >= targetWords * 0.85) return null;
-            const supportedMins = Math.max(1, Math.round(supported / 150));
+          {/* MOVE #5 — HONESTY CEILING. The pipeline already dug the core case and then real
+              surrounding context toward the per-minute budget; if it still falls short, tell
+              the truth about the supportable length rather than padding. The message IS the
+              feature. Uses the server's authoritative reckoning (2.5 load-bearing facts per
+              narrated minute), not a client guess. */}
+          {slotMode && !underSourced && honesty?.honestMinutes && honesty?.requestedMinutes
+            && honesty.honestMinutes < Math.round(honesty.requestedMinutes * 0.85) && (() => {
+            const supp = honesty.honestMinutes!;
+            const asked = honesty.requestedMinutes!;
+            const ctx = honesty.contextCount || 0;
+            const applyHonest = () => {
+              const nb = { ...(brief as any), targetMinutes: supp };
+              setBrief(nb);
+              try { sessionStorage.setItem("skripr_viral_brief", JSON.stringify(nb)); } catch { /* best effort */ }
+            };
             return (
               <div style={{ marginTop: 4, marginBottom: 4, padding: "12px 16px", borderRadius: 12, background: "rgba(217,160,69,0.07)", border: "1px solid #d9a04540" }}>
-                <div style={{ fontSize: 12.5, fontWeight: 700, color: "#e6b45a" }}>Your target is longer than your evidence supports</div>
+                <div style={{ fontSize: 12.5, fontWeight: 700, color: "#e6b45a" }}>This case honestly supports about {supp} minutes, not {asked}</div>
                 <div style={{ fontSize: 12, color: C.textDim, marginTop: 3, lineHeight: 1.55 }}>
-                  You set {(brief as any)?.targetMinutes ?? 15} minutes (~{targetWords.toLocaleString()} words). {deepFacts.length} facts across {angles.filter((a) => a.slot).length} sections supports about {supportedMins} minutes of honest script. Add facts at the next step, or the script will pad — and padding is where unsupported claims come from.
+                  {honesty.factCount} sourced facts{ctx > 0 ? ` (including ${ctx} of real surrounding context)` : ""} carry about {supp} minutes. Skripr already researched the case and its context to the limit of what is documented. Pushing to {asked} minutes means padding, and padding is where invented facts come from. Choose a length the evidence can carry, or pick a richer case.
                 </div>
+                <button onClick={applyHonest}
+                  style={{ marginTop: 9, padding: "8px 14px", borderRadius: 9, border: "1px solid #d9a04566", background: "rgba(217,160,69,0.12)", color: "#e6b45a", fontSize: 12.5, fontWeight: 700, cursor: "pointer" }}>
+                  Set the target to {supp} minutes
+                </button>
               </div>
             );
           })()}

@@ -5,7 +5,7 @@
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
-import { parsePerplexityAnswers, isNonAnswer, dedupeCandidates, sourceTier, reconcileDuration, deriveWhenFromFacts, cleanFact, capFact, toCaseIdentity, dropSuperseded, attributionFor, mechanismIsGeneric } from "../src/lib/research.ts";
+import { parsePerplexityAnswers, isNonAnswer, dedupeCandidates, sourceTier, reconcileDuration, deriveWhenFromFacts, cleanFact, capFact, toCaseIdentity, dropSuperseded, attributionFor, mechanismIsGeneric, factBudgetForMinutes, honestMinutes, FACTS_PER_MINUTE, MAX_FACTS } from "../src/lib/research.ts";
 
 const here = dirname(fileURLToPath(import.meta.url));
 let failures = 0;
@@ -134,6 +134,19 @@ check("one quantified fact in the set clears the flag",
     { fact: "The scheme relied on bot accounts.", source: "x" },
     { fact: "Investigators counted 1,040 accounts across 52 cloud servers.", source: "y" },
   ]) === false);
+
+// Move #5 — honest length. Budget is per-minute (2-3 load-bearing facts/min); the honesty
+// ceiling reports the runtime a fact set actually supports.
+console.log("honest length budget + ceiling:");
+check("10 minutes needs ~25 facts", factBudgetForMinutes(10) === Math.round(10 * FACTS_PER_MINUTE));
+check("20 minutes needs ~50 facts", factBudgetForMinutes(20) === 50);
+check("budget is capped at MAX_FACTS", factBudgetForMinutes(1000) === MAX_FACTS);
+check("a tiny ask still researches a floor of 6", factBudgetForMinutes(1) === 6);
+check("no minutes defaults to a 10-minute budget", factBudgetForMinutes(undefined) === factBudgetForMinutes(10));
+check("12 facts honestly supports about 5 minutes", honestMinutes(12) === 5);
+check("50 facts supports about 20 minutes", honestMinutes(50) === 20);
+// The ceiling case: a 20-min ask on a 12-fact case must report ~5, never claim 20.
+check("thin case reports its honest length, not the ask", honestMinutes(12) < 20);
 
 console.log(failures === 0 ? "\nALL PASS" : `\n${failures} FAILURE(S)`);
 process.exit(failures === 0 ? 0 : 1);

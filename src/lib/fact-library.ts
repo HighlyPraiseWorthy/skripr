@@ -85,7 +85,7 @@ export async function addToLibrary(
     if (!f?.fact?.trim()) continue;
     const id = factId(f.fact);
     if (!id || byId.has(id)) continue;
-    byId.set(id, { id, fact: f.fact.trim(), source: f.source ?? null, addedAt: new Date().toISOString(), manual: !!opts?.manual });
+    byId.set(id, { id, fact: f.fact.trim(), source: f.source ?? null, addedAt: new Date().toISOString(), manual: !!opts?.manual, context: (f as any).context || undefined });
     added++;
   }
   const merged: FactLibrary = { facts: [...byId.values()], dismissed: current.dismissed };

@@ -14,7 +14,31 @@ function anthropic(): Anthropic {
 // facts each paired with a source URL for the user to approve/verify. Dormant
 // until PERPLEXITY_API_KEY is set — callers surface the error gracefully.
 
-export interface ResearchFact { fact: string; source: string | null }
+export interface ResearchFact {
+  fact: string;
+  source: string | null;
+  // MOVE #5(c): a real SURROUNDING-CONTEXT fact (how the royalty system works, how bot
+  // detection operates, a prior similar case) fetched to fill honest minutes once the core
+  // case is tapped out — never padding, always sourced and adjudicated like any other fact.
+  context?: boolean;
+}
+
+// MOVE #5 — HONEST LENGTH. Length is an OUTPUT of the evidence, not an input: never force a
+// runtime onto thin facts (that is the padding/fabrication the checks were built to catch).
+// A load-bearing fact (a name, number, date, turn of events, or quote) carries roughly one
+// narrated span; at Anton's ~166 wpm that is about 2 to 3 facts per minute. So the budget is
+// per-minute, and when the case cannot meet it we tell the truth about the supportable length.
+export const FACTS_PER_MINUTE = 2.5;
+export const MAX_FACTS = 60; // ceiling (~24 honest minutes); also the hard cap on the fact set
+// Facts a runtime honestly needs. Floored so even a 1-minute ask researches a real minimum.
+export function factBudgetForMinutes(minutes?: number): number {
+  const m = minutes && minutes > 0 ? minutes : 10;
+  return Math.min(MAX_FACTS, Math.max(6, Math.round(m * FACTS_PER_MINUTE)));
+}
+// The runtime a given number of sourced facts honestly supports.
+export function honestMinutes(factCount: number): number {
+  return Math.max(1, Math.round((factCount || 0) / FACTS_PER_MINUTE));
+}
 
 // Bump whenever the deepen question brief changes materially. It is part of the
 // fact-cache key, so incrementing it invalidates every previously cached fact set and
@@ -609,6 +633,13 @@ export interface DeepenResult {
   // hand the corrected name/date back so the caller can relabel the case everywhere.
   caseName?: string;
   when?: string;
+  // MOVE #5 — honest length. What the returned facts actually support, so the UI can tell the
+  // truth ("this case honestly supports ~12 min; 20 means padding") instead of stretching.
+  factCount?: number;      // load-bearing facts finally returned
+  contextCount?: number;   // of those, how many are surrounding-context facts (5c)
+  honestMinutes?: number;  // runtime those facts honestly support
+  requestedMinutes?: number; // what the length slider asked for
+  budget?: number;         // facts the requested runtime needs
 }
 
 // One Perplexity round: number the questions, get sourced answers, pair each answer
@@ -965,11 +996,24 @@ Output ONLY a JSON array, no prose: [{"i":1,"status":"keep|drop|conflict|tempora
  * Claude never supplies a fact directly: only sourced answers reach the script, so
  * the anti-fabrication guarantee holds while the grounding gets much richer.
  */
-export async function deepenCaseFacts(input: { caseName: string; summary?: string; niche?: string; sourcePayoff?: string; sourceSubject?: string; userId?: string; kind?: TopicKind; topicAnchor?: string; targetFacts?: number }): Promise<DeepenResult> {
+export async function deepenCaseFacts(input: { caseName: string; summary?: string; niche?: string; sourcePayoff?: string; sourceSubject?: string; userId?: string; kind?: TopicKind; topicAnchor?: string; targetFacts?: number; targetMinutes?: number }): Promise<DeepenResult> {
   const t0 = Date.now();
   // Sanitize the case identity first: arbitrary prose in this field drifts retrieval.
   const caseName = toCaseIdentity(input.caseName || "");
   if (!caseName.trim()) return { facts: [], conflicts: [], status: "no-facts" };
+  // MOVE #5 — the per-minute fact budget the requested runtime honestly needs, and the hard
+  // cap on how many facts we will collect for it. targetFacts (if a caller passes it) wins;
+  // otherwise it is derived from the length slider's minutes.
+  const requestedMinutes = input.targetMinutes && input.targetMinutes > 0 ? Math.round(input.targetMinutes) : undefined;
+  const budget = input.targetFacts && input.targetFacts > 0 ? Math.min(MAX_FACTS, Math.round(input.targetFacts)) : factBudgetForMinutes(input.targetMinutes);
+  const factCap = Math.min(MAX_FACTS, Math.max(16, budget));
+  // Attach the honest-length reckoning to any ok-result: what the final facts support vs what
+  // was asked, so the UI can tell the truth about the supportable length (5d).
+  const withHonesty = (r: DeepenResult): DeepenResult => {
+    if (r.status !== "ok") return r;
+    const contextCount = r.facts.filter((f) => f.context).length;
+    return { ...r, factCount: r.facts.length, contextCount, honestMinutes: honestMinutes(r.facts.length), requestedMinutes, budget };
+  };
   const pkey = process.env.PERPLEXITY_API_KEY;
   // No Perplexity means no citable answers, and Claude-only facts would be
   // unsourced, which is exactly what must not reach the script. This is an OUTAGE,
@@ -1071,7 +1115,7 @@ Each question seeks a single concrete, citable fact. Output ONLY this JSON, no p
     // later run short-circuited here and never reached the merge at the bottom, so the
     // v1 facts (54 indicted, 28 months, full patch) stayed invisible.
     const priorHit = await getBestAcrossVersions(baseKey);
-    const mergedHit = unionFacts([...cached.facts, ...(priorHit?.facts || [])]).slice(0, 12);
+    const mergedHit = unionFacts([...cached.facts, ...(priorHit?.facts || [])]).slice(0, factCap);
     const whenHit = deriveWhenFromFacts(mergedHit) || cached.when || correction.when;
     if (mergedHit.length > cached.facts.length) {
       await putCachedFactSet(key, { caseName: cached.caseName || correction.caseName, when: whenHit, facts: mergedHit, conflicts: cached.conflicts });
@@ -1087,8 +1131,8 @@ Each question seeks a single concrete, citable fact. Output ONLY this JSON, no p
     // MOVE #2: supersede stale/weaker facts before returning — including any the LIBRARY
     // accumulated on an earlier run (the $10M the safety-gate TTL couldn't shed), so the
     // angle page and script never see a superseded number.
-    const reconciledHit = (await reconcileFacts(returnHit)).facts.slice(0, 16);
-    return { facts: reconciledHit, conflicts: cached.conflicts, status: "ok", caseName: cached.caseName || correction.caseName, when: whenHit };
+    const reconciledHit = (await reconcileFacts(returnHit)).facts.slice(0, factCap);
+    return withHonesty({ facts: reconciledHit, conflicts: cached.conflicts, status: "ok", caseName: cached.caseName || correction.caseName, when: whenHit });
   }
 
   if (!questions.length) return { facts: [], conflicts: [], status: "no-facts", ...correction };
@@ -1124,7 +1168,7 @@ Each question seeks a single concrete, citable fact. Output ONLY this JSON, no p
   // stands behind a claim while a wire story is available. If low-tier is all we
   // have, keep it rather than return nothing — the fact card already warns to verify.
   const strong = keep.filter((f) => sourceTier(f.source) !== "low");
-  let freshFacts = (strong.length >= 2 ? strong : keep).slice(0, 12);
+  let freshFacts = (strong.length >= 2 ? strong : keep).slice(0, factCap);
 
   // MOVE #3 — GENERIC-MECHANISM DIG. When the "how" is present but number-free, dig
   // specifically for the quantities FIRST, with targeted questions (not broad reformulations
@@ -1138,7 +1182,7 @@ Each question seeks a single concrete, citable fact. Output ONLY this JSON, no p
     const mechPairs = await fetchPerplexityAnswers(pkey, canonicalCaseName, input.summary, canonical, mechQs);
     if (mechPairs.length) {
       const reviewed = await reviewDeepenedFacts(canonicalCaseName, mechPairs, input.summary, watchlist);
-      freshFacts = unionFacts([...freshFacts, ...reviewed.keep]).slice(0, 12);
+      freshFacts = unionFacts([...freshFacts, ...reviewed.keep]).slice(0, factCap);
     }
   }
 
@@ -1151,8 +1195,10 @@ Each question seeks a single concrete, citable fact. Output ONLY this JSON, no p
   // Retrieval gravity is the caveat: on a topic that is 95% the same suspect material
   // (Tylenol), "fetch more" returns more of the same. So this is CAPPED at two extra rounds,
   // time-guarded, and STOPS EARLY when a round adds nothing genuinely new (fact overlap).
+  // MOVE #5(b): the depth loop now digs toward the per-minute BUDGET (a 20-min ask wants ~50
+  // facts, a 5-min ask ~12), not a flat 12. Same caps so retrieval gravity can't run away.
   const MIN_FACTS = 6;
-  const target = Math.min(12, Math.max(input.targetFacts && input.targetFacts > 0 ? Math.round(input.targetFacts) : 0, MIN_FACTS));
+  const target = Math.min(MAX_FACTS, Math.max(budget, MIN_FACTS));
   let askPool = [...questions];
   for (let round = 0; (freshFacts.length < target || (conflicts.length > 0 && round === 0)) && round < 2 && Date.now() - t0 < 60_000; round++) {
     const gaps = (await reformulateQuestions(canonicalCaseName, askPool.slice(0, 8))).filter((q) => !askPool.includes(q));
@@ -1162,8 +1208,36 @@ Each question seeks a single concrete, citable fact. Output ONLY this JSON, no p
     if (!morePairs.length) break;
     const reviewed = await reviewDeepenedFacts(canonicalCaseName, morePairs, input.summary, watchlist);
     const before = freshFacts.length;
-    freshFacts = unionFacts([...freshFacts, ...reviewed.keep]).slice(0, 12);
+    freshFacts = unionFacts([...freshFacts, ...reviewed.keep]).slice(0, factCap);
     if (freshFacts.length <= before) break; // nothing new — retrieval gravity; stop rather than loop
+  }
+
+  // MOVE #5(c) — CONTEXTUAL-FACT EXPANSION. The core case is now tapped (the depth loop above
+  // stopped adding case facts), but the budget may still be unmet. Rather than PAD, fetch real
+  // SURROUNDING CONTEXT — how the system/industry works, how this kind of thing is normally
+  // detected or prosecuted, what makes it a first, the closest prior cases. These are sourced
+  // and adjudicated like any other fact, marked context:true, and add honest minutes instead
+  // of filler. Capped and time-guarded like the depth loop.
+  if (freshFacts.length < target && Date.now() - t0 < 60_000) {
+    const contextQs = [
+      `What is the essential BACKGROUND CONTEXT for understanding ${canonicalCaseName}: how does the system, industry, technology, or mechanism it involves normally work?`,
+      `How is this kind of activity normally DETECTED, prevented, or prosecuted, and what makes ${canonicalCaseName} notable, unprecedented, or a first of its kind?`,
+      `What are the closest PRIOR or SIMILAR documented cases to ${canonicalCaseName}, and how does it compare to them in scale or method?`,
+    ];
+    let cAsk = [...contextQs];
+    for (let round = 0; freshFacts.length < target && round < 2 && Date.now() - t0 < 60_000; round++) {
+      const qs = round === 0 ? contextQs : await reformulateQuestions(canonicalCaseName, cAsk.slice(0, 6));
+      const fresh = qs.filter((q) => round === 0 || !cAsk.includes(q));
+      if (!fresh.length) break;
+      cAsk = cAsk.concat(fresh);
+      const cPairs = await fetchPerplexityAnswers(pkey, canonicalCaseName, input.summary, canonical, fresh);
+      if (!cPairs.length) break;
+      const reviewed = await reviewDeepenedFacts(canonicalCaseName, cPairs, input.summary, watchlist);
+      const ctx = reviewed.keep.map((f) => ({ ...f, context: true as const }));
+      const before = freshFacts.length;
+      freshFacts = unionFacts([...freshFacts, ...ctx]).slice(0, factCap);
+      if (freshFacts.length <= before) break; // context well is dry too — honesty ceiling will speak
+    }
   }
 
   // Union with the case's best prior fact set (any brief version) rather than
@@ -1171,7 +1245,7 @@ Each question seeks a single concrete, citable fact. Output ONLY this JSON, no p
   // earlier run's hard facts — 54 indicted, 53 convicted, 28 months, full patch — must
   // NOT be lost. Fresh facts lead (they carry the new material); prior uniques fill in.
   const prior = await getBestAcrossVersions(caseKey(canonicalCaseName));
-  const facts = unionFacts([...freshFacts, ...(prior?.facts || [])]).slice(0, 12);
+  const facts = unionFacts([...freshFacts, ...(prior?.facts || [])]).slice(0, factCap);
 
   // Prefer a date range the SOURCED FACTS state explicitly over the resolver's guess,
   // so a confidently-wrong 1999-2001 gives way to the 1998-2000 the record actually says.
@@ -1194,11 +1268,11 @@ Each question seeks a single concrete, citable fact. Output ONLY this JSON, no p
   if (input.userId && facts.length) {
     const lib = await addToLibrary(input.userId, libraryAnchor, facts, { topicLabel: canonicalCaseName });
     const all = activeFacts(lib);
-    if (all.length) returnFacts = all.map((f) => ({ fact: f.fact, source: f.source }));
+    if (all.length) returnFacts = all.map((f) => ({ fact: f.fact, source: f.source, context: f.context }));
   }
   // MOVE #2: reconcile before returning, so a superseded number (this run's or one the
   // library accumulated earlier) is dropped and the angle page states one authoritative
   // figure — the "$8M beats $10M, age-52 drops" adjudication, with zero human intervention.
-  const reconciled = (await reconcileFacts(returnFacts)).facts.slice(0, 16);
-  return { facts: reconciled, conflicts, status: "ok", caseName: correction.caseName, when: finalWhen };
+  const reconciled = (await reconcileFacts(returnFacts)).facts.slice(0, factCap);
+  return withHonesty({ facts: reconciled, conflicts, status: "ok", caseName: correction.caseName, when: finalWhen });
 }
