@@ -15,7 +15,7 @@ const C = {
   textDim: "#a6c0d8", green: "#34d399",
 };
 
-type Phase = "loading" | "pick-case" | "angles" | "research" | "storytelling" | "generating" | "result";
+type Phase = "loading" | "pick-case" | "angles" | "research" | "storytelling" | "generating" | "result" | "resolve-error";
 type Angle = { angle: string; description: string; audience: string; titleSuggestion: string; swap?: string | null; slot?: string; factRefs?: number[]; 
   // Short label for the progress screen. The composite outline sent to generation runs
   // to several hundred words, which swamped the box it was displayed in.
@@ -249,48 +249,51 @@ export default function ViralBriefPage() {
     return { kind: topicKind || "event", verdict: "documented", caseName: groundedCase.name, caseSummary: groundedCase.summary, when: groundedCase.when, sources: groundedCase.sources || [], facts: deepFacts.map((f) => (f.source ? `${f.fact} (source: ${f.source})` : f.fact)) };
   }
 
-  async function groundThenAngles(b: Brief) {
+  async function groundThenAngles(b: Brief, isRetry = false) {
     setResolving(true);
-    let g: any = null;
+    setError(null);
     try {
       const r = await fetch("/api/research/find", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ topic: b.selectedTitle, angle: b.selectedTitle, niche: b.niche }),
       });
-      const d = await r.json();
-      if (r.ok) {
+      const d = await r.json().catch(() => null);
+      if (r.ok && d) {
         setTopicKind(d.kind || null);
         setSourceVerdict(d.verdict || null);
         const cands = Array.isArray(d.candidates) ? d.candidates : [];
-        // Always confirm the case for an event, even when only one resolved. The
-        // pick-case screen doubles as the approval + override step, so the creator
-        // always sees and signs off on what the script will be grounded in rather
-        // than a case being chosen silently on their behalf.
-        // Events confirm a CASE; explainers and hypotheticals confirm a SCOPE question.
-        // Both need the same discipline — ground on something specific before writing
-        // angles — so both stop here rather than only the event path.
-        if ((d.kind === "event" || d.kind === "explainer" || d.kind === "hypothetical" || d.kind === "claim") && cands.length >= 1) {
+        console.log("[viral-brief] resolve", { ok: r.ok, kind: d.kind, candidates: cands.length, title: b.selectedTitle });
+        // Always confirm the case, even when only one resolved. The pick-case screen
+        // doubles as the approval + override step for every kind, so the creator signs
+        // off on what the script grounds in rather than a case being chosen silently.
+        if (cands.length >= 1) {
           setCaseChoices(cands); setResolving(false); setPhase("pick-case"); return;
         }
-        // FAIL-SAFE: unknown kind, or a kind that produced no candidates, must route
-        // TO grounding rather than around it. Skipping produced the worst possible
-        // combination — an ungrounded script on a contested literature, where none of
-        // the correlation or consensus rules can fire because there are no facts. When
-        // there is nothing to confirm, treat the chosen title itself as the scope and
-        // research that, so a script is never written on zero evidence.
-        if (d.kind !== "event") {
-          setResolving(false);
-          await groundAndAngles(
-            { name: b.selectedTitle, summary: b.selectedTitleDescription || "", when: "", sources: [] as string[] },
-            d.kind || "claim",
-            b,
-          );
-          return;
-        }
+        // ZERO CANDIDATES for ANY kind (including "event"). This used to fall through to
+        // ungrounded generic angles, which FABRICATE a mechanism ("spectral analysis
+        // fingerprints", "streams clustering at identical times") — the silent-fallback
+        // blocker. Never render ungrounded: ground on the chosen title itself so real
+        // research runs and the script is written on evidence, not invented specifics.
+        console.warn("[viral-brief] resolve returned 0 candidates — grounding on the title, not ungrounded angles", { kind: d.kind, title: b.selectedTitle });
+        setResolving(false);
+        await groundAndAngles(
+          { name: b.selectedTitle, summary: b.selectedTitleDescription || "", when: "", sources: [] as string[] },
+          d.kind || "event",
+          b,
+        );
+        return;
       }
-    } catch { /* best effort: fall through to ungrounded angles */ }
-    setResolving(false);
-    await fetchAngles(b, g);
+      // HARD FAILURE (non-200 or unparseable body). Retry once, then surface an error —
+      // NEVER silently render ungrounded, fabrication-prone angles.
+      console.error("[viral-brief] resolve failed", { status: r.status, isRetry });
+      if (!isRetry) { return groundThenAngles(b, true); }
+      setResolving(false); setError("Research could not resolve this topic right now."); setPhase("resolve-error");
+      return;
+    } catch (e) {
+      console.error("[viral-brief] resolve threw", { error: (e as any)?.message, isRetry });
+      if (!isRetry) { return groundThenAngles(b, true); }
+      setResolving(false); setError("Research is temporarily unavailable. Please try again in a moment."); setPhase("resolve-error");
+    }
   }
 
   async function fetchAngles(b: Brief, g?: any) {
@@ -660,6 +663,29 @@ export default function ViralBriefPage() {
       <Spinner />
       <div style={{ fontSize: 15, fontWeight: 600, color: C.accentDim }}>Crafting angles from viral DNA...</div>
       <div style={{ fontSize: 12, color: C.textDim }}>Analyzing hook · structure · retention mechanics</div>
+    </div>
+  );
+
+  // Resolution hard-failed (after a retry). We deliberately do NOT render angles here: an
+  // ungrounded angle set fabricates specifics, so a failed resolution surfaces as an honest
+  // error the creator can retry, never a factless generic script.
+  if (phase === "resolve-error") return (
+    <div style={{ minHeight: "100vh", background: C.bg, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: 14, padding: 24, fontFamily: "system-ui, sans-serif" }}>
+      <div style={{ fontSize: 30 }}>⚠</div>
+      <div style={{ fontSize: 16, fontWeight: 700, color: C.textBright, textAlign: "center" }}>Couldn&apos;t research this topic</div>
+      <div style={{ fontSize: 13, color: C.textDim, textAlign: "center", maxWidth: 420, lineHeight: 1.55 }}>
+        {error || "Research is temporarily unavailable."} Skripr won&apos;t write a script on invented facts, so nothing was generated. Try again in a moment.
+      </div>
+      <div style={{ display: "flex", gap: 10, marginTop: 6 }}>
+        <button onClick={() => { if (brief) void groundThenAngles(brief); }}
+          style={{ padding: "10px 20px", borderRadius: 10, border: "none", background: "linear-gradient(135deg,#0e6499,#1a8fd1,#4db8ff)", color: "#fff", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>
+          Try again
+        </button>
+        <button onClick={() => { window.location.href = "/dashboard/viral-remixer"; }}
+          style={{ padding: "10px 20px", borderRadius: 10, border: `1px solid ${C.border}`, background: "transparent", color: C.textDim, fontSize: 14, fontWeight: 600, cursor: "pointer" }}>
+          Start over
+        </button>
+      </div>
     </div>
   );
 

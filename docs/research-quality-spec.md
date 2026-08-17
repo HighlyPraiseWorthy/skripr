@@ -247,3 +247,22 @@ the zero-edit bar. Four fixes, same "adjudicate/floor, don't fabricate" discipli
 Live proof PENDING: run the Michael Smith / Spotify case twice under the same preview user — run 1
 warms the store, run 2 must re-surface the $8M forfeiture and the 1,040/661,440 mechanism, not a
 weaker set.
+
+## Blocker fix — no silent fallback to ungrounded angles (branch)
+
+Symptom: intermittently the flow skipped "Confirm the case" and rendered ungrounded generic
+angles whose mechanism was fabricated ("spectral analysis fingerprints"). No 500 in the logs —
+a logic path, not a crash.
+
+Root cause: `groundThenAngles` (viral-brief) only routed `kind !== "event"` with zero candidates
+to grounding; an EVENT that resolved to **zero candidates** fell through to `fetchAngles(b, null)`
+= ungrounded. And `!r.ok` / a thrown fetch landed there too. The intermittency is upstream:
+`findResearch` classifies `kind` via Perplexity Sonar (a LIVE search), so the same title resolves
+"event" one run and "claim"/"explainer" the next, changing whether `resolveSubjects` runs. Neither
+the length budget nor the v3 cache touches this path.
+
+Fix: zero candidates for ANY kind now grounds on the chosen title (real research), never
+ungrounded angles; a hard failure retries once, then surfaces a `resolve-error` screen with Try
+Again / Start over — it never renders a factless, fabrication-prone script. Added logging at the
+branch (`[viral-brief] resolve`, `[findResearch] resolved`, `[resolveSubjects] resolved`) so a
+future empty run shows which path fired and why.

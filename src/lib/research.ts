@@ -390,8 +390,19 @@ Only include a fact you can attribute to a real source URL. Output ONLY this JSO
       }
     }
 
+    // Log the resolution outcome so an intermittent "0 candidates" run is diagnosable. The
+    // intermittency lives HERE: Perplexity Sonar classifies `kind` from a LIVE search, so the
+    // same title can come back "event" one run and "claim"/"explainer" the next, changing
+    // whether resolveSubjects runs at all. (Neither the length budget nor the v3 cache touches
+    // this path.) When an event yields no candidates, the client now grounds on the title
+    // rather than rendering ungrounded angles — but this line shows WHY it was empty.
+    console.log("[findResearch] resolved", { kind, candidates: candidates.length, verdict, factCount: facts.length, topic: (input.topic || "").slice(0, 80) });
+    if (kind === "event" && candidates.length === 0) {
+      console.warn("[findResearch] EVENT resolved to 0 candidates — resolveSubjects returned none or was skipped", { topic: (input.topic || "").slice(0, 80), angle: (input.angle || "").slice(0, 80) });
+    }
     return { ok: true, kind, verdict, verdictNote, facts, citations, candidates };
   } catch (e: any) {
+    console.error("[findResearch] threw", { error: e?.name === "TimeoutError" ? "timeout" : e?.message });
     return { ok: false, error: e?.name === "TimeoutError" ? "Research lookup timed out." : (e?.message || "Research lookup failed.") };
   }
 }
@@ -547,9 +558,11 @@ Output ONLY this JSON, no prose, no markdown:
     // MOVE #1: rank the event candidates by authoritative coverage and attach the
     // living-person/company guard, so the confirm card leads with the DOJ-documented case
     // and flags an uncharged individual. Scope questions (other kinds) are not ranked.
+    const preRank = candidates.length;
     if (kind === "event" && candidates.length) {
       candidates = await rankAndGuardCandidates(topic, candidates);
     }
+    console.log("[resolveSubjects] resolved", { kind, claudeCandidates: preRank, finalCandidates: candidates.length, topic: topic.slice(0, 80) });
     return { ok: true, kind, candidates };
   } catch (e: any) {
     return { ok: false, error: e?.message || "Subject lookup failed." };
