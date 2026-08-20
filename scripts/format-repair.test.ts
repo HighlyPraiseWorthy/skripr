@@ -1,6 +1,6 @@
 // Offline test for the mid-sentence paragraph-break repair. Run:
 //   node --experimental-strip-types --loader ./scripts/alias-loader.mjs scripts/format-repair.test.ts
-import { healMidSentenceBreaks, restampHook, hookIsVague, endingTeasesWithoutLanding, isUsableRewrite, chooseRewrite } from "../src/lib/ai/claude.ts";
+import { healMidSentenceBreaks, restampHook, hookIsVague, hookDumpsPayoff, endingTeasesWithoutLanding, isUsableRewrite, chooseRewrite, repeatedOpeners } from "../src/lib/ai/claude.ts";
 
 let failures = 0;
 function check(name: string, cond: boolean) {
@@ -62,6 +62,29 @@ check("an oversized rewrite falls back to the original", chooseRewrite("original
 check("a good rewrite is used", chooseRewrite("original hook here", "A song no one ever chose to play is streaming right now.") === "A song no one ever chose to play is streaming right now.");
 check("isUsableRewrite rejects empty/refusal/oversized, accepts a good line",
   !isUsableRewrite("") && !isUsableRewrite("Sorry, I cannot.") && !isUsableRewrite("x ".repeat(90)) && isUsableRewrite("A stark concrete image opens the video."));
+
+// Move #9 fix #2 refinements — withholding hook, extended callback detection, anaphora.
+console.log("withholding hook detection:");
+check("flags a fact-dump hook (bots + $10M in the opening)",
+  hookDumpsPayoff("Ten thousand bot accounts streamed his music and he collected more than $10 million."));
+check("flags a hook that names the mechanism (AI fraud)",
+  hookDumpsPayoff("This was an AI streaming fraud scheme run through a shell company."));
+check("does NOT flag a withholding paradox hook",
+  hookDumpsPayoff("A song no human ever chose to hear is playing right now. It has millions of streams and not one fan.") === false);
+check("a fact-dump hook triggers a rewrite (vague-or-dump)",
+  hookIsVague("Ten thousand bot accounts...") || hookDumpsPayoff("Ten thousand bot accounts streamed his music and he collected $10 million."));
+check("extended callback detection catches the 'takes a turn the documents don't explain' tease",
+  endingTeasesWithoutLanding("And that is where this case takes a direction the charging documents don't explain."));
+
+console.log("anaphora guard:");
+const anaParas = [
+  "The story starts in 2017.",
+  "Ten thousand accounts. That number comes directly from the indictment, and it is the spine of the case.",
+  "The detection systems were blind to it for years.",
+  "Ten thousand accounts. That number comes directly from the indictment, and it is worth sitting with.",
+];
+check("detects a repeated section-opening figure/line", repeatedOpeners(anaParas).includes(3));
+check("does not flag distinct openers", repeatedOpeners(["First, the setup here.", "Second, the mechanism.", "Third, the fallout."]).length === 0);
 
 console.log(failures === 0 ? "\nALL PASS" : `\n${failures} FAILURE(S)`);
 process.exit(failures === 0 ? 0 : 1);

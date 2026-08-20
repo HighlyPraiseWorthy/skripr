@@ -1150,10 +1150,13 @@ ANGLE OUTRANKS A CONFLICTING NOTE: if a note aims the climax at a moment that is
   let hookText = typeof (script as any).hook === "string" ? (script as any).hook.trim() : "";
 
   // MOVE #9 fix #2 — GUARDED hook rewrite (runs BEFORE the re-stamp so a rewrite is synced into
-  // the body). Fires ONLY when the hook is clearly vague; keeps the original on any failure.
-  if (hookText && hookIsVague(hookText)) {
+  // the body). Fires when the hook is vague OR fact-dumps the payoff; accepts the rewrite ONLY if
+  // it is usable AND genuinely WITHHOLDS (does not itself dump the mechanism/figure), else keeps
+  // the original. So it can only replace a failing hook with a withholding one — never regress.
+  if (hookText && (hookIsVague(hookText) || hookDumpsPayoff(hookText))) {
     const rewritten = await rewriteVagueHook(hookText, input.sourceMaterial, input.voiceProfile, startedAt);
-    const chosen = chooseRewrite(hookText, rewritten, 55);
+    const withholds = isUsableRewrite(rewritten, 60) && !hookDumpsPayoff((rewritten as string).trim());
+    const chosen = withholds ? (rewritten as string).trim() : hookText;
     if (chosen !== hookText) { hookText = chosen; (script as any).hook = chosen; }
   }
 
@@ -1185,6 +1188,19 @@ ANGLE OUTRANKS A CONFLICTING NOTE: if a note aims the climax at a moment that is
         (script as any)[bodyKey2] = paras.join("\n\n");
       }
     }
+
+    // MOVE #9 fix #2(3) — ANAPHORA GUARD. Reword paragraphs that open by restating the same
+    // figure/line as an earlier section (the "Ten thousand accounts…" drumbeat). Capped at 2
+    // rewrites, each guarded with a fallback to the original paragraph.
+    const paras2 = ((script as any)[bodyKey2] as string).split(/\n\n+/);
+    const repeats = repeatedOpeners(paras2).slice(0, 2);
+    let changed = false;
+    for (const idx of repeats) {
+      const rewritten = await rewriteRepeatedOpener(paras2[idx], startedAt);
+      const chosen = chooseRewrite(paras2[idx], rewritten, 400);
+      if (chosen !== paras2[idx]) { paras2[idx] = chosen; changed = true; }
+    }
+    if (changed) (script as any)[bodyKey2] = paras2.join("\n\n");
   }
 
   return script;
@@ -1237,15 +1253,67 @@ export function hookIsVague(hook: string): boolean {
   return /\b(something (?:was|kept|had been|felt)\s+(?:quietly|slowly|going|deeply|off|wrong|draining|happening)|for (?:years|decades|nearly [\w-]+ years|the better part of [\w-]+ years)[,\s]+(?:something|a scheme|a system|nobody|no one|few|it)\b|few (?:people )?(?:noticed|realized|knew|understood)|nobody (?:noticed|realized|suspected|knew)\b|no one (?:noticed|suspected)\b|quietly (?:draining|operating|building|happening|slipping)|in the shadows|beneath the surface|behind the scenes,?\s+(?:something|a\b))/i.test(first);
 }
 
-// An ending fails when it TEASES a follow-up ("what happened next", "who assembled it", "more
-// consequential than…") instead of landing on a concrete sourced fact (a figure or a documented
-// outcome). Fires only when it teases AND does not land.
+// A hook FACT-DUMPS when it hands over the explanation in the opening — the mechanism nouns
+// (bots, AI, fraud, scheme, indictment) or the precise money figure. That leaves no curiosity
+// gap: the hook answers its own question, which is exactly why even Skripr's "good" number-led
+// hooks don't pull and why the open-loop check correctly flags "nothing deferred". The fix is to
+// make the hook WITHHOLD the payoff (lead with the strange situation), not to loosen the check.
+export function hookDumpsPayoff(hook: string): boolean {
+  const h = (hook || "");
+  const mechanism = /\b(bots?|bot accounts?|artificial intelligence|\bA\.?I\.?\b|fraud\w*|scheme|indict\w+|laundered|money laundering|algorithm|shell compan\w+)\b/i.test(h);
+  const money = /[$£€]\s?\d|\b\d+(?:\.\d+)?\s*million\b|\bmillion dollars\b/i.test(h);
+  return mechanism || money;
+}
+
+// An ending fails when it TEASES a follow-up ("what happened next", "who assembled it", "where
+// this case takes a turn the charging documents don't explain") instead of landing on a concrete
+// sourced fact. Fires only when it teases AND does not land.
 export function endingTeasesWithoutLanding(closing: string): boolean {
   const c = (closing || "");
-  const teases = /\b(what (?:happened|comes|came) (?:next|after|to)|who (?:assembled|built|was behind|else was)|more consequential than|not what anyone expected|the (?:real )?question (?:remains|is|becomes)|remains? to be seen|only time will tell|what (?:investigators|prosecutors|they) (?:found|discovered|would find)|still (?:out there|unanswered)|may never (?:be )?know)\b/i.test(c);
+  const teases = /\b(what (?:happened|comes|came) (?:next|after|to)|who (?:assembled|built|was behind|else was)|more consequential than|not what anyone expected|the (?:real )?question (?:remains|is|becomes)|remains? to be seen|only time will tell|what (?:investigators|prosecutors|they) (?:found|discovered|would find)|still (?:out there|unanswered)|may never (?:be )?know|(?:where|when) (?:this|the) (?:case|story|investigation) (?:takes?|took|turns?|turned|goes|went)|takes? a (?:direction|turn)|the charging documents (?:don'?t|do not) (?:explain|say|cover)|that'?s where (?:it|this|the story))\b/i.test(c);
   if (!teases) return false;
   const lands = /\b(forfeit\w*|pleaded guilty|pled guilty|guilty plea|convicted|sentenced|settlement|verdict|judgment|restitution|ordered to pay)\b/i.test(c) || /[$£€]\s?\d|\b\d[\d,]{2,}\b/.test(c);
   return !lands;
+}
+
+// Detect paragraphs that OPEN by restating an earlier paragraph's opening figure or line — the
+// "Ten thousand accounts. That number comes directly from the indictment." drumbeat repeated
+// across sections that trips the padding check. Signature = the opener's leading number, else its
+// first five normalized words. Returns the indices of the REPEATS (the later occurrences).
+export function repeatedOpeners(paras: string[]): number[] {
+  const seen = new Map<string, number>();
+  const repeats: number[] = [];
+  paras.forEach((p, i) => {
+    const t = (p || "").trim();
+    if (!t) return;
+    const firstSent = t.split(/(?<=[.!?])\s/)[0] || t;
+    const num = firstSent.match(/\b\d[\d,]*(?:\.\d+)?\b/);
+    const sig = num ? `n:${num[0].replace(/,/g, "")}` : `w:${firstSent.toLowerCase().replace(/[^a-z0-9 ]/g, "").split(/\s+/).filter(Boolean).slice(0, 5).join(" ")}`;
+    if (sig.length <= 2) return;
+    if (seen.has(sig)) repeats.push(i);
+    else seen.set(sig, i);
+  });
+  return repeats;
+}
+
+// Guarded LLM rewrite of one paragraph whose opener repeats an earlier one — reword ONLY the
+// opening so it does not restate the same figure/line, keeping the paragraph's content. Null on failure.
+async function rewriteRepeatedOpener(paragraph: string, startedAt: number): Promise<string | null> {
+  if (Date.now() - startedAt > 252_000) return null;
+  try {
+    const msg = await getAnthropic().messages.create({
+      model: "claude-sonnet-4-6",
+      max_tokens: 400,
+      temperature: 0.4,
+      system: "You lightly edit one paragraph of a documentary script. Output ONLY the edited paragraph as plain prose — no label, no quotes.",
+      messages: [{ role: "user", content: `This paragraph opens by RESTATING a figure/line the script already opened an earlier section with (a repetitive drumbeat). Rewrite ONLY its opening sentence so it does NOT lead with that same number or the same "that number comes from the indictment" restatement — open it a different way and move straight into the section's substance. Keep every fact and the rest of the paragraph. Invent nothing.
+
+Paragraph:
+${paragraph}` }],
+    });
+    const t = msg.content[0]?.type === "text" ? msg.content[0].text.trim() : "";
+    return t || null;
+  } catch { return null; }
 }
 
 // GUARD (pure): is a rewrite usable? Non-empty, not absurdly long, not a refusal/echo.
@@ -1274,16 +1342,18 @@ async function rewriteVagueHook(originalHook: string, sourceMaterial: string | u
       max_tokens: 260,
       temperature: 0.5,
       system: "You rewrite the cold-open hook of a documentary script. Output ONLY the new hook as plain speakable prose — no label, no quotes, no commentary.",
-      messages: [{ role: "user", content: `The current hook is a VAGUE abstract opener that fails ("${originalHook}"). Rewrite it.
+      messages: [{ role: "user", content: `The current hook FAILS because it hands over the answer instead of creating a mystery ("${originalHook}"). Rewrite it to WITHHOLD.
 
 FACTS (use ONLY these; invent nothing):
 ${facts}
 
-Rules for the new hook (1 to 3 sentences, at most ~45 words):
-- Pick the strongest DEVICE the facts support: a PARADOX (two true facts that can't both be true, held side by side), a COLD VIVID SCENE (drop into one documented moment), a TICKING CLOCK, or a single STARK CONCRETE OBJECT.
-- The VERY FIRST SENTENCE must be that device firing on a specific concrete image or contradiction from the facts. Never "something was quietly...", never a vague windup.
-- DEFER the payoff: tease the question, do not resolve it in the hook.
-- Use only what the facts state. No new numbers, names, or claims.${voiceProfile ? `\n- Voice (render the wording in this style, but keep the device and the concrete image): ${voiceProfile.slice(0, 400)}` : ""}` }],
+The best hooks work like this benchmark, which leads with a paradox and withholds the explanation: "Imagine opening Spotify and discovering one of the biggest artists in the world has billions of streams. Except there is no superstar. No concerts. No fans. No human audience at all. The music is mostly AI. And the listeners? They're bots." It makes you ask HOW before it ever explains.
+
+Rules for the new hook (2 to 4 short sentences, at most ~55 words):
+- LEAD WITH THE STRANGE SITUATION OR PARADOX drawn from the facts — the thing that makes no sense and makes the viewer ask "how is that possible?" (e.g. a song playing that no human ever chose to hear; an artist with millions of streams and zero fans). NOT the biggest number.
+- WITHHOLD THE EXPLANATION. Do NOT put the mechanism or the payoff in the hook: no "bots", no "AI", no "fraud", no "scheme", no "indictment", no dollar figure. Those are the reveal — save them for later. The hook states the mystery; the video answers it.
+- BUILD WITH RHYTHM where it helps — an accumulating list of absences lands hard ("No fans. No concerts. No human audience.").
+- Use only what the facts state; invent nothing.${voiceProfile ? `\n- Render the wording in this creator's voice, but keep the paradox and the withholding. If the voice never uses second person ("imagine you..."), do NOT use it: ${voiceProfile.slice(0, 400)}` : "\n- You may address the viewer directly (\"Imagine opening Spotify...\") — it pulls the viewer in."}` }],
     });
     const t = msg.content[0]?.type === "text" ? msg.content[0].text.trim() : "";
     return t || null;

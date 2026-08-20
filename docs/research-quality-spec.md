@@ -683,3 +683,25 @@ rewrite is an LLM call that earns the preview gate:
 → original retained); all six suites green. PREVIEW VERIFICATION (the rewrite quality): across a
 few runs, does the hook now lead on a concrete-image device consistently (the tell was 4/5 then
 3/5), and does the ending land on the forfeiture instead of a co-conspirator cliffhanger?
+
+## Hook/callback fix #2 — refinements (withholding hook, callback shapes, anaphora)
+
+The key correction: ChatGPT out-hooks Skripr not by better writing but because it WITHHOLDS the
+answer while Skripr fact-dumps it in sentence one ("Ten thousand bots… $10M"). The open-loop check
+was RIGHT to flag "nothing deferred." So: don't loosen the check — make the hook withhold.
+
+1. **Withholding hook.** New `hookDumpsPayoff` fires when the hook hands over the mechanism (bots/
+   AI/fraud/scheme/indictment) or a money figure. The rewrite now triggers on vague OR fact-dump,
+   and is accepted ONLY if the rewrite genuinely WITHHOLDS (does not itself dump) — so a failing
+   hook can only be replaced by a withholding one, never regressed. The rewrite prompt leads with
+   the strange SITUATION/paradox, withholds the explanation (no bots/AI/$/fraud in the hook),
+   builds with rhythm, and uses second person only if the voice allows.
+2. **Callback detection extended** to the missed shape ("where this case takes a direction the
+   charging documents don't explain", "takes a turn", "that's where it…").
+3. **Anaphora guard.** `repeatedOpeners` detects paragraphs that open by restating an earlier
+   section's leading figure/line (the "Ten thousand accounts…" drumbeat ~3×); up to 2 are
+   reworded by a guarded rewrite (fallback to original).
+
+`tsc`-clean; new detection + guard unit tests green; all six suites green. Preview-verify the
+rewrite quality: hook now LEADS on the paradox and WITHHOLDS bots/AI/$ (across a few runs), the
+ending lands on the forfeiture, and section openers don't drum the same figure.
