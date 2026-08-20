@@ -661,3 +661,25 @@ Still open (deterministic, force-it): the hook device + callback RE-STAMP — a 
 that guarantees the first sentence is the selected device on a concrete image and the ending
 returns to it + lands on a sourced fact (prompt nudges have failed ~3 runs; needs a rewrite pass,
 preview-verified). Then the timeout refactor for the 20-min head-to-head.
+
+## Hook/callback fix #2 — deterministic detection + GUARDED rewrite (BUILT, preview-gated)
+
+"Force it, don't ask." Prompt nudges failed ~3 runs (hook opened vague, ending teased). Built as a
+post-generation pass whose two GUARDS are pure/deterministic and unit-tested, even though the
+rewrite is an LLM call that earns the preview gate:
+- **Detection (conservative, under-fire):** `hookIsVague` fires only on the specific failing shapes
+  ("something was quietly…", "for years,…", "few noticed…"); `endingTeasesWithoutLanding` fires
+  only when the ending teases ("what happened next", "who assembled it") AND does not land on a
+  sourced figure/outcome. A false negative is cheap; a false positive touches the finished script.
+- **Guard (a):** the rewriter is called ONLY when detection fires — a hook/callback that already
+  works is never touched.
+- **Guard (b):** `chooseRewrite`/`isUsableRewrite` keep the ORIGINAL on any empty, oversized, or
+  refusal return, and on any error. Worst case is "fails to improve an already-failing hook" — it
+  cannot regress a good one.
+- The hook rewrite runs BEFORE `restampHook` so it re-syncs into the body; the ending rewrite
+  replaces only the final paragraph. Both time-guarded within the generation budget.
+
+`tsc`-clean; detection + both guards unit-tested (passing hook → no rewrite; garbage/empty/refusal
+→ original retained); all six suites green. PREVIEW VERIFICATION (the rewrite quality): across a
+few runs, does the hook now lead on a concrete-image device consistently (the tell was 4/5 then
+3/5), and does the ending land on the forfeiture instead of a co-conspirator cliffhanger?

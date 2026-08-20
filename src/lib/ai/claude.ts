@@ -1147,7 +1147,16 @@ ANGLE OUTRANKS A CONFLICTING NOTE: if a note aims the climax at a moment that is
   // first line drift apart — a visible bug the hook-matches-script check flags. Overwrite
   // the body's opening sentence(s) with the hook verbatim, making the guarantee
   // deterministic instead of hoped for.
-  const hookText = typeof (script as any).hook === "string" ? (script as any).hook.trim() : "";
+  let hookText = typeof (script as any).hook === "string" ? (script as any).hook.trim() : "";
+
+  // MOVE #9 fix #2 — GUARDED hook rewrite (runs BEFORE the re-stamp so a rewrite is synced into
+  // the body). Fires ONLY when the hook is clearly vague; keeps the original on any failure.
+  if (hookText && hookIsVague(hookText)) {
+    const rewritten = await rewriteVagueHook(hookText, input.sourceMaterial, input.voiceProfile, startedAt);
+    const chosen = chooseRewrite(hookText, rewritten, 55);
+    if (chosen !== hookText) { hookText = chosen; (script as any).hook = chosen; }
+  }
+
   if (hookText) {
     for (const k of ["fullScript", "script", "body", "content"]) {
       const cur = (script as any)[k];
@@ -1157,6 +1166,23 @@ ANGLE OUTRANKS A CONFLICTING NOTE: if a note aims the climax at a moment that is
       const s0 = (script as any).sections[0];
       if (s0 && typeof s0.content === "string" && s0.content.trim()) {
         (script as any).sections[0] = { ...s0, content: restampHook(s0.content, hookText) };
+      }
+    }
+  }
+
+  // MOVE #9 fix #2 — GUARDED ending rewrite. Fires ONLY when the ending teases without landing
+  // on a sourced fact; keeps the original on any failure. Rewrites just the final paragraph.
+  const bodyKey2 = ["fullScript", "script", "body", "content"].find((k) => typeof (script as any)[k] === "string" && (script as any)[k].trim());
+  if (bodyKey2) {
+    const body = (script as any)[bodyKey2] as string;
+    const paras = body.split(/\n\n+/);
+    const lastPara = paras[paras.length - 1] || "";
+    if (lastPara && endingTeasesWithoutLanding(lastPara)) {
+      const rewritten = await rewriteTeasingEnding(lastPara, hookText, input.sourceMaterial, startedAt);
+      const chosen = chooseRewrite(lastPara, rewritten, 60);
+      if (chosen !== lastPara) {
+        paras[paras.length - 1] = chosen;
+        (script as any)[bodyKey2] = paras.join("\n\n");
       }
     }
   }
@@ -1190,6 +1216,106 @@ export function restampHook(body: string, hook: string): string {
   }
   rest = rest.replace(/^\s+/, "");
   return rest ? `${h} ${rest}` : h;
+}
+
+// ---- MOVE #9 fix #2: deterministic detection + GUARDED rewrite of the hook/callback ----
+// "Force it, don't ask." Prompt nudges failed ~3 runs (hook opened vague, ending teased). The
+// rewrite itself is an LLM call (preview-gated), but the two GUARDS are pure and deterministic:
+//   (a) it fires ONLY when detection clearly says the hook is vague / the ending teases — so it
+//       never touches a hook/callback that already works;
+//   (b) it keeps the ORIGINAL on any rewrite failure or empty/oversized return.
+// Worst case is therefore "fails to improve an already-failing hook" — it cannot regress a good
+// one. Detection is deliberately CONSERVATIVE (under-fire): a false negative is cheap, a false
+// positive touches the finished script.
+
+// A hook is vague when it opens on an abstract windup instead of a concrete image/paradox. Tight
+// on purpose — only the specific failing shapes.
+export function hookIsVague(hook: string): boolean {
+  const h = (hook || "").trim();
+  if (!h) return false;
+  const first = h.split(/(?<=[.!?])\s/)[0] || h;
+  return /\b(something (?:was|kept|had been|felt)\s+(?:quietly|slowly|going|deeply|off|wrong|draining|happening)|for (?:years|decades|nearly [\w-]+ years|the better part of [\w-]+ years)[,\s]+(?:something|a scheme|a system|nobody|no one|few|it)\b|few (?:people )?(?:noticed|realized|knew|understood)|nobody (?:noticed|realized|suspected|knew)\b|no one (?:noticed|suspected)\b|quietly (?:draining|operating|building|happening|slipping)|in the shadows|beneath the surface|behind the scenes,?\s+(?:something|a\b))/i.test(first);
+}
+
+// An ending fails when it TEASES a follow-up ("what happened next", "who assembled it", "more
+// consequential than…") instead of landing on a concrete sourced fact (a figure or a documented
+// outcome). Fires only when it teases AND does not land.
+export function endingTeasesWithoutLanding(closing: string): boolean {
+  const c = (closing || "");
+  const teases = /\b(what (?:happened|comes|came) (?:next|after|to)|who (?:assembled|built|was behind|else was)|more consequential than|not what anyone expected|the (?:real )?question (?:remains|is|becomes)|remains? to be seen|only time will tell|what (?:investigators|prosecutors|they) (?:found|discovered|would find)|still (?:out there|unanswered)|may never (?:be )?know)\b/i.test(c);
+  if (!teases) return false;
+  const lands = /\b(forfeit\w*|pleaded guilty|pled guilty|guilty plea|convicted|sentenced|settlement|verdict|judgment|restitution|ordered to pay)\b/i.test(c) || /[$£€]\s?\d|\b\d[\d,]{2,}\b/.test(c);
+  return !lands;
+}
+
+// GUARD (pure): is a rewrite usable? Non-empty, not absurdly long, not a refusal/echo.
+export function isUsableRewrite(s: string | null | undefined, maxWords = 70): boolean {
+  const t = (s || "").trim();
+  if (!t) return false;
+  const w = t.split(/\s+/).length;
+  if (w < 3 || w > maxWords) return false;
+  if (/^(i (?:can'?t|cannot|won'?t)|as an ai|sorry|here('?s| is)\b)/i.test(t)) return false;
+  return true;
+}
+// GUARD (pure): the hook/ending to actually use — the rewrite only when usable, else the original.
+export function chooseRewrite(original: string, rewritten: string | null | undefined, maxWords = 70): string {
+  return isUsableRewrite(rewritten, maxWords) ? (rewritten as string).trim() : original;
+}
+
+// LLM rewrite of ONLY the hook (preview-gated). Targeted, device-from-facts, defers the payoff,
+// respects the voice. Returns null on any failure so the guard keeps the original.
+async function rewriteVagueHook(originalHook: string, sourceMaterial: string | undefined, voiceProfile: string | undefined, startedAt: number): Promise<string | null> {
+  if (Date.now() - startedAt > 245_000) return null;
+  const facts = (sourceMaterial || "").slice(0, 2200);
+  if (!facts.trim()) return null;
+  try {
+    const msg = await getAnthropic().messages.create({
+      model: "claude-sonnet-4-6",
+      max_tokens: 260,
+      temperature: 0.5,
+      system: "You rewrite the cold-open hook of a documentary script. Output ONLY the new hook as plain speakable prose — no label, no quotes, no commentary.",
+      messages: [{ role: "user", content: `The current hook is a VAGUE abstract opener that fails ("${originalHook}"). Rewrite it.
+
+FACTS (use ONLY these; invent nothing):
+${facts}
+
+Rules for the new hook (1 to 3 sentences, at most ~45 words):
+- Pick the strongest DEVICE the facts support: a PARADOX (two true facts that can't both be true, held side by side), a COLD VIVID SCENE (drop into one documented moment), a TICKING CLOCK, or a single STARK CONCRETE OBJECT.
+- The VERY FIRST SENTENCE must be that device firing on a specific concrete image or contradiction from the facts. Never "something was quietly...", never a vague windup.
+- DEFER the payoff: tease the question, do not resolve it in the hook.
+- Use only what the facts state. No new numbers, names, or claims.${voiceProfile ? `\n- Voice (render the wording in this style, but keep the device and the concrete image): ${voiceProfile.slice(0, 400)}` : ""}` }],
+    });
+    const t = msg.content[0]?.type === "text" ? msg.content[0].text.trim() : "";
+    return t || null;
+  } catch { return null; }
+}
+
+// LLM rewrite of ONLY the final beat (preview-gated) so it lands on a concrete sourced fact
+// instead of a cliffhanger tease. Returns null on failure.
+async function rewriteTeasingEnding(originalEnding: string, hookText: string, sourceMaterial: string | undefined, startedAt: number): Promise<string | null> {
+  if (Date.now() - startedAt > 250_000) return null;
+  const facts = (sourceMaterial || "").slice(0, 2000);
+  if (!facts.trim()) return null;
+  try {
+    const msg = await getAnthropic().messages.create({
+      model: "claude-sonnet-4-6",
+      max_tokens: 220,
+      temperature: 0.4,
+      system: "You rewrite the final beat of a documentary script. Output ONLY the new closing beat as plain speakable prose — no label, no quotes.",
+      messages: [{ role: "user", content: `The current ending TEASES an unresolved follow-up instead of landing: "${originalEnding}". Rewrite the final beat.
+
+HOOK it should call back to: "${hookText}"
+FACTS (use ONLY these):
+${facts}
+
+The new ending (1 to 3 sentences, short and hard):
+- RETURN to the concrete image or thread from the hook.
+- LAND on a REAL sourced fact: the settled figure, the guilty plea, the documented outcome. No cliffhanger, no "what happened next", no teased revelation.
+- Use only what the facts state. Stop on the strongest line.` }],
+    });
+    const t = msg.content[0]?.type === "text" ? msg.content[0].text.trim() : "";
+    return t || null;
+  } catch { return null; }
 }
 
 export interface HookGenerationInput {
