@@ -263,5 +263,21 @@ check("flags an ending that teases a revelation the facts don't deliver", !ir(te
 const cleanEnding = "He ran the scheme for years.\n\nThe bots streamed around the clock.\n\nIn January 2024 he pleaded guilty, and the court ordered an $8,091,843.64 forfeiture.";
 check("passes an ending that lands on a real documented outcome", ir(cleanEnding).pass);
 
+// UNIVERSAL figure-check — voice-independent. The SAME fact rendered three ways must all match;
+// an actually-absent number must flag in all three renderings.
+console.log("figure-check: voice-independent number normalization:");
+const moneyFacts = ["The court ordered an $8,091,843.64 forfeiture."];
+const fg = (s: string) => get(checkCompliance({ fullScript: s + " " + "and the analysis continues here. ".repeat(8), facts: moneyFacts }), "grounding");
+check("digits form of the fact passes", fg("The forfeiture was 8,091,843 dollars.").pass);
+check("spelled-out form of the fact passes", fg("The forfeiture was eight million ninety one thousand eight hundred forty three dollars.").pass);
+check("abbreviated $8M form of the fact passes", fg("The forfeiture was about $8M.").pass);
+check("an absent figure flags in digit form", !fg("They seized 25,000,000 dollars.").pass);
+check("an absent figure flags in spelled form", !fg("They seized twenty five million dollars.").pass);
+check("an absent figure flags in abbreviated form", !fg("They seized $25M.").pass);
+// The fragmentation bug: a correctly-spelled big number is parsed whole, not chopped into fragments.
+const bigFacts = ["The bots generated 661,440 streams a day."];
+check("a correctly-spelled big number matching the facts passes (no fragmentation)",
+  get(checkCompliance({ fullScript: "The bots generated six hundred sixty one thousand four hundred forty streams a day. " + "More analysis here. ".repeat(8), facts: bigFacts }), "grounding").pass);
+
 console.log(failures === 0 ? "\nALL PASS" : `\n${failures} FAILURE(S)`);
 process.exit(failures === 0 ? 0 : 1);

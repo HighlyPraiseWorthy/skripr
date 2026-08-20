@@ -69,6 +69,70 @@ export function sourceSectionRatio(structure?: { timestamp?: string }[]): number
 
 const words = (s: string) => (s || "").split(/\s+/).filter(Boolean).length;
 
+// ---- UNIVERSAL NUMERIC NORMALIZATION (voice-independent) --------------------------------
+// The figure-check must not care how a voice renders a number — digits, spelled out, or
+// abbreviated ("$8M"). It normalizes BOTH the script and the facts to numeric VALUES and
+// matches on value, and it parses a WHOLE spelled number ("six hundred sixty-one thousand
+// four hundred forty" = 661440) instead of fragmenting it into "six hundred" + "four hundred"
+// (the bug that flagged real, correctly-spelled figures as invented).
+const _ONES: Record<string, number> = { zero: 0, one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10, eleven: 11, twelve: 12, thirteen: 13, fourteen: 14, fifteen: 15, sixteen: 16, seventeen: 17, eighteen: 18, nineteen: 19 };
+const _TENS: Record<string, number> = { twenty: 20, thirty: 30, forty: 40, fifty: 50, sixty: 60, seventy: 70, eighty: 80, ninety: 90 };
+const _SCALE: Record<string, number> = { hundred: 100, thousand: 1000, million: 1e6, billion: 1e9, trillion: 1e12 };
+
+// Precision = the least-significant nonzero place (trailing-zeros heuristic): "$8M"
+// (8,000,000) → 1e6, "8,091,843" → 1, "1,200,000" → 1e5.
+function precisionOf(v: number): number {
+  let n = Math.floor(Math.abs(v));
+  if (n === 0) return 1;
+  let p = 1;
+  while (n % 10 === 0) { n /= 10; p *= 10; }
+  return p;
+}
+// Two numbers match if they agree once BOTH are rounded to the COARSER one's precision, so
+// "$8M" matches "$8,091,843.64" (both → 8 at 1e6) but "$9M" does not (9 vs 8). Symmetric, so a
+// precise figure also matches the abbreviated fact and vice versa.
+export function numbersMatch(a: number, b: number): boolean {
+  const P = Math.max(precisionOf(a), precisionOf(b));
+  return Math.round(Math.floor(Math.abs(a)) / P) === Math.round(Math.floor(Math.abs(b)) / P);
+}
+// Spelled-out cardinal numbers → values, whole phrases (never fragmented). Standard
+// words-to-number accumulation; "and" is a mid-number connector.
+export function spelledNumbersIn(text: string): { value: number; surface: string }[] {
+  const toks = (text.toLowerCase().match(/[a-z]+/g)) || [];
+  const out: { value: number; surface: string }[] = [];
+  let total = 0, current = 0, active = false, phrase: string[] = [];
+  const flush = () => { if (active && total + current > 0) out.push({ value: total + current, surface: phrase.join(" ") }); total = 0; current = 0; active = false; phrase = []; };
+  for (const t of toks) {
+    if (t in _ONES) { current += _ONES[t]; active = true; phrase.push(t); }
+    else if (t in _TENS) { current += _TENS[t]; active = true; phrase.push(t); }
+    else if (t === "hundred") { current = (current || 1) * 100; active = true; phrase.push(t); }
+    else if (t in _SCALE) { total += (current || 1) * _SCALE[t]; current = 0; active = true; phrase.push(t); }
+    else if (t === "and" && active) { phrase.push(t); }
+    else flush();
+  }
+  flush();
+  return out;
+}
+// Digit and abbreviated numbers → values with their surface text: "$8M", "1.2M", "8 million",
+// "661,440", "8,091,843.64", "42%".
+export function digitNumbersIn(text: string): { value: number; surface: string; unit: boolean }[] {
+  const out: { value: number; surface: string; unit: boolean }[] = [];
+  const re = /(?:[$£€]\s?)?(\d[\d,]*(?:\.\d+)?)\s*(k|m|bn|b|thousand|million|billion|trillion|%|percent|dollars?|hours?|minutes?|years?|days?|people|users)?\b/gi;
+  for (const m of text.matchAll(re)) {
+    const base = parseFloat(m[1].replace(/,/g, ""));
+    if (!isFinite(base)) continue;
+    const suf = (m[2] || "").toLowerCase();
+    const mult = suf === "k" || suf === "thousand" ? 1e3 : suf === "m" || suf === "million" ? 1e6 : (suf === "b" || suf === "bn" || suf === "billion") ? 1e9 : suf === "trillion" ? 1e12 : 1;
+    const unit = /[$£€]/.test(m[0]) || /^(k|m|bn|b|thousand|million|billion|trillion|%|percent|dollar|hour|minute|year|day|people|user)/.test(suf);
+    out.push({ value: base * mult, surface: m[0].trim(), unit });
+  }
+  return out;
+}
+// Every numeric value present in a text, from all three renderings — the fact set's canonical form.
+function allNumberValues(text: string): number[] {
+  return [...digitNumbersIn(text).map((d) => d.value), ...spelledNumbersIn(text).map((s) => s.value)];
+}
+
 // A verbatim quote of 3+ words inside quotation marks (straight or curly).
 // Min 6 chars, not 12: the strongest quotes are short ("You a cop?"), and those are
 // exactly the ones worth opening on and putting on a thumbnail.
@@ -388,46 +452,28 @@ export function checkCompliance(input: ComplianceInput): ComplianceCheck[] {
   // failure behind the fabricated auditor, the invented sentence lengths, and the
   // mismatched-population comparison.
   if ((input.facts || []).length > 0) {
-    // Digit-strings the research supports (normalized so "$135.0 billion" and
-    // "135 billion" collide, and "2 hours 23 minutes" yields both 2 and 23).
-    const digitsOf = (s: string) => new Set((s.match(/\d+(?:\.\d+)?/g) || []).map((n) => String(Number(n))));
-    const factDigits = digitsOf(factBlob);
-    // Years the facts mention are also fair game anywhere in the script.
-    const significant: { text: string; num: string }[] = [];
-    const numRe = /(?:[$£€]\s?)?\d+(?:[.,]\d+)*\s*(?:%|percent|billion|million|thousand|hours?|minutes?|years?|days?|people|users|dollars)?/gi;
-    for (const m of script.match(numRe) || []) {
-      const raw = m.trim();
-      const nums = (raw.match(/\d+(?:\.\d+)?/g) || []).map((n) => String(Number(n)));
-      if (!nums.length) continue;
-      // Only judge SPECIFICS: a figure is checkable when it is large, decimal, or
-      // carries a unit/currency. Bare small integers ("one", "two", "3 ways") are
-      // narration, not claims, and flagging them would drown the real signal.
-      const isCheckable = /[$£€%]|percent|billion|million|thousand|hours?|minutes?|dollars|people|users/i.test(raw)
-        || nums.some((n) => Number(n) >= 100 || n.includes("."));
-      if (!isCheckable) continue;
-      if (nums.every((n) => factDigits.has(n))) continue; // supported
-      significant.push({ text: raw, num: nums[0] });
-    }
-    // Dedupe by the figure itself so one repeated number is reported once.
-    const unsupported = Array.from(new Map(significant.map((s) => [s.num, s])).values());
-
-    // SPELLED-OUT QUANTITIES. "three billion", "fifty dollars", "thirty minutes" are
-    // exactly the shape the digit scan misses, and "an hour and thirty minutes" was one
-    // of the flagged fabrications. Convert a number word + unit to its digit form and
-    // check that against the facts (also normalized), so word and digit forms collide.
-    const NUM: Record<string, number> = { one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10, eleven: 11, twelve: 12, thirteen: 13, fifteen: 15, twenty: 20, thirty: 30, forty: 40, fifty: 50, sixty: 60, seventy: 70, eighty: 80, ninety: 90, hundred: 100, thousand: 1000, million: 1000000, billion: 1000000000 };
+    // UNIVERSAL, VOICE-INDEPENDENT figure check. Normalize the facts to numeric VALUES from
+    // every rendering (digits, spelled out, abbreviated), then match the script's numbers on
+    // value, not surface string — so the SAME figure passes whether the voice writes "8,091,843",
+    // "eight million ninety one thousand eight hundred forty three", or "$8M", and a genuinely
+    // invented number still fails in any of those forms.
+    const factNums = allNumberValues(factBlob);
     const factLc = factBlob.toLowerCase();
-    const wordQtyRe = /\b(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fifteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety)\s+(billion|million|thousand|hundred|dollars|minutes|hours|years|percent)\b/gi;
-    for (const m of script.matchAll(wordQtyRe)) {
-      const n = NUM[m[1].toLowerCase()];
-      const unit = m[2].toLowerCase();
-      if (!n) continue;
-      const digit = String(/billion|million|thousand|hundred/.test(unit) ? n : n); // magnitude kept as-word
-      const supported =
-        factLc.includes(`${m[1].toLowerCase()} ${unit}`) ||       // "fifty dollars"
-        new RegExp(`\\b${digit}\\s*${unit.replace(/s$/, "")}`, "i").test(factLc) || // "50 dollar(s)"
-        (/billion|million|thousand|hundred/.test(unit) && factDigits.has(String(n)));
-      if (!supported) unsupported.push({ text: `${m[1]} ${unit}`, num: `${m[1]} ${unit}` });
+    const isSupported = (v: number) => factNums.some((f) => numbersMatch(v, f));
+    const unsupported: { text: string; num: string }[] = [];
+    // Digit / abbreviated numbers in the script.
+    for (const d of digitNumbersIn(script)) {
+      // Only judge SPECIFICS: large, decimal, or unit/currency-bearing. Bare small integers
+      // ("3 ways", "two") are narration, not claims.
+      const checkable = d.unit || Math.floor(d.value) >= 100 || !Number.isInteger(d.value);
+      if (!checkable || isSupported(d.value)) continue;
+      unsupported.push({ text: d.surface, num: String(d.value) });
+    }
+    // Spelled-out numbers in the script, parsed as WHOLE phrases (this is what kills the
+    // fragmentation false-positive where "six hundred ... four hundred forty" got chopped).
+    for (const s of spelledNumbersIn(script)) {
+      if (Math.floor(s.value) < 100 || isSupported(s.value)) continue; // small spelled counts are narration
+      unsupported.push({ text: s.surface, num: String(s.value) });
     }
 
     // PROPORTION CLAIMS. "more than half", "the majority", "most of them" are unfalsifiable
@@ -460,13 +506,15 @@ export function checkCompliance(input: ComplianceInput): ComplianceCheck[] {
     for (const s of input.sections || []) {
       const title = (s?.title || "").trim();
       if (!title) continue;
-      for (const m of title.matchAll(/\d[\d,]*(?:\.\d+)?(?:k|m|bn|b)?/gi)) {
-        const raw = m[0];
-        const dstr = (raw.match(/\d[\d,]*(?:\.\d+)?/) || [""])[0].replace(/,/g, "");
-        if (!dstr) continue;
-        const d = String(Number(dstr));
-        if (Number(d) < 10) continue; // small counts ("3 ways") are narration, not claims
-        if (!factDigits.has(d) && !factLc.includes(raw.toLowerCase())) headingMiss.push(raw);
+      // Same voice-independent matcher as the body figure check ("661k" heading matches a
+      // "661,440" fact; a made-up "9,000,000" heading does not).
+      for (const d of digitNumbersIn(title)) {
+        if (Math.floor(d.value) < 10 || isSupported(d.value)) continue; // small counts are narration
+        headingMiss.push(d.surface);
+      }
+      for (const s of spelledNumbersIn(title)) {
+        if (Math.floor(s.value) < 10 || isSupported(s.value)) continue;
+        headingMiss.push(s.surface);
       }
     }
     const uniqHeadings = [...new Set(headingMiss)].slice(0, 6);

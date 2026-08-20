@@ -640,3 +640,24 @@ metric: the count of distinct sourced facts on the angle page and in the generat
 that count goes UP on the ~11-min build before touching padding or hook determinism — those two
 are downstream symptoms of thin material and should ease once the breadth lands. `tsc`-clean; all
 six suites green.
+
+## Figure-check — universal spelled-number normalization (BUILT, voice-independent)
+
+The figure-check false-positived when a voice spelled numbers out: it chopped a correctly-spelled
+figure ("six hundred sixty-one thousand four hundred forty" = 661,440, which IS in the facts) into
+fragments ("six hundred", "four hundred") and flagged them. Fixed BELOW the voice layer, by
+construction — no special-casing of any voice:
+- `spelledNumbersIn` / `digitNumbersIn` / `numbersMatch` in `script-compliance.ts` normalize BOTH
+  the script AND the fact set to numeric VALUES (spelled → digits, "$8M"/"8 million" → 8,000,000,
+  "8,091,843.64" → canonical), and match on value at the coarser side's precision, so "$8M"
+  matches "$8,091,843.64" but "$9M" does not. Spelled numbers are parsed as WHOLE phrases (no
+  fragmentation).
+- The body grounding check and the heading claim-check both use it. "seven years" stays a soft
+  flag (computed span, unchanged).
+Test: the same fact ($8,091,843.64) as digits / spelled / "$8M" all pass; an absent number ($25M)
+flags in all three renderings; the whole-phrase 661,440 no longer fragments. All green.
+
+Still open (deterministic, force-it): the hook device + callback RE-STAMP — a post-generation pass
+that guarantees the first sentence is the selected device on a concrete image and the ending
+returns to it + lands on a sourced fact (prompt nudges have failed ~3 runs; needs a rewrite pass,
+preview-verified). Then the timeout refactor for the 20-min head-to-head.
