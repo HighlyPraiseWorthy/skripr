@@ -394,6 +394,70 @@ split it:
 
 Contained prompt-and-check change (no heavy refactor) → sequence HIGH, most visible engagement gain.
 
+### Sharper framing (after reading the actual source, "After 5 Years Nike Finally Caught Them")
+
+The source's hook is NOT flat — it's a strong open loop with a real callback. Its cold open leads
+on the RAIDS ("12 charged, $2M stolen, Cool Kicks raided on livestream"), then "nobody knew why…
+law enforcement stayed silent… then the indictment gave answers," and it lands the ending on a
+concrete object: "the answer was sitting on the box the whole time — a shipping label."
+
+The critical insight: **the source's hook works because it resolves a spectacle the audience
+personally witnessed** (sneakerheads SAW the Cool Kicks livestream raid). "You watched this happen
+and nobody explained it — here's the explanation." Michael Smith has NO equivalent witnessed
+spectacle. So when Skripr copies the source's hook *treatment* ("something was quietly happening…
+silence… then the indictment"), it falls flat — the emotional engine (resolve-a-thing-you-saw)
+has nothing to grab. That is *why* Skripr's hook is weak: it's faithfully matching a device that
+cannot fire on this case.
+
+**So Move #9 is not "write a better hook" — it's "select the best hook DEVICE for THIS case's own
+facts, don't transplant the source's."** Menu of devices: resolve-a-witnessed-spectacle (Nike),
+paradox (Smith), cold-scene-drop (Brew's date-stamped openings), ticking clock, etc. For Smith the
+right device is the **paradox** — "billions of streams, zero real fans" — which is exactly what the
+benchmarked ChatGPT used AND which is **already in Skripr's own researched facts**: its paragraph 2
+literally says "royalty payments flowing into accounts attached to songs that had no listeners, no
+cultural history, no presence of any kind." The hook material was there; the generator buried it in
+para 2 because it was busy copying the source's "silence then answers" opening. The fix is
+surfacing and placing the strongest image as the cold open, not inventing anything.
+
+Two craft points confirmed by the source:
+- **The callback returns to a concrete OBJECT.** The source orbits one physical thing — the
+  shipping label — and lands on it at the end. Skripr's callback is abstract ("the calculation on
+  a spreadsheet"). Stronger: plant a concrete image in the hook (the spreadsheet; "a song no human
+  ever chose to play is streaming right now") and return to THAT.
+- **Structure-copying is already working, maybe too literally.** Skripr's "investigators didn't
+  follow the royalty payments, they followed the songs" is a near-verbatim lift of the source's
+  "investigators didn't follow the labels, they followed the shoes." Skeleton copy = correct; the
+  gap is ONLY the hook/callback craft layer — exactly where #9 says stop imitating, start improving.
+
+Net: match the source's skeleton; for the hook, pick the device the case's facts best support and
+lead with the strongest concrete image; for the callback, return to that image. The material is
+usually already in the researched facts — surface and place it, don't invent it.
+
+### How Voice Match interacts with Move #9 (keep these two axes separate)
+
+Voice Match and hook/callback craft are **orthogonal** and must not be conflated:
+- **Structure/craft (Move #9)** = WHAT happens and WHEN — which hook device, where the loop opens,
+  where the callback lands, where the peak sits. Case- and framework-driven.
+- **Voice Match** = HOW it's said — diction, sentence rhythm, register, signature phrases. Creator-
+  driven (Brew, J Wisdom, etc.).
+
+The same paradox hook should be renderable in any voice: Brew states it forensically ("A song is
+playing on Spotify right now. No one has ever chosen to hear it."), J Wisdom states it clinically,
+a hype voice states it with energy. So **Move #9 must specify the hook as a STRUCTURAL INSTRUCTION
+(device + which fact/image + defer-the-payoff), then let Voice Match phrase it** — never bake a
+specific voice's wording into the hook logic, or you get the earlier bug where a J Wisdom /
+Kurzgesagt voice fought the case (psychology voice on a mechanism story). Order of operations:
+pick device from facts → draft hook as structure → Voice Match renders the wording → hook re-stamp.
+
+Caveats where voice legitimately constrains craft:
+- Some voices ban a device: J Wisdom "never opens on a rhetorical question"; Brew avoids second-
+  person. Move #9's device menu must respect the selected voice's NEVER-DOES list (pick a device
+  the voice allows).
+- A voice may carry its own opening signature (Brew's date-stamp cold-drop). When it does, treat
+  that as the device for that voice, still applied to the case's strongest fact/image.
+- Voice must never be allowed to WEAKEN the loop/callback requirement — those stay always-on
+  best-practice (§ above); voice changes the words, not whether the loop opens or the callback lands.
+
 ## Consolidated next sequence (after the 11-min Move #8 read)
 
 Ordered by leverage, not by number:
@@ -502,3 +566,27 @@ Skripr invented nothing). Three follow-ups:
   Must be preview-verified end to end at 20 min before `--prod` — this is why it wasn't built blind.
 
 `tsc`-clean; new `implied-revelation` test green; all six suites green.
+
+## Move #9 supplement — hook device selection + concrete-object callback (BUILT, prompt-level)
+
+The first Move #9 build did the check side (best-practice tags on early-loop/callback) and a
+GENERIC "defer the payoff" hook. The sharper craft framing was missing; added, all prompt-level in
+`claude.ts` generation:
+
+1. **Hook device SELECTED from the case's facts (1a).** A device menu — resolve-a-witnessed-
+   spectacle, paradox, cold-scene-drop, ticking-clock — with the instruction to pick the one THIS
+   case's facts support (paradox for Smith: "billions of streams, zero real fans", already in the
+   researched facts) and the voice allows, and to LEAD with the strongest concrete image, not bury
+   it in paragraph 2. Explicitly: do not transplant the source's device.
+2. **Concrete-object callback (2c).** Plant one concrete image/object in the hook (the 2017
+   spreadsheet; "a song no human ever chose to play"), return to THAT image at the end, still
+   landing on a real sourced fact (the forfeiture). Abstract callbacks are called out as weak.
+3. **Order of operations — device/voice separated (1b).** Pick device from facts → draft hook as
+   STRUCTURE → voice renders the wording → hook re-stamp. Voice changes words, never whether the
+   loop opens or the callback lands; it may not pick a device from its NEVER-DOES list.
+4. **Voice-owned opening signatures allowed as the device** (Brew's date-stamp), still pointed at
+   the case's strongest fact/image.
+
+`tsc`-clean; all six suites green (prompt-only, no new logic). Verify on the ~11-min Michael Smith
+build: hook LEADS on the paradox (not "something was draining millions"), plants a concrete image,
+and the ending returns to that image + the $8M forfeiture.
