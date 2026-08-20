@@ -60,7 +60,10 @@ export function honestMinutes(factCount: number): number {
 // description + nickname, and one vivid scene in full. v3 (move #7): active primary-source
 // QUOTE hunting — the subject's own words, plea/court statements, indictment language, and
 // named-official quotes — as the highest-value target, each with its speaker and source.
-export const RESEARCH_BRIEF_VERSION = 3;
+// v4 (settled figure): explicitly retrieve the RESOLVED authoritative number (forfeiture /
+// judgment / verdict / restitution / final toll / sentence) vs any earlier alleged figure, so
+// supersession has the settled number to win with every run.
+export const RESEARCH_BRIEF_VERSION = 4;
 
 // Whether the record actually supports the premise the script is about to assert.
 //   documented  a real, citable source describes THIS specific event or claim
@@ -1116,6 +1119,7 @@ ${isExplainer ? `- the CORE MECHANISM: how the thing actually works, step by ste
 ${isExplainer ? "" : `- how they obtained their access, position, or clearance, including any named front or cover
 - the real names of the key settings or locations
 - the case outcomes for the named defendants (ask broadly, not one presupposing question per person)
+- THE SETTLED / RESOLVED FIGURE (high value — ask for this explicitly). The final, authoritative number the case actually resolved on, AS OPPOSED TO any earlier alleged or estimated figure: a court-ordered forfeiture, a judgment or verdict amount, restitution, a settlement, a final confirmed toll or count, or the sentence handed down. Ask for the exact settled figure, what it represents, and who set it, so the script leads with the resolved number and not a superseded allegation. (This generalizes across niches: a forfeiture in a fraud case, a verdict amount in a lawsuit, a final death toll in a disaster, a sentence in a criminal case.)
 - the documented procedural history and how the story actually RESOLVED, with dates
 - the DOCUMENTED AFTERMATH for the central figure (threats, retaliation, litigation, personal cost) — this is often the strongest material
 - the KEY HUMAN RELATIONSHIP: the specific, named person the central figure grew closest to, trusted, befriended, or ultimately betrayed — the emotional core a documentary lives on. Ask for it by name where the record supports it

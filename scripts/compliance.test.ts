@@ -221,6 +221,13 @@ check("does NOT flag a future pending date",
   sd("His sentencing is scheduled for December 1, 2026.").pass);
 check("does NOT flag a normal past-tense historical date",
   sd("He was sentenced on July 29, 2019, to twenty years.").pass);
+// Month-level granularity (the missed case): "July 2026" with no day, today is Aug 2026.
+check("flags a month-only future-framed date that has passed",
+  !sd("His sentencing is scheduled for July 2026.").pass);
+check("does NOT flag a month-only date still in the future",
+  sd("His sentencing is scheduled for December 2026.").pass);
+check("does NOT flag the current month before it has fully passed",
+  sd("His sentencing is scheduled for August 2026.").pass);
 
 // Move #6 — heading claim-check. A number in a SECTION HEADING must trace to the facts, even
 // when the body grounding misses it.

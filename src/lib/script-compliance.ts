@@ -636,16 +636,27 @@ export function checkCompliance(input: ComplianceInput): ComplianceCheck[] {
   {
     const now = input.now ?? Date.now();
     const MONTH = "(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:t(?:ember)?)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)";
+    // Match a future-framed date at DAY granularity ("July 29, 2026", "7/29/2026") OR MONTH
+    // granularity ("July 2026") — the month-level form was being missed.
     const frameRe = new RegExp(
       `\\b(?:scheduled|set|slated|due|expected|awaiting|pending|upcoming|will (?:be )?(?:sentenc|appear|stand trial|face|go on trial)\\w*)\\b[^.]{0,50}?` +
-      `(${MONTH}\\.?\\s+\\d{1,2},?\\s+\\d{4}|\\d{1,2}/\\d{1,2}/\\d{4})`,
+      `(${MONTH}\\.?\\s+\\d{1,2},?\\s+\\d{4}|\\d{1,2}/\\d{1,2}/\\d{4}|${MONTH}\\.?\\s+\\d{4})`,
       "gi",
     );
+    const monthYearRe = new RegExp(`^${MONTH}\\.?\\s+\\d{4}$`, "i");
+    const todayStart = new Date(now); todayStart.setHours(0, 0, 0, 0);
     const stale: string[] = [];
     for (const m of script.matchAll(frameRe)) {
-      const when = Date.parse(m[1].replace(/(\d)(st|nd|rd|th)/, "$1"));
-      // Compare against the START of today, so an event dated "today" is not called stale.
-      const todayStart = new Date(now); todayStart.setHours(0, 0, 0, 0);
+      const raw = m[1].replace(/(\d)(st|nd|rd|th)/, "$1").trim();
+      let when: number;
+      if (monthYearRe.test(raw)) {
+        // Month-only date: stale only once the WHOLE month has passed, so a partial current
+        // month is not wrongly flagged. Compare against the END of that month.
+        const first = new Date(Date.parse(raw));
+        when = Number.isNaN(first.getTime()) ? NaN : new Date(first.getFullYear(), first.getMonth() + 1, 0, 23, 59, 59).getTime();
+      } else {
+        when = Date.parse(raw);
+      }
       if (!Number.isNaN(when) && when < todayStart.getTime()) stale.push(m[1]);
     }
     const uniqStale = [...new Set(stale)].slice(0, 5);

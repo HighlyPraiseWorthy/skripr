@@ -199,7 +199,7 @@ Your scripts follow these principles:
    - PARADOX: two true facts that cannot both be true, held side by side ("billions of streams, zero real fans"; "a song no human ever chose to play is streaming right now"). Strong when the facts contain a contradiction.
    - COLD-SCENE-DROP: drop straight into one vivid documented moment, mid-action, no setup.
    - TICKING-CLOCK: a countdown or deadline the facts establish.
-   LEAD WITH THE STRONGEST CONCRETE IMAGE that is already in the researched facts — do not bury it in paragraph 2. The material is almost always already there; surface and place it, never invent it. (For a streaming-fraud case whose facts describe royalties flowing to songs "with no listeners, no cultural history," the device is the PARADOX and that image is the cold open — not a vague "something was quietly draining millions.")
+   LEAD WITH THE STRONGEST CONCRETE IMAGE that is already in the researched facts — do not bury it in paragraph 2. THE VERY FIRST SENTENCE MUST BE THE DEVICE FIRING ON THAT CONCRETE IMAGE, not a windup toward it. A vague abstract opener is a FAILURE: "something was quietly draining millions", "for years, a scheme operated in the shadows", "few people noticed at first" — these name nothing the viewer can picture and they bury the real hook. Instead, open ON the specific image or contradiction the facts give you and let the viewer feel it before you explain anything. The material is almost always already there; surface and place it, never invent it. This is niche-agnostic: a paradox for a fraud whose facts contradict each other, a cold vivid scene for a murder case, a ticking clock for a disaster, a single stark object for a heist — pick from the facts you were given, and put it in sentence one.
 1. HOOK: First 5 seconds must grab attention using one of the proven hook types defined in the HOOK RULES section below. OPEN A LOOP, DO NOT STATE FACTS (non-negotiable — this is graded and it fails most often): the hook must TEASE a payoff and then JUMP AWAY from it, creating a question the viewer needs answered. Name the most striking thing to come (the scale, the number, the turn) WITHOUT resolving it, then cut to the setup. A hook that simply states facts in order ("In 2017, a man began…") has no open loop and fails. Right shape: name the stakes or the shocking outcome as a question the video will answer, then pull back to the beginning. Do NOT resolve the teased payoff until later — that gap is the loop. Hook types built on a specific statistic (Data Drop, and the numeric form of Curiosity Gap) are only available when that number appears in the provided source material; with no source, pick a hook type that does not require inventing one (Cold Open, Question, Data Drop, Provocation, Curiosity Gap, Myth-Bust, Bold Claim, Direct Address, Teaser, Pattern Interrupt, Scene-Setter, Story). QUOTE-FIRST HOOK (strongly prefer when available): if the source material contains a striking VERBATIM quote — something a real person actually said or wrote, with a source — opening ON that quote, word for word, is one of the strongest possible cold opens. A real voice with real words in it lands harder than any narration describing the scene. Use the quote exactly as sourced; never invent or embellish one.
 1b. HOOK DEVICE vs VOICE — TWO SEPARATE AXES, DO NOT CONFLATE THEM. The hook DEVICE, where the loop opens, and where the callback lands are STRUCTURE — chosen from the case's facts (rule 1a). The creator's VOICE is only HOW it is said — diction, rhythm, register. Order of operations: pick the device from the facts, decide which fact/image it points at and defer the payoff, THEN let the voice render the wording. The same paradox hook is renderable in any voice (forensic, clinical, high-energy); never bake a specific voice's phrasing into the device choice, or a voice fights the case (a psychology voice forced onto a mechanism story). Voice may NOT weaken the requirement that the loop opens or the callback lands — those are always-on best practice regardless of voice. Two legitimate constraints: (a) if the voice's NEVER-DOES bans a device (e.g. never opens on a rhetorical question, never uses second person), pick a device the voice allows; (b) if the voice carries its OWN opening signature (e.g. a date-stamped cold drop), use that AS the device, still pointed at the case's strongest concrete fact or image.
 2. RETENTION BEATS: Use three precision mechanics — not generic pattern interrupts:
@@ -232,7 +232,7 @@ Your scripts follow these principles:
 6a. BANNED NARRATOR TICS (hard rule — these belong to no creator and mark a script as machine-written). Never use, in any variation: "pause on that for a second", "sit with that", "think about what that means", "read that again", "let that sink in", "here's the thing", "now slow down", "that's not a metaphor", "the uncomfortable truth", or the construction "That's not X. That's Y." These are the loudest thing in a generic AI script. If you feel the urge to tell the viewer that something is significant, make the sentence itself carry the weight instead — show the thing, do not instruct the viewer how to feel about it.
 
 6. ANTI-REPETITION: Never start two consecutive sentences with the same word. Vary sentence length — mix short punchy sentences with longer ones. Never repeat a key point already made; build forward only. Two specific patterns to avoid, because they are the usual way a good script goes slack:
-   a) RESTATING AN IDEA IN NEW WORDS. Making the same point across two or three consecutive paragraphs, each time slightly rephrased, is not emphasis, it is padding, and the viewer feels the script stop moving. Make the point once, in its strongest form, then advance.
+   a) RESTATING AN IDEA IN NEW WORDS (a hard failure, and the #1 way length gets faked). Making the same point — the same mechanism, the same explanation, the same number — a second time, however reworded, is padding. State each fact and each explanation ONCE, in its strongest form, then ADVANCE to different material. If you feel you are running short, that is NOT a cue to re-explain what you already said; it is a cue to go DEEPER on a DISTINCT fact or context fact you have not used yet (the mechanics, a prior case, the victims, the money trail, the response). You have been given a wide set of facts precisely so length comes from BREADTH of real material, never from repeating five points. If you cannot fill the length without restating, write it shorter — a tight script beats a padded one.
    b) NO RECAP BEFORE THE END. Do not summarise the story you just told before the closing beat. Re-narrating the whole case in the final third kills the momentum you spent the whole script building and steals the ending's job. The last beat should land the meaning of the story, not list its contents again. If you feel the need to remind the viewer what happened, the earlier telling was not vivid enough; fix that instead.
    c) STOP ON YOUR STRONGEST LINE (closing discipline — a formatting constraint, not a suggestion). The final narrative beat must be SHORT and hard: land it in one or two sentences and stop. Do NOT explain, soften, or add a reflective paragraph after your best line — every sentence that follows your strongest one is weaker than it and drains the ending. If the beat is a quote, END on the quote: no trailing gloss after it. The only thing allowed to follow the closing beat is the single required CTA, and that CTA must itself be brief (one or two sentences). Concretely: the last block of the script — closing beat plus CTA together — should be well under 60 words. A long final paragraph is the single most common way a strong script fumbles its ending.
 7. NO FABRICATED FACTS: Never state a specific statistic, percentage, dollar figure, year, date, named study, or named survey unless it appears in the provided source material. Never attribute a quote or claim to a named real person unless it was in the source material. A creator will read this on camera — an invented number destroys their credibility. Do NOT downgrade an unsourced number into a vague claim of evidence; write the sentence without the number, or cut it.
@@ -1161,42 +1161,16 @@ ANGLE OUTRANKS A CONFLICTING NOTE: if a note aims the climax at a moment that is
     }
   }
 
-  // DETERMINISTIC DURATION REPLACEMENT (runs last). Overwrite a computed span ("seven years")
-  // with the sourced date range — prompt-only enforcement failed repeatedly.
-  for (const k of ["fullScript", "script", "body", "content", "hook", "outro"]) {
-    if (typeof (script as any)[k] === "string") (script as any)[k] = stripComputedDurations((script as any)[k]);
-  }
-  if (Array.isArray((script as any).sections)) {
-    (script as any).sections = (script as any).sections.map((s: any) =>
-      s && typeof s.content === "string" ? { ...s, content: stripComputedDurations(s.content) } : s
-    );
-  }
-
   return script;
 }
 
-// MOVE #8 #4 (hard replacement) — prompt-only enforcement failed ("seven years" shipped 5x), so
-// replace a COMPUTED DURATION COUNT with the sourced date range deterministically, the way the
-// hook re-stamp overwrites rather than asks. SAFE by construction: it only rewrites "N years"
-// when N EXACTLY equals the span between the earliest and latest year the text itself states, so
-// "ran for seven years" (2024-2017=7) becomes "from 2017 to 2024" while an unrelated "five years
-// in prison" is left untouched. First hit becomes the full range; later hits become "since START"
-// to avoid repetition.
-export function stripComputedDurations(text: string): string {
-  if (!text) return text;
-  const years = Array.from(new Set((text.match(/\b(?:19|20)\d{2}\b/g) || []).map(Number))).sort((a, b) => a - b);
-  if (years.length < 2) return text;
-  const min = years[0], max = years[years.length - 1], span = max - min;
-  if (span < 2 || span > 60) return text; // implausible or trivial span — do not touch
-  const W: Record<string, number> = { one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10, eleven: 11, twelve: 12 };
-  const range = `from ${min} to ${max}`, since = `since ${min}`;
-  let n = 0;
-  return text.replace(/\b(?:for |over |across |nearly |almost |about |roughly )?((?:one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve)|\d{1,2})\s+years\b/gi, (m, num) => {
-    const val = W[String(num).toLowerCase()] ?? Number(num);
-    if (val !== span) return m; // not the computed story duration (e.g. a prison sentence) — leave it
-    return n++ === 0 ? range : since;
-  });
-}
+// NOTE (Move #8 #4): a deterministic "seven years -> 2017 to 2024" strip was tried and REVERTED —
+// a blind token replace shattered real prose ("For nearly seven years" -> "For from 2017 to 2024",
+// dangling "...through 2024. since 2017.") and does not generalize across niches ("for three
+// decades", "over eleven months"). Enforcement stays: the prompt COMPUTED DURATION COUNTS rule +
+// the grounding check, which already soft-flags a spelled span not present in the facts. A future
+// grammar-aware replacer would have to rewrite whole phrases and re-sync the hook, and must be
+// verified on live prose before shipping — not a blind string swap.
 
 // Force the body to OPEN on the hook verbatim. Peels as many leading sentences off the
 // body as the hook contains (so a paraphrased 1- or 2-sentence opening is replaced, not

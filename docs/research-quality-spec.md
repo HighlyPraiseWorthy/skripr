@@ -590,3 +590,32 @@ GENERIC "defer the payoff" hook. The sharper craft framing was missing; added, a
 `tsc`-clean; all six suites green (prompt-only, no new logic). Verify on the ~11-min Michael Smith
 build: hook LEADS on the paradox (not "something was draining millions"), plants a concrete image,
 and the ending returns to that image + the $8M forfeiture.
+
+## Move #9 fixes round 2 — the niche-agnostic punch-list
+
+Overarching rule now front and center: **case- and niche-agnostic only.** Michael Smith is the
+test fixture, not the target — no hard-coded case names, topics, numbers, or date ranges. The
+`stripComputedDurations` break was the object lesson: a blind rule that shatters on real prose and
+would shatter identically on "for three decades" in any niche.
+
+1. **`stripComputedDurations` REVERTED (top priority).** The blind token replace shipped broken
+   grammar ("For nearly seven years" → "For from 2017 to 2024", dangling "…through 2024. since
+   2017.") and desynced the hook. Reverted to prompt rule + the existing grounding soft-flag (which
+   already flags a spelled span not in the facts). Clean prose beats a mangling strip. A future
+   grammar-aware version must rewrite whole phrases, re-sync the hook, and be live-verified.
+2. **Settled-figure retrieval (supersession variance).** The resolved authoritative number
+   (forfeiture / judgment / verdict / restitution / final toll / sentence) is now an explicit
+   high-value deepen question, so it re-surfaces every run and supersession (#2) has it to win over
+   the earlier allegation. `RESEARCH_BRIEF_VERSION` 3→4. Generalizes across niches by construction.
+3. **Stale-date month granularity.** The check now catches "scheduled for July 2026" (month-only),
+   comparing against the END of that month so a partial current month isn't wrongly flagged. Any
+   niche, any future-framed date.
+4. **Padding.** The anti-restatement rule is hardened: restating a fact/explanation to fill length
+   is a hard failure; length comes from BREADTH of distinct real material (ties to context depth),
+   and a tight script beats a padded one.
+5. **Hook device selection pushed.** The first SENTENCE must be the device firing on a concrete
+   image from the facts; vague abstract openers ("something was quietly draining millions") are a
+   failure. Niche-agnostic device menu (paradox / cold-scene / ticking-clock / stark-object).
+
+Confirmed working, do not regress: the Move #9 open-loop and callback checks now PASS (framework
+fidelity 4/5, beats source). `tsc`-clean; new stale-date month tests green; all six suites green.

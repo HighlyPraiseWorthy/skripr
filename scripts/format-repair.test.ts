@@ -1,6 +1,6 @@
 // Offline test for the mid-sentence paragraph-break repair. Run:
 //   node --experimental-strip-types --loader ./scripts/alias-loader.mjs scripts/format-repair.test.ts
-import { healMidSentenceBreaks, restampHook, stripComputedDurations } from "../src/lib/ai/claude.ts";
+import { healMidSentenceBreaks, restampHook } from "../src/lib/ai/claude.ts";
 
 let failures = 0;
 function check(name: string, cond: boolean) {
@@ -41,18 +41,6 @@ check("is a no-op when the body already opens on the hook",
 check("keeps the body's later paragraphs intact",
   restampHook("Totally different opener here. Second sentence.\n\nA whole second paragraph.", "Real hook line.")
     === "Real hook line. Second sentence.\n\nA whole second paragraph.");
-
-// Move #8/#9 — deterministic computed-duration replacement. "seven years" -> the sourced range.
-console.log("computed-duration replacement:");
-check("replaces a computed span matching the date range",
-  stripComputedDurations("The scheme ran for seven years. It began in 2017 and ended in 2024.")
-    === "The scheme ran from 2017 to 2024. It began in 2017 and ended in 2024.");
-check("leaves an unrelated duration (a prison sentence) untouched",
-  stripComputedDurations("He was sentenced to five years. The fraud ran from 2017 to 2024.").includes("five years"));
-check("a second computed span becomes 'since START', not a repeat of the range",
-  /since 2017/.test(stripComputedDurations("Seven years of it. Another seven years later. Between 2017 and 2024.")));
-check("does nothing without a derivable date range",
-  stripComputedDurations("It went on for seven years and nobody noticed.") === "It went on for seven years and nobody noticed.");
 
 console.log(failures === 0 ? "\nALL PASS" : `\n${failures} FAILURE(S)`);
 process.exit(failures === 0 ? 0 : 1);
