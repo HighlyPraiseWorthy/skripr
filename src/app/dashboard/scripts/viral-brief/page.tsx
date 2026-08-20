@@ -372,7 +372,12 @@ export default function ViralBriefPage() {
       audience: cards[0]?.audience || "",
       titleSuggestion: brief.selectedTitle,
       slot: peak || undefined,
-      factRefs: Array.from(new Set(cards.flatMap((c) => c.factRefs || []))),
+      // A full-video build uses the WHOLE researched set (case + context facts), not only the
+      // facts the cards happened to cite. Passing every fact is what gives the writer the
+      // distinct context material (detection, prior cases, victims, response) to fill length
+      // without recycling the core five numbers — and the claim check then validates against
+      // that same full set. Cards still each rest on their own factRefs for the panel.
+      factRefs: deepFacts.length ? deepFacts.map((_, i) => i + 1) : Array.from(new Set(cards.flatMap((c) => c.factRefs || []))),
     };
     setAltTitles([]);
     setSelectedAngle(composite);

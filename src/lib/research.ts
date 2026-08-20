@@ -611,7 +611,7 @@ export function buildGroundingBlock(g?: GroundingContext | null): string {
   }
   if (g.facts?.length) {
     lines.push(g.caseName ? "SOURCED FACTS:" : "RESEARCHED FACTS (real, sourced):");
-    lines.push(...g.facts.slice(0, 12).map((f) => `- ${f}`));
+    lines.push(...g.facts.slice(0, 50).map((f) => `- ${f}`));
   }
   if (!lines.length) return "";
 

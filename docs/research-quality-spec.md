@@ -619,3 +619,24 @@ would shatter identically on "for three decades" in any niche.
 
 Confirmed working, do not regress: the Move #9 open-loop and callback checks now PASS (framework
 fidelity 4/5, beats source). `tsc`-clean; new stale-date month tests green; all six suites green.
+
+## Context depth — the real bottleneck was a fact CAP, not the research (root-cause fix)
+
+Diagnosis held: the ~11-min build recycled five numbers because the angle page had almost nothing
+else on it. But the research WAS gathering context — the facts just weren't reaching the page. The
+cap, not the deepen brief, was the bottleneck:
+- `suggest-viral-angles` sliced the researched facts to the first **12** before building slot
+  cards. With `capFacts` pinning the core case figures to the front, those 12 were the core five;
+  the 20-40 distinct context facts (detection, prior cases, victims, response) were sliced off and
+  never reached the cards. Raised 12 → 50.
+- The full-video outline passed generation only the facts the CARDS cited (a union of ~12), so the
+  writer never saw the context breadth even when it existed. The full build now scopes on the
+  ENTIRE researched set (`factRefs` = every fact), and the claim check validates against that same
+  full set. Single-card builds still scope to that card.
+- `buildGroundingBlock` cap 12 → 50 for consistency.
+
+Deterministic, niche-agnostic (no streaming-specific logic), and it directly moves the acceptance
+metric: the count of distinct sourced facts on the angle page and in the generated script. Verify
+that count goes UP on the ~11-min build before touching padding or hook determinism — those two
+are downstream symptoms of thin material and should ease once the breadth lands. `tsc`-clean; all
+six suites green.
