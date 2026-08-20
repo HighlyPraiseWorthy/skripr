@@ -247,5 +247,14 @@ check("flags a quote that appears in no fact",
 check("passes when the script has no verbatim quotes",
   qg("The scheme relied on automated accounts that streamed songs around the clock.").pass);
 
+// Move #8 follow-up — implied-fact cliffhanger. Craft may not imply a revelation the facts
+// don't deliver, even when every sentence is individually sourced.
+console.log("implied-revelation:");
+const ir = (s: string) => get(checkCompliance({ fullScript: s }), "implied-revelation");
+const teaseEnding = "He ran the scheme for years.\n\nThe bots streamed around the clock.\n\nAnd what investigators found when they traced where the money actually went was not what anyone expected.";
+check("flags an ending that teases a revelation the facts don't deliver", !ir(teaseEnding).pass);
+const cleanEnding = "He ran the scheme for years.\n\nThe bots streamed around the clock.\n\nIn January 2024 he pleaded guilty, and the court ordered an $8,091,843.64 forfeiture.";
+check("passes an ending that lands on a real documented outcome", ir(cleanEnding).pass);
+
 console.log(failures === 0 ? "\nALL PASS" : `\n${failures} FAILURE(S)`);
 process.exit(failures === 0 ? 0 : 1);

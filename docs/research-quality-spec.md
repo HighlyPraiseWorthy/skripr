@@ -301,6 +301,41 @@ facts / fake quotes (claim + quote-grounding clean). Benchmark: match what ChatG
 the same topic for length and engagement, and BEAT it on accuracy (ChatGPT slips in unsourced
 elaboration; Skripr must not).
 
+## Move #8 — first live read (10-min Michael Smith build) + three follow-ups
+
+First real script read (built at 10-12 min because the 20-min build times out — see follow-up 1).
+**The good:** Move #8 craft works — the script tells a real story with sourced context (royalty-pool
+explanation woven in), a controlling thesis ("no lock was cut… he read the rules more carefully
+than the system expected"), patient mechanism, escalation. Prose is tighter than ChatGPT's. And
+the accuracy moat is visible: benchmarked ChatGPT invented a named co-conspirator ("Jonathan Hay")
+and a likely-fabricated U.S. Attorney quote from memory; Skripr invented no names, every fact
+traced to a source. That edge is the product.
+
+**Three follow-ups before Move #8 beats ChatGPT:**
+1. **20-min generation timeout (blocker).** The heavier Move #8 generation drops the connection
+   ("connection dropped while generating") on a 20-min build, reproducibly. Fix: chunked /
+   section-by-section streaming generation so no single request runs past the function time limit
+   (raising `maxDuration` alone won't scale as scripts grow). Until fixed, no length parity with
+   ChatGPT.
+2. **Enforce the retention scaffolding in generation, not just grade it.** The 10-min script scored
+   framework-fidelity 2/5 — missing (a) an open loop in the first 30 seconds (the hook stated facts
+   instead of teasing-then-jumping) and (b) an ending callback. ChatGPT nailed both. The
+   open-loop-in-30s and ending-callback checks must DRIVE the writer (hook must defer a payoff;
+   ending must return to a cold-open thread) and the callback must close on a REAL sourced fact
+   (the $8M forfeiture / guilty plea), not a teased phantom.
+3. **NEW guardrail: craft may not imply facts not in evidence.** The script ended on
+   "what investigators found when they traced where the remaining money actually went was not what
+   anyone following this case had expected to find" — an unresolved cliffhanger implying a hidden
+   money-trail revelation that does NOT exist in the facts (the $60k-vs-$8M gap is mundane: $60k is
+   Spotify's slice, $8M is all-platform). No individual sentence is unsourced, so the claim check
+   passed it — the INVENTED thing is the narrative implication. Add a check: a teased loop /
+   "investigators found X" / "was not what anyone expected" framing must resolve on a sourced fact
+   or not be opened. This is the risk Move #8's storytelling expansion introduces — invented
+   *narrative*, not invented *facts*.
+
+Also recurring: the "seven years" count flag (rule: give 2017–2024, never state a count) still
+trips; the body should state the span, never the number.
+
 ## Holding every change against the bar
 
 For each move, the test is: *would this have produced a right, complete fact without a human
@@ -353,3 +388,32 @@ ungrounded angles; a hard failure retries once, then surfaces a `resolve-error` 
 Again / Start over — it never renders a factless, fabrication-prone script. Added logging at the
 branch (`[viral-brief] resolve`, `[findResearch] resolved`, `[resolveSubjects] resolved`) so a
 future empty run shows which path fired and why.
+
+## Move #8 — follow-ups (2 of 3 built on branch; #1 scoped)
+
+First live read: craft works, accuracy moat held (ChatGPT invented "Jonathan Hay" + a fake quote;
+Skripr invented nothing). Three follow-ups:
+
+- **#2 Retention scaffolding enforced (BUILT).** Hook rule now demands an OPEN LOOP (tease-then-
+  jump, never state-facts-in-order); callback rule is mandatory and must land the ending on a REAL
+  SOURCED FACT (forfeiture / plea / documented outcome), never a phantom. Prompt-level driving.
+- **#3 Implied-fact cliffhanger guard (BUILT).** New `implied-revelation` compliance check: a
+  revelation-tease in the CLOSING ("what investigators found was not what anyone expected") is
+  flagged — the invented thing is the narrative IMPLICATION, which the claim check misses because
+  every sentence is individually sourced. Move #8's expansion introduced this risk; this is the net.
+- **#4 Duration-count rule (BUILT).** Prompt: never state a computed span ("seven years"); use the
+  date range ("2017 to 2024"). The recurring flag.
+- **#1 20-min generation timeout (BLOCKER — SCOPED, not built).** The heavy Move #8 generation
+  drops the connection on a 20-min build; `maxDuration` is already 300 and won't scale. Needs
+  request-splitting, NOT a bigger timeout:
+  1. Add a `mode:"section"` to the generate route: write ONE section given {sectionPlan, index,
+     prior-body, facts, voice}, return it fast (<30s). Reuse `generateBySections`' per-section logic.
+  2. Add a `mode:"finalize"`: take the assembled body, run voice pass (or per-section), the
+     deterministic tic strip, format repair, hook re-stamp, then ALL safety checks
+     (claim / quote-grounding / source-leak / heading / padding / implied-revelation) on the
+     ASSEMBLED script. Return the final script + compliance.
+  3. Client (viral-brief generate flow): loop the section plan calling `mode:"section"` with a
+     progress bar, accumulate, then one `mode:"finalize"` call. No single request runs long.
+  Must be preview-verified end to end at 20 min before `--prod` — this is why it wasn't built blind.
+
+`tsc`-clean; new `implied-revelation` test green; all six suites green.

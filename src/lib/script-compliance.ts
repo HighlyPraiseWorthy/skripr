@@ -573,6 +573,24 @@ export function checkCompliance(input: ComplianceInput): ComplianceCheck[] {
       : "The script doesn't reference a sponsor, Patreon, or community that wasn't supplied.",
   });
 
+  // 5g) IMPLIED-FACT CLIFFHANGER (Move #8's new risk). Move #8 lets the writer expand a sourced
+  // fact into narrative. The failure it introduces is INVENTED IMPLICATION, not an invented fact:
+  // every sentence traces to a source, but the FRAMING promises a revelation the facts don't
+  // contain — "what investigators found was not what anyone expected", ending on a teased
+  // money-trail twist that doesn't exist. The claim check passes it because no single sentence is
+  // false. A teased loop must RESOLVE on a real sourced fact, or not be opened — so flag a
+  // revelation-tease that lands in the CLOSING (an unresolved cliffhanger the script ends on).
+  const teaseRe = /\b(not what (?:anyone|everyone|you|they|the world|the public)\s*(?:had\s*)?(?:ever\s*)?expected|what (?:investigators|prosecutors|authorities|agents|they|the fbi|the doj)\s+(?:found|discovered|uncovered|learned|traced)[^.]{0,90}(?:was|were|would|is)\b|the truth (?:was|turned out|is)\s+(?:far\s+)?(?:stranger|worse|darker|more|nothing like)|(?:far\s+)?(?:stranger|darker|worse)\s+than (?:anyone|fiction|expected|imagined)|wasn'?t what it seemed|the real (?:story|reason|truth)\b[^.]{0,40}\b(?:was|is|would|only now)|only the beginning|would (?:change|reveal) everything|the (?:biggest|real) (?:twist|secret|surprise|question)\b)/i;
+  const tease = teaseRe.exec(closing);
+  out.push({
+    id: "implied-revelation", kind: "accuracy",
+    label: "No teased revelation the facts don't deliver",
+    pass: !tease,
+    detail: tease
+      ? `The ending implies a revelation the facts may not support: "${tease[0].trim()}". This is invented IMPLICATION — every sentence can be sourced while the framing promises a payoff that isn't in the material. Resolve the tease on a real sourced fact (a figure, a name, the documented outcome), or cut the framing. Don't end on a cliffhanger the evidence doesn't pay off.`
+      : "The ending doesn't tease a revelation the facts don't deliver.",
+  });
+
   // 6) SOURCING LEAK — the narrator talking about the evidence instead of the story.
   const leakRe = /\b(what the (?:facts|record|sources) (?:establish|show|say)|that'?s the sourced version|according to the facts|what is documented|the sources (?:don'?t|do not) say|isn'?t something that gets cleaner)\b/i;
   const leak = leakRe.exec(script);
