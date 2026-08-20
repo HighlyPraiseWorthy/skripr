@@ -835,18 +835,25 @@ export default function ViralBriefPage() {
                     {/* Fidelity set: your pass, and whether the SOURCE passes it too. A check
                         the source ALSO fails is measuring preference, not what works. */}
                     {[...fidMisses, ...fid.items.filter((c) => c.pass)].map((c) => {
-                      const srcPass = srcPassById.get(c.id);
+                      // MOVE #9: the hook open-loop and the ending callback are held to BEST
+                      // PRACTICE, not source parity — never capped at "the source skipped it too."
+                      // Match the source's skeleton, write better muscle.
+                      const bestPractice = c.id === "early-loop" || c.id === "callback";
+                      const srcPass = bestPractice ? undefined : srcPassById.get(c.id);
                       const sourceAlsoFails = srcPass === false && !c.pass;
                       return (
                         <div key={c.id} style={{ display: "flex", gap: 8, alignItems: "flex-start" }}>
                           <span style={{ flexShrink: 0, fontSize: 12, color: c.pass ? C.green : "#e6b45a" }}>{c.pass ? "✓" : "!"}</span>
                           <span style={{ minWidth: 0 }}>
                             <span style={{ fontSize: 12.5, color: C.textBright, fontWeight: 600 }}>{c.label}</span>
+                            {bestPractice && !c.pass && (
+                              <span style={{ fontSize: 10.5, fontWeight: 700, marginLeft: 7, color: "#4db8ff" }}>BEST PRACTICE</span>
+                            )}
                             {srcPass !== undefined && (
                               <span style={{ fontSize: 10.5, fontWeight: 700, marginLeft: 7, color: srcPass ? C.green : "#e6b45a" }}>SOURCE {srcPass ? "✓" : "✗"}</span>
                             )}
                             <span style={{ display: "block", fontSize: 11.5, color: C.textDim, lineHeight: 1.45 }}>
-                              {c.detail}{sourceAlsoFails ? " The source video doesn't do this either, so it may not be worth chasing." : ""}
+                              {c.detail}{sourceAlsoFails ? " The source video doesn't do this either, so it may not be worth chasing." : ""}{bestPractice && !c.pass ? " Held to best practice, not the source: a strong hook and a real callback are worth writing even if the source skipped them." : ""}
                             </span>
                           </span>
                         </div>

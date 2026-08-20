@@ -1279,18 +1279,24 @@ Each question seeks a single concrete, citable fact. Output ONLY this JSON, no p
   // works. Each is sourced and adjudicated like any other fact, marked context:true — never
   // padding, never invention. This is what lets the honest-length math clear a 20-min target.
   if (freshFacts.length < target && Date.now() - t0 < 60_000) {
+    // MOVE #9(3) — CONTEXT DEPTH. The earlier set was too shallow: an 11-min build still padded by
+    // repeating five numbers. Beating ChatGPT means bringing the SOURCED version of the breadth it
+    // fills 20 minutes with, so ask across MANY distinct, specific angles that each return NEW
+    // material, not restatements of the case facts.
     const contextQs = [
-      `Explain in concrete, sourced detail HOW THE SYSTEM WORKS that ${canonicalCaseName} exploited or operated within — the mechanics of the industry, technology, market, or process, step by step.`,
-      `What is the HISTORY AND PRECEDENT around ${canonicalCaseName}: the closest prior or similar documented cases, how this kind of scheme or event has happened before, and how they compare in scale and method?`,
-      `What BROADER MOMENT, trend, or shift does ${canonicalCaseName} belong to, and why did it become possible or prominent when it did? Give sourced specifics, not generalities.`,
-      `What are the real STAKES AND IMPACT of ${canonicalCaseName} — who was harmed or affected, how much, and what changed as a result? Sourced figures and named parties.`,
-      `How is this kind of activity normally DETECTED, PREVENTED, PROSECUTED, or REGULATED, and what did ${canonicalCaseName} reveal about the gaps or the response?`,
-      `What makes ${canonicalCaseName} NOTABLE, unprecedented, or a first of its kind, according to experts or officials, with the specific reasons given?`,
+      `Explain in concrete, sourced detail HOW THE SYSTEM WORKS that ${canonicalCaseName} exploited or operated within — the mechanics of the industry, technology, market, payment or royalty flow, step by step.`,
+      `Name the closest PRIOR OR SIMILAR documented cases to ${canonicalCaseName} SPECIFICALLY, by name, with their own dates, figures, and outcomes, and how each compares in scale and method.`,
+      `How is this kind of activity DETECTED and PREVENTED in practice — the specific technology, methods, or audits used to catch it — and what did ${canonicalCaseName} expose about the gaps?`,
+      `Who were the VICTIMS or PARTIES HARMED by ${canonicalCaseName} — named companies, artists, or people — and what specifically did each lose, with figures?`,
+      `What was the full LAW-ENFORCEMENT and REGULATORY response to ${canonicalCaseName}: the agencies involved, the charges, the legal theory, statements from officials, and any policy or industry change that followed?`,
+      `What BROADER TREND, technology shift, or economic moment does ${canonicalCaseName} belong to (for example the streaming economy, AI, or platform incentives), and why did it become possible when it did? Sourced specifics.`,
+      `Where did the MONEY actually go in ${canonicalCaseName} — the financial forensics, the accounts, the flow, what was recovered or forfeited and what was not?`,
+      `What have EXPERTS, journalists, or officials SAID about why ${canonicalCaseName} matters or what it reveals — sourced analysis and named commentary, not generalities?`,
     ];
     let cAsk = [...contextQs];
-    // Up to 3 rounds (time-guarded): the first asks the full category set at once for breadth,
+    // Up to 4 rounds (time-guarded): the first asks the full category set at once for breadth,
     // later rounds broaden whatever is still thin. Stops early when a round adds nothing new.
-    for (let round = 0; freshFacts.length < target && round < 3 && Date.now() - t0 < 70_000; round++) {
+    for (let round = 0; freshFacts.length < target && round < 4 && Date.now() - t0 < 75_000; round++) {
       const qs = round === 0 ? contextQs : await reformulateQuestions(canonicalCaseName, cAsk.slice(0, 8));
       const fresh = qs.filter((q) => round === 0 || !cAsk.includes(q));
       if (!fresh.length) break;

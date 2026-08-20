@@ -1154,7 +1154,41 @@ ANGLE OUTRANKS A CONFLICTING NOTE: if a note aims the climax at a moment that is
     }
   }
 
+  // DETERMINISTIC DURATION REPLACEMENT (runs last). Overwrite a computed span ("seven years")
+  // with the sourced date range — prompt-only enforcement failed repeatedly.
+  for (const k of ["fullScript", "script", "body", "content", "hook", "outro"]) {
+    if (typeof (script as any)[k] === "string") (script as any)[k] = stripComputedDurations((script as any)[k]);
+  }
+  if (Array.isArray((script as any).sections)) {
+    (script as any).sections = (script as any).sections.map((s: any) =>
+      s && typeof s.content === "string" ? { ...s, content: stripComputedDurations(s.content) } : s
+    );
+  }
+
   return script;
+}
+
+// MOVE #8 #4 (hard replacement) — prompt-only enforcement failed ("seven years" shipped 5x), so
+// replace a COMPUTED DURATION COUNT with the sourced date range deterministically, the way the
+// hook re-stamp overwrites rather than asks. SAFE by construction: it only rewrites "N years"
+// when N EXACTLY equals the span between the earliest and latest year the text itself states, so
+// "ran for seven years" (2024-2017=7) becomes "from 2017 to 2024" while an unrelated "five years
+// in prison" is left untouched. First hit becomes the full range; later hits become "since START"
+// to avoid repetition.
+export function stripComputedDurations(text: string): string {
+  if (!text) return text;
+  const years = Array.from(new Set((text.match(/\b(?:19|20)\d{2}\b/g) || []).map(Number))).sort((a, b) => a - b);
+  if (years.length < 2) return text;
+  const min = years[0], max = years[years.length - 1], span = max - min;
+  if (span < 2 || span > 60) return text; // implausible or trivial span — do not touch
+  const W: Record<string, number> = { one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10, eleven: 11, twelve: 12 };
+  const range = `from ${min} to ${max}`, since = `since ${min}`;
+  let n = 0;
+  return text.replace(/\b(?:for |over |across |nearly |almost |about |roughly )?((?:one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve)|\d{1,2})\s+years\b/gi, (m, num) => {
+    const val = W[String(num).toLowerCase()] ?? Number(num);
+    if (val !== span) return m; // not the computed story duration (e.g. a prison sentence) — leave it
+    return n++ === 0 ? range : since;
+  });
 }
 
 // Force the body to OPEN on the hook verbatim. Peels as many leading sentences off the

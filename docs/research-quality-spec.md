@@ -336,6 +336,91 @@ traced to a source. That edge is the product.
 Also recurring: the "seven years" count flag (rule: give 2017–2024, never state a count) still
 trips; the body should state the span, never the number.
 
+## Move #9 — match structure, exceed on hook/callback/climax craft (SHIPPED to branch; live PENDING)
+
+Built (items 1–3 of the consolidated sequence; #1 timeout stays last):
+- **Move #9 best-practice checks.** The fidelity panel now holds `early-loop` (open loop in 30s)
+  and `callback` (ending callback) to BEST PRACTICE, not source parity: for those two it drops the
+  `SOURCE ✗` marker and the "the source doesn't do this either, may not be worth chasing" line, and
+  shows a `BEST PRACTICE` tag + "worth writing even if the source skipped them." The hook prompt
+  already demands an open loop that defers the payoff (tease-then-jump), and `5b` stages the peak.
+  Match the source's skeleton, write better muscle.
+- **#4 duration HARD replacement.** `stripComputedDurations` (claude.ts) runs last in generation and
+  overwrites a computed span with the sourced date range — but ONLY when the count equals the span
+  between the earliest and latest year the text states (so "ran for seven years" with 2017+2024 →
+  "from 2017 to 2024", while "five years in prison" is left alone). First hit → full range, later
+  hits → "since START". Prompt-only had failed 5×; this is deterministic like the hook re-stamp.
+- **Context DEPTH.** The Move #8 context loop is deeper: 8 distinct, specific categories (system
+  mechanics, NAMED prior cases, detection tech, named victims + losses, the full LE/regulatory
+  response, the broader trend, where the money went, expert commentary) and up to 4 time-guarded
+  rounds — so the writer gets genuinely NEW sourced material instead of restating five numbers.
+- **#1 20-min timeout** stays LAST (scoped in the follow-ups section): request-splitting, only once
+  context depth means there is enough distinct material to fill 20 min honestly.
+
+`tsc`-clean; new `stripComputedDurations` tests green; all six suites green. Live proof PENDING:
+the ~11-min Michael Smith build should now open on a deferred-payoff hook, end on a real callback
+(forfeiture/plea), say "2017 to 2024" not "seven years", and recycle fewer numbers because the
+context research brought more distinct facts.
+
+### Original write-up (for reference)
+
+**The problem, exact:** the framework-fidelity checks grade Skripr against the SOURCE video's
+structure, and for the hook/callback they say "SOURCE ✗ — the source video doesn't do this
+either, so it may not be worth chasing." That caps Skripr's hook quality at the source's ceiling.
+The Nike source has a flat hook → Skripr writes a flat hook → the check tells the writer not to
+improve it. This is why the benchmarked ChatGPT script felt more engaging: ChatGPT wasn't
+handcuffed to a source's mediocre hook, it just wrote the best cold-open it could ("Imagine
+opening Spotify and discovering one of the biggest artists in the world… except there is no
+superstar").
+
+**The principle refined:** "copy structure, not content" still holds for MOST of the remix, but
+split it:
+- **Structure + pacing = copy the source** (section count, running order, peak placement, peak
+  length, escalation rhythm). This is the proven part; keep matching it.
+- **High-craft moments — hook, ending callback, climax staging = best-in-class, NOT source-
+  parity.** No reason to cap the highest-leverage retention beats at whatever the source did.
+  One line: **match the source's skeleton, write better muscle.**
+
+**What changes:**
+1. The **open-loop-in-30s and ending-callback checks become always-on best-practice targets** —
+   drop the "source didn't do it, so skip it" deprioritization FOR THESE TWO. A hook must open a
+   loop; an ending must call back — regardless of the source. (This subsumes the reopened Move #8
+   follow-up #2: those two checks were still failing; this is the fix.)
+2. The **hook generator aims for a cold-open that defers the payoff** — tease the mystery and jump
+   away BEFORE resolving it, instead of the current "here's the mystery, here's the answer two
+   sentences later" (the 11-min build resolved its hook with "The charge was fraud. The mechanism
+   was arithmetic" immediately).
+3. **Keep everything else source-matched** — don't lose the proven pacing/structure.
+
+Contained prompt-and-check change (no heavy refactor) → sequence HIGH, most visible engagement gain.
+
+## Consolidated next sequence (after the 11-min Move #8 read)
+
+Ordered by leverage, not by number:
+
+1. **Move #9 — hook/callback/climax craft** (above). Highest visible engagement gain; contained.
+   Fixes the two retention checks that still fail.
+2. **Move #8 follow-up #4 — duration-count HARD replacement.** Prompt-only enforcement FAILED (the
+   11-min build still said "seven years" 5× and still tripped the safety flag). Make it a
+   deterministic post-pass that replaces computed spans ("seven years") with the sourced date
+   range ("2017 to 2024" / "since 2017"), like the hook re-stamp overwrites rather than asks.
+   Small, contained; do alongside #9.
+3. **Context-expansion DEPTH — the real lever for beating ChatGPT.** The 11-min build padded by
+   repetition: "$1.2M" appeared 4+ times, and it recycled the same five numbers ($1.2M / 661,440 /
+   10,000 bots / seven years / $10M) across every section while still coming in UNDER target
+   (1,513 vs 1,650 words). Even at 11 min there isn't enough DISTINCT sourced material, so the
+   writer stretches by restating. ChatGPT filled 20 min with genuinely new material (victims,
+   AI-future implications, the co-conspirator) — some sourced, some invented; Skripr must bring
+   the SOURCED version of that breadth. Move #8's context-expansion (#5c upgrade) is not gathering
+   enough distinct facts. **This jumps AHEAD of the timeout refactor** — chunked 20-min generation
+   on a thin fact base just yields 20 minutes of the same five numbers.
+4. **Move #8 follow-up #1 — 20-min timeout refactor (LAST).** `maxDuration` is already 300s, so
+   this is request-splitting: `mode:"section"` (write one section <30s) + `mode:"finalize"`
+   (assemble body, run voice/tic-strip/format-repair/hook-restamp, then ALL safety checks on the
+   assembled script) + client loops the section plan with progress, one finalize call. Heavy,
+   multi-file, only verifiable live — do it in a focused session AFTER context-depth, so there's
+   actually enough distinct material to fill 20 min without padding.
+
 ## Holding every change against the bar
 
 For each move, the test is: *would this have produced a right, complete fact without a human
