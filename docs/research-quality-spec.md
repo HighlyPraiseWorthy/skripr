@@ -214,6 +214,93 @@ February 2024 email boast is exactly this kind of quotable primary line.
 allegedly/unconfirmed/one-outlet by source tier. The pieces exist via move #2 attribution; left
 out of scope per Anton.)
 
+## Move #8 — length through craft + context (SHIPPED to branch; live result PENDING)
+
+Built:
+- **(1) Two-tier, craft-credited length.** The research budget still gathers generously at ~2.5
+  facts/min (case + context), but the honest-length math now credits storytelling craft at
+  `HONEST_FACTS_PER_MINUTE = 1.6`, so the ceiling counts context facts AND the fact that a skilled
+  writer stretches each fact into scene/stakes/mechanism. `honestMinutes` divides by 1.6, not 2.5,
+  so the ceiling is a last resort instead of a tripwire.
+- **(2) Aggressive contextual research** (heavy upgrade of #5c). When the core case is tapped, up
+  to 3 time-guarded rounds gather real sourced context across six categories: how the system
+  works, history/precedent (prior similar cases), the broader moment, stakes/impact, detection/
+  regulation, and what makes it a first. Marked `context: true`, adjudicated by #2.
+- **(3) Storytelling craft in generation (the core).** A new `5b` prompt block tells the writer to
+  reach length by rendering each fact as a scene with stakes, explaining the mechanism patiently,
+  using the context facts as connective tissue, building a controlling thesis, and running the
+  retention playbook (open loop in 30s, escalation, one section carries the weight, ending
+  callback) — with a hard line: expand a sourced fact = required; invent a new case fact or quote
+  = forbidden (the claim/quote-grounding/source-leak checks stay as the net).
+- **(4) Ceiling = last resort** — emergent from (1)+(2): for a well-documented case at 20 min it
+  should no longer fire.
+- **Follow-ups folded in:** the grounded-on-title path already surfaces the honest-length ceiling
+  (`groundAndAngles` sets the honesty state); and `findResearch` now ALWAYS runs `resolveSubjects`
+  and prefers Claude's deterministic `kind` over Perplexity's flapping live-search classification.
+
+`tsc`-clean; honest-length tests updated for the 1.6 rate; all six suites green. Live proof
+PENDING: Michael Smith at 20 min must reach ~20 min via facts + real context + craft, read like
+the reference scripts (scene/stakes/thesis, not a flat list), and stay clean on the claim + quote
++ source-leak checks. Benchmark vs ChatGPT: match length/engagement, beat on accuracy.
+
+### Original write-up (for reference)
+
+**The correction:** earlier framing ("length is an output of the evidence; take the honest
+9 minutes") drew the line in the wrong place. It conflated **padding** (repeating a fact,
+inventing a fact) with **storytelling craft** and **real sourced context** — which are NOT
+padding and are exactly how honest long-form reaches 20+ minutes. The honest-length ceiling
+currently counts only CASE-facts, so it is far too pessimistic: it says "22 facts = 9 minutes"
+for Michael Smith, when a skilled writer (or ChatGPT) reaches 20 minutes on the same facts
+without fabricating anything.
+
+**Proof it's achievable:** the three reference scripts Anton flagged as the quality bar — a
+Miami-influencer true-crime piece, a Carl Jung explainer, and Brew's "How 1 Man Ruined Airports"
+(30+ min). Each is built on a MODEST core of real facts and reaches full length through (a)
+storytelling craft — scene, tension, stakes, patient mechanism explanation, a controlling
+thesis, open loops, escalation, callbacks — and (b) real sourced CONTEXT (how PETN works, the
+security-theater history, industry implications). Most of the airports runtime is craft +
+context, not case facts. The viewer stays AND learns something. **That is the target: take
+researched facts and tell them as a story that holds retention and teaches.**
+
+**The line, hardened:**
+- ✅ ALLOWED and REQUIRED: storytelling craft (expand a fact into narrative/scene/stakes) +
+  real sourced context (royalty-pool mechanics, how fraud detection works, prior cases like the
+  Bulgarian playlist fraud, the AI-music moment, artist impact).
+- ❌ BANNED: fabricating case facts, fake quotes, invented specifics (the ungrounded-angles bug).
+  The distinction: **expansion** adds narrative/framing/explanation AROUND a sourced fact;
+  **invention** adds a new unsourced fact. Claim check / quote-grounding / source-leak enforce
+  the invention boundary and stay as the net.
+
+**Four parts to build:**
+1. **Two-tier fact budget — case-facts + context-facts.** A 20-min target is not ~50 case facts;
+   it's ~22 case facts + ~25–30 real sourced CONTEXT facts. The honest-length math counts both.
+   The ceiling only fires when case + context + craft genuinely cannot reach the target — which,
+   for a well-documented case, should almost never happen at 20 min.
+2. **Aggressive contextual research (upgrade move #5c).** Actively gather substantial real
+   background WITH sources: how the system works, history/precedent, the broader moment,
+   stakes/impact. Marked `context: true`, adjudicated by #2, sourced like every other fact. Much
+   heavier than #5c does today.
+3. **Storytelling expansion in generation (the core).** The writer must render each fact as
+   narrative — scene, tension, patient causal mechanism, stakes, a thesis, open loops,
+   escalation, callbacks (the retention playbook the reference scripts use) — WITHOUT inventing
+   case facts. The existing framework-fidelity checks (open-loop-in-30s, ending-callback,
+   escalation, one-section-carries-weight) already target this; wire them to DRIVE the writing,
+   not merely grade it after.
+4. **Ceiling becomes a true last resort.** Fires only when facts + real context + craft can't
+   honestly fill the target (a genuinely obscure subject), not when case-facts alone fall short.
+
+**Bar update:** the bar is no longer only "publishable with zero edits" (accuracy). It's ALSO
+"engaging and informative — the viewer stays and learns something" (retention). Both: accurate
+AND engaging. A tight-but-flat 9-minute recitation fails the second bar; a padded/fabricated
+20-minute script fails the first. The target hits both.
+
+**Test:** build Michael Smith / Spotify at 20 min. Expected: (a) reaches ~20 min honestly via
+case facts + real sourced context + craft; (b) reads like the reference scripts — story format,
+mechanism explained vividly, stakes, a thesis — not a flat fact list; (c) zero fabricated case
+facts / fake quotes (claim + quote-grounding clean). Benchmark: match what ChatGPT produces on
+the same topic for length and engagement, and BEAT it on accuracy (ChatGPT slips in unsourced
+elaboration; Skripr must not).
+
 ## Holding every change against the bar
 
 For each move, the test is: *would this have produced a right, complete fact without a human

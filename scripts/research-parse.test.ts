@@ -143,10 +143,12 @@ check("20 minutes needs ~50 facts", factBudgetForMinutes(20) === 50);
 check("budget is capped at MAX_FACTS", factBudgetForMinutes(1000) === MAX_FACTS);
 check("a tiny ask still researches a floor of 6", factBudgetForMinutes(1) === 6);
 check("no minutes defaults to a 10-minute budget", factBudgetForMinutes(undefined) === factBudgetForMinutes(10));
-check("12 facts honestly supports about 5 minutes", honestMinutes(12) === 5);
-check("50 facts supports about 20 minutes", honestMinutes(50) === 20);
-// The ceiling case: a 20-min ask on a 12-fact case must report ~5, never claim 20.
-check("thin case reports its honest length, not the ask", honestMinutes(12) < 20);
+// Move #8: honest length credits storytelling craft (1.6 facts/min), so a fact set stretches
+// further than the raw 2.5/min research rate — the ceiling is a last resort, not a tripwire.
+check("12 facts honestly supports about 8 minutes (craft-credited)", honestMinutes(12) === Math.round(12 / 1.6));
+check("~32 facts (case + context) clears a 20-minute target", honestMinutes(32) >= 20);
+// The ceiling case: a genuinely thin 6-fact set still reports far under a 20-min ask.
+check("a thin case still reports well under a 20-min ask", honestMinutes(6) < 20);
 
 // Move #6 — high-value fact pin. Money outcomes and quantified mechanisms must never fall off
 // the end of the cap.

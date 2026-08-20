@@ -29,15 +29,29 @@ export interface ResearchFact {
 // narrated span; at Anton's ~166 wpm that is about 2 to 3 facts per minute. So the budget is
 // per-minute, and when the case cannot meet it we tell the truth about the supportable length.
 export const FACTS_PER_MINUTE = 2.5;
-export const MAX_FACTS = 60; // ceiling (~24 honest minutes); also the hard cap on the fact set
-// Facts a runtime honestly needs. Floored so even a 1-minute ask researches a real minimum.
+export const MAX_FACTS = 60; // ceiling (also the hard cap on the fact set)
+// MOVE #8 — TWO-TIER, CRAFT-CREDITED length. Earlier framing counted only CASE facts and set
+// the rate at 2.5/min, so it declared "22 facts = 9 minutes" and the ceiling fired far too
+// often. That conflated PADDING (repeating/inventing a fact) with STORYTELLING CRAFT and REAL
+// SOURCED CONTEXT, which are how honest long-form actually reaches 20+ minutes (Brew's airports
+// is 30+ min on a modest fact core). Two changes:
+//   • The RESEARCH budget gathers generously — case facts AND real sourced context facts — at
+//     ~2.5/min, so a 20-min target researches ~50 facts (roughly ~22 case + ~28 context).
+//   • The HONEST-LENGTH math credits craft: a skilled writer renders each fact as scene, stakes,
+//     patient mechanism and context, so the ceiling counts ~1.6 facts/min, not 2.5. The ceiling
+//     is now a TRUE last resort — it fires only when facts + context genuinely cannot fill the
+//     runtime even with craft (a genuinely obscure subject).
+export const HONEST_FACTS_PER_MINUTE = 1.6;
+// Facts a runtime honestly needs RESEARCHED (case + context). Floored so even a 1-minute ask
+// researches a real minimum.
 export function factBudgetForMinutes(minutes?: number): number {
   const m = minutes && minutes > 0 ? minutes : 10;
   return Math.min(MAX_FACTS, Math.max(6, Math.round(m * FACTS_PER_MINUTE)));
 }
-// The runtime a given number of sourced facts honestly supports.
+// The runtime a given number of sourced facts honestly supports, crediting storytelling craft
+// (scene/stakes/context expand a fact) — this drives the ceiling, which must be a last resort.
 export function honestMinutes(factCount: number): number {
-  return Math.max(1, Math.round((factCount || 0) / FACTS_PER_MINUTE));
+  return Math.max(1, Math.round((factCount || 0) / HONEST_FACTS_PER_MINUTE));
 }
 
 // Bump whenever the deepen question brief changes materially. It is part of the
@@ -373,21 +387,18 @@ Only include a fact you can attribute to a real source URL. Output ONLY this JSO
     // Candidate resolution ALWAYS runs on Claude (see resolveSubjects), because
     // Perplexity searches live and buries famous historical cases under recent
     // coverage. Perplexity here only supplies kind, verdict, and facts.
-    if (kind === "event") {
-      // Anchor case resolution on the ANGLE when there is one, not just the topic.
-      // The angle is the real subject ("How a Mobster Infiltrated the FBI for 30
-      // Years"); the topic is often the angle's framing ("The Double Life Nobody
-      // Suspected"). Passing topic alone made Claude resolve the framing and return
-      // psychological-profile cases while Perplexity, which got the angle, returned
-      // the correct mob-informant facts. The two must key off the same subject.
-      const resolveSubject = input.angle ? `${input.angle}. ${input.topic}` : input.topic;
-      const resolved = await resolveSubjects({ topic: resolveSubject, niche: input.niche }).catch(() => null);
-      if (resolved?.ok) {
-        candidates = resolved.candidates;
-        // Claude's classification is also more reliable; if it says this is not an
-        // event after all, trust that and drop the (now irrelevant) event verdict.
-        if (resolved.kind !== "event") kind = resolved.kind;
-      }
+    // PREFER CLAUDE'S CLASSIFICATION (follow-up fix). Perplexity classifies `kind` from a LIVE
+    // Sonar search, so the same title flapped between event/claim/explainer run to run — which
+    // flipped whether a case resolved and caused the intermittent grounded-vs-ungrounded bug.
+    // Claude (temp 0) is deterministic on the same prompt, so resolveSubjects ALWAYS runs now and
+    // its kind + candidates win when it succeeds; Perplexity's kind is only the fallback.
+    // Anchor on the ANGLE when there is one, not just the topic: the angle is the real subject
+    // ("How a Mobster Infiltrated the FBI") while the topic is often just its framing.
+    const resolveSubject = input.angle ? `${input.angle}. ${input.topic}` : input.topic;
+    const resolved = await resolveSubjects({ topic: resolveSubject, niche: input.niche }).catch(() => null);
+    if (resolved?.ok) {
+      kind = resolved.kind;
+      candidates = resolved.candidates;
     }
 
     // Log the resolution outcome so an intermittent "0 candidates" run is diagnosable. The
@@ -1260,21 +1271,27 @@ Each question seeks a single concrete, citable fact. Output ONLY this JSON, no p
     if (freshFacts.length <= before) break; // nothing new — retrieval gravity; stop rather than loop
   }
 
-  // MOVE #5(c) — CONTEXTUAL-FACT EXPANSION. The core case is now tapped (the depth loop above
-  // stopped adding case facts), but the budget may still be unmet. Rather than PAD, fetch real
-  // SURROUNDING CONTEXT — how the system/industry works, how this kind of thing is normally
-  // detected or prosecuted, what makes it a first, the closest prior cases. These are sourced
-  // and adjudicated like any other fact, marked context:true, and add honest minutes instead
-  // of filler. Capped and time-guarded like the depth loop.
+  // MOVE #8(2) — AGGRESSIVE CONTEXTUAL RESEARCH (heavy upgrade of #5c). Honest long-form reaches
+  // 20+ minutes through storytelling craft plus REAL SOURCED CONTEXT, not more case facts — so
+  // once the core case is tapped, actively gather substantial background across MANY categories:
+  // how the system/industry works, the history and precedent (prior similar cases), the broader
+  // moment or trend it belongs to, the stakes and who it affects, and how the response/regulation
+  // works. Each is sourced and adjudicated like any other fact, marked context:true — never
+  // padding, never invention. This is what lets the honest-length math clear a 20-min target.
   if (freshFacts.length < target && Date.now() - t0 < 60_000) {
     const contextQs = [
-      `What is the essential BACKGROUND CONTEXT for understanding ${canonicalCaseName}: how does the system, industry, technology, or mechanism it involves normally work?`,
-      `How is this kind of activity normally DETECTED, prevented, or prosecuted, and what makes ${canonicalCaseName} notable, unprecedented, or a first of its kind?`,
-      `What are the closest PRIOR or SIMILAR documented cases to ${canonicalCaseName}, and how does it compare to them in scale or method?`,
+      `Explain in concrete, sourced detail HOW THE SYSTEM WORKS that ${canonicalCaseName} exploited or operated within — the mechanics of the industry, technology, market, or process, step by step.`,
+      `What is the HISTORY AND PRECEDENT around ${canonicalCaseName}: the closest prior or similar documented cases, how this kind of scheme or event has happened before, and how they compare in scale and method?`,
+      `What BROADER MOMENT, trend, or shift does ${canonicalCaseName} belong to, and why did it become possible or prominent when it did? Give sourced specifics, not generalities.`,
+      `What are the real STAKES AND IMPACT of ${canonicalCaseName} — who was harmed or affected, how much, and what changed as a result? Sourced figures and named parties.`,
+      `How is this kind of activity normally DETECTED, PREVENTED, PROSECUTED, or REGULATED, and what did ${canonicalCaseName} reveal about the gaps or the response?`,
+      `What makes ${canonicalCaseName} NOTABLE, unprecedented, or a first of its kind, according to experts or officials, with the specific reasons given?`,
     ];
     let cAsk = [...contextQs];
-    for (let round = 0; freshFacts.length < target && round < 2 && Date.now() - t0 < 60_000; round++) {
-      const qs = round === 0 ? contextQs : await reformulateQuestions(canonicalCaseName, cAsk.slice(0, 6));
+    // Up to 3 rounds (time-guarded): the first asks the full category set at once for breadth,
+    // later rounds broaden whatever is still thin. Stops early when a round adds nothing new.
+    for (let round = 0; freshFacts.length < target && round < 3 && Date.now() - t0 < 70_000; round++) {
+      const qs = round === 0 ? contextQs : await reformulateQuestions(canonicalCaseName, cAsk.slice(0, 8));
       const fresh = qs.filter((q) => round === 0 || !cAsk.includes(q));
       if (!fresh.length) break;
       cAsk = cAsk.concat(fresh);
