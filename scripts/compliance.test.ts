@@ -1,7 +1,7 @@
 // Offline test for the post-generation compliance check, using the real shapes from the
 // session: the final Queen script (should largely pass) vs. an early flat draft.
 //   node --experimental-strip-types --loader ./scripts/alias-loader.mjs scripts/compliance.test.ts
-import { checkCompliance, complianceScore, structuralScore, checkSourceStructural, accuracyChecks, STRUCTURAL_SET } from "../src/lib/script-compliance.ts";
+import { checkCompliance, complianceScore, structuralScore, checkSourceStructural, accuracyChecks, STRUCTURAL_SET, stripInsinuations } from "../src/lib/script-compliance.ts";
 
 let failures = 0;
 function check(name: string, cond: boolean) {
@@ -309,6 +309,17 @@ check("flags a distinctive line restated near-verbatim",
   !rp(`${quote}\n\nThe investigation widened over the next year.\n\n${quote} It was the line that undid him.`).pass);
 check("does not flag distinct sentences",
   rp("He started the scheme and built it patiently over time.\n\nInvestigators counted 1,040 accounts in the network.\n\nThe court ordered an $8 million dollars forfeiture that spring.").pass !== false);
+
+// GOVERNING PRINCIPLE — silent auto-cut of person-guilt insinuation (no panel; cut, record).
+console.log("silent insinuation cut:");
+const insinScript = "Michael Smith pleaded guilty in 2024. The structure of that agreement is not the kind of thing you sign without asking questions. He ran the scheme for years.";
+const r1 = stripInsinuations(insinScript);
+check("cuts the insinuation sentence", !/not the kind of thing/.test(r1.text));
+check("keeps the surrounding sourced sentences", /pleaded guilty/.test(r1.text) && /ran the scheme/.test(r1.text));
+check("records what was cut internally", r1.cuts.length === 1 && /not the kind of thing/.test(r1.cuts[0]));
+const clean = stripInsinuations("He pleaded guilty in 2024. The court ordered an $8 million forfeiture.");
+check("leaves a clean script untouched with no cuts", clean.text === "He pleaded guilty in 2024. The court ordered an $8 million forfeiture." && clean.cuts.length === 0);
+check("drops a paragraph that was ONLY an insinuation", stripInsinuations("A real fact here.\n\nHe had to have known exactly what was happening.").text === "A real fact here.");
 
 console.log(failures === 0 ? "\nALL PASS" : `\n${failures} FAILURE(S)`);
 process.exit(failures === 0 ? 0 : 1);

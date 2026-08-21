@@ -908,29 +908,13 @@ export default function ViralBriefPage() {
                   <div style={{ fontSize: 12, color: C.textDim, marginTop: 4, lineHeight: 1.5 }}>The vivid lines are dressed-up versions of your sourced facts, not new claims. Nothing asserts more than the evidence supports.</div>
                 </div>
               ) : (() => {
-                // HARD guard: a line insinuating a named living/uncharged person's guilt or
-                // complicity is a defamation risk, not a stylistic choice — it must be rewritten
-                // or cut. Split those out and present them as a hard safety block, above the soft
-                // "catchy lines you're choosing" list.
-                const hard = script.semanticGrounding.findings.filter((f: any) => f.verdict === "culpability");
+                // Culpability findings are CUT silently server-side and never reach the user
+                // (governing principle: safety problems are fixed, not flagged). Defensively filter
+                // any out here too, so a "MUST FIX" panel can never render.
                 const soft = script.semanticGrounding.findings.filter((f: any) => f.verdict !== "culpability");
+                if (!soft.length) return null;
                 return (
                 <div>
-                  {hard.length > 0 && (
-                    <div style={{ marginBottom: soft.length ? 14 : 0, padding: "10px 12px", borderRadius: 10, background: "rgba(224,102,102,0.14)", border: "1px solid rgba(224,102,102,0.6)" }}>
-                      <div style={{ fontSize: 11.5, fontWeight: 800, color: "#ff8f8f", letterSpacing: 0.4, marginBottom: 3 }}>⛔ MUST FIX — {hard.length} LINE{hard.length === 1 ? "" : "S"} IMPL{hard.length === 1 ? "IES" : "Y"} A REAL PERSON&apos;S GUILT YOUR FACTS DON&apos;T SUPPORT</div>
-                      <div style={{ fontSize: 11.5, color: C.textDim, marginBottom: 9, lineHeight: 1.5 }}>This is a defamation risk, not a stylistic choice. These insinuate the knowledge, complicity, or guilt of a named living or uncharged person beyond what your facts establish. Rewrite or cut them before publishing — this is not optional.</div>
-                      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                        {hard.map((f: any, i: number) => (
-                          <div key={i} style={{ paddingLeft: 10, borderLeft: "2px solid #e06666" }}>
-                            <div style={{ fontSize: 12.5, color: C.textBright, lineHeight: 1.45 }}>&ldquo;{f.claim}&rdquo;</div>
-                            <div style={{ fontSize: 11.5, color: "#ff8f8f", marginTop: 2 }}>Implies guilt/complicity the facts don&apos;t support: {f.note}</div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                  {soft.length > 0 && (<>
                   <div style={{ fontSize: 11, fontWeight: 700, color: "#f0a3a3", letterSpacing: 0.4, marginBottom: 3 }}>⚠ {soft.length} CATCHY LINE{soft.length === 1 ? "" : "S"} THAT GO{soft.length === 1 ? "ES" : ""} BEYOND YOUR FACTS</div>
                   <div style={{ fontSize: 11.5, color: C.textDim, marginBottom: 10, lineHeight: 1.5 }}>These sound great, but they assert something no fact backs. Keep them if you want the punch, but you&apos;re choosing it on purpose, not by accident.</div>
                   <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
@@ -941,7 +925,6 @@ export default function ViralBriefPage() {
                       </div>
                     ))}
                   </div>
-                  </>)}
                 </div>
                 );
               })()}

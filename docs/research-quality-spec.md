@@ -10,6 +10,38 @@ Test it that way: generate for a case you know cold, then count how many correct
 user would need. For Michael Smith (Spotify streaming fraud) this session it was four
 (wrong case suggested, `$10M` superseded number, stale age `52`, missing mechanism). Target: zero.
 
+## Governing product principle: Skripr fixes silently — the user gets a clean script, not a checklist
+
+**A wall of warnings IS edits.** It turns the tool into homework, discourages the user, and kills
+word-of-mouth. Every check in this system exists to TRIGGER AN AUTOMATIC FIX, not to display a
+problem for the user to resolve. Detection stays internal; only the clean script reaches the user.
+
+Two categories, both fully silent — NOTHING is surfaced to the user:
+- **Accuracy / safety** (person-insinuation, figure/quote/source/date/heading grounding,
+  implied-revelation, supersession, spelled-number, hook re-stamp) → **silently FIX** before
+  returning the script. For safety-critical lines (insinuating a real person's guilt, fabrication)
+  the safe default is **CUT** the line, not rewrite — removing a line can't introduce a new problem.
+- **Creative / rhetorical** — a vivid line that goes beyond the facts but is NOT about a real
+  person's guilt or a checkable fabricated number → **silently KEEP it in.** Do not cut, do not
+  rewrite, do not flag. Authorship is preserved by keeping the punch, not by offering a choice.
+
+Hard rules:
+- **NO user-facing panels, flags, "3 catchy lines", "MUST FIX", or "show what Skripr did"** — none,
+  not even opt-in. The user gets the clean script and nothing else. (Decided by Anton, 2026-08-20:
+  a user-facing audit is friction; "it's better for them that way.")
+- A **quiet INTERNAL record** of what was auto-cut/fixed is kept — NOT shown to the user — solely so
+  a preview read can verify the fix hit the right span, and to feed self-learning telemetry. Internal
+  plumbing, never surfaced.
+- Silent fixing must be CONSERVATIVE — only fix on confident detection (under-fire, don't over-fire),
+  with a fallback (if a clean cut breaks the sentence, rewrite the sentence to drop only the
+  offending span). Because the user isn't there to catch a bad cut, the fix must be reliable.
+- No user-facing prompts. If Skripr genuinely can't adjudicate something, prefer the safe silent
+  default (cut the risk / keep the punch) over asking.
+
+This is the zero-edit bar taken to its conclusion: paste a video, get a great script, done. No
+triage, no flags, no homework. Every future check is governed by this — route its output to a silent
+fix or silent keep, never to a panel.
+
 ## Root cause (one sentence)
 
 **The pipeline gathers, but never adjudicates.** It has no step that ranks candidates by
@@ -736,3 +768,25 @@ ending lands on the forfeiture, and section openers don't drum the same figure.
 
 `tsc`-clean; new person-insinuation, source-leak, padding, and hookIsVague tests green; all six
 suites green. The culpability rewrite/enforcement beyond the HARD flag is preview-verified.
+
+## #1 — person-insinuation → SILENT AUTO-CUT (built; the governing principle in action)
+
+The red "⛔ MUST FIX" panel is GONE. Person-guilt insinuation is now cut silently before the
+script is ever returned; the user gets a clean script and nothing else.
+- Shared detection: `INSINUATION_RE` / `looksLikeInsinuation` / `stripInsinuations` in
+  `script-compliance.ts` (one source of truth for the check AND the cut).
+- Generation (`claude.ts`): `stripInsinuations` runs LAST, cutting sentences that insinuate a
+  real person's guilt (the deterministic language shapes). A cut is the safe default — removing a
+  sentence can't add a new problem. Conservative (under-fire).
+- Route (`generate/route.ts`): the LLM `culpability` findings (the subtle ones the language cut
+  misses, e.g. a false attribution) are cut sentence-by-sentence too, and DROPPED from the
+  findings so nothing about them reaches the user.
+- Client: the MUST-FIX block removed; culpability findings defensively filtered so no such panel
+  can ever render.
+- Internal record only: `script._autoCuts` keeps what was cut (never surfaced) for preview
+  verification + self-learning telemetry.
+
+`tsc`-clean; `stripInsinuations` tested (cuts the insinuation, keeps sourced sentences, records
+cuts, no-ops on clean text, drops an insinuation-only paragraph); all six suites green. Preview:
+build the Boomy/Alex-Mitchell angle — the insinuating lines should be silently gone and
+`_autoCuts` should list exactly those spans and nothing else.

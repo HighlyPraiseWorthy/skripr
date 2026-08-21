@@ -1,6 +1,7 @@
 import { Anthropic } from "@anthropic-ai/sdk";
 import { fingerprintToBrief, readProhibitions, stripStandaloneTics, type VoiceFingerprint } from "@/lib/voice-metrics";
 import { buildStorytellingBlock } from "@/lib/storytelling";
+import { stripInsinuations } from "@/lib/script-compliance";
 import { buildVarietyBlock } from "@/lib/ai/phrase-variety";
 
 let _anthropic: Anthropic | null = null;
@@ -1206,6 +1207,32 @@ ANGLE OUTRANKS A CONFLICTING NOTE: if a note aims the climax at a moment that is
       if (chosen !== paras2[idx]) { paras2[idx] = chosen; changed = true; }
     }
     if (changed) (script as any)[bodyKey2] = paras2.join("\n\n");
+  }
+
+  // GOVERNING PRINCIPLE — SILENT SAFETY CUT (runs last). Person-guilt insinuation is a defamation
+  // risk, so it is CUT silently before the script is returned — no panel, no flag. A cut is the
+  // safe default (removing a sentence can't add a new problem). What was cut is kept ONLY in an
+  // internal record (script._autoCuts), never surfaced to the user.
+  const autoCuts: string[] = [];
+  for (const k of ["fullScript", "script", "body", "content", "outro"]) {
+    const cur = (script as any)[k];
+    if (typeof cur === "string" && cur.trim()) {
+      const { text, cuts } = stripInsinuations(cur);
+      if (cuts.length) { (script as any)[k] = text; autoCuts.push(...cuts); }
+    }
+  }
+  if (Array.isArray((script as any).sections)) {
+    (script as any).sections = (script as any).sections.map((s: any) => {
+      if (s && typeof s.content === "string" && s.content.trim()) {
+        const { text, cuts } = stripInsinuations(s.content);
+        if (cuts.length) { autoCuts.push(...cuts); return { ...s, content: text }; }
+      }
+      return s;
+    });
+  }
+  if (autoCuts.length) {
+    (script as any)._autoCuts = [...new Set(autoCuts)]; // internal record, never shown to the user
+    console.log(`[safety] silently cut ${autoCuts.length} person-insinuation line(s)`);
   }
 
   return script;

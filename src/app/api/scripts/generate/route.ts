@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import { generateScript } from "@/lib/ai/claude";
+import { generateScript, buildSectionPlan } from "@/lib/ai/claude";
 import { checkScriptLimit, incrementGenerationCount, refundGenerationCount } from "@/lib/usage";
 import { getMagnetSuggestions } from "@/lib/magnet-word";
 import { supabaseAdmin } from "@/lib/db/supabase";
@@ -14,6 +14,7 @@ import { factCheckAgainstSource } from "@/lib/fact-check";
 import { reviewAndCorrectScript } from "@/lib/ai/self-review";
 import { getActiveVoiceMeta, getVoiceMetaById } from "@/lib/voice-profile";
 import { captureFrameworkInBackground } from "@/lib/framework-capture";
+import { checkSemanticGrounding } from "@/lib/ai/semantic-grounding";
 
 export const maxDuration = 300;
 
@@ -45,7 +46,7 @@ export async function POST(req: Request) {
   const startTime = Date.now();
 
   try {
-    const { transcript, niche, topic, sourceVideoId, videoLength = "long", targetMinutes, viralMagnetWord, angle, remixFramework, hookType, titleFormula, hookScript, contentStructure, retentionTriggers, voiceProfileId, sourceNiche, bridgeNiche, companionCta, storytellingMode, storytellingTechniques, sourceMaterial, selectedTitle, softCta, sourceVerdict, topicKind, directorNote } = await req.json();
+    const { transcript, niche, topic, sourceVideoId, videoLength = "long", targetMinutes, viralMagnetWord, angle, remixFramework, hookType, titleFormula, hookScript, hookWhyItWorks, contentStructure, retentionTriggers, voiceProfileId, sourceNiche, bridgeNiche, companionCta, storytellingMode, storytellingTechniques, sourceMaterial, selectedTitle, softCta, sourceVerdict, topicKind, directorNote } = await req.json();
 
     // Free plan: scripts capped at 10 minutes — longer scripts are a paid feature
     if (plan === "free" && targetMinutes && targetMinutes > 10) {
@@ -64,17 +65,65 @@ export async function POST(req: Request) {
     let enhancedAngle: string | undefined = angle || undefined;
     if (remixFramework || hookType || titleFormula || hookScript || contentStructure || retentionTriggers) {
       const parts: string[] = [];
-      if (hookType) parts.push(`Open with a ${hookType} hook`);
+      // This is a REMIX: the source video is the template, and reproducing ITS shape is
+      // the entire product. Generic craft guidance in the system prompt describes the
+      // form in general; anything below describes THIS video, and wins on conflict.
+      parts.push(`REPRODUCE THE SHAPE OF THE SOURCE VIDEO (highest priority). Everything below was measured from the specific video this remix is modeled on. Where any general craft guidance conflicts with it, THIS WINS — copying the source's actual structure, weighting and beat placement is the whole point of a remix. Copy the SHAPE and the MECHANICS, never the wording, the subject, or the source's own metaphors.`);
+      // The extracted RECIPE is the best structural instruction available — it is written
+      // in exactly the register a prompt wants and describes what this specific video did.
+      // It was previously buried as one line among many; it leads now.
+      if (remixFramework) parts.push(`THE SOURCE VIDEO'S RECIPE — follow this structure beat for beat, it is what made the original work: ${remixFramework}`);
+      if (hookType) parts.push(`HOOK ARCHETYPE (required): the source opened with a ${hookType} hook, and yours must be the same archetype. A "stat" or "controversy" hook means a concrete NUMBER lands in the first two sentences. A "quote" hook means real quoted speech opens the script. Do NOT open by restating the title or the thesis — the viewer just read the title, so repeating it carries zero new information.`);
+      if (hookWhyItWorks) parts.push(`WHY THE SOURCE'S HOOK WORKS (reproduce this mechanism, not its wording): ${String(hookWhyItWorks).slice(0, 400)}`);
       if (hookScript) parts.push(`Hook style to mirror (adapt, don't copy): "${String(hookScript).slice(0, 200)}"`);
       if (titleFormula) parts.push(`Title formula: ${titleFormula}`);
-      if (remixFramework) parts.push(`Viral framework: ${remixFramework}`);
-      if (contentStructure && Array.isArray(contentStructure) && contentStructure.length > 0) {
-        const sections = (contentStructure as any[]).map((s: any) => s.section || "").filter(Boolean);
-        if (sections.length) parts.push(`Content structure to follow: ${sections.join(" → ")}`);
+      // The extracted timestamps are a WEIGHTING and PLACEMENT signal, not decoration.
+      // Previously only the section names and trigger types survived, so a remix copied
+      // the source's themes but none of its shape. Convert timestamps to percentages of
+      // runtime: the gaps say how long each section runs (which one is the expanded
+      // peak), and the trigger positions say where each beat belongs.
+      const tsToSec = (t: string): number | null => {
+        const m = String(t || "").match(/^(?:(\d+):)?(\d+):(\d{2})$/);
+        return m ? Number(m[1] || 0) * 3600 + Number(m[2]) * 60 + Number(m[3]) : null;
+      };
+      const structRows = (Array.isArray(contentStructure) ? contentStructure : []) as any[];
+      const secs = structRows.map((s) => tsToSec(s?.timestamp)).filter((n): n is number => n !== null);
+      const runtime = secs.length ? Math.max(...secs) : 0;
+
+      if (structRows.length > 0) {
+        if (runtime > 0 && secs.length === structRows.length) {
+          // Section i runs from its own timestamp to the next one; the last runs to the end.
+          const spans = structRows.map((s, i) => {
+            const start = tsToSec(s?.timestamp) ?? 0;
+            const end = i + 1 < structRows.length ? (tsToSec(structRows[i + 1]?.timestamp) ?? runtime) : runtime * 1.12;
+            return { name: s?.section || `Section ${i + 1}`, start, span: Math.max(1, end - start) };
+          });
+          const totalSpan = spans.reduce((a, b) => a + b.span, 0) || 1;
+          const shaped = spans.map((s, i) => {
+            const purpose = String(structRows[i]?.purpose || structRows[i]?.description || "").slice(0, 120);
+            return `${s.name} (starts ~${Math.round((s.start / (runtime * 1.12)) * 100)}% in, ~${Math.round((s.span / totalSpan) * 100)}% of the runtime)${purpose ? ` — its job in the video: ${purpose}` : ""}`;
+          });
+          const biggest = [...spans].sort((a, b) => b.span - a.span)[0];
+          parts.push(`Content shape to reproduce, WITH ITS WEIGHTING (this is the source's actual pacing, copy the proportions not just the order): ${shaped.join(" → ")}`);
+          parts.push(`The source's LONGEST section by far is "${biggest.name}" at roughly ${Math.round((biggest.span / totalSpan) * 100)}% of the whole video. Your equivalent section must dominate the script in the same proportion — that is the scene you tell at full length while everything else stays tight.`);
+        } else {
+          const sections = structRows.map((s: any) => s.section || "").filter(Boolean);
+          if (sections.length) parts.push(`Content structure to follow: ${sections.join(" → ")}`);
+        }
       }
       if (retentionTriggers && Array.isArray(retentionTriggers) && retentionTriggers.length > 0) {
-        const triggers = (retentionTriggers as any[]).map((t: any) => t.trigger || "").filter(Boolean);
-        if (triggers.length) parts.push(`Retention mechanics to include: ${triggers.join(", ")}`);
+        const rows = (retentionTriggers as any[]).filter((t) => t?.trigger);
+        const placed = rows.map((t) => {
+          const sec = tsToSec(t?.timestamp);
+          const pct = runtime > 0 && sec !== null ? Math.round((sec / (runtime * 1.12)) * 100) : null;
+          // The "example" is the real moment from the source that performed this beat.
+          // It shows HOW that video does the move, which is the thing worth reproducing;
+          // the type name alone ("open loop") says nothing about execution.
+          const how = String(t?.example || "").slice(0, 140);
+          const where = pct === null ? String(t.trigger) : `${t.trigger} at ~${pct}% in`;
+          return how ? `${where} — how the source did it: "${how}"` : where;
+        });
+        if (placed.length) parts.push(`Retention beats to place AT THESE PROPORTIONAL POSITIONS (not just somewhere in the script): ${placed.join("; ")}`);
       }
       enhancedAngle = parts.join(". ") + (angle ? `. ${angle}` : "");
     }
@@ -121,12 +170,13 @@ export async function POST(req: Request) {
     // no selection falls back to the user's active profile
     let voiceProfile: string | null = null;
     let voiceName: string | null = null;
+    let voiceFingerprint: any = undefined;
     if (voiceProfileId === "default") { /* explicit Skripr Default — no voice */ }
     else {
       const meta = voiceProfileId
         ? await getVoiceMetaById(userId, String(voiceProfileId)).catch(() => null)
         : await getActiveVoiceMeta(userId).catch(() => null);
-      if (meta) { voiceProfile = meta.styleGuide; voiceName = meta.name; }
+      if (meta) { voiceProfile = meta.styleGuide; voiceName = meta.name; voiceFingerprint = meta.fingerprint; }
     }
     if (voiceProfile) console.log(`[voice] profile injected: ${voiceName} (${voiceProfile.length} chars)`);
 
@@ -178,6 +228,18 @@ export async function POST(req: Request) {
       nicheHookExamples: nicheHookExamples || undefined,
       nicheTitleFormulas: titleFormulas || undefined,
       voiceProfile: voiceProfile || undefined,
+      voiceName: voiceName || undefined,
+      // Section-by-section: the source's measured structure, scaled to the chosen
+      // length, so each section is written against its own function and word budget.
+      sectionPlan: targetMinutes
+        ? buildSectionPlan(contentStructure, retentionTriggers, Math.round(targetMinutes * 150))
+        : undefined,
+      remixRecipe: remixFramework || undefined,
+      // Hook-first inputs: the hook is written and archetype-validated before the body.
+      hookArchetype: hookType || undefined,
+      hookWhyItWorks: hookWhyItWorks || undefined,
+      hookScript: hookScript || undefined,
+      voiceFingerprint,
       companionCta: !!companionCta,
       softCta: !!softCta,
       topicKind: topicKind === "explainer" || topicKind === "hypothetical" || topicKind === "claim" ? topicKind : "event",
@@ -325,7 +387,45 @@ export async function POST(req: Request) {
       .filter((x: any) => typeof x === "string").join("\n\n");
     const factCheck = factCheckAgainstSource(scannedText, typeof sourceMaterial === "string" ? sourceMaterial : "");
 
-    return NextResponse.json({ ...script, magnetSuggestions, savedId, factCheck, reviewChanges });
+    // SEMANTIC GROUNDING, run automatically here rather than only behind the on-demand
+    // button — the whole point is that unsourced substantive claims (dopamine, "same
+    // circuitry as sex") ship silently, so they must surface without a click. Scoped to
+    // the same sourceMaterial the script was allowed to use, and time-guarded so a slow
+    // run degrades to the manual re-check rather than timing out the whole request.
+    let semanticGrounding: any = undefined;
+    const scopedFactList = String(sourceMaterial || "")
+      .split(/\n+/).map((l) => l.replace(/^[-•\d.\s]+/, "").replace(/\s*\(source:[^)]*\)\s*$/i, "").trim())
+      .filter((l) => l.length > 12);
+    if (scopedFactList.length && Date.now() - startTime < 250_000) {
+      semanticGrounding = await checkSemanticGrounding(scannedText, scopedFactList).catch(() => undefined);
+    }
+
+    // GOVERNING PRINCIPLE — silently CUT the LLM-detected person-guilt insinuations too (the
+    // subtle ones the deterministic language-cut in generation misses, e.g. a false attribution),
+    // and DROP them from the findings so nothing about them ever reaches the user.
+    if (semanticGrounding?.findings?.length) {
+      const culp = semanticGrounding.findings.filter((f: any) => f?.verdict === "culpability" && typeof f.claim === "string" && f.claim.trim().length > 20);
+      if (culp.length) {
+        const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, "");
+        const keys = culp.map((f: any) => norm(f.claim).slice(0, 40)).filter((k: string) => k.length >= 20);
+        const culpCuts: string[] = [];
+        const cutClaimSentences = (text: string) => text.split(/\n\n+/).map((p: string) =>
+          p.split(/(?<=[.!?])\s+/).filter((sent: string) => {
+            if (keys.some((k: string) => norm(sent).includes(k))) { culpCuts.push(sent.trim()); return false; }
+            return true;
+          }).join(" ").trim()
+        ).filter((p: string) => p.length > 0).join("\n\n");
+        for (const k of ["fullScript", "script", "body", "content", "outro"]) {
+          if (typeof (script as any)[k] === "string" && (script as any)[k].trim()) (script as any)[k] = cutClaimSentences((script as any)[k]);
+        }
+        if (Array.isArray((script as any).sections)) (script as any).sections = (script as any).sections.map((s: any) => s && typeof s.content === "string" ? { ...s, content: cutClaimSentences(s.content) } : s);
+        (script as any)._autoCuts = [...new Set([...((script as any)._autoCuts || []), ...culpCuts])]; // internal, never surfaced
+        // The user never sees culpability findings — they were fixed, not flagged.
+        semanticGrounding = { ...semanticGrounding, findings: semanticGrounding.findings.filter((f: any) => f?.verdict !== "culpability") };
+      }
+    }
+
+    return NextResponse.json({ ...script, magnetSuggestions, savedId, factCheck, reviewChanges, semanticGrounding });
   } catch (error: any) {
     console.error("Script generation error:", error.message);
     // Refund the credit — user shouldn't pay for our failure

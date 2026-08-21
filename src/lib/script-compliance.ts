@@ -141,6 +141,30 @@ function allNumberValues(text: string): number[] {
 // swallows half the paragraph.
 const QUOTE_RE = /["“]([^"”\n]{6,240})["”]|(?:^|[\s(\[])['‘]([^'’\n]{6,240})['’](?=$|[\s.,!?)\]])/;
 
+// PERSON-INSINUATION detection — shared by the compliance check AND the silent auto-cut in
+// generation, so both use one source of truth. Matches the LANGUAGE of insinuated guilt/
+// knowledge/complicity about a real person ("someone else was collecting", "not the kind of thing
+// you sign without asking", "had to have known").
+export const INSINUATION_RE = /\b(not the kind of thing (?:you|anyone|someone|people) (?:sign|do|build|set up)\w*\s+without (?:asking|knowing|realizing|questions)|(?:had to have|must have|could\s?n'?t (?:not )?have|would have) known|knew (?:exactly )?(?:what|where|how|who|that)|beneficiary (?:built|baked) (?:right )?into|looked the other way|turned a blind eye|\bcomplicit\b|(?:was|were|had to be) in on it|cover(?:ing)? (?:for (?:him|her|them)| it up)|no coincidence that|someone (?:else )?was (?:collecting|profiting|benefiting|pulling)|does(?:n'?t| not) happen without someone (?:knowing|noticing))\b/i;
+export function looksLikeInsinuation(s: string): boolean { return INSINUATION_RE.test(s || ""); }
+
+// GOVERNING PRINCIPLE — silent fix. Cut sentences that insinuate a real person's guilt beyond the
+// facts, before the script is ever returned. A CUT is the safe default: removing a sentence can't
+// introduce a new problem. Returns the cleaned text and an INTERNAL record of what was cut (never
+// shown to the user — for preview verification + self-learning telemetry only).
+export function stripInsinuations(text: string): { text: string; cuts: string[] } {
+  if (!text) return { text, cuts: [] };
+  const cuts: string[] = [];
+  const outParas = text.split(/\n\n+/).map((p) => {
+    const kept = p.split(/(?<=[.!?])\s+/).filter((s) => {
+      if (looksLikeInsinuation(s)) { cuts.push(s.trim()); return false; }
+      return true;
+    });
+    return kept.join(" ").trim();
+  }).filter((p) => p.length > 0);
+  return { text: outParas.join("\n\n"), cuts };
+}
+
 export function checkCompliance(input: ComplianceInput): ComplianceCheck[] {
   const out: ComplianceCheck[] = [];
   const script = input.fullScript || "";
@@ -669,8 +693,7 @@ export function checkCompliance(input: ComplianceInput): ComplianceCheck[] {
   // (culpability) check hasn't run. Report-not-block, but HARD: rewrite or cut, not a stylistic
   // choice. (A CHARGED/CONVICTED person the facts name is fair game; the risk is implying more
   // about someone the record does not.)
-  const insinuationRe = /\b(not the kind of thing (?:you|anyone|someone|people) (?:sign|do|build|set up)\w*\s+without (?:asking|knowing|realizing|questions)|(?:had to have|must have|could\s?n'?t (?:not )?have|would have) known|knew (?:exactly )?(?:what|where|how|who|that)|beneficiary (?:built|baked) (?:right )?into|looked the other way|turned a blind eye|\bcomplicit\b|(?:was|were|had to be) in on it|cover(?:ing)? (?:for (?:him|her|them)| it up)|no coincidence that|someone (?:else )?was (?:collecting|profiting|benefiting|pulling)|does(?:n'?t| not) happen without someone (?:knowing|noticing))\b/i;
-  const insin = insinuationRe.exec(script);
+  const insin = INSINUATION_RE.exec(script);
   out.push({
     id: "person-insinuation", kind: "accuracy",
     label: "No implied guilt of a real person beyond the facts",
