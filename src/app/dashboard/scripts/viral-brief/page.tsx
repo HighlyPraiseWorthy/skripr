@@ -466,6 +466,9 @@ export default function ViralBriefPage() {
           fullScript: d.body ?? prev.fullScript, script: d.body ?? prev.script,
           body: d.body ?? prev.body, content: d.body ?? prev.content,
           factVerify: d,
+          // Unified INTERNAL record of every silent fix (never surfaced): fold the applied
+          // fact corrections in with the server-side auto-cuts, for verification + telemetry.
+          _autoCuts: [...new Set([...(prev._autoCuts || []), ...(Array.isArray(d.changes) ? d.changes.map((c: string) => `fact-correction: ${c}`) : [])])],
         } : prev);
       } else {
         setScript((prev: any) => prev ? { ...prev, factVerify: { ran: false } } : prev);
@@ -767,35 +770,18 @@ export default function ViralBriefPage() {
               semanticGrounding culpability findings are still CUT server-side; the soft findings are
               simply kept in silently and never surfaced. */}
 
-          {script.factVerify?.ran && (
-            <div style={{ background: "rgba(52,211,153,0.06)", border: "1px solid rgba(52,211,153,0.28)", borderRadius: 12, padding: "14px 18px", marginBottom: 16 }}>
-              <div style={{ fontSize: 11, fontWeight: 700, color: C.green, letterSpacing: 0.4, marginBottom: 7 }}>FACT-CHECKED AGAINST SOURCES</div>
-              {Array.isArray(script.factVerify.changes) && script.factVerify.changes.length > 0 && (
-                <div style={{ marginBottom: script.factVerify.stillVerify?.length ? 12 : 0 }}>
-                  <div style={{ fontSize: 12, fontWeight: 600, color: C.textBright, marginBottom: 4 }}>Corrected in the script:</div>
-                  <ul style={{ margin: 0, paddingLeft: 18 }}>
-                    {script.factVerify.changes.map((c: string, i: number) => (<li key={i} style={{ fontSize: 12.5, color: C.textDim, lineHeight: 1.5 }}>{c}</li>))}
-                  </ul>
-                </div>
-              )}
-              {Array.isArray(script.factVerify.stillVerify) && script.factVerify.stillVerify.length > 0 && (
-                <div>
-                  <div style={{ fontSize: 12, fontWeight: 600, color: "#fbbf24", marginBottom: 4 }}>Could not confirm, check these yourself:</div>
-                  <ul style={{ margin: 0, paddingLeft: 18 }}>
-                    {script.factVerify.stillVerify.map((c: string, i: number) => (<li key={i} style={{ fontSize: 12.5, color: C.textDim, lineHeight: 1.5 }}>{c}</li>))}
-                  </ul>
-                </div>
-              )}
-              {(!script.factVerify.changes?.length && !script.factVerify.stillVerify?.length) && (
-                <div style={{ fontSize: 12.5, color: C.textDim, lineHeight: 1.5 }}>Every checkable claim confirmed against a source. Nothing to fix.</div>
-              )}
-            </div>
-          )}
-          {script.factVerify && !script.factVerify.ran && (
-            <div style={{ background: "rgba(251,191,36,0.08)", border: "1px solid rgba(251,191,36,0.3)", borderRadius: 12, padding: "12px 18px", marginBottom: 16, fontSize: 12.5, color: C.textDim }}>
-              Fact verification could not run right now. Your script is unchanged.
-            </div>
-          )}
+          {/* GOVERNING PRINCIPLE — Option A (Anton, 2026-08-21). Fact-verify keeps its silent
+              auto-corrections (runVerify swaps the corrected hook/body straight into the script) but
+              surfaces NOTHING: no "FACT-CHECKED AGAINST SOURCES" panel, no "Corrected in the script"
+              list, and — the homework surface that had to go — no "check these yourself" list. The
+              unconfirmable claims are NOT cut: they already passed grounding against the researched
+              facts, so a blind cut would risk losing real facts; the deeper source-check simply
+              couldn't independently re-confirm them, and that is not the user's problem to resolve.
+              The full result (changes + stillVerify) is kept on script.factVerify as an INTERNAL
+              record for verification + self-learning telemetry, never rendered. (Moving verify to
+              run automatically during generation is deferred to the chunked-generation refactor: it
+              is a ~120s source-check that inline would blow the generation time budget the #1
+              timeout fix protects.) */}
           {hook && (
             <div style={{ background: C.card, border: "1px solid " + C.border, borderRadius: 12, padding: "14px 18px", marginBottom: 16 }}>
               <div style={{ fontSize: 10, fontWeight: 700, color: C.accentDim, letterSpacing: 0.6, marginBottom: 8 }}>HOOK · {brief?.hookAnalysis.hookType}</div>
