@@ -103,7 +103,6 @@ export default function ViralBriefPage() {
   const [caseChoices, setCaseChoices] = useState<any[]>([]);
   const [resolving, setResolving] = useState(false);
   const [verifying, setVerifying] = useState(false);
-  const [groundingRunning, setGroundingRunning] = useState(false);
   const [manualCase, setManualCase] = useState("");
   // Research-before-cards: the case is deepened at confirm time, and the resulting
   // facts feed BOTH the slot cards and the research step (no re-fetch). Held here so
@@ -449,21 +448,6 @@ export default function ViralBriefPage() {
       : deepFacts.map((f) => f.fact);
   }
 
-  async function runGroundingCheck() {
-    if (!script || groundingRunning) return;
-    setGroundingRunning(true);
-    try {
-      const b = script.fullScript || script.script || script.body || script.content || "";
-      const res = await fetch("/api/scripts/grounding", {
-        method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ script: joinHookBody(script.hook || "", b), facts: scopedFactStrings() }),
-      });
-      const d = await res.json();
-      setScript((prev: any) => prev ? { ...prev, semanticGrounding: d?.ran ? d : { ran: false } } : prev);
-    } catch {
-      setScript((prev: any) => prev ? { ...prev, semanticGrounding: { ran: false } } : prev);
-    } finally { setGroundingRunning(false); }
-  }
 
   async function runVerify() {
     if (!script || verifying) return;
@@ -728,10 +712,6 @@ export default function ViralBriefPage() {
                 style={{ padding: "8px 14px", borderRadius: 9, background: "rgba(77,184,255,0.07)", border: "1px solid rgba(99,102,241,0.2)", color: C.accentDim, fontSize: 12, fontWeight: 600, cursor: "pointer" }}>
                 ← Try another angle
               </button>
-              <button onClick={runGroundingCheck} disabled={groundingRunning}
-                style={{ padding: "8px 14px", borderRadius: 9, background: "rgba(126,230,176,0.10)", border: "1px solid rgba(126,230,176,0.35)", color: "#7ee6b0", fontSize: 12, fontWeight: 600, cursor: groundingRunning ? "wait" : "pointer" }}>
-                {groundingRunning ? "Reading every claim..." : script.semanticGrounding?.ran ? "Re-check claims" : "Check claims vs facts"}
-              </button>
               <button onClick={runVerify} disabled={verifying}
                 style={{ padding: "8px 14px", borderRadius: 9, background: "rgba(52,211,153,0.10)", border: "1px solid rgba(52,211,153,0.35)", color: C.green, fontSize: 12, fontWeight: 600, cursor: verifying ? "wait" : "pointer" }}>
                 {verifying ? "Verifying against sources..." : script.factVerify?.ran ? "Re-verify facts" : "Verify facts"}
@@ -781,44 +761,11 @@ export default function ViralBriefPage() {
               user receives a clean script with no scorecard — no "FRAMEWORK FIDELITY", no "SAFETY
               8/9", no "BEST PRACTICE". A quiet internal record (script._autoCuts) is kept in plumbing
               only, for preview verification and self-learning telemetry, never rendered. The only
-              soft panel that remains is the creative-choice "catchy lines you're keeping" one below,
-              which is authorship the user is deliberately choosing, not a compliance flag. */}
-
-          {/* Semantic grounding — the "vivid + true" check. Vivid retellings of real facts
-              are kept; only claims that assert something the facts don't carry are named.
-              This is the sentence-level grounding the deterministic checks can't see. */}
-          {script.semanticGrounding && (
-            <div style={{ background: script.semanticGrounding.ran && script.semanticGrounding.findings?.length ? "rgba(224,102,102,0.06)" : "rgba(126,230,176,0.06)", border: `1px solid ${script.semanticGrounding.ran && script.semanticGrounding.findings?.length ? "rgba(224,102,102,0.3)" : "rgba(126,230,176,0.3)"}`, borderRadius: 12, padding: "14px 18px", marginBottom: 16 }}>
-              {!script.semanticGrounding.ran ? (
-                <div style={{ fontSize: 12.5, color: C.textDim }}>Couldn&apos;t read the claims right now — try again in a moment.</div>
-              ) : !script.semanticGrounding.findings?.length ? (
-                <div>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: "#7ee6b0", letterSpacing: 0.4 }}>EVERY CLAIM STANDS ON A FACT</div>
-                  <div style={{ fontSize: 12, color: C.textDim, marginTop: 4, lineHeight: 1.5 }}>The vivid lines are dressed-up versions of your sourced facts, not new claims. Nothing asserts more than the evidence supports.</div>
-                </div>
-              ) : (() => {
-                // Culpability findings are CUT silently server-side and never reach the user
-                // (governing principle: safety problems are fixed, not flagged). Defensively filter
-                // any out here too, so a "MUST FIX" panel can never render.
-                const soft = script.semanticGrounding.findings.filter((f: any) => f.verdict !== "culpability");
-                if (!soft.length) return null;
-                return (
-                <div>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: "#f0a3a3", letterSpacing: 0.4, marginBottom: 3 }}>⚠ {soft.length} CATCHY LINE{soft.length === 1 ? "" : "S"} THAT GO{soft.length === 1 ? "ES" : ""} BEYOND YOUR FACTS</div>
-                  <div style={{ fontSize: 11.5, color: C.textDim, marginBottom: 10, lineHeight: 1.5 }}>These sound great, but they assert something no fact backs. Keep them if you want the punch, but you&apos;re choosing it on purpose, not by accident.</div>
-                  <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                    {soft.map((f: any, i: number) => (
-                      <div key={i} style={{ paddingLeft: 10, borderLeft: `2px solid ${f.verdict === "contradicts" ? "#e06666" : f.verdict === "narrative" ? "#d98cff" : "#e6b45a"}` }}>
-                        <div style={{ fontSize: 12.5, color: C.textBright, lineHeight: 1.45 }}>&ldquo;{f.claim}&rdquo;</div>
-                        <div style={{ fontSize: 11.5, color: f.verdict === "contradicts" ? "#f0a3a3" : f.verdict === "narrative" ? "#d98cff" : "#e6b45a", marginTop: 2 }}>{f.verdict === "contradicts" ? "Contradicts a fact" : f.verdict === "narrative" ? "Unsupported argument across the script" : "Not in your facts"}: {f.note}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                );
-              })()}
-            </div>
-          )}
+              Anton rejected the authorship-as-choice surface too (2026-08-21): creative/vivid lines
+              that go beyond the facts stay in the script SILENTLY, with no panel. The user sees ZERO
+              panels of any kind — no SAFETY, no FIDELITY, no "catchy lines you're keeping". The
+              semanticGrounding culpability findings are still CUT server-side; the soft findings are
+              simply kept in silently and never surfaced. */}
 
           {script.factVerify?.ran && (
             <div style={{ background: "rgba(52,211,153,0.06)", border: "1px solid rgba(52,211,153,0.28)", borderRadius: 12, padding: "14px 18px", marginBottom: 16 }}>
