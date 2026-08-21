@@ -46,6 +46,7 @@ check("keeps the body's later paragraphs intact",
 console.log("hook/callback detection (conservative):");
 check("flags the vague windup opener", hookIsVague("For seven years, something was quietly draining millions from the pool."));
 check("flags 'few noticed at first'", hookIsVague("Few people noticed at first."));
+check("flags the Run-2 slip 'something strange was moving'", hookIsVague("Something strange was moving through Spotify's servers."));
 check("does NOT flag a concrete paradox hook", !hookIsVague("A song no human has ever chosen to play is streaming right now, over and over."));
 check("does NOT flag a cold-scene hook", !hookIsVague("In a Miami warehouse, 1,040 phones lit up at once."));
 check("ending tease without landing fires", endingTeasesWithoutLanding("But what happened to the people who assembled it is more consequential than the conviction itself."));

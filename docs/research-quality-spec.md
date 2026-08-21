@@ -705,3 +705,34 @@ was RIGHT to flag "nothing deferred." So: don't loosen the check — make the ho
 `tsc`-clean; new detection + guard unit tests green; all six suites green. Preview-verify the
 rewrite quality: hook now LEADS on the paradox and WITHHOLDS bots/AI/$ (across a few runs), the
 ending lands on the forfeiture, and section openers don't drum the same figure.
+
+## Safety + hook-consistency round (BLOCKS PROD on the safety guard)
+
+1. **HARD GUARD — insinuation of a named living/uncharged person's guilt (defamation risk; blocks
+   prod).** The dramatic-craft push started building an unsupported argument that a real, named,
+   living person (who denied wrongdoing) was complicit — from only a contract + credits. Split the
+   "3 catchy lines" check by severity:
+   - `semantic-grounding.ts` gains a `culpability` verdict: a line insinuating the knowledge/
+     complicity/guilt of a named living or uncharged person (or a named institution's cover-up
+     implicating real people) that no fact supports. HARD, not a stylistic choice. A charged/
+     convicted person the facts name stays fair game.
+   - The panel now renders culpability findings as a red "⛔ MUST FIX" block ("rewrite or cut, not
+     optional"), separate from the soft "catchy lines you're choosing."
+   - Deterministic always-on backstop: new `person-insinuation` compliance check flags the
+     LANGUAGE of insinuated guilt ("not the kind of thing you sign without asking", "had to have
+     known", "someone else was collecting") even when the on-demand semantic check hasn't run.
+   Niche/voice-agnostic. Skripr won't fabricate a fact; it must equally not fabricate an
+   implication about a real person.
+2. **Hook consistency.** Run 2 slipped ("something strange was moving… bots and AI") — a vague
+   shape `hookIsVague` missed, with the dump in the body opener not the hook field. Widened
+   `hookIsVague`, and detection now runs on the EFFECTIVE OPENER (hook + the body's first
+   sentences), so a dump in the opening body is caught and rewritten every run.
+3. **Minor:** source-leak no longer false-flags a term independently true of the case ("federal
+   indictment" is allowed when the facts carry an indictment — token overlap, not exact string);
+   the padding check now catches a restated distinctive line/quote recurring at non-adjacent points
+   (the Feb-2024-email shape). **Brew length short (~15% under) — flagged for investigation, not
+   fixed blind:** likely the extend-to-length pass not firing (~84% is just above its <80%
+   threshold) or the terse voice compressing; needs a live look at the brew run, not a blind change.
+
+`tsc`-clean; new person-insinuation, source-leak, padding, and hookIsVague tests green; all six
+suites green. The culpability rewrite/enforcement beyond the HARD flag is preview-verified.

@@ -279,5 +279,36 @@ const bigFacts = ["The bots generated 661,440 streams a day."];
 check("a correctly-spelled big number matching the facts passes (no fragmentation)",
   get(checkCompliance({ fullScript: "The bots generated six hundred sixty one thousand four hundred forty streams a day. " + "More analysis here. ".repeat(8), facts: bigFacts }), "grounding").pass);
 
+// SAFETY — person-insinuation HARD guard (defamation risk): implying a real person's knowledge/
+// complicity beyond the facts.
+console.log("person-insinuation guard:");
+const pi = (s: string) => get(checkCompliance({ fullScript: s + " " + "The rest of the script continues here. ".repeat(8) }), "person-insinuation");
+check("flags 'not the kind of thing you sign without asking'",
+  !pi("The structure of that agreement is not the kind of thing you sign without asking questions about where the money comes from.").pass);
+check("flags 'had to have known'",
+  !pi("A man in his position had to have known exactly what was happening.").pass);
+check("flags 'someone else was collecting'",
+  !pi("The machine had a beneficiary built into its architecture. Someone else was collecting.").pass);
+check("does not fire on neutral narration",
+  pi("He signed the agreement in 2019 and the payments began the next month.").pass);
+
+// source-leak must allow a term independently true of the current case (present in the facts).
+console.log("source-leak allows fact-supported terms:");
+const slFacts = ["A federal indictment was unsealed in 2024 charging him with wire fraud."];
+const sl = (s: string, ents: string[], f: string[]) => get(checkCompliance({ fullScript: s + " more text here.", sourceEntities: ents, facts: f }), "source-leak");
+check("does NOT flag 'federal indictment' when the facts have an indictment",
+  sl("The federal indictment laid out the scheme.", ["federal indictment", "sneaker stores"], slFacts).pass);
+check("still flags a source term the facts do not carry",
+  !sl("They moved product through sneaker stores.", ["sneaker stores"], slFacts).pass);
+
+// Padding — a restated distinctive line/quote (the Feb-2024-email shape) must be caught.
+console.log("padding: repeated distinctive line:");
+const quote = "In a February 2024 email he bragged that his songs had four billion streams and earned twelve million dollars.";
+const rp = (s: string) => get(checkCompliance({ fullScript: s }), "repetition");
+check("flags a distinctive line restated near-verbatim",
+  !rp(`${quote}\n\nThe investigation widened over the next year.\n\n${quote} It was the line that undid him.`).pass);
+check("does not flag distinct sentences",
+  rp("He started the scheme and built it patiently over time.\n\nInvestigators counted 1,040 accounts in the network.\n\nThe court ordered an $8 million dollars forfeiture that spring.").pass !== false);
+
 console.log(failures === 0 ? "\nALL PASS" : `\n${failures} FAILURE(S)`);
 process.exit(failures === 0 ? 0 : 1);

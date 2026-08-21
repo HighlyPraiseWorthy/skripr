@@ -33,7 +33,11 @@ export interface GroundingFinding {
   // "narrative" = a sustained THESIS the script advances across several sentences (an
   //   institutional cover-up, a conspiracy, a systemic intent, a grand causal story) that
   //   no fact establishes — the risk that hides between individually-defensible sentences.
-  verdict: "unsupported" | "contradicts" | "narrative";
+  // "culpability" = HARD, blocks publish. Insinuates the GUILT, KNOWLEDGE, or COMPLICITY of a
+  //   NAMED living or uncharged person (or a named institution's cover-up implicating real
+  //   people) that no fact supports — a defamation risk, not a stylistic choice. Skripr won't
+  //   fabricate a fact; it must equally not fabricate an implication about a real person.
+  verdict: "unsupported" | "contradicts" | "narrative" | "culpability";
   // One short, plain sentence: what is being asserted that the facts don't carry.
   note: string;
 }
@@ -71,6 +75,9 @@ CRITICAL — WHAT IS AND IS NOT A PROBLEM:
 - "contradicts" is stronger than "unsupported": use it only when a fact directly disagrees with the script.
 - When unsure whether something is vivid-but-true versus a new claim, do NOT flag it. False alarms train the writer to ignore you. Only flag claims you are confident go beyond the facts.
 
+THE MOST SERIOUS CHECK — INSINUATING A REAL PERSON'S GUILT (verdict "culpability", HARD):
+The gravest failure is not an invented number, it is an invented IMPLICATION about a real, named, LIVING or UNCHARGED person: that they KNEW, were COMPLICIT, benefited knowingly, or are guilty — when the facts do not support it. This is a defamation risk. Flag with verdict "culpability" any line that insinuates the knowledge, intent, guilt, or complicity of a named living/uncharged individual (or a named company's cover-up implicating real people) that no supplied fact establishes. Examples to catch: "someone else was collecting… a beneficiary built right into the architecture" (implies a named person knowingly profited); "not the kind of thing you sign without asking questions about where the money comes from" (implies a named signer knew); attributing a statement no fact supports ("Mitchell publicly stated he was shocked" when no fact says so). A person who was CHARGED/CONVICTED (the facts say so) is fair game; a person who merely appears in the story, denied wrongdoing, or was never charged is NOT — you may state only what the facts establish about them, never imply more. This is HARD: it is not a stylistic punch the creator can choose to keep.
+
 ALSO CHECK THE ARGUMENT, NOT JUST THE SENTENCES (verdict "narrative"):
 A script can stay clean sentence-by-sentence and still advance a THESIS the facts never establish — the dangerous failure that pure span-matching misses. Read the script as a whole and ask: does it build a sustained interpretation across several sentences or paragraphs that no supplied fact supports? The classic case is an INSTITUTIONAL COVER-UP or CONSPIRACY or DELIBERATE SYSTEMIC INTENT: the facts document events (a camera was installed, children were fathered, a report was filed), and the script threads them into "the institution knew and buried it" or "this was designed to happen" when NO fact states knowledge, intent, concealment, or coordination. Other forms: a grand causal story ("this is why X collapsed"), an attributed motive no fact gives, a pattern-of-behavior claim built from one instance. When you find one, emit ONE finding with verdict "narrative": set "claim" to the single most representative sentence that carries the thesis, and in "note" name the throughline and what is missing (e.g. "Script argues a deliberate cover-up; no fact states the institution knew or concealed anything"). Flag at most 2 such theses, only when you are confident the argument outruns the facts. Do not flag a script for merely stating documented events in a dramatic order.
 
@@ -83,7 +90,7 @@ ${body.slice(0, 9000)}
 """
 
 Output ONLY a JSON array, most serious first, empty if the script stays within its facts:
-[{"claim":"the exact sentence or short span from the script","verdict":"unsupported|contradicts|narrative","note":"one short plain sentence naming what is asserted that the facts do not carry"}]`,
+[{"claim":"the exact sentence or short span from the script","verdict":"unsupported|contradicts|narrative|culpability","note":"one short plain sentence naming what is asserted that the facts do not carry"}]`,
       }],
     });
     const text = msg.content[0]?.type === "text" ? msg.content[0].text : "";
@@ -93,7 +100,7 @@ Output ONLY a JSON array, most serious first, empty if the script stays within i
           .filter((x: any) => x && typeof x.claim === "string" && x.claim.trim())
           .map((x: any): GroundingFinding => ({
             claim: String(x.claim).trim().slice(0, 240),
-            verdict: x.verdict === "contradicts" ? "contradicts" : x.verdict === "narrative" ? "narrative" : "unsupported",
+            verdict: x.verdict === "contradicts" ? "contradicts" : x.verdict === "narrative" ? "narrative" : x.verdict === "culpability" ? "culpability" : "unsupported",
             note: String(x.note || "").trim().slice(0, 200),
           }))
           .slice(0, 12)

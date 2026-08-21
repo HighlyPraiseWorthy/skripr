@@ -583,8 +583,28 @@ export function checkCompliance(input: ComplianceInput): ComplianceCheck[] {
       }
     }
 
-    const padded = overused.length > 0 || !!repeatPair;
-    if (figureCounts.size > 0 || bigParas.length >= 2) {
+    // REPEATED DISTINCTIVE LINE/QUOTE — a memorable sentence (a quoted email, a signature line)
+    // restated near-verbatim to fill space (the Feb 2024 email quoted 2-3x). Key each long
+    // sentence on its sorted distinctive content words, so a lightly-reworded restatement still
+    // collides; a distinctive line appearing 2+ times is padding.
+    const lineIdx = new Map<string, number[]>();
+    script.split(/(?<=[.!?])\s+/).forEach((sent, i) => {
+      const norm = sent.toLowerCase().replace(/[^a-z0-9 ]/g, " ").replace(/\s+/g, " ").trim();
+      if (norm.split(" ").filter(Boolean).length < 8) return;
+      const key = [...new Set(norm.match(/\b[a-z]{5,}\b/g) || [])].sort().join(" ");
+      if (key.split(" ").filter(Boolean).length < 5) return;
+      const arr = lineIdx.get(key) || []; arr.push(i); lineIdx.set(key, arr);
+    });
+    // A restated line is one that recurs at NON-ADJACENT points (spread across the script, like a
+    // quote used in two sections) — not the same sentence repeated consecutively to bulk a
+    // paragraph. Require a gap of >=2 between two occurrences.
+    const restatedLine = [...lineIdx.values()].some((idxs) => {
+      for (let k = 1; k < idxs.length; k++) if (idxs[k] - idxs[k - 1] >= 2) return true;
+      return false;
+    });
+
+    const padded = overused.length > 0 || !!repeatPair || restatedLine;
+    if (figureCounts.size > 0 || bigParas.length >= 2 || restatedLine) {
       out.push({
         id: "repetition", kind: "structure",
         label: "Nothing is repeated as padding",
@@ -593,7 +613,9 @@ export function checkCompliance(input: ComplianceInput): ComplianceCheck[] {
           ? "No figure or explanation is restated to fill space."
           : repeatPair
             ? `An explanation appears twice, a few paragraphs apart ("${repeatPair[0].slice(0, 60)}…" and "${repeatPair[1].slice(0, 60)}…"). That is a thin fact set stretched to length — cut the second telling or add material.`
-            : `A figure appears 4+ times (${overused.slice(0, 3).join(", ")}). The script is leaning on the same number to fill space. Add facts or let it come in shorter.`,
+            : restatedLine && !overused.length
+              ? "A distinctive line or quote is restated near-verbatim more than once. Say it once, in its strongest place, then move to different material."
+              : `A figure appears 4+ times (${overused.slice(0, 3).join(", ")}). The script is leaning on the same number to fill space. Add facts or let it come in shorter.`,
       });
     }
   }
@@ -639,6 +661,25 @@ export function checkCompliance(input: ComplianceInput): ComplianceCheck[] {
       : "The ending doesn't tease a revelation the facts don't deliver.",
   });
 
+  // 5h) PERSON-INSINUATION — HARD GUARD (defamation risk). The dramatic-craft push can build an
+  // unsupported ARGUMENT that a real, named, living or uncharged person KNEW, benefited knowingly,
+  // or was complicit — from only a contract or a credit. Skripr won't fabricate a fact; it must
+  // equally not fabricate an implication about a real person. This deterministic backstop flags
+  // the LANGUAGE of insinuated guilt/knowledge so it is caught even when the on-demand semantic
+  // (culpability) check hasn't run. Report-not-block, but HARD: rewrite or cut, not a stylistic
+  // choice. (A CHARGED/CONVICTED person the facts name is fair game; the risk is implying more
+  // about someone the record does not.)
+  const insinuationRe = /\b(not the kind of thing (?:you|anyone|someone|people) (?:sign|do|build|set up)\w*\s+without (?:asking|knowing|realizing|questions)|(?:had to have|must have|could\s?n'?t (?:not )?have|would have) known|knew (?:exactly )?(?:what|where|how|who|that)|beneficiary (?:built|baked) (?:right )?into|looked the other way|turned a blind eye|\bcomplicit\b|(?:was|were|had to be) in on it|cover(?:ing)? (?:for (?:him|her|them)| it up)|no coincidence that|someone (?:else )?was (?:collecting|profiting|benefiting|pulling)|does(?:n'?t| not) happen without someone (?:knowing|noticing))\b/i;
+  const insin = insinuationRe.exec(script);
+  out.push({
+    id: "person-insinuation", kind: "accuracy",
+    label: "No implied guilt of a real person beyond the facts",
+    pass: !insin,
+    detail: insin
+      ? `The script uses insinuation language: "${insin[0].trim()}". If this implies the knowledge, complicity, or guilt of a NAMED living or uncharged person beyond what your facts establish, it is a defamation risk — rewrite or cut it, this is not optional. State only the documented outcome about a real person; never imply more. (Someone the facts say was charged or convicted is fair game.)`
+      : "The script doesn't insinuate a real person's guilt beyond the documented facts.",
+  });
+
   // 6) SOURCING LEAK — the narrator talking about the evidence instead of the story.
   const leakRe = /\b(what the (?:facts|record|sources) (?:establish|show|say)|that'?s the sourced version|according to the facts|what is documented|the sources (?:don'?t|do not) say|isn'?t something that gets cleaner)\b/i;
   const leak = leakRe.exec(script);
@@ -664,7 +705,14 @@ export function checkCompliance(input: ComplianceInput): ComplianceCheck[] {
       if (term.length < 3) continue;
       const tl = term.toLowerCase();
       const re = new RegExp(`(?:^|[^a-z0-9])${escapeRe(tl)}(?:[^a-z0-9]|$)`, "i");
-      if (re.test(scriptLc) && !factLc.includes(tl)) leaked.push(term);
+      if (!re.test(scriptLc)) continue;
+      // A term is NOT a leak when it is independently TRUE of the current case — i.e. it (or a
+      // significant word of it) appears in the FACTS. "federal indictment" is not copied from the
+      // source just because the source also had one: Michael Smith genuinely had a federal
+      // indictment, and it's in the facts. Only flag a term the current case's facts don't carry.
+      const tokens = tl.split(/[^a-z0-9]+/).filter((w) => w.length >= 4);
+      const supportedByFacts = factLc.includes(tl) || tokens.some((w) => factLc.includes(w));
+      if (!supportedByFacts) leaked.push(term);
     }
     const uniqLeak = [...new Set(leaked)].slice(0, 8);
     out.push({

@@ -1153,7 +1153,12 @@ ANGLE OUTRANKS A CONFLICTING NOTE: if a note aims the climax at a moment that is
   // the body). Fires when the hook is vague OR fact-dumps the payoff; accepts the rewrite ONLY if
   // it is usable AND genuinely WITHHOLDS (does not itself dump the mechanism/figure), else keeps
   // the original. So it can only replace a failing hook with a withholding one — never regress.
-  if (hookText && (hookIsVague(hookText) || hookDumpsPayoff(hookText))) {
+  // Detect on the EFFECTIVE OPENER (the hook field PLUS the body's first sentences), because a
+  // dump ("running on bots and AI") often lands in the opening body, not the short hook field.
+  const bodyKeyEarly = ["fullScript", "script", "body", "content"].find((k) => typeof (script as any)[k] === "string" && (script as any)[k].trim());
+  const bodyOpener = bodyKeyEarly ? ((script as any)[bodyKeyEarly] as string).trim().split(/(?<=[.!?])\s/).slice(0, 3).join(" ") : "";
+  const openerText = [hookText, bodyOpener].filter(Boolean).join(" ");
+  if (hookText && (hookIsVague(openerText) || hookDumpsPayoff(openerText))) {
     const rewritten = await rewriteVagueHook(hookText, input.sourceMaterial, input.voiceProfile, startedAt);
     const withholds = isUsableRewrite(rewritten, 60) && !hookDumpsPayoff((rewritten as string).trim());
     const chosen = withholds ? (rewritten as string).trim() : hookText;
@@ -1250,7 +1255,7 @@ export function hookIsVague(hook: string): boolean {
   const h = (hook || "").trim();
   if (!h) return false;
   const first = h.split(/(?<=[.!?])\s/)[0] || h;
-  return /\b(something (?:was|kept|had been|felt)\s+(?:quietly|slowly|going|deeply|off|wrong|draining|happening)|for (?:years|decades|nearly [\w-]+ years|the better part of [\w-]+ years)[,\s]+(?:something|a scheme|a system|nobody|no one|few|it)\b|few (?:people )?(?:noticed|realized|knew|understood)|nobody (?:noticed|realized|suspected|knew)\b|no one (?:noticed|suspected)\b|quietly (?:draining|operating|building|happening|slipping)|in the shadows|beneath the surface|behind the scenes,?\s+(?:something|a\b))/i.test(first);
+  return /\b(something (?:was|kept|had been|felt|is|isn'?t|wasn'?t)\s+(?:quietly|slowly|going|deeply|off|wrong|draining|happening|moving|building|right|not right|adding up)|something (?:strange|odd|off|weird|unusual|suspicious|wrong)\b|there (?:was|is) something\b|something didn'?t (?:add up|feel right|make sense|seem right)|for (?:years|decades|nearly [\w-]+ years|the better part of [\w-]+ years|a (?:long )?(?:time|while))[,\s]+(?:something|a scheme|a system|nobody|no one|few|it)\b|few (?:people )?(?:noticed|realized|knew|understood)|nobody (?:noticed|realized|suspected|knew)\b|no one (?:noticed|suspected)\b|quietly (?:draining|operating|building|happening|slipping|moving)|in the shadows|beneath the surface|behind the scenes,?\s+(?:something|a\b))/i.test(first);
 }
 
 // A hook FACT-DUMPS when it hands over the explanation in the opening — the mechanism nouns
