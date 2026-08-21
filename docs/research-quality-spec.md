@@ -790,3 +790,25 @@ script is ever returned; the user gets a clean script and nothing else.
 cuts, no-ops on clean text, drops an insinuation-only paragraph); all six suites green. Preview:
 build the Boomy/Alex-Mitchell angle — the insinuating lines should be silently gone and
 `_autoCuts` should list exactly those spans and nothing else.
+
+## #1 timeout fix — LLM culpability check moved OFF the critical generation path
+
+Verification of #1 hit "connection dropped while generating" on an ~11-min build that completed
+pre-#1. The generation tail had accumulated LLM round-trips (hook / callback / anaphora guarded
+rewrites) AND the auto semantic-grounding call — together tipping long builds past the function
+time limit. Fix, per the scoped instruction:
+- The inline SAFETY cut stays DETERMINISTIC-ONLY: `stripInsinuations` (regex, no LLM) in
+  `generateScript`. Unchanged — it's the always-on person-guilt cut.
+- The LLM culpability/narrative check is now OFF the critical path: the auto `checkSemanticGrounding`
+  call in `generate/route.ts` is removed (and the route-side LLM-finding cut with it). It runs ONLY
+  on demand (the "Check claims" button → `/api/scripts/grounding`), so it never blocks the build.
+- Residual (known, accepted): a SUBTLE culpability insinuation the regex misses (e.g. a false
+  attribution) is no longer auto-cut — it's caught only on the on-demand check. Close this when the
+  chunked-generation refactor lands and there's budget to run the LLM pass inline again.
+
+**Reassess sequencing:** every silent-fix pass now competes for the same generation time budget, and
+`maxDuration` (300s) won't scale if the platform gateway caps lower. The chunked-generation timeout
+refactor (`mode:"section"` + `mode:"finalize"`) should move UP from "last" — it's now the thing
+gating both the 20-min head-to-head AND the ability to run the richer silent-fix passes inline.
+
+`tsc`-clean; all six suites green.

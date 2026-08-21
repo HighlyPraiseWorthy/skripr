@@ -14,7 +14,7 @@ import { factCheckAgainstSource } from "@/lib/fact-check";
 import { reviewAndCorrectScript } from "@/lib/ai/self-review";
 import { getActiveVoiceMeta, getVoiceMetaById } from "@/lib/voice-profile";
 import { captureFrameworkInBackground } from "@/lib/framework-capture";
-import { checkSemanticGrounding } from "@/lib/ai/semantic-grounding";
+// semantic-grounding is now on-demand only (see below) — not run on the generation path.
 
 export const maxDuration = 300;
 
@@ -387,43 +387,12 @@ export async function POST(req: Request) {
       .filter((x: any) => typeof x === "string").join("\n\n");
     const factCheck = factCheckAgainstSource(scannedText, typeof sourceMaterial === "string" ? sourceMaterial : "");
 
-    // SEMANTIC GROUNDING, run automatically here rather than only behind the on-demand
-    // button — the whole point is that unsourced substantive claims (dopamine, "same
-    // circuitry as sex") ship silently, so they must surface without a click. Scoped to
-    // the same sourceMaterial the script was allowed to use, and time-guarded so a slow
-    // run degrades to the manual re-check rather than timing out the whole request.
-    let semanticGrounding: any = undefined;
-    const scopedFactList = String(sourceMaterial || "")
-      .split(/\n+/).map((l) => l.replace(/^[-•\d.\s]+/, "").replace(/\s*\(source:[^)]*\)\s*$/i, "").trim())
-      .filter((l) => l.length > 12);
-    if (scopedFactList.length && Date.now() - startTime < 250_000) {
-      semanticGrounding = await checkSemanticGrounding(scannedText, scopedFactList).catch(() => undefined);
-    }
-
-    // GOVERNING PRINCIPLE — silently CUT the LLM-detected person-guilt insinuations too (the
-    // subtle ones the deterministic language-cut in generation misses, e.g. a false attribution),
-    // and DROP them from the findings so nothing about them ever reaches the user.
-    if (semanticGrounding?.findings?.length) {
-      const culp = semanticGrounding.findings.filter((f: any) => f?.verdict === "culpability" && typeof f.claim === "string" && f.claim.trim().length > 20);
-      if (culp.length) {
-        const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, "");
-        const keys = culp.map((f: any) => norm(f.claim).slice(0, 40)).filter((k: string) => k.length >= 20);
-        const culpCuts: string[] = [];
-        const cutClaimSentences = (text: string) => text.split(/\n\n+/).map((p: string) =>
-          p.split(/(?<=[.!?])\s+/).filter((sent: string) => {
-            if (keys.some((k: string) => norm(sent).includes(k))) { culpCuts.push(sent.trim()); return false; }
-            return true;
-          }).join(" ").trim()
-        ).filter((p: string) => p.length > 0).join("\n\n");
-        for (const k of ["fullScript", "script", "body", "content", "outro"]) {
-          if (typeof (script as any)[k] === "string" && (script as any)[k].trim()) (script as any)[k] = cutClaimSentences((script as any)[k]);
-        }
-        if (Array.isArray((script as any).sections)) (script as any).sections = (script as any).sections.map((s: any) => s && typeof s.content === "string" ? { ...s, content: cutClaimSentences(s.content) } : s);
-        (script as any)._autoCuts = [...new Set([...((script as any)._autoCuts || []), ...culpCuts])]; // internal, never surfaced
-        // The user never sees culpability findings — they were fixed, not flagged.
-        semanticGrounding = { ...semanticGrounding, findings: semanticGrounding.findings.filter((f: any) => f?.verdict !== "culpability") };
-      }
-    }
+    // SEMANTIC GROUNDING is an LLM round-trip, so it is OFF the critical generation path — the
+    // accumulating generation-tail passes were tipping long builds past the function time limit.
+    // The inline SAFETY cut stays deterministic (stripInsinuations in generateScript, regex, no
+    // LLM); the LLM culpability/narrative check runs ONLY on demand (the "Check claims" button →
+    // /api/scripts/grounding), so it never blocks or slows the build.
+    const semanticGrounding: any = undefined;
 
     return NextResponse.json({ ...script, magnetSuggestions, savedId, factCheck, reviewChanges, semanticGrounding });
   } catch (error: any) {
