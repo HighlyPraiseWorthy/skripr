@@ -1,7 +1,7 @@
 import { Anthropic } from "@anthropic-ai/sdk";
 import { fingerprintToBrief, readProhibitions, stripStandaloneTics, type VoiceFingerprint } from "@/lib/voice-metrics";
 import { buildStorytellingBlock } from "@/lib/storytelling";
-import { stripInsinuations } from "@/lib/script-compliance";
+import { stripInsinuations, stripImpliedRevelation } from "@/lib/script-compliance";
 import { buildVarietyBlock } from "@/lib/ai/phrase-variety";
 
 let _anthropic: Anthropic | null = null;
@@ -1230,9 +1230,31 @@ ANGLE OUTRANKS A CONFLICTING NOTE: if a note aims the climax at a moment that is
       return s;
     });
   }
+
+  // IMPLIED-REVELATION — silent cut of the TRAILING cliffhanger (the tease the facts never pay
+  // off). Applied only to the ENDING: the assembled body's last block, and the last section's
+  // content, so the script stops on its prior sourced beat. Trailing-only, so a mid-body loop
+  // that legitimately resolves later is never touched. Deterministic, off the critical path.
+  const bodyKeyEnd = ["fullScript", "script", "body", "content"].find(
+    (k) => typeof (script as any)[k] === "string" && (script as any)[k].trim(),
+  );
+  if (bodyKeyEnd) {
+    const { text, cuts } = stripImpliedRevelation((script as any)[bodyKeyEnd] as string);
+    if (cuts.length) { (script as any)[bodyKeyEnd] = text; autoCuts.push(...cuts); }
+  }
+  if (Array.isArray((script as any).sections) && (script as any).sections.length) {
+    // Only the final non-empty section can hold the script's ending.
+    const secs = (script as any).sections as any[];
+    let last = secs.length - 1;
+    while (last >= 0 && !(secs[last] && typeof secs[last].content === "string" && secs[last].content.trim())) last--;
+    if (last >= 0) {
+      const { text, cuts } = stripImpliedRevelation(secs[last].content);
+      if (cuts.length) { secs[last] = { ...secs[last], content: text }; autoCuts.push(...cuts); }
+    }
+  }
   if (autoCuts.length) {
     (script as any)._autoCuts = [...new Set(autoCuts)]; // internal record, never shown to the user
-    console.log(`[safety] silently cut ${autoCuts.length} person-insinuation line(s)`);
+    console.log(`[safety] silently cut ${autoCuts.length} accuracy/safety line(s) (insinuation + trailing implied-revelation)`);
   }
 
   return script;

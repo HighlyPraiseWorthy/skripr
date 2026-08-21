@@ -165,6 +165,46 @@ export function stripInsinuations(text: string): { text: string; cuts: string[] 
   return { text: outParas.join("\n\n"), cuts };
 }
 
+// TRAILING IMPLIED-REVELATION detection — the closing cliffhanger the facts never pay off
+// ("what investigators found when they pulled the thread was not simply one man", "the trail
+// did not end with Smith", "almost more surprising than the scheme itself", "that's where this
+// takes a turn"). Distinct from INSINUATION_RE: this is about an unresolved PAYOFF tease, not a
+// real person's guilt. Only meaningful at the END of the script, so it is applied to the trailing
+// block, never mid-body (a mid-script tease may legitimately resolve later).
+export const TRAILING_TEASE_RE = /\b(what (?:investigators|prosecutors|authorities|agents|they|the fbi|the doj|the sec)\s+(?:found|discovered|uncovered|learned|traced)\b|the (?:trail|money|story|thread|truth)\s+(?:did|does)(?:n'?t| not)\s+end\b|almost more (?:surprising|shocking|disturbing|interesting|unsettling)\s+than|(?:and )?(?:that|this|here|now)(?:'?s| is| was) where (?:this story|the story|it|this|things?)\s+(?:takes?|took|turns?|turned|gets?|got|begins?|began)\b|not (?:simply|just|merely|only) one (?:man|woman|person|name|scheme|story)|was(?:n'?t| not) what it seemed|not what (?:anyone|everyone|you|they|the world|the public)\s*(?:had\s*)?(?:ever\s*)?expected|the truth (?:was|turned out|is)\s+(?:far\s+)?(?:stranger|worse|darker|bigger|more|nothing like)|(?:far\s+)?(?:stranger|darker|worse|bigger)\s+than (?:anyone|fiction|expected|imagined)|(?:this|it|that|the story)\s+(?:was|is)\s+only the beginning|would (?:change|reveal|rewrite) everything|the (?:biggest|real|bigger) (?:twist|secret|surprise|question|story)\b|(?:still|may (?:never|still))\s+(?:out there|be (?:out there|found|known)|know|remain)|we may never (?:know|find out))\b/i;
+export function looksLikeTrailingTease(s: string): boolean { return TRAILING_TEASE_RE.test(s || ""); }
+
+// GOVERNING PRINCIPLE — silent fix. Cut the trailing cliffhanger the evidence doesn't deliver.
+// The ending usually lands the callback/sourced beat CORRECTLY and then appends the tease, so the
+// fix walks from the end, dropping trailing tease sentences (and wholly-tease trailing paragraphs)
+// and STOPS at the first real sourced sentence — leaving the script to end on that beat. A cut is
+// the safe default; the internal record is returned for preview verification, never surfaced.
+export function stripImpliedRevelation(text: string): { text: string; cuts: string[] } {
+  if (!text) return { text, cuts: [] };
+  const paras = text.split(/\n\n+/);
+  const cuts: string[] = [];
+  let i = paras.length - 1;
+  while (i >= 0) {
+    const p = paras[i].trim();
+    if (!p) { paras.splice(i, 1); i--; continue; }
+    const sentences = p.split(/(?<=[.!?])\s+/);
+    while (sentences.length && looksLikeTrailingTease(sentences[sentences.length - 1])) {
+      cuts.push(sentences.pop()!.trim());
+    }
+    if (sentences.length === 0) {
+      // The whole trailing paragraph was tease — drop it and inspect the now-last paragraph,
+      // since the real callback often sits one paragraph back.
+      paras.splice(i, 1);
+      i--;
+      continue;
+    }
+    // Hit a real sourced sentence; the script should stop here. Don't dig into earlier content.
+    paras[i] = sentences.join(" ").trim();
+    break;
+  }
+  return { text: paras.filter((p) => p.trim().length > 0).join("\n\n"), cuts };
+}
+
 export function checkCompliance(input: ComplianceInput): ComplianceCheck[] {
   const out: ComplianceCheck[] = [];
   const script = input.fullScript || "";

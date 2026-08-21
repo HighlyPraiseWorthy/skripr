@@ -1,6 +1,5 @@
 "use client";
 import { useState, useEffect } from "react";
-import { checkCompliance, sourceSectionRatio, structuralScore, checkSourceStructural, accuracyChecks, STRUCTURAL_SET, scoreKindOf } from "@/lib/script-compliance";
 import GenerationProgress from "@/components/GenerationProgress";
 import { joinHookBody, bodyStartsWithHook } from "@/lib/script-text";
 import { VoiceSelect } from "@/components/VoiceSelect";
@@ -124,7 +123,6 @@ export default function ViralBriefPage() {
   // Both result-page panels collapse by default. People land here to read the script;
   // the alternate titles and the framework check are reference, not the main event.
   const [showAltTitles, setShowAltTitles] = useState(false);
-  const [showCompliance, setShowCompliance] = useState(false);
   // Which section carries the weight. Defaults from the source video's longest section,
   // so a new user gets a well-shaped video with zero decisions and an experienced one
   // has a single meaningful lever.
@@ -777,123 +775,14 @@ export default function ViralBriefPage() {
             </div>
           )}
 
-          {/* Post-generation compliance: the script measured against the spec extracted
-              from the source video. This is the loop that was open all session — the
-              flattened climax was detectable here every time. */}
-          {(() => {
-            // SCOPE THE CHECK TO THE SELECTED SECTIONS, not the whole accumulated library.
-            // The library is what's available to draw on; the chosen angle's facts are what
-            // THIS script may use. Validating against the library let a figure from an old
-            // run (DataReportal) pass even though no selected section carried it.
-            const refs = selectedAngle?.factRefs;
-            const scopedFacts = (Array.isArray(refs) && refs.length)
-              ? refs.map((r) => deepFacts[r - 1]?.fact).filter(Boolean) as string[]
-              : deepFacts.map((f) => f.fact);
-            const checks = checkCompliance({
-              fullScript: body, hook,
-              sections: Array.isArray(script.sections) ? script.sections : undefined,
-              sourceHookType: brief?.hookAnalysis?.hookType,
-              sourceHookText: brief?.hookAnalysis?.hook,
-              sourceSectionCount: brief?.structure?.length,
-              targetWords: (brief as any)?.targetMinutes ? (brief as any).targetMinutes * 150 : undefined,
-              facts: scopedFacts,
-              topicKind: (topicKind as any) || undefined,
-              sourceWeightRatio: sourceSectionRatio(brief?.structure),
-              voiceProhibitions: script.voiceProhibitions,
-              sourceEntities: brief?.sourceEntities,
-            });
-            if (!checks.length) return null;
-            // FIDELITY (fixed per-kind structural set), scored against the SAME set on the
-            // source video, so the target is "as close to the source as the source itself
-            // scores" — not an abstract 11/11 nobody can hit.
-            const fid = structuralScore(checks, topicKind as any);
-            const sourceChecks = brief?.sourceTranscript && brief.sourceTranscript.length > 200
-              ? checkSourceStructural({ sourceText: brief.sourceTranscript, topicKind: topicKind as any, sourceHookType: brief?.hookAnalysis?.hookType, voiceProhibitions: script.voiceProhibitions })
-              : null;
-            const srcFid = sourceChecks ? structuralScore(sourceChecks, topicKind as any) : null;
-            const srcPassById = new Map((sourceChecks || []).map((c) => [c.id, c.pass] as const));
-            // Publish-safety checks, always shown, never folded into the fidelity number.
-            const safety = accuracyChecks(checks);
-            const safetyMisses = safety.filter((c) => !c.pass);
-            const setIdSet = new Set(STRUCTURAL_SET[scoreKindOf(topicKind as any)]);
-            const otherStructural = checks.filter((c) => c.kind === "structure" && !setIdSet.has(c.id));
-            const fidMisses = fid.items.filter((c) => !c.pass);
-            // Green when the script matches or beats the source on fidelity; amber otherwise.
-            const meetsSource = srcFid ? fid.passed >= srcFid.passed : fidMisses.length === 0;
-            return (
-              <div style={{ background: "rgba(77,184,255,0.05)", border: `1px solid ${C.border}`, borderRadius: 12, padding: "12px 18px", marginBottom: 16 }}>
-                <button onClick={() => setShowCompliance((v) => !v)}
-                  style={{ display: "flex", alignItems: "center", gap: 8, width: "100%", background: "none", border: "none", padding: 0, cursor: "pointer", textAlign: "left", flexWrap: "wrap" as const }}>
-                  <span style={{ fontSize: 10, color: C.textDim, transform: showCompliance ? "rotate(90deg)" : "none", transition: "transform .12s" }}>▶</span>
-                  <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: 0.4, color: meetsSource ? C.green : "#e6b45a" }}>
-                    FRAMEWORK FIDELITY · your script {fid.passed}/{fid.total}{srcFid ? ` · source video ${srcFid.passed}/${srcFid.total}` : ""}
-                  </span>
-                  <span style={{ fontSize: 11.5, color: C.textDim, fontWeight: 500 }}>
-                    {srcFid
-                      ? (fid.passed >= srcFid.passed ? "matches the video it was modeled on" : `${srcFid.passed - fid.passed} behind the source`)
-                      : (fidMisses.length === 0 ? "matches the video it was modeled on" : `${fidMisses.length} to look at`)}
-                    {safetyMisses.length > 0 ? ` · ⚠ ${safetyMisses.length} safety` : ""}
-                  </span>
-                </button>
-                {showCompliance && (
-                  <div style={{ display: "flex", flexDirection: "column", gap: 5, marginTop: 10 }}>
-                    {/* Fidelity set: your pass, and whether the SOURCE passes it too. A check
-                        the source ALSO fails is measuring preference, not what works. */}
-                    {[...fidMisses, ...fid.items.filter((c) => c.pass)].map((c) => {
-                      // MOVE #9: the hook open-loop and the ending callback are held to BEST
-                      // PRACTICE, not source parity — never capped at "the source skipped it too."
-                      // Match the source's skeleton, write better muscle.
-                      const bestPractice = c.id === "early-loop" || c.id === "callback";
-                      const srcPass = bestPractice ? undefined : srcPassById.get(c.id);
-                      const sourceAlsoFails = srcPass === false && !c.pass;
-                      return (
-                        <div key={c.id} style={{ display: "flex", gap: 8, alignItems: "flex-start" }}>
-                          <span style={{ flexShrink: 0, fontSize: 12, color: c.pass ? C.green : "#e6b45a" }}>{c.pass ? "✓" : "!"}</span>
-                          <span style={{ minWidth: 0 }}>
-                            <span style={{ fontSize: 12.5, color: C.textBright, fontWeight: 600 }}>{c.label}</span>
-                            {bestPractice && !c.pass && (
-                              <span style={{ fontSize: 10.5, fontWeight: 700, marginLeft: 7, color: "#4db8ff" }}>BEST PRACTICE</span>
-                            )}
-                            {srcPass !== undefined && (
-                              <span style={{ fontSize: 10.5, fontWeight: 700, marginLeft: 7, color: srcPass ? C.green : "#e6b45a" }}>SOURCE {srcPass ? "✓" : "✗"}</span>
-                            )}
-                            <span style={{ display: "block", fontSize: 11.5, color: C.textDim, lineHeight: 1.45 }}>
-                              {c.detail}{sourceAlsoFails ? " The source video doesn't do this either, so it may not be worth chasing." : ""}{bestPractice && !c.pass ? " Held to best practice, not the source: a strong hook and a real callback are worth writing even if the source skipped them." : ""}
-                            </span>
-                          </span>
-                        </div>
-                      );
-                    })}
-                    {/* Extra structural checks that aren't part of the pinned score. */}
-                    {otherStructural.map((c) => (
-                      <div key={c.id} style={{ display: "flex", gap: 8, alignItems: "flex-start", opacity: 0.75 }}>
-                        <span style={{ flexShrink: 0, fontSize: 12, color: c.pass ? C.green : "#e6b45a" }}>{c.pass ? "✓" : "!"}</span>
-                        <span style={{ minWidth: 0 }}>
-                          <span style={{ fontSize: 12.5, color: C.textBright, fontWeight: 600 }}>{c.label}<span style={{ fontSize: 10, color: C.textDim, fontWeight: 500, marginLeft: 6 }}>(not scored)</span></span>
-                          <span style={{ display: "block", fontSize: 11.5, color: C.textDim, lineHeight: 1.45 }}>{c.detail}</span>
-                        </span>
-                      </div>
-                    ))}
-                    {/* SAFETY — the publish guards, always shown, separate from fidelity. */}
-                    {safety.length > 0 && (
-                      <div style={{ marginTop: 8, paddingTop: 8, borderTop: `1px solid ${C.border}` }}>
-                        <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 0.4, color: safetyMisses.length ? "#f0a3a3" : C.textDim, marginBottom: 5 }}>SAFETY {safety.length - safetyMisses.length}/{safety.length}</div>
-                        {[...safetyMisses, ...safety.filter((c) => c.pass)].map((c) => (
-                          <div key={c.id} style={{ display: "flex", gap: 8, alignItems: "flex-start", marginBottom: 3 }}>
-                            <span style={{ flexShrink: 0, fontSize: 12, color: c.pass ? C.green : "#f0a3a3" }}>{c.pass ? "✓" : "⚠"}</span>
-                            <span style={{ minWidth: 0 }}>
-                              <span style={{ fontSize: 12.5, color: C.textBright, fontWeight: 600 }}>{c.label}</span>
-                              <span style={{ display: "block", fontSize: 11.5, color: C.textDim, lineHeight: 1.45 }}>{c.detail}</span>
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-            );
-          })()}
+          {/* GOVERNING PRINCIPLE — the accuracy/safety and framework-fidelity panels are no longer
+              surfaced. Skripr fixes silently: the person-insinuation cut, the trailing implied-
+              revelation cut, and the other accuracy guards run server-side in generateScript and the
+              user receives a clean script with no scorecard — no "FRAMEWORK FIDELITY", no "SAFETY
+              8/9", no "BEST PRACTICE". A quiet internal record (script._autoCuts) is kept in plumbing
+              only, for preview verification and self-learning telemetry, never rendered. The only
+              soft panel that remains is the creative-choice "catchy lines you're keeping" one below,
+              which is authorship the user is deliberately choosing, not a compliance flag. */}
 
           {/* Semantic grounding — the "vivid + true" check. Vivid retellings of real facts
               are kept; only claims that assert something the facts don't carry are named.

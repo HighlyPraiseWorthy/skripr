@@ -1,7 +1,7 @@
 // Offline test for the post-generation compliance check, using the real shapes from the
 // session: the final Queen script (should largely pass) vs. an early flat draft.
 //   node --experimental-strip-types --loader ./scripts/alias-loader.mjs scripts/compliance.test.ts
-import { checkCompliance, complianceScore, structuralScore, checkSourceStructural, accuracyChecks, STRUCTURAL_SET, stripInsinuations } from "../src/lib/script-compliance.ts";
+import { checkCompliance, complianceScore, structuralScore, checkSourceStructural, accuracyChecks, STRUCTURAL_SET, stripInsinuations, stripImpliedRevelation } from "../src/lib/script-compliance.ts";
 
 let failures = 0;
 function check(name: string, cond: boolean) {
@@ -320,6 +320,28 @@ check("records what was cut internally", r1.cuts.length === 1 && /not the kind o
 const clean = stripInsinuations("He pleaded guilty in 2024. The court ordered an $8 million forfeiture.");
 check("leaves a clean script untouched with no cuts", clean.text === "He pleaded guilty in 2024. The court ordered an $8 million forfeiture." && clean.cuts.length === 0);
 check("drops a paragraph that was ONLY an insinuation", stripInsinuations("A real fact here.\n\nHe had to have known exactly what was happening.").text === "A real fact here.");
+
+// GOVERNING PRINCIPLE — silent auto-cut of the TRAILING implied-revelation cliffhanger. The
+// script lands its sourced beat, then appends a tease the facts never pay off; the cut removes
+// the tease and stops the script on the prior beat. (The verified live failure: an ending that
+// landed the guilty plea and then drifted into "what investigators found ... was not simply one
+// man ... the trail did not end with Smith ... almost more surprising than the scheme itself".)
+console.log("silent implied-revelation cut:");
+const liveTail = "In January 2024 he pleaded guilty, and the court ordered an $8,091,843.64 forfeiture.\n\nBut what investigators found when they pulled the thread was not simply one man. The trail did not end with Smith. It was almost more surprising than the scheme itself.";
+const r2 = stripImpliedRevelation(liveTail);
+check("cuts the trailing cliffhanger tease", !/investigators found|trail did not end|almost more surprising/i.test(r2.text));
+check("stops on the prior sourced beat", /pleaded guilty/.test(r2.text) && /\$8,091,843\.64 forfeiture\.$/.test(r2.text.trim()));
+check("records the cut spans internally", r2.cuts.length >= 1 && r2.cuts.some((c) => /investigators found/i.test(c)));
+// A whole trailing paragraph that is only tease is removed, and the real ending kept.
+const wholeParaTease = "He was sentenced to time in federal prison.\n\nAnd that is where this story takes a turn nobody saw coming.";
+check("drops a trailing paragraph that is entirely a tease", stripImpliedRevelation(wholeParaTease).text === "He was sentenced to time in federal prison.");
+// A clean documented ending is left untouched, with no cuts.
+const cleanTail = "He ran the scheme for years.\n\nIn January 2024 he pleaded guilty, and the court ordered an $8 million forfeiture.";
+const r3 = stripImpliedRevelation(cleanTail);
+check("leaves a clean sourced ending untouched", r3.text === cleanTail && r3.cuts.length === 0);
+// A mid-body tease that legitimately resolves later must NOT be cut (trailing-only discipline).
+const midResolves = "What investigators found when they pulled the thread surprised everyone.\n\nIt was a network of 1,040 bot accounts generating 661,440 streams a day, and the court ordered an $8 million forfeiture.";
+check("does not touch a mid-body tease that resolves on a later sourced beat", stripImpliedRevelation(midResolves).text === midResolves && stripImpliedRevelation(midResolves).cuts.length === 0);
 
 console.log(failures === 0 ? "\nALL PASS" : `\n${failures} FAILURE(S)`);
 process.exit(failures === 0 ? 0 : 1);
