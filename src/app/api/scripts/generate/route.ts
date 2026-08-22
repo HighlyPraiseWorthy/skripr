@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import { generateScript, buildSectionPlan } from "@/lib/ai/claude";
+import { generateScript, buildSectionPlan, generateHookFirst, writeSection, assembleFinalizeScript } from "@/lib/ai/claude";
 import { checkScriptLimit, incrementGenerationCount, refundGenerationCount } from "@/lib/usage";
 import { getMagnetSuggestions } from "@/lib/magnet-word";
 import { supabaseAdmin } from "@/lib/db/supabase";
@@ -24,9 +24,81 @@ function truncateTranscript(text: string, maxWords = 400): string {
   return words.slice(0, maxWords).join(" ") + "...";
 }
 
+// CHUNKED GENERATION — write ONE section (mode:"section"). Cheap, stateless, and fast (<30s), so
+// no single request runs long. The client loops this over the section plan, passing the running
+// tail so each section continues the last. NO tail passes run here — every silent-fix + safety
+// pass runs once, later, in mode:"finalize" on the assembled whole. A failed write retries once,
+// then fails with a clear message; it never silently drops to an ungrounded fallback.
+async function handleSectionMode(userId: string, raw: any) {
+  try {
+    const { topic, selectedTitle, sourceMaterial, remixFramework, contentStructure, retentionTriggers, targetMinutes, voiceProfileId, sectionIndex, priorTail } = raw;
+    const index = Number(sectionIndex);
+    if (!Number.isInteger(index) || index < 0) {
+      return NextResponse.json({ error: "Invalid section index." }, { status: 400 });
+    }
+    if (!targetMinutes) {
+      return NextResponse.json({ error: "A section build needs a target length." }, { status: 400 });
+    }
+    const plan = buildSectionPlan(contentStructure, retentionTriggers, Math.round(targetMinutes * 150));
+    if (!plan || plan.length < 2) {
+      return NextResponse.json({ error: "This video has no measurable section structure — use the one-shot path." }, { status: 409 });
+    }
+    if (index >= plan.length) {
+      return NextResponse.json({ error: `Section ${index} is out of range (${plan.length} sections).` }, { status: 400 });
+    }
+
+    // Voice: same resolution as the one-shot path, so a section reads in the chosen voice from the
+    // first word (voice is not a finishing touch — the finalize voice pass only refines it).
+    let voiceProfile: string | null = null;
+    if (voiceProfileId !== "default") {
+      const meta = voiceProfileId
+        ? await getVoiceMetaById(userId, String(voiceProfileId)).catch(() => null)
+        : await getActiveVoiceMeta(userId).catch(() => null);
+      if (meta) voiceProfile = meta.styleGuide;
+    }
+
+    const context = {
+      topic: topic || "",
+      title: selectedTitle || topic || "",
+      sourceMaterial: typeof sourceMaterial === "string" && sourceMaterial.trim() ? sourceMaterial.trim() : undefined,
+      recipe: remixFramework || undefined,
+      voice: voiceProfile || undefined,
+      previousTail: typeof priorTail === "string" ? priorTail : "",
+    };
+
+    let text = "";
+    for (let attempt = 0; attempt < 2 && !text; attempt++) {
+      try {
+        text = await writeSection(plan[index], index, plan.length, context);
+      } catch (e) {
+        console.error(`[section] index ${index} attempt ${attempt + 1} failed:`, (e as any)?.message);
+      }
+    }
+    if (!text) {
+      return NextResponse.json({ error: "That section didn't come back — please try generating again." }, { status: 502 });
+    }
+    // The tail the next section continues from — the same 40-word window the one-shot loop uses.
+    const tail = text.split(/\s+/).slice(-40).join(" ");
+    return NextResponse.json({ mode: "section", index, total: plan.length, name: plan[index].name, text, tail });
+  } catch (e: any) {
+    console.error("[section] mode failed:", e?.message);
+    return NextResponse.json({ error: e?.message || "Section generation failed" }, { status: 500 });
+  }
+}
+
 export async function POST(req: Request) {
   const { userId } = await auth();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const raw: any = await req.json().catch(() => ({}));
+  // CHUNKED GENERATION (the 20-min timeout fix): the one long request is split into a short
+  // plan call, one short call per section, and a finalize call. Mode discriminates them.
+  const mode: "full" | "plan" | "section" | "finalize" =
+    raw?.mode === "plan" || raw?.mode === "section" || raw?.mode === "finalize" ? raw.mode : "full";
+
+  // A section write is cheap and stateless and must NOT count against usage — the plan call at
+  // the head of the chunked build already counted the script. Handle it before any limit logic.
+  if (mode === "section") return handleSectionMode(userId, raw);
 
   // Hard block — check limit before burning API credits
   const { allowed, plan, used, limit } = await checkScriptLimit(userId);
@@ -40,13 +112,19 @@ export async function POST(req: Request) {
     }, { status: 403 });
   }
 
-  // Count the attempt now — enforce at event level, prevents free retries on failures
-  const genEventId = await incrementGenerationCount(userId).catch(e => { console.error("[usage] increment failed:", e); return null; });
+  // Count the COMPLETING call, once per finished script: a one-shot "full", or the "finalize" of
+  // a chunked build. "plan" checks the limit (above) but does NOT increment — so if chunking
+  // fails partway and the client falls back to a one-shot "full", the script is still counted
+  // exactly once, never twice. (The limit check already ran for every mode here, blocking an
+  // over-limit user before any section API credits are burned.)
+  const genEventId = (mode === "full" || mode === "finalize")
+    ? await incrementGenerationCount(userId).catch(e => { console.error("[usage] increment failed:", e); return null; })
+    : null;
 
   const startTime = Date.now();
 
   try {
-    const { transcript, niche, topic, sourceVideoId, videoLength = "long", targetMinutes, viralMagnetWord, angle, remixFramework, hookType, titleFormula, hookScript, hookWhyItWorks, contentStructure, retentionTriggers, voiceProfileId, sourceNiche, bridgeNiche, companionCta, storytellingMode, storytellingTechniques, sourceMaterial, selectedTitle, softCta, sourceVerdict, topicKind, directorNote } = await req.json();
+    const { transcript, niche, topic, sourceVideoId, videoLength = "long", targetMinutes, viralMagnetWord, angle, remixFramework, hookType, titleFormula, hookScript, hookWhyItWorks, contentStructure, retentionTriggers, voiceProfileId, sourceNiche, bridgeNiche, companionCta, storytellingMode, storytellingTechniques, sourceMaterial, selectedTitle, softCta, sourceVerdict, topicKind, directorNote } = raw;
 
     // Free plan: scripts capped at 10 minutes — longer scripts are a paid feature
     if (plan === "free" && targetMinutes && targetMinutes > 10) {
@@ -183,7 +261,10 @@ export async function POST(req: Request) {
     // Learning loop: if this is a remix of a real YouTube video (New Script URL),
     // bank its framework into the pool. Overlaps generation so it adds ~no
     // wall-time, and skips if the video was already captured. Never blocks.
-    const capturePromise: Promise<void> = (sourceVideoId && typeof transcript === "string" && transcript.trim().length > 200)
+    // Skip on finalize: the plan call at the head of this chunked build already fired both
+    // learning loops, so re-firing here would double-count (capture dedupes, but the angle pick
+    // would be banked twice).
+    const capturePromise: Promise<void> = (mode !== "finalize" && sourceVideoId && typeof transcript === "string" && transcript.trim().length > 200)
       ? captureFrameworkInBackground({ videoId: String(sourceVideoId), transcript, title: topic || null })
       : Promise.resolve();
 
@@ -194,7 +275,7 @@ export async function POST(req: Request) {
     // angle reader looks up) — NOT the freeform `niche`/audience string, or the
     // pick would be written to a drawer nothing reads from.
     const anglePickNiche = bridgeNiche || resolvedNiche || null;
-    const anglePromise: Promise<void> = (typeof angle === "string" && angle.trim().length > 8)
+    const anglePromise: Promise<void> = (mode !== "finalize" && typeof angle === "string" && angle.trim().length > 8)
       ? saveAnglePick({
           user_id: userId,
           niche: anglePickNiche,
@@ -212,7 +293,7 @@ export async function POST(req: Request) {
       Array.isArray(storytellingTechniques) && storytellingTechniques.length ? storytellingTechniques : null
     );
 
-    const scriptPromise = generateScript({
+    const scriptInput: Parameters<typeof generateScript>[0] = {
       sourceTranscript: truncated,
       targetTopic: topic || "",
       targetNiche: resolvedNiche || "general",
@@ -252,13 +333,47 @@ export async function POST(req: Request) {
       sourceMaterial: typeof sourceMaterial === "string" && sourceMaterial.trim() ? sourceMaterial.trim() : undefined,
       selectedTitle: typeof selectedTitle === "string" && selectedTitle.trim() ? selectedTitle.trim() : undefined,
       directorNote: typeof directorNote === "string" && directorNote.trim() ? directorNote.trim() : undefined,
-    });
+    };
 
-    const timeoutPromise = new Promise((_, reject) =>
-      setTimeout(() => reject(new Error("Script generation timed out — our AI is taking longer than expected. Could you wait a moment and then try again?")), 290000)
-    );
+    // PLAN mode: the head of a chunked build. Return the presetHook (one cheap hook call) and the
+    // number of sections so the client can loop. Does not increment usage — the completing
+    // "finalize" (or a fallback "full") is what counts. If the source has no measurable structure
+    // (plan < 2 sections), tell the client to fall back to the one-shot path.
+    if (mode === "plan") {
+      const planned = scriptInput.sectionPlan;
+      if (!planned || planned.length < 2) {
+        // No measurable structure — the client falls back to the one-shot path, which counts.
+        return NextResponse.json({ mode: "plan", total: 0, presetHook: null, title: scriptInput.selectedTitle || topic || "" });
+      }
+      const presetHook = await generateHookFirst({
+        title: scriptInput.selectedTitle || topic || "",
+        topic: topic || "",
+        hookType: hookType || undefined,
+        hookWhyItWorks: hookWhyItWorks || undefined,
+        hookScript: hookScript || undefined,
+        sourceMaterial: typeof sourceMaterial === "string" && sourceMaterial.trim() ? sourceMaterial.trim() : undefined,
+        voiceProfile: voiceProfile || undefined,
+      });
+      return NextResponse.json({ mode: "plan", total: planned.length, presetHook, title: scriptInput.selectedTitle || topic || "" });
+    }
 
-    const script = await Promise.race([scriptPromise, timeoutPromise]) as any;
+    let script: any;
+    if (mode === "finalize") {
+      // The client looped the sections; assemble them and run the ENTIRE generation tail on the
+      // joined body (assembleFinalizeScript -> finalizeScript). No section writing happens here,
+      // so this call is passes-only and fits comfortably in the time budget.
+      const sections = Array.isArray(raw.sections) ? raw.sections : [];
+      if (sections.length < 2) {
+        return NextResponse.json({ error: "No sections were provided to finalize." }, { status: 400 });
+      }
+      script = await assembleFinalizeScript(scriptInput, sections, typeof raw.presetHook === "string" ? raw.presetHook : null);
+    } else {
+      const scriptPromise = generateScript(scriptInput);
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Script generation timed out — our AI is taking longer than expected. Could you wait a moment and then try again?")), 290000)
+      );
+      script = await Promise.race([scriptPromise, timeoutPromise]) as any;
+    }
     const elapsed = Date.now() - startTime;
     // Belt-and-suspenders over the prompt instructions: strip em dashes and any
     // stage-direction markers ([PAUSE], [EMPHASIS], etc.) — scripts must be pure

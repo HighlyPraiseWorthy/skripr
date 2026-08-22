@@ -1,0 +1,91 @@
+// CHECKLIST TEST for the chunked-generation refactor. The whole safety story of chunking is:
+// when the section loop moves to the client, every silent-fix + safety pass must still run in
+// finalizeScript on the ASSEMBLED whole script — if the split drops one, the guarantee breaks
+// with no visible sign. This asserts each pass actually ran on an assembled body.
+//   node --experimental-strip-types --loader ./scripts/alias-loader.mjs scripts/finalize.test.ts
+//
+// Inputs are crafted so NO LLM call fires (fully offline): no voiceProfile (voice pass skipped),
+// a clean withholding hook (hook-rewrite guard false), a trailing tease that trips the
+// deterministic cut but NOT endingTeasesWithoutLanding (the LLM ending-rewrite is skipped), and
+// no repeated section-openers (anaphora rewrite skipped). Only the deterministic passes run.
+import { finalizeScript, hookIsVague, hookDumpsPayoff, endingTeasesWithoutLanding } from "../src/lib/ai/claude.ts";
+
+let failures = 0;
+function check(name: string, cond: boolean) {
+  if (!cond) { failures++; console.log("  ✗ " + name); } else { console.log("  ✓ " + name); }
+}
+
+// A withholding hook with no mechanism/money words and no vague windup — so the hook-rewrite
+// guard stays false and no LLM call is made.
+const HOOK = "For a while, the strangest part was how ordinary it all looked.";
+
+// Assembled body (as if the client looped the sections and joined them). It deliberately carries:
+//  - the hook as its opening (the re-stamp should keep it, first line intact)
+//  - a stock narrator tic that must be stripped
+//  - a person-guilt insinuation sentence that must be cut
+//  - a mid-sentence paragraph break (after "U.S.") that format-repair must heal
+//  - a real sourced closing beat, THEN a trailing cliffhanger paragraph that must be cut
+const BODY = [
+  `${HOOK} The building was plain, the paperwork was dull, and nobody looked twice at either.`,
+  "Let that sink in.",
+  "The payments moved on a schedule, quarter after quarter, exactly as the contract laid out. This is not the kind of thing you sign without asking questions about where the money comes from. On paper it was routine.",
+  "By 2019 the arrangement had spread across the U.S.\n\nDepartment filings from that year describe the same pattern in three more states.",
+  "In January 2024 he pleaded guilty, and the court ordered an $8,091,843.64 forfeiture.",
+  "But the trail did not end with him. It was almost more surprising than the scheme itself.",
+].join("\n\n");
+
+// Guard sanity — confirm the offline assumptions hold, so a failure here explains a hang.
+check("hook does not trip the vague-hook guard", !hookIsVague(HOOK));
+check("hook does not dump the payoff", !hookDumpsPayoff(HOOK));
+check("trailing tease does NOT trip the LLM ending-rewrite (deterministic cut handles it)",
+  !endingTeasesWithoutLanding("But the trail did not end with him. It was almost more surprising than the scheme itself."));
+
+const script: any = {
+  title: "A quiet arrangement",
+  hook: HOOK,
+  fullScript: BODY, script: BODY, body: BODY, content: BODY,
+  sections: [
+    { title: "Open", content: `${HOOK} The building was plain, the paperwork was dull, and nobody looked twice at either.\n\nLet that sink in.` },
+    { title: "Mechanism", content: "The payments moved on a schedule, quarter after quarter, exactly as the contract laid out. This is not the kind of thing you sign without asking questions about where the money comes from. On paper it was routine." },
+    { title: "Close", content: "In January 2024 he pleaded guilty, and the court ordered an $8,091,843.64 forfeiture.\n\nBut the trail did not end with him. It was almost more surprising than the scheme itself." },
+  ],
+  sectionwise: true,
+};
+
+const input: any = { targetTopic: "a streaming scheme", targetNiche: "true crime" }; // no voiceProfile => no LLM
+
+console.log("finalize runs every tail pass on the assembled script:");
+const out: any = await finalizeScript(script, input, { startedAt: Date.now(), presetHook: HOOK });
+const finalBody: string = out.fullScript || out.script || out.body || out.content || "";
+
+// 1) HOOK RE-STAMP — the body still opens on the hook verbatim, hook field intact.
+check("hook re-stamp: body opens with the hook", finalBody.trim().startsWith(HOOK));
+check("hook re-stamp: hook field preserved", out.hook.trim() === HOOK);
+
+// 2) TIC STRIP — the stock narrator tic is gone.
+check("tic strip: 'Let that sink in' removed", !/let that sink in/i.test(finalBody));
+
+// 3) FORMAT REPAIR — the mid-sentence break after 'U.S.' is healed (no paragraph split there).
+check("format repair: mid-sentence break after 'U.S.' healed", /U\.S\.\s+Department/.test(finalBody));
+
+// 4) INSINUATION SILENT CUT — the person-guilt sentence is gone, surrounding facts kept.
+check("insinuation cut: 'not the kind of thing you sign' removed", !/not the kind of thing you sign/i.test(finalBody));
+check("insinuation cut: surrounding sourced sentence kept", /payments moved on a schedule/i.test(finalBody));
+
+// 5) TRAILING CLIFFHANGER SILENT CUT — the tease is gone; the script ends on the sourced beat.
+check("cliffhanger cut: 'the trail did not end' removed", !/the trail did not end/i.test(finalBody));
+check("cliffhanger cut: 'almost more surprising' removed", !/almost more surprising/i.test(finalBody));
+check("cliffhanger cut: ends on the forfeiture beat", /\$8,091,843\.64 forfeiture\.?$/.test(finalBody.trim()));
+
+// 6) _autoCuts INTERNAL RECORD — populated with BOTH the insinuation and the cliffhanger spans.
+check("_autoCuts recorded", Array.isArray(out._autoCuts) && out._autoCuts.length >= 2);
+check("_autoCuts names the insinuation", (out._autoCuts || []).some((c: string) => /not the kind of thing you sign/i.test(c)));
+check("_autoCuts names the cliffhanger", (out._autoCuts || []).some((c: string) => /trail did not end|almost more surprising/i.test(c)));
+
+// 7) The passes ran on the SECTIONS too (the last section's ending is cleaned; tic gone in sec 0).
+const secLast: string = out.sections[out.sections.length - 1].content;
+check("sections: trailing cliffhanger cut from the final section", !/the trail did not end/i.test(secLast));
+check("sections: tic stripped from the opening section", !/let that sink in/i.test(out.sections[0].content));
+
+console.log(failures === 0 ? "\nALL PASS" : `\n${failures} FAILURE(S)`);
+process.exit(failures === 0 ? 0 : 1);

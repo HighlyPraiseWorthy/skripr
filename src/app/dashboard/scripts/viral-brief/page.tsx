@@ -103,6 +103,9 @@ export default function ViralBriefPage() {
   const [caseChoices, setCaseChoices] = useState<any[]>([]);
   const [resolving, setResolving] = useState(false);
   const [verifying, setVerifying] = useState(false);
+  // Chunked generation progress: {done, total} while the client loops the section writes; null
+  // for the one-shot path. Drives the label on the generating screen.
+  const [genProgress, setGenProgress] = useState<{ done: number; total: number } | null>(null);
   const [manualCase, setManualCase] = useState("");
   // Research-before-cards: the case is deepened at confirm time, and the resulting
   // facts feed BOTH the slot cards and the research step (no re-fetch). Held here so
@@ -400,7 +403,7 @@ export default function ViralBriefPage() {
   async function generateWithStory(storytellingMode: string, storytellingTechniques: string[], directorNote?: string) {
     const angle = selectedAngle;
     if (!brief || !angle) return;
-    setPhase("generating"); setError(null);
+    setPhase("generating"); setError(null); setGenProgress(null);
     // Scope the facts the SCRIPT may use to the selected sections, not the whole library.
     // The library accumulates across runs so a script could otherwise reach for a fact no
     // chosen section carries (the different-population DataReportal figure). Fall back to
@@ -409,34 +412,78 @@ export default function ViralBriefPage() {
       ? angle.factRefs.map((r) => deepFacts[r - 1]).filter(Boolean)
           .map((f) => (f.source ? `- ${f.fact} (source: ${f.source})` : `- ${f.fact}`)).join("\n")
       : sourceMaterial;
-    try {
+    // The shared generation payload — identical across the one-shot path and every chunked call,
+    // so a section, the plan, and finalize all see the same inputs.
+    const payload: any = {
+      transcript: "", topic: angle.angle, niche: angle.audience, videoLength: (brief as any).targetMinutes >= 14 ? "long" : "medium", targetMinutes: (brief as any).targetMinutes ?? 15,
+      hookType: brief.hookAnalysis.hookType, hookScript: brief.hookAnalysis.hook,
+      // WHY the source's hook works is the actual instruction; the archetype name
+      // alone ("Controversy/Stat") says nothing about execution. This was extracted,
+      // displayed in the UI, and never reached generation.
+      hookWhyItWorks: brief.hookAnalysis.whyItWorks,
+      titleFormula: angle.titleSuggestion, remixFramework: brief.remixFramework,
+      contentStructure: brief.structure, retentionTriggers: brief.retentionTriggers,
+      voiceProfileId: voiceId || undefined,
+      companionCta,
+      softCta,
+      sourceVerdict: sourceVerdict || undefined,
+      topicKind: topicKind || undefined,
+      storytellingMode, storytellingTechniques, directorNote: directorNote || undefined, sourceMaterial: scopedSource || undefined,
+      selectedTitle: angle.titleSuggestion || undefined,
+    };
+    const post = async (extra: any) => {
       const res = await fetch("/api/scripts/generate", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          transcript: "", topic: angle.angle, niche: angle.audience, videoLength: (brief as any).targetMinutes >= 14 ? "long" : "medium", targetMinutes: (brief as any).targetMinutes ?? 15,
-          hookType: brief.hookAnalysis.hookType, hookScript: brief.hookAnalysis.hook,
-          // WHY the source's hook works is the actual instruction; the archetype name
-          // alone ("Controversy/Stat") says nothing about execution. This was extracted,
-          // displayed in the UI, and never reached generation.
-          hookWhyItWorks: brief.hookAnalysis.whyItWorks,
-          titleFormula: angle.titleSuggestion, remixFramework: brief.remixFramework,
-          contentStructure: brief.structure, retentionTriggers: brief.retentionTriggers,
-          voiceProfileId: voiceId || undefined,
-          companionCta,
-          softCta,
-          sourceVerdict: sourceVerdict || undefined,
-          topicKind: topicKind || undefined,
-          storytellingMode, storytellingTechniques, directorNote: directorNote || undefined, sourceMaterial: scopedSource || undefined,
-          selectedTitle: angle.titleSuggestion || undefined,
-        }),
+        body: JSON.stringify({ ...payload, ...extra }),
       });
-      const data = await res.json().catch(() => null);
+      return res.json().catch(() => null);
+    };
+    try {
+      // CHUNKED GENERATION — the 20-min timeout fix. Split the one long request into a plan call,
+      // one call per section (each short, none running the tail passes), and a finalize call that
+      // runs every silent-fix + safety pass on the assembled whole. Falls back to the one-shot
+      // path whenever the plan can't be built (no measurable structure) or any step fails, so the
+      // common 11-min build is never worse off.
+      let data: any = null;
+      const plan = await post({ mode: "plan" });
+      if (plan?.limitReached) { window.location.href = "/dashboard/settings?upgrade=1"; return; }
+      if (plan && !plan.error && typeof plan.total === "number" && plan.total >= 2) {
+        const total: number = plan.total;
+        const sections: { title: string; content: string }[] = [];
+        let priorTail = "";
+        setGenProgress({ done: 0, total });
+        let chunkFailed = false;
+        for (let i = 0; i < total; i++) {
+          const sec = await post({ mode: "section", sectionIndex: i, priorTail });
+          if (!sec || sec.error || typeof sec.text !== "string" || !sec.text.trim()) { chunkFailed = true; break; }
+          sections.push({ title: sec.name || `Section ${i + 1}`, content: sec.text });
+          priorTail = typeof sec.tail === "string" ? sec.tail : sec.text.split(/\s+/).slice(-40).join(" ");
+          setGenProgress({ done: i + 1, total });
+        }
+        if (!chunkFailed && sections.length >= 2) {
+          setGenProgress({ done: total, total });
+          data = await post({ mode: "finalize", sections, presetHook: plan.presetHook ?? null });
+          // Finalize failing is NOT a reason to regenerate from scratch — the sections are already
+          // written (and paid for). Surface the error and let the user retry finalize, rather than
+          // silently burning a second full generation.
+          if (!data || data.error) {
+            if (data?.limitReached) { window.location.href = "/dashboard/settings?upgrade=1"; return; }
+            setError(data?.error || "The script was written but the final pass didn't complete. Please try again."); setPhase("angles"); setGenProgress(null); return;
+          }
+        }
+        // If chunking failed BEFORE finalize (plan/section), fall through to the one-shot path.
+      }
+      // Fallback: plan said total 0 (no measurable structure), or a section write failed partway.
+      if (!data || data.error) {
+        setGenProgress(null);
+        data = await post({});
+      }
       if (!data || data.error) {
         if (data?.limitReached) { window.location.href = "/dashboard/settings?upgrade=1"; return; }
-        setError(data?.error || "The connection dropped while generating. Please try again."); setPhase("angles"); return;
+        setError(data?.error || "The connection dropped while generating. Please try again."); setPhase("angles"); setGenProgress(null); return;
       }
-      setScript(data); setSavedId(data.savedId ?? null); setPhase("result");
-    } catch (e: any) { setError(e?.message || "Failed to generate script"); setPhase("angles"); }
+      setScript(data); setSavedId(data.savedId ?? null); setPhase("result"); setGenProgress(null);
+    } catch (e: any) { setError(e?.message || "Failed to generate script"); setPhase("angles"); setGenProgress(null); }
   }
 
   // Facts the SELECTED sections are allowed to draw on, so the grounding check judges the
@@ -682,7 +729,13 @@ export default function ViralBriefPage() {
   if (phase === "generating") return (
     <div style={{ minHeight: "100vh", background: C.bg, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: 16, fontFamily: "system-ui, sans-serif" }}>
       <GenerationProgress
-        label="Building your script..."
+        label={
+          genProgress
+            ? (genProgress.done >= genProgress.total
+                ? "Polishing the final script..."
+                : `Writing section ${Math.min(genProgress.done + 1, genProgress.total)} of ${genProgress.total}...`)
+            : "Building your script..."
+        }
         fullScreen={false}
         expectedMs={45000 + (((brief as any)?.targetMinutes ?? 15) * 5000)}
       />

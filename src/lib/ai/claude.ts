@@ -549,7 +549,7 @@ export function buildSectionPlan(
 
 // Write one section against its own brief. Small, focused calls: the model has one job,
 // one word budget, and the beats that belong here — nothing to trade the structure against.
-async function writeSection(
+export async function writeSection(
   spec: SectionSpec,
   index: number,
   total: number,
@@ -680,7 +680,10 @@ ${fullScript}`,
 async function extendScriptToLength(fullScript: string, targetWords: number, topic: string, niche: string, startedAt: number): Promise<string> {
   const count = (s: string) => s.split(/\s+/).filter(Boolean).length;
   const words = count(fullScript);
-  if (words >= targetWords * 0.8) return fullScript;
+  // Backstop at 0.88, not 0.8: a terse voice was landing brew at ~84% of target and slipping under
+  // the old 0.8 gate, so it never extended and shipped ~15% short. 0.88 catches that band while
+  // leaving a script already within ~12% of target alone (no needless padding pass).
+  if (words >= targetWords * 0.88) return fullScript;
   const elapsed = Date.now() - startedAt;
   if (elapsed > 180_000) {
     console.log(`[extend] skipped — ${elapsed}ms elapsed, too close to function limit`);
@@ -1062,17 +1065,50 @@ ANGLE OUTRANKS A CONFLICTING NOTE: if a note aims the climax at a moment that is
     }
   }
 
-  if (!sectionsWritten && targetWords && targetWords >= 1200 && bodyKey) {
+  // Length backstop moved into finalizeScript, so it covers ALL paths in one place — the one-shot
+  // blob, the one-shot section build, and the chunked build. (Before, it lived here and ran only
+  // when sections were NOT written, so a section build that came in short — a terse voice
+  // compressing every section — had no extend backstop at all. That was the brew-length miss.)
+  void sectionsWritten;
+
+  // The generation TAIL — every silent-fix + safety pass — lives in finalizeScript, so it is
+  // shared by construction between the one-shot path (here) and the chunked path (the route's
+  // mode:"finalize"). If a pass moves, both paths get it; neither can silently skip one.
+  return finalizeScript(script, input, { startedAt, presetHook });
+}
+
+// FINALIZE — the whole generation tail, run on an already-assembled body. Called by
+// generateScript (one-shot) AND by the chunked mode:"finalize" (client looped the sections, then
+// hands the assembled whole here). MUST run every silent-fix + safety pass on the WHOLE script:
+// voice pass, deterministic tic strip, format repair, hook rewrite + re-stamp, guarded ending
+// rewrite, anaphora guard, stripInsinuations (person-guilt cut), stripImpliedRevelation (trailing
+// cliffhanger cut), and the _autoCuts internal record. Some passes are inherently whole-script
+// (hook/callback, anaphora, insinuation, cliffhanger), which is exactly why they run HERE, after
+// assembly, never per-section.
+export async function finalizeScript(
+  script: GeneratedScript,
+  input: ScriptGenerationInput,
+  opts: { startedAt: number; presetHook: string | null },
+): Promise<GeneratedScript> {
+  const { startedAt, presetHook } = opts;
+  const bodyKey = ["fullScript", "script", "body", "content"].find(
+    (k) => typeof (script as any)[k] === "string" && (script as any)[k].trim().length > 0,
+  );
+
+  // LENGTH BACKSTOP (runs FIRST, so the passes below act on the final-length text). One place for
+  // every path — the one-shot blob, the one-shot section build, and the chunked build. Long
+  // scripts only (>= 1200 target words); extendScriptToLength is itself a no-op unless the body is
+  // under 88% of target, so a script already at length pays nothing.
+  const targetWords = input.targetMinutes ? Math.round(input.targetMinutes * 130) : null;
+  if (targetWords && targetWords >= 1200 && bodyKey) {
     try {
       const before = (script as any)[bodyKey].split(/\s+/).filter(Boolean).length;
-      (script as any)[bodyKey] = await extendScriptToLength((script as any)[bodyKey], targetWords, input.targetTopic, input.targetNiche, startedAt);
+      (script as any)[bodyKey] = await extendScriptToLength((script as any)[bodyKey], targetWords, input.targetTopic || "", input.targetNiche || "", startedAt);
       const after = (script as any)[bodyKey].split(/\s+/).filter(Boolean).length;
-      console.log(`[extend] field=${bodyKey} target=${targetWords} before=${before} after=${after}`);
+      if (after !== before) console.log(`[extend] field=${bodyKey} target=${targetWords} before=${before} after=${after}`);
     } catch (e) {
-      console.error("[extend] continuation failed, returning base script:", e);
+      console.error("[extend] backstop failed, keeping assembled body:", e);
     }
-  } else if (targetWords && targetWords >= 1200) {
-    console.error("[extend] no body field found on script object; keys:", Object.keys(script || {}));
   }
 
   // ONE SOURCE OF TRUTH for the opening. The prompt asks for the preset hook verbatim;
@@ -1258,6 +1294,36 @@ ANGLE OUTRANKS A CONFLICTING NOTE: if a note aims the climax at a moment that is
   }
 
   return script;
+}
+
+// CHUNKED PATH — assemble the client-written sections into one script object and run the ENTIRE
+// generation tail on the whole (finalizeScript). This is the server half of mode:"finalize": the
+// client looped mode:"section" (one section per request, none of them running tail passes), then
+// hands the assembled sections here so every whole-script silent-fix + safety pass runs exactly
+// once, on the joined body. By routing through finalizeScript it CANNOT skip a pass the one-shot
+// path runs — they are the same code.
+export async function assembleFinalizeScript(
+  input: ScriptGenerationInput,
+  sections: { title?: string; content?: string }[],
+  presetHook: string | null,
+): Promise<GeneratedScript> {
+  const startedAt = Date.now();
+  const clean = (sections || [])
+    .filter((s) => s && typeof s.content === "string" && s.content.trim().length > 0)
+    .map((s) => ({ title: String(s.title || ""), content: String(s.content).trim() }));
+  const body = clean.map((s) => s.content).join("\n\n");
+  const title = input.selectedTitle || input.targetTopic || input.sourceTitle || "";
+  const script = {
+    title,
+    hook: presetHook || "",
+    fullScript: body,
+    script: body,
+    body,
+    content: body,
+    sections: clean,
+    sectionwise: true,
+  } as unknown as GeneratedScript;
+  return finalizeScript(script, input, { startedAt, presetHook });
 }
 
 // NOTE (Move #8 #4): a deterministic "seven years -> 2017 to 2024" strip was tried and REVERTED —
