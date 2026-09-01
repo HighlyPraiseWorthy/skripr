@@ -1078,12 +1078,30 @@ async function minePrimarySourceDocs(
   urls: string[],
   watchlist: string[],
   deadlineMs: number,
+  pkey?: string,
+  summary?: string,
 ): Promise<ResearchFact[]> {
   // PDFs are now READ, not skipped — the deepest facts (aliases, milestones, quoted lines) are
   // PDF-only in a charging document, and Claude reads a PDF natively via a base64 document block,
   // so no PDF library is needed. HTML press releases / opinions are read as text as before.
-  const primary = [...new Set(urls.filter((u) => typeof u === "string" && PRIMARY_SOURCE_RE.test(u)))].slice(0, 3);
-  if (!primary.length) return [];
+  let primary = [...new Set(urls.filter((u) => typeof u === "string" && PRIMARY_SOURCE_RE.test(u)))].slice(0, 3);
+  // If NO primary-source URL rode along in the fact citations, the mining would never see the
+  // charging document. So actively resolve it: ask for the official document URL directly and
+  // harvest the primary-source links from that answer's citations (this is where the indictment
+  // PDF / DOJ release actually surfaces). Only runs when citations lacked one, so it adds no cost
+  // on cases where the primary source was already cited.
+  if (!primary.length && pkey && Date.now() < deadlineMs) {
+    try {
+      const q = [`What is the exact URL of the official PRIMARY-SOURCE document for ${caseName} — the DOJ or U.S. Attorney press release, the indictment or complaint PDF, the SEC litigation release, or the court opinion? Give the direct link.`];
+      const ans = await fetchPerplexityAnswers(pkey, caseName, summary, [caseName], q);
+      const resolved = ans.map((a) => a.source).filter((s): s is string => !!s && PRIMARY_SOURCE_RE.test(s));
+      primary = [...new Set(resolved)].slice(0, 3);
+      if (primary.length) console.log(`[primary-doc] resolved ${primary.length} primary URL(s) via lookup (none were in citations)`);
+    } catch (e) {
+      console.error("[primary-doc] URL resolve failed:", (e as any)?.message);
+    }
+  }
+  if (!primary.length) { console.log("[primary-doc] no primary-source URL found (citations or lookup) — skipping"); return []; }
   const SYSTEM = `You extract granular facts from a PRIMARY-SOURCE official document (indictment, complaint, court opinion, agency report, press release). Output ONLY facts the document literally states — never add, infer, or recall anything from your own knowledge. ENUMERATE, do not summarize or select highlights: aim for 30-60 distinct items, each ONE concrete specific. Capture in particular the things a summary drops — every NAMED entity/alias/account/product (list each proper name exactly as written), every DATED milestone with the figure attached, every DOLLAR movement (amount, date, instrument, where it went), every QUOTED line with its speaker, and every WARNING and the response to it. Skip navigation, boilerplate, and disclaimers.`;
   const ASK = `CASE: ${caseName}\n\nEnumerate EVERY granular fact this document states — aim for 30-60 items, the specific over the general, nothing invented. Output ONLY JSON: {"facts":["...", "..."]}`;
   const out: ResearchFact[] = [];
@@ -1443,7 +1461,9 @@ Each question seeks a single concrete, citable fact. Output ONLY this JSON, no p
   // only (they need the depth), time-guarded, and every extracted fact carries the document URL.
   if (deep && Date.now() - t0 < ctxDeadline) {
     const citedUrls = freshFacts.map((f) => f.source).filter((s): s is string => !!s);
-    const docFacts = await minePrimarySourceDocs(canonicalCaseName, citedUrls, watchlist, t0 + ctxDeadline);
+    const docFacts = await minePrimarySourceDocs(canonicalCaseName, citedUrls, watchlist, t0 + ctxDeadline, pkey, input.summary);
+    // Existing facts lead the union so a flood of newly-mined doc facts can't push an established
+    // high-value figure (e.g. the $1.3M forfeiture) out when capFacts trims to the cap.
     if (docFacts.length) freshFacts = capFacts(unionFacts([...freshFacts, ...docFacts]), factCap);
   }
 

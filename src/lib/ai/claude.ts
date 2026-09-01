@@ -576,6 +576,7 @@ ITS JOB IN THE VIDEO: ${spec.purpose || "advance the argument"}
 LENGTH: about ${spec.targetWords} words. This is a budget, not a suggestion — stay within about 10%.
 REACH THAT LENGTH BY ELABORATION, NEVER BY REPETITION. Hit the word budget by going DEEPER on the facts you have: explain the mechanism in causal, step-by-step detail; unpack what a figure means in real economic and human terms (against a normal comparison, who gained, who lost and how much); render the key moment as a scene, beat by beat; place it in its context and precedent. That is how a good narrator fills the time. Do NOT restate a number, name, or claim you have already made — repeating "the same figure" three times is padding and will be cut. And never invent a fact to reach length: every specific still comes only from the source material. If you are short, deepen an existing fact; do not repeat one and do not make one up.
 ADVANCE THE STORY — this section is one link in a CHAIN OF DISCOVERIES, not a standalone essay. It must move PAST where the previous section left off: introduce genuinely new material that escalates — a new development, a deeper cause, a bigger consequence, an answer that opens a harder question. Never re-explain a mechanism, re-introduce a person, or re-state a figure the earlier sections already covered; assume the viewer already has it and build on it. A 20-minute video earns its length by escalating, and that is also why it never repeats: each section carries facts the others do not.
+THIN SECTION? KEEP IT SHORT — NEVER PAD WITH INFERENCE. If the facts you have for this section are sparse (a role the record names but does not explain, an unnamed person, a gap the sources leave open), state plainly what the record DOES say, once, and move on — a short honest section is fine. Do NOT stretch thin facts to length by guessing at roles, motives, or cooperation ("the publicist provided the cover", "whether they cooperated"), by building a "mystery" the sources don't support, or by editorializing about what the record doesn't say. When the record is silent, say so briefly ("the indictment names them but does not detail their role") and go no further. Unsupported inference is the one thing worse than a short section.
 ${spec.isPeak ? `THIS IS THE PEAK OF THE VIDEO. It is the longest section by design. Slow down, go beat by beat, and let it breathe. Do not summarize what happens here — render it.\n` : ""}
 ${spec.triggers.length ? `RETENTION BEATS THAT BELONG IN THIS SECTION (place them here, reproduce the MECHANIC not the wording):\n${spec.triggers.map((t) => `- ${t}`).join("\n")}\n` : ""}
 ${context.previousTail ? `THE SECTION BEFORE THIS ONE ENDED LIKE THIS (continue naturally, never repeat it):\n"...${context.previousTail}"\n` : "This is the OPENING section — it carries the hook.\n"}
@@ -1253,6 +1254,26 @@ export async function finalizeScript(
     if (changed) (script as any)[bodyKey2] = paras2.join("\n\n");
   }
 
+  // SEMANTIC REFINE PASS — the one place deterministic-first flips to model judgment. Two problems
+  // survived every regex/overlap attempt because they are about MEANING, not pattern: a theme
+  // restated 3+ times with fresh wording each time (the overlap heuristic can't see "provided the
+  // cover of legitimacy" == "knows how to package an artist"), and inference-as-fact ("the publicist
+  // provided cover", "whether they cooperated") phrased outside any fixed pattern. One targeted LLM
+  // pass, on the assembled body, judges by meaning: collapse a repeated point to its 1-2 best
+  // instances, and cut/hedge any role/motive/cooperation the FACTS don't establish. Reduction-only
+  // (never adds), guarded, graceful fallback — the deterministic cuts below still backstop it.
+  const refineKey = ["fullScript", "script", "body", "content"].find((k) => typeof (script as any)[k] === "string" && (script as any)[k].trim());
+  if (refineKey && input.sourceMaterial && input.sourceMaterial.trim()) {
+    const before = (script as any)[refineKey] as string;
+    const refined = await refineAssembledBody(before, input.sourceMaterial, startedAt);
+    if (refined && refined !== before) {
+      for (const k of ["fullScript", "script", "body", "content"]) {
+        if (typeof (script as any)[k] === "string") (script as any)[k] = refined;
+      }
+      (script as any).semanticRefined = true;
+    }
+  }
+
   // GOVERNING PRINCIPLE — SILENT SAFETY CUT (runs last). Person-guilt insinuation is a defamation
   // risk, so it is CUT silently before the script is returned — no panel, no flag. A cut is the
   // safe default (removing a sentence can't add a new problem). What was cut is kept ONLY in an
@@ -1344,6 +1365,48 @@ export async function finalizeScript(
   }
 
   return script;
+}
+
+// The model-judgment editor behind the semantic refine pass. Reduction-only: it collapses a point
+// restated 3+ times to its 1-2 best instances and cuts/hedges any cause/motive/role/cooperation the
+// FACTS don't establish — judged by MEANING, which no regex can do. It must not add, invent, or
+// restructure. Heavily guarded: on any failure, a truncated return, an empty return, or a return
+// that is not clearly SHORTER than the input (a reduction pass only ever cuts), the original body
+// is kept — so a bad pass can never make the script worse.
+async function refineAssembledBody(body: string, facts: string, startedAt: number): Promise<string> {
+  if (!body || !body.trim() || !facts || !facts.trim()) return body;
+  if (Date.now() - startedAt > 240_000) return body; // out of budget — keep as-is
+  try {
+    const approxTokens = Math.min(8000, Math.max(1500, Math.round(body.length / 3) + 500));
+    const msg = await getAnthropic().messages.create({
+      model: "claude-sonnet-4-6",
+      max_tokens: approxTokens,
+      temperature: 0,
+      system: `You are a strict line editor making ONLY two kinds of change to a finished documentary voiceover script, judged by MEANING:
+
+(1) COLLAPSE REPETITION. If the SAME point, theme, or figure is made three or more times across the script — even when reworded each time — keep the ONE or TWO most developed instances and DELETE the others. Do not reword the survivors; just remove the redundant restatements. (Example: a co-conspirator's role, or a single number, hammered in section after section.)
+
+(2) CUT OR HEDGE INFERENCE-AS-FACT. Any sentence that asserts a cause, motive, role, intent, or cooperation that the FACTS below do NOT establish must be either deleted or softened to state only what the record says. Turn "the publicist provided the cover of legitimacy" into nothing or "the indictment names a publicist but does not detail their role." Cut speculation like "whether they cooperated, whether they are still working in the industry." Cut editorial mind-reading like "the record goes quiet exactly where you'd want it to speak."
+
+HARD RULES: Do NOT add any new fact, sentence, or transition. Do NOT invent. Do NOT change the voice, the hook, or the structure. Do NOT rewrite prose that is fine. You only DELETE redundancy and DELETE/soften unsupported inference — the output is always SHORTER than the input. Preserve the opening line exactly. Output ONLY the revised script text, nothing else.`,
+      messages: [{
+        role: "user",
+        content: `FACTS — the only things the record establishes (anything beyond these is unsupported inference):\n"""\n${facts.slice(0, 8000)}\n"""\n\nSCRIPT TO EDIT:\n"""\n${body}\n"""\n\nReturn the revised script — redundancy removed, unsupported inference cut or hedged, nothing added.`,
+      }],
+    });
+    const out = msg.content[0]?.type === "text" ? msg.content[0].text.trim().replace(/^["“']|["”']$/g, "").trim() : "";
+    // Guards: non-trivial, actually a REDUCTION (never longer), not truncated mid-sentence, and it
+    // did not gut the script (kept at least ~60% — a reduction pass trims, it doesn't rewrite away).
+    if (!out || out.length < 200) return body;
+    if (out.length > body.length) return body;              // a reduction pass never grows
+    if (out.length < body.length * 0.55) return body;       // gutted or went off-task
+    if (!/[.!?"'”’)\]]\s*$/.test(out)) return body;          // truncated at max_tokens
+    console.log(`[refine] semantic pass: ${body.length} -> ${out.length} chars`);
+    return out;
+  } catch (e) {
+    console.error("[refine] semantic pass failed, keeping original:", (e as any)?.message);
+    return body;
+  }
 }
 
 // CHUNKED PATH — assemble the client-written sections into one script object and run the ENTIRE
