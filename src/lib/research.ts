@@ -1114,7 +1114,17 @@ async function minePrimarySourceDocs(
     try {
       const ctrl = new AbortController();
       const timer = setTimeout(() => ctrl.abort(), 25_000);
-      const res = await fetch(url, { signal: ctrl.signal, headers: { "user-agent": "Mozilla/5.0 (compatible; SkriprResearch/1.0)" } });
+      // A FULL browser User-Agent is required: .gov hosts (justice.gov confirmed) return 403 to a
+      // bot-style UA like "SkriprResearch/1.0" but 200 + application/pdf to a real browser UA. This
+      // was THE PDF-depth blocker — the document was never unreadable, the request was forbidden.
+      const res = await fetch(url, {
+        signal: ctrl.signal,
+        headers: {
+          "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+          "accept": "application/pdf,text/html,application/xhtml+xml,*/*;q=0.8",
+          "accept-language": "en-US,en;q=0.9",
+        },
+      });
       clearTimeout(timer);
       if (!res.ok) {
         // Never silently drop a known primary source — record that it exists but wasn't read, so

@@ -1401,7 +1401,10 @@ HARD RULES: Do NOT add any new fact, sentence, or transition. Do NOT invent. Do 
     // did not gut the script (kept at least ~60% — a reduction pass trims, it doesn't rewrite away).
     if (!out || out.length < 200) return body;
     if (out.length > body.length) return body;              // a reduction pass never grows
-    if (out.length < body.length * 0.55) return body;       // gutted or went off-task
+    // Allow a LARGE cut: a 40%-repetitive script needs ~40% removed, and the old 0.55 floor was
+    // rejecting exactly the big trims the worst scripts need. Floor at 0.30 — below that it has
+    // almost certainly gone off-task or refused, so keep the original.
+    if (out.length < body.length * 0.30) return body;
     if (!/[.!?"'”’)\]]\s*$/.test(out)) return body;          // truncated at max_tokens
     console.log(`[refine] semantic pass: ${body.length} -> ${out.length} chars`);
     return out;
