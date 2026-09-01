@@ -1051,6 +1051,77 @@ Output ONLY a JSON array, no prose: [{"i":1,"status":"keep|drop|conflict|tempora
  * Claude never supplies a fact directly: only sourced answers reach the script, so
  * the anti-fabrication guarantee holds while the grounding gets much richer.
  */
+
+// PRIMARY-SOURCE DOCUMENT MINING. Perplexity returns the NEWS-SUMMARY layer — the big round
+// numbers everyone reports — but the vivid, script-winning granularity (a $1.3M debit-card trail,
+// AI-artist aliases, month-by-month milestones, the warnings-and-denials thread) lives in the
+// actual charging document, which a well-read model has in memory and Perplexity's summaries omit.
+// This closes that gap the only way that works: FETCH the primary-source document the citations
+// already point at and extract facts straight from its text. Claude still never invents — it reads
+// a real fetched document and every extracted fact carries that document's URL as its source.
+const PRIMARY_SOURCE_RE = /^https?:\/\/(?:www\.)?(?:justice\.gov|sec\.gov|courtlistener\.com|govinfo\.gov|[a-z0-9.-]*uscourts\.gov|ftc\.gov|fbi\.gov|treasury\.gov|cftc\.gov|fincen\.gov)\b/i;
+function htmlToText(html: string): string {
+  return html
+    .replace(/<script[\s\S]*?<\/script>/gi, " ")
+    .replace(/<style[\s\S]*?<\/style>/gi, " ")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&nbsp;/gi, " ").replace(/&amp;/gi, "&").replace(/&#\d+;/g, " ").replace(/&[a-z]+;/gi, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+async function minePrimarySourceDocs(
+  caseName: string,
+  urls: string[],
+  watchlist: string[],
+  deadlineMs: number,
+): Promise<ResearchFact[]> {
+  const primary = [...new Set(urls.filter((u) => typeof u === "string" && PRIMARY_SOURCE_RE.test(u)))].slice(0, 2);
+  if (!primary.length) return [];
+  const out: ResearchFact[] = [];
+  for (const url of primary) {
+    if (Date.now() > deadlineMs) break;
+    let text = "";
+    try {
+      const ctrl = new AbortController();
+      const timer = setTimeout(() => ctrl.abort(), 20_000);
+      const res = await fetch(url, { signal: ctrl.signal, headers: { "user-agent": "Mozilla/5.0 (compatible; SkriprResearch/1.0)" } });
+      clearTimeout(timer);
+      if (!res.ok) continue;
+      text = htmlToText(await res.text()).slice(0, 24_000);
+    } catch (e) {
+      console.error(`[primary-doc] fetch failed for ${url}:`, (e as any)?.message);
+      continue;
+    }
+    if (text.length < 400) continue;
+    // Extract EVERY granular fact from the fetched document text. Claude reads a real document and
+    // lists what it literally says — no memory, no invention; the URL is the source for each fact.
+    try {
+      const msg = await anthropic().messages.create({
+        model: "claude-sonnet-4-6",
+        max_tokens: 3000,
+        temperature: 0,
+        system: `You extract granular facts from a PRIMARY-SOURCE legal/official document. Output ONLY facts the document text literally states — never add, infer, or recall anything from your own knowledge. Prefer the specific over the general: exact dates, dollar amounts, counts, named people and their titles, aliases/entities/accounts, quoted lines, milestones, warnings and the response to them, and how it resolved. One concrete fact per item.`,
+        messages: [{
+          role: "user",
+          content: `CASE: ${caseName}\nSOURCE DOCUMENT URL: ${url}\n\nDOCUMENT TEXT:\n"""\n${text}\n"""\n\nExtract the granular facts this document states, most specific first. Output ONLY JSON: {"facts":["...", "..."]}`,
+        }],
+      });
+      const content = msg.content[0]?.type === "text" ? msg.content[0].text : "";
+      const m = content.match(/\{[\s\S]*\}/);
+      const parsed = m ? JSON.parse(m[0]) : null;
+      const facts: string[] = Array.isArray(parsed?.facts) ? parsed.facts.filter((f: any) => typeof f === "string" && f.trim().length > 8) : [];
+      for (const f of facts.slice(0, 40)) {
+        // Guard the living-person watchlist the same way the other paths do.
+        if (watchlist.some((w) => f.toLowerCase().includes(w.toLowerCase()))) continue;
+        out.push({ fact: f.trim(), source: url, context: true });
+      }
+      console.log(`[primary-doc] extracted ${facts.length} facts from ${url}`);
+    } catch (e) {
+      console.error(`[primary-doc] extraction failed for ${url}:`, (e as any)?.message);
+    }
+  }
+  return out;
+}
 export async function deepenCaseFacts(input: { caseName: string; summary?: string; niche?: string; sourcePayoff?: string; sourceSubject?: string; userId?: string; kind?: TopicKind; topicAnchor?: string; targetFacts?: number; targetMinutes?: number }): Promise<DeepenResult> {
   const t0 = Date.now();
   // Sanitize the case identity first: arbitrary prose in this field drifts retrieval.
@@ -1339,6 +1410,15 @@ Each question seeks a single concrete, citable fact. Output ONLY this JSON, no p
       freshFacts = capFacts(unionFacts([...freshFacts, ...ctx]), factCap);
       if (freshFacts.length <= before) break; // context well is dry too — honesty ceiling will speak
     }
+  }
+
+  // PRIMARY-SOURCE DOCUMENT MINING (the depth fix). Perplexity gave the summary layer; now read the
+  // actual charging document the citations point at, where the vivid granularity lives. Long asks
+  // only (they need the depth), time-guarded, and every extracted fact carries the document URL.
+  if (deep && Date.now() - t0 < ctxDeadline) {
+    const citedUrls = freshFacts.map((f) => f.source).filter((s): s is string => !!s);
+    const docFacts = await minePrimarySourceDocs(canonicalCaseName, citedUrls, watchlist, t0 + ctxDeadline);
+    if (docFacts.length) freshFacts = capFacts(unionFacts([...freshFacts, ...docFacts]), factCap);
   }
 
   // Union with the case's best prior fact set (any brief version) rather than

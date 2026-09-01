@@ -165,5 +165,28 @@ check("role-insinuation: 'reason not to look too hard' is cut", !/reason not to 
 check("the on-topic + sourced sentences survive", /streamed around the clock/.test(b4) && /\$8 million forfeiture/.test(b4));
 check("_autoCuts tags source-leak", (out4._autoCuts || []).some((c: string) => /^source-leak:/.test(c)));
 
+// REMATCH regressions must be fixed IN finalize on the assembled body: repeated title collapsed,
+// orphan fragments merged, the title-leaked bare duration cut. Fully offline.
+console.log("finalize fixes the chunked regressions on the assembled body:");
+const title5 = "How He Stole Millions in 8 Years";
+const BODY5 = [
+  `${HOOK} It began as ordinary distribution.`,
+  "Fifty-two years old.",
+  "The man behind it had spent a quiet career in music before any of this.",
+  "The charges were announced by the Complex Frauds and Cybercrime Unit, which laid out years of evidence and the full mechanics of the fraud in detail.",
+  "The Complex Frauds and Cybercrime Unit. The Complex Frauds and Cybercrime Unit ran point on it.",
+  "The scheme ran from 2017 to 2024, roughly seven years inside the royalty system.",
+  "Eight years. Undetected.",
+  "In January 2024 he pleaded guilty and the court ordered an $8 million forfeiture.",
+].join("\n\n");
+const script5: any = { title: title5, hook: HOOK, fullScript: BODY5, script: BODY5, body: BODY5, content: BODY5, sections: [{ title: "All", content: BODY5 }], sectionwise: true };
+const out5: any = await finalizeScript(script5, { targetTopic: "a streaming scheme", targetNiche: "true crime" } as any, { startedAt: Date.now(), presetHook: HOOK });
+const b5: string = out5.fullScript || "";
+check("seam: 'Fifty-two years old.' is no longer a standalone paragraph", !/\n\nFifty-two years old\.\n\n/.test("\n\n" + b5 + "\n\n"));
+check("duration: the title-leaked 'Eight years.' is cut", !/Eight years\./.test(b5));
+check("duration: the sourced date range survives", /2017 to 2024/.test(b5));
+check("de-repetition: the bare 'Complex Frauds and Cybercrime Unit.' restatements are reduced", (b5.match(/Complex Frauds and Cybercrime Unit/g) || []).length <= 2);
+check("the sourced closing beat is intact", /\$8 million forfeiture/.test(b5));
+
 console.log(failures === 0 ? "\nALL PASS" : `\n${failures} FAILURE(S)`);
 process.exit(failures === 0 ? 0 : 1);

@@ -257,9 +257,26 @@ export function dedupeAdjacentParagraphs(text: string): { text: string; cuts: st
 // can never shatter prose the way the reverted token-replace did. Niche-agnostic.
 const DURATION_CLAIM_RE = /\b(?:that|this)(?:'?s| is| was) (?:exactly )?how long (?:it|this|that|the scheme|the operation|the fraud|the whole thing) (?:ran|lasted|went on|continued|kept going|took|had been running)\b/i;
 const BARE_DURATION_RE = /^(?:for\s+)?(?:about|nearly|almost|roughly|over|more than)?\s*(?:\d+|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve)\s+(?:years?|months?|weeks?|days?|decades?)\.?$/i;
-export function stripSchemeDurationClaim(text: string): { text: string; cuts: string[] } {
+const _DURWORDS: Record<string, number> = { one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10, eleven: 11, twelve: 12 };
+// The number of YEARS a duration phrase asserts (decades x10), or null. Used to spot the title's
+// number leaking into the body and internal "seven years" vs "eight years" contradictions.
+function durationYears(s: string): number | null {
+  const m = s.toLowerCase().match(/\b(\d+|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve)\s+(years?|decades?)\b/);
+  if (!m) return null;
+  const n = /^\d+$/.test(m[1]) ? parseInt(m[1], 10) : _DURWORDS[m[1]];
+  if (!n) return null;
+  return /decade/.test(m[2]) ? n * 10 : n;
+}
+export function stripSchemeDurationClaim(text: string, title?: string): { text: string; cuts: string[] } {
   if (!text) return { text, cuts: [] };
   const cuts: string[] = [];
+  // The locked title's number is a hook device, never a sourced fact — so a bare body fragment
+  // repeating it ("Eight years." from a "8 Years" title) is a leak. Also collect every distinct
+  // year-duration stated in the body, so a bare fragment that CONTRADICTS another ("seven years"
+  // elsewhere vs a bare "Eight years.") is caught as an internal inconsistency.
+  const titleYears = title ? durationYears(title) : null;
+  const bodyYearVals = new Set<number>();
+  for (const raw of text.split(/(?<=[.!?])\s+/)) { const y = durationYears(raw); if (y !== null) bodyYearVals.add(y); }
   const outParas = text.split(/\n\n+/).map((para) => {
     const sentences = para.split(/(?<=[.!?])\s+/);
     const kept: string[] = [];
@@ -270,6 +287,18 @@ export function stripSchemeDurationClaim(text: string): { text: string; cuts: st
         // claim was elaborating — it is the same false count with no sentence of its own.
         if (kept.length && BARE_DURATION_RE.test(kept[kept.length - 1].trim())) cuts.push(kept.pop()!.trim());
         continue;
+      }
+      // A BARE standalone duration fragment ("Eight years.") is a dramatic stated span. Cut it when
+      // it either repeats the title's number (a title-leak, never a sourced fact) OR conflicts with
+      // a different year-duration stated elsewhere in the body (internal contradiction). A duration
+      // mentioned INSIDE a full sentence (contextualized) is left alone — only the bare beat is cut.
+      const t = s.trim();
+      if (BARE_DURATION_RE.test(t)) {
+        const y = durationYears(t);
+        if (y !== null && ((titleYears !== null && y === titleYears) || [...bodyYearVals].some((v) => v !== y))) {
+          cuts.push(t);
+          continue;
+        }
       }
       kept.push(s);
     }
@@ -466,6 +495,51 @@ export function collapseRepeatedAnchors(text: string): { text: string; cuts: str
     }
   }
 
+  // DETECTOR D — a repeated PROPER-NOUN TITLE/PHRASE embedded in DIFFERENT sentences. Detectors A/C
+  // work at whole-sentence level, so a title restated across varying sentences slips them — the
+  // 20-min build repeated "Christie M. Curtis, Acting Assistant Director in Charge of the FBI's New
+  // York Field Office" 3x and "Complex Frauds and Cybercrime Unit" 4x. Extract multi-word proper-
+  // noun spans (>= 3 words), and for any appearing in 3+ sentences, keep the two longest occurrences
+  // and cut the rest ONLY when the sentence is a SHORT bare restatement (< 22 words), never a long
+  // one carrying real content around the name.
+  const properNounSpans = (s: string): string[] => {
+    const out: string[] = [];
+    const re = /\b[A-Z][a-zA-Z.'’-]+(?:\s+(?:of|and|the|in|for|de|&|[A-Z][a-zA-Z.'’-]+)){2,}/g;
+    let m: RegExpExecArray | null;
+    const CONNECT = new Set(["the", "a", "an", "of", "and", "in", "for", "de"]);
+    while ((m = re.exec(s)) !== null) {
+      let span = normalizeForCompare(m[0]).split(" ").filter((w) => w.length > 1);
+      // Trim leading/trailing connector words so "The Complex Frauds..." (sentence start) and
+      // "the Complex Frauds..." (mid-sentence) normalize to the SAME anchor key.
+      while (span.length && CONNECT.has(span[0])) span = span.slice(1);
+      while (span.length && CONNECT.has(span[span.length - 1])) span = span.slice(0, -1);
+      if (span.length >= 3) out.push(span.join(" "));
+    }
+    return out;
+  };
+  const spanCounts = new Map<string, number[]>(); // span -> sentence indices
+  flat.forEach((f, idx) => {
+    if (remove.has(idx)) return;
+    for (const span of new Set(properNounSpans(f.s))) {
+      const arr = spanCounts.get(span) || [];
+      arr.push(idx);
+      spanCounts.set(span, arr);
+    }
+  });
+  for (const [, occ] of spanCounts) {
+    if (occ.length < 3) continue;
+    const live = occ.filter((k) => !remove.has(k));
+    if (live.length < 3) continue;
+    const byLen = [...live].sort((a, b) => flat[b].s.length - flat[a].s.length);
+    const keep = new Set(byLen.slice(0, 2));
+    for (const k of live) {
+      if (keep.has(k)) { protectKeep.add(k); continue; }
+      if (protectKeep.has(k)) continue;
+      if (wc(flat[k].s) >= 22) continue; // long sentence = real content, leave it
+      remove.add(k); cuts.push(`repetition (title): ${flat[k].s}`);
+    }
+  }
+
   for (const k of protectKeep) remove.delete(k); // an elaborated instance is never cut
   if (remove.size === 0) return { text: paras.join("\n\n"), cuts: [] };
 
@@ -475,6 +549,40 @@ export function collapseRepeatedAnchors(text: string): { text: string; cuts: str
     if (kept.length) rebuilt.push(kept.join(" "));
   });
   return { text: rebuilt.join("\n\n"), cuts };
+}
+
+// GOVERNING PRINCIPLE — silent fix. Merge an ORPHANED sentence fragment back into its neighbor. A
+// chunked build joins sections, and a modifier fragment can end up stranded as its own paragraph —
+// the 20-min build produced a floating "Fifty-two years old." right after the hook and a stranded
+// "Every single day." split from the "661,440 streams" it modifies. These are appositive/adverbial
+// fragments (no finite verb) that read as broken when isolated. Only a paragraph that is EXACTLY one
+// such short fragment is merged (into the previous paragraph, else the next), so a deliberate
+// verbed one-line beat ("No human ever chose to play it.") is untouched.
+const ORPHAN_FRAGMENT_RE = /^(?:[A-Za-z][\w-]*(?:[\s-][\w-]+)?\s+years?\s+old|every (?:single )?day|day after day|year after year|night after night|again and again|over and over|month after month|(?:for\s+)?(?:\d+|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve)\s+(?:years?|months?|weeks?|days?|decades?))\.?$/i;
+export function mergeOrphanFragments(text: string): { text: string; cuts: string[] } {
+  if (!text) return { text, cuts: [] };
+  const paras = text.split(/\n\n+/).map((p) => p.trim()).filter(Boolean);
+  const isOrphan = (p: string) => {
+    const parts = p.split(/(?<=[.!?])\s+/).filter(Boolean);
+    return parts.length === 1 && ORPHAN_FRAGMENT_RE.test(parts[0].trim()) && parts[0].split(/\s+/).length <= 6;
+  };
+  const out: string[] = [];
+  const cuts: string[] = [];
+  for (const p of paras) {
+    if (isOrphan(p) && out.length > 0) {
+      out[out.length - 1] = `${out[out.length - 1]} ${p}`.replace(/\s+/g, " ").trim();
+      cuts.push(p);
+    } else {
+      out.push(p);
+    }
+  }
+  // A leading orphan (nothing before it) attaches to the paragraph that follows.
+  if (out.length >= 2 && isOrphan(out[0])) {
+    const merged = `${out[0]} ${out[1]}`.replace(/\s+/g, " ").trim();
+    cuts.push(out[0]);
+    out.splice(0, 2, merged);
+  }
+  return { text: out.join("\n\n"), cuts };
 }
 
 export function checkCompliance(input: ComplianceInput): ComplianceCheck[] {

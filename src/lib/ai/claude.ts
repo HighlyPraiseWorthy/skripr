@@ -1,7 +1,7 @@
 import { Anthropic } from "@anthropic-ai/sdk";
 import { fingerprintToBrief, readProhibitions, stripStandaloneTics, type VoiceFingerprint } from "@/lib/voice-metrics";
 import { buildStorytellingBlock } from "@/lib/storytelling";
-import { stripInsinuations, stripImpliedRevelation, dedupeAdjacentParagraphs, collapseRepeatedAnchors, stripSchemeDurationClaim, stripStaleFutureDates, stripSourceLeaks } from "@/lib/script-compliance";
+import { stripInsinuations, stripImpliedRevelation, dedupeAdjacentParagraphs, collapseRepeatedAnchors, stripSchemeDurationClaim, stripStaleFutureDates, stripSourceLeaks, mergeOrphanFragments } from "@/lib/script-compliance";
 import { buildVarietyBlock } from "@/lib/ai/phrase-variety";
 
 let _anthropic: Anthropic | null = null;
@@ -1289,8 +1289,10 @@ export async function finalizeScript(
   // elaborated instances and cutting the bare restatements. Runs after dedupe (adjacent copies
   // already gone) and on the assembled body, so it catches an anchor spread across sections.
   applyBodyPass(collapseRepeatedAnchors, "repetition");
-  applyBodyPass(stripSchemeDurationClaim, "duration");
+  applyBodyPass((t) => stripSchemeDurationClaim(t, (script as any).title), "duration");
   applyBodyPass((t) => stripStaleFutureDates(t, nowMs), "stale-date");
+  // Seam cleanup runs LAST, after the cuts, so any fragment a cut left stranded is folded back in.
+  applyBodyPass(mergeOrphanFragments, "seam");
 
   for (const k of ["fullScript", "script", "body", "content", "outro"]) {
     const cur = (script as any)[k];

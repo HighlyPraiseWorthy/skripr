@@ -1,7 +1,7 @@
 // Offline test for the post-generation compliance check, using the real shapes from the
 // session: the final Queen script (should largely pass) vs. an early flat draft.
 //   node --experimental-strip-types --loader ./scripts/alias-loader.mjs scripts/compliance.test.ts
-import { checkCompliance, complianceScore, structuralScore, checkSourceStructural, accuracyChecks, STRUCTURAL_SET, stripInsinuations, stripImpliedRevelation, dedupeAdjacentParagraphs, collapseRepeatedAnchors, stripSchemeDurationClaim, stripStaleFutureDates, stripSourceLeaks } from "../src/lib/script-compliance.ts";
+import { checkCompliance, complianceScore, structuralScore, checkSourceStructural, accuracyChecks, STRUCTURAL_SET, stripInsinuations, stripImpliedRevelation, dedupeAdjacentParagraphs, collapseRepeatedAnchors, stripSchemeDurationClaim, stripStaleFutureDates, stripSourceLeaks, mergeOrphanFragments } from "../src/lib/script-compliance.ts";
 
 let failures = 0;
 function check(name: string, cond: boolean) {
@@ -461,6 +461,42 @@ check("records the source-leak cut", slc.cuts.some((c) => /Project Blitz/.test(c
 check("does NOT cut a source term the user's OWN facts support",
   stripSourceLeaks("The Memphis operation was the hub.", ["Memphis"], "The scheme was based in Memphis, Tennessee.").cuts.length === 0);
 check("no entities -> no cuts", stripSourceLeaks("Any text here about the case.", undefined, "facts").cuts.length === 0);
+
+// REMATCH BATCH — the finalize/chunked regressions a full 20-min build exposed.
+console.log("de-repetition catches a repeated proper-noun TITLE across varying sentences:");
+const titleStr = "Christie M. Curtis, Acting Assistant Director in Charge of the FBI's New York Field Office";
+const around2 = (n: number) => `Prosecutors leaned on the announcement as the public face of the case, moment number ${n} in the rollout.`;
+const titleScript = [
+  `The charges were announced by ${titleStr}, who framed it as a landmark cybercrime case with real detail about the scheme's mechanics and the years of investigation behind it.`,
+  around2(1),
+  `${titleStr} said the fraud was brazen.`,
+  around2(2),
+  `Again, ${titleStr} spoke.`,
+  around2(3),
+  `The Complex Frauds and Cybercrime Unit led it. The Complex Frauds and Cybercrime Unit. The Complex Frauds and Cybercrime Unit ran point.`,
+].join("\n\n");
+const tr = collapseRepeatedAnchors(titleScript);
+check("a proper-noun title restated 3x collapses (bare restatements cut)", (tr.text.match(/Christie M\. Curtis/g) || []).length <= 2);
+check("title repetition recorded", tr.cuts.some((c) => /repetition \(title\)/.test(c)));
+check("the long content-bearing sentence with the title is kept", /landmark cybercrime case/.test(tr.text));
+
+console.log("duration: bare dramatic fragment (title-leak + contradiction):");
+const durFrag = "The scheme ran from 2017 to 2024, roughly seven years of quiet operation inside the royalty system.\n\nEight years. Undetected.";
+const dfr = stripSchemeDurationClaim(durFrag, "How He Stole Millions in 8 Years");
+check("cuts the bare 'Eight years.' fragment that leaks the title's number", !/Eight years\./.test(dfr.text));
+check("keeps the sourced date-range sentence", /2017 to 2024/.test(dfr.text));
+check("records the duration cut", dfr.cuts.some((c) => /Eight years/i.test(c)));
+check("does NOT cut a lone contextual duration with no title-leak or conflict",
+  stripSchemeDurationClaim("The scheme ran for seven years, from 2017 to 2024.").cuts.length === 0);
+
+console.log("assembly seams: orphan fragments merged:");
+const seam = "So where was all that money going?\n\nFifty-two years old.\n\nThe man behind it had spent a career in music.\n\nThe bots pushed 661,440 streams.\n\nEvery single day.";
+const sr = mergeOrphanFragments(seam);
+check("'Fifty-two years old.' is no longer its own paragraph", !/\n\nFifty-two years old\.\n\n/.test("\n\n" + sr.text + "\n\n"));
+check("'Every single day.' merged into the streams sentence", /661,440 streams\.? Every single day\./.test(sr.text));
+check("orphan merges recorded", sr.cuts.length >= 2);
+check("a deliberate verbed one-line beat is NOT merged",
+  mergeOrphanFragments("The scheme was simple.\n\nNo human ever chose to play it.\n\nThat was the point.").cuts.length === 0);
 
 console.log(failures === 0 ? "\nALL PASS" : `\n${failures} FAILURE(S)`);
 process.exit(failures === 0 ? 0 : 1);
