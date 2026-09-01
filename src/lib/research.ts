@@ -1059,7 +1059,11 @@ Output ONLY a JSON array, no prose: [{"i":1,"status":"keep|drop|conflict|tempora
 // This closes that gap the only way that works: FETCH the primary-source document the citations
 // already point at and extract facts straight from its text. Claude still never invents — it reads
 // a real fetched document and every extracted fact carries that document's URL as its source.
-const PRIMARY_SOURCE_RE = /^https?:\/\/(?:www\.)?(?:justice\.gov|sec\.gov|courtlistener\.com|govinfo\.gov|[a-z0-9.-]*uscourts\.gov|ftc\.gov|fbi\.gov|treasury\.gov|cftc\.gov|fincen\.gov)\b/i;
+// Official / primary-record domains — deliberately broad so this is not a fraud/DOJ-only feature:
+// any government host (US .gov incl. state/agency, UK gov.uk, EU europa.eu), court archives, and
+// standards/records bodies. On a niche with no fetchable primary doc (a philosophy explainer whose
+// primary source is a book) this simply matches nothing and no-ops — never assumes a legal shape.
+export const PRIMARY_SOURCE_RE = /^https?:\/\/(?:www\.)?(?:[a-z0-9-]+\.)*(?:gov(?:\.[a-z]{2})?|mil|courtlistener\.com|europa\.eu|un\.org|who\.int|nih\.gov|nasa\.gov|federalregister\.gov)(?:\/|$)/i;
 function htmlToText(html: string): string {
   return html
     .replace(/<script[\s\S]*?<\/script>/gi, " ")
@@ -1075,7 +1079,9 @@ async function minePrimarySourceDocs(
   watchlist: string[],
   deadlineMs: number,
 ): Promise<ResearchFact[]> {
-  const primary = [...new Set(urls.filter((u) => typeof u === "string" && PRIMARY_SOURCE_RE.test(u)))].slice(0, 2);
+  // Skip PDFs and other binaries — htmlToText only reads HTML, and a PDF fetched as text is noise
+  // that yields junk "facts". HTML press releases / opinions carry the granularity we need.
+  const primary = [...new Set(urls.filter((u) => typeof u === "string" && PRIMARY_SOURCE_RE.test(u) && !/\.pdf(\?|$)/i.test(u)))].slice(0, 3);
   if (!primary.length) return [];
   const out: ResearchFact[] = [];
   for (const url of primary) {
@@ -1087,30 +1093,38 @@ async function minePrimarySourceDocs(
       const res = await fetch(url, { signal: ctrl.signal, headers: { "user-agent": "Mozilla/5.0 (compatible; SkriprResearch/1.0)" } });
       clearTimeout(timer);
       if (!res.ok) continue;
-      text = htmlToText(await res.text()).slice(0, 24_000);
+      const ctype = res.headers.get("content-type") || "";
+      if (/pdf|octet-stream/i.test(ctype)) continue; // binary — can't read as text
+      // Larger window: the granular specifics (aliases, later dollar movements, milestones) often
+      // sit deep in a filing, well past the first screen the old 24k cap stopped at.
+      text = htmlToText(await res.text()).slice(0, 50_000);
     } catch (e) {
       console.error(`[primary-doc] fetch failed for ${url}:`, (e as any)?.message);
       continue;
     }
     if (text.length < 400) continue;
-    // Extract EVERY granular fact from the fetched document text. Claude reads a real document and
-    // lists what it literally says — no memory, no invention; the URL is the source for each fact.
+    // Extract EXHAUSTIVELY from the fetched document text. Claude reads a real document and lists
+    // what it literally states — no memory, no invention; the URL is the source for each fact. The
+    // whole point is the granular layer Perplexity summaries omit, so this must ENUMERATE, not
+    // summarize: every named entity/alias, every dated milestone with its figure, every dollar
+    // movement, every quoted line, every warning-and-response. Niche-agnostic — the same
+    // instruction pulls the specifics from a fraud indictment, a court opinion, or an agency report.
     try {
       const msg = await anthropic().messages.create({
         model: "claude-sonnet-4-6",
-        max_tokens: 3000,
+        max_tokens: 4500,
         temperature: 0,
-        system: `You extract granular facts from a PRIMARY-SOURCE legal/official document. Output ONLY facts the document text literally states — never add, infer, or recall anything from your own knowledge. Prefer the specific over the general: exact dates, dollar amounts, counts, named people and their titles, aliases/entities/accounts, quoted lines, milestones, warnings and the response to them, and how it resolved. One concrete fact per item.`,
+        system: `You extract granular facts from a PRIMARY-SOURCE official document (indictment, complaint, court opinion, agency report, press release). Output ONLY facts the document text literally states — never add, infer, or recall anything from your own knowledge. ENUMERATE, do not summarize or select highlights: aim for 30-60 distinct items, each ONE concrete specific. Capture in particular the things a summary drops — every NAMED entity/alias/account/product (list each proper name exactly as written), every DATED milestone with the figure attached, every DOLLAR movement (amount, date, instrument, where it went), every QUOTED line with its speaker, and every WARNING and the response to it. Skip navigation, boilerplate, and disclaimers.`,
         messages: [{
           role: "user",
-          content: `CASE: ${caseName}\nSOURCE DOCUMENT URL: ${url}\n\nDOCUMENT TEXT:\n"""\n${text}\n"""\n\nExtract the granular facts this document states, most specific first. Output ONLY JSON: {"facts":["...", "..."]}`,
+          content: `CASE: ${caseName}\nSOURCE DOCUMENT URL: ${url}\n\nDOCUMENT TEXT:\n"""\n${text}\n"""\n\nEnumerate EVERY granular fact this document states — aim for 30-60 items, the specific over the general, nothing invented. Output ONLY JSON: {"facts":["...", "..."]}`,
         }],
       });
       const content = msg.content[0]?.type === "text" ? msg.content[0].text : "";
       const m = content.match(/\{[\s\S]*\}/);
       const parsed = m ? JSON.parse(m[0]) : null;
       const facts: string[] = Array.isArray(parsed?.facts) ? parsed.facts.filter((f: any) => typeof f === "string" && f.trim().length > 8) : [];
-      for (const f of facts.slice(0, 40)) {
+      for (const f of facts.slice(0, 60)) {
         // Guard the living-person watchlist the same way the other paths do.
         if (watchlist.some((w) => f.toLowerCase().includes(w.toLowerCase()))) continue;
         out.push({ fact: f.trim(), source: url, context: true });

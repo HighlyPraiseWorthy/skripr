@@ -5,7 +5,7 @@
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
-import { parsePerplexityAnswers, isNonAnswer, dedupeCandidates, sourceTier, reconcileDuration, deriveWhenFromFacts, cleanFact, capFact, toCaseIdentity, dropSuperseded, attributionFor, mechanismIsGeneric, factBudgetForMinutes, honestMinutes, FACTS_PER_MINUTE, MAX_FACTS, isHighValueFact, capFacts } from "../src/lib/research.ts";
+import { parsePerplexityAnswers, isNonAnswer, dedupeCandidates, sourceTier, reconcileDuration, deriveWhenFromFacts, cleanFact, capFact, toCaseIdentity, dropSuperseded, attributionFor, mechanismIsGeneric, factBudgetForMinutes, honestMinutes, FACTS_PER_MINUTE, MAX_FACTS, isHighValueFact, capFacts, PRIMARY_SOURCE_RE } from "../src/lib/research.ts";
 
 const here = dirname(fileURLToPath(import.meta.url));
 let failures = 0;
@@ -167,6 +167,18 @@ const capped = capFacts(many, 2);
 check("capFacts keeps the high-value fact even when it would be sliced off", capped.some((f) => /8,091,843/.test(f.fact)));
 check("capFacts still respects the cap", capped.length === 2);
 check("capFacts is a no-op when under the cap", capFacts(many, 10).length === 4);
+
+// PRIMARY-SOURCE domain matching — niche-agnostic (any official record, not DOJ/fraud only), and
+// no false positives on ordinary news/blog domains.
+console.log("primary-source doc URLs (niche-agnostic):");
+check("matches a DOJ press release", PRIMARY_SOURCE_RE.test("https://www.justice.gov/usao-sdny/pr/music-fraud"));
+check("matches an SEC page", PRIMARY_SOURCE_RE.test("https://www.sec.gov/litigation/complaints/2024/comp.htm"));
+check("matches a court archive", PRIMARY_SOURCE_RE.test("https://www.courtlistener.com/docket/12345/us-v-smith/"));
+check("matches a UK government record (non-US, non-crime)", PRIMARY_SOURCE_RE.test("https://www.gov.uk/government/publications/companies-house-report"));
+check("matches an EU institutional source", PRIMARY_SOURCE_RE.test("https://commission.europa.eu/document"));
+check("matches a state .gov agency", PRIMARY_SOURCE_RE.test("https://oag.ca.gov/news/press-release"));
+check("does NOT match a news summary", !PRIMARY_SOURCE_RE.test("https://www.nytimes.com/2024/01/01/music-fraud.html"));
+check("does NOT match a blog that merely contains 'gov'", !PRIMARY_SOURCE_RE.test("https://mygovsucks.com/rant"));
 
 console.log(failures === 0 ? "\nALL PASS" : `\n${failures} FAILURE(S)`);
 process.exit(failures === 0 ? 0 : 1);
