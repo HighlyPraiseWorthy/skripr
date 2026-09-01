@@ -539,5 +539,15 @@ check("keeps the surrounding sourced facts", spec("Smith did not build this enti
 check("does NOT fire on a plainly sourced statement", stripSpeculation("The indictment names one co-conspirator and does not describe their role.").cuts.length === 0);
 check("does NOT fire on a properly hedged line", stripSpeculation("The record does not explain why the co-conspirator is unnamed.").cuts.length === 0);
 
+// ATMOSPHERIC speculation (the 8.0-run regression): unobserved states/consensus stated as fact.
+console.log("atmospheric speculation guard:");
+const atmo = (s: string) => stripSpeculation("Streams generate royalties. " + s + " The court ordered a forfeiture.");
+check("cuts 'nobody could explain where the listeners had gone'", atmo("Nobody could explain where all those listeners had gone.").cuts.length >= 1);
+check("cuts 'no one in the industry could agree'", atmo("No one in the music industry could agree on what was happening.").cuts.length >= 1);
+check("cuts 'the royalty pools didn't add up'", atmo("The royalty pools simply did not add up.").cuts.length >= 1);
+check("cuts 'the system was treated as airtight'", atmo("The system was treated as essentially airtight.").cuts.length >= 1);
+check("does NOT fire on a plain mechanical statement", stripSpeculation("Platforms pay a share of the royalty pool based on each track's stream count.").cuts.length === 0);
+check("does NOT fire on a documented, attributed quiet", stripSpeculation("Prosecutors said Spotify's systems did not flag the accounts for years.").cuts.length === 0);
+
 console.log(failures === 0 ? "\nALL PASS" : `\n${failures} FAILURE(S)`);
 process.exit(failures === 0 ? 0 : 1);

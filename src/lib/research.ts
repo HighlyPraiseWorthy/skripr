@@ -29,7 +29,9 @@ export interface ResearchFact {
 // narrated span; at Anton's ~166 wpm that is about 2 to 3 facts per minute. So the budget is
 // per-minute, and when the case cannot meet it we tell the truth about the supportable length.
 export const FACTS_PER_MINUTE = 2.5;
-export const MAX_FACTS = 60; // ceiling (also the hard cap on the fact set)
+export const MAX_FACTS = 80; // ceiling (also the hard cap on the fact set) — raised so the deep
+// primary-source document facts (dated emails, dollar movements, CC-N designations) survive the cap
+// alongside the narrative set instead of being trimmed back out.
 // MOVE #8 — TWO-TIER, CRAFT-CREDITED length. Earlier framing counted only CASE facts and set
 // the rate at 2.5/min, so it declared "22 facts = 9 minutes" and the ceiling fired far too
 // often. That conflated PADDING (repeating/inventing a fact) with STORYTELLING CRAFT and REAL
@@ -1102,8 +1104,8 @@ async function minePrimarySourceDocs(
     }
   }
   if (!primary.length) { console.log("[primary-doc] no primary-source URL found (citations or lookup) — skipping"); return []; }
-  const SYSTEM = `You extract granular facts from a PRIMARY-SOURCE official document (indictment, complaint, court opinion, agency report, press release). Output ONLY facts the document literally states — never add, infer, or recall anything from your own knowledge. ENUMERATE, do not summarize or select highlights: aim for 30-60 distinct items, each ONE concrete specific. Capture in particular the things a summary drops — every NAMED entity/alias/account/product (list each proper name exactly as written), every DATED milestone with the figure attached, every DOLLAR movement (amount, date, instrument, where it went), every QUOTED line with its speaker, and every WARNING and the response to it. Skip navigation, boilerplate, and disclaimers.`;
-  const ASK = `CASE: ${caseName}\n\nEnumerate EVERY granular fact this document states — aim for 30-60 items, the specific over the general, nothing invented. Output ONLY JSON: {"facts":["...", "..."]}`;
+  const SYSTEM = `You extract granular facts from a PRIMARY-SOURCE official document (indictment, complaint, court opinion, agency report, press release). Output ONLY facts the document literally states — never add, infer, or recall anything from your own knowledge. ENUMERATE, do not summarize or select highlights: aim for 50-80 distinct items, each ONE concrete specific. Read the WHOLE document, and mine the DETAILED-ALLEGATIONS / OVERT-ACTS / "Manner and Means" section hardest — that is where the granularity a summary drops lives: every DATED email or message with its quoted words and date (e.g. an Oct 2018 email about needing content), every DOLLAR movement (amount, date, instrument, from/to), every NAMED entity/alias/account/product/song exactly as written, every co-conspirator designation exactly as labeled (e.g. "CC-1", "CC-2", "Co-Conspirator 3"), every month-by-month milestone (streams, accounts, income), and every WARNING or challenge and the response to it. Skip navigation, boilerplate, and legal-standard disclaimers.`;
+  const ASK = `CASE: ${caseName}\n\nEnumerate EVERY granular fact this document states — read the entire document, mine the detailed-allegations / overt-acts section hardest (dated quoted emails, each dollar movement, CC-N designations, month-by-month milestones), aim for 50-80 items, the specific over the general, nothing invented. Output ONLY JSON: {"facts":["...", "..."]}`;
   const out: ResearchFact[] = [];
   for (const url of primary) {
     if (Date.now() > deadlineMs) break;
@@ -1164,7 +1166,9 @@ async function minePrimarySourceDocs(
         : `${ASK}\n\nSOURCE DOCUMENT URL: ${url}\n\nDOCUMENT TEXT:\n"""\n${text}\n"""`;
       const msg = await anthropic().messages.create({
         model: "claude-sonnet-4-6",
-        max_tokens: 4500,
+        // A PDF indictment is dense; give the enumeration room so the deep overt-acts section
+        // (dated emails, dollar movements, CC-N) is not truncated out of the fact list.
+        max_tokens: pdfB64 ? 8000 : 4500,
         temperature: 0,
         system: SYSTEM,
         messages: [{ role: "user", content: userContent }],
@@ -1180,7 +1184,7 @@ async function minePrimarySourceDocs(
         console.error(`[primary-doc] fetch_failed ${JSON.stringify({ url, reason: "extraction_too_thin", facts: facts.length, bytes: isPdf ? docBytes : text.length, source_type: isPdf ? "government_pdf" : "government_doc" })}`);
         continue;
       }
-      for (const f of facts.slice(0, 60)) {
+      for (const f of facts.slice(0, 80)) {
         // Guard the living-person watchlist the same way the other paths do.
         if (watchlist.some((w) => f.toLowerCase().includes(w.toLowerCase()))) continue;
         out.push({ fact: f.trim(), source: url, context: true });
@@ -1202,7 +1206,9 @@ export async function deepenCaseFacts(input: { caseName: string; summary?: strin
   // otherwise it is derived from the length slider's minutes.
   const requestedMinutes = input.targetMinutes && input.targetMinutes > 0 ? Math.round(input.targetMinutes) : undefined;
   const budget = input.targetFacts && input.targetFacts > 0 ? Math.min(MAX_FACTS, Math.round(input.targetFacts)) : factBudgetForMinutes(input.targetMinutes);
-  const factCap = Math.min(MAX_FACTS, Math.max(16, budget));
+  // A long (deep) ask keeps the FULL ceiling so the granular document facts survive alongside the
+  // narrative set; a short ask stays near its per-minute budget so it isn't over-stuffed.
+  const factCap = budget >= 40 ? MAX_FACTS : Math.min(MAX_FACTS, Math.max(16, budget));
   // Attach the honest-length reckoning to any ok-result: what the final facts support vs what
   // was asked, so the UI can tell the truth about the supportable length (5d).
   const withHonesty = (r: DeepenResult): DeepenResult => {
