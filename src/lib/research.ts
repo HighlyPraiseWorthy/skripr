@@ -1262,8 +1262,18 @@ Each question seeks a single concrete, citable fact. Output ONLY this JSON, no p
   // facts, a 5-min ask ~12), not a flat 12. Same caps so retrieval gravity can't run away.
   const MIN_FACTS = 6;
   const target = Math.min(MAX_FACTS, Math.max(budget, MIN_FACTS));
+  // TARGET-DRIVEN DEPTH. The length the user asked for drives how hard/long research digs: a
+  // long ask (~16+ min, budget >= 40 facts) needs far more genuinely-new context to be filled by
+  // ELABORATION rather than padding, so it earns more rounds and a longer time window. A short ask
+  // keeps the old tight caps. This is what closes the gap the honest-length ceiling used to warn
+  // about — the answer is to research harder, not to shorten the video. (Route maxDuration=300.)
+  const deep = target >= 40;
+  const gapRounds = deep ? 3 : 2;
+  const gapDeadline = deep ? 90_000 : 60_000;
+  const ctxRounds = deep ? 7 : 4;
+  const ctxDeadline = deep ? 175_000 : 75_000;
   let askPool = [...questions];
-  for (let round = 0; (freshFacts.length < target || (conflicts.length > 0 && round === 0)) && round < 2 && Date.now() - t0 < 60_000; round++) {
+  for (let round = 0; (freshFacts.length < target || (conflicts.length > 0 && round === 0)) && round < gapRounds && Date.now() - t0 < gapDeadline; round++) {
     const gaps = (await reformulateQuestions(canonicalCaseName, askPool.slice(0, 8))).filter((q) => !askPool.includes(q));
     if (!gaps.length) break;
     askPool = askPool.concat(gaps);
@@ -1282,7 +1292,7 @@ Each question seeks a single concrete, citable fact. Output ONLY this JSON, no p
   // moment or trend it belongs to, the stakes and who it affects, and how the response/regulation
   // works. Each is sourced and adjudicated like any other fact, marked context:true — never
   // padding, never invention. This is what lets the honest-length math clear a 20-min target.
-  if (freshFacts.length < target && Date.now() - t0 < 60_000) {
+  if (freshFacts.length < target && Date.now() - t0 < ctxDeadline) {
     // MOVE #9(3) — CONTEXT DEPTH. The earlier set was too shallow: an 11-min build still padded by
     // repeating five numbers. Beating ChatGPT means bringing the SOURCED version of the breadth it
     // fills 20 minutes with, so ask across MANY distinct, specific angles that each return NEW
@@ -1300,7 +1310,7 @@ Each question seeks a single concrete, citable fact. Output ONLY this JSON, no p
     let cAsk = [...contextQs];
     // Up to 4 rounds (time-guarded): the first asks the full category set at once for breadth,
     // later rounds broaden whatever is still thin. Stops early when a round adds nothing new.
-    for (let round = 0; freshFacts.length < target && round < 4 && Date.now() - t0 < 75_000; round++) {
+    for (let round = 0; freshFacts.length < target && round < ctxRounds && Date.now() - t0 < ctxDeadline; round++) {
       const qs = round === 0 ? contextQs : await reformulateQuestions(canonicalCaseName, cAsk.slice(0, 8));
       const fresh = qs.filter((q) => round === 0 || !cAsk.includes(q));
       if (!fresh.length) break;

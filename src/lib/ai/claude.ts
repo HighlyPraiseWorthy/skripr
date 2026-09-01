@@ -1,7 +1,7 @@
 import { Anthropic } from "@anthropic-ai/sdk";
 import { fingerprintToBrief, readProhibitions, stripStandaloneTics, type VoiceFingerprint } from "@/lib/voice-metrics";
 import { buildStorytellingBlock } from "@/lib/storytelling";
-import { stripInsinuations, stripImpliedRevelation } from "@/lib/script-compliance";
+import { stripInsinuations, stripImpliedRevelation, dedupeAdjacentParagraphs, stripSchemeDurationClaim, stripStaleFutureDates } from "@/lib/script-compliance";
 import { buildVarietyBlock } from "@/lib/ai/phrase-variety";
 
 let _anthropic: Anthropic | null = null;
@@ -568,6 +568,7 @@ ${context.recipe ? `\nTHE SOURCE VIDEO'S RECIPE (this remix follows it): ${conte
 YOU ARE WRITING SECTION ${index + 1} OF ${total}: "${spec.name}"
 ITS JOB IN THE VIDEO: ${spec.purpose || "advance the argument"}
 LENGTH: about ${spec.targetWords} words. This is a budget, not a suggestion — stay within about 10%.
+REACH THAT LENGTH BY ELABORATION, NEVER BY REPETITION. Hit the word budget by going DEEPER on the facts you have: explain the mechanism in causal, step-by-step detail; unpack what a figure means in real economic and human terms (against a normal comparison, who gained, who lost and how much); render the key moment as a scene, beat by beat; place it in its context and precedent. That is how a good narrator fills the time. Do NOT restate a number, name, or claim you have already made — repeating "the same figure" three times is padding and will be cut. And never invent a fact to reach length: every specific still comes only from the source material. If you are short, deepen an existing fact; do not repeat one and do not make one up.
 ${spec.isPeak ? `THIS IS THE PEAK OF THE VIDEO. It is the longest section by design. Slow down, go beat by beat, and let it breathe. Do not summarize what happens here — render it.\n` : ""}
 ${spec.triggers.length ? `RETENTION BEATS THAT BELONG IN THIS SECTION (place them here, reproduce the MECHANIC not the wording):\n${spec.triggers.map((t) => `- ${t}`).join("\n")}\n` : ""}
 ${context.previousTail ? `THE SECTION BEFORE THIS ONE ENDED LIKE THIS (continue naturally, never repeat it):\n"...${context.previousTail}"\n` : "This is the OPENING section — it carries the hook.\n"}
@@ -1250,6 +1251,35 @@ export async function finalizeScript(
   // safe default (removing a sentence can't add a new problem). What was cut is kept ONLY in an
   // internal record (script._autoCuts), never surfaced to the user.
   const autoCuts: string[] = [];
+
+  // Deterministic body-wide cleanups that run BEFORE the safety cuts, each over the body fields
+  // AND every section, feeding the same internal record. All are cut/merge only — never a rewrite
+  // that could shatter prose. Order: drop near-duplicate adjacent paragraphs (a chunked-generation
+  // artifact — padding, not elaboration) -> cut a false STATED scheme-duration ("Three years.
+  // That's how long this ran") -> cut a now-past future-framed date ("scheduled for July 2026").
+  const applyBodyPass = (fn: (t: string) => { text: string; cuts: string[] }, tag: string) => {
+    for (const k of ["fullScript", "script", "body", "content", "outro"]) {
+      const cur = (script as any)[k];
+      if (typeof cur === "string" && cur.trim()) {
+        const { text, cuts } = fn(cur);
+        if (cuts.length) { (script as any)[k] = text; autoCuts.push(...cuts.map((c) => `${tag}: ${c}`)); }
+      }
+    }
+    if (Array.isArray((script as any).sections)) {
+      (script as any).sections = (script as any).sections.map((s: any) => {
+        if (s && typeof s.content === "string" && s.content.trim()) {
+          const { text, cuts } = fn(s.content);
+          if (cuts.length) { autoCuts.push(...cuts.map((c) => `${tag}: ${c}`)); return { ...s, content: text }; }
+        }
+        return s;
+      });
+    }
+  };
+  const nowMs = Date.now();
+  applyBodyPass(dedupeAdjacentParagraphs, "dedupe");
+  applyBodyPass(stripSchemeDurationClaim, "duration");
+  applyBodyPass((t) => stripStaleFutureDates(t, nowMs), "stale-date");
+
   for (const k of ["fullScript", "script", "body", "content", "outro"]) {
     const cur = (script as any)[k];
     if (typeof cur === "string" && cur.trim()) {

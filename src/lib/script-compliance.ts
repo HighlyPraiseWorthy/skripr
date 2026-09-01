@@ -171,7 +171,7 @@ export function stripInsinuations(text: string): { text: string; cuts: string[] 
 // takes a turn"). Distinct from INSINUATION_RE: this is about an unresolved PAYOFF tease, not a
 // real person's guilt. Only meaningful at the END of the script, so it is applied to the trailing
 // block, never mid-body (a mid-script tease may legitimately resolve later).
-export const TRAILING_TEASE_RE = /\b(what (?:investigators|prosecutors|authorities|agents|they|the fbi|the doj|the sec)\s+(?:found|discovered|uncovered|learned|traced)\b|the (?:trail|money|story|thread|truth)\s+(?:did|does)(?:n'?t| not)\s+end\b|almost more (?:surprising|shocking|disturbing|interesting|unsettling)\s+than|(?:and )?(?:that|this|here|now)(?:'?s| is| was) where (?:this story|the story|it|this|things?)\s+(?:takes?|took|turns?|turned|gets?|got|begins?|began)\b|not (?:simply|just|merely|only) one (?:man|woman|person|name|scheme|story)|was(?:n'?t| not) what it seemed|not what (?:anyone|everyone|you|they|the world|the public)\s*(?:had\s*)?(?:ever\s*)?expected|the truth (?:was|turned out|is)\s+(?:far\s+)?(?:stranger|worse|darker|bigger|more|nothing like)|(?:far\s+)?(?:stranger|darker|worse|bigger)\s+than (?:anyone|fiction|expected|imagined)|(?:this|it|that|the story)\s+(?:was|is)\s+only the beginning|would (?:change|reveal|rewrite) everything|the (?:biggest|real|bigger) (?:twist|secret|surprise|question|story)\b|(?:still|may (?:never|still))\s+(?:out there|be (?:out there|found|known)|know|remain)|we may never (?:know|find out))\b/i;
+export const TRAILING_TEASE_RE = /\b(what (?:investigators|prosecutors|authorities|agents|they|the fbi|the doj|the sec)\s+(?:found|discovered|uncovered|learned|traced)\b|the (?:trail|money|story|thread|truth)\s+(?:did|does)(?:n'?t| not)\s+end\b|(?:almost )?more (?:surprising|shocking|disturbing|interesting|unsettling|damning|important)\s+than(?:\s+anything)?|(?:and )?(?:that|this|here|now)(?:'?s| is| was) where (?:this story|the story|it|this|things?)\s+(?:takes?|took|turns?|turned|gets?|got|begins?|began)\b|not (?:simply|just|merely|only) one (?:man|woman|person|name|scheme|story)|was(?:n'?t| not) what it seemed|not what (?:anyone|everyone|you|they|the world|the public)\s*(?:had\s*)?(?:ever\s*)?expected|the truth (?:was|turned out|is)\s+(?:far\s+)?(?:stranger|worse|darker|bigger|more|nothing like)|(?:far\s+)?(?:stranger|darker|worse|bigger)\s+than (?:anyone|fiction|expected|imagined)|(?:this|it|that|the story)\s+(?:was|is)\s+only the beginning|would (?:change|reveal|rewrite) everything|the (?:biggest|real|bigger) (?:twist|secret|surprise|question|story)\b|(?:the (?:real |full |whole )?(?:story|part|truth|answer)\b[^.]{0,40}\b)?has(?:n'?t| not) (?:yet )?been (?:told|revealed|written|heard)|(?:the answer|the rest|what (?:comes|came|happened) next)\b[^.]{0,30}?\bgoing to (?:be|surprise|shock)|going to be more (?:surprising|shocking|disturbing)|(?:still|may (?:never|still))\s+(?:out there|be (?:out there|found|known)|know|remain)|we may never (?:know|find out))\b/i;
 export function looksLikeTrailingTease(s: string): boolean { return TRAILING_TEASE_RE.test(s || ""); }
 
 // GOVERNING PRINCIPLE — silent fix. Cut the trailing cliffhanger the evidence doesn't deliver.
@@ -203,6 +203,122 @@ export function stripImpliedRevelation(text: string): { text: string; cuts: stri
     break;
   }
   return { text: paras.filter((p) => p.trim().length > 0).join("\n\n"), cuts };
+}
+
+// GOVERNING PRINCIPLE — silent fix. Remove near-duplicate ADJACENT paragraphs. Chunked generation
+// (each section written against a similar brief) can restate the same paragraph back to back — the
+// live 20-min build repeated the "the indictment makes explicit ... trick royalty systems" block
+// almost verbatim in consecutive positions. This is padding, not elaboration, so the later copy is
+// dropped. Conservative: only fires on a HIGH token-overlap between adjacent paragraphs of similar
+// length, so paragraphs that merely share a phrase are left alone.
+function normalizeForCompare(s: string): string {
+  return (s || "").toLowerCase().replace(/[^a-z0-9 ]/g, " ").replace(/\s+/g, " ").trim();
+}
+function tokenOverlap(a: string, b: string): number {
+  const ta = new Set(normalizeForCompare(a).split(" ").filter((w) => w.length > 2));
+  const tb = new Set(normalizeForCompare(b).split(" ").filter((w) => w.length > 2));
+  if (ta.size === 0 || tb.size === 0) return 0;
+  let shared = 0;
+  for (const w of ta) if (tb.has(w)) shared++;
+  return shared / Math.min(ta.size, tb.size); // fraction of the SHORTER paragraph reproduced
+}
+export function dedupeAdjacentParagraphs(text: string): { text: string; cuts: string[] } {
+  if (!text) return { text, cuts: [] };
+  const paras = text.split(/\n\n+/).map((p) => p.trim()).filter((p) => p.length > 0);
+  const cuts: string[] = [];
+  const kept: string[] = [];
+  for (const p of paras) {
+    const prev = kept[kept.length - 1];
+    if (prev) {
+      const lenRatio = Math.min(p.length, prev.length) / Math.max(p.length, prev.length);
+      // Near-verbatim adjacent block: >=80% of the shorter paragraph's words appear in the other,
+      // and they are within 40% in length. Keep the LONGER of the two (more elaboration survives).
+      if (lenRatio >= 0.6 && tokenOverlap(p, prev) >= 0.8) {
+        if (p.length > prev.length) { cuts.push(prev); kept[kept.length - 1] = p; }
+        else { cuts.push(p); }
+        continue;
+      }
+    }
+    kept.push(p);
+  }
+  return { text: kept.join("\n\n"), cuts };
+}
+
+// GOVERNING PRINCIPLE — silent fix (CORRECTNESS). Cut a stated SCHEME-DURATION count. Two failure
+// shapes from the live build: a bare "Three years." fragment immediately followed by "That's how
+// long this ran", and the locked title's number ("3 Years") leaking into the body as a stated
+// fact. A computed span is a fabrication risk (the scheme ran ~2017-2024, not "three years"); the
+// sourced date range should carry it, so the claim sentence is cut. Sentence-level cut only, so it
+// can never shatter prose the way the reverted token-replace did. Niche-agnostic.
+const DURATION_CLAIM_RE = /\b(?:that|this)(?:'?s| is| was) (?:exactly )?how long (?:it|this|that|the scheme|the operation|the fraud|the whole thing) (?:ran|lasted|went on|continued|kept going|took|had been running)\b/i;
+const BARE_DURATION_RE = /^(?:for\s+)?(?:about|nearly|almost|roughly|over|more than)?\s*(?:\d+|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve)\s+(?:years?|months?|weeks?|days?|decades?)\.?$/i;
+export function stripSchemeDurationClaim(text: string): { text: string; cuts: string[] } {
+  if (!text) return { text, cuts: [] };
+  const cuts: string[] = [];
+  const outParas = text.split(/\n\n+/).map((para) => {
+    const sentences = para.split(/(?<=[.!?])\s+/);
+    const kept: string[] = [];
+    for (const s of sentences) {
+      if (DURATION_CLAIM_RE.test(s)) {
+        cuts.push(s.trim());
+        // Also drop an immediately-preceding bare duration fragment ("Three years.") that the
+        // claim was elaborating — it is the same false count with no sentence of its own.
+        if (kept.length && BARE_DURATION_RE.test(kept[kept.length - 1].trim())) cuts.push(kept.pop()!.trim());
+        continue;
+      }
+      kept.push(s);
+    }
+    return kept.join(" ").trim();
+  }).filter((p) => p.length > 0);
+  return { text: outParas.join("\n\n"), cuts };
+}
+
+// Detector for a future-FRAMED calendar date that is now in the past (shared by the compliance
+// check and the silent cut below). DAY granularity ("July 29, 2026", "7/29/2026") or MONTH
+// granularity ("July 2026", stale only once the whole month has passed).
+const STALE_MONTH = "(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:t(?:ember)?)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)";
+function staleDateFrameRe(): RegExp {
+  return new RegExp(
+    `\\b(?:scheduled|set|slated|due|expected|awaiting|pending|upcoming|will (?:be )?(?:sentenc|appear|stand trial|face|go on trial)\\w*)\\b[^.]{0,50}?` +
+    `(${STALE_MONTH}\\.?\\s+\\d{1,2},?\\s+\\d{4}|\\d{1,2}/\\d{1,2}/\\d{4}|${STALE_MONTH}\\.?\\s+\\d{4})`,
+    "gi",
+  );
+}
+export function isStaleFutureDate(raw: string, now: number): boolean {
+  const monthYearRe = new RegExp(`^${STALE_MONTH}\\.?\\s+\\d{4}$`, "i");
+  const todayStart = new Date(now); todayStart.setHours(0, 0, 0, 0);
+  const cleaned = raw.replace(/(\d)(st|nd|rd|th)/, "$1").trim();
+  let when: number;
+  if (monthYearRe.test(cleaned)) {
+    const first = new Date(Date.parse(cleaned));
+    when = Number.isNaN(first.getTime()) ? NaN : new Date(first.getFullYear(), first.getMonth() + 1, 0, 23, 59, 59).getTime();
+  } else {
+    when = Date.parse(cleaned);
+  }
+  return !Number.isNaN(when) && when < todayStart.getTime();
+}
+
+// GOVERNING PRINCIPLE — silent fix. Cut a sentence that presents a now-PAST date as still upcoming
+// ("sentencing was scheduled for July 2026" read in September 2026). We can't know the real
+// outcome, so the safe default is to cut the stale forward-looking sentence rather than assert a
+// wrong one. Fires only on a FUTURE-FRAMED date that has passed, so a normal past-tense historical
+// date is never touched. Month-level dates (the live miss) are covered.
+export function stripStaleFutureDates(text: string, now: number): { text: string; cuts: string[] } {
+  if (!text) return { text, cuts: [] };
+  const cuts: string[] = [];
+  const outParas = text.split(/\n\n+/).map((para) => {
+    const sentences = para.split(/(?<=[.!?])\s+/);
+    const kept = sentences.filter((s) => {
+      const re = staleDateFrameRe();
+      let m: RegExpExecArray | null;
+      while ((m = re.exec(s)) !== null) {
+        if (isStaleFutureDate(m[1], now)) { cuts.push(s.trim()); return false; }
+      }
+      return true;
+    });
+    return kept.join(" ").trim();
+  }).filter((p) => p.length > 0);
+  return { text: outParas.join("\n\n"), cuts };
 }
 
 export function checkCompliance(input: ComplianceInput): ComplianceCheck[] {

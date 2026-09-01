@@ -87,5 +87,33 @@ const secLast: string = out.sections[out.sections.length - 1].content;
 check("sections: trailing cliffhanger cut from the final section", !/the trail did not end/i.test(secLast));
 check("sections: tic stripped from the opening section", !/let that sink in/i.test(out.sections[0].content));
 
+// The four 20-min-build misses must be fixed IN finalize (wired, not just unit-tested), on the
+// assembled body. A second assembled script exercising all four, still fully offline.
+console.log("finalize applies the 20-min-build fixes on the assembled body:");
+const dupPara = "The indictment makes explicit that the accounts existed only to trick royalty systems into paying on plays no human ever heard.";
+const BODY2 = [
+  `${HOOK} It looked like ordinary music distribution.`,
+  dupPara,
+  `${dupPara} That was the engine of the whole scheme.`,
+  "Three years. That's how long this ran, or so the title would have you believe.",
+  "His sentencing was scheduled for July 2026, where he faced twenty years.",
+  "In January 2024 he pleaded guilty and the court ordered an $8,091,843.64 forfeiture.",
+  "But the real story hasn't been told yet, and the answer is going to be more surprising than anything that came before.",
+].join("\n\n");
+const script2: any = {
+  title: "3 Years of a quiet scheme", hook: HOOK,
+  fullScript: BODY2, script: BODY2, body: BODY2, content: BODY2,
+  sections: [{ title: "All", content: BODY2 }],
+  sectionwise: true,
+};
+const out2: any = await finalizeScript(script2, { targetTopic: "a streaming scheme", targetNiche: "true crime" } as any, { startedAt: Date.now(), presetHook: HOOK });
+const b2: string = out2.fullScript || "";
+check("dedupe: the near-duplicate adjacent paragraph is collapsed to one", (b2.match(/trick royalty systems/g) || []).length === 1);
+check("duration: the false 'that's how long this ran' claim is cut", !/how long this ran/i.test(b2));
+check("stale-date: the past July 2026 sentencing sentence is cut", !/scheduled for July 2026/i.test(b2));
+check("extended cliffhanger: 'hasn't been told yet / more surprising than anything' is cut", !/hasn'?t been told yet/i.test(b2) && !/more surprising than anything/i.test(b2));
+check("ends on the sourced forfeiture beat", /\$8,091,843\.64 forfeiture\.?$/.test(b2.trim()));
+check("_autoCuts tags the new fixes", (out2._autoCuts || []).some((c: string) => /^dedupe:/.test(c)) && (out2._autoCuts || []).some((c: string) => /^duration:/.test(c)) && (out2._autoCuts || []).some((c: string) => /^stale-date:/.test(c)));
+
 console.log(failures === 0 ? "\nALL PASS" : `\n${failures} FAILURE(S)`);
 process.exit(failures === 0 ? 0 : 1);

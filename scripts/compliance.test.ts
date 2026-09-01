@@ -1,7 +1,7 @@
 // Offline test for the post-generation compliance check, using the real shapes from the
 // session: the final Queen script (should largely pass) vs. an early flat draft.
 //   node --experimental-strip-types --loader ./scripts/alias-loader.mjs scripts/compliance.test.ts
-import { checkCompliance, complianceScore, structuralScore, checkSourceStructural, accuracyChecks, STRUCTURAL_SET, stripInsinuations, stripImpliedRevelation } from "../src/lib/script-compliance.ts";
+import { checkCompliance, complianceScore, structuralScore, checkSourceStructural, accuracyChecks, STRUCTURAL_SET, stripInsinuations, stripImpliedRevelation, dedupeAdjacentParagraphs, stripSchemeDurationClaim, stripStaleFutureDates } from "../src/lib/script-compliance.ts";
 
 let failures = 0;
 function check(name: string, cond: boolean) {
@@ -342,6 +342,40 @@ check("leaves a clean sourced ending untouched", r3.text === cleanTail && r3.cut
 // A mid-body tease that legitimately resolves later must NOT be cut (trailing-only discipline).
 const midResolves = "What investigators found when they pulled the thread surprised everyone.\n\nIt was a network of 1,040 bot accounts generating 661,440 streams a day, and the court ordered an $8 million forfeiture.";
 check("does not touch a mid-body tease that resolves on a later sourced beat", stripImpliedRevelation(midResolves).text === midResolves && stripImpliedRevelation(midResolves).cuts.length === 0);
+
+// 20-MIN BUILD MISSES — the four silent-fix gaps a full-length build exposed.
+console.log("implied-revelation: extended phrasing (the 20-min miss):");
+const ir2 = (s: string) => stripImpliedRevelation("A sourced beat here. He pleaded guilty and paid $8 million.\n\n" + s);
+check("cuts 'that story hasn't been told yet'", /hasn'?t been told/i.test(ir2("But that part of the story hasn't been told yet.").cuts.join(" ")) === true);
+check("cuts 'more surprising than anything that came before'", ir2("The answer is going to be more surprising than anything that came before.").cuts.length >= 1);
+check("still ends on the sourced beat after the extended cut", /pleaded guilty/i.test(ir2("But that story hasn't been told yet.").text));
+
+console.log("dedupe adjacent near-duplicate paragraphs:");
+const dupPara = "The indictment makes explicit that the accounts existed only to trick royalty systems into paying out on plays no human ever heard.";
+const dd = dedupeAdjacentParagraphs(`${dupPara}\n\n${dupPara} It was the engine of the whole scheme.`);
+check("keeps the longer of two near-duplicate adjacent paragraphs", dd.cuts.length === 1 && /engine of the whole scheme/.test(dd.text));
+check("collapses to a single copy", (dd.text.match(/trick royalty systems/g) || []).length === 1);
+check("does NOT merge two genuinely different adjacent paragraphs",
+  dedupeAdjacentParagraphs("He built the network in 2017 with a rented server.\n\nBy 2024 the DOJ had traced every dollar to a single account.").cuts.length === 0);
+
+console.log("false stated scheme-duration cut:");
+const durText = "The scheme grew quietly for years.\n\nThree years. That's how long this ran, from the outside looking like ordinary distribution.";
+const dc = stripSchemeDurationClaim(durText);
+check("cuts the 'that's how long this ran' claim", !/how long this ran/i.test(dc.text));
+check("also drops the bare 'Three years.' fragment it elaborated", !/three years/i.test(dc.text));
+check("keeps the surrounding sourced sentence", /grew quietly for years/i.test(dc.text));
+check("does NOT touch a normal duration mention",
+  stripSchemeDurationClaim("For years the payments continued, and by 2024 investigators moved in.").cuts.length === 0);
+
+console.log("stale future date cut (month-level, the 20-min miss):");
+const sept = Date.parse("2026-09-01");
+const sd2 = stripStaleFutureDates("He pleaded guilty in January 2024. His sentencing was scheduled for July 2026, where he faces twenty years.", sept);
+check("cuts a month-level future-framed date that has passed", !/scheduled for July 2026/i.test(sd2.text));
+check("keeps the sourced past-tense sentence", /pleaded guilty in January 2024/i.test(sd2.text));
+check("does NOT cut a still-future date",
+  stripStaleFutureDates("His sentencing is scheduled for December 2026.", sept).cuts.length === 0);
+check("does NOT cut a normal past-tense historical date",
+  stripStaleFutureDates("He was sentenced on July 29, 2019, to twenty years.", sept).cuts.length === 0);
 
 console.log(failures === 0 ? "\nALL PASS" : `\n${failures} FAILURE(S)`);
 process.exit(failures === 0 ? 0 : 1);

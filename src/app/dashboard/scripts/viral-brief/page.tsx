@@ -1029,54 +1029,16 @@ export default function ViralBriefPage() {
             </div>
           ))}
 
-          {/* FACT SUFFICIENCY. Length is chosen before research runs, so this is the first
-              screen where both are known. A long target on a thin fact set does not make a
-              longer video, it makes a padded one — and every fabrication this session
-              appeared in the gap between what the evidence supported and what the word
-              count demanded. Surfaced where the user can still act on it. */}
-          {/* MOVE #5 — HONESTY CEILING. The pipeline already dug the core case and then real
-              surrounding context toward the per-minute budget; if it still falls short, tell
-              the truth about the supportable length rather than padding. The message IS the
-              feature. Uses the server's authoritative reckoning (2.5 load-bearing facts per
-              narrated minute), not a client guess. */}
-          {slotMode && !underSourced && honesty?.honestMinutes && honesty?.requestedMinutes
-            && honesty.honestMinutes < Math.round(honesty.requestedMinutes * 0.85) && (() => {
-            const supp = honesty.honestMinutes!;
-            const asked = honesty.requestedMinutes!;
-            const ctx = honesty.contextCount || 0;
-            const applyHonest = () => {
-              // Re-target to the honest length AND rebuild the plan at N, exactly as if the
-              // slider had been set to N. Without the rebuild + the honesty re-target this was
-              // a dead click: the ceiling reads honesty.requestedMinutes (from the server), so
-              // changing only brief.targetMinutes left the warning up and nothing regenerated.
-              const nb = { ...(brief as any), targetMinutes: supp };
-              setBrief(nb);
-              try { sessionStorage.setItem("skripr_viral_brief", JSON.stringify(nb)); } catch { /* best effort */ }
-              setHonesty((h) => (h ? { ...h, requestedMinutes: supp } : h));
-              // Rebuild the angle plan from the facts already researched — pass them in so
-              // fetchAngles does NOT re-deepen (facts are unchanged; only the target shrank).
-              const g = {
-                kind: topicKind || "event", verdict: "documented",
-                caseName: groundedCase?.name, caseSummary: groundedCase?.summary, when: groundedCase?.when,
-                sources: groundedCase?.sources || [],
-                facts: deepFacts.map((f) => (f.source ? `${f.fact} (source: ${f.source})` : f.fact)),
-              };
-              setPhase("loading");
-              void fetchAngles(nb, g);
-            };
-            return (
-              <div style={{ marginTop: 4, marginBottom: 4, padding: "12px 16px", borderRadius: 12, background: "rgba(217,160,69,0.07)", border: "1px solid #d9a04540" }}>
-                <div style={{ fontSize: 12.5, fontWeight: 700, color: "#e6b45a" }}>This case honestly supports about {supp} minutes, not {asked}</div>
-                <div style={{ fontSize: 12, color: C.textDim, marginTop: 3, lineHeight: 1.55 }}>
-                  {honesty.factCount} sourced facts{ctx > 0 ? ` (including ${ctx} of real surrounding context)` : ""} carry about {supp} minutes. Skripr already researched the case and its context to the limit of what is documented. Pushing to {asked} minutes means padding, and padding is where invented facts come from. Choose a length the evidence can carry, or pick a richer case.
-                </div>
-                <button onClick={applyHonest}
-                  style={{ marginTop: 9, padding: "8px 14px", borderRadius: 9, border: "1px solid #d9a04566", background: "rgba(217,160,69,0.12)", color: "#e6b45a", fontSize: 12.5, fontWeight: 700, cursor: "pointer" }}>
-                  Set the target to {supp} minutes
-                </button>
-              </div>
-            );
-          })()}
+          {/* GOVERNING PRINCIPLE — the MOVE #5 honest-length CEILING warning ("This case honestly
+              supports about N minutes, not M") is no longer surfaced. Anton rejected it (2026-09):
+              a "choose a shorter length" panel is a user-facing warning AND it silently short-changes
+              the length the user asked for. The answer is not to warn or to shorten, but to REACH
+              the requested length with real material — research harder for genuinely new context
+              (target-driven depth in research.ts) and elaborate each sourced fact deeper (the
+              generator's length-through-depth instruction), never by restating the same figures.
+              The `honesty` reckoning stays computed server-side as an internal signal (telemetry /
+              how hard to research), never rendered. Hard boundary unchanged: never invent a fact to
+              hit length — the padding check kills repetition, the claim check kills fabrication. */}
 
           {/* PRIMARY ACTION: build the whole video from every researched section. This
               is the default because the slots in order ARE the video — picking one card

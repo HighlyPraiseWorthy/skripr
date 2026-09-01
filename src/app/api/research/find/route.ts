@@ -7,7 +7,10 @@ import { getLibrary, addToLibrary, setDismissed, activeFacts } from "@/lib/fact-
 // Retry-on-refusal adds a reformulate + second Perplexity round, so the deepen
 // path can chain up to five sequential model calls. vercel.json is authoritative;
 // this matches it so local/dev behaviour lines up.
-export const maxDuration = 90;
+// Long targets research MUCH harder (more context rounds, longer window) to gather genuinely new
+// material for the requested length, so the function needs the headroom. deepenCaseFacts is itself
+// target-driven and time-guarded well under this.
+export const maxDuration = 300;
 
 export async function POST(req: Request) {
   const { userId } = await auth();
