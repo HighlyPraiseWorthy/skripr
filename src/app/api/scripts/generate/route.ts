@@ -124,7 +124,7 @@ export async function POST(req: Request) {
   const startTime = Date.now();
 
   try {
-    const { transcript, niche, topic, sourceVideoId, videoLength = "long", targetMinutes, viralMagnetWord, angle, remixFramework, hookType, titleFormula, hookScript, hookWhyItWorks, contentStructure, retentionTriggers, voiceProfileId, sourceNiche, bridgeNiche, companionCta, storytellingMode, storytellingTechniques, sourceMaterial, selectedTitle, softCta, sourceVerdict, topicKind, directorNote } = raw;
+    const { transcript, niche, topic, sourceVideoId, videoLength = "long", targetMinutes, viralMagnetWord, angle, remixFramework, hookType, titleFormula, hookScript, hookWhyItWorks, contentStructure, retentionTriggers, voiceProfileId, sourceNiche, bridgeNiche, companionCta, storytellingMode, storytellingTechniques, sourceMaterial, selectedTitle, softCta, sourceVerdict, topicKind, directorNote, sourceEntities } = raw;
 
     // Free plan: scripts capped at 10 minutes — longer scripts are a paid feature
     if (plan === "free" && targetMinutes && targetMinutes > 10) {
@@ -333,6 +333,7 @@ export async function POST(req: Request) {
       sourceMaterial: typeof sourceMaterial === "string" && sourceMaterial.trim() ? sourceMaterial.trim() : undefined,
       selectedTitle: typeof selectedTitle === "string" && selectedTitle.trim() ? selectedTitle.trim() : undefined,
       directorNote: typeof directorNote === "string" && directorNote.trim() ? directorNote.trim() : undefined,
+      sourceEntities: Array.isArray(sourceEntities) ? sourceEntities.filter((e: any) => typeof e === "string") : undefined,
     };
 
     // PLAN mode: the head of a chunked build. Return the presetHook (one cheap hook call) and the

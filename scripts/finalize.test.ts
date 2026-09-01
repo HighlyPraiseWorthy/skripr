@@ -144,5 +144,26 @@ check("a bare restatement is cut", !/It was 661,440 streams a day\./.test(b3) ||
 check("_autoCuts tags the repetition fix", (out3._autoCuts || []).some((c: string) => /^repetition/.test(c)));
 check("the sourced closing beat is untouched", /\$8,091,843\.64 forfeiture/.test(b3));
 
+// SOURCE-LEAK + ROLE-INSINUATION must run in finalize on the assembled body.
+console.log("finalize cuts a source-leak and a role-based insinuation:");
+const BODY4 = [
+  `${HOOK} It looked like ordinary distribution.`,
+  "The accounts streamed around the clock to inflate the counts.",
+  "It's almost like that Project Blitz situation from the sneaker world.",
+  "The CEO of the unnamed distributor had every reason not to look too hard at the numbers.",
+  "In January 2024 he pleaded guilty and the court ordered an $8 million forfeiture.",
+].join("\n\n");
+const script4: any = { title: "Quiet distribution", hook: HOOK, fullScript: BODY4, script: BODY4, body: BODY4, content: BODY4, sections: [{ title: "All", content: BODY4 }], sectionwise: true };
+const out4: any = await finalizeScript(
+  script4,
+  { targetTopic: "a streaming scheme", targetNiche: "true crime", sourceEntities: ["Project Blitz", "Nike"], sourceMaterial: "The scheme used bot accounts to inflate streams. The DOJ traced the money and won a forfeiture." } as any,
+  { startedAt: Date.now(), presetHook: HOOK },
+);
+const b4: string = out4.fullScript || "";
+check("source-leak: 'Project Blitz' sentence is cut", !/Project Blitz/.test(b4));
+check("role-insinuation: 'reason not to look too hard' is cut", !/reason not to look too hard/i.test(b4));
+check("the on-topic + sourced sentences survive", /streamed around the clock/.test(b4) && /\$8 million forfeiture/.test(b4));
+check("_autoCuts tags source-leak", (out4._autoCuts || []).some((c: string) => /^source-leak:/.test(c)));
+
 console.log(failures === 0 ? "\nALL PASS" : `\n${failures} FAILURE(S)`);
 process.exit(failures === 0 ? 0 : 1);

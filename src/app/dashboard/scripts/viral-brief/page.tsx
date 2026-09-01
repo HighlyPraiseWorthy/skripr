@@ -430,6 +430,9 @@ export default function ViralBriefPage() {
       topicKind: topicKind || undefined,
       storytellingMode, storytellingTechniques, directorNote: directorNote || undefined, sourceMaterial: scopedSource || undefined,
       selectedTitle: angle.titleSuggestion || undefined,
+      // Source video's distinctive proper nouns — so finalize can CUT any that leak into the script
+      // unsupported by the user's facts (the "Project Blitz" copied-content fabrication).
+      sourceEntities: Array.isArray(brief.sourceEntities) ? brief.sourceEntities : undefined,
     };
     const post = async (extra: any) => {
       const res = await fetch("/api/scripts/generate", {

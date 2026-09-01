@@ -1,7 +1,7 @@
 // Offline test for the post-generation compliance check, using the real shapes from the
 // session: the final Queen script (should largely pass) vs. an early flat draft.
 //   node --experimental-strip-types --loader ./scripts/alias-loader.mjs scripts/compliance.test.ts
-import { checkCompliance, complianceScore, structuralScore, checkSourceStructural, accuracyChecks, STRUCTURAL_SET, stripInsinuations, stripImpliedRevelation, dedupeAdjacentParagraphs, collapseRepeatedAnchors, stripSchemeDurationClaim, stripStaleFutureDates } from "../src/lib/script-compliance.ts";
+import { checkCompliance, complianceScore, structuralScore, checkSourceStructural, accuracyChecks, STRUCTURAL_SET, stripInsinuations, stripImpliedRevelation, dedupeAdjacentParagraphs, collapseRepeatedAnchors, stripSchemeDurationClaim, stripStaleFutureDates, stripSourceLeaks } from "../src/lib/script-compliance.ts";
 
 let failures = 0;
 function check(name: string, cond: boolean) {
@@ -430,6 +430,37 @@ check("a fact appearing only twice is left alone", twice.cuts.length === 0 && (t
 // NEGATIVE — a year (2017) recurring many times is not an anchor.
 const years = collapseRepeatedAnchors(["The scheme began in 2017.", filler(2), "By 2017 the accounts were live.", filler(2), "Everything traces back to 2017.", filler(2), "It all started in 2017."].join("\n\n"));
 check("a recurring year is never collapsed", (years.text.match(/2017/g) || []).length === 4 && !years.cuts.some((c) => /2017/.test(c)));
+
+// HEAD-TO-HEAD BATCH — the three guard gaps a famous-case comparison exposed.
+console.log("insinuation guard extends to ROLE-identified persons:");
+const roleInsin = (s: string) => stripInsinuations("The company signed a contract for a 15 percent cut. " + s);
+check("cuts 'reasons not to look too hard'",
+  /reasons? not to look/.test(roleInsin("The CEO had every reason not to look too hard at where the streams came from.").cuts.join(" ")));
+check("cuts 'the right person in the right agreement'",
+  roleInsin("He was the right person in the right agreement while the bots quietly ran.").cuts.length >= 1);
+check("cuts 'profited ... while ... quietly'",
+  stripInsinuations("The executive profited handsomely while the network quietly inflated the counts.").cuts.length >= 1);
+check("does NOT fire on neutral role narration",
+  stripInsinuations("The CEO of the distributor signed the agreement and received a 15 percent share.").cuts.length === 0);
+
+console.log("de-repetition catches a restated QUOTE:");
+const emailQuote = 'In a February 2024 email he wrote, "we have over four billion streams and twelve million dollars since 2019."';
+const around = (n: number) => `Investigators kept returning to that message as the clearest admission in the whole file number ${n}.`;
+const quoteScript2 = [emailQuote, around(1), `He had bragged in writing: "we have over four billion streams and twelve million dollars since 2019," and prosecutors quoted it.`, around(2), `The email was blunt: "we have over four billion streams and twelve million dollars since 2019."`, around(3), `That same line, "we have over four billion streams and twelve million dollars since 2019," closed the government's case.`].join("\n\n");
+const qc = collapseRepeatedAnchors(quoteScript2);
+check("a quote restated 4x is reduced to 1-2", (qc.text.match(/four billion streams and twelve million/g) || []).length >= 1 && (qc.text.match(/four billion streams and twelve million/g) || []).length <= 2);
+check("quote repetition is recorded", qc.cuts.some((c) => /repetition \(quote\)|repetition \(figure\)|repetition \(phrase\)/.test(c)));
+
+console.log("source-leak silent cut (the Project Blitz fabrication):");
+const srcEnts = ["Project Blitz", "Nike", "Memphis"];
+const leakScript2 = "The scheme relied on automated accounts streaming around the clock. It's almost like that Project Blitz situation from a few years back. By 2024 the DOJ had traced every dollar.";
+const slc = stripSourceLeaks(leakScript2, srcEnts, "The scheme used bot accounts to inflate streams. The DOJ traced the money.");
+check("cuts the sentence carrying the leaked source proper noun", !/Project Blitz/.test(slc.text));
+check("keeps the surrounding on-topic sentences", /automated accounts streaming/.test(slc.text) && /traced every dollar/.test(slc.text));
+check("records the source-leak cut", slc.cuts.some((c) => /Project Blitz/.test(c)));
+check("does NOT cut a source term the user's OWN facts support",
+  stripSourceLeaks("The Memphis operation was the hub.", ["Memphis"], "The scheme was based in Memphis, Tennessee.").cuts.length === 0);
+check("no entities -> no cuts", stripSourceLeaks("Any text here about the case.", undefined, "facts").cuts.length === 0);
 
 console.log(failures === 0 ? "\nALL PASS" : `\n${failures} FAILURE(S)`);
 process.exit(failures === 0 ? 0 : 1);

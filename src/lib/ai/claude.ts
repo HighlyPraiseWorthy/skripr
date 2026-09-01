@@ -1,7 +1,7 @@
 import { Anthropic } from "@anthropic-ai/sdk";
 import { fingerprintToBrief, readProhibitions, stripStandaloneTics, type VoiceFingerprint } from "@/lib/voice-metrics";
 import { buildStorytellingBlock } from "@/lib/storytelling";
-import { stripInsinuations, stripImpliedRevelation, dedupeAdjacentParagraphs, collapseRepeatedAnchors, stripSchemeDurationClaim, stripStaleFutureDates } from "@/lib/script-compliance";
+import { stripInsinuations, stripImpliedRevelation, dedupeAdjacentParagraphs, collapseRepeatedAnchors, stripSchemeDurationClaim, stripStaleFutureDates, stripSourceLeaks } from "@/lib/script-compliance";
 import { buildVarietyBlock } from "@/lib/ai/phrase-variety";
 
 let _anthropic: Anthropic | null = null;
@@ -70,6 +70,11 @@ export interface ScriptGenerationInput {
   // auto-sourced facts). The script MAY state specific facts/numbers/studies
   // that appear here; anything not in it still obeys the anti-fabrication rule.
   sourceMaterial?: string;
+  // Distinctive proper nouns from the SOURCE video's own story (names/places/objects). Used only
+  // to CUT a leak: a remix copies structure, never content, so any of these that appears in the
+  // generated script AND is not supported by the user's own facts is a copied-content leak (a
+  // fabrication about this subject) and is silently removed in finalize.
+  sourceEntities?: string[];
   // The title the user explicitly chose (e.g. by picking an angle card). When
   // set, it LOCKS the title — generation must use it as-is, not invent its own.
   selectedTitle?: string;
@@ -1276,6 +1281,9 @@ export async function finalizeScript(
     }
   };
   const nowMs = Date.now();
+  // Source-leak CUT first — a leaked proper noun from the source video's story is a fabrication
+  // about this subject; remove it before anything else reasons about the body.
+  applyBodyPass((t) => stripSourceLeaks(t, input.sourceEntities, input.sourceMaterial), "source-leak");
   applyBodyPass(dedupeAdjacentParagraphs, "dedupe");
   // De-repetition: collapse an anchor fact drummed 3+ times across the whole body, keeping the
   // elaborated instances and cutting the bare restatements. Runs after dedupe (adjacent copies

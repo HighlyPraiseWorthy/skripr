@@ -144,8 +144,13 @@ const QUOTE_RE = /["“]([^"”\n]{6,240})["”]|(?:^|[\s(\[])['‘]([^'’\n]{6
 // PERSON-INSINUATION detection — shared by the compliance check AND the silent auto-cut in
 // generation, so both use one source of truth. Matches the LANGUAGE of insinuated guilt/
 // knowledge/complicity about a real person ("someone else was collecting", "not the kind of thing
-// you sign without asking", "had to have known").
-export const INSINUATION_RE = /\b(not the kind of thing (?:you|anyone|someone|people) (?:sign|do|build|set up)\w*\s+without (?:asking|knowing|realizing|questions)|(?:had to have|must have|could\s?n'?t (?:not )?have|would have) known|knew (?:exactly )?(?:what|where|how|who|that)|beneficiary (?:built|baked) (?:right )?into|looked the other way|turned a blind eye|\bcomplicit\b|(?:was|were|had to be) in on it|cover(?:ing)? (?:for (?:him|her|them)| it up)|no coincidence that|someone (?:else )?was (?:collecting|profiting|benefiting|pulling)|does(?:n'?t| not) happen without someone (?:knowing|noticing))\b/i;
+// you sign without asking", "had to have known"). This is about a real, IDENTIFIABLE person —
+// which includes a person named only by ROLE ("the CEO of the unnamed AI music company"), since
+// that still points at one real human. The 20-min build insinuated exactly that: a roled CEO had
+// "reasons not to look too hard" and was "the right person in the right agreement while bots
+// quietly ran" — an unsupported complicity argument from a bare contract + revenue share. Those
+// role-based shapes are added below.
+export const INSINUATION_RE = /\b(not the kind of thing (?:you|anyone|someone|people) (?:sign|do|build|set up)\w*\s+without (?:asking|knowing|realizing|questions)|(?:had to have|must have|could\s?n'?t (?:not )?have|would have) known|knew (?:exactly )?(?:what|where|how|who|that)|beneficiary (?:built|baked) (?:right )?into|looked the other way|turned a blind eye|\bcomplicit\b|(?:was|were|had to be) in on it|cover(?:ing)? (?:for (?:him|her|them)| it up)|no coincidence that|someone (?:else )?was (?:collecting|profiting|benefiting|pulling)|does(?:n'?t| not) happen without someone (?:knowing|noticing)|reasons? not to (?:look|ask|dig|question)(?: too)?(?: hard| closely| deep\w*| many questions)?|(?:did|does)(?:n'?t| not) (?:want to |care to )?(?:look|ask|dig)(?: too)? (?:hard|closely|deep\w*|many questions)|paid (?:not to ask|to look away|to stay quiet)|the right (?:person|man|woman|name) in the right (?:agreement|place|position|deal|contract|room)|(?:profit\w*|benefit\w*|paid|collect\w*)[^.]{0,40}\bwhile [^.]{0,40}\b(?:quietly|secretly)\b|(?:chose|preferred) not to (?:know|ask|look)|asked no questions)\b/i;
 export function looksLikeInsinuation(s: string): boolean { return INSINUATION_RE.test(s || ""); }
 
 // GOVERNING PRINCIPLE — silent fix. Cut sentences that insinuate a real person's guilt beyond the
@@ -321,6 +326,43 @@ export function stripStaleFutureDates(text: string, now: number): { text: string
   return { text: outParas.join("\n\n"), cuts };
 }
 
+// GOVERNING PRINCIPLE — silent fix (CRITICAL: a leak here is a FABRICATION). A remix copies the
+// source video's STRUCTURE, never its CONTENT — but the 20-min build leaked "It's almost like that
+// Project Blitz situation", a proper noun from the Nike source video that has nothing to do with
+// this case. That is both a copied-content leak AND an invented fact about the subject. The
+// source-leak compliance check only DISPLAYED this (and the panels are hidden), so it reached the
+// user. This CUTS any sentence carrying a source-specific term (name/place/object from the source
+// video's story) that the user's OWN facts do not support — a term the facts carry is legitimately
+// theirs and is kept. Cut the whole sentence (safe default); reworded seams heal downstream.
+export function stripSourceLeaks(text: string, sourceEntities: string[] | undefined, factBlob: string | undefined): { text: string; cuts: string[] } {
+  if (!text || !sourceEntities || sourceEntities.length === 0) return { text, cuts: [] };
+  const factLc = (factBlob || "").toLowerCase();
+  const escapeRe = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  // Precompute the leak matchers: a source term is a leak only when the CURRENT case's facts do
+  // not carry it (or a significant word of it).
+  const leakTerms = sourceEntities
+    .map((raw) => String(raw || "").trim())
+    .filter((t) => t.length >= 3)
+    .filter((t) => {
+      const tl = t.toLowerCase();
+      const tokens = tl.split(/[^a-z0-9]+/).filter((w) => w.length >= 4);
+      const supported = factLc.includes(tl) || tokens.some((w) => factLc.includes(w));
+      return !supported;
+    })
+    .map((t) => ({ term: t, re: new RegExp(`(?:^|[^a-z0-9])${escapeRe(t.toLowerCase())}(?:[^a-z0-9]|$)`, "i") }));
+  if (!leakTerms.length) return { text, cuts: [] };
+  const cuts: string[] = [];
+  const outParas = text.split(/\n\n+/).map((para) => {
+    const kept = para.split(/(?<=[.!?])\s+/).filter((s) => {
+      const sl = s.toLowerCase();
+      if (leakTerms.some((lt) => lt.re.test(sl))) { cuts.push(s.trim()); return false; }
+      return true;
+    });
+    return kept.join(" ").trim();
+  }).filter((p) => p.length > 0);
+  return { text: outParas.join("\n\n"), cuts };
+}
+
 // GOVERNING PRINCIPLE — silent fix. Collapse an ANCHOR fact restated 3+ times, non-adjacent, across
 // the assembled body. Elaboration (deepening a fact) is good and stays; the failure this catches is
 // a fact that DRUMS — "661,440 streams a day" 5-6x, the Damian Williams quote 3-4x, "not a tech
@@ -370,6 +412,35 @@ export function collapseRepeatedAnchors(text: string): { text: string; cuts: str
           if (wc(flat[k].s) >= 22) continue;
           remove.add(k); cuts.push(`repetition (figure): ${flat[k].s}`);
         }
+      }
+    }
+  }
+
+  // DETECTOR C — a QUOTE restated 3+ times. A verbatim quote (the Feb-2024 email boast) tends to
+  // recur inside DIFFERENT surrounding sentences, so its sentences may not hit the near-verbatim
+  // threshold in detector A — but the quoted string itself is the anchor. Key each sentence by the
+  // normalized first 6 words of its longest quoted span (>= 5 words); cluster by shared key.
+  const quoteKey = (s: string): string | null => {
+    let best = "";
+    const re = /["“]([^"”\n]{12,240})["”]|(?:^|[\s(\[])['‘]([^'’\n]{12,240})['’]/g;
+    let m: RegExpExecArray | null;
+    while ((m = re.exec(s)) !== null) { const q = (m[1] || m[2] || "").trim(); if (q.length > best.length) best = q; }
+    if (!best) return null;
+    const words = normalizeForCompare(best).split(" ").filter(Boolean);
+    return words.length >= 5 ? words.slice(0, 6).join(" ") : null;
+  };
+  const keys = flat.map((f, idx) => (remove.has(idx) ? null : quoteKey(f.s)));
+  const usedC = new Set<number>();
+  for (let i = 0; i < flat.length; i++) {
+    if (usedC.has(i) || remove.has(i) || !keys[i]) continue;
+    const occ = flat.map((_, idx) => idx).filter((idx) => !remove.has(idx) && keys[idx] === keys[i]);
+    if (occ.length >= 3) {
+      occ.forEach((k) => usedC.add(k));
+      const byLen = [...occ].sort((a, b) => flat[b].s.length - flat[a].s.length);
+      const keep = new Set(byLen.slice(0, 2));
+      for (const k of occ) {
+        if (keep.has(k)) protectKeep.add(k);
+        else { remove.add(k); cuts.push(`repetition (quote): ${flat[k].s}`); }
       }
     }
   }

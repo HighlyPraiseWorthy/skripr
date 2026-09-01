@@ -1297,7 +1297,23 @@ Each question seeks a single concrete, citable fact. Output ONLY this JSON, no p
     // repeating five numbers. Beating ChatGPT means bringing the SOURCED version of the breadth it
     // fills 20 minutes with, so ask across MANY distinct, specific angles that each return NEW
     // material, not restatements of the case facts.
+    // PRIMARY-SOURCE COMPLETENESS (highest value, asked FIRST). When a charging document / court
+    // filing / official report exists, it usually contains ~2x the facts a headline carries — the
+    // full dated timeline, every dollar movement, every named entity and alias, every warning and
+    // the response to it, and how it unraveled. The head-to-head Skripr lost was lost HERE: it
+    // stopped at ~14 top-line facts while the DOJ indictment held the $1.3M debit-card trail, the
+    // AI-artist alias names, the month-by-month streaming milestones, the platform warnings and
+    // denials, and the payment halt that ended it. Mine the primary source to completeness so the
+    // script is MORE detailed than a well-read model's memory, not less.
+    const primaryQs = [
+      `From the PRIMARY SOURCE on ${canonicalCaseName} (the indictment, complaint, charging document, plea agreement, or official report), extract the FULL CHRONOLOGICAL TIMELINE: every dated milestone, month by month or year by year, each with the specific figures attached (streams, dollars, accounts, dates). List them in order, sourced.`,
+      `Trace EVERY MOVEMENT OF MONEY documented in the ${canonicalCaseName} primary source: each transfer, the amounts and dates, the accounts or instruments used (bank accounts, debit cards, shell entities, payment processors), how funds were funneled or laundered, and the per-day or per-month rate where stated.`,
+      `List EVERY NAMED ENTITY, ALIAS, PRODUCT, ACCOUNT, or CODE-NAME in the ${canonicalCaseName} primary source — the specific names of fronts, shell companies, fake artists or products, aliases, platforms, and counterparties, exactly as written, with what each was used for.`,
+      `What WARNINGS, red flags, audits, or challenges did ${canonicalCaseName} receive from platforms, distributors, regulators, or partners BEFORE it ended — the dates, who raised them, and exactly how the subject responded or denied each one? This "they were warned and lied to keep it running" thread is documented; retrieve it in detail.`,
+      `Exactly HOW DID ${canonicalCaseName} UNRAVEL and get caught — the specific event, audit, halt, or investigation that ended it, who acted, on what date, and the concrete step-by-step of the detection and takedown?`,
+    ];
     const contextQs = [
+      ...primaryQs,
       `Explain in concrete, sourced detail HOW THE SYSTEM WORKS that ${canonicalCaseName} exploited or operated within — the mechanics of the industry, technology, market, payment or royalty flow, step by step.`,
       `Name the closest PRIOR OR SIMILAR documented cases to ${canonicalCaseName} SPECIFICALLY, by name, with their own dates, figures, and outcomes, and how each compares in scale and method.`,
       `How is this kind of activity DETECTED and PREVENTED in practice — the specific technology, methods, or audits used to catch it — and what did ${canonicalCaseName} expose about the gaps?`,
