@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import GenerationProgress from "@/components/GenerationProgress";
 import { joinHookBody, bodyStartsWithHook } from "@/lib/script-text";
 import { VoiceSelect } from "@/components/VoiceSelect";
@@ -239,9 +239,36 @@ export default function ViralBriefPage() {
         }
       } catch { /* fall through to blurb-grounded angles */ }
     }
-    const factStrings = facts.map((f) => (f.source ? `${f.fact} (source: ${f.source})` : f.fact));
-    const g = { kind, verdict: "documented", caseName, caseSummary: c.summary, when, sources: c.sources || [], facts: factStrings, hasConflict: conflicts.length > 0 };
-    if (b) await fetchAngles(b, g);
+    // REORDERED FLOW: research/grounding comes BEFORE the angle page. Deepen (done above), then
+    // show the grounding page so the user approves the fact set FIRST; the angle is then built from
+    // exactly those approved facts (continueFromGrounding), instead of before the case is understood.
+    setPhase("research");
+  }
+
+  // Approved facts from the grounding page (checked set), stashed on Continue so continueFromGrounding
+  // can build the angles from precisely what the user approved.
+  const approvedFactsRef = useRef<{ fact: string; source: string | null }[]>([]);
+
+  // Grounding page -> angle page. Build the angle outline from the APPROVED fact set (the user may
+  // have unchecked some), so the angle and the script draw on the same, user-approved research.
+  async function continueFromGrounding(approved: { fact: string; source: string | null }[], sm?: string, v?: any, k?: any) {
+    setSourceMaterial(sm || "");
+    if (v) setSourceVerdict(v);
+    if (k) setTopicKind(k);
+    const useFacts = approved.length ? approved : deepFacts;
+    setDeepFacts(useFacts);
+    const g = {
+      kind: k || topicKind || "event",
+      verdict: "documented",
+      caseName: groundedCase?.name,
+      caseSummary: groundedCase?.summary,
+      when: groundedCase?.when,
+      sources: groundedCase?.sources || [],
+      facts: useFacts.map((f) => (f.source ? `${f.fact} (source: ${f.source})` : f.fact)),
+      hasConflict: deepConflicts.length > 0,
+    };
+    setPhase("loading");
+    if (brief) await fetchAngles(brief, g);
   }
 
   function groundedGroundingFrom(): any | null {
@@ -382,7 +409,9 @@ export default function ViralBriefPage() {
     setAltTitles([]);
     setSelectedAngle(composite);
     setError(null);
-    setPhase("research");
+    // Grounding already happened before the angle page in the reordered flow, so go straight to
+    // storytelling style — no second research step.
+    setPhase("storytelling");
   }
 
   function handlePickAngle(angle: Angle) {
@@ -397,7 +426,7 @@ export default function ViralBriefPage() {
         .filter((t) => t && t !== angle.titleSuggestion)
         .slice(0, 4)
     );
-    setSelectedAngle(angle); setError(null); setPhase("research");
+    setSelectedAngle(angle); setError(null); setPhase("storytelling");
   }
 
   async function generateWithStory(storytellingMode: string, storytellingTechniques: string[], directorNote?: string) {
@@ -563,15 +592,19 @@ export default function ViralBriefPage() {
     }
   }
 
-  if (phase === "research" && selectedAngle) return (
+  // GROUNDING PAGE — now BEFORE the angle page. The user approves the deep fact set here, then the
+  // angle is generated from exactly those facts (continueFromGrounding). Keyed on the grounded case,
+  // not a selected angle, since no angle exists yet.
+  if (phase === "research" && groundedCase) return (
     <ResearchStep
-      topic={selectedAngle.angle}
+      topic={groundedCase.name || brief?.selectedTitle || ""}
       topicAnchor={brief?.selectedTitle}
-      niche={selectedAngle.audience || brief?.niche}
-      angle={selectedAngle.titleSuggestion || selectedAngle.angle}
-      angleLabel={selectedAngle.titleSuggestion || selectedAngle.angle}
-      onContinue={(sm, v, k) => { setSourceMaterial(sm || ""); setSourceVerdict(v || null); setTopicKind(k || null); setPhase("storytelling"); }}
-      onBack={() => setPhase("angles")}
+      niche={brief?.niche}
+      angle={brief?.selectedTitle}
+      angleLabel={groundedCase.name || brief?.selectedTitle}
+      onFactsApproved={(fs) => { approvedFactsRef.current = fs; }}
+      onContinue={(sm, v, k) => { void continueFromGrounding(approvedFactsRef.current, sm, v, k); }}
+      onBack={() => setPhase("pick-case")}
       presetCase={groundedCase || undefined}
       presetFacts={deepFacts.length ? deepFacts : undefined}
       presetConflicts={deepConflicts.length ? deepConflicts : undefined}
@@ -694,7 +727,7 @@ export default function ViralBriefPage() {
       slot={selectedAngle.slot}
       topicKind={(topicKind as any) || undefined}
       onGenerate={generateWithStory}
-      onBack={() => setPhase("research")}
+      onBack={() => setPhase("angles")}
     />
   );
 

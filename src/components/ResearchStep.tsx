@@ -33,6 +33,10 @@ export default function ResearchStep(props: {
   angle?: string;
   angleLabel?: string;
   onContinue: (sourceMaterial?: string, verdict?: Verdict, kind?: TopicKind) => void;
+  // Fired alongside onContinue with the APPROVED (checked) fact objects. When this grounding step
+  // runs BEFORE the angle page, the caller uses these to build the angles from exactly the facts
+  // the user approved, so the angle is grounded in the same set the script will draw on.
+  onFactsApproved?: (facts: { fact: string; source: string | null }[]) => void;
   onBack?: () => void;
   // When the case was already resolved upstream (the reordered Remixer flow), pass
   // it here: the step deepens that case's facts instead of re-resolving, so the
@@ -473,7 +477,7 @@ export default function ResearchStep(props: {
               Back
             </button>
           )}
-          <button onClick={() => props.onContinue(buildSourceMaterial(), verdict ?? undefined, kind ?? undefined)}
+          <button onClick={() => { props.onFactsApproved?.(facts.filter((_, i) => picked.has(i)).map((f) => ({ fact: f.fact, source: f.source }))); props.onContinue(buildSourceMaterial(), verdict ?? undefined, kind ?? undefined); }}
             style={{ flex: 1, padding: "12px 18px", borderRadius: 12, border: "none", background: "linear-gradient(135deg,#0e6499,#1a8fd1,#4db8ff)", color: "#fff", fontSize: 15, fontWeight: 700, cursor: "pointer", boxShadow: "0 0 22px rgba(77,184,255,0.26)" }}>
             {includedCount > 0 ? `Continue with ${includedCount} fact${includedCount === 1 ? "" : "s"} →` : grounded ? "Continue →" : "Skip, continue →"}
           </button>
