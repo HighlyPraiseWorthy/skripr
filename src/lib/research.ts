@@ -1109,27 +1109,36 @@ async function minePrimarySourceDocs(
     if (Date.now() > deadlineMs) break;
     let text = "";
     let pdfB64 = "";
+    let isPdf = false;
+    let docBytes = 0;
     try {
       const ctrl = new AbortController();
       const timer = setTimeout(() => ctrl.abort(), 25_000);
       const res = await fetch(url, { signal: ctrl.signal, headers: { "user-agent": "Mozilla/5.0 (compatible; SkriprResearch/1.0)" } });
       clearTimeout(timer);
-      if (!res.ok) continue;
+      if (!res.ok) {
+        // Never silently drop a known primary source — record that it exists but wasn't read, so
+        // the gap is visible in telemetry rather than looking like "the case has no deep facts".
+        console.error(`[primary-doc] fetch_failed ${JSON.stringify({ url, status: res.status, reason: "http_error", source_type: "government_doc" })}`);
+        continue;
+      }
       const ctype = res.headers.get("content-type") || "";
-      const isPdf = /pdf/i.test(ctype) || /\.pdf(\?|$)/i.test(url);
+      isPdf = /pdf/i.test(ctype) || /\.pdf(\?|$)/i.test(url);
       if (isPdf) {
         const buf = Buffer.from(await res.arrayBuffer());
-        if (buf.length > 24 * 1024 * 1024) continue; // too large for a document block
+        docBytes = buf.length;
+        if (buf.length > 24 * 1024 * 1024) { console.error(`[primary-doc] fetch_failed ${JSON.stringify({ url, reason: "pdf_too_large", bytes: buf.length, source_type: "government_pdf" })}`); continue; }
         pdfB64 = buf.toString("base64");
       } else if (/octet-stream|application\/(?!pdf)/i.test(ctype)) {
+        console.error(`[primary-doc] fetch_failed ${JSON.stringify({ url, reason: "unreadable_binary", content_type: ctype, source_type: "government_doc" })}`);
         continue; // some other binary we can't read
       } else {
         // Larger window: the granular specifics often sit deep in a filing, past the first screen.
         text = htmlToText(await res.text()).slice(0, 50_000);
-        if (text.length < 400) continue;
+        if (text.length < 400) { console.error(`[primary-doc] fetch_failed ${JSON.stringify({ url, reason: "empty_after_htmlstrip", chars: text.length, source_type: "government_doc" })}`); continue; }
       }
     } catch (e) {
-      console.error(`[primary-doc] fetch failed for ${url}:`, (e as any)?.message);
+      console.error(`[primary-doc] fetch_failed ${JSON.stringify({ url, reason: "fetch_threw", detail: (e as any)?.message, source_type: "government_doc" })}`);
       continue;
     }
     // Extract EXHAUSTIVELY. Claude reads the real document (PDF natively, or the HTML text) and
@@ -1154,12 +1163,19 @@ async function minePrimarySourceDocs(
       const m = content.match(/\{[\s\S]*\}/);
       const parsed = m ? JSON.parse(m[0]) : null;
       const facts: string[] = Array.isArray(parsed?.facts) ? parsed.facts.filter((f: any) => typeof f === "string" && f.trim().length > 8) : [];
+      // QUALITY GATE. A substantial document that yields almost nothing was not really read (a
+      // failed PDF decode, an OCR-only scan, a refusal). Do NOT pass that off as "researched" — log
+      // fetch_failed so the gap is visible, and add nothing from this doc.
+      if ((isPdf && docBytes > 40_000 && facts.length < 5) || (!isPdf && text.length > 8_000 && facts.length < 3)) {
+        console.error(`[primary-doc] fetch_failed ${JSON.stringify({ url, reason: "extraction_too_thin", facts: facts.length, bytes: isPdf ? docBytes : text.length, source_type: isPdf ? "government_pdf" : "government_doc" })}`);
+        continue;
+      }
       for (const f of facts.slice(0, 60)) {
         // Guard the living-person watchlist the same way the other paths do.
         if (watchlist.some((w) => f.toLowerCase().includes(w.toLowerCase()))) continue;
         out.push({ fact: f.trim(), source: url, context: true });
       }
-      console.log(`[primary-doc] extracted ${facts.length} facts from ${url}`);
+      console.log(`[primary-doc] extracted ${facts.length} facts from ${isPdf ? "PDF" : "HTML"} ${url}`);
     } catch (e) {
       console.error(`[primary-doc] extraction failed for ${url}:`, (e as any)?.message);
     }

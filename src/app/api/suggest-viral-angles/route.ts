@@ -92,6 +92,7 @@ ${hasConflict ? `5. OPEN QUESTION — what is genuinely unsettled, modelled rath
 ${hasConflict ? `5. CONTESTED — the disputed/unresolved point the facts flag. Build this ONLY from the genuinely conflicting facts, never from your own sense that something is controversial.` : `(Do NOT produce a CONTESTED card. The fact set contains no flagged dispute, and you must not manufacture one.)`}`}
 
 HARD RULES:
+- DISCOVERY ARC, not a topic list. The slots in order should read as an escalating investigation — a mystery or impossible situation, then a discovery, then the new problem that discovery creates, then the next discovery, toward the collapse and its consequence — NOT a flat sequence of facts or a legal explainer. Each slot should open on what is not yet known and land a new piece of it. Peak the strongest, BEST-DOCUMENTED material (the mechanism and the money), never the thinnest, most speculative thread (an unnamed co-conspirator).
 - Build every card ONLY from the numbered facts. A card may rest ONLY on facts that genuinely support its slot.
 - Produce a card for a slot ONLY IF at least TWO numbered facts support it. If fewer than two support a slot, OMIT that slot entirely. Never invent a fact, an ending, or a detail to fill a slot.
 - Return BETWEEN 2 AND 5 cards. Fewer strong, non-overlapping cards is the correct outcome; padding with a thin or duplicate card is a failure.
