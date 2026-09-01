@@ -1079,46 +1079,58 @@ async function minePrimarySourceDocs(
   watchlist: string[],
   deadlineMs: number,
 ): Promise<ResearchFact[]> {
-  // Skip PDFs and other binaries — htmlToText only reads HTML, and a PDF fetched as text is noise
-  // that yields junk "facts". HTML press releases / opinions carry the granularity we need.
-  const primary = [...new Set(urls.filter((u) => typeof u === "string" && PRIMARY_SOURCE_RE.test(u) && !/\.pdf(\?|$)/i.test(u)))].slice(0, 3);
+  // PDFs are now READ, not skipped — the deepest facts (aliases, milestones, quoted lines) are
+  // PDF-only in a charging document, and Claude reads a PDF natively via a base64 document block,
+  // so no PDF library is needed. HTML press releases / opinions are read as text as before.
+  const primary = [...new Set(urls.filter((u) => typeof u === "string" && PRIMARY_SOURCE_RE.test(u)))].slice(0, 3);
   if (!primary.length) return [];
+  const SYSTEM = `You extract granular facts from a PRIMARY-SOURCE official document (indictment, complaint, court opinion, agency report, press release). Output ONLY facts the document literally states — never add, infer, or recall anything from your own knowledge. ENUMERATE, do not summarize or select highlights: aim for 30-60 distinct items, each ONE concrete specific. Capture in particular the things a summary drops — every NAMED entity/alias/account/product (list each proper name exactly as written), every DATED milestone with the figure attached, every DOLLAR movement (amount, date, instrument, where it went), every QUOTED line with its speaker, and every WARNING and the response to it. Skip navigation, boilerplate, and disclaimers.`;
+  const ASK = `CASE: ${caseName}\n\nEnumerate EVERY granular fact this document states — aim for 30-60 items, the specific over the general, nothing invented. Output ONLY JSON: {"facts":["...", "..."]}`;
   const out: ResearchFact[] = [];
   for (const url of primary) {
     if (Date.now() > deadlineMs) break;
     let text = "";
+    let pdfB64 = "";
     try {
       const ctrl = new AbortController();
-      const timer = setTimeout(() => ctrl.abort(), 20_000);
+      const timer = setTimeout(() => ctrl.abort(), 25_000);
       const res = await fetch(url, { signal: ctrl.signal, headers: { "user-agent": "Mozilla/5.0 (compatible; SkriprResearch/1.0)" } });
       clearTimeout(timer);
       if (!res.ok) continue;
       const ctype = res.headers.get("content-type") || "";
-      if (/pdf|octet-stream/i.test(ctype)) continue; // binary — can't read as text
-      // Larger window: the granular specifics (aliases, later dollar movements, milestones) often
-      // sit deep in a filing, well past the first screen the old 24k cap stopped at.
-      text = htmlToText(await res.text()).slice(0, 50_000);
+      const isPdf = /pdf/i.test(ctype) || /\.pdf(\?|$)/i.test(url);
+      if (isPdf) {
+        const buf = Buffer.from(await res.arrayBuffer());
+        if (buf.length > 24 * 1024 * 1024) continue; // too large for a document block
+        pdfB64 = buf.toString("base64");
+      } else if (/octet-stream|application\/(?!pdf)/i.test(ctype)) {
+        continue; // some other binary we can't read
+      } else {
+        // Larger window: the granular specifics often sit deep in a filing, past the first screen.
+        text = htmlToText(await res.text()).slice(0, 50_000);
+        if (text.length < 400) continue;
+      }
     } catch (e) {
       console.error(`[primary-doc] fetch failed for ${url}:`, (e as any)?.message);
       continue;
     }
-    if (text.length < 400) continue;
-    // Extract EXHAUSTIVELY from the fetched document text. Claude reads a real document and lists
-    // what it literally states — no memory, no invention; the URL is the source for each fact. The
-    // whole point is the granular layer Perplexity summaries omit, so this must ENUMERATE, not
-    // summarize: every named entity/alias, every dated milestone with its figure, every dollar
-    // movement, every quoted line, every warning-and-response. Niche-agnostic — the same
-    // instruction pulls the specifics from a fraud indictment, a court opinion, or an agency report.
+    // Extract EXHAUSTIVELY. Claude reads the real document (PDF natively, or the HTML text) and
+    // lists what it literally states — no memory, no invention; the URL is the source for each
+    // fact. This is the granular layer Perplexity summaries omit. Niche-agnostic: the same
+    // instruction pulls specifics from a fraud indictment, a court opinion, or an agency report.
     try {
+      const userContent: any = pdfB64
+        ? [
+            { type: "document", source: { type: "base64", media_type: "application/pdf", data: pdfB64 } },
+            { type: "text", text: ASK },
+          ]
+        : `${ASK}\n\nSOURCE DOCUMENT URL: ${url}\n\nDOCUMENT TEXT:\n"""\n${text}\n"""`;
       const msg = await anthropic().messages.create({
         model: "claude-sonnet-4-6",
         max_tokens: 4500,
         temperature: 0,
-        system: `You extract granular facts from a PRIMARY-SOURCE official document (indictment, complaint, court opinion, agency report, press release). Output ONLY facts the document text literally states — never add, infer, or recall anything from your own knowledge. ENUMERATE, do not summarize or select highlights: aim for 30-60 distinct items, each ONE concrete specific. Capture in particular the things a summary drops — every NAMED entity/alias/account/product (list each proper name exactly as written), every DATED milestone with the figure attached, every DOLLAR movement (amount, date, instrument, where it went), every QUOTED line with its speaker, and every WARNING and the response to it. Skip navigation, boilerplate, and disclaimers.`,
-        messages: [{
-          role: "user",
-          content: `CASE: ${caseName}\nSOURCE DOCUMENT URL: ${url}\n\nDOCUMENT TEXT:\n"""\n${text}\n"""\n\nEnumerate EVERY granular fact this document states — aim for 30-60 items, the specific over the general, nothing invented. Output ONLY JSON: {"facts":["...", "..."]}`,
-        }],
+        system: SYSTEM,
+        messages: [{ role: "user", content: userContent }],
       });
       const content = msg.content[0]?.type === "text" ? msg.content[0].text : "";
       const m = content.match(/\{[\s\S]*\}/);

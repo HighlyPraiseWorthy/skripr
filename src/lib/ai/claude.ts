@@ -1,7 +1,7 @@
 import { Anthropic } from "@anthropic-ai/sdk";
 import { fingerprintToBrief, readProhibitions, stripStandaloneTics, type VoiceFingerprint } from "@/lib/voice-metrics";
 import { buildStorytellingBlock } from "@/lib/storytelling";
-import { stripInsinuations, stripImpliedRevelation, dedupeAdjacentParagraphs, collapseRepeatedAnchors, stripSchemeDurationClaim, stripStaleFutureDates, stripSourceLeaks, mergeOrphanFragments } from "@/lib/script-compliance";
+import { stripInsinuations, stripSpeculation, stripImpliedRevelation, dedupeAdjacentParagraphs, collapseRepeatedAnchors, stripSchemeDurationClaim, stripStaleFutureDates, stripSourceLeaks, mergeOrphanFragments } from "@/lib/script-compliance";
 import { buildVarietyBlock } from "@/lib/ai/phrase-variety";
 
 let _anthropic: Anthropic | null = null;
@@ -464,6 +464,7 @@ ${retryNote ? `\nYOUR PREVIOUS ATTEMPT FAILED: ${retryNote} Fix that.` : ""}
 
 Rules:
 - Do NOT restate the title or the thesis. The viewer just read the title; repeating it carries zero new information.
+- WITHHOLD THE EXPLANATION. Open on the PARADOX or the impossible situation and STOP there — do not name the mechanism, the method, or the cause in the hook. If the story's engine is "bots and AI generated billions of fake streams", the hook is the paradox ("A song racking up billions of streams that no human ever chose to play") and NOT the answer ("using AI songs and bot accounts"). The reveal is what the body is for; the hook's only job is to open the loop. A hook that hands over the how has nothing left to pull the viewer in.
 - Say something about the WORLD, not about the video.
 - No invented numbers. Every figure must appear in the facts above.
 - No em dashes. Plain speakable prose.
@@ -1292,6 +1293,10 @@ export async function finalizeScript(
   applyBodyPass(collapseRepeatedAnchors, "repetition");
   applyBodyPass((t) => stripSchemeDurationClaim(t, (script as any).title), "duration");
   applyBodyPass((t) => stripStaleFutureDates(t, nowMs), "stale-date");
+  // Inference/speculation-as-fact: cut a sentence that asserts a cause, motive, or conclusion the
+  // record doesn't support ("must have required...", "did not do this alone", "...or both"). Like
+  // the insinuation cut, this is an accuracy/credibility guard — the safe default is to remove it.
+  applyBodyPass(stripSpeculation, "speculation");
   // Seam cleanup runs LAST, after the cuts, so any fragment a cut left stranded is folded back in.
   applyBodyPass(mergeOrphanFragments, "seam");
 

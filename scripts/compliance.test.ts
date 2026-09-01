@@ -1,7 +1,7 @@
 // Offline test for the post-generation compliance check, using the real shapes from the
 // session: the final Queen script (should largely pass) vs. an early flat draft.
 //   node --experimental-strip-types --loader ./scripts/alias-loader.mjs scripts/compliance.test.ts
-import { checkCompliance, complianceScore, structuralScore, checkSourceStructural, accuracyChecks, STRUCTURAL_SET, stripInsinuations, stripImpliedRevelation, dedupeAdjacentParagraphs, collapseRepeatedAnchors, stripSchemeDurationClaim, stripStaleFutureDates, stripSourceLeaks, mergeOrphanFragments } from "../src/lib/script-compliance.ts";
+import { checkCompliance, complianceScore, structuralScore, checkSourceStructural, accuracyChecks, STRUCTURAL_SET, stripInsinuations, stripSpeculation, stripImpliedRevelation, dedupeAdjacentParagraphs, collapseRepeatedAnchors, stripSchemeDurationClaim, stripStaleFutureDates, stripSourceLeaks, mergeOrphanFragments } from "../src/lib/script-compliance.ts";
 
 let failures = 0;
 function check(name: string, cond: boolean) {
@@ -497,6 +497,47 @@ check("'Every single day.' merged into the streams sentence", /661,440 streams\.
 check("orphan merges recorded", sr.cuts.length >= 2);
 check("a deliberate verbed one-line beat is NOT merged",
   mergeOrphanFragments("The scheme was simple.\n\nNo human ever chose to play it.\n\nThat was the point.").cuts.length === 0);
+
+// CHATGPT-REVIEW BATCH — de-repetition of long restatements, and the new inference-as-fact guard.
+console.log("de-repetition catches a figure drummed across LONG sentences (not just short):");
+const filler2 = [
+  "The streaming economy had quietly become a system that almost nobody outside it understood in depth.",
+  "Royalty pools split each month's money by share of total plays, a design meant to reward real listening.",
+  "Detection teams tend to look for frantic spikes, not the patient cadence that this operation kept.",
+];
+// The SAME 661,440 restated four times, each inside a full (>22-word) sentence that merely rewords
+// the point (high mutual overlap) — the outside-review offender the old short-only rule missed.
+const longRe = [
+  "At its peak the network was pushing exactly 661,440 fraudulent streams every single day across the thousands of accounts it controlled, an industrial volume of fake plays.",
+  filler2[0],
+  "Across the thousands of accounts it controlled, the network was pushing 661,440 fraudulent streams every single day at its peak, an industrial volume of fake plays.",
+  filler2[1],
+  "Every single day at its peak the operation pushed 661,440 fraudulent streams across the thousands of accounts it ran, an industrial scale of fake plays.",
+  filler2[2],
+  "At its peak, across thousands of accounts, the scheme was generating 661,440 fraudulent streams every single day, an industrial volume of fake plays it sustained.",
+].join("\n\n");
+const lr = collapseRepeatedAnchors(longRe);
+check("a figure drummed across long near-duplicate sentences is reduced to 1-2", (lr.text.match(/661,440/g) || []).length <= 2);
+check("the long restatements are recorded as repetition", lr.cuts.some((c) => /repetition \(figure\)/.test(c)));
+// A figure used in genuinely DISTINCT long sentences must be left alone (low mutual overlap).
+const distinctUse = [
+  "The network pushed 661,440 fraudulent streams a day, a number prosecutors would later use to anchor the entire forfeiture calculation against Smith.",
+  filler2[0], filler2[1],
+  "To grasp 661,440 daily plays, picture a mid-size arena selling out every seat, then doing it again forty times before lunch, all of it invisible.",
+  filler2[2],
+  "Spotify's own abuse team, which reviews 661,440-scale anomalies routinely, somehow never escalated this one to a human for years.",
+].join("\n\n");
+check("a figure used across genuinely distinct long sentences is NOT collapsed", (collapseRepeatedAnchors(distinctUse).text.match(/661,440/g) || []).length === 3);
+
+console.log("inference / speculation-as-fact guard:");
+const spec = (s: string) => stripSpeculation("He was charged with wire fraud in 2024. " + s + " The court ordered a forfeiture.");
+check("cuts a 'must have required' necessity inference", !/must have required/i.test(spec("A scheme this large must have required coordination with others inside the company.").text));
+check("cuts 'did not build this alone' accomplice inference", spec("Smith did not build this entirely alone.").cuts.length >= 1);
+check("cuts the 'sealed cooperation... or both' speculation", spec("The co-conspirator is unnamed because of sealed cooperation, an ongoing investigation, or both.").cuts.length >= 1);
+check("cuts a totalizing 'was the entire business' claim", !/was the entire business/i.test(spec("That gap was the entire business.").text));
+check("keeps the surrounding sourced facts", spec("Smith did not build this entirely alone.").text.includes("charged with wire fraud") && spec("x").text.includes("forfeiture"));
+check("does NOT fire on a plainly sourced statement", stripSpeculation("The indictment names one co-conspirator and does not describe their role.").cuts.length === 0);
+check("does NOT fire on a properly hedged line", stripSpeculation("The record does not explain why the co-conspirator is unnamed.").cuts.length === 0);
 
 console.log(failures === 0 ? "\nALL PASS" : `\n${failures} FAILURE(S)`);
 process.exit(failures === 0 ? 0 : 1);

@@ -170,6 +170,29 @@ export function stripInsinuations(text: string): { text: string; cuts: string[] 
   return { text: outParas.join("\n\n"), cuts };
 }
 
+// INFERENCE / SPECULATION-AS-FACT detection. Distinct from INSINUATION_RE (a real person's guilt)
+// and the claim check (an invented FACT): this catches invented REASONING — a cause, motive, or
+// conclusion asserted as established when the record doesn't support it. An outside review of a
+// Skripr script flagged exactly this: "sealed cooperation, ongoing investigation, or both" (a guess
+// at why a co-conspirator is unnamed), "Smith did not build this entirely alone" (accomplices
+// inferred from silence), a totalizing "that gap was the entire business", and necessity inferences
+// ("must have required coordination"). For an investigative script this is a credibility risk, so
+// the safe default is to CUT the speculating sentence (never soften into a new claim).
+export const SPECULATION_RE = /\b((?:must|would|could|had to) have (?:been|required|involved|known|meant|taken|needed|had|coordinated|demanded)|had to have (?:been|required|involved|meant|known|taken)|which (?:can|could) only mean|could only (?:have )?mean(?:t)?(?:\s+(?:one thing|that))?|(?:did(?:n'?t| not)|could(?:n'?t| not) have|had(?:n'?t| not)) (?:do|done|build|built|run|ran|orchestrate|orchestrated|pull off|pulled off|manage|managed|create|created|mastermind|masterminded|set up|pull|pulled|act|acted|operate|operated)[^.]{0,40}?\b(?:alone|on (?:his|her|their) own|by (?:him|her|them)\s?self|single-handedly|without help)\b|\bwas the entire (?:business|scheme|point|story|operation|game|plan|thing|fraud)\b|(?:points to|all but confirms|is clear evidence of|strongly (?:implies|suggests)|can only be explained by)\b|(?:sealed (?:cooperation|plea|deal)|an? ongoing investigation|a cooperating (?:witness|deal)|cooperation deal|a plea deal)[^.]{0,60}\bor both\b|the (?:most likely|only plausible) (?:explanation|reason|scenario) is)\b/i;
+export function looksLikeSpeculation(s: string): boolean { return SPECULATION_RE.test(s || ""); }
+export function stripSpeculation(text: string): { text: string; cuts: string[] } {
+  if (!text) return { text, cuts: [] };
+  const cuts: string[] = [];
+  const outParas = text.split(/\n\n+/).map((p) => {
+    const kept = p.split(/(?<=[.!?])\s+/).filter((s) => {
+      if (looksLikeSpeculation(s)) { cuts.push(s.trim()); return false; }
+      return true;
+    });
+    return kept.join(" ").trim();
+  }).filter((p) => p.length > 0);
+  return { text: outParas.join("\n\n"), cuts };
+}
+
 // TRAILING IMPLIED-REVELATION detection — the closing cliffhanger the facts never pay off
 // ("what investigators found when they pulled the thread was not simply one man", "the trail
 // did not end with Smith", "almost more surprising than the scheme itself", "that's where this
@@ -416,6 +439,17 @@ export function collapseRepeatedAnchors(text: string): { text: string; cuts: str
   const remove = new Set<number>();
   const protectKeep = new Set<number>();
   const cuts: string[] = [];
+  // A restatement is cut-eligible when it is either a SHORT bare beat OR it near-duplicates one of
+  // the kept (elaborated) occurrences — the latter catches a figure/name drummed across sections
+  // inside full sentences that merely reword the same point (the outside-review finding: repeated
+  // anchors in long sentences slipped the old short-only rule). A long sentence that carries
+  // genuinely DISTINCT content around the anchor has low overlap and is left alone.
+  const restatesAKept = (idx: number, keepIdxs: number[]) => keepIdxs.some((k) => tokenOverlap(flat[idx].s, flat[k].s) >= 0.5);
+  // Cut a non-kept occurrence when it near-duplicates a kept one (any length — catches a drummed
+  // anchor reworded across long sentences) OR it is a tiny bare beat (< 10 words, almost certainly a
+  // restatement, e.g. "661,440 streams a day."). A medium/long sentence with DISTINCT content around
+  // the anchor has low overlap and is left alone, so genuine elaboration is never lost.
+  const cutEligible = (idx: number, keepIdxs: number[]) => wc(flat[idx].s) < 10 || restatesAKept(idx, keepIdxs);
 
   // DETECTOR B (runs FIRST) — a distinctive FIGURE repeated 3+ times. Normalizes spelled/digit forms
   // and matches on value (numbersMatch). Excludes plausible bare years so "2017" recurring is never
@@ -434,11 +468,13 @@ export function collapseRepeatedAnchors(text: string): { text: string; cuts: str
       if (occ.length >= 3) {
         figHandled.push(v);
         const byLen = [...occ].sort((a, b) => flat[b].s.length - flat[a].s.length);
-        const keep = new Set(byLen.slice(0, 2)); // keep the two most elaborated occurrences
+        const keepArr = byLen.slice(0, 2); // keep the two most elaborated occurrences
+        const keep = new Set(keepArr);
         for (const k of occ) {
           if (keep.has(k)) { protectKeep.add(k); continue; }
-          // Only cut a BARE restatement — a long sentence carrying the figure is elaboration, leave it.
-          if (wc(flat[k].s) >= 22) continue;
+          // Cut a bare restatement OR a long one that just rewords a kept occurrence; leave a long
+          // sentence that carries distinct content around the figure.
+          if (!cutEligible(k, keepArr)) continue;
           remove.add(k); cuts.push(`repetition (figure): ${flat[k].s}`);
         }
       }
@@ -531,11 +567,12 @@ export function collapseRepeatedAnchors(text: string): { text: string; cuts: str
     const live = occ.filter((k) => !remove.has(k));
     if (live.length < 3) continue;
     const byLen = [...live].sort((a, b) => flat[b].s.length - flat[a].s.length);
-    const keep = new Set(byLen.slice(0, 2));
+    const keepArr = byLen.slice(0, 2);
+    const keep = new Set(keepArr);
     for (const k of live) {
       if (keep.has(k)) { protectKeep.add(k); continue; }
       if (protectKeep.has(k)) continue;
-      if (wc(flat[k].s) >= 22) continue; // long sentence = real content, leave it
+      if (!cutEligible(k, keepArr)) continue; // long sentence with distinct content = leave it
       remove.add(k); cuts.push(`repetition (title): ${flat[k].s}`);
     }
   }
