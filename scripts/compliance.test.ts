@@ -1,7 +1,7 @@
 // Offline test for the post-generation compliance check, using the real shapes from the
 // session: the final Queen script (should largely pass) vs. an early flat draft.
 //   node --experimental-strip-types --loader ./scripts/alias-loader.mjs scripts/compliance.test.ts
-import { checkCompliance, complianceScore, structuralScore, checkSourceStructural, accuracyChecks, STRUCTURAL_SET, stripInsinuations, stripImpliedRevelation, dedupeAdjacentParagraphs, stripSchemeDurationClaim, stripStaleFutureDates } from "../src/lib/script-compliance.ts";
+import { checkCompliance, complianceScore, structuralScore, checkSourceStructural, accuracyChecks, STRUCTURAL_SET, stripInsinuations, stripImpliedRevelation, dedupeAdjacentParagraphs, collapseRepeatedAnchors, stripSchemeDurationClaim, stripStaleFutureDates } from "../src/lib/script-compliance.ts";
 
 let failures = 0;
 function check(name: string, cond: boolean) {
@@ -376,6 +376,60 @@ check("does NOT cut a still-future date",
   stripStaleFutureDates("His sentencing is scheduled for December 2026.", sept).cuts.length === 0);
 check("does NOT cut a normal past-tense historical date",
   stripStaleFutureDates("He was sentenced on July 29, 2019, to twenty years.", sept).cuts.length === 0);
+
+// DE-REPETITION — an anchor drummed 3+ times, non-adjacent, collapsed to 1-2 ELABORATED instances.
+// Uses the exact offenders from the clean 20-min Michael Smith build as fixtures.
+console.log("de-repetition: collapse drummed anchors, keep the elaborated instance:");
+const fillerBank = [
+  "The streaming economy had grown into a system almost nobody outside it fully understood.",
+  "Royalty pools redistribute money by share of total plays, a design meant to be fair.",
+  "Detection systems lean on pattern analysis that assumes fraud looks frantic, not patient.",
+  "Investigators later described a paper trail that was mundane precisely because it was careful.",
+  "Independent artists rarely see the internal machinery that decides how they get paid.",
+  "The wider industry had spent a decade optimizing for volume above almost everything else.",
+  "Court filings walked through a chronology built from bank records and platform logs.",
+  "Musicians who lost income mostly never knew a specific name to blame for it.",
+];
+const filler = (n: number) => Array.from({ length: n }, (_, i) => fillerBank[i % fillerBank.length]).join(" ");
+// A distinctive figure (661,440) drummed 5x: two elaborated, three bare restatements.
+const figElab1 = "At its peak the network pushed 661,440 streams a day, a volume that against a real touring artist's yearly total would have taken that musician the better part of a decade to earn honestly.";
+const figElab2 = "That figure, 661,440 streams every single day, is what let the royalties compound so fast that the pool redistribution never flagged it as anomalous.";
+const figScript = [
+  figElab1, filler(2),
+  "It was 661,440 streams a day.",
+  filler(2),
+  "Again, 661,440 streams a day.",
+  filler(2),
+  figElab2,
+  filler(2),
+  "661,440 streams a day.",
+].join("\n\n");
+const fr = collapseRepeatedAnchors(figScript);
+const figCount = (fr.text.match(/661,440/g) || []).length;
+check("a figure drummed 5x is reduced to 1-2 instances", figCount >= 1 && figCount <= 2);
+check("the ELABORATED instances are the ones kept", /the better part of a decade|redistribution never flagged/.test(fr.text));
+check("the bare 'It was 661,440 streams a day.' restatement is cut", !/It was 661,440 streams a day\./.test(fr.text));
+check("figure cuts are recorded internally", fr.cuts.some((c) => /repetition \(figure\)/.test(c)));
+
+// A distinctive phrase repeated 3x, near-verbatim.
+const phrase = "This was not a tech executive, not a hedge fund manager, but a music producer working out of a modest studio.";
+const phraseScript = [phrase, filler(2), phrase, filler(2), "This was not a tech executive, not a hedge fund manager. It was a music producer.", filler(2), "A real closing beat: the court ordered an $8 million forfeiture."].join("\n\n");
+const pr = collapseRepeatedAnchors(phraseScript);
+check("a distinctive phrase repeated 3x is reduced", (pr.text.match(/not a tech executive/g) || []).length <= 2);
+check("phrase cuts are recorded internally", pr.cuts.some((c) => /repetition \(phrase\)/.test(c)));
+
+// A quote restated 4x (near-verbatim), collapsed to 1-2.
+const q = "Damian Williams said the defendant appropriated millions in royalties that rightfully belonged to musicians and songwriters.";
+const quoteScript = [q, filler(2), q, filler(2), q, filler(2), q].join("\n\n");
+const qr = collapseRepeatedAnchors(quoteScript);
+check("a quote restated 4x collapses to 1-2", (qr.text.match(/appropriated millions in royalties/g) || []).length >= 1 && (qr.text.match(/appropriated millions in royalties/g) || []).length <= 2);
+
+// NEGATIVE — a fact that legitimately appears TWICE must NOT be touched.
+const twice = collapseRepeatedAnchors([figElab1, filler(3), figElab2].join("\n\n"));
+check("a fact appearing only twice is left alone", twice.cuts.length === 0 && (twice.text.match(/661,440/g) || []).length === 2);
+// NEGATIVE — a year (2017) recurring many times is not an anchor.
+const years = collapseRepeatedAnchors(["The scheme began in 2017.", filler(2), "By 2017 the accounts were live.", filler(2), "Everything traces back to 2017.", filler(2), "It all started in 2017."].join("\n\n"));
+check("a recurring year is never collapsed", (years.text.match(/2017/g) || []).length === 4 && !years.cuts.some((c) => /2017/.test(c)));
 
 console.log(failures === 0 ? "\nALL PASS" : `\n${failures} FAILURE(S)`);
 process.exit(failures === 0 ? 0 : 1);

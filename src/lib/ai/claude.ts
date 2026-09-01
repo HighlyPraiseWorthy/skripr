@@ -1,7 +1,7 @@
 import { Anthropic } from "@anthropic-ai/sdk";
 import { fingerprintToBrief, readProhibitions, stripStandaloneTics, type VoiceFingerprint } from "@/lib/voice-metrics";
 import { buildStorytellingBlock } from "@/lib/storytelling";
-import { stripInsinuations, stripImpliedRevelation, dedupeAdjacentParagraphs, stripSchemeDurationClaim, stripStaleFutureDates } from "@/lib/script-compliance";
+import { stripInsinuations, stripImpliedRevelation, dedupeAdjacentParagraphs, collapseRepeatedAnchors, stripSchemeDurationClaim, stripStaleFutureDates } from "@/lib/script-compliance";
 import { buildVarietyBlock } from "@/lib/ai/phrase-variety";
 
 let _anthropic: Anthropic | null = null;
@@ -1277,6 +1277,10 @@ export async function finalizeScript(
   };
   const nowMs = Date.now();
   applyBodyPass(dedupeAdjacentParagraphs, "dedupe");
+  // De-repetition: collapse an anchor fact drummed 3+ times across the whole body, keeping the
+  // elaborated instances and cutting the bare restatements. Runs after dedupe (adjacent copies
+  // already gone) and on the assembled body, so it catches an anchor spread across sections.
+  applyBodyPass(collapseRepeatedAnchors, "repetition");
   applyBodyPass(stripSchemeDurationClaim, "duration");
   applyBodyPass((t) => stripStaleFutureDates(t, nowMs), "stale-date");
 

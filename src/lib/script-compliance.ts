@@ -321,6 +321,91 @@ export function stripStaleFutureDates(text: string, now: number): { text: string
   return { text: outParas.join("\n\n"), cuts };
 }
 
+// GOVERNING PRINCIPLE — silent fix. Collapse an ANCHOR fact restated 3+ times, non-adjacent, across
+// the assembled body. Elaboration (deepening a fact) is good and stays; the failure this catches is
+// a fact that DRUMS — "661,440 streams a day" 5-6x, the Damian Williams quote 3-4x, "not a tech
+// executive, not a hedge fund manager" 3x, the royalty-pool mechanism twice. dedupeAdjacentParagraphs
+// handles adjacent copies and the anaphora guard handles repeated section-openers; neither catches
+// an anchor spread across sections 2, 4 and 6 — this does.
+//
+// CRITICAL: keep the ELABORATED instance(s), cut the bare restatements — not the reverse. A fact
+// should land once or twice with depth; it shouldn't drum. So among a cluster's occurrences the two
+// LONGEST (most surrounding depth) are kept and protected; only the shorter bare restatements are
+// cut. Conservative/under-fire: fires only on clear 3+ repeats, always leaves >= 2 instances, never
+// strips a fact entirely, and never touches a sentence kept as elaborated by another anchor.
+export function collapseRepeatedAnchors(text: string): { text: string; cuts: string[] } {
+  if (!text) return { text, cuts: [] };
+  const paras = text.split(/\n\n+/).map((p) => p.trim()).filter(Boolean);
+  type Flat = { p: number; s: string };
+  const flat: Flat[] = [];
+  paras.forEach((p, pi) => {
+    for (const raw of p.split(/(?<=[.!?])\s+/)) { const s = raw.trim(); if (s) flat.push({ p: pi, s }); }
+  });
+  const wc = (s: string) => s.split(/\s+/).filter(Boolean).length;
+  const remove = new Set<number>();
+  const protectKeep = new Set<number>();
+  const cuts: string[] = [];
+
+  // DETECTOR B (runs FIRST) — a distinctive FIGURE repeated 3+ times. Normalizes spelled/digit forms
+  // and matches on value (numbersMatch). Excludes plausible bare years so "2017" recurring is never
+  // an anchor. Keeps the two LONGEST occurrences (the elaborated ones) and cuts the short bare
+  // restatements. Runs before the phrase detector so bare figure-restatements can't be protected as
+  // a near-verbatim cluster of each other.
+  const isDistinctive = (v: number) => Math.abs(v) >= 1000 && !(Number.isInteger(v) && v >= 1900 && v <= 2100);
+  const sentVals: number[][] = flat.map((f) =>
+    [...digitNumbersIn(f.s).map((d) => d.value), ...spelledNumbersIn(f.s).map((s) => s.value)].filter(isDistinctive),
+  );
+  const figHandled: number[] = [];
+  for (let i = 0; i < flat.length; i++) {
+    for (const v of sentVals[i]) {
+      if (figHandled.some((h) => numbersMatch(h, v))) continue;
+      const occ = flat.map((_, idx) => idx).filter((idx) => sentVals[idx].some((x) => numbersMatch(x, v)));
+      if (occ.length >= 3) {
+        figHandled.push(v);
+        const byLen = [...occ].sort((a, b) => flat[b].s.length - flat[a].s.length);
+        const keep = new Set(byLen.slice(0, 2)); // keep the two most elaborated occurrences
+        for (const k of occ) {
+          if (keep.has(k)) { protectKeep.add(k); continue; }
+          // Only cut a BARE restatement — a long sentence carrying the figure is elaboration, leave it.
+          if (wc(flat[k].s) >= 22) continue;
+          remove.add(k); cuts.push(`repetition (figure): ${flat[k].s}`);
+        }
+      }
+    }
+  }
+
+  // DETECTOR A — near-verbatim sentence clusters (a repeated quote/phrase/mechanism sentence). Skips
+  // sentences the figure pass already removed, so it can't resurrect a bare restatement.
+  const usedA = new Set<number>();
+  for (let i = 0; i < flat.length; i++) {
+    if (usedA.has(i) || remove.has(i) || wc(flat[i].s) < 6) continue;
+    const cluster = [i];
+    for (let j = i + 1; j < flat.length; j++) {
+      if (usedA.has(j) || remove.has(j)) continue;
+      if (tokenOverlap(flat[i].s, flat[j].s) >= 0.8) cluster.push(j);
+    }
+    if (cluster.length >= 3) {
+      cluster.forEach((k) => usedA.add(k));
+      const byLen = [...cluster].sort((a, b) => flat[b].s.length - flat[a].s.length);
+      const keep = new Set(byLen.slice(0, 2)); // keep the two most elaborated
+      for (const k of cluster) {
+        if (keep.has(k)) protectKeep.add(k);
+        else { remove.add(k); cuts.push(`repetition (phrase): ${flat[k].s}`); }
+      }
+    }
+  }
+
+  for (const k of protectKeep) remove.delete(k); // an elaborated instance is never cut
+  if (remove.size === 0) return { text: paras.join("\n\n"), cuts: [] };
+
+  const rebuilt: string[] = [];
+  paras.forEach((_, pi) => {
+    const kept = flat.filter((f, idx) => f.p === pi && !remove.has(idx)).map((f) => f.s);
+    if (kept.length) rebuilt.push(kept.join(" "));
+  });
+  return { text: rebuilt.join("\n\n"), cuts };
+}
+
 export function checkCompliance(input: ComplianceInput): ComplianceCheck[] {
   const out: ComplianceCheck[] = [];
   const script = input.fullScript || "";

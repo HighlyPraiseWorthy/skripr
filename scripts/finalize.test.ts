@@ -115,5 +115,34 @@ check("extended cliffhanger: 'hasn't been told yet / more surprising than anythi
 check("ends on the sourced forfeiture beat", /\$8,091,843\.64 forfeiture\.?$/.test(b2.trim()));
 check("_autoCuts tags the new fixes", (out2._autoCuts || []).some((c: string) => /^dedupe:/.test(c)) && (out2._autoCuts || []).some((c: string) => /^duration:/.test(c)) && (out2._autoCuts || []).some((c: string) => /^stale-date:/.test(c)));
 
+// DE-REPETITION must run in finalize on the assembled body: an anchor drummed 4x collapses to the
+// elaborated instances, bare restatements cut, recorded as repetition:. Fully offline.
+console.log("finalize collapses a drummed anchor on the assembled body:");
+const distinct = [
+  "The streaming economy had grown into something few outsiders understood in any depth.",
+  "Royalty pools split money by share of total plays, a design that assumes honest listening.",
+  "Detection tools look for frantic spikes, not the patient, boring cadence this scheme kept.",
+  "Independent musicians almost never see the machinery that decides what they are paid.",
+];
+const figE1 = "At its peak the operation pushed 661,440 streams a day, a number that against a working artist's real yearly total represents years of honest listening manufactured in a single afternoon.";
+const figE2 = "That same 661,440 streams a day is why the royalty pool redistributed so much so quietly that no automated audit ever marked it as strange.";
+const BODY3 = [
+  `${HOOK} It began as ordinary distribution.`,
+  figE1, distinct[0],
+  "It was 661,440 streams a day.", distinct[1],
+  "Again: 661,440 streams a day.", distinct[2],
+  figE2, distinct[3],
+  "In January 2024 he pleaded guilty and the court ordered an $8,091,843.64 forfeiture.",
+].join("\n\n");
+const script3: any = { title: "The quiet pipeline", hook: HOOK, fullScript: BODY3, script: BODY3, body: BODY3, content: BODY3, sections: [{ title: "All", content: BODY3 }], sectionwise: true };
+const out3: any = await finalizeScript(script3, { targetTopic: "a streaming scheme", targetNiche: "true crime" } as any, { startedAt: Date.now(), presetHook: HOOK });
+const b3: string = out3.fullScript || "";
+const n3 = (b3.match(/661,440/g) || []).length;
+check("drummed figure collapsed to 1-2 instances in finalize", n3 >= 1 && n3 <= 2);
+check("the elaborated instances survive", /single afternoon|no automated audit ever marked/.test(b3));
+check("a bare restatement is cut", !/It was 661,440 streams a day\./.test(b3) || !/Again: 661,440 streams a day\./.test(b3));
+check("_autoCuts tags the repetition fix", (out3._autoCuts || []).some((c: string) => /^repetition/.test(c)));
+check("the sourced closing beat is untouched", /\$8,091,843\.64 forfeiture/.test(b3));
+
 console.log(failures === 0 ? "\nALL PASS" : `\n${failures} FAILURE(S)`);
 process.exit(failures === 0 ? 0 : 1);
