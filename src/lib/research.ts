@@ -1158,12 +1158,31 @@ async function minePrimarySourceDocs(
     // fact. This is the granular layer Perplexity summaries omit. Niche-agnostic: the same
     // instruction pulls specifics from a fraud indictment, a court opinion, or an agency report.
     try {
-      const userContent: any = pdfB64
-        ? [
-            { type: "document", source: { type: "base64", media_type: "application/pdf", data: pdfB64 } },
-            { type: "text", text: ASK },
-          ]
-        : `${ASK}\n\nSOURCE DOCUMENT URL: ${url}\n\nDOCUMENT TEXT:\n"""\n${text}\n"""`;
+      // A document block (PDF) or the stripped HTML text, reused across both passes.
+      const docBlock: any = pdfB64
+        ? { type: "document", source: { type: "base64", media_type: "application/pdf", data: pdfB64 } }
+        : null;
+      const withDoc = (ask: string): any => docBlock ? [docBlock, { type: "text", text: ask }] : `${ask}\n\nSOURCE DOCUMENT URL: ${url}\n\nDOCUMENT TEXT:\n"""\n${text}\n"""`;
+
+      // PASS A — MAP. A single "extract the key facts" call compresses the buried overt-acts away,
+      // so first locate WHERE the granular allegations live. Cheap; names the evidence-dense
+      // sections so pass B can be told to mine them exhaustively.
+      let denseHint = "";
+      try {
+        const mapMsg = await anthropic().messages.create({
+          model: "claude-sonnet-4-6",
+          max_tokens: 600,
+          temperature: 0,
+          system: "You map the structure of an official document. List its section/heading names and mark which contain the DETAILED FACTUAL ALLEGATIONS — the speaking-indictment narrative, 'Manner and Means', 'Overt Acts', or the dated-events section (as opposed to legal standards, statutes, boilerplate). Output ONLY JSON: {\"denseSections\":[\"exact heading\", ...]}.",
+          messages: [{ role: "user", content: withDoc("Map this document. Output ONLY JSON: {\"denseSections\":[...]}.") }],
+        });
+        const mc = mapMsg.content[0]?.type === "text" ? mapMsg.content[0].text : "";
+        const mm = mc.match(/\{[\s\S]*\}/);
+        const ds = mm ? (JSON.parse(mm[0])?.denseSections) : null;
+        if (Array.isArray(ds) && ds.length) denseHint = `\n\nThe detailed allegations are concentrated in these sections — mine them the hardest: ${ds.filter((x: any) => typeof x === "string").slice(0, 8).join("; ")}.`;
+      } catch { /* map is best-effort; pass B still runs exhaustively */ }
+
+      // PASS B — EXHAUST. Enumerate every evidentiary event, not "key facts".
       const msg = await anthropic().messages.create({
         model: "claude-sonnet-4-6",
         // A PDF indictment is dense; give the enumeration room so the deep overt-acts section
@@ -1171,7 +1190,7 @@ async function minePrimarySourceDocs(
         max_tokens: pdfB64 ? 8000 : 4500,
         temperature: 0,
         system: SYSTEM,
-        messages: [{ role: "user", content: userContent }],
+        messages: [{ role: "user", content: withDoc(ASK + denseHint) }],
       });
       const content = msg.content[0]?.type === "text" ? msg.content[0].text : "";
       const m = content.match(/\{[\s\S]*\}/);
@@ -1189,7 +1208,16 @@ async function minePrimarySourceDocs(
         if (watchlist.some((w) => f.toLowerCase().includes(w.toLowerCase()))) continue;
         out.push({ fact: f.trim(), source: url, context: true });
       }
-      console.log(`[primary-doc] extracted ${facts.length} facts from ${isPdf ? "PDF" : "HTML"} ${url}`);
+      // EVIDENTIARY-DENSITY PROVENANCE SIGNAL (niche-agnostic). The overt-acts layer is made of
+      // dated events, dollar movements, quoted lines, and co-conspirator designations. Counting how
+      // many extracted facts carry each tells us — without any case-specific anchor list — whether
+      // the deep section actually came through or got summarized away. Near-zero here on a real
+      // charging document = the extraction is still compressing (or the doc wasn't truly read).
+      const dated = facts.filter((f) => /\b(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s+\d{1,2}?,?\s*\d{4}\b|\b\d{4}\b/i.test(f)).length;
+      const dollar = facts.filter((f) => /[$£€]\s?\d|\b\d[\d,]*(?:\.\d+)?\s*(?:million|thousand|billion|dollars)\b/i.test(f)).length;
+      const quoted = facts.filter((f) => /["“][^"”]{6,}["”]|wrote|stated|said|emailed|texted/i.test(f)).length;
+      const ccN = facts.filter((f) => /\bC\.?C\.?-?\s?\d\b|co-?conspirator\s*\d/i.test(f)).length;
+      console.log(`[primary-doc] extracted ${facts.length} facts from ${isPdf ? "PDF" : "HTML"} ${url} — evidentiary density: dated=${dated} dollar=${dollar} quoted=${quoted} ccN=${ccN}`);
     } catch (e) {
       console.error(`[primary-doc] extraction failed for ${url}:`, (e as any)?.message);
     }

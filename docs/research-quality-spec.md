@@ -812,3 +812,23 @@ refactor (`mode:"section"` + `mode:"finalize"`) should move UP from "last" — i
 gating both the 20-min head-to-head AND the ability to run the richer silent-fix passes inline.
 
 `tsc`-clean; all six suites green.
+
+## PDF depth — phase 1 shipped, phase 2 deferred (2026-09)
+
+Root cause of the persistent depth gap was found and fixed: justice.gov returns HTTP 403 to a
+bot User-Agent, so the indictment PDF fetch was silently blocked (the "PDF facts" on the
+grounding page were Perplexity summaries). Fix: a full browser User-Agent on the primary-doc
+fetch (verified 200 + application/pdf via curl).
+
+Phase 1 (shipped): browser-UA fetch; native-PDF read via a Claude document block; two-pass
+extraction (map the detailed-allegations / overt-acts section, then enumerate every evidentiary
+event exhaustively — not "key facts"); 8000-token extraction budget; MAX_FACTS 80 with deep asks
+keeping the full ceiling so granular facts survive the cap; a niche-agnostic evidentiary-density
+provenance log (`[primary-doc] ... evidentiary density: dated=X dollar=Y quoted=Z ccN=W`); and a
+regression fixture (`scripts/benchmark-michael-smith.test.ts`) locking the 10-fact depth benchmark.
+
+Phase 2 (noted, NOT built — the research-grade version; a prompt reframe + the density log get
+~90% of the win first): a full integrity-report UI; page-precise chunking; per-class anchor-recovery
+passes; coverage scoring; dual native+local (pdf-parse) extraction merge; per-sentence
+evidence→source provenance matching on every fact (the evidence-database + traceability layer). Build
+these only after the phase-1 depth is proven on a live rematch.
