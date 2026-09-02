@@ -1,7 +1,7 @@
 // Offline test for the post-generation compliance check, using the real shapes from the
 // session: the final Queen script (should largely pass) vs. an early flat draft.
 //   node --experimental-strip-types --loader ./scripts/alias-loader.mjs scripts/compliance.test.ts
-import { checkCompliance, complianceScore, structuralScore, checkSourceStructural, accuracyChecks, STRUCTURAL_SET, stripInsinuations, stripUnnamedPartyNaming, stripSpeculation, stripImpliedRevelation, dedupeAdjacentParagraphs, collapseRepeatedAnchors, stripSchemeDurationClaim, stripStaleFutureDates, stripSourceLeaks, mergeOrphanFragments } from "../src/lib/script-compliance.ts";
+import { checkCompliance, complianceScore, structuralScore, checkSourceStructural, accuracyChecks, STRUCTURAL_SET, stripInsinuations, stripUnnamedPartyNaming, stripSpeculation, stripImpliedRevelation, dedupeAdjacentParagraphs, collapseRepeatedAnchors, stripSchemeDurationClaim, stripStaleFutureDates, stripSourceLeaks, mergeOrphanFragments, correctDatesToFacts } from "../src/lib/script-compliance.ts";
 
 let failures = 0;
 function check(name: string, cond: boolean) {
@@ -562,6 +562,29 @@ check("does NOT fire on a plain named-defendant sentence",
   stripUnnamedPartyNaming("Michael Smith was the mastermind of the streaming scheme.").cuts.length === 0);
 check("does NOT fire when the co-conspirator stays unnamed",
   stripUnnamedPartyNaming("The indictment references a co-conspirator but does not name them.").cuts.length === 0);
+
+// TIGHTENING BATCH — absolute characterizations, date integrity.
+console.log("absolute / uncheckable characterizations:");
+const abs = (s: string) => stripSpeculation("The accounts streamed songs. " + s + " The court ordered a forfeiture.");
+check("cuts 'indistinguishable from a real listener'", abs("Each bot was indistinguishable from a real listener.").cuts.length >= 1);
+check("cuts 'invisible from the outside'", abs("The whole operation was invisible from the outside.").cuts.length >= 1);
+check("cuts 'ran largely uninterrupted for seven years'", abs("It ran largely uninterrupted for roughly seven years.").cuts.length >= 1);
+check("cuts 'nobody audits whether the listeners were real'", abs("Nobody audits whether the listeners were real.").cuts.length >= 1);
+check("cuts 'every registration converted into a royalty payment'", abs("Every registration converted into a royalty payment.").cuts.length >= 1);
+check("does NOT fire on a bounded documented statement",
+  stripSpeculation("The bots streamed songs around the clock, and distributors warned him in 2018.").cuts.length === 0);
+
+console.log("date integrity (verbatim to facts):");
+const dFacts = "Smith pleaded guilty on March 19, 2026. He agreed to forfeit $8,091,843.64.";
+const dc2 = correctDatesToFacts("He pleaded guilty on March 20, 2026, in a Manhattan courtroom.", dFacts);
+check("corrects a day shifted off the fact (March 20 -> March 19)", /March 19, 2026/.test(dc2.text) && !/March 20/.test(dc2.text));
+check("records the date correction", dc2.cuts.some((c) => /March 20, 2026 -> March 19, 2026/.test(c)));
+check("leaves a date that already matches the fact untouched",
+  correctDatesToFacts("He pleaded guilty on March 19, 2026.", dFacts).cuts.length === 0);
+check("does NOT guess a month/year the facts don't carry",
+  correctDatesToFacts("The scheme began in August 12, 2017.", dFacts).cuts.length === 0);
+check("does NOT fire when facts have two different days that month (ambiguous)",
+  correctDatesToFacts("It happened on March 25, 2026.", "Events on March 19, 2026 and March 30, 2026.").cuts.length === 0);
 
 console.log(failures === 0 ? "\nALL PASS" : `\n${failures} FAILURE(S)`);
 process.exit(failures === 0 ? 0 : 1);

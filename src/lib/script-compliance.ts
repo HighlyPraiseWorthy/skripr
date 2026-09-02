@@ -205,7 +205,7 @@ export function stripUnnamedPartyNaming(text: string): { text: string; cuts: str
 // inferred from silence), a totalizing "that gap was the entire business", and necessity inferences
 // ("must have required coordination"). For an investigative script this is a credibility risk, so
 // the safe default is to CUT the speculating sentence (never soften into a new claim).
-export const SPECULATION_RE = /\b((?:must|would|could|had to) have (?:been|required|involved|known|meant|taken|needed|had|coordinated|demanded)|had to have (?:been|required|involved|meant|known|taken)|which (?:can|could) only mean|could only (?:have )?mean(?:t)?(?:\s+(?:one thing|that))?|(?:did(?:n'?t| not)|could(?:n'?t| not) have|had(?:n'?t| not)) (?:do|done|build|built|run|ran|orchestrate|orchestrated|pull off|pulled off|manage|managed|create|created|mastermind|masterminded|set up|pull|pulled|act|acted|operate|operated)[^.]{0,40}?\b(?:alone|on (?:his|her|their) own|by (?:him|her|them)\s?self|single-handedly|without help)\b|\bwas the entire (?:business|scheme|point|story|operation|game|plan|thing|fraud)\b|(?:points to|all but confirms|is clear evidence of|strongly (?:implies|suggests)|can only be explained by)\b|(?:sealed (?:cooperation|plea|deal)|an? ongoing investigation|a cooperating (?:witness|deal)|cooperation deal|a plea deal)[^.]{0,60}\bor both\b|the (?:most likely|only plausible) (?:explanation|reason|scenario) is|(?:nobody|no one|not (?:one|a single) (?:person|executive|analyst|investigator))[^.]{0,40}\b(?:could (?:explain|say|agree|figure out|account for|tell)|knew|noticed|understood|had (?:an? )?answer)|(?:no one|nobody|few people|not everyone)[^.]{0,30}\b(?:in the (?:industry|business|company)|at the (?:platforms?|labels?|company))[^.]{0,30}\b(?:could|knew|agreed|understood|noticed)|(?:was|were) (?:treated as|considered|thought to be|assumed) (?:essentially |basically |all but )?(?:airtight|foolproof|impossible|unbeatable|bulletproof)|(?:the (?:royalty pools?|numbers?|books?|figures?)) (?:just |simply |never )?(?:did(?:n'?t| not) add up|made no sense))\b/i;
+export const SPECULATION_RE = /\b((?:must|would|could|had to) have (?:been|required|involved|known|meant|taken|needed|had|coordinated|demanded)|had to have (?:been|required|involved|meant|known|taken)|which (?:can|could) only mean|could only (?:have )?mean(?:t)?(?:\s+(?:one thing|that))?|(?:did(?:n'?t| not)|could(?:n'?t| not) have|had(?:n'?t| not)) (?:do|done|build|built|run|ran|orchestrate|orchestrated|pull off|pulled off|manage|managed|create|created|mastermind|masterminded|set up|pull|pulled|act|acted|operate|operated)[^.]{0,40}?\b(?:alone|on (?:his|her|their) own|by (?:him|her|them)\s?self|single-handedly|without help)\b|\bwas the entire (?:business|scheme|point|story|operation|game|plan|thing|fraud)\b|(?:points to|all but confirms|is clear evidence of|strongly (?:implies|suggests)|can only be explained by)\b|(?:sealed (?:cooperation|plea|deal)|an? ongoing investigation|a cooperating (?:witness|deal)|cooperation deal|a plea deal)[^.]{0,60}\bor both\b|the (?:most likely|only plausible) (?:explanation|reason|scenario) is|(?:nobody|no one|not (?:one|a single) (?:person|executive|analyst|investigator))[^.]{0,40}\b(?:could (?:explain|say|agree|figure out|account for|tell)|knew|noticed|understood|had (?:an? )?answer)|(?:no one|nobody|few people|not everyone)[^.]{0,30}\b(?:in the (?:industry|business|company)|at the (?:platforms?|labels?|company))[^.]{0,30}\b(?:could|knew|agreed|understood|noticed)|(?:was|were) (?:treated as|considered|thought to be|assumed) (?:essentially |basically |all but )?(?:airtight|foolproof|impossible|unbeatable|bulletproof)|(?:the (?:royalty pools?|numbers?|books?|figures?)) (?:just |simply |never )?(?:did(?:n'?t| not) add up|made no sense)|indistinguishable from (?:a |real |an actual )?(?:real |human )?(?:listener|listening|person|user|artist|human)|(?:completely |entirely |totally |essentially )?invisible (?:from the outside|to (?:everyone|anyone|the platforms?|detection)|the whole time)|(?:completely |entirely |essentially )?undetectable|(?:largely|completely|entirely|totally) uninterrupted|never (?:once )?(?:verified|audited|checked|flagged|questioned|caught|detected)|(?:nobody|no one) (?:ever )?(?:audits?|verifies|verified|checks?|checked|knew|noticed|questioned|caught it)|(?:every|each) (?:single )?(?:registration|stream|account|song|upload|play)[^.]{0,25}?(?:converted|became|turned into|generated|counted as)|(?:almost |virtually )?none of (?:them|the (?:listeners?|streams?|plays?|accounts?)) (?:were|was) (?:real|human|legitimate|genuine))\b/i;
 export function looksLikeSpeculation(s: string): boolean { return SPECULATION_RE.test(s || ""); }
 export function stripSpeculation(text: string): { text: string; cuts: string[] } {
   if (!text) return { text, cuts: [] };
@@ -355,6 +355,47 @@ export function stripSchemeDurationClaim(text: string, title?: string): { text: 
     return kept.join(" ").trim();
   }).filter((p) => p.length > 0);
   return { text: outParas.join("\n\n"), cuts };
+}
+
+// GOVERNING PRINCIPLE — silent fix (CORRECTNESS). Correct a case-event DATE the script shifted
+// off the sourced date. The rematch script said the guilty plea was "March 20, 2026" when the DOJ
+// fact says March 19 — a fabricated-by-drift date. Dates must be copied VERBATIM from the facts.
+// Deterministic and conservative: only when a script date's MONTH+YEAR match EXACTLY ONE fact date
+// but the DAY differs is the day corrected to the fact's day (the exact "20 vs 19" drift). A month
+// or year the facts don't carry at all is left alone — we can't know the right value, so we never
+// guess; the semantic pass / grounding handles those.
+const _MONTHNUM: Record<string, number> = { jan: 1, feb: 2, mar: 3, apr: 4, may: 5, jun: 6, jul: 7, aug: 8, sep: 9, oct: 10, nov: 11, dec: 12 };
+const _MONTH_DATE_RE = /\b(jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:t(?:ember)?)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\.?\s+(\d{1,2})(,)?\s+(\d{4})\b/gi;
+function factDateDays(factBlob: string): Map<string, Set<number>> {
+  const byMonthYear = new Map<string, Set<number>>();
+  for (const m of (factBlob || "").matchAll(_MONTH_DATE_RE)) {
+    const mn = _MONTHNUM[m[1].slice(0, 3).toLowerCase()];
+    const day = parseInt(m[2], 10);
+    const yr = m[4];
+    if (!mn || !day) continue;
+    const key = `${mn}-${yr}`;
+    if (!byMonthYear.has(key)) byMonthYear.set(key, new Set());
+    byMonthYear.get(key)!.add(day);
+  }
+  return byMonthYear;
+}
+export function correctDatesToFacts(text: string, factBlob: string | undefined): { text: string; cuts: string[] } {
+  if (!text || !factBlob) return { text, cuts: [] };
+  const factDays = factDateDays(factBlob);
+  if (!factDays.size) return { text, cuts: [] };
+  const cuts: string[] = [];
+  const out = text.replace(_MONTH_DATE_RE, (whole, mon, day, comma, yr) => {
+    const mn = _MONTHNUM[String(mon).slice(0, 3).toLowerCase()];
+    const key = `${mn}-${yr}`;
+    const days = factDays.get(key);
+    if (!days || days.has(parseInt(day, 10))) return whole; // month/year not in facts, or day already correct
+    if (days.size !== 1) return whole;                       // ambiguous — don't guess
+    const correct = [...days][0];
+    const fixed = whole.replace(/\d{1,2}(?=(,)?\s+\d{4}\b)/, String(correct));
+    cuts.push(`${whole} -> ${fixed}`);
+    return fixed;
+  });
+  return { text: out, cuts };
 }
 
 // Detector for a future-FRAMED calendar date that is now in the past (shared by the compliance
