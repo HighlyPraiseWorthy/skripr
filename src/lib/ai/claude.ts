@@ -756,15 +756,21 @@ export function factIsUsed(fact: string, bodyLc: string): boolean {
 async function extendWithUnusedFacts(fullScript: string, factsBlob: string, targetWords: number, startedAt: number): Promise<string> {
   const count = (s: string) => s.split(/\s+/).filter(Boolean).length;
   const facts = parseFactList(factsBlob);
-  if (facts.length < 3) return fullScript;
+  // Instrumentation so ONE live run answers: was it invoked, how many facts read UNUSED going in,
+  // how many passes ran, and why it stopped. Prints exactly one [expand] line at the end.
+  const unusedAtStart = facts.filter((f) => !factIsUsed(f, fullScript.toLowerCase())).length;
+  let passes = 0;
+  let stoppedBecause = "loop-max";
+  const report = () => console.log(`[expand] invoked=true parsedFacts=${facts.length} unusedFacts=${unusedAtStart} passes=${passes} stoppedBecause=${stoppedBecause} startWords=${count(fullScript)} finalWords=${count(body)} target=${targetWords}`);
   let body = fullScript;
+  if (facts.length < 3) { console.log(`[expand] invoked=true parsedFacts=${facts.length} stoppedBecause=too-few-facts finalWords=${count(body)} target=${targetWords}`); return fullScript; }
   for (let iter = 0; iter < 4; iter++) {
     const w = count(body);
-    if (w >= targetWords * 0.92) break;
-    if (Date.now() - startedAt > 200_000) break;
+    if (w >= targetWords * 0.92) { stoppedBecause = "length-reached"; break; }
+    if (Date.now() - startedAt > 200_000) { stoppedBecause = "time-budget"; break; }
     const bodyLc = body.toLowerCase();
     const unused = facts.filter((f) => !factIsUsed(f, bodyLc));
-    if (!unused.length) break;
+    if (!unused.length) { stoppedBecause = "facts-exhausted"; break; }
     const batch = unused.slice(0, 12);
     const paras = body.split(/\n\n+/);
     const conclusion = paras.length > 3 ? paras.pop()! : "";
@@ -783,14 +789,17 @@ async function extendWithUnusedFacts(fullScript: string, factsBlob: string, targ
       });
       const c = resp.content[0];
       const seg = c.type === "text" ? c.text.trim() : "";
-      if (!seg || count(seg) < 40) break; // model gave nothing usable
+      if (!seg || count(seg) < 40) { stoppedBecause = "empty-segment"; break; }
       body = [mid, seg, conclusion].filter(Boolean).join("\n\n");
+      passes++;
       console.log(`[extend-facts] iter ${iter}: +${count(seg)} words (${w} -> ${count(body)}, target ${targetWords}, ${unused.length} unused facts)`);
     } catch (e) {
+      stoppedBecause = "llm-error";
       console.error("[extend-facts] failed, keeping current body:", (e as any)?.message);
       break;
     }
   }
+  report();
   return body;
 }
 
@@ -1194,18 +1203,23 @@ export async function finalizeScript(
   // when no fact set was supplied. Both no-op once the body is at length, so a full script pays
   // nothing.
   const targetWords = input.targetMinutes ? Math.round(input.targetMinutes * 130) : null;
+  const startWordsForLog = bodyKey ? (script as any)[bodyKey].split(/\s+/).filter(Boolean).length : 0;
   if (targetWords && targetWords >= 1200 && bodyKey) {
     try {
-      const before = (script as any)[bodyKey].split(/\s+/).filter(Boolean).length;
+      const before = startWordsForLog;
       const facts = input.sourceMaterial && input.sourceMaterial.trim() ? input.sourceMaterial : "";
       (script as any)[bodyKey] = facts
         ? await extendWithUnusedFacts((script as any)[bodyKey], facts, targetWords, startedAt)
         : await extendScriptToLength((script as any)[bodyKey], targetWords, input.targetTopic || "", input.targetNiche || "", startedAt);
       const after = (script as any)[bodyKey].split(/\s+/).filter(Boolean).length;
-      if (after !== before) console.log(`[extend] field=${bodyKey} target=${targetWords} before=${before} after=${after} (${facts ? "fact-aware" : "generic"})`);
+      console.log(`[extend] field=${bodyKey} target=${targetWords} before=${before} after=${after} (${facts ? "fact-aware" : "generic"})`);
     } catch (e) {
       console.error("[extend] backstop failed, keeping assembled body:", e);
     }
+  } else {
+    // Answer question (1) even in the SKIP case: why the expansion never ran.
+    const why = !bodyKey ? "no-body-field" : !targetWords ? "targetMinutes-undefined" : `target-below-1200 (${targetWords})`;
+    console.log(`[expand] invoked=false reason=${why} targetMinutes=${input.targetMinutes ?? "undefined"} startWords=${startWordsForLog}`);
   }
 
   // ONE SOURCE OF TRUTH for the opening. The prompt asks for the preset hook verbatim;
