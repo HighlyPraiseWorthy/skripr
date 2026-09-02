@@ -1233,7 +1233,14 @@ export async function deepenCaseFacts(input: { caseName: string; summary?: strin
   // cap on how many facts we will collect for it. targetFacts (if a caller passes it) wins;
   // otherwise it is derived from the length slider's minutes.
   const requestedMinutes = input.targetMinutes && input.targetMinutes > 0 ? Math.round(input.targetMinutes) : undefined;
-  const budget = input.targetFacts && input.targetFacts > 0 ? Math.min(MAX_FACTS, Math.round(input.targetFacts)) : factBudgetForMinutes(input.targetMinutes);
+  // DEPTH FLOOR for the reordered flow. Research now runs BEFORE the length page, so targetMinutes
+  // is undefined at grounding — and factBudgetForMinutes(undefined) defaulted to 10 min (budget 25),
+  // which made `deep` false and capped the whole set (mined document facts included) at 25. Since the
+  // fact set is gathered ONCE up front and cached for the angle + the eventual build, research it at
+  // real depth: floor the budget minutes to 20 when no length was given. A short final video simply
+  // draws on fewer of the cached facts; it never needs a shallower research pass.
+  const budgetMinutes = input.targetMinutes && input.targetMinutes > 0 ? input.targetMinutes : 20;
+  const budget = input.targetFacts && input.targetFacts > 0 ? Math.min(MAX_FACTS, Math.round(input.targetFacts)) : factBudgetForMinutes(budgetMinutes);
   // A long (deep) ask keeps the FULL ceiling so the granular document facts survive alongside the
   // narrative set; a short ask stays near its per-minute budget so it isn't over-stuffed.
   const factCap = budget >= 40 ? MAX_FACTS : Math.min(MAX_FACTS, Math.max(16, budget));
@@ -1517,11 +1524,21 @@ Each question seeks a single concrete, citable fact. Output ONLY this JSON, no p
   }
 
   // PRIMARY-SOURCE DOCUMENT MINING (the depth fix). Perplexity gave the summary layer; now read the
-  // actual charging document the citations point at, where the vivid granularity lives. Long asks
-  // only (they need the depth), time-guarded, and every extracted fact carries the document URL.
-  if (deep && Date.now() - t0 < ctxDeadline) {
+  // actual charging document, where the vivid granularity lives. DECOUPLED FROM `deep`: reading the
+  // primary source is THE depth lever and must never depend on how long the video will be. The old
+  // `deep` gate (target >= 40) silently disabled this in the research-before-angle flow, where
+  // targetMinutes is undefined at grounding so target defaults to 25 (< 40) and mining never ran —
+  // that is why zero [primary-doc] lines printed. It now runs whenever the case has a fetchable
+  // primary source (or one is resolvable), on its own generous deadline independent of the shallow
+  // context-round budget, under the 300s route cap. minePrimarySourceDocs itself no-ops gracefully
+  // when no PRIMARY_SOURCE_RE URL exists (a niche whose primary source is a book, etc.).
+  const _pdElapsed = Date.now() - t0;
+  const _pdDeadline = t0 + 210_000; // own budget, not the deep/shallow ctxDeadline; leaves ~90s
+  const _pdEligible = _pdElapsed < 210_000; // under the 300s route cap for the final reconcile pass
+  console.log(`[primary-doc] gate: deep=${deep} target=${target} targetMinutes=${input.targetMinutes ?? "undefined"} elapsedMs=${_pdElapsed} -> ${_pdEligible ? "MINING" : "SKIPPED (out of time budget)"}`);
+  if (_pdEligible) {
     const citedUrls = freshFacts.map((f) => f.source).filter((s): s is string => !!s);
-    const docFacts = await minePrimarySourceDocs(canonicalCaseName, citedUrls, watchlist, t0 + ctxDeadline, pkey, input.summary);
+    const docFacts = await minePrimarySourceDocs(canonicalCaseName, citedUrls, watchlist, _pdDeadline, pkey, input.summary);
     // Existing facts lead the union so a flood of newly-mined doc facts can't push an established
     // high-value figure (e.g. the $1.3M forfeiture) out when capFacts trims to the cap.
     if (docFacts.length) freshFacts = capFacts(unionFacts([...freshFacts, ...docFacts]), factCap);
