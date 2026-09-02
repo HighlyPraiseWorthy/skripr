@@ -1,7 +1,7 @@
 // Offline test for the post-generation compliance check, using the real shapes from the
 // session: the final Queen script (should largely pass) vs. an early flat draft.
 //   node --experimental-strip-types --loader ./scripts/alias-loader.mjs scripts/compliance.test.ts
-import { checkCompliance, complianceScore, structuralScore, checkSourceStructural, accuracyChecks, STRUCTURAL_SET, stripInsinuations, stripSpeculation, stripImpliedRevelation, dedupeAdjacentParagraphs, collapseRepeatedAnchors, stripSchemeDurationClaim, stripStaleFutureDates, stripSourceLeaks, mergeOrphanFragments } from "../src/lib/script-compliance.ts";
+import { checkCompliance, complianceScore, structuralScore, checkSourceStructural, accuracyChecks, STRUCTURAL_SET, stripInsinuations, stripUnnamedPartyNaming, stripSpeculation, stripImpliedRevelation, dedupeAdjacentParagraphs, collapseRepeatedAnchors, stripSchemeDurationClaim, stripStaleFutureDates, stripSourceLeaks, mergeOrphanFragments } from "../src/lib/script-compliance.ts";
 
 let failures = 0;
 function check(name: string, cond: boolean) {
@@ -548,6 +548,20 @@ check("cuts 'the royalty pools didn't add up'", atmo("The royalty pools simply d
 check("cuts 'the system was treated as airtight'", atmo("The system was treated as essentially airtight.").cuts.length >= 1);
 check("does NOT fire on a plain mechanical statement", stripSpeculation("Platforms pay a share of the royalty pool based on each track's stream count.").cuts.length === 0);
 check("does NOT fire on a documented, attributed quiet", stripSpeculation("Prosecutors said Spotify's systems did not flag the accounts for years.").cuts.length === 0);
+
+// DEFAMATION: naming a living person/company as the record's UNNAMED co-conspirator.
+console.log("unnamed-party naming guard (defamation):");
+const pid = (s: string) => stripUnnamedPartyNaming("The scheme used AI songs. " + s + " The court ordered a forfeiture.");
+check("cuts 'the unnamed AI company CEO was Alex Mitchell'", !/Alex Mitchell/.test(pid("The unnamed AI company CEO was Alex Mitchell.").text));
+check("cuts 'Alex Mitchell, ..., was the co-conspirator'", !/co-conspirator who supplied/.test(pid("Alex Mitchell, the CEO of Boomy, was the co-conspirator who supplied the songs.").text));
+check("cuts 'CC-3 was later identified as Jane Doe'", pid("CC-3 was later identified as Jane Doe.").cuts.length >= 1);
+check("records the person-id cut", pid("The unnamed AI company CEO was Alex Mitchell.").cuts.length >= 1);
+check("does NOT fire naming the charged defendant next to a co-conspirator",
+  stripUnnamedPartyNaming("Michael Smith worked with an unnamed co-conspirator to supply the songs.").cuts.length === 0);
+check("does NOT fire on a plain named-defendant sentence",
+  stripUnnamedPartyNaming("Michael Smith was the mastermind of the streaming scheme.").cuts.length === 0);
+check("does NOT fire when the co-conspirator stays unnamed",
+  stripUnnamedPartyNaming("The indictment references a co-conspirator but does not name them.").cuts.length === 0);
 
 console.log(failures === 0 ? "\nALL PASS" : `\n${failures} FAILURE(S)`);
 process.exit(failures === 0 ? 0 : 1);

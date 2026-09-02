@@ -170,6 +170,33 @@ export function stripInsinuations(text: string): { text: string; cuts: string[] 
   return { text: outParas.join("\n\n"), cuts };
 }
 
+// GOVERNING PRINCIPLE — silent fix (DEFAMATION). Cut a sentence that EQUATES a party the record
+// left unnamed (a co-conspirator, "CC-N", an unindicted co-conspirator, "the unnamed CEO/company")
+// with a specific NAMED living person or company. The richer primary-source mining surfaces real
+// names near "CC-N" designations, and a script that fills the blank ("the unnamed AI company CEO
+// was Alex Mitchell", "Alex Mitchell was the co-conspirator") is asserting an identity the record
+// does NOT establish AND naming a living, uncharged person in a crime — the sharpest defamation
+// risk in the whole pipeline. Two-signal by design: fires ONLY when a designation is EQUATED to a
+// proper name (copula/appositive), so "Michael Smith worked with an unnamed co-conspirator" (the
+// charged defendant, no identification of the unnamed party) is left alone.
+const _DESIG = "(?:un(?:named|identified)[^.]{0,25}?(?:ceo|executive|officer|company|firm|founder|owner|distributor|promoter|publicist|individual|conspirator)|co-?conspirators?|cc-?\\d+|(?:an? )?unindicted co-?conspirator)";
+const _NAME = "[A-Z][a-zA-Z.'’-]+(?:\\s+[A-Z][a-zA-Z.'’-]+)+";
+const UNNAMED_ID_RE_A = new RegExp(`\\b(?:the )?${_DESIG}\\b[^.]{0,30}?(?:\\bwas\\b|\\bis\\b|\\bwere\\b|identified as|turned out to be|revealed to be|none other than|namely|,\\s*)\\s*(${_NAME})`, "i");
+const UNNAMED_ID_RE_B = new RegExp(`(${_NAME})\\b[^.]{0,35}?(?:\\bwas\\b|\\bis\\b|,\\s*(?:the\\s+)?)\\s*(?:the\\s+)?${_DESIG}\\b`, "i");
+export function namesAnUnnamedParty(s: string): boolean { return UNNAMED_ID_RE_A.test(s || "") || UNNAMED_ID_RE_B.test(s || ""); }
+export function stripUnnamedPartyNaming(text: string): { text: string; cuts: string[] } {
+  if (!text) return { text, cuts: [] };
+  const cuts: string[] = [];
+  const outParas = text.split(/\n\n+/).map((p) => {
+    const kept = p.split(/(?<=[.!?])\s+/).filter((s) => {
+      if (namesAnUnnamedParty(s)) { cuts.push(s.trim()); return false; }
+      return true;
+    });
+    return kept.join(" ").trim();
+  }).filter((p) => p.length > 0);
+  return { text: outParas.join("\n\n"), cuts };
+}
+
 // INFERENCE / SPECULATION-AS-FACT detection. Distinct from INSINUATION_RE (a real person's guilt)
 // and the claim check (an invented FACT): this catches invented REASONING — a cause, motive, or
 // conclusion asserted as established when the record doesn't support it. An outside review of a

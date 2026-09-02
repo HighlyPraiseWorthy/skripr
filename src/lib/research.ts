@@ -65,7 +65,12 @@ export function honestMinutes(factCount: number): number {
 // v4 (settled figure): explicitly retrieve the RESOLVED authoritative number (forfeiture /
 // judgment / verdict / restitution / final toll / sentence) vs any earlier alleged figure, so
 // supersession has the settled number to win with every run.
-export const RESEARCH_BRIEF_VERSION = 4;
+// v5 (primary-source DOCUMENT mining): the deep charging-document read now lands (the 403 fix +
+// the mining-gate decouple + depth floor), adding the overt-acts layer — dated emails, dollar
+// movements, CC-N designations. Bumping busts the stale ::v4 cache so already-researched cases
+// re-derive WITH the document facts instead of serving the shallow pre-fix set. ALWAYS bump this
+// when the fact-gathering pipeline changes, or cached cases silently ship the old depth.
+export const RESEARCH_BRIEF_VERSION = 5;
 
 // Whether the record actually supports the premise the script is about to assert.
 //   documented  a real, citable source describes THIS specific event or claim
@@ -1186,8 +1191,10 @@ async function minePrimarySourceDocs(
       const msg = await anthropic().messages.create({
         model: "claude-sonnet-4-6",
         // A PDF indictment is dense; give the enumeration room so the deep overt-acts section
-        // (dated emails, dollar movements, CC-N) is not truncated out of the fact list.
-        max_tokens: pdfB64 ? 8000 : 4500,
+        // (dated emails, dollar movements, CC-N) is not truncated out of the fact list. Capped at
+        // 6000 (was 8000) because an 8000-token generation is a major time sink and the deep path
+        // must land under the 300s route cap; 6000 still holds ~70 enumerated facts.
+        max_tokens: pdfB64 ? 6000 : 4500,
         temperature: 0,
         system: SYSTEM,
         messages: [{ role: "user", content: withDoc(ASK + denseHint) }],
@@ -1449,11 +1456,16 @@ Each question seeks a single concrete, citable fact. Output ONLY this JSON, no p
   // ELABORATION rather than padding, so it earns more rounds and a longer time window. A short ask
   // keeps the old tight caps. This is what closes the gap the honest-length ceiling used to warn
   // about — the answer is to research harder, not to shorten the video. (Route maxDuration=300.)
+  // TIME BUDGET (route maxDuration=300s): the deep path must finish end-to-end under ~270s or
+  // Vercel 504s and silently falls back to shallow facts. The high-value step is the primary-doc
+  // MINING, so cap the Perplexity gap+context rounds to finish by ~120s, leaving the miner a bounded
+  // window before the final reconcile — measured: gap+context had been eating 186s, pushing totals
+  // to 4.6-5.2min. Tightened here so gap+context+mine+reconcile stays ~250s.
   const deep = target >= 40;
   const gapRounds = deep ? 3 : 2;
-  const gapDeadline = deep ? 90_000 : 60_000;
-  const ctxRounds = deep ? 7 : 4;
-  const ctxDeadline = deep ? 175_000 : 75_000;
+  const gapDeadline = deep ? 70_000 : 55_000;
+  const ctxRounds = deep ? 5 : 4;
+  const ctxDeadline = deep ? 120_000 : 70_000;
   let askPool = [...questions];
   for (let round = 0; (freshFacts.length < target || (conflicts.length > 0 && round === 0)) && round < gapRounds && Date.now() - t0 < gapDeadline; round++) {
     const gaps = (await reformulateQuestions(canonicalCaseName, askPool.slice(0, 8))).filter((q) => !askPool.includes(q));
@@ -1533,8 +1545,8 @@ Each question seeks a single concrete, citable fact. Output ONLY this JSON, no p
   // context-round budget, under the 300s route cap. minePrimarySourceDocs itself no-ops gracefully
   // when no PRIMARY_SOURCE_RE URL exists (a niche whose primary source is a book, etc.).
   const _pdElapsed = Date.now() - t0;
-  const _pdDeadline = t0 + 210_000; // own budget, not the deep/shallow ctxDeadline; leaves ~90s
-  const _pdEligible = _pdElapsed < 210_000; // under the 300s route cap for the final reconcile pass
+  const _pdDeadline = t0 + 200_000; // own budget, not the deep/shallow ctxDeadline
+  const _pdEligible = _pdElapsed < 200_000; // leaves ~100s under the 300s route cap for reconcile + response
   console.log(`[primary-doc] gate: deep=${deep} target=${target} targetMinutes=${input.targetMinutes ?? "undefined"} elapsedMs=${_pdElapsed} -> ${_pdEligible ? "MINING" : "SKIPPED (out of time budget)"}`);
   if (_pdEligible) {
     const citedUrls = freshFacts.map((f) => f.source).filter((s): s is string => !!s);

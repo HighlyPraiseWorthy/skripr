@@ -1,7 +1,7 @@
 import { Anthropic } from "@anthropic-ai/sdk";
 import { fingerprintToBrief, readProhibitions, stripStandaloneTics, type VoiceFingerprint } from "@/lib/voice-metrics";
 import { buildStorytellingBlock } from "@/lib/storytelling";
-import { stripInsinuations, stripSpeculation, stripImpliedRevelation, dedupeAdjacentParagraphs, collapseRepeatedAnchors, stripSchemeDurationClaim, stripStaleFutureDates, stripSourceLeaks, mergeOrphanFragments } from "@/lib/script-compliance";
+import { stripInsinuations, stripUnnamedPartyNaming, stripSpeculation, stripImpliedRevelation, dedupeAdjacentParagraphs, collapseRepeatedAnchors, stripSchemeDurationClaim, stripStaleFutureDates, stripSourceLeaks, mergeOrphanFragments } from "@/lib/script-compliance";
 import { buildVarietyBlock } from "@/lib/ai/phrase-variety";
 
 let _anthropic: Anthropic | null = null;
@@ -1318,6 +1318,11 @@ export async function finalizeScript(
   // record doesn't support ("must have required...", "did not do this alone", "...or both"). Like
   // the insinuation cut, this is an accuracy/credibility guard — the safe default is to remove it.
   applyBodyPass(stripSpeculation, "speculation");
+  // DEFAMATION cut: never let the script equate an unnamed/CC party with a real named person or
+  // company. The deeper mining surfaces real names next to "CC-N" designations, so this guard
+  // matters more now — a named living person identified as an uncharged co-conspirator must not
+  // reach the finished script.
+  applyBodyPass(stripUnnamedPartyNaming, "person-id");
   // Seam cleanup runs LAST, after the cuts, so any fragment a cut left stranded is folded back in.
   applyBodyPass(mergeOrphanFragments, "seam");
 
