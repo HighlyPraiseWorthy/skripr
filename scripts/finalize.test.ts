@@ -8,7 +8,7 @@
 // a clean withholding hook (hook-rewrite guard false), a trailing tease that trips the
 // deterministic cut but NOT endingTeasesWithoutLanding (the LLM ending-rewrite is skipped), and
 // no repeated section-openers (anaphora rewrite skipped). Only the deterministic passes run.
-import { finalizeScript, hookIsVague, hookDumpsPayoff, endingTeasesWithoutLanding } from "../src/lib/ai/claude.ts";
+import { finalizeScript, hookIsVague, hookDumpsPayoff, endingTeasesWithoutLanding, parseFactList, factIsUsed } from "../src/lib/ai/claude.ts";
 
 let failures = 0;
 function check(name: string, cond: boolean) {
@@ -187,6 +187,27 @@ check("duration: the title-leaked 'Eight years.' is cut", !/Eight years\./.test(
 check("duration: the sourced date range survives", /2017 to 2024/.test(b5));
 check("de-repetition: the bare 'Complex Frauds and Cybercrime Unit.' restatements are reduced", (b5.match(/Complex Frauds and Cybercrime Unit/g) || []).length <= 2);
 check("the sourced closing beat is intact", /\$8 million forfeiture/.test(b5));
+
+// UTILIZATION: the unused-fact detection that drives the fact-aware length expansion. A bug here
+// (marking every fact "used") would silently disable the fix, so lock the deterministic core.
+console.log("unused-fact detection (drives fact-aware expansion):");
+const factsBlob = [
+  "- In a February 2024 email he boasted of 4 billion streams and $12 million since 2019 (source: justice.gov)",
+  "- CC-3 supplied roughly 10,000 files per month to the operation.",
+  "- Smith transferred about $1.3 million to an entity called SMH Entertainment.",
+  "- The scheme relied on 1,040 bot accounts.",
+].join("\n");
+const parsed = parseFactList(factsBlob);
+check("parseFactList strips bullets and source tags", parsed.length === 4 && !/source:/i.test(parsed[0]) && !/^-/.test(parsed[0]));
+// A body that used only the headline bot count -> the other three read as UNUSED.
+const bodyUsedOne = "the operation ran on 1,040 bot accounts streaming around the clock.".toLowerCase();
+check("the used headline fact reads as used", factIsUsed(parsed[3], bodyUsedOne) === true);
+check("an unused quoted-email fact reads as unused", factIsUsed(parsed[0], bodyUsedOne) === false);
+check("an unused named-entity fact ($1.3M / SMH Entertainment) reads as unused", factIsUsed(parsed[2], bodyUsedOne) === false);
+check("an unused figure fact (10,000 files) reads as unused", factIsUsed(parsed[1], bodyUsedOne) === false);
+// Once the body incorporates them, they read as used (so the expander stops).
+const bodyUsedAll = ("he boasted of 4 billion streams and $12 million. cc-3 supplied 10,000 files per month. he moved $1.3 million to smh entertainment. 1,040 bot accounts ran it.").toLowerCase();
+check("a fact becomes used once the body walks it", factIsUsed(parsed[0], bodyUsedAll) && factIsUsed(parsed[2], bodyUsedAll));
 
 console.log(failures === 0 ? "\nALL PASS" : `\n${failures} FAILURE(S)`);
 process.exit(failures === 0 ? 0 : 1);

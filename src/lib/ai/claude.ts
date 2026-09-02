@@ -716,6 +716,84 @@ async function extendScriptToLength(fullScript: string, targetWords: number, top
   return [body, c.text.trim(), conclusion].filter(Boolean).join("\n\n");
 }
 
+// UTILIZATION + LENGTH in one pass. The root cause of both the short length and the shallow depth
+// was the same: the script used ~10 of ~79 approved facts and stopped short. Generic padding makes
+// it longer but not deeper. This reaches the requested length by ELABORATING the UNUSED approved
+// facts — each distinctive fact becomes a walked beat — so length and depth rise together, and
+// never by inventing (only the supplied facts are fed in). Loops so a large gap (1,000 -> 3,300
+// words) is actually closed, not one capped call; time-guarded; inserts before the conclusion.
+export function parseFactList(factsBlob: string): string[] {
+  return (factsBlob || "")
+    .split(/\n+/)
+    .map((l) => l.replace(/^\s*[-•*]\s*/, "").replace(/\s*\(source:[^)]*\)\s*$/i, "").trim())
+    .filter((l) => l.length > 12);
+}
+// A fact is "used" if a DISTINCTIVE marker of it (a quoted phrase, a 3+ digit number, or a
+// multi-word proper noun) already appears in the body. Facts with no distinctive marker are treated
+// as used (untrackable), so the pass targets the granular overt-acts facts that carry the depth.
+export function factIsUsed(fact: string, bodyLc: string): boolean {
+  const has = (m: string) => !!m && bodyLc.includes(m.toLowerCase());
+  // Strongest marker first: a quoted phrase.
+  const quoted = fact.match(/["“]([^"”]{8,})["”]/);
+  if (quoted) return bodyLc.includes(quoted[1].toLowerCase().slice(0, 40));
+  // A spelled magnitude ("4 billion", "$12 million") — the digit-only scan misses these.
+  const mag = fact.match(/\$?\d+(?:\.\d+)?\s*(?:billion|million|thousand)\b/i);
+  if (mag) return has(mag[0]);
+  // A distinctive contiguous number ($1.3M, 1,040, 10,000, 661,440) — but NOT a bare year, which is
+  // a weak, ubiquitous marker.
+  const bignum = [...fact.matchAll(/\$?\d[\d,]{2,}(?:\.\d+)?/g)]
+    .map((x) => x[0])
+    .find((x) => { const v = parseFloat(x.replace(/[$,]/g, "")); return !(Number.isInteger(v) && v >= 1900 && v <= 2100); });
+  if (bignum) return has(bignum) || has(bignum.replace(/[$,]/g, ""));
+  // A co-conspirator designation (CC-3).
+  const ccn = fact.match(/\bC\.?C\.?-?\s?\d\b/i);
+  if (ccn) return has(ccn[0]);
+  // A multi-word proper noun (SMH Entertainment).
+  const proper = fact.match(/\b[A-Z][a-zA-Z.'’-]+(?:\s+[A-Z][a-zA-Z.'’-]+){1,3}\b/);
+  if (proper && !/^(The|A|An|In|On|By|He|She|They|It|His|Her|And|But|For|Of)\b/.test(proper[0])) return has(proper[0]);
+  return true; // no distinctive marker to track -> don't chase it
+}
+async function extendWithUnusedFacts(fullScript: string, factsBlob: string, targetWords: number, startedAt: number): Promise<string> {
+  const count = (s: string) => s.split(/\s+/).filter(Boolean).length;
+  const facts = parseFactList(factsBlob);
+  if (facts.length < 3) return fullScript;
+  let body = fullScript;
+  for (let iter = 0; iter < 4; iter++) {
+    const w = count(body);
+    if (w >= targetWords * 0.92) break;
+    if (Date.now() - startedAt > 200_000) break;
+    const bodyLc = body.toLowerCase();
+    const unused = facts.filter((f) => !factIsUsed(f, bodyLc));
+    if (!unused.length) break;
+    const batch = unused.slice(0, 12);
+    const paras = body.split(/\n\n+/);
+    const conclusion = paras.length > 3 ? paras.pop()! : "";
+    const mid = paras.join("\n\n");
+    const needed = Math.min(targetWords - w, 1400);
+    try {
+      const resp = await getAnthropic().messages.create({
+        model: "claude-sonnet-4-6",
+        max_tokens: 8000,
+        temperature: 0.7,
+        system: "You are extending a documentary YouTube script mid-production, matching its existing voice, sentence rhythm, and TTS style exactly. You write NEW body segments that WALK a set of documented facts as beats — each fact rendered in causal detail (what it was, when, the figure, why it mattered), never merely mentioned. Use ONLY the facts given; invent nothing, add no statistic/name/quote not present. Output ONLY the new segments as plain speakable prose — no preamble, no headers, no conclusion, no wrap-up.",
+        messages: [{
+          role: "user",
+          content: `The script so far (its conclusion is held out and will follow your segments):\n"""\n${mid.slice(-6000)}\n"""\n\nThese DOCUMENTED facts are approved but NOT yet used in the script — each is a real, sourced detail. Turn them into new body beats, walked in causal detail, in the script's voice:\n${batch.map((f, i) => `${i + 1}. ${f}`).join("\n")}\n\nWrite about ${needed} words of NEW body segments built from these facts. Each fact becomes a concrete beat (a dated email quoted, a money movement traced, a named entity introduced, a milestone reached), continuing the story's causal chain. Match the existing sentence rhythm. Do NOT repeat anything already in the script, do NOT write a conclusion, and do NOT state any fact not in the list above.`,
+        }],
+      });
+      const c = resp.content[0];
+      const seg = c.type === "text" ? c.text.trim() : "";
+      if (!seg || count(seg) < 40) break; // model gave nothing usable
+      body = [mid, seg, conclusion].filter(Boolean).join("\n\n");
+      console.log(`[extend-facts] iter ${iter}: +${count(seg)} words (${w} -> ${count(body)}, target ${targetWords}, ${unused.length} unused facts)`);
+    } catch (e) {
+      console.error("[extend-facts] failed, keeping current body:", (e as any)?.message);
+      break;
+    }
+  }
+  return body;
+}
+
 function containsWord(s: unknown, word: string): boolean {
   return typeof s === "string" && s.toLowerCase().includes(word.toLowerCase());
 }
@@ -1109,15 +1187,22 @@ export async function finalizeScript(
 
   // LENGTH BACKSTOP (runs FIRST, so the passes below act on the final-length text). One place for
   // every path — the one-shot blob, the one-shot section build, and the chunked build. Long
-  // scripts only (>= 1200 target words); extendScriptToLength is itself a no-op unless the body is
-  // under 88% of target, so a script already at length pays nothing.
+  // scripts only (>= 1200 target words). When the approved FACTS are available, reach length by
+  // ELABORATING THE UNUSED ONES (fact-aware) — the fix for the utilization gap where a 20-min build
+  // used ~10 of ~79 facts and stopped at ~1,000 words: each unused distinctive fact becomes a walked
+  // beat, so length and depth rise together and never by padding. Generic extend is the fallback
+  // when no fact set was supplied. Both no-op once the body is at length, so a full script pays
+  // nothing.
   const targetWords = input.targetMinutes ? Math.round(input.targetMinutes * 130) : null;
   if (targetWords && targetWords >= 1200 && bodyKey) {
     try {
       const before = (script as any)[bodyKey].split(/\s+/).filter(Boolean).length;
-      (script as any)[bodyKey] = await extendScriptToLength((script as any)[bodyKey], targetWords, input.targetTopic || "", input.targetNiche || "", startedAt);
+      const facts = input.sourceMaterial && input.sourceMaterial.trim() ? input.sourceMaterial : "";
+      (script as any)[bodyKey] = facts
+        ? await extendWithUnusedFacts((script as any)[bodyKey], facts, targetWords, startedAt)
+        : await extendScriptToLength((script as any)[bodyKey], targetWords, input.targetTopic || "", input.targetNiche || "", startedAt);
       const after = (script as any)[bodyKey].split(/\s+/).filter(Boolean).length;
-      if (after !== before) console.log(`[extend] field=${bodyKey} target=${targetWords} before=${before} after=${after}`);
+      if (after !== before) console.log(`[extend] field=${bodyKey} target=${targetWords} before=${before} after=${after} (${facts ? "fact-aware" : "generic"})`);
     } catch (e) {
       console.error("[extend] backstop failed, keeping assembled body:", e);
     }
