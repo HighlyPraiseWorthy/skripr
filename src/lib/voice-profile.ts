@@ -1,4 +1,5 @@
 import { supabaseAdmin } from "@/lib/db/supabase";
+import { measureVoice, type VoiceFingerprint } from "@/lib/voice-metrics";
 
 // Voice Match: up to MAX_PROFILES named voice profiles per user, extracted
 // from the creator's scripts or a YouTube channel's transcripts. One profile
@@ -153,32 +154,45 @@ export async function getVoiceProfileById(userId: string, profileId: string): Pr
 
 // Variants that also return the voice name, so generation can record which
 // voice produced each script (shown in My Scripts).
-export async function getActiveVoiceMeta(userId: string): Promise<{ styleGuide: string; name: string } | null> {
+// The voice FINGERPRINT (sentence rhythm, fragment use, diction) is computed from the profile's
+// stored sample_excerpt via measureVoice — the generation voice pass targets it. This completes a
+// half-committed feature: generate/route.ts already reads meta.fingerprint, but these getters never
+// returned it (the type was {styleGuide,name}), which broke `next build`. Measured, not stored, so
+// no schema change; null/absent sample -> undefined -> generation falls back to the generic brief.
+export type VoiceMeta = { styleGuide: string; name: string; fingerprint?: VoiceFingerprint };
+function toVoiceMeta(data: any): VoiceMeta {
+  return {
+    styleGuide: data.style_guide,
+    name: data.name,
+    fingerprint: typeof data.sample_excerpt === "string" && data.sample_excerpt.trim() ? measureVoice(data.sample_excerpt) : undefined,
+  };
+}
+export async function getActiveVoiceMeta(userId: string): Promise<VoiceMeta | null> {
   if (!supabaseAdmin) return null;
   try {
     const { data } = await supabaseAdmin
       .from("voice_profiles")
-      .select("style_guide, name")
+      .select("style_guide, name, sample_excerpt")
       .eq("user_id", userId)
       .eq("is_active", true)
       .limit(1)
       .maybeSingle();
-    return data ? { styleGuide: data.style_guide, name: data.name } : null;
+    return data ? toVoiceMeta(data) : null;
   } catch {
     return null;
   }
 }
 
-export async function getVoiceMetaById(userId: string, profileId: string): Promise<{ styleGuide: string; name: string } | null> {
+export async function getVoiceMetaById(userId: string, profileId: string): Promise<VoiceMeta | null> {
   if (!supabaseAdmin) return null;
   try {
     const { data } = await supabaseAdmin
       .from("voice_profiles")
-      .select("style_guide, name")
+      .select("style_guide, name, sample_excerpt")
       .eq("user_id", userId)
       .eq("id", profileId)
       .maybeSingle();
-    return data ? { styleGuide: data.style_guide, name: data.name } : null;
+    return data ? toVoiceMeta(data) : null;
   } catch {
     return null;
   }
