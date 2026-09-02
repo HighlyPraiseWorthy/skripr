@@ -205,7 +205,14 @@ export function stripUnnamedPartyNaming(text: string): { text: string; cuts: str
 // inferred from silence), a totalizing "that gap was the entire business", and necessity inferences
 // ("must have required coordination"). For an investigative script this is a credibility risk, so
 // the safe default is to CUT the speculating sentence (never soften into a new claim).
-export const SPECULATION_RE = /\b((?:must|would|could|had to) have (?:been|required|involved|known|meant|taken|needed|had|coordinated|demanded)|had to have (?:been|required|involved|meant|known|taken)|which (?:can|could) only mean|could only (?:have )?mean(?:t)?(?:\s+(?:one thing|that))?|(?:did(?:n'?t| not)|could(?:n'?t| not) have|had(?:n'?t| not)) (?:do|done|build|built|run|ran|orchestrate|orchestrated|pull off|pulled off|manage|managed|create|created|mastermind|masterminded|set up|pull|pulled|act|acted|operate|operated)[^.]{0,40}?\b(?:alone|on (?:his|her|their) own|by (?:him|her|them)\s?self|single-handedly|without help)\b|\bwas the entire (?:business|scheme|point|story|operation|game|plan|thing|fraud)\b|(?:points to|all but confirms|is clear evidence of|strongly (?:implies|suggests)|can only be explained by)\b|(?:sealed (?:cooperation|plea|deal)|an? ongoing investigation|a cooperating (?:witness|deal)|cooperation deal|a plea deal)[^.]{0,60}\bor both\b|the (?:most likely|only plausible) (?:explanation|reason|scenario) is|(?:nobody|no one|not (?:one|a single) (?:person|executive|analyst|investigator))[^.]{0,40}\b(?:could (?:explain|say|agree|figure out|account for|tell)|knew|noticed|understood|had (?:an? )?answer)|(?:no one|nobody|few people|not everyone)[^.]{0,30}\b(?:in the (?:industry|business|company)|at the (?:platforms?|labels?|company))[^.]{0,30}\b(?:could|knew|agreed|understood|noticed)|(?:was|were) (?:treated as|considered|thought to be|assumed) (?:essentially |basically |all but )?(?:airtight|foolproof|impossible|unbeatable|bulletproof)|(?:the (?:royalty pools?|numbers?|books?|figures?)) (?:just |simply |never )?(?:did(?:n'?t| not) add up|made no sense)|indistinguishable from (?:a |real |an actual )?(?:real |human )?(?:listener|listening|person|user|artist|human)|(?:completely |entirely |totally |essentially )?invisible (?:from the outside|to (?:everyone|anyone|the platforms?|detection)|the whole time)|(?:completely |entirely |essentially )?undetectable|(?:largely|completely|entirely|totally) uninterrupted|never (?:once )?(?:verified|audited|checked|flagged|questioned|caught|detected)|(?:nobody|no one) (?:ever )?(?:audits?|verifies|verified|checks?|checked|knew|noticed|questioned|caught it)|(?:every|each) (?:single )?(?:registration|stream|account|song|upload|play)[^.]{0,25}?(?:converted|became|turned into|generated|counted as)|(?:almost |virtually )?none of (?:them|the (?:listeners?|streams?|plays?|accounts?)) (?:were|was) (?:real|human|legitimate|genuine))\b/i;
+//
+// CALIBRATION (Anton's call, 2026-09, ChatGPT-endorsed at the 8.45 re-score): the guard cuts
+// FABRICATIONS and DIRECT CONTRADICTIONS of the record — never reasonable narrative inference or
+// dramatic framing grounded in evidence. "The system's neutrality was its vulnerability" and "the
+// royalty system doesn't ask where a stream came from" STAY (grounded framing, keeps the retention
+// punch); "nobody noticed for seven years" GOES (a documented contradiction: 2018/2019 warnings +
+// the 2023 halt). When in doubt, keep the punch — the line is fabrication/contradiction, not drama.
+export const SPECULATION_RE = /\b((?:must|would|could|had to) have (?:been|required|involved|known|meant|taken|needed|had|coordinated|demanded)|had to have (?:been|required|involved|meant|known|taken)|which (?:can|could) only mean|could only (?:have )?mean(?:t)?(?:\s+(?:one thing|that))?|(?:did(?:n'?t| not)|could(?:n'?t| not) have|had(?:n'?t| not)) (?:do|done|build|built|run|ran|orchestrate|orchestrated|pull off|pulled off|manage|managed|create|created|mastermind|masterminded|set up|pull|pulled|act|acted|operate|operated)[^.]{0,40}?\b(?:alone|on (?:his|her|their) own|by (?:him|her|them)\s?self|single-handedly|without help)\b|\bwas the entire (?:business|scheme|point|story|operation|game|plan|thing|fraud)\b|(?:points to|all but confirms|is clear evidence of|strongly (?:implies|suggests)|can only be explained by)\b|(?:sealed (?:cooperation|plea|deal)|an? ongoing investigation|a cooperating (?:witness|deal)|cooperation deal|a plea deal)[^.]{0,60}\bor both\b|the (?:most likely|only plausible) (?:explanation|reason|scenario) is|(?:nobody|no one|not (?:one|a single) (?:person|executive|analyst|investigator))[^.]{0,40}\b(?:could (?:explain|say|agree|figure out|account for|tell)|knew|noticed|understood|had (?:an? )?answer)|(?:no one|nobody|few people|not everyone)[^.]{0,30}\b(?:in the (?:industry|business|company)|at the (?:platforms?|labels?|company))[^.]{0,30}\b(?:could|knew|agreed|understood|noticed)|(?:was|were) (?:treated as|considered|thought to be|assumed) (?:essentially |basically |all but )?(?:airtight|foolproof|impossible|unbeatable|bulletproof)|(?:the (?:royalty pools?|numbers?|books?|figures?)) (?:just |simply |never )?(?:did(?:n'?t| not) add up|made no sense)|indistinguishable from (?:a |real |an actual )?(?:real |human )?(?:listener|listening|person|user|artist|human)|(?:completely |entirely |totally |essentially )?invisible (?:from the outside|to (?:everyone|anyone|the platforms?|detection)|the whole time)|(?:completely |entirely |essentially )?undetectable|(?:largely|completely|entirely|totally) uninterrupted|never (?:once )?(?:verified|audited|checked|flagged|questioned|caught|detected)|(?:nobody|no one) (?:ever )?(?:audits?|verifies|verified|checks?|checked|knew|noticed|questioned|caught it)|(?:every|each) (?:single )?(?:registration|stream|account|song|upload|play)[^.]{0,25}?(?:converted|became|turned into|generated|counted as)|(?:almost |virtually )?none of (?:them|the (?:listeners?|streams?|plays?|accounts?)) (?:were|was) (?:real|human|legitimate|genuine)|went (?:largely |completely |entirely )?unnoticed|for (?:almost |nearly |over |more than )?[\w-]+ years,?\s+(?:nobody|no one|it (?:went|stayed|kept)|nothing)\b|(?:nobody|no one) (?:ever )?(?:noticed|caught on|raised a flag|said a word|stepped in))\b/i;
 export function looksLikeSpeculation(s: string): boolean { return SPECULATION_RE.test(s || ""); }
 export function stripSpeculation(text: string): { text: string; cuts: string[] } {
   if (!text) return { text, cuts: [] };
@@ -297,6 +304,36 @@ export function dedupeAdjacentParagraphs(text: string): { text: string; cuts: st
     kept.push(p);
   }
   return { text: kept.join("\n\n"), cuts };
+}
+
+// GOVERNING PRINCIPLE — silent fix. Cut a DUPLICATE OF THE HOOK that reappears later in the body.
+// A chunked build re-emitted "Imagine a song playing right now..." twice near-verbatim; it is
+// non-adjacent (so dedupeAdjacentParagraphs misses it) and appears only twice (so the 3+ anchor
+// collapse misses it). This compares the opening against everything after it and removes a later
+// near-duplicate — both a whole restated opening paragraph, and a later paragraph that just OPENS
+// by re-running the hook's first sentence. The first occurrence (the real hook) always stays.
+export function stripDuplicateHook(text: string): { text: string; cuts: string[] } {
+  if (!text) return { text, cuts: [] };
+  const paras = text.split(/\n\n+/).map((p) => p.trim()).filter(Boolean);
+  if (paras.length < 2) return { text, cuts: [] };
+  const cuts: string[] = [];
+  const hook = paras[0];
+  const hookFirst = hook.split(/(?<=[.!?])\s+/)[0]?.trim() || hook;
+  const out = [paras[0]];
+  for (let i = 1; i < paras.length; i++) {
+    const p = paras[i];
+    // Whole later paragraph is a restatement of the opening.
+    if (tokenOverlap(p, hook) >= 0.7) { cuts.push(p); continue; }
+    // Later paragraph OPENS by re-running the hook's first sentence — drop just that sentence.
+    const sents = p.split(/(?<=[.!?])\s+/);
+    if (sents.length > 1 && tokenOverlap(sents[0], hookFirst) >= 0.7) {
+      cuts.push(sents[0].trim());
+      out.push(sents.slice(1).join(" ").trim());
+      continue;
+    }
+    out.push(p);
+  }
+  return { text: out.filter(Boolean).join("\n\n"), cuts };
 }
 
 // GOVERNING PRINCIPLE — silent fix (CORRECTNESS). Cut a stated SCHEME-DURATION count. Two failure

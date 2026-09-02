@@ -1,7 +1,7 @@
 // Offline test for the post-generation compliance check, using the real shapes from the
 // session: the final Queen script (should largely pass) vs. an early flat draft.
 //   node --experimental-strip-types --loader ./scripts/alias-loader.mjs scripts/compliance.test.ts
-import { checkCompliance, complianceScore, structuralScore, checkSourceStructural, accuracyChecks, STRUCTURAL_SET, stripInsinuations, stripUnnamedPartyNaming, stripSpeculation, stripImpliedRevelation, dedupeAdjacentParagraphs, collapseRepeatedAnchors, stripSchemeDurationClaim, stripStaleFutureDates, stripSourceLeaks, mergeOrphanFragments, correctDatesToFacts } from "../src/lib/script-compliance.ts";
+import { checkCompliance, complianceScore, structuralScore, checkSourceStructural, accuracyChecks, STRUCTURAL_SET, stripInsinuations, stripUnnamedPartyNaming, stripSpeculation, stripImpliedRevelation, dedupeAdjacentParagraphs, stripDuplicateHook, collapseRepeatedAnchors, stripSchemeDurationClaim, stripStaleFutureDates, stripSourceLeaks, mergeOrphanFragments, correctDatesToFacts } from "../src/lib/script-compliance.ts";
 
 let failures = 0;
 function check(name: string, cond: boolean) {
@@ -585,6 +585,22 @@ check("does NOT guess a month/year the facts don't carry",
   correctDatesToFacts("The scheme began in August 12, 2017.", dFacts).cuts.length === 0);
 check("does NOT fire when facts have two different days that month (ambiguous)",
   correctDatesToFacts("It happened on March 25, 2026.", "Events on March 19, 2026 and March 30, 2026.").cuts.length === 0);
+
+// POLISH BATCH — duplicated hook + the "nobody noticed" absolute phrasing.
+console.log("duplicated hook cut:");
+const hookP = "Imagine a song playing right now that no human ever chose to hear.";
+const dupHookBody = `${hookP} That is where this begins.\n\nThe scheme used bot accounts to stream around the clock.\n\n${hookP} It sounds impossible, but it happened.\n\nIn January 2024 he pleaded guilty.`;
+const dh = stripDuplicateHook(dupHookBody);
+check("keeps the first hook, cuts the later duplicate opening", (dh.text.match(/Imagine a song playing right now/g) || []).length === 1);
+check("the real opening stays first", dh.text.startsWith(hookP));
+check("records the duplicate-hook cut", dh.cuts.length >= 1);
+check("does NOT touch a body with a single hook", stripDuplicateHook(`${hookP}\n\nThe scheme ran for years.\n\nHe pleaded guilty.`).cuts.length === 0);
+
+console.log("'nobody noticed' absolute:");
+check("cuts 'For almost seven years, nobody noticed'", stripSpeculation("The bots streamed songs. For almost seven years, nobody noticed. The court ordered a forfeiture.").cuts.length >= 1);
+check("cuts 'the operation went unnoticed'", stripSpeculation("The operation went largely unnoticed for years.").cuts.length >= 1);
+check("keeps a grounded framing line (calibration: drama stays)",
+  stripSpeculation("The royalty system doesn't ask where a stream came from.").cuts.length === 0);
 
 console.log(failures === 0 ? "\nALL PASS" : `\n${failures} FAILURE(S)`);
 process.exit(failures === 0 ? 0 : 1);
