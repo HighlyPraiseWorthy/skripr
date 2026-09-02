@@ -1194,33 +1194,10 @@ export async function finalizeScript(
     (k) => typeof (script as any)[k] === "string" && (script as any)[k].trim().length > 0,
   );
 
-  // LENGTH BACKSTOP (runs FIRST, so the passes below act on the final-length text). One place for
-  // every path — the one-shot blob, the one-shot section build, and the chunked build. Long
-  // scripts only (>= 1200 target words). When the approved FACTS are available, reach length by
-  // ELABORATING THE UNUSED ONES (fact-aware) — the fix for the utilization gap where a 20-min build
-  // used ~10 of ~79 facts and stopped at ~1,000 words: each unused distinctive fact becomes a walked
-  // beat, so length and depth rise together and never by padding. Generic extend is the fallback
-  // when no fact set was supplied. Both no-op once the body is at length, so a full script pays
-  // nothing.
-  const targetWords = input.targetMinutes ? Math.round(input.targetMinutes * 130) : null;
-  const startWordsForLog = bodyKey ? (script as any)[bodyKey].split(/\s+/).filter(Boolean).length : 0;
-  if (targetWords && targetWords >= 1200 && bodyKey) {
-    try {
-      const before = startWordsForLog;
-      const facts = input.sourceMaterial && input.sourceMaterial.trim() ? input.sourceMaterial : "";
-      (script as any)[bodyKey] = facts
-        ? await extendWithUnusedFacts((script as any)[bodyKey], facts, targetWords, startedAt)
-        : await extendScriptToLength((script as any)[bodyKey], targetWords, input.targetTopic || "", input.targetNiche || "", startedAt);
-      const after = (script as any)[bodyKey].split(/\s+/).filter(Boolean).length;
-      console.log(`[extend] field=${bodyKey} target=${targetWords} before=${before} after=${after} (${facts ? "fact-aware" : "generic"})`);
-    } catch (e) {
-      console.error("[extend] backstop failed, keeping assembled body:", e);
-    }
-  } else {
-    // Answer question (1) even in the SKIP case: why the expansion never ran.
-    const why = !bodyKey ? "no-body-field" : !targetWords ? "targetMinutes-undefined" : `target-below-1200 (${targetWords})`;
-    console.log(`[expand] invoked=false reason=${why} targetMinutes=${input.targetMinutes ?? "undefined"} startWords=${startWordsForLog}`);
-  }
+  // NOTE: the length RE-FILL runs at the very END of finalize, AFTER the reduction passes — never
+  // here. The instrumented run proved the script generates at full length, and the refine + safety
+  // cuts then remove ~60%; a backstop placed before those cuts sees full length and no-ops, leaving
+  // the gutted result with nothing to re-fill it. So expansion is the LAST step (see bottom).
 
   // ONE SOURCE OF TRUTH for the opening. The prompt asks for the preset hook verbatim;
   // this guarantees it, and guarantees the body actually STARTS with it — the exact
@@ -1473,8 +1450,50 @@ export async function finalizeScript(
     }
   }
   if (autoCuts.length) {
-    (script as any)._autoCuts = [...new Set(autoCuts)]; // internal record, never shown to the user
-    console.log(`[safety] silently cut ${autoCuts.length} accuracy/safety line(s) (insinuation + trailing implied-revelation)`);
+    const unique = [...new Set(autoCuts)];
+    (script as any)._autoCuts = unique; // internal record, never shown to the user
+    // Report UNIQUE cuts, not the raw tally — the raw counter double-counts each line once per body
+    // field (fullScript/script/body/content/outro) and per section, which made ~8 real cuts read as
+    // "44" and looked like the guard was shredding the script. It isn't; that many fields hold copies.
+    console.log(`[safety] silently cut ${unique.length} unique accuracy/safety line(s) (raw tally ${autoCuts.length} across duplicate fields)`);
+  }
+
+  // LENGTH RE-FILL — runs LAST, AFTER refine + every safety cut, so whatever the reductions removed
+  // is re-filled from UNUSED facts back to the target. This is the fix for the gutted 6-min output:
+  // generation was full (3299 words), refine/safety cut ~60%, and the old backstop (which ran first)
+  // couldn't help. Target is ~165 wpm (the finished-video rate; the old 130 undershot a 20:40 ask by
+  // ~800 words). Only the supplied facts feed in (never invents), and a deterministic safety re-sweep
+  // guards any newly-added beat so the re-fill can't re-introduce an insinuation.
+  const refillKey = ["fullScript", "script", "body", "content"].find(
+    (k) => typeof (script as any)[k] === "string" && (script as any)[k].trim().length > 0,
+  );
+  const finalTarget = input.targetMinutes ? Math.round(input.targetMinutes * 165) : null;
+  if (finalTarget && finalTarget >= 1200 && refillKey) {
+    const beforeWords = (script as any)[refillKey].split(/\s+/).filter(Boolean).length;
+    const facts = input.sourceMaterial && input.sourceMaterial.trim() ? input.sourceMaterial : "";
+    try {
+      let filled = facts
+        ? await extendWithUnusedFacts((script as any)[refillKey], facts, finalTarget, startedAt)
+        : await extendScriptToLength((script as any)[refillKey], finalTarget, input.targetTopic || "", input.targetNiche || "", startedAt);
+      if (filled !== (script as any)[refillKey]) {
+        // Deterministic safety re-sweep on the (now longer) body — a re-fill beat is fact-walked and
+        // low-risk, but re-run the cheap regex guards so nothing new slips the safety net.
+        filled = healMidSentenceBreaks(filled);
+        filled = stripInsinuations(filled).text;
+        filled = stripSpeculation(filled).text;
+        filled = stripUnnamedPartyNaming(filled).text;
+        for (const k of ["fullScript", "script", "body", "content"]) {
+          if (typeof (script as any)[k] === "string") (script as any)[k] = filled;
+        }
+      }
+      const afterWords = filled.split(/\s+/).filter(Boolean).length;
+      console.log(`[refill] target=${finalTarget} before=${beforeWords} after=${afterWords} (${facts ? "fact-aware" : "generic"})`);
+    } catch (e) {
+      console.error("[refill] failed, keeping post-cut body:", (e as any)?.message);
+    }
+  } else {
+    const why = !refillKey ? "no-body-field" : !finalTarget ? "targetMinutes-undefined" : `target-below-1200 (${finalTarget})`;
+    console.log(`[refill] skipped reason=${why}`);
   }
 
   return script;
@@ -1515,7 +1534,7 @@ ALSO CUT ATMOSPHERIC SPECULATION — unobserved states, moods, or consensus stat
   (g) DATES VERBATIM. Every case-event date must match the FACTS exactly — never shift a day or month ("March 20" when the fact says March 19 is an error). Copy the fact's date.
 This is a REPHRASE, not a cut: the sentence stays, just recast to what the evidence backs. Model: "Spotify's fraud-detection system flagged the account" -> "Spotify said its preventative measures limited his royalties there to about $60,000."
 
-HARD RULES: Do NOT add any NEW fact, claim, or figure not in the FACTS. Do NOT invent. Do NOT change the voice, the hook, or the section structure. Do NOT rewrite prose that is already accurate. You only: delete redundancy, delete/soften unsupported inference, trim a weak tail, and rephrase overstatement to the defensible claim. The output is about the same length or shorter (softening adds only short qualifiers). Preserve the opening line exactly. Output ONLY the revised script text, nothing else.`,
+HARD RULES: This is a SURGICAL edit — change as LITTLE as possible. The vast majority of this script is good and MUST be preserved verbatim; a 20-minute script should come back nearly the same length (keep AT LEAST ~85% of it). You are not rewriting or condensing — you are removing only a CLEAR redundancy (a point already fully made) or a CLEARLY unsupported line, and lightly rephrasing overstatement to the defensible claim. When in doubt, KEEP the line — especially a vivid, evidence-grounded framing line (those are the retention and must survive; only fabrications and direct contradictions of the record are cut). Do NOT add any NEW fact, claim, or figure not in the FACTS. Do NOT invent, do NOT change the voice/hook/structure, do NOT condense good prose. Preserve the opening line exactly. Output ONLY the revised script text, nothing else.`,
       messages: [{
         role: "user",
         content: `FACTS — the only things the record establishes; PRESERVE their qualifiers (alleged/prosecutors-say) and their scope (which platform, which range):\n"""\n${facts.slice(0, 8000)}\n"""\n\nSCRIPT TO EDIT:\n"""\n${body}\n"""\n\nReturn the revised script — redundancy removed, unsupported inference cut, overstatement rephrased to the defensible claim, nothing new added.`,
@@ -1527,7 +1546,11 @@ HARD RULES: Do NOT add any NEW fact, claim, or figure not in the FACTS. Do NOT i
     // "prosecutors say"); reject only real growth (went off-task / started adding) or a gut.
     if (!out || out.length < 200) return body;
     if (out.length > body.length * 1.12) return body;       // ballooned — adding, not softening
-    if (out.length < body.length * 0.30) return body;       // gutted or refused
+    // A surgical de-rep/soften pass trims; it does NOT remove two-thirds of a good script. The old
+    // 0.30 floor let a pathological 62% gut through (20071 -> 7566 chars), which is what produced the
+    // 6-minute output. Reject anything under 0.72 — that is over-cutting good content, not editing;
+    // keep the original and let the deterministic passes + the re-fill handle the rest.
+    if (out.length < body.length * 0.72) { console.log(`[refine] REJECTED over-cut ${body.length} -> ${out.length} (kept original)`); return body; }
     if (!/[.!?"'”’)\]]\s*$/.test(out)) return body;          // truncated at max_tokens
     console.log(`[refine] semantic pass: ${body.length} -> ${out.length} chars`);
     return out;
