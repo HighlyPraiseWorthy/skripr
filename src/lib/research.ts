@@ -29,9 +29,11 @@ export interface ResearchFact {
 // narrated span; at Anton's ~166 wpm that is about 2 to 3 facts per minute. So the budget is
 // per-minute, and when the case cannot meet it we tell the truth about the supportable length.
 export const FACTS_PER_MINUTE = 2.5;
-export const MAX_FACTS = 80; // ceiling (also the hard cap on the fact set) — raised so the deep
-// primary-source document facts (dated emails, dollar movements, CC-N designations) survive the cap
-// alongside the narrative set instead of being trimmed back out.
+export const MAX_FACTS = 130; // ceiling (also the hard cap on the fact set) — raised 80 -> 130 so the
+// FULL grounded pool (case + context + primary-source document facts, ~120 on a rich case) reaches
+// generation. Refill quality is capped by pool size: an 80-cap threw away the deep evidence the
+// re-fill needed, so a 20-min build padded a thin pool instead of consuming distinct facts. Short
+// asks stay near their per-minute budget (factCap); only a long/deep ask keeps the whole ceiling.
 // MOVE #8 — TWO-TIER, CRAFT-CREDITED length. Earlier framing counted only CASE facts and set
 // the rate at 2.5/min, so it declared "22 facts = 9 minutes" and the ceiling fired far too
 // often. That conflated PADDING (repeating/inventing a fact) with STORYTELLING CRAFT and REAL
@@ -70,7 +72,11 @@ export function honestMinutes(factCount: number): number {
 // movements, CC-N designations. Bumping busts the stale ::v4 cache so already-researched cases
 // re-derive WITH the document facts instead of serving the shallow pre-fix set. ALWAYS bump this
 // when the fact-gathering pipeline changes, or cached cases silently ship the old depth.
-export const RESEARCH_BRIEF_VERSION = 5;
+// v6: busts the stale-SHALLOW ::v5 rows — fact sets cached by a v5 deepen that ran BEFORE the
+// mining-gate decouple + depth floor (so they hold only ~23 facts). Those stale rows were being
+// served on cached runs (parsedFacts=23), starving the re-fill; v6 forces re-derivation with the
+// full mining (~120 facts). Combined with MAX_FACTS 80->130 so the full set survives the cap.
+export const RESEARCH_BRIEF_VERSION = 6;
 
 // Whether the record actually supports the premise the script is about to assert.
 //   documented  a real, citable source describes THIS specific event or claim

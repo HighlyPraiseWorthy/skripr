@@ -141,6 +141,22 @@ function allNumberValues(text: string): number[] {
 // swallows half the paragraph.
 const QUOTE_RE = /["“]([^"”\n]{6,240})["”]|(?:^|[\s(\[])['‘]([^'’\n]{6,240})['’](?=$|[\s.,!?)\]])/;
 
+// ABBREVIATION-AWARE sentence split. A period inside "U.S.", "Mr.", or an initial ("Damian A.") is
+// NOT a sentence boundary — the naive /(?<=[.!?])\s+/ split treated it as one, so a silent cut that
+// removed the real sentence ("Former U.S. Attorney Damian Williams said X.") left an orphan fragment
+// ("Former U.S."). This merges a fragment ending in a known abbreviation back into the next piece,
+// so every cut is SENTENCE-ATOMIC — a strip removes a whole sentence, never a dangling clause.
+const _ABBR_TAIL = /(?:\b(?:U\.S|U\.K|U\.N|E\.U|D\.C|Mr|Mrs|Ms|Dr|Jr|Sr|St|Inc|Corp|Ltd|Co|vs|etc|No|Nos|Vol|Sen|Rep|Gov|Gen|Lt|Col|Sgt|Adm|Rev|Hon|Prof|Ave|Blvd|Dept|a\.m|p\.m)\.|\b[A-Z]\.)["'”’)\]]?\s*$/;
+export function splitSentences(text: string): string[] {
+  const rough = (text || "").split(/(?<=[.!?])\s+/);
+  const out: string[] = [];
+  for (const s of rough) {
+    if (out.length && _ABBR_TAIL.test(out[out.length - 1])) out[out.length - 1] = `${out[out.length - 1]} ${s}`;
+    else out.push(s);
+  }
+  return out;
+}
+
 // PERSON-INSINUATION detection — shared by the compliance check AND the silent auto-cut in
 // generation, so both use one source of truth. Matches the LANGUAGE of insinuated guilt/
 // knowledge/complicity about a real person ("someone else was collecting", "not the kind of thing
@@ -161,7 +177,7 @@ export function stripInsinuations(text: string): { text: string; cuts: string[] 
   if (!text) return { text, cuts: [] };
   const cuts: string[] = [];
   const outParas = text.split(/\n\n+/).map((p) => {
-    const kept = p.split(/(?<=[.!?])\s+/).filter((s) => {
+    const kept = splitSentences(p).filter((s) => {
       if (looksLikeInsinuation(s)) { cuts.push(s.trim()); return false; }
       return true;
     });
@@ -188,7 +204,7 @@ export function stripUnnamedPartyNaming(text: string): { text: string; cuts: str
   if (!text) return { text, cuts: [] };
   const cuts: string[] = [];
   const outParas = text.split(/\n\n+/).map((p) => {
-    const kept = p.split(/(?<=[.!?])\s+/).filter((s) => {
+    const kept = splitSentences(p).filter((s) => {
       if (namesAnUnnamedParty(s)) { cuts.push(s.trim()); return false; }
       return true;
     });
@@ -212,7 +228,7 @@ export function stripUnnamedPartyNaming(text: string): { text: string; cuts: str
 // royalty system doesn't ask where a stream came from" STAY (grounded framing, keeps the retention
 // punch); "nobody noticed for seven years" GOES (a documented contradiction: 2018/2019 warnings +
 // the 2023 halt). When in doubt, keep the punch — the line is fabrication/contradiction, not drama.
-export const SPECULATION_RE = /\b((?:must|would|could|had to) have (?:been|required|involved|known|meant|taken|needed|had|coordinated|demanded)|had to have (?:been|required|involved|meant|known|taken)|which (?:can|could) only mean|could only (?:have )?mean(?:t)?(?:\s+(?:one thing|that))?|(?:did(?:n'?t| not)|could(?:n'?t| not) have|had(?:n'?t| not)) (?:do|done|build|built|run|ran|orchestrate|orchestrated|pull off|pulled off|manage|managed|create|created|mastermind|masterminded|set up|pull|pulled|act|acted|operate|operated)[^.]{0,40}?\b(?:alone|on (?:his|her|their) own|by (?:him|her|them)\s?self|single-handedly|without help)\b|\bwas the entire (?:business|scheme|point|story|operation|game|plan|thing|fraud)\b|(?:points to|all but confirms|is clear evidence of|strongly (?:implies|suggests)|can only be explained by)\b|(?:sealed (?:cooperation|plea|deal)|an? ongoing investigation|a cooperating (?:witness|deal)|cooperation deal|a plea deal)[^.]{0,60}\bor both\b|the (?:most likely|only plausible) (?:explanation|reason|scenario) is|(?:nobody|no one|not (?:one|a single) (?:person|executive|analyst|investigator))[^.]{0,40}\b(?:could (?:explain|say|agree|figure out|account for|tell)|knew|noticed|understood|had (?:an? )?answer)|(?:no one|nobody|few people|not everyone)[^.]{0,30}\b(?:in the (?:industry|business|company)|at the (?:platforms?|labels?|company))[^.]{0,30}\b(?:could|knew|agreed|understood|noticed)|(?:was|were) (?:treated as|considered|thought to be|assumed) (?:essentially |basically |all but )?(?:airtight|foolproof|impossible|unbeatable|bulletproof)|(?:the (?:royalty pools?|numbers?|books?|figures?)) (?:just |simply |never )?(?:did(?:n'?t| not) add up|made no sense)|indistinguishable from (?:a |real |an actual )?(?:real |human )?(?:listener|listening|person|user|artist|human)|(?:completely |entirely |totally |essentially )?invisible (?:from the outside|to (?:everyone|anyone|the platforms?|detection)|the whole time)|(?:completely |entirely |essentially )?undetectable|(?:largely|completely|entirely|totally) uninterrupted|never (?:once )?(?:verified|audited|checked|flagged|questioned|caught|detected)|(?:nobody|no one) (?:ever )?(?:audits?|verifies|verified|checks?|checked|knew|noticed|questioned|caught it)|(?:every|each) (?:single )?(?:registration|stream|account|song|upload|play)[^.]{0,25}?(?:converted|became|turned into|generated|counted as)|(?:almost |virtually )?none of (?:them|the (?:listeners?|streams?|plays?|accounts?)) (?:were|was) (?:real|human|legitimate|genuine)|went (?:largely |completely |entirely )?unnoticed|for (?:almost |nearly |over |more than )?[\w-]+ years,?\s+(?:nobody|no one|it (?:went|stayed|kept)|nothing)\b|(?:nobody|no one) (?:ever )?(?:noticed|caught on|raised a flag|said a word|stepped in)|rumors? (?:circulated|swirled|spread|began)|industry insiders?\b|(?:law enforcement|authorities|investigators|regulators) (?:stayed|remained|kept) (?:silent|quiet|in the dark)|(?:people|everyone|many|some) (?:were|was) (?:saying|whispering|talking about)|(?:it was |it became )?widely (?:known|believed|suspected|rumored|assumed)|(?:authorities|investigators|prosecutors|officials) (?:suspected|believed|assumed|were aware)\b(?![^.]{0,30}\b(?:said|charged|alleged|stated|according))|word (?:spread|got around|on the street))\b/i;
+export const SPECULATION_RE = /\b((?:must|would|could|had to) have (?:been|required|involved|known|meant|taken|needed|had|coordinated|demanded)|had to have (?:been|required|involved|meant|known|taken)|which (?:can|could) only mean|could only (?:have )?mean(?:t)?(?:\s+(?:one thing|that))?|(?:did(?:n'?t| not)|could(?:n'?t| not) have|had(?:n'?t| not)) (?:do|done|build|built|run|ran|orchestrate|orchestrated|pull off|pulled off|manage|managed|create|created|mastermind|masterminded|set up|pull|pulled|act|acted|operate|operated)[^.]{0,40}?\b(?:alone|on (?:his|her|their) own|by (?:him|her|them)\s?self|single-handedly|without help)\b|\bwas the entire (?:business|scheme|point|story|operation|game|plan|thing|fraud)\b|(?:points to|all but confirms|is clear evidence of|strongly (?:implies|suggests)|can only be explained by)\b|(?:sealed (?:cooperation|plea|deal)|an? ongoing investigation|a cooperating (?:witness|deal)|cooperation deal|a plea deal)[^.]{0,60}\bor both\b|the (?:most likely|only plausible) (?:explanation|reason|scenario) is|(?:nobody|no one|not (?:one|a single) (?:person|executive|analyst|investigator))[^.]{0,40}\b(?:could (?:explain|say|agree|figure out|account for|tell)|knew|noticed|understood|had (?:an? )?answer)|(?:no one|nobody|few people|not everyone)[^.]{0,30}\b(?:in the (?:industry|business|company)|at the (?:platforms?|labels?|company))[^.]{0,30}\b(?:could|knew|agreed|understood|noticed)|(?:was|were) (?:treated as|considered|thought to be|assumed) (?:essentially |basically |all but )?(?:airtight|foolproof|impossible|unbeatable|bulletproof)|(?:the (?:royalty pools?|numbers?|books?|figures?)) (?:just |simply |never )?(?:did(?:n'?t| not) add up|made no sense)|indistinguishable from (?:a |real |an actual )?(?:real |human )?(?:listener|listening|person|user|artist|human)|(?:completely |entirely |totally |essentially )?invisible (?:from the outside|to (?:everyone|anyone|the platforms?|detection)|the whole time)|(?:completely |entirely |essentially )?undetectable|(?:largely|completely|entirely|totally) uninterrupted|never (?:once )?(?:verified|audited|checked|flagged|questioned|caught|detected)|(?:nobody|no one) (?:ever )?(?:audits?|verifies|verified|checks?|checked|knew|noticed|questioned|caught it)|(?:every|each) (?:single )?(?:registration|stream|account|song|upload|play)[^.]{0,25}?(?:converted|became|turned into|generated|counted as)|(?:almost |virtually )?none of (?:them|the (?:listeners?|streams?|plays?|accounts?)) (?:were|was) (?:real|human|legitimate|genuine)|went (?:largely |completely |entirely )?unnoticed|for (?:almost |nearly |over |more than )?[\w-]+ years,?\s+(?:nobody|no one|it (?:went|stayed|kept)|nothing)\b|(?:nobody|no one) (?:ever )?(?:noticed|caught on|raised a flag|said a word|stepped in)|rumors?\b[^.]{0,20}?(?:circulat\w+|swirl\w+|spread\w*|flying|abound\w*)|industry insiders?\b|(?:law enforcement|authorities|investigators|regulators|the government|officials) (?:stayed|remained|kept|went) (?:completely |entirely |totally |largely )?(?:silent|quiet|in the dark)|(?:people|everyone|many|some) (?:were|was) (?:saying|whispering|talking about)|(?:it was |it became )?widely (?:known|believed|suspected|rumored|assumed)|(?:authorities|investigators|prosecutors|officials) (?:suspected|believed|assumed|were aware)\b(?![^.]{0,30}\b(?:said|charged|alleged|stated|according))|word (?:spread|got around|on the street)|not (?:a |one )?single [\w ]{0,45}?(?:flagged|detected|caught|noticed|questioned|audited|stopped|stepped in)|the (?:answer|truth|number|scale|reality|real (?:figure|number|answer)) (?:was|is|turned out to be|went) [\w-]+ times (?:further|farther|larger|bigger|deeper|greater|worse|higher|more)|money (?:that )?(?:had )?(?:already )?(?:moved|flowed|vanished|disappeared)[^.]{0,45}?(?:forfeiture|order|could(?:n'?t| not)|beyond|reach|recover)|the forfeiture (?:order |judgment )?(?:could|can|would)(?:n'?t| not)? (?:not )?(?:fully |ever )?(?:reach|recover|touch|account for|capture|claw back)|sealed (?:portions?|records?|documents?|filings?|parts?|sections?)[^.]{0,35}?(?:cover|hide|conceal|contain|point to|suggest|hint|mean|protect))\b/i;
 export function looksLikeSpeculation(s: string): boolean { return SPECULATION_RE.test(s || ""); }
 
 // GOVERNING PRINCIPLE — silent fix (CORRECTNESS, light). Cut a sentence that arithmetically TIES a
@@ -228,7 +244,7 @@ export function stripUnitConflation(text: string): { text: string; cuts: string[
   if (!text) return { text, cuts: [] };
   const cuts: string[] = [];
   const outParas = text.split(/\n\n+/).map((para) => {
-    const kept = para.split(/(?<=[.!?])\s+/).filter((s) => {
+    const kept = splitSentences(para).filter((s) => {
       if (SONGS_FIG_RE.test(s) && STREAMS_FIG_RE.test(s) && CONFLATION_CUE_RE.test(s)) { cuts.push(s.trim()); return false; }
       return true;
     });
@@ -240,7 +256,7 @@ export function stripSpeculation(text: string): { text: string; cuts: string[] }
   if (!text) return { text, cuts: [] };
   const cuts: string[] = [];
   const outParas = text.split(/\n\n+/).map((p) => {
-    const kept = p.split(/(?<=[.!?])\s+/).filter((s) => {
+    const kept = splitSentences(p).filter((s) => {
       if (looksLikeSpeculation(s)) { cuts.push(s.trim()); return false; }
       return true;
     });
@@ -271,7 +287,7 @@ export function stripImpliedRevelation(text: string): { text: string; cuts: stri
   while (i >= 0) {
     const p = paras[i].trim();
     if (!p) { paras.splice(i, 1); i--; continue; }
-    const sentences = p.split(/(?<=[.!?])\s+/);
+    const sentences = splitSentences(p);
     while (sentences.length && looksLikeTrailingTease(sentences[sentences.length - 1])) {
       cuts.push(sentences.pop()!.trim());
     }
@@ -340,14 +356,14 @@ export function stripDuplicateHook(text: string): { text: string; cuts: string[]
   if (paras.length < 2) return { text, cuts: [] };
   const cuts: string[] = [];
   const hook = paras[0];
-  const hookFirst = hook.split(/(?<=[.!?])\s+/)[0]?.trim() || hook;
+  const hookFirst = splitSentences(hook)[0]?.trim() || hook;
   const out = [paras[0]];
   for (let i = 1; i < paras.length; i++) {
     const p = paras[i];
     // Whole later paragraph is a restatement of the opening.
     if (tokenOverlap(p, hook) >= 0.7) { cuts.push(p); continue; }
     // Later paragraph OPENS by re-running the hook's first sentence — drop just that sentence.
-    const sents = p.split(/(?<=[.!?])\s+/);
+    const sents = splitSentences(p);
     if (sents.length > 1 && tokenOverlap(sents[0], hookFirst) >= 0.7) {
       cuts.push(sents[0].trim());
       out.push(sents.slice(1).join(" ").trim());
@@ -387,7 +403,7 @@ export function stripSchemeDurationClaim(text: string, title?: string): { text: 
   const bodyYearVals = new Set<number>();
   for (const raw of text.split(/(?<=[.!?])\s+/)) { const y = durationYears(raw); if (y !== null) bodyYearVals.add(y); }
   const outParas = text.split(/\n\n+/).map((para) => {
-    const sentences = para.split(/(?<=[.!?])\s+/);
+    const sentences = splitSentences(para);
     const kept: string[] = [];
     for (const s of sentences) {
       if (DURATION_CLAIM_RE.test(s)) {
@@ -491,7 +507,7 @@ export function stripStaleFutureDates(text: string, now: number): { text: string
   if (!text) return { text, cuts: [] };
   const cuts: string[] = [];
   const outParas = text.split(/\n\n+/).map((para) => {
-    const sentences = para.split(/(?<=[.!?])\s+/);
+    const sentences = splitSentences(para);
     const kept = sentences.filter((s) => {
       const re = staleDateFrameRe();
       let m: RegExpExecArray | null;
@@ -532,7 +548,7 @@ export function stripSourceLeaks(text: string, sourceEntities: string[] | undefi
   if (!leakTerms.length) return { text, cuts: [] };
   const cuts: string[] = [];
   const outParas = text.split(/\n\n+/).map((para) => {
-    const kept = para.split(/(?<=[.!?])\s+/).filter((s) => {
+    const kept = splitSentences(para).filter((s) => {
       const sl = s.toLowerCase();
       if (leakTerms.some((lt) => lt.re.test(sl))) { cuts.push(s.trim()); return false; }
       return true;
@@ -560,7 +576,7 @@ export function collapseRepeatedAnchors(text: string): { text: string; cuts: str
   type Flat = { p: number; s: string };
   const flat: Flat[] = [];
   paras.forEach((p, pi) => {
-    for (const raw of p.split(/(?<=[.!?])\s+/)) { const s = raw.trim(); if (s) flat.push({ p: pi, s }); }
+    for (const raw of splitSentences(p)) { const s = raw.trim(); if (s) flat.push({ p: pi, s }); }
   });
   const wc = (s: string) => s.split(/\s+/).filter(Boolean).length;
   const remove = new Set<number>();
@@ -597,11 +613,14 @@ export function collapseRepeatedAnchors(text: string): { text: string; cuts: str
         const byLen = [...occ].sort((a, b) => flat[b].s.length - flat[a].s.length);
         const keepArr = byLen.slice(0, 2); // keep the two most elaborated occurrences
         const keep = new Set(keepArr);
+        // A figure drummed 4+ times is padding no matter how it's dressed — cap it at the 2 most
+        // elaborated and cut ALL the rest, even long distinct-looking sentences (that is the
+        // "661,440 six times" case, which slipped the conservative per-cut check). At exactly 3, stay
+        // conservative (only clear bare/near-dup restatements) so genuine triple-use isn't over-cut.
+        const heavy = occ.length >= 4;
         for (const k of occ) {
           if (keep.has(k)) { protectKeep.add(k); continue; }
-          // Cut a bare restatement OR a long one that just rewords a kept occurrence; leave a long
-          // sentence that carries distinct content around the figure.
-          if (!cutEligible(k, keepArr)) continue;
+          if (!heavy && !cutEligible(k, keepArr)) continue;
           remove.add(k); cuts.push(`repetition (figure): ${flat[k].s}`);
         }
       }
@@ -727,7 +746,7 @@ export function mergeOrphanFragments(text: string): { text: string; cuts: string
   if (!text) return { text, cuts: [] };
   const paras = text.split(/\n\n+/).map((p) => p.trim()).filter(Boolean);
   const isOrphan = (p: string) => {
-    const parts = p.split(/(?<=[.!?])\s+/).filter(Boolean);
+    const parts = splitSentences(p).filter(Boolean);
     return parts.length === 1 && ORPHAN_FRAGMENT_RE.test(parts[0].trim()) && parts[0].split(/\s+/).length <= 6;
   };
   const out: string[] = [];

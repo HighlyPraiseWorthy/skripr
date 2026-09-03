@@ -1577,7 +1577,13 @@ HARD RULES: This is a SURGICAL edit — change as LITTLE as possible. The vast m
     // 0.30 floor let a pathological 62% gut through (20071 -> 7566 chars), which is what produced the
     // 6-minute output. Reject anything under 0.72 — that is over-cutting good content, not editing;
     // keep the original and let the deterministic passes + the re-fill handle the rest.
-    if (out.length < body.length * 0.72) { console.log(`[refine] REJECTED over-cut ${body.length} -> ${out.length} (kept original)`); return body; }
+    // Floor 0.45 (not 0.72): the re-fill now runs AFTER refine, so a de-rep cut is SAFE — whatever
+    // refine removes (repetition, unsupported lines) gets re-filled from DISTINCT unused facts, not
+    // the cut repetition. The old 0.72 floor rejected de-rep wholesale, which is exactly why the
+    // repetition survived (661,440 6x, four platforms 3x) while length "landed" via the repetition.
+    // Reject only a catastrophic <45% survival (a broken/refused pass); otherwise apply the cut and
+    // let re-fill restore length WITH depth.
+    if (out.length < body.length * 0.45) { console.log(`[refine] REJECTED catastrophic-cut ${body.length} -> ${out.length} (kept original)`); return body; }
     if (!/[.!?"'”’)\]]\s*$/.test(out)) return body;          // truncated at max_tokens
     console.log(`[refine] semantic pass: ${body.length} -> ${out.length} chars`);
     return out;

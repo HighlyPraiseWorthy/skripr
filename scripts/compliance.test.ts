@@ -611,6 +611,13 @@ check("cuts 'law enforcement stayed silent'", atm2("Law enforcement stayed silen
 check("cuts 'it was widely known'", atm2("It was widely known that something was off.").cuts.length >= 1);
 check("keeps an ATTRIBUTED authorities statement (not atmosphere)",
   stripSpeculation("Prosecutors said authorities suspected fraud as early as 2019, according to the indictment.").cuts.length === 0);
+// The exact phrasings that survived the last build.
+check("cuts 'rumors circulating in industry circles'", atm2("Rumors were circulating in industry circles.").cuts.length >= 1);
+check("cuts 'law enforcement stayed completely silent' (adverb inside)", atm2("Law enforcement and the government stayed completely silent.").cuts.length >= 1);
+check("cuts 'not a single detection system had flagged'", atm2("Not a single automated detection system had flagged the accounts.").cuts.length >= 1);
+check("cuts invented numeric multiple 'the answer was ten times further'", atm2("The answer was ten times further than anyone guessed.").cuts.length >= 1);
+check("cuts invented money-movement 'the forfeiture order could not reach'", atm2("Money had already moved in ways the forfeiture order could not fully reach.").cuts.length >= 1);
+check("cuts sealed-content speculation", atm2("The sealed portions of the case cover something else entirely.").cuts.length >= 1);
 
 console.log("unit conflation (streams vs songs):");
 check("cuts a sentence tying songs-count to streams via computation",
@@ -625,6 +632,34 @@ check("does NOT cut a lone streams figure",
   stripUnitConflation("At its peak the network pushed 661,440 streams a day.").cuts.length === 0);
 check("does NOT cut a lone songs figure",
   stripUnitConflation("CC-3 supplied roughly 10,000 songs a month.").cuts.length === 0);
+
+// HEAVY figure repetition (661,440 six times, all in distinct long sentences) -> collapse to <=2.
+console.log("heavy figure repetition (4+):");
+const sixTimes = [
+  "At its peak the network was pushing 661,440 fraudulent streams a day, a scale prosecutors called industrial.",
+  "The distributor's own analytics, had anyone read them, showed 661,440 streams a day flowing through the accounts.",
+  "To fund that, the bots needed content, and content is what fed the 661,440 streams a day at the core of it.",
+  "Investigators later fixed the daily figure at 661,440 streams, the number that anchored the forfeiture math.",
+  "Every morning the same machine woke up and produced 661,440 streams a day without a single human listener.",
+  "By 2023 the 661,440 streams a day had compounded into a figure large enough to draw the MLC's attention.",
+].join("\n\n");
+const six = collapseRepeatedAnchors(sixTimes);
+check("a figure drummed 6x in long distinct sentences collapses to <=2", (six.text.match(/661,440/g) || []).length <= 2);
+check("still records the figure repetition cuts", six.cuts.some((c) => /repetition \(figure\)/.test(c)));
+// A figure used exactly 3x stays conservative (distinct long uses are kept).
+const thrice = [
+  "The network pushed 661,440 streams a day, a number prosecutors used to anchor the forfeiture against Smith.",
+  "To picture 661,440 daily plays, imagine an arena selling out forty times before lunch, every day.",
+  "Spotify's abuse team, which reviews 661,440-scale anomalies, somehow never escalated this to a human.",
+].join("\n\n");
+check("a figure used 3x in distinct long sentences is NOT force-collapsed", (collapseRepeatedAnchors(thrice).text.match(/661,440/g) || []).length === 3);
+
+// Abbreviation-atomic sentence split — a cut removes the WHOLE sentence, no "Former U.S." orphan.
+console.log("abbreviation-atomic cuts:");
+const abbrBody = "Former U.S. Attorney Damian Williams announced the charges. Nobody noticed for seven years. The scheme ran from 2017 to 2024.";
+const ab = stripSpeculation(abbrBody);
+check("cuts the whole 'nobody noticed' sentence, not a fragment", !/nobody noticed/i.test(ab.text));
+check("leaves 'Former U.S. Attorney' sentence intact (no orphan)", /Former U\.S\. Attorney Damian Williams announced the charges\./.test(ab.text) && !/\bFormer U\.S\.$/m.test(ab.text));
 
 console.log(failures === 0 ? "\nALL PASS" : `\n${failures} FAILURE(S)`);
 process.exit(failures === 0 ? 0 : 1);
