@@ -514,7 +514,24 @@ function durationYears(s: string): number | null {
   if (!n) return null;
   return /decade/.test(m[2]) ? n * 10 : n;
 }
-export function stripSchemeDurationClaim(text: string, title?: string): { text: string; cuts: string[] } {
+// The scheme's span in YEARS as the researched facts establish it: the gap between the earliest and
+// latest plausible calendar year mentioned (2017..2024 -> 7). Returns null unless at least two
+// distinct in-range years appear and the gap is a sane 1..40 — so we NEVER invent a duration from a
+// thin or single-year fact set. Shared by the title reconciler and the body-duration backstop.
+export function researchedYearSpan(facts: string | undefined): number | null {
+  if (!facts) return null;
+  const years = (facts.match(/\b(19[5-9]\d|20[0-4]\d)\b/g) || []).map(Number);
+  if (years.length < 2) return null;
+  const span = Math.max(...years) - Math.min(...years);
+  return span >= 1 && span <= 40 ? span : null;
+}
+
+// A body sentence asserting the SCHEME's own duration (not just any passing mention of a number of
+// years): "the scheme ran for almost four years", "over the course of four years", "a four-year
+// operation". Captures the year count so it can be checked against the researched span.
+const SCHEME_DURATION_ASSERT_RE = /\b(?:ran|lasted|went on|continued|operated|spanned|kept going|running|going)\s+(?:for\s+)?(?:about|nearly|almost|roughly|over|just|more than|around)?\s*(\d+|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve)\s+years?\b|\bfor\s+(?:about|nearly|almost|roughly|over|just|more than|around)?\s*(\d+|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve)\s+years?,?\s+(?:the\s+)?(?:scheme|operation|fraud|scam|it|this)\b|\bover the course of\s+(?:about|nearly|almost|roughly)?\s*(\d+|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve)\s+years?\b|\b(\d+|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve)[\s-]year[\s-](?:long\s+)?(?:scheme|operation|fraud|scam|run|con)\b/i;
+
+export function stripSchemeDurationClaim(text: string, title?: string, researchedSpanYears?: number | null): { text: string; cuts: string[] } {
   if (!text) return { text, cuts: [] };
   const cuts: string[] = [];
   // The locked title's number is a hook device, never a sourced fact — so a bare body fragment
@@ -534,6 +551,17 @@ export function stripSchemeDurationClaim(text: string, title?: string): { text: 
         // claim was elaborating — it is the same false count with no sentence of its own.
         if (kept.length && BARE_DURATION_RE.test(kept[kept.length - 1].trim())) cuts.push(kept.pop()!.trim());
         continue;
+      }
+      // BACKSTOP: a sentence asserting the SCHEME's duration that CONTRADICTS the researched span
+      // (facts establish ~7 years 2017-2024, but the sentence says "almost four years") — the exact
+      // hook/body contradiction the title reconciler prevents at the source. Cut it (±1yr tolerance).
+      if (researchedSpanYears != null) {
+        const m = s.match(SCHEME_DURATION_ASSERT_RE);
+        if (m) {
+          const tok = (m[1] || m[2] || m[3] || m[4] || "").toLowerCase();
+          const n = /^\d+$/.test(tok) ? parseInt(tok, 10) : _DURWORDS[tok];
+          if (n && Math.abs(n - researchedSpanYears) > 1) { cuts.push(s.trim()); continue; }
+        }
       }
       // A BARE standalone duration fragment ("Eight years.") is a dramatic stated span. Cut it when
       // it either repeats the title's number (a title-leak, never a sourced fact) OR conflicts with

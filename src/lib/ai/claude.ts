@@ -1,7 +1,7 @@
 import { Anthropic } from "@anthropic-ai/sdk";
 import { fingerprintToBrief, readProhibitions, stripStandaloneTics, type VoiceFingerprint } from "@/lib/voice-metrics";
 import { buildStorytellingBlock } from "@/lib/storytelling";
-import { stripInsinuations, stripUnnamedPartyNaming, stripSpeculation, stripImpliedRevelation, dedupeAdjacentParagraphs, stripDuplicateHook, collapseRepeatedAnchors, stripSchemeDurationClaim, stripStaleFutureDates, stripSourceLeaks, mergeOrphanFragments, correctDatesToFacts, stripUnitConflation, stripInventedInference, flagOverstatementRisk, splitSentences, stripLeakedLabels, stripFalseEquality, stripUnsourcedStat } from "@/lib/script-compliance";
+import { stripInsinuations, stripUnnamedPartyNaming, stripSpeculation, stripImpliedRevelation, dedupeAdjacentParagraphs, stripDuplicateHook, collapseRepeatedAnchors, stripSchemeDurationClaim, stripStaleFutureDates, stripSourceLeaks, mergeOrphanFragments, correctDatesToFacts, stripUnitConflation, stripInventedInference, flagOverstatementRisk, splitSentences, stripLeakedLabels, stripFalseEquality, stripUnsourcedStat, researchedYearSpan } from "@/lib/script-compliance";
 import { buildVarietyBlock } from "@/lib/ai/phrase-variety";
 
 let _anthropic: Anthropic | null = null;
@@ -637,6 +637,7 @@ Write the TRUE version with the same punch. Model recasts: "no human choosing to
     messages: [{
       role: "user",
       content: `VIDEO: "${context.title}"
+THE TITLE IS A HOOK FRAMING, NOT A SOURCE OF FACT. Any time span or number in the title is a headline device — never state a duration (how many years the scheme ran, how long it lasted) FROM the title. State durations only from the sourced facts below; if the facts give dates (a start year and an end year), the span is their difference, and that is the only duration you may assert.
 TOPIC/ANGLE: ${context.topic}
 ${context.recipe ? `\nTHE SOURCE VIDEO'S RECIPE (this remix follows it): ${context.recipe}\n` : ""}
 YOU ARE WRITING SECTION ${index + 1} OF ${total}: "${spec.name}"
@@ -996,6 +997,43 @@ async function enforceMagnetWord(script: GeneratedScript, word: string, topic: s
     console.error("[magnet] enforce rewrite unparseable, keeping original title/hook:", e);
   }
   return script;
+}
+
+// RECONCILE THE PLACEHOLDER TITLE AGAINST THE RESEARCHED FACTS. The remix titles shown at ideation
+// are placeholders written BEFORE research: the time period is a guess and the target pronoun is the
+// generic "Them". Once the facts are grounded, rewrite ONLY those two variable slots of the viral
+// formula ("After [Time] [Brand] Finally Caught [pronoun]..") to match the evidence — the brand and
+// the formula are preserved. Deterministic and conservative: it never INVENTS a number (keeps the
+// placeholder when the span isn't clearly established) and only downgrades "Them" when the record
+// clearly centers ONE named, charged/convicted person. This becomes both the displayed title AND the
+// title handed to the section-writer, so the hook draws its duration from a CORRECT title, killing
+// the hook/body contradiction ("for almost four years" vs a correct "roughly seven years") at source.
+export function reconcileTitle(title: string, facts: string | undefined): string {
+  if (!title || !facts || !facts.trim()) return title;
+  let out = title;
+
+  // TIME SLOT — the researched span replaces the guessed one ("4 Years" -> "7 Years"). Only when the
+  // span is clearly established (>=2 distinct in-range years); otherwise keep the placeholder.
+  const span = researchedYearSpan(facts);
+  if (span != null) {
+    out = out.replace(/\b(\d+|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve)(\s+Years?\b)/i, `${span}$2`);
+  }
+
+  // PRONOUN SLOT — "Caught Them" -> "Caught Him/Her" ONLY when the record clearly centers one named,
+  // charged/convicted person. Signal: a charge/conviction verb is present AND gendered pronouns run
+  // overwhelmingly one way. If multiple or unnamed, keep the generic "Them".
+  const charged = /\b(?:pleaded? guilty|plead(?:ed)? guilty|convicted|indicted|charged|sentenced|arrested|found guilty)\b/i.test(facts);
+  if (charged) {
+    const male = (facts.match(/\b(?:he|him|his)\b/gi) || []).length;
+    const female = (facts.match(/\b(?:she|her|hers)\b/gi) || []).length;
+    let pron: string | null = null;
+    if (male >= 2 && male > female * 2) pron = "Him";
+    else if (female >= 2 && female > male * 2) pron = "Her";
+    if (pron) out = out.replace(/\b(Caught|Catch|Get|Got|Nail(?:ed)?|Stop(?:ped)?|Bust(?:ed)?)\s+Them\b/i, `$1 ${pron}`);
+  }
+
+  if (out !== title) console.log(`[reconcile-title] "${title}" -> "${out}" (span=${span ?? "kept"})`);
+  return out;
 }
 
 export async function generateScript(input: ScriptGenerationInput): Promise<GeneratedScript> {
@@ -1365,6 +1403,14 @@ export async function finalizeScript(
     return false;
   };
 
+  // Reconcile the displayed title against the researched facts (idempotent — the plan/section paths
+  // already reconciled, but the one-shot path and the stored title land here). Compute the scheme's
+  // researched span once, for the body-duration backstop below.
+  if (typeof (script as any).title === "string" && (script as any).title.trim()) {
+    (script as any).title = reconcileTitle((script as any).title, input.sourceMaterial);
+  }
+  const researchedSpan = researchedYearSpan(input.sourceMaterial);
+
   const bodyKey = ["fullScript", "script", "body", "content"].find(
     (k) => typeof (script as any)[k] === "string" && (script as any)[k].trim().length > 0,
   );
@@ -1580,7 +1626,7 @@ export async function finalizeScript(
   // elaborated instances and cutting the bare restatements. Runs after dedupe (adjacent copies
   // already gone) and on the assembled body, so it catches an anchor spread across sections.
   applyBodyPass(collapseRepeatedAnchors, "repetition");
-  applyBodyPass((t) => stripSchemeDurationClaim(t, (script as any).title), "duration");
+  applyBodyPass((t) => stripSchemeDurationClaim(t, (script as any).title, researchedSpan), "duration");
   applyBodyPass((t) => stripStaleFutureDates(t, nowMs), "stale-date");
   // Date integrity: correct a case-event date the script shifted off the sourced date (March 20 ->
   // March 19), when the fact set uniquely fixes it. Verbatim dates, silently.
@@ -1659,11 +1705,11 @@ export async function finalizeScript(
   const refillKey = ["fullScript", "script", "body", "content"].find(
     (k) => typeof (script as any)[k] === "string" && (script as any)[k].trim().length > 0,
   );
-  // Refill target is over-provisioned above the 165-wpm delivery rate: the post-refill re-sweep
-  // (dedupe/collapse/strips) and the certainty-discipline rewrite both run AFTER refill and shave
-  // ~15% off, so aiming at 165 lands ~14 min. Aim at ~190 wpm so the SETTLED body lands ~18-20 min.
-  // Affordable now that latency has headroom (207s vs the 270s bar).
-  const finalTarget = input.targetMinutes ? Math.round(input.targetMinutes * 190) : null;
+  // Refill target at ~166 wpm — the real finished-narration rate. 190 over-provisioned it: a good
+  // ~3,000-word / ~18-min script tripped a false "shortfall 3007/3800" DEGRADED, and the refill kept
+  // fighting the person-id/de-rep cuts to chase a number it didn't need. ~166 wpm lands a genuine
+  // 18-20 min without false-flagging, and the bounded 2-call cap still holds the latency.
+  const finalTarget = input.targetMinutes ? Math.round(input.targetMinutes * 166) : null;
   if (finalTarget && finalTarget >= 1200 && refillKey && !budgetBlown("refill", 75_000)) {
     const beforeWords = (script as any)[refillKey].split(/\s+/).filter(Boolean).length;
     const facts = input.sourceMaterial && input.sourceMaterial.trim() ? input.sourceMaterial : "";

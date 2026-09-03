@@ -750,6 +750,19 @@ check("cuts 'running in plain sight'", stripSpeculation("It was running in plain
 check("cuts 'with a spreadsheet attached'", stripInventedInference("He sent the email with a spreadsheet attached.").cuts.length >= 1);
 check("cuts the false 'It took five' duration", stripSchemeDurationClaim("It did not take sixteen years. It took five.").cuts.length >= 1);
 
+// Body-duration backstop against the researched span (facts establish ~7 years).
+console.log("body-duration vs researched span:");
+check("cuts 'ran for almost four years' when span is 7",
+  stripSchemeDurationClaim("The scheme ran for almost four years before anyone noticed.", undefined, 7).cuts.length >= 1);
+check("cuts a 'four-year scheme' when span is 7",
+  stripSchemeDurationClaim("It was a four-year scheme built on fake streams.", undefined, 7).cuts.length >= 1);
+check("keeps a duration that MATCHES the span (7)",
+  stripSchemeDurationClaim("The operation spanned seven years.", undefined, 7).cuts.length === 0);
+check("keeps within 1-year tolerance (six vs 7)",
+  stripSchemeDurationClaim("The scheme ran for six years.", undefined, 7).cuts.length === 0);
+check("does nothing when span is unknown (null)",
+  stripSchemeDurationClaim("The scheme ran for almost four years.", undefined, null).cuts.length === 0);
+
 // Exact shipped surface forms that regressed — regression-locked.
 console.log("shipped-surface regression locks:");
 check("[2] comma form 'running, largely undetected, for years'",

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import { generateScript, buildSectionPlan, generateHookFirst, writeSection, assembleFinalizeScript } from "@/lib/ai/claude";
+import { generateScript, buildSectionPlan, generateHookFirst, writeSection, assembleFinalizeScript, reconcileTitle } from "@/lib/ai/claude";
 import { checkScriptLimit, incrementGenerationCount, refundGenerationCount } from "@/lib/usage";
 import { getMagnetSuggestions } from "@/lib/magnet-word";
 import { supabaseAdmin } from "@/lib/db/supabase";
@@ -57,10 +57,13 @@ async function handleSectionMode(userId: string, raw: any) {
       if (meta) voiceProfile = meta.styleGuide;
     }
 
+    const facts = typeof sourceMaterial === "string" && sourceMaterial.trim() ? sourceMaterial.trim() : undefined;
     const context = {
       topic: topic || "",
-      title: selectedTitle || topic || "",
-      sourceMaterial: typeof sourceMaterial === "string" && sourceMaterial.trim() ? sourceMaterial.trim() : undefined,
+      // Reconcile the placeholder title against the researched facts BEFORE the section-writer sees
+      // it, so the hook draws its duration/pronoun from the corrected title, not the guess.
+      title: reconcileTitle(selectedTitle || topic || "", facts),
+      sourceMaterial: facts,
       recipe: remixFramework || undefined,
       voice: voiceProfile || undefined,
       previousTail: typeof priorTail === "string" ? priorTail : "",
@@ -346,16 +349,20 @@ export async function POST(req: Request) {
         // No measurable structure — the client falls back to the one-shot path, which counts.
         return NextResponse.json({ mode: "plan", total: 0, presetHook: null, title: scriptInput.selectedTitle || topic || "" });
       }
+      // Reconcile the placeholder title against the researched facts NOW, so the preset hook is
+      // written from the corrected duration/pronoun and the client displays the corrected title.
+      const planFacts = typeof sourceMaterial === "string" && sourceMaterial.trim() ? sourceMaterial.trim() : undefined;
+      const reconciledTitle = reconcileTitle(scriptInput.selectedTitle || topic || "", planFacts);
       const presetHook = await generateHookFirst({
-        title: scriptInput.selectedTitle || topic || "",
+        title: reconciledTitle,
         topic: topic || "",
         hookType: hookType || undefined,
         hookWhyItWorks: hookWhyItWorks || undefined,
         hookScript: hookScript || undefined,
-        sourceMaterial: typeof sourceMaterial === "string" && sourceMaterial.trim() ? sourceMaterial.trim() : undefined,
+        sourceMaterial: planFacts,
         voiceProfile: voiceProfile || undefined,
       });
-      return NextResponse.json({ mode: "plan", total: planned.length, presetHook, title: scriptInput.selectedTitle || topic || "" });
+      return NextResponse.json({ mode: "plan", total: planned.length, presetHook, title: reconciledTitle });
     }
 
     let script: any;

@@ -8,7 +8,8 @@ import {
   stripSpeculation, stripInventedInference, stripUnsourcedStat, stripSchemeDurationClaim,
   collapseRepeatedAnchors, flagOverstatementRisk,
 } from "../src/lib/script-compliance.ts";
-import { extractJSON, repairJson } from "../src/lib/ai/claude.ts";
+import { extractJSON, repairJson, reconcileTitle } from "../src/lib/ai/claude.ts";
+import { researchedYearSpan } from "../src/lib/script-compliance.ts";
 
 let failures = 0;
 const check = (name: string, cond: boolean) => {
@@ -105,6 +106,24 @@ check("[24 Cr. intact] splitter keeps the case cite whole",
   splitSentences("The case was United States v. Michael Smith, 24 Cr. 542. Filed in 2024.").length === 2);
 check("['undetected, for years' gone] comma form flagged",
   stripSpeculation("It ran, largely undetected, for years.").cuts.length >= 1);
+
+console.log("title reconciliation vs researched facts:");
+{
+  // Placeholder title + facts spanning 2017-2024 with one charged male defendant.
+  const facts = "The scheme began in 2017 and continued until it was charged in 2024. Michael Smith pleaded guilty to the fraud. He built the accounts. His operation collected roughly ten million dollars over the years.";
+  const reconciled = reconcileTitle("After 4 Years Spotify Finally Caught Them..", facts);
+  const span = researchedYearSpan(facts);
+  check("span is the researched ~7 years, not the placeholder 4", span === 7);
+  check("reconciled title asserts 7 years", /\b7 Years\b/.test(reconciled));
+  check("reconciled title downgrades Them -> Him", /Caught Him\b/.test(reconciled) && !/Caught Them\b/.test(reconciled));
+  check("brand (Spotify) preserved", /Spotify/.test(reconciled));
+  // And the body's stated scheme duration must MATCH: a body '4-year' claim is cut against span 7.
+  const bodyCut = stripSchemeDurationClaim("The scheme ran for almost four years before anyone noticed.", reconciled, span).cuts.length;
+  check("body '4-year' scheme claim is cut against the 7-year span", bodyCut >= 1);
+  // Conservatism: unnamed/no-charge facts keep the generic 'Them' and the placeholder time.
+  const vague = reconcileTitle("After 4 Years Spotify Finally Caught Them..", "Some accounts were involved in a streaming pattern. No one was named.");
+  check("keeps 'Them' and placeholder when the record is thin", /Caught Them\b/.test(vague) && /\b4 Years\b/.test(vague));
+}
 
 console.log(failures === 0 ? "\nALL PASS" : `\n${failures} FAILURE(S)`);
 if (failures) process.exit(1);
