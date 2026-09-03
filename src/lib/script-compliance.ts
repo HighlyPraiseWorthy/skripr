@@ -241,7 +241,7 @@ export function looksLikeSpeculation(s: string): boolean { return SPECULATION_RE
 // placement", "apparently unaware, or unconcerned", "someone had to go line by line through the
 // royalty records", "reflects that infrastructure expanding, year over year", "we now have answers
 // to essentially everything".
-export const INVENTED_INFERENCE_RE = /\b(?:(?:the )?(?:publicist|promoter|manager|distributor|executive|producer|accountant|attorney|lawyer|partner|collaborator)\b[^.]{0,35}?\b(?:provides?|provided|supplies|supplied|handles?|handled|brings?|brought|is|was|means?|meant)\b[^.]{0,35}?\b(?:legitimacy|cover|the surface|placement|access|credibility|distribution|the front|plausibility|respectability)\b|(?:apparently|seemingly|evidently|presumably|either)\s+(?:unaware|unconcerned|indifferent|oblivious|untroubled)\b|\b(?:unaware|unconcerned|oblivious)\b\s*,?\s*or\s+(?:unaware|unconcerned|indifferent|oblivious)\b|(?:someone|somebody|investigators?|analysts?|agents?|they)\b[^.]{0,40}?\b(?:had to|would have had to|must have)\b[^.]{0,30}?\b(?:line by line|record by record|one by one|by hand|entry by entry)\b|\b(?:reflects?|shows?|traces?|maps?)\b[^.]{0,45}?\b(?:expanding|growing|scaling|compounding)\b[^.]{0,25}?\byear over year\b|\banswers? to (?:essentially|virtually|almost|nearly) everything\b)/i;
+export const INVENTED_INFERENCE_RE = /\b(?:(?:the )?(?:publicist|promoter|manager|distributor|executive|producer|accountant|attorney|lawyer|partner|collaborator)\b[^.]{0,35}?\b(?:provides?|provided|supplies|supplied|handles?|handled|brings?|brought|is|was|means?|meant)\b[^.]{0,35}?\b(?:legitimacy|cover|the surface|placement|access|credibility|distribution|the front|plausibility|respectability)\b|(?:apparently|seemingly|evidently|presumably|either)\s+(?:unaware|unconcerned|indifferent|oblivious|untroubled)\b|\b(?:unaware|unconcerned|oblivious)\b\s*,?\s*or\s+(?:unaware|unconcerned|indifferent|oblivious)\b|(?:someone|somebody|investigators?|analysts?|agents?|they)\b[^.]{0,40}?\b(?:had to|would have had to|must have)\b[^.]{0,30}?\b(?:line by line|record by record|one by one|by hand|entry by entry)\b|\b(?:reflects?|shows?|traces?|maps?)\b[^.]{0,45}?\b(?:expanding|growing|scaling|compounding)\b[^.]{0,25}?\byear over year\b|\banswers? to (?:essentially|virtually|almost|nearly) everything\b|\b(?:a |his |the )?(?:spreadsheet|excel (?:file|sheet)|cloud dashboard|dashboard|control panel|command center)\b[^.]{0,40}?\b(?:track\w*|log\w*|record\w*|monitor\w*|manage\w*|show\w*|listing|tallied|every)\b)/i;
 export function looksLikeInventedInference(s: string): boolean { return INVENTED_INFERENCE_RE.test(s || ""); }
 export function stripInventedInference(text: string): { text: string; cuts: string[] } {
   if (!text) return { text, cuts: [] };
@@ -745,6 +745,41 @@ export function collapseRepeatedAnchors(text: string): { text: string; cuts: str
       if (protectKeep.has(k)) continue;
       if (!cutEligible(k, keepArr)) continue; // long sentence with distinct content = leave it
       remove.add(k); cuts.push(`repetition (title): ${flat[k].s}`);
+    }
+  }
+
+  // DETECTOR E — a repeated verbatim QUOTE or ENUMERATION (a recurring content shingle). Figures are
+  // handled above, but the Williams quote ("stolen millions that should have been allocated...") and
+  // the four-platform list recurred 3-4x and slipped every prior detector (not a figure, not a whole
+  // near-verbatim sentence, not a single proper-noun span). This finds a distinctive 6-content-word
+  // shingle appearing in 3+ sentences and caps it at first mention + one callback — the same cap as
+  // figures, so a drummed quote or list collapses to two.
+  const STOP = new Set(["the", "a", "an", "and", "or", "but", "of", "to", "in", "on", "for", "with", "that", "this", "was", "were", "is", "are", "had", "has", "have", "it", "its", "as", "at", "by", "from", "he", "she", "they", "his", "her", "their", "which", "who", "been", "be"]);
+  const shingleKey = (s: string): string[] => {
+    const words = normalizeForCompare(s).split(" ").filter((w) => w.length > 2 && !STOP.has(w));
+    const out: string[] = [];
+    for (let i = 0; i + 6 <= words.length; i++) out.push(words.slice(i, i + 6).join(" "));
+    return out;
+  };
+  const shingleOcc = new Map<string, Set<number>>();
+  flat.forEach((f, idx) => {
+    if (remove.has(idx)) return;
+    for (const sh of new Set(shingleKey(f.s))) {
+      if (!shingleOcc.has(sh)) shingleOcc.set(sh, new Set());
+      shingleOcc.get(sh)!.add(idx);
+    }
+  });
+  const shingleHandled = new Set<number>();
+  for (const [, idxSet] of shingleOcc) {
+    const occ = [...idxSet].filter((k) => !remove.has(k) && !shingleHandled.has(k));
+    if (occ.length < 3) continue;
+    occ.forEach((k) => shingleHandled.add(k));
+    const byLen = [...occ].sort((a, b) => flat[b].s.length - flat[a].s.length);
+    const keep = new Set(byLen.slice(0, 2));
+    for (const k of occ) {
+      if (keep.has(k)) { protectKeep.add(k); continue; }
+      if (protectKeep.has(k)) continue;
+      remove.add(k); cuts.push(`repetition (quote/list): ${flat[k].s}`);
     }
   }
 

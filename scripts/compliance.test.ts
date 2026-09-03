@@ -677,6 +677,19 @@ check("cuts totalizing 'answers to essentially everything'", inv("We now have an
 check("keeps grounded dramatic framing", stripInventedInference("The royalty system doesn't ask where a stream came from.").cuts.length === 0);
 check("keeps a plainly sourced collaborator statement", stripInventedInference("The indictment names a publicist but does not detail their role.").cuts.length === 0);
 check("keeps documented investigative work", stripInventedInference("Investigators traced the payments through bank records cited in the indictment.").cuts.length === 0);
+check("cuts invented 'spreadsheet' specificity (record says email)", inv("He kept a spreadsheet tracking every account and payout.").cuts.length >= 1);
+
+// REPETITION on QUOTES / ENUMERATIONS (Detector E — recurring content shingle, not a figure).
+console.log("quote / enumeration repetition:");
+const wQuote = "Williams said the defendant stole millions in royalties that should have been allocated to real artists";
+const between = (n: number) => `Prosecutors returned to that framing at stage ${n} of the rollout, hammering the point home.`;
+const quoteRepeat = [`${wQuote}, a line the press repeated everywhere.`, between(1), `${wQuote}, and the message stuck.`, between(2), `Once more: ${wQuote}.`, between(3), "The court ordered an $8 million forfeiture."].join("\n\n");
+const qrep = collapseRepeatedAnchors(quoteRepeat);
+check("a verbatim quote restated 3x is capped at 2", (qrep.text.match(/stole millions in royalties that should have been allocated/g) || []).length <= 2);
+check("records a repetition cut for the quote", qrep.cuts.some((c) => /repetition \(/.test(c)));
+const platformLine = "the songs were spread across Spotify, Apple Music, Amazon Music, and YouTube to avoid detection";
+const listRepeat = [`${platformLine} in the first phase.`, between(1), `Again, ${platformLine} throughout 2019.`, between(2), `${platformLine}, the same four services every time.`, between(3), `${platformLine}, right up to the end.`].join("\n\n");
+check("a four-platform enumeration repeated 4x is capped at 2", (collapseRepeatedAnchors(listRepeat).text.match(/spotify, apple music, amazon music, and youtube/gi) || []).length <= 2);
 
 console.log(failures === 0 ? "\nALL PASS" : `\n${failures} FAILURE(S)`);
 process.exit(failures === 0 ? 0 : 1);

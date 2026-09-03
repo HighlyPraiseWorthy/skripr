@@ -778,6 +778,7 @@ async function extendWithUnusedFacts(fullScript: string, factsBlob: string, targ
   let stoppedBecause = "loop-max";
   const report = () => console.log(`[expand] invoked=true parsedFacts=${facts.length} unusedFacts=${unusedAtStart} passes=${passes} rejectedPadding=${rejects} stoppedBecause=${stoppedBecause} startWords=${count(fullScript)} finalWords=${count(body)} target=${targetWords}`);
   let body = fullScript;
+  const addedBeats: string[] = []; // the new fact-beats, collected so they can be WOVEN, not tailed
   if (facts.length < 3) { console.log(`[expand] invoked=true parsedFacts=${facts.length} stoppedBecause=too-few-facts finalWords=${count(body)} target=${targetWords}`); return fullScript; }
   for (let iter = 0; iter < 7; iter++) { // room for a rejected attempt to be retried smaller
     const w = count(body);
@@ -827,6 +828,7 @@ async function extendWithUnusedFacts(fullScript: string, factsBlob: string, targ
         continue; // retry with a smaller, sharper batch
       }
       body = [mid, seg, conclusion].filter(Boolean).join("\n\n");
+      addedBeats.push(...seg.split(/\n\n+/).map((p) => p.trim()).filter(Boolean));
       passes++;
       console.log(`[extend-facts] iter ${iter}: +${count(seg)} words consuming ${consumed}/${batch.length} facts (${Math.round(wordsPerFact)} w/fact) (${w} -> ${count(body)}, target ${targetWords}, ${unused.length} unused)`);
     } catch (e) {
@@ -835,8 +837,45 @@ async function extendWithUnusedFacts(fullScript: string, factsBlob: string, targ
       break;
     }
   }
+  // WEAVE, don't tail. The loop appended the new beats at the end (needed so factIsUsed could track
+  // consumption); now relocate each beat next to the existing paragraph it is most topically related
+  // to, so the consumed facts read as part of the narrative arc instead of a list bolted on at the
+  // end. Deterministic (token overlap) — no rewrite, no new text, so it cannot fabricate.
+  if (addedBeats.length) {
+    const woven = weaveBeats(fullScript, addedBeats);
+    if (woven.split(/\s+/).filter(Boolean).length >= count(fullScript)) body = woven; // never shrink
+  }
   report();
   return body;
+}
+
+// Relocate new beat-paragraphs into an original body at contextual homes: each beat goes right after
+// the original paragraph it shares the most distinctive vocabulary with; a beat with no clear home is
+// placed before the conclusion (the old tail behavior). No text is added or changed — only order.
+function weaveBeats(originalBody: string, beats: string[]): string {
+  const norm = (s: string) => (s || "").toLowerCase().replace(/[^a-z0-9 ]/g, " ").replace(/\s+/g, " ").trim();
+  const contentTokens = (s: string) => new Set(norm(s).split(" ").filter((w) => w.length > 3));
+  const overlap = (a: string, b: string) => {
+    const ta = contentTokens(a), tb = contentTokens(b);
+    if (!ta.size || !tb.size) return 0;
+    let shared = 0; for (const w of ta) if (tb.has(w)) shared++;
+    return shared / Math.min(ta.size, tb.size);
+  };
+  const paras = originalBody.split(/\n\n+/).map((p) => p.trim()).filter(Boolean);
+  if (paras.length < 2) return [originalBody, ...beats].join("\n\n");
+  const conclusion = paras.length > 3 ? paras.pop()! : null; // keep the ending last
+  for (const beat of beats) {
+    if (!beat) continue;
+    let bestI = -1, best = 0;
+    for (let i = 0; i < paras.length; i++) {
+      const o = overlap(beat, paras[i]);
+      if (o > best) { best = o; bestI = i; }
+    }
+    if (bestI >= 0 && best >= 0.16) paras.splice(bestI + 1, 0, beat); // insert after its topical home
+    else paras.push(beat); // no clear home -> tail (before the conclusion, which is re-added below)
+  }
+  if (conclusion) paras.push(conclusion);
+  return paras.join("\n\n");
 }
 
 function containsWord(s: unknown, word: string): boolean {
