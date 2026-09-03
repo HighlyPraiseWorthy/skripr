@@ -42,5 +42,11 @@ When a pattern holds across pages, append a `{ date, lesson, evidence }` entry t
 ## 5. Propose actions (do not auto-publish)
 Output a short action list: pages to request-index, internal links to add, refresh-candidates to rewrite, kill-candidates to stop. Queue rewrites for human review; never silently edit a live page. Apply ledger/doc updates directly, but route any page-copy changes through `/seo-page`-style review.
 
+## 5b. Do not re-flag already-shipped fixes
+A fix deployed but not yet recrawled looks identical to a missing fix in GSC. Before adding any "add link X to page Y" action, curl the live page and grep for the href; if present, mark it "shipped, awaiting recrawl", not a to-do. When on-page fixes are all shipped and nothing is recrawling, the correct action is external backlinks + patience, not more internal links. Say so plainly.
+
+## 5c. COMMIT the ledger (mandatory) — no PR
+After editing `docs/seo-opportunities.json`, run `git add docs/seo-opportunities.json && git commit -m "SEO review <date>: ledger update"`. Do NOT open a PR; do NOT commit other working-tree files. Hard-won lesson 2026-09-01: an uncommitted ledger silently reverts to the last committed state on routine git operations across sessions, discarding weeks of memory. Committing every run is how the agent's memory stays durable.
+
 ## 6. Cadence
-Weekly once there is data; monthly while the domain is young. Suggest scheduling via a cron only after the first manual run proves the data pulls work.
+Bi-weekly (1st and 15th) while the bottleneck is authority, not content. Revisit weekly once pages rank and there is real week-over-week movement.
