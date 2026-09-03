@@ -1691,10 +1691,31 @@ async function applyCertaintyDiscipline(body: string, facts: string, startedAt: 
       model: "claude-sonnet-4-6",
       max_tokens: 4000,
       temperature: 0.3,
-      system: `You enforce the DRAMATIC TRUTH RULE on flagged documentary sentences. A sentence may intensify emotion, imagery, contrast, pacing, and narrative IMPLICATION freely. It may NOT intensify the evidence's SCOPE, CERTAINTY, CAUSATION, EXCLUSIVITY, QUANTITY, or KNOWLEDGE/INTENT beyond the approved facts. For each sentence: identify its factual propositions; if all are directly supported OR reasonably inferable WITHOUT enlarging scope/certainty — or the intensity is pure metaphor, rhetorical contrast, vivid description, or narrative framing a reasonable viewer would NOT read as a factual claim — return KEEP. Otherwise return REWRITE: find the strongest TRUE proposition underneath, and rewrite AROUND it preserving the rhythm and the dramatic effect. NEVER flatten to a dry hedge, NEVER just swap "every"->"some", NEVER add a new fact. The accurate version should be as punchy as the original. Output ONLY JSON: {"results":[{"i":<index>,"action":"KEEP"|"REWRITE","rewrite":"<new sentence, only if REWRITE>"}]}.`,
+      system: `You enforce the DRAMATIC TRUTH RULE on flagged documentary sentences. A sentence may intensify emotion, imagery, contrast, pacing, and narrative IMPLICATION freely. It may NOT intensify the evidence's SCOPE, CERTAINTY, CAUSATION, EXCLUSIVITY, QUANTITY, or KNOWLEDGE/INTENT beyond the approved facts.
+
+DEFAULT IS REWRITE, NOT KEEP. A sentence was flagged because it carries an absolute, a superlative, a causal claim, an institutional claim, or an exclusivity claim. Return KEEP ONLY when one of these is true: (a) an approved fact DIRECTLY ENTAILS the flagged claim at that exact scope/certainty; or (b) the intensity is PURE metaphor, rhetorical contrast, or vivid description that no reasonable viewer would read as a factual claim ("the operation became a factory", "the streams were fake, the money was real"). In every other case return REWRITE. When unsure whether a fact entails the claim, REWRITE.
+
+Hard rules that ALWAYS force REWRITE:
+- EXPANDING AN OFFICIAL'S CHARACTERIZATION. Never enlarge a quoted official label. The DOJ said "First Criminal Case Involving Artificially Inflated Music Streaming" — so "the first criminal case in American history" is unsupported (it added "American history"); rewrite to "one of the earliest criminal cases to put AI-generated music inside the machinery of the scheme."
+- ROLE/FUNCTION about a co-conspirator. "his job was to keep improving them", "he was a partner with skin in the game" impute a role the record doesn't define — rewrite to what IS supported ("financially incentivized", "paid a share"), hedged.
+- CLAIMING A PLATFORM DETECTED THE SCHEME OR DROVE THE INVESTIGATION. The ~$60K fact means one platform limited ITS OWN exposure; it does NOT establish that platform caught Smith or tipped investigators. "the platform that was not fooled", "handed investigators exactly the discrepancy they needed" are unsupported — rewrite to "one platform's measures limited its own exposure to roughly $60,000."
+- An ABSOLUTE about human listening / universal scope ("no human choosing to hear it", "the industry hadn't built its defenses around it") — rewrite to the mechanism ("The stream didn't need a fan. It needed a system capable of generating the play.").
+
+When you REWRITE: find the strongest TRUE proposition underneath and rewrite AROUND it, keeping the rhythm and the punch — the accurate version should be as memorable as the original. NEVER flatten to a dry hedge, NEVER just swap "every"->"some", NEVER add a new fact.
+
+WORKED FIXTURES (input -> KEEP/REWRITE):
+- "not a single person choosing to hear it / no human audience at all" -> REWRITE: "The stream didn't need a fan. It needed a system capable of generating the play."
+- "the first criminal case in history built around AI" -> REWRITE: "one of the earliest criminal cases to put AI-generated music inside the machinery of the scheme."
+- "something the industry hadn't built its defenses around yet" -> REWRITE: "The defenses were catching pieces of the operation. The operation was already changing."
+- "every dollar Smith collected was a dollar the royalty pool didn't pay out to someone who had actually made something" -> REWRITE: "The streams were fake. The money they generated wasn't."
+- "the only thing you could point to in the real world was a man in Cornelius" -> REWRITE: "Behind the millions of artificial streams was something remarkably ordinary: a man in Cornelius, working from a system designed to manufacture the numbers."
+- "the platforms were only catching pieces of it" -> KEEP only if partial detection is in the facts, sharpened: "The platforms were catching pieces of the operation. Smith kept adapting."
+- "the operation became a factory" -> KEEP (metaphor). "the streams were fake, the money was real" -> KEEP (contrast).
+
+Output ONLY JSON: {"results":[{"i":<index>,"action":"KEEP"|"REWRITE","rewrite":"<new sentence, only if REWRITE>"}]}.`,
       messages: [{
         role: "user",
-        content: `APPROVED FACTS (the only established truth):\n"""\n${facts.slice(0, 8000)}\n"""\n\nFLAGGED SENTENCES:\n${flagged.map((s, i) => `${i}. ${s.text}`).join("\n")}\n\nJudge each by the Dramatic Truth Rule and output the JSON.`,
+        content: `APPROVED FACTS (the only established truth — anything beyond these, at greater scope/certainty, is unsupported):\n"""\n${facts.slice(0, 8000)}\n"""\n\nFLAGGED SENTENCES (each was flagged for an absolute/superlative/causal/institutional/exclusivity marker — REWRITE unless a fact entails it or it is pure metaphor/contrast):\n${flagged.map((s, i) => `${i}. ${s.text}`).join("\n")}\n\nJudge each by the Dramatic Truth Rule and output the JSON.`,
       }],
     });
     const c = resp.content[0];

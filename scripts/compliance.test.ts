@@ -691,6 +691,16 @@ const platformLine = "the songs were spread across Spotify, Apple Music, Amazon 
 const listRepeat = [`${platformLine} in the first phase.`, between(1), `Again, ${platformLine} throughout 2019.`, between(2), `${platformLine}, the same four services every time.`, between(3), `${platformLine}, right up to the end.`].join("\n\n");
 check("a four-platform enumeration repeated 4x is capped at 2", (collapseRepeatedAnchors(listRepeat).text.match(/spotify, apple music, amazon music, and youtube/gi) || []).length <= 2);
 
+// A recurring multi-number CALCULATION (52 x 20 x 636 -> 661,440) restated across sections -> one
+// anchor, capped at first mention + one callback (Detector F; small numbers slip the figure detector).
+console.log("recurring calculation repetition:");
+const calc = "52 cloud accounts running 20 bots each is 1,040 bots, and 1,040 bots playing 636 songs a day comes to 661,440 streams";
+const nB = (n: number) => `The scheme kept escalating through phase ${n}, drawing more scrutiny each month.`;
+const calcRepeat = [`${calc} at the peak.`, nB(1), `Recall the math: ${calc}.`, nB(2), `Again, ${calc}, the engine of it all.`, nB(3), `${calc}, quarter after quarter.`].join("\n\n");
+const cf = collapseRepeatedAnchors(calcRepeat);
+check("a repeated multi-number calculation is capped at 2", (cf.text.match(/661,440/g) || []).length <= 2);
+check("records the calculation cut", cf.cuts.some((c) => /repetition \(calculation\)|repetition \(figure\)|repetition \(quote\/list\)/.test(c)));
+
 // CERTAINTY DISCIPLINE — Stage 1 flag (deterministic pre-filter; over-flags by design, the LLM judge
 // decides keep-vs-rewrite). Only the six risk dimensions trip it; the judge protects the sexy.
 console.log("certainty-discipline stage-1 flag:");

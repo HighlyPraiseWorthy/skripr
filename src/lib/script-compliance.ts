@@ -792,6 +792,36 @@ export function collapseRepeatedAnchors(text: string): { text: string; cuts: str
     }
   }
 
+  // DETECTOR F — a recurring MULTI-NUMBER CALCULATION treated as one anchor. The "52 accounts x 20
+  // bots x 636 songs -> 661,440 streams" walk was restated in the early, AI, Spotify and forfeiture
+  // sections; each restatement carries the same set of small numbers (52/20/636) that the figure
+  // detector (>= 1000 only) ignores, and varied wrappers that the shingle detector misses. Signature
+  // = a sentence's set of numeric VALUES; sentences sharing 3+ of the same numbers cluster, capped at
+  // first mention + one callback.
+  const sentNums: number[][] = flat.map((f) => {
+    const vals = [...digitNumbersIn(f.s).map((d) => d.value), ...spelledNumbersIn(f.s).map((s) => s.value)]
+      .filter((v) => Number.isFinite(v) && !(Number.isInteger(v) && v >= 1900 && v <= 2100)); // drop bare years
+    return [...new Set(vals)];
+  });
+  const calcHandled = new Set<number>();
+  for (let i = 0; i < flat.length; i++) {
+    if (remove.has(i) || calcHandled.has(i) || sentNums[i].length < 3) continue;
+    const occ = flat.map((_, idx) => idx).filter((idx) => {
+      if (remove.has(idx) || sentNums[idx].length < 3) return false;
+      const shared = sentNums[idx].filter((v) => sentNums[i].some((x) => numbersMatch(x, v))).length;
+      return shared >= 3; // same 3+ numbers => the same calculation
+    });
+    if (occ.length < 3) continue;
+    occ.forEach((k) => calcHandled.add(k));
+    const byLen = [...occ].sort((a, b) => flat[b].s.length - flat[a].s.length);
+    const keep = new Set(byLen.slice(0, 2));
+    for (const k of occ) {
+      if (keep.has(k)) { protectKeep.add(k); continue; }
+      if (protectKeep.has(k)) continue;
+      remove.add(k); cuts.push(`repetition (calculation): ${flat[k].s}`);
+    }
+  }
+
   for (const k of protectKeep) remove.delete(k); // an elaborated instance is never cut
   if (remove.size === 0) return { text: paras.join("\n\n"), cuts: [] };
 
