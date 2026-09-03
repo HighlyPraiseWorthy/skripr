@@ -1,7 +1,7 @@
 import { Anthropic } from "@anthropic-ai/sdk";
 import { fingerprintToBrief, readProhibitions, stripStandaloneTics, type VoiceFingerprint } from "@/lib/voice-metrics";
 import { buildStorytellingBlock } from "@/lib/storytelling";
-import { stripInsinuations, stripUnnamedPartyNaming, stripSpeculation, stripImpliedRevelation, dedupeAdjacentParagraphs, stripDuplicateHook, collapseRepeatedAnchors, stripSchemeDurationClaim, stripStaleFutureDates, stripSourceLeaks, mergeOrphanFragments, correctDatesToFacts, stripUnitConflation } from "@/lib/script-compliance";
+import { stripInsinuations, stripUnnamedPartyNaming, stripSpeculation, stripImpliedRevelation, dedupeAdjacentParagraphs, stripDuplicateHook, collapseRepeatedAnchors, stripSchemeDurationClaim, stripStaleFutureDates, stripSourceLeaks, mergeOrphanFragments, correctDatesToFacts, stripUnitConflation, stripInventedInference } from "@/lib/script-compliance";
 import { buildVarietyBlock } from "@/lib/ai/phrase-variety";
 
 let _anthropic: Anthropic | null = null;
@@ -774,11 +774,12 @@ async function extendWithUnusedFacts(fullScript: string, factsBlob: string, targ
   // how many passes ran, and why it stopped. Prints exactly one [expand] line at the end.
   const unusedAtStart = facts.filter((f) => !factIsUsed(f, fullScript.toLowerCase())).length;
   let passes = 0;
+  let rejects = 0;
   let stoppedBecause = "loop-max";
-  const report = () => console.log(`[expand] invoked=true parsedFacts=${facts.length} unusedFacts=${unusedAtStart} passes=${passes} stoppedBecause=${stoppedBecause} startWords=${count(fullScript)} finalWords=${count(body)} target=${targetWords}`);
+  const report = () => console.log(`[expand] invoked=true parsedFacts=${facts.length} unusedFacts=${unusedAtStart} passes=${passes} rejectedPadding=${rejects} stoppedBecause=${stoppedBecause} startWords=${count(fullScript)} finalWords=${count(body)} target=${targetWords}`);
   let body = fullScript;
   if (facts.length < 3) { console.log(`[expand] invoked=true parsedFacts=${facts.length} stoppedBecause=too-few-facts finalWords=${count(body)} target=${targetWords}`); return fullScript; }
-  for (let iter = 0; iter < 5; iter++) {
+  for (let iter = 0; iter < 7; iter++) { // room for a rejected attempt to be retried smaller
     const w = count(body);
     if (w >= targetWords * 0.92) { stoppedBecause = "length-reached"; break; }
     if (Date.now() - startedAt > 200_000) { stoppedBecause = "time-budget"; break; }
@@ -786,33 +787,48 @@ async function extendWithUnusedFacts(fullScript: string, factsBlob: string, targ
     // REFILL IS FACT-CONSUMPTION: operate on the UNUSED pool only, highest-novelty first.
     const unused = facts.filter((f) => !factIsUsed(f, bodyLc)).sort((a, b) => factNoveltyScore(b) - factNoveltyScore(a));
     if (!unused.length) { stoppedBecause = "facts-exhausted"; break; } // shortfall over padding
-    const batch = unused.slice(0, 12);
+    // Shrink the batch after a rejected (padding) attempt so the next try is sharper.
+    const batchSize = Math.max(4, 12 - rejects * 4);
+    const batch = unused.slice(0, batchSize);
     const paras = body.split(/\n\n+/);
     const conclusion = paras.length > 3 ? paras.pop()! : "";
     const mid = paras.join("\n\n");
-    const needed = Math.min(targetWords - w, 1400);
+    // SIZE THE ASK TO THE FACTS, not to the word gap. Asking for 1,400 words off 12 facts invites
+    // the model to pad with connective narration (the observed "+1067 words consuming 1/12"), and
+    // that narration is where every invented inference came from. A beat is ~130 words, so the ask
+    // can never exceed what the assigned facts can honestly carry.
+    const needed = Math.min(targetWords - w, batch.length * 130);
     try {
       const resp = await getAnthropic().messages.create({
         model: "claude-sonnet-4-6",
         max_tokens: 8000,
         temperature: 0.7,
-        system: "You are extending a documentary YouTube script mid-production, matching its existing voice, sentence rhythm, and TTS style exactly. Your ONLY job is to CONSUME a set of documented facts: each assigned fact must become a beat that substantively communicates THAT fact (what it was, when, the figure, why it mattered), never merely name-dropped. Use ONLY the facts given; invent nothing, add no statistic/name/quote not present. Do NOT restate a concept the script already covered — if you cannot say something NEW with a fact, omit it. Output ONLY the new segments as plain speakable prose — no preamble, no headers, no conclusion.",
+        system: "You are extending a documentary YouTube script mid-production, matching its existing voice and rhythm. Your ONLY job is to CONSUME documented facts: write ONE beat per assigned fact, and each beat must DELIVER that fact — stating its specific figure, date, name or quoted words verbatim so it is unmistakably communicated. You are NOT writing connective narration, scene-setting, or analysis to reach a word count. Never invent: no statistic, name, quote, motive, role, method, or physical detail that is not in the assigned facts. If a fact cannot be delivered without inventing something, SKIP that fact and write fewer words — a shorter, fully-sourced passage is the correct outcome. Output ONLY the new beats as plain speakable prose — no preamble, no headers, no conclusion.",
         messages: [{
           role: "user",
-          content: `The script so far (its conclusion is held out and will follow your segments):\n"""\n${mid.slice(-6000)}\n"""\n\nWrite NEW body beats that CONSUME these approved, not-yet-used facts — each becomes a concrete beat (a dated email quoted, a money movement traced, a named entity introduced, a milestone reached), continuing the causal chain:\n${batch.map((f, i) => `${i + 1}. ${f}`).join("\n")}\n\nAbout ${needed} words. Every beat must substantively deliver at least one of the numbered facts above. Do NOT restate anything already in the script, do NOT write a conclusion, do NOT state any fact not in the list.`,
+          content: `The script so far (its conclusion is held out and will follow your beats):\n"""\n${mid.slice(-6000)}\n"""\n\nWrite ONE beat for EACH of these approved, not-yet-used facts, in order. Each beat must state that fact's specific figure/date/name/quote verbatim:\n${batch.map((f, i) => `${i + 1}. ${f}`).join("\n")}\n\nAbout ${needed} words total (roughly ${Math.round(needed / Math.max(1, batch.length))} per beat). Deliver as many of the numbered facts as you honestly can. Do NOT pad with narration to reach the length, do NOT restate anything already in the script, do NOT write a conclusion, do NOT state anything not in the list. Fewer words with every fact delivered beats more words with invented connective tissue.`,
         }],
       });
       const c = resp.content[0];
       const seg = c.type === "text" ? c.text.trim() : "";
       if (!seg || count(seg) < 40) { stoppedBecause = "empty-segment"; break; }
-      // REJECT A NON-CONSUMING BEAT: the segment must actually USE at least one assigned fact, else
-      // it is padding masquerading as a beat — drop it and stop rather than append filler.
+      // ENFORCE THE INVARIANT: refill is fact-CONSUMPTION. A segment that adds many words while
+      // delivering almost no assigned facts is padding, and padding is precisely where the invented
+      // roles/motives/methodology come from. Require a real consumption rate AND a sane words-per-fact
+      // density; otherwise REJECT the segment (never append it) — shortfall over padding.
       const segLc = seg.toLowerCase();
       const consumed = batch.filter((f) => factIsUsed(f, segLc)).length;
-      if (consumed === 0) { stoppedBecause = "non-consuming-segment-rejected"; break; }
+      const wordsPerFact = consumed > 0 ? count(seg) / consumed : Infinity;
+      const minConsumed = Math.max(2, Math.ceil(batch.length * 0.34));
+      if (consumed < minConsumed || wordsPerFact > 250) {
+        rejects++;
+        console.log(`[extend-facts] iter ${iter}: REJECTED padding (+${count(seg)} words, consumed ${consumed}/${batch.length}, ${Math.round(wordsPerFact)} words/fact)`);
+        if (rejects >= 2) { stoppedBecause = "padding-rejected"; break; }
+        continue; // retry with a smaller, sharper batch
+      }
       body = [mid, seg, conclusion].filter(Boolean).join("\n\n");
       passes++;
-      console.log(`[extend-facts] iter ${iter}: +${count(seg)} words consuming ${consumed}/${batch.length} facts (${w} -> ${count(body)}, target ${targetWords}, ${unused.length} unused)`);
+      console.log(`[extend-facts] iter ${iter}: +${count(seg)} words consuming ${consumed}/${batch.length} facts (${Math.round(wordsPerFact)} w/fact) (${w} -> ${count(body)}, target ${targetWords}, ${unused.length} unused)`);
     } catch (e) {
       stoppedBecause = "llm-error";
       console.error("[extend-facts] failed, keeping current body:", (e as any)?.message);
@@ -1426,6 +1442,9 @@ export async function finalizeScript(
   // record doesn't support ("must have required...", "did not do this alone", "...or both"). Like
   // the insinuation cut, this is an accuracy/credibility guard — the safe default is to remove it.
   applyBodyPass(stripSpeculation, "speculation");
+  // Invented inference: assigned roles, imputed motives, undocumented methodology or trends — the
+  // class padding produces. Grounded framing is untouched; only invented specifics are cut.
+  applyBodyPass(stripInventedInference, "invented-inference");
   // DEFAMATION cut: never let the script equate an unnamed/CC party with a real named person or
   // company. The deeper mining surfaces real names next to "CC-N" designations, so this guard
   // matters more now — a named living person identified as an uncharged co-conspirator must not
@@ -1508,6 +1527,7 @@ export async function finalizeScript(
         filled = collapseRepeatedAnchors(filled).text;
         filled = stripInsinuations(filled).text;
         filled = stripSpeculation(filled).text;
+        filled = stripInventedInference(filled).text; // refill is where invented roles/motives appear
         filled = stripUnnamedPartyNaming(filled).text;
         for (const k of ["fullScript", "script", "body", "content"]) {
           if (typeof (script as any)[k] === "string") (script as any)[k] = filled;

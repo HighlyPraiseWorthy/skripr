@@ -231,6 +231,31 @@ export function stripUnnamedPartyNaming(text: string): { text: string; cuts: str
 export const SPECULATION_RE = /\b((?:must|would|could|had to) have (?:been|required|involved|known|meant|taken|needed|had|coordinated|demanded)|had to have (?:been|required|involved|meant|known|taken)|which (?:can|could) only mean|could only (?:have )?mean(?:t)?(?:\s+(?:one thing|that))?|(?:did(?:n'?t| not)|could(?:n'?t| not) have|had(?:n'?t| not)) (?:do|done|build|built|run|ran|orchestrate|orchestrated|pull off|pulled off|manage|managed|create|created|mastermind|masterminded|set up|pull|pulled|act|acted|operate|operated)[^.]{0,40}?\b(?:alone|on (?:his|her|their) own|by (?:him|her|them)\s?self|single-handedly|without help)\b|\bwas the entire (?:business|scheme|point|story|operation|game|plan|thing|fraud)\b|(?:points to|all but confirms|is clear evidence of|strongly (?:implies|suggests)|can only be explained by)\b|(?:sealed (?:cooperation|plea|deal)|an? ongoing investigation|a cooperating (?:witness|deal)|cooperation deal|a plea deal)[^.]{0,60}\bor both\b|the (?:most likely|only plausible) (?:explanation|reason|scenario) is|(?:nobody|no one|not (?:one|a single) (?:person|executive|analyst|investigator))[^.]{0,40}\b(?:could (?:explain|say|agree|figure out|account for|tell)|knew|noticed|understood|had (?:an? )?answer)|(?:no one|nobody|few people|not everyone)[^.]{0,30}\b(?:in the (?:industry|business|company)|at the (?:platforms?|labels?|company))[^.]{0,30}\b(?:could|knew|agreed|understood|noticed)|(?:was|were) (?:treated as|considered|thought to be|assumed) (?:essentially |basically |all but )?(?:airtight|foolproof|impossible|unbeatable|bulletproof)|(?:the (?:royalty pools?|numbers?|books?|figures?)) (?:just |simply |never )?(?:did(?:n'?t| not) add up|made no sense)|indistinguishable from (?:a |real |an actual )?(?:real |human )?(?:listener|listening|person|user|artist|human)|(?:completely |entirely |totally |essentially )?invisible (?:from the outside|to (?:everyone|anyone|the platforms?|detection)|the whole time)|(?:completely |entirely |essentially )?undetectable|(?:largely|completely|entirely|totally) uninterrupted|never (?:once )?(?:verified|audited|checked|flagged|questioned|caught|detected)|(?:nobody|no one) (?:ever )?(?:audits?|verifies|verified|checks?|checked|knew|noticed|questioned|caught it)|(?:every|each) (?:single )?(?:registration|stream|account|song|upload|play)[^.]{0,25}?(?:converted|became|turned into|generated|counted as)|(?:almost |virtually )?none of (?:them|the (?:listeners?|streams?|plays?|accounts?)) (?:were|was) (?:real|human|legitimate|genuine)|went (?:largely |completely |entirely )?unnoticed|for (?:almost |nearly |over |more than )?[\w-]+ years,?\s+(?:nobody|no one|it (?:went|stayed|kept)|nothing)\b|(?:nobody|no one) (?:ever )?(?:noticed|caught on|raised a flag|said a word|stepped in)|rumors?\b[^.]{0,20}?(?:circulat\w+|swirl\w+|spread\w*|flying|abound\w*)|industry insiders?\b|(?:law enforcement|authorities|investigators|regulators|the government|officials) (?:stayed|remained|kept|went) (?:completely |entirely |totally |largely )?(?:silent|quiet|in the dark)|(?:people|everyone|many|some) (?:were|was) (?:saying|whispering|talking about)|(?:it was |it became )?widely (?:known|believed|suspected|rumored|assumed)|(?:authorities|investigators|prosecutors|officials) (?:suspected|believed|assumed|were aware)\b(?![^.]{0,30}\b(?:said|charged|alleged|stated|according))|word (?:spread|got around|on the street)|not (?:a |one )?single [\w ]{0,45}?(?:flagged|detected|caught|noticed|questioned|audited|stopped|stepped in)|the (?:answer|truth|number|scale|reality|real (?:figure|number|answer)) (?:was|is|turned out to be|went) [\w-]+ times (?:further|farther|larger|bigger|deeper|greater|worse|higher|more)|money (?:that )?(?:had )?(?:already )?(?:moved|flowed|vanished|disappeared)[^.]{0,45}?(?:forfeiture|order|could(?:n'?t| not)|beyond|reach|recover)|the forfeiture (?:order |judgment )?(?:could|can|would)(?:n'?t| not)? (?:not )?(?:fully |ever )?(?:reach|recover|touch|account for|capture|claw back)|sealed (?:portions?|records?|documents?|filings?|parts?|sections?)[^.]{0,35}?(?:cover|hide|conceal|contain|point to|suggest|hint|mean|protect))\b/i;
 export function looksLikeSpeculation(s: string): boolean { return SPECULATION_RE.test(s || ""); }
 
+// GOVERNING PRINCIPLE — silent fix. INVENTED INFERENCE: confident narration that assigns a ROLE,
+// MOTIVE, METHOD, or TREND the record does not establish. Distinct from a fabricated FACT (the claim
+// check) and from atmospheric cliché (SPECULATION_RE) — this is the "sexy line turned into a fact"
+// class: it reads like reporting but the specifics are the narrator's. It is what padding produces
+// when a refill can't consume real facts. Calibration holds: evidence-grounded FRAMING stays ("the
+// royalty system doesn't ask where a stream came from"); an invented ROLE/MOTIVE/METHOD goes.
+// Survivors this targets: "the publicist provides the surface legitimacy", "the promoter is
+// placement", "apparently unaware, or unconcerned", "someone had to go line by line through the
+// royalty records", "reflects that infrastructure expanding, year over year", "we now have answers
+// to essentially everything".
+export const INVENTED_INFERENCE_RE = /\b(?:(?:the )?(?:publicist|promoter|manager|distributor|executive|producer|accountant|attorney|lawyer|partner|collaborator)\b[^.]{0,35}?\b(?:provides?|provided|supplies|supplied|handles?|handled|brings?|brought|is|was|means?|meant)\b[^.]{0,35}?\b(?:legitimacy|cover|the surface|placement|access|credibility|distribution|the front|plausibility|respectability)\b|(?:apparently|seemingly|evidently|presumably|either)\s+(?:unaware|unconcerned|indifferent|oblivious|untroubled)\b|\b(?:unaware|unconcerned|oblivious)\b\s*,?\s*or\s+(?:unaware|unconcerned|indifferent|oblivious)\b|(?:someone|somebody|investigators?|analysts?|agents?|they)\b[^.]{0,40}?\b(?:had to|would have had to|must have)\b[^.]{0,30}?\b(?:line by line|record by record|one by one|by hand|entry by entry)\b|\b(?:reflects?|shows?|traces?|maps?)\b[^.]{0,45}?\b(?:expanding|growing|scaling|compounding)\b[^.]{0,25}?\byear over year\b|\banswers? to (?:essentially|virtually|almost|nearly) everything\b)/i;
+export function looksLikeInventedInference(s: string): boolean { return INVENTED_INFERENCE_RE.test(s || ""); }
+export function stripInventedInference(text: string): { text: string; cuts: string[] } {
+  if (!text) return { text, cuts: [] };
+  const cuts: string[] = [];
+  const outParas = text.split(/\n\n+/).map((p) => {
+    const kept = splitSentences(p).filter((s) => {
+      if (looksLikeInventedInference(s)) { cuts.push(s.trim()); return false; }
+      return true;
+    });
+    return kept.join(" ").trim();
+  }).filter((p) => p.length > 0);
+  return { text: outParas.join("\n\n"), cuts };
+}
+
 // GOVERNING PRINCIPLE — silent fix (CORRECTNESS, light). Cut a sentence that arithmetically TIES a
 // songs/files figure to a streams figure — the observed conflation where "661,440 streams/day" was
 // wrongly computed from "10,000 songs". Conservative and unit-aware: fires only when a songs/files/
@@ -613,11 +638,11 @@ export function collapseRepeatedAnchors(text: string): { text: string; cuts: str
         const byLen = [...occ].sort((a, b) => flat[b].s.length - flat[a].s.length);
         const keepArr = byLen.slice(0, 2); // keep the two most elaborated occurrences
         const keep = new Set(keepArr);
-        // A figure drummed 4+ times is padding no matter how it's dressed — cap it at the 2 most
-        // elaborated and cut ALL the rest, even long distinct-looking sentences (that is the
-        // "661,440 six times" case, which slipped the conservative per-cut check). At exactly 3, stay
-        // conservative (only clear bare/near-dup restatements) so genuine triple-use isn't over-cut.
-        const heavy = occ.length >= 4;
+        // CAP AT FIRST MENTION + ONE CALLBACK. A figure stated 3+ times is padding however it is
+        // dressed, so keep the 2 most elaborated and cut ALL the rest — even long distinct-looking
+        // sentences (the "661,440 six times" / "$10M three times" cases that slipped the
+        // conservative per-cut check).
+        const heavy = occ.length >= 3;
         for (const k of occ) {
           if (keep.has(k)) { protectKeep.add(k); continue; }
           if (!heavy && !cutEligible(k, keepArr)) continue;

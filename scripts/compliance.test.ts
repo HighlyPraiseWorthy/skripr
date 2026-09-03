@@ -1,7 +1,7 @@
 // Offline test for the post-generation compliance check, using the real shapes from the
 // session: the final Queen script (should largely pass) vs. an early flat draft.
 //   node --experimental-strip-types --loader ./scripts/alias-loader.mjs scripts/compliance.test.ts
-import { checkCompliance, complianceScore, structuralScore, checkSourceStructural, accuracyChecks, STRUCTURAL_SET, stripInsinuations, stripUnnamedPartyNaming, stripSpeculation, stripImpliedRevelation, dedupeAdjacentParagraphs, stripDuplicateHook, collapseRepeatedAnchors, stripSchemeDurationClaim, stripStaleFutureDates, stripSourceLeaks, mergeOrphanFragments, correctDatesToFacts, stripUnitConflation } from "../src/lib/script-compliance.ts";
+import { checkCompliance, complianceScore, structuralScore, checkSourceStructural, accuracyChecks, STRUCTURAL_SET, stripInsinuations, stripUnnamedPartyNaming, stripSpeculation, stripImpliedRevelation, dedupeAdjacentParagraphs, stripDuplicateHook, collapseRepeatedAnchors, stripSchemeDurationClaim, stripStaleFutureDates, stripSourceLeaks, mergeOrphanFragments, correctDatesToFacts, stripUnitConflation, stripInventedInference } from "../src/lib/script-compliance.ts";
 
 let failures = 0;
 function check(name: string, cond: boolean) {
@@ -527,7 +527,9 @@ const distinctUse = [
   filler2[2],
   "Spotify's own abuse team, which reviews 661,440-scale anomalies routinely, somehow never escalated this one to a human for years.",
 ].join("\n\n");
-check("a figure used across genuinely distinct long sentences is NOT collapsed", (collapseRepeatedAnchors(distinctUse).text.match(/661,440/g) || []).length === 3);
+// NOTE: the contract changed — a figure is now capped at first mention + one callback even across
+// distinct sentences (3+ restatement is padding), so 3 distinct uses collapse to 2.
+check("a figure used 3x across distinct long sentences is capped at 2", (collapseRepeatedAnchors(distinctUse).text.match(/661,440/g) || []).length <= 2);
 
 console.log("inference / speculation-as-fact guard:");
 const spec = (s: string) => stripSpeculation("He was charged with wire fraud in 2024. " + s + " The court ordered a forfeiture.");
@@ -652,7 +654,7 @@ const thrice = [
   "To picture 661,440 daily plays, imagine an arena selling out forty times before lunch, every day.",
   "Spotify's abuse team, which reviews 661,440-scale anomalies, somehow never escalated this to a human.",
 ].join("\n\n");
-check("a figure used 3x in distinct long sentences is NOT force-collapsed", (collapseRepeatedAnchors(thrice).text.match(/661,440/g) || []).length === 3);
+check("a figure stated 3x is capped at first mention + one callback", (collapseRepeatedAnchors(thrice).text.match(/661,440/g) || []).length <= 2);
 
 // Abbreviation-atomic sentence split — a cut removes the WHOLE sentence, no "Former U.S." orphan.
 console.log("abbreviation-atomic cuts:");
@@ -660,6 +662,21 @@ const abbrBody = "Former U.S. Attorney Damian Williams announced the charges. No
 const ab = stripSpeculation(abbrBody);
 check("cuts the whole 'nobody noticed' sentence, not a fragment", !/nobody noticed/i.test(ab.text));
 check("leaves 'Former U.S. Attorney' sentence intact (no orphan)", /Former U\.S\. Attorney Damian Williams announced the charges\./.test(ab.text) && !/\bFormer U\.S\.$/m.test(ab.text));
+
+// INVENTED INFERENCE — the accuracy-capping class: roles/motives/methodology/trends the record
+// doesn't establish. Distinct from fabricated facts and atmospheric cliché.
+console.log("invented inference guard:");
+const inv = (s: string) => stripInventedInference("The indictment names three collaborators. " + s + " The court ordered a forfeiture.");
+check("cuts an assigned collaborator FUNCTION", inv("The publicist provides the surface legitimacy the operation needed.").cuts.length >= 1);
+check("cuts 'the promoter is placement'", inv("The promoter was placement, pure and simple.").cuts.length >= 1);
+check("cuts imputed mind-state 'apparently unaware, or unconcerned'", inv("They were apparently unaware, or unconcerned.").cuts.length >= 1);
+check("cuts invented methodology 'had to go line by line'", inv("Someone had to go line by line through the royalty records.").cuts.length >= 1);
+check("cuts an undocumented trend 'expanding year over year'", inv("The filings reflect that infrastructure expanding, year over year.").cuts.length >= 1);
+check("cuts totalizing 'answers to essentially everything'", inv("We now have answers to essentially everything.").cuts.length >= 1);
+// Calibration: grounded framing and plain sourced statements SURVIVE.
+check("keeps grounded dramatic framing", stripInventedInference("The royalty system doesn't ask where a stream came from.").cuts.length === 0);
+check("keeps a plainly sourced collaborator statement", stripInventedInference("The indictment names a publicist but does not detail their role.").cuts.length === 0);
+check("keeps documented investigative work", stripInventedInference("Investigators traced the payments through bank records cited in the indictment.").cuts.length === 0);
 
 console.log(failures === 0 ? "\nALL PASS" : `\n${failures} FAILURE(S)`);
 process.exit(failures === 0 ? 0 : 1);
