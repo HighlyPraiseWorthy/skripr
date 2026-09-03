@@ -736,6 +736,19 @@ check("keeps a figure that IS in the facts",
   stripUnsourcedStat("According to the filing, the forfeiture was $8,091,843.64.", statFacts).cuts.length === 0);
 check("does NOT fire on an attribution with no figure",
   stripUnsourcedStat("A recent report described the streaming economy as opaque.", statFacts).cuts.length === 0);
+check("cuts an unverified regulatory citation not in facts",
+  stripUnsourcedStat("The scheme violated 37 C.F.R. §§ 385.2 and 385.21, the mechanical royalty rules.", statFacts).cuts.length >= 1);
+check("keeps a citation whose number IS in the facts",
+  stripUnsourcedStat("It cited 17 U.S.C. 115.", "The charge referenced 17 U.S.C. 115.").cuts.length === 0);
+
+// The five genuinely-misleading lines from the ship pass.
+console.log("five real misleading lines:");
+check("cuts the $2M invented-mystery gap", stripSpeculation("A gap of roughly two million dollars remains unexplained.").cuts.length >= 1);
+check("cuts 'no court filing has explained the difference'", stripSpeculation("No public court filing has explained the difference.").cuts.length >= 1);
+check("cuts 'largely undetected for years'", stripSpeculation("The operation ran largely undetected for years.").cuts.length >= 1);
+check("cuts 'running in plain sight'", stripSpeculation("It was running in plain sight the whole time.").cuts.length >= 1);
+check("cuts 'with a spreadsheet attached'", stripInventedInference("He sent the email with a spreadsheet attached.").cuts.length >= 1);
+check("cuts the false 'It took five' duration", stripSchemeDurationClaim("It did not take sixteen years. It took five.").cuts.length >= 1);
 
 console.log(failures === 0 ? "\nALL PASS" : `\n${failures} FAILURE(S)`);
 process.exit(failures === 0 ? 0 : 1);

@@ -789,7 +789,9 @@ async function extendWithUnusedFacts(fullScript: string, factsBlob: string, targ
   let body = fullScript;
   const addedBeats: string[] = []; // the new fact-beats, collected so they can be WOVEN, not tailed
   if (facts.length < 3) { console.log(`[expand] invoked=true parsedFacts=${facts.length} stoppedBecause=too-few-facts finalWords=${count(body)} target=${targetWords}`); return fullScript; }
-  for (let iter = 0; iter < 7; iter++) { // room for a rejected attempt to be retried smaller
+  for (let iter = 0; iter < 4; iter++) { // capped for LATENCY (each iter is an LLM call; 5-7 was
+    // blowing the 300s route budget, with late iters wasted on padding-rejection). 4 is enough to
+    // reach length once the acceptance gate below is at the DEFENSIBLE bar, not the zero-survivors bar.
     const w = count(body);
     if (w >= targetWords * 0.92) { stoppedBecause = "length-reached"; break; }
     if (Date.now() - startedAt > 200_000) { stoppedBecause = "time-budget"; break; }
@@ -829,8 +831,11 @@ async function extendWithUnusedFacts(fullScript: string, factsBlob: string, targ
       const segLc = seg.toLowerCase();
       const consumed = batch.filter((f) => factIsUsed(f, segLc)).length;
       const wordsPerFact = consumed > 0 ? count(seg) / consumed : Infinity;
-      const minConsumed = Math.max(2, Math.ceil(batch.length * 0.34));
-      if (consumed < minConsumed || wordsPerFact > 250) {
+      // DEFENSIBLE bar (not zero-survivors): reject only clear PADDING — a segment that delivers no
+      // new fact, or one so verbose per fact it is mostly narration (> 320 w/fact). A 1-fact beat at a
+      // sane density is accepted, so the loop reaches length instead of dying at padding-rejected with
+      // facts still unused. Fabrication is caught downstream by the certainty judge + strips.
+      if (consumed < 1 || wordsPerFact > 320) {
         rejects++;
         console.log(`[extend-facts] iter ${iter}: REJECTED padding (+${count(seg)} words, consumed ${consumed}/${batch.length}, ${Math.round(wordsPerFact)} words/fact)`);
         if (rejects >= 2) { stoppedBecause = "padding-rejected"; break; }
@@ -1708,8 +1713,12 @@ async function applyCertaintyDiscipline(body: string, facts: string, startedAt: 
   const all: Sent[] = [];
   const sentsByPara: string[][] = paras.map((p) => splitSentences(p));
   sentsByPara.forEach((ss, pi) => ss.forEach((text, si) => all.push({ pi, si, text })));
-  const flagged = all.filter((s) => flagOverstatementRisk(s.text)).slice(0, 30); // bound the batch
-  if (!flagged.length) { console.log("[certainty] no flagged sentences"); return body; }
+  const allFlagged = all.filter((s) => flagOverstatementRisk(s.text));
+  const flaggedTotal = allFlagged.length; // TRUE pre-cap count — the leading indicator for whether
+  // the upstream writer discipline reduced produced overstatements (the logged number was pinned at
+  // the 30-cap on every run, so it could never move; report the real total now).
+  const flagged = allFlagged.slice(0, 30); // still cap the JUDGE batch for latency
+  if (!flagged.length) { console.log("[certainty] flaggedTotal=0"); return body; }
   try {
     const resp = await getAnthropic().messages.create({
       model: "claude-sonnet-4-6",
@@ -1760,11 +1769,11 @@ Output ONLY JSON: {"results":[{"i":<index>,"action":"KEEP"|"REWRITE","rewrite":"
       const tgt = flagged[idx];
       if (sentsByPara[tgt.pi] && sentsByPara[tgt.pi][tgt.si] === orig) { sentsByPara[tgt.pi][tgt.si] = rw; rewrites++; }
     }
-    if (!rewrites) { console.log(`[certainty] flagged=${flagged.length} rewrites=0 (all KEEP)`); return body; }
+    if (!rewrites) { console.log(`[certainty] flaggedTotal=${flaggedTotal} judged=${flagged.length} rewrites=0 (all KEEP)`); return body; }
     const rebuilt = sentsByPara.map((ss) => ss.join(" ").trim()).filter(Boolean).join("\n\n");
     // Never let the pass gut the script; a certainty recast is length-neutral-ish.
     if (rebuilt.split(/\s+/).filter(Boolean).length < body.split(/\s+/).filter(Boolean).length * 0.75) return body;
-    console.log(`[certainty] flagged=${flagged.length} rewrites=${rewrites}`);
+    console.log(`[certainty] flaggedTotal=${flaggedTotal} judged=${flagged.length} rewrites=${rewrites}`);
     return rebuilt;
   } catch (e) {
     console.error("[certainty] pass failed, keeping original:", (e as any)?.message);
