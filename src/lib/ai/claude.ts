@@ -1568,7 +1568,11 @@ export async function finalizeScript(
   const refillKey = ["fullScript", "script", "body", "content"].find(
     (k) => typeof (script as any)[k] === "string" && (script as any)[k].trim().length > 0,
   );
-  const finalTarget = input.targetMinutes ? Math.round(input.targetMinutes * 165) : null;
+  // Refill target is over-provisioned above the 165-wpm delivery rate: the post-refill re-sweep
+  // (dedupe/collapse/strips) and the certainty-discipline rewrite both run AFTER refill and shave
+  // ~15% off, so aiming at 165 lands ~14 min. Aim at ~190 wpm so the SETTLED body lands ~18-20 min.
+  // Affordable now that latency has headroom (207s vs the 270s bar).
+  const finalTarget = input.targetMinutes ? Math.round(input.targetMinutes * 190) : null;
   if (finalTarget && finalTarget >= 1200 && refillKey) {
     const beforeWords = (script as any)[refillKey].split(/\s+/).filter(Boolean).length;
     const facts = input.sourceMaterial && input.sourceMaterial.trim() ? input.sourceMaterial : "";

@@ -750,5 +750,25 @@ check("cuts 'running in plain sight'", stripSpeculation("It was running in plain
 check("cuts 'with a spreadsheet attached'", stripInventedInference("He sent the email with a spreadsheet attached.").cuts.length >= 1);
 check("cuts the false 'It took five' duration", stripSchemeDurationClaim("It did not take sixteen years. It took five.").cuts.length >= 1);
 
+// Exact shipped surface forms that regressed — regression-locked.
+console.log("shipped-surface regression locks:");
+check("[2] comma form 'running, largely undetected, for years'",
+  stripSpeculation("The scheme had been running, largely undetected, for years.").cuts.length >= 1);
+check("[3] 'C.F.R. §§' cite cut when its numbers aren't in facts",
+  stripUnsourcedStat("The indictment cited 37 C.F.R. §§ 385.2 and 385.21 among the rules.", "unrelated facts about streaming").cuts.length >= 1);
+check("[4a] splitter keeps 'United States v. Michael Smith, 24 Cr. 542' intact",
+  splitSentences("The case was United States v. Michael Smith, 24 Cr. 542. It was filed in 2024.").length === 2);
+check("[4b] splitter does not break on 'Cir.'",
+  splitSentences("It went to the 2d Cir. on appeal. The panel affirmed.").length === 2);
+check("[1a] strips a markdown-bold leaked label '**HOOK:**'",
+  stripLeakedLabels("**HOOK:** In 2017 a man began.\n\nThen the story turns.").text.startsWith("In 2017"));
+check("[1b] strips a bracketed leaked label '[HOOK]'",
+  stripLeakedLabels("[HOOK] In 2017 a man began.\n\nThen the story turns.").text.startsWith("In 2017"));
+check("[1c] near-duplicate re-open (0.55-0.7 overlap) is cut",
+  (() => {
+    const r = stripDuplicateHook("In 2017 a quiet man in Nebraska began building an army of fake listeners to steal royalties from the streaming platforms.\n\nIn 2017 a quiet man in Nebraska began building an army of fake listeners to steal royalties from the streaming services.\n\nThe real story starts at the labels.");
+    return r.cuts.length >= 1;
+  })());
+
 console.log(failures === 0 ? "\nALL PASS" : `\n${failures} FAILURE(S)`);
 process.exit(failures === 0 ? 0 : 1);
