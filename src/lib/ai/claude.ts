@@ -405,6 +405,65 @@ export function extractJSON(text: string, kind: "object" | "array"): unknown {
   throw new Error(`No valid JSON ${kind} found in Claude response. Text (last 300 chars): ${text.slice(-300)}`);
 }
 
+// Lenient JSON salvage for a model response. extractJSON already handles code fences and outermost
+// bracket-matching; this adds the two failure modes it doesn't: trailing commas before a closing
+// brace/bracket, and smart quotes the model sometimes emits around keys/values. Applied only as a
+// LAST resort before giving up, so a well-formed response is never perturbed.
+export function repairJson(raw: string): string {
+  return raw
+    .replace(/[“”]/g, '"')
+    .replace(/[‘’]/g, "'")
+    .replace(/,(\s*[}\]])/g, "$1");
+}
+
+// THE shared structured-LLM boundary. Every pass that asks the model for JSON goes through here so
+// a malformed response is HANDLED, LOUDLY, in one place — never silently swallowed into a SUCCESS.
+// Pipeline: native parse -> strip fences / bracket-match (extractJSON) -> repairJson -> ONE retry
+// with a minimal "JSON only" reprompt -> schema-validate. On final failure it returns { ok:false }
+// with a reason; the CALLER decides what to keep, but must mark the stage DEGRADED (never SUCCESS).
+async function callStructuredLLM<T>(opts: {
+  model: string;
+  max_tokens: number;
+  temperature: number;
+  system: string;
+  user: string;
+  kind: "object" | "array";
+  validate: (v: unknown) => T | null;
+  label: string;
+}): Promise<{ ok: true; value: T; attempts: number } | { ok: false; reason: string; attempts: number }> {
+  const tryParse = (text: string): unknown | null => {
+    try { return extractJSON(text, opts.kind); } catch { /* fall through */ }
+    try { return extractJSON(repairJson(text), opts.kind); } catch { /* fall through */ }
+    return null;
+  };
+  let lastReason = "unknown";
+  for (let attempt = 1; attempt <= 2; attempt++) {
+    const system = attempt === 1
+      ? opts.system
+      : `${opts.system}\n\nCRITICAL: your previous reply was not valid JSON. Reply with ONLY the JSON value — no prose, no code fences, no trailing commas.`;
+    try {
+      const resp = await getAnthropic().messages.create({
+        model: opts.model,
+        max_tokens: opts.max_tokens,
+        temperature: attempt === 1 ? opts.temperature : Math.min(opts.temperature, 0.2),
+        system,
+        messages: [{ role: "user", content: opts.user }],
+      });
+      const c = resp.content[0];
+      const text = c && c.type === "text" ? c.text : "";
+      const parsed = tryParse(text);
+      if (parsed == null) { lastReason = "unparseable"; continue; }
+      const value = opts.validate(parsed);
+      if (value == null) { lastReason = "schema-mismatch"; continue; }
+      return { ok: true, value, attempts: attempt };
+    } catch (e) {
+      lastReason = `llm-error: ${(e as any)?.message || e}`;
+    }
+  }
+  console.error(`[${opts.label}] STRUCTURED_LLM_FAILED reason=${lastReason} attempts=2`);
+  return { ok: false, reason: lastReason, attempts: 2 };
+}
+
 // Single extension pass only: each pass is a full Sonnet call (60-90s), and the
 // base generation already uses one. Stacking passes risks the Vercel function limit,
 // and a dead function loses everything — a slightly-short script beats no script.
@@ -776,41 +835,45 @@ export function factNoveltyScore(fact: string): number {
   if (/\bC\.?C\.?-?\s?\d\b|\b[A-Z][a-zA-Z.'’-]+\s+[A-Z][a-zA-Z.'’-]+\b/.test(fact)) s += 2; // named entity / CC-N
   return s;
 }
-async function extendWithUnusedFacts(fullScript: string, factsBlob: string, targetWords: number, startedAt: number): Promise<string> {
+// BOUNDED refill — never an unbounded word-target-driven loop. Hard caps: at most MAX_REFILL_CALLS
+// LLM calls and MAX_REFILL_MS wall-clock (also stops at the shared finalize deadline). Each call is
+// ONE ~450-word envelope written from a whole BATCH of assigned unused facts (not iterative 100-word
+// top-ups). If the target isn't reached within the budget we return status:"shortfall" — the caller
+// marks the pipeline DEGRADED. We do NOT loop chasing the word count; a slightly-short, fully-sourced
+// body beats a timed-out request.
+const MAX_REFILL_CALLS = 2;
+const MAX_REFILL_MS = 70_000;
+type RefillResult = { text: string; status: "ok" | "shortfall" };
+async function extendWithUnusedFacts(fullScript: string, factsBlob: string, targetWords: number, startedAt: number, deadline: number): Promise<RefillResult> {
   const count = (s: string) => s.split(/\s+/).filter(Boolean).length;
   const facts = parseFactList(factsBlob);
-  // Instrumentation so ONE live run answers: was it invoked, how many facts read UNUSED going in,
-  // how many passes ran, and why it stopped. Prints exactly one [expand] line at the end.
+  const refillStart = Date.now();
   const unusedAtStart = facts.filter((f) => !factIsUsed(f, fullScript.toLowerCase())).length;
-  let passes = 0;
-  let rejects = 0;
-  let stoppedBecause = "loop-max";
-  const report = () => console.log(`[expand] invoked=true parsedFacts=${facts.length} unusedFacts=${unusedAtStart} passes=${passes} rejectedPadding=${rejects} stoppedBecause=${stoppedBecause} startWords=${count(fullScript)} finalWords=${count(body)} target=${targetWords}`);
+  let calls = 0;
+  let stoppedBecause = "calls-max";
   let body = fullScript;
   const addedBeats: string[] = []; // the new fact-beats, collected so they can be WOVEN, not tailed
-  if (facts.length < 3) { console.log(`[expand] invoked=true parsedFacts=${facts.length} stoppedBecause=too-few-facts finalWords=${count(body)} target=${targetWords}`); return fullScript; }
-  for (let iter = 0; iter < 4; iter++) { // capped for LATENCY (each iter is an LLM call; 5-7 was
-    // blowing the 300s route budget, with late iters wasted on padding-rejection). 4 is enough to
-    // reach length once the acceptance gate below is at the DEFENSIBLE bar, not the zero-survivors bar.
+  const report = (status: RefillResult["status"]) => console.log(`[expand] invoked=true parsedFacts=${facts.length} unusedFacts=${unusedAtStart} calls=${calls} stoppedBecause=${stoppedBecause} startWords=${count(fullScript)} finalWords=${count(body)} target=${targetWords} status=${status}`);
+  if (facts.length < 3) { stoppedBecause = "too-few-facts"; report("shortfall"); return { text: fullScript, status: "shortfall" }; }
+  for (calls = 0; calls < MAX_REFILL_CALLS; ) {
     const w = count(body);
     if (w >= targetWords * 0.92) { stoppedBecause = "length-reached"; break; }
-    if (Date.now() - startedAt > 200_000) { stoppedBecause = "time-budget"; break; }
+    if (Date.now() - refillStart > MAX_REFILL_MS) { stoppedBecause = "refill-time-budget"; break; }
+    if (deadline - Date.now() < 35_000) { stoppedBecause = "finalize-deadline"; break; }
     const bodyLc = body.toLowerCase();
     // REFILL IS FACT-CONSUMPTION: operate on the UNUSED pool only, highest-novelty first.
     const unused = facts.filter((f) => !factIsUsed(f, bodyLc)).sort((a, b) => factNoveltyScore(b) - factNoveltyScore(a));
     if (!unused.length) { stoppedBecause = "facts-exhausted"; break; } // shortfall over padding
-    // Shrink the batch after a rejected (padding) attempt so the next try is sharper.
-    const batchSize = Math.max(4, 12 - rejects * 4);
-    const batch = unused.slice(0, batchSize);
+    // Assign a whole batch that can honestly fill the remaining deficit at ~130 w/fact, capped so ONE
+    // call stays a ~450-word envelope (roughly 4-6 facts) rather than a giant ask that invites padding.
+    const deficitFacts = Math.ceil((targetWords - w) / 130);
+    const batch = unused.slice(0, Math.min(unused.length, Math.max(3, Math.min(6, deficitFacts))));
     const paras = body.split(/\n\n+/);
     const conclusion = paras.length > 3 ? paras.pop()! : "";
     const mid = paras.join("\n\n");
-    // SIZE THE ASK TO THE FACTS, not to the word gap. Asking for 1,400 words off 12 facts invites
-    // the model to pad with connective narration (the observed "+1067 words consuming 1/12"), and
-    // that narration is where every invented inference came from. A beat is ~130 words, so the ask
-    // can never exceed what the assigned facts can honestly carry.
-    const needed = Math.min(targetWords - w, batch.length * 130);
+    const needed = Math.min(450, batch.length * 130);
     try {
+      calls++;
       const resp = await getAnthropic().messages.create({
         model: "claude-sonnet-4-6",
         max_tokens: 8000,
@@ -824,27 +887,21 @@ async function extendWithUnusedFacts(fullScript: string, factsBlob: string, targ
       const c = resp.content[0];
       const seg = c.type === "text" ? c.text.trim() : "";
       if (!seg || count(seg) < 40) { stoppedBecause = "empty-segment"; break; }
-      // ENFORCE THE INVARIANT: refill is fact-CONSUMPTION. A segment that adds many words while
-      // delivering almost no assigned facts is padding, and padding is precisely where the invented
-      // roles/motives/methodology come from. Require a real consumption rate AND a sane words-per-fact
-      // density; otherwise REJECT the segment (never append it) — shortfall over padding.
+      // ENFORCE THE INVARIANT: refill is fact-CONSUMPTION. Reject only clear PADDING — a segment that
+      // delivers no new fact, or one so verbose per fact it is mostly narration (> 320 w/fact). We do
+      // NOT retry a rejected call (that was the latency sink); a rejected call still counts against the
+      // 2-call cap, and we stop, returning shortfall rather than looping.
       const segLc = seg.toLowerCase();
       const consumed = batch.filter((f) => factIsUsed(f, segLc)).length;
       const wordsPerFact = consumed > 0 ? count(seg) / consumed : Infinity;
-      // DEFENSIBLE bar (not zero-survivors): reject only clear PADDING — a segment that delivers no
-      // new fact, or one so verbose per fact it is mostly narration (> 320 w/fact). A 1-fact beat at a
-      // sane density is accepted, so the loop reaches length instead of dying at padding-rejected with
-      // facts still unused. Fabrication is caught downstream by the certainty judge + strips.
       if (consumed < 1 || wordsPerFact > 320) {
-        rejects++;
-        console.log(`[extend-facts] iter ${iter}: REJECTED padding (+${count(seg)} words, consumed ${consumed}/${batch.length}, ${Math.round(wordsPerFact)} words/fact)`);
-        if (rejects >= 2) { stoppedBecause = "padding-rejected"; break; }
-        continue; // retry with a smaller, sharper batch
+        stoppedBecause = "padding-rejected";
+        console.log(`[extend-facts] call ${calls}: REJECTED padding (+${count(seg)} words, consumed ${consumed}/${batch.length}, ${Math.round(wordsPerFact)} words/fact)`);
+        break;
       }
       body = [mid, seg, conclusion].filter(Boolean).join("\n\n");
       addedBeats.push(...seg.split(/\n\n+/).map((p) => p.trim()).filter(Boolean));
-      passes++;
-      console.log(`[extend-facts] iter ${iter}: +${count(seg)} words consuming ${consumed}/${batch.length} facts (${Math.round(wordsPerFact)} w/fact) (${w} -> ${count(body)}, target ${targetWords}, ${unused.length} unused)`);
+      console.log(`[extend-facts] call ${calls}: +${count(seg)} words consuming ${consumed}/${batch.length} facts (${Math.round(wordsPerFact)} w/fact) (${w} -> ${count(body)}, target ${targetWords}, ${unused.length} unused)`);
     } catch (e) {
       stoppedBecause = "llm-error";
       console.error("[extend-facts] failed, keeping current body:", (e as any)?.message);
@@ -859,8 +916,11 @@ async function extendWithUnusedFacts(fullScript: string, factsBlob: string, targ
     const woven = weaveBeats(fullScript, addedBeats);
     if (woven.split(/\s+/).filter(Boolean).length >= count(fullScript)) body = woven; // never shrink
   }
-  report();
-  return body;
+  // Shortfall = we stopped before reaching the length band (facts ran out, budget blown, padding).
+  // It is a real signal (the caller marks DEGRADED), not a failure to return a usable body.
+  const status: RefillResult["status"] = count(body) >= targetWords * 0.92 ? "ok" : "shortfall";
+  report(status);
+  return { text: body, status };
 }
 
 // Relocate new beat-paragraphs into an original body at contextual homes: each beat goes right after
@@ -1279,6 +1339,32 @@ export async function finalizeScript(
   opts: { startedAt: number; presetHook: string | null },
 ): Promise<GeneratedScript> {
   const { startedAt, presetHook } = opts;
+
+  // PIPELINE STATUS + GLOBAL DEADLINE CIRCUIT-BREAKER. The route budget is 300s; we hold a hard
+  // internal deadline 30s under it and, before every expensive LLM stage, check whether the stage's
+  // minimum run time still fits. If it doesn't, we SKIP that stage and mark the pipeline DEGRADED —
+  // a script missing one polish stage beats a lost request. Any stage that fails (e.g. an unparseable
+  // JSON reply) also marks DEGRADED and logs LOUDLY; a stage NEVER fails into a silent SUCCESS.
+  const DEADLINE = startedAt + 270_000;
+  const pipeline: { status: "SUCCESS" | "DEGRADED"; skipped: string[]; failed: string[] } = {
+    status: "SUCCESS", skipped: [], failed: [],
+  };
+  (script as any)._pipeline = pipeline;
+  const markDegraded = (kind: "skipped" | "failed", stage: string, reason: string) => {
+    pipeline.status = "DEGRADED";
+    pipeline[kind].push(stage);
+    console.error(`FINALIZE_DEGRADED stage=${stage} kind=${kind} reason=${reason}`);
+  };
+  // Returns true (and marks DEGRADED skipped) when `stageMinMs` no longer fits before the deadline.
+  const budgetBlown = (stage: string, stageMinMs: number): boolean => {
+    const remaining = DEADLINE - Date.now();
+    if (remaining < stageMinMs) {
+      markDegraded("skipped", stage, `deadline: ${Math.round(remaining / 1000)}s left < ${Math.round(stageMinMs / 1000)}s min`);
+      return true;
+    }
+    return false;
+  };
+
   const bodyKey = ["fullScript", "script", "body", "content"].find(
     (k) => typeof (script as any)[k] === "string" && (script as any)[k].trim().length > 0,
   );
@@ -1431,7 +1517,7 @@ export async function finalizeScript(
   // instances, and cut/hedge any role/motive/cooperation the FACTS don't establish. Reduction-only
   // (never adds), guarded, graceful fallback — the deterministic cuts below still backstop it.
   const refineKey = ["fullScript", "script", "body", "content"].find((k) => typeof (script as any)[k] === "string" && (script as any)[k].trim());
-  if (refineKey && input.sourceMaterial && input.sourceMaterial.trim()) {
+  if (refineKey && input.sourceMaterial && input.sourceMaterial.trim() && !budgetBlown("refine", 45_000)) {
     const before = (script as any)[refineKey] as string;
     const refined = await refineAssembledBody(before, input.sourceMaterial, startedAt);
     if (refined && refined !== before) {
@@ -1453,14 +1539,19 @@ export async function finalizeScript(
   // that could shatter prose. Order: drop near-duplicate adjacent paragraphs (a chunked-generation
   // artifact — padding, not elaboration) -> cut a false STATED scheme-duration ("Three years.
   // That's how long this ran") -> cut a now-past future-framed date ("scheduled for July 2026").
+  const wc = (s: string) => s.split(/\s+/).filter(Boolean).length;
   const applyBodyPass = (fn: (t: string) => { text: string; cuts: string[] }, tag: string) => {
+    let wIn = 0, wOut = 0, nCuts = 0;
     for (const k of ["fullScript", "script", "body", "content", "outro"]) {
       const cur = (script as any)[k];
       if (typeof cur === "string" && cur.trim()) {
         const { text, cuts } = fn(cur);
-        if (cuts.length) { (script as any)[k] = text; autoCuts.push(...cuts.map((c) => `${tag}: ${c}`)); }
+        if (cuts.length) { wIn += wc(cur); wOut += wc(text); nCuts += cuts.length; (script as any)[k] = text; autoCuts.push(...cuts.map((c) => `${tag}: ${c}`)); }
       }
     }
+    // Per-pass metric — so a length/quality regression is attributable to the exact deterministic pass
+    // that caused it. Logged only when the pass actually changed something.
+    if (nCuts) console.log(`[pass] ${tag} words=${wIn}->${wOut} (-${wIn - wOut}) cuts=${nCuts}`);
     if (Array.isArray((script as any).sections)) {
       (script as any).sections = (script as any).sections.map((s: any) => {
         if (s && typeof s.content === "string" && s.content.trim()) {
@@ -1573,13 +1664,15 @@ export async function finalizeScript(
   // ~15% off, so aiming at 165 lands ~14 min. Aim at ~190 wpm so the SETTLED body lands ~18-20 min.
   // Affordable now that latency has headroom (207s vs the 270s bar).
   const finalTarget = input.targetMinutes ? Math.round(input.targetMinutes * 190) : null;
-  if (finalTarget && finalTarget >= 1200 && refillKey) {
+  if (finalTarget && finalTarget >= 1200 && refillKey && !budgetBlown("refill", 75_000)) {
     const beforeWords = (script as any)[refillKey].split(/\s+/).filter(Boolean).length;
     const facts = input.sourceMaterial && input.sourceMaterial.trim() ? input.sourceMaterial : "";
     try {
-      let filled = facts
-        ? await extendWithUnusedFacts((script as any)[refillKey], facts, finalTarget, startedAt)
-        : await extendScriptToLength((script as any)[refillKey], finalTarget, input.targetTopic || "", input.targetNiche || "", startedAt);
+      const refill = facts
+        ? await extendWithUnusedFacts((script as any)[refillKey], facts, finalTarget, startedAt, DEADLINE)
+        : { text: await extendScriptToLength((script as any)[refillKey], finalTarget, input.targetTopic || "", input.targetNiche || "", startedAt), status: "ok" as const };
+      if (refill.status === "shortfall") markDegraded("failed", "refill", `shortfall: ${refill.text.split(/\s+/).filter(Boolean).length}/${finalTarget} words`);
+      let filled = refill.text;
       if (filled !== (script as any)[refillKey]) {
         // Deterministic re-sweep on the (now longer) body — de-rep AFTER refill (so refill can't
         // reintroduce a repeated concept), plus the cheap safety guards so a new beat can't slip the
@@ -1612,11 +1705,12 @@ export async function finalizeScript(
   const certKey = ["fullScript", "script", "body", "content"].find(
     (k) => typeof (script as any)[k] === "string" && (script as any)[k].trim().length > 0,
   );
-  if (certKey && input.sourceMaterial && input.sourceMaterial.trim()) {
-    const judged = await applyCertaintyDiscipline((script as any)[certKey] as string, input.sourceMaterial, startedAt);
-    if (judged && judged !== (script as any)[certKey]) {
+  if (certKey && input.sourceMaterial && input.sourceMaterial.trim() && !budgetBlown("certainty", 30_000)) {
+    const cert = await applyCertaintyDiscipline((script as any)[certKey] as string, input.sourceMaterial, startedAt);
+    if (cert.status === "failed") markDegraded("failed", "certainty", cert.reason || "unknown");
+    if (cert.text && cert.text !== (script as any)[certKey]) {
       for (const k of ["fullScript", "script", "body", "content"]) {
-        if (typeof (script as any)[k] === "string") (script as any)[k] = judged;
+        if (typeof (script as any)[k] === "string") (script as any)[k] = cert.text;
       }
     }
   }
@@ -1628,6 +1722,15 @@ export async function finalizeScript(
       (script as any)[k] = stripLeakedLabels((script as any)[k]).text;
       (script as any)[k] = stripDuplicateHook((script as any)[k]).text;
     }
+  }
+
+  // ALWAYS emit the final pipeline status — SUCCESS or DEGRADED with the stages that skipped/failed,
+  // so we can measure how often a stage is lost to the deadline or a bad JSON reply. Never silent.
+  const elapsed = Math.round((Date.now() - startedAt) / 1000);
+  if (pipeline.status === "DEGRADED") {
+    console.error(`FINALIZE_DEGRADED status=DEGRADED skipped=[${pipeline.skipped.join(",")}] failed=[${pipeline.failed.join(",")}] elapsed=${elapsed}s`);
+  } else {
+    console.log(`[finalize] status=SUCCESS elapsed=${elapsed}s`);
   }
 
   return script;
@@ -1708,9 +1811,10 @@ HARD RULES: This is a SURGICAL edit — change as LITTLE as possible. The vast m
 // scope/certainty/causation/exclusivity/quantity/knowledge beyond the facts — rewriting AROUND the
 // true core so the dramatic proposition survives (often more memorable). Runs on the FINAL assembled
 // body (after refill/weave), which is where overstatement lands. One LLM round-trip; heavily guarded.
-async function applyCertaintyDiscipline(body: string, facts: string, startedAt: number): Promise<string> {
-  if (!body || !body.trim() || !facts || !facts.trim()) return body;
-  if (Date.now() - startedAt > 250_000) return body;
+type CertaintyResult = { text: string; status: "ok" | "failed"; reason?: string };
+async function applyCertaintyDiscipline(body: string, facts: string, startedAt: number): Promise<CertaintyResult> {
+  if (!body || !body.trim() || !facts || !facts.trim()) return { text: body, status: "ok" };
+  if (Date.now() - startedAt > 250_000) return { text: body, status: "ok" };
   const paras = body.split(/\n\n+/);
   // Flatten to sentences, tagging each with an id, and collect the flagged ones for the judge.
   type Sent = { pi: number; si: number; text: string };
@@ -1722,13 +1826,9 @@ async function applyCertaintyDiscipline(body: string, facts: string, startedAt: 
   // the upstream writer discipline reduced produced overstatements (the logged number was pinned at
   // the 30-cap on every run, so it could never move; report the real total now).
   const flagged = allFlagged.slice(0, 30); // still cap the JUDGE batch for latency
-  if (!flagged.length) { console.log("[certainty] flaggedTotal=0"); return body; }
-  try {
-    const resp = await getAnthropic().messages.create({
-      model: "claude-sonnet-4-6",
-      max_tokens: 4000,
-      temperature: 0.3,
-      system: `You enforce the DRAMATIC TRUTH RULE on flagged documentary sentences. A sentence may intensify emotion, imagery, contrast, pacing, and narrative IMPLICATION freely. It may NOT intensify the evidence's SCOPE, CERTAINTY, CAUSATION, EXCLUSIVITY, QUANTITY, or KNOWLEDGE/INTENT beyond the approved facts.
+  if (!flagged.length) { console.log("[certainty] flaggedTotal=0"); return { text: body, status: "ok" }; }
+  {
+    const system = `You enforce the DRAMATIC TRUTH RULE on flagged documentary sentences. A sentence may intensify emotion, imagery, contrast, pacing, and narrative IMPLICATION freely. It may NOT intensify the evidence's SCOPE, CERTAINTY, CAUSATION, EXCLUSIVITY, QUANTITY, or KNOWLEDGE/INTENT beyond the approved facts.
 
 DEFAULT IS REWRITE, NOT KEEP. A sentence was flagged because it carries an absolute, a superlative, a causal claim, an institutional claim, or an exclusivity claim. Return KEEP ONLY when one of these is true: (a) an approved fact DIRECTLY ENTAILS the flagged claim at that exact scope/certainty; or (b) the intensity is PURE metaphor, rhetorical contrast, or vivid description that no reasonable viewer would read as a factual claim ("the operation became a factory", "the streams were fake, the money was real"). In every other case return REWRITE. When unsure whether a fact entails the claim, REWRITE.
 
@@ -1749,17 +1849,20 @@ WORKED FIXTURES (input -> KEEP/REWRITE):
 - "the platforms were only catching pieces of it" -> KEEP only if partial detection is in the facts, sharpened: "The platforms were catching pieces of the operation. Smith kept adapting."
 - "the operation became a factory" -> KEEP (metaphor). "the streams were fake, the money was real" -> KEEP (contrast).
 
-Output ONLY JSON: {"results":[{"i":<index>,"action":"KEEP"|"REWRITE","rewrite":"<new sentence, only if REWRITE>"}]}.`,
-      messages: [{
-        role: "user",
-        content: `APPROVED FACTS (the only established truth — anything beyond these, at greater scope/certainty, is unsupported):\n"""\n${facts.slice(0, 8000)}\n"""\n\nFLAGGED SENTENCES (each was flagged for an absolute/superlative/causal/institutional/exclusivity marker — REWRITE unless a fact entails it or it is pure metaphor/contrast):\n${flagged.map((s, i) => `${i}. ${s.text}`).join("\n")}\n\nJudge each by the Dramatic Truth Rule and output the JSON.`,
-      }],
+Output ONLY JSON: {"results":[{"i":<index>,"action":"KEEP"|"REWRITE","rewrite":"<new sentence, only if REWRITE>"}]}.`;
+    const user = `APPROVED FACTS (the only established truth — anything beyond these, at greater scope/certainty, is unsupported):\n"""\n${facts.slice(0, 8000)}\n"""\n\nFLAGGED SENTENCES (each was flagged for an absolute/superlative/causal/institutional/exclusivity marker — REWRITE unless a fact entails it or it is pure metaphor/contrast):\n${flagged.map((s, i) => `${i}. ${s.text}`).join("\n")}\n\nJudge each by the Dramatic Truth Rule and output the JSON.`;
+    // Through the shared structured boundary: an unparseable/invalid reply is retried ONCE and then
+    // reported as FAILED — never swallowed into a silent SUCCESS with the body unchanged (the old bug).
+    const res = await callStructuredLLM<any[]>({
+      model: "claude-sonnet-4-6", max_tokens: 4000, temperature: 0.3, system, user, kind: "object",
+      label: "certainty",
+      validate: (v) => (v && Array.isArray((v as any).results) ? (v as any).results : null),
     });
-    const c = resp.content[0];
-    const raw = c.type === "text" ? c.text : "";
-    const m = raw.match(/\{[\s\S]*\}/);
-    const parsed = m ? JSON.parse(m[0]) : null;
-    const results: any[] = Array.isArray(parsed?.results) ? parsed.results : [];
+    if (!res.ok) {
+      console.error(`[certainty] FAILED reason=${res.reason} — body unchanged, pipeline DEGRADED`);
+      return { text: body, status: "failed", reason: res.reason };
+    }
+    const results: any[] = res.value;
     let rewrites = 0;
     for (const r of results) {
       if (r?.action !== "REWRITE") continue;
@@ -1773,15 +1876,12 @@ Output ONLY JSON: {"results":[{"i":<index>,"action":"KEEP"|"REWRITE","rewrite":"
       const tgt = flagged[idx];
       if (sentsByPara[tgt.pi] && sentsByPara[tgt.pi][tgt.si] === orig) { sentsByPara[tgt.pi][tgt.si] = rw; rewrites++; }
     }
-    if (!rewrites) { console.log(`[certainty] flaggedTotal=${flaggedTotal} judged=${flagged.length} rewrites=0 (all KEEP)`); return body; }
+    if (!rewrites) { console.log(`[certainty] flaggedTotal=${flaggedTotal} judged=${flagged.length} rewrites=0 (all KEEP)`); return { text: body, status: "ok" }; }
     const rebuilt = sentsByPara.map((ss) => ss.join(" ").trim()).filter(Boolean).join("\n\n");
     // Never let the pass gut the script; a certainty recast is length-neutral-ish.
-    if (rebuilt.split(/\s+/).filter(Boolean).length < body.split(/\s+/).filter(Boolean).length * 0.75) return body;
+    if (rebuilt.split(/\s+/).filter(Boolean).length < body.split(/\s+/).filter(Boolean).length * 0.75) return { text: body, status: "ok" };
     console.log(`[certainty] flaggedTotal=${flaggedTotal} judged=${flagged.length} rewrites=${rewrites}`);
-    return rebuilt;
-  } catch (e) {
-    console.error("[certainty] pass failed, keeping original:", (e as any)?.message);
-    return body;
+    return { text: rebuilt, status: "ok" };
   }
 }
 
