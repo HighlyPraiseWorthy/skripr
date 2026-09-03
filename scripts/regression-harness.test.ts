@@ -9,7 +9,8 @@ import {
   collapseRepeatedAnchors, flagOverstatementRisk,
 } from "../src/lib/script-compliance.ts";
 import { extractJSON, repairJson, reconcileTitle } from "../src/lib/ai/claude.ts";
-import { researchedYearSpan } from "../src/lib/script-compliance.ts";
+import { researchedYearSpan, primarySubjectName, stripUnnamedPartyNaming } from "../src/lib/script-compliance.ts";
+import { REFILL_RESTORE_WORDS_PER_CALL } from "../src/lib/ai/claude.ts";
 
 let failures = 0;
 const check = (name: string, cond: boolean) => {
@@ -109,11 +110,12 @@ check("['undetected, for years' gone] comma form flagged",
 
 console.log("title reconciliation vs researched facts:");
 {
-  // Placeholder title + facts spanning 2017-2024 with one charged male defendant.
-  const facts = "The scheme began in 2017 and continued until it was charged in 2024. Michael Smith pleaded guilty to the fraud. He built the accounts. His operation collected roughly ten million dollars over the years.";
+  // Placeholder title + facts: scheme runs 2017-2024, plea in 2026 (a post-arrest legal milestone
+  // that must NOT count toward the scheme span), one charged male defendant.
+  const facts = "The scheme began in 2017 and continued until it was charged in 2024. Michael Smith pleaded guilty in 2026. He built the accounts. His operation collected roughly ten million dollars over the years.";
   const reconciled = reconcileTitle("After 4 Years Spotify Finally Caught Them..", facts);
   const span = researchedYearSpan(facts);
-  check("span is the researched ~7 years, not the placeholder 4", span === 7);
+  check("span is the scheme span 7 (2017-2024), excluding the 2026 plea year", span === 7);
   check("reconciled title asserts 7 years", /\b7 Years\b/.test(reconciled));
   check("reconciled title downgrades Them -> Him", /Caught Him\b/.test(reconciled) && !/Caught Them\b/.test(reconciled));
   check("brand (Spotify) preserved", /Spotify/.test(reconciled));
@@ -123,6 +125,41 @@ console.log("title reconciliation vs researched facts:");
   // Conservatism: unnamed/no-charge facts keep the generic 'Them' and the placeholder time.
   const vague = reconcileTitle("After 4 Years Spotify Finally Caught Them..", "Some accounts were involved in a streaming pattern. No one was named.");
   check("keeps 'Them' and placeholder when the record is thin", /Caught Them\b/.test(vague) && /\b4 Years\b/.test(vague));
+}
+
+console.log("over-cutting invariant (net cut <= what the bounded refill can rebuild):");
+{
+  // THE anti-oscillation lock. If the deterministic cut passes remove more than a 2-call refill can
+  // restore, the script lands short every run and the refill churns trying to catch up (the short<->
+  // slow oscillation). Assert the net cut on a repetition-heavy, named-subject body stays within the
+  // refill's rebuild capacity, AND that the primary charged subject is exempt from the person-id cut.
+  const MAX_NET_CUT = 2 * REFILL_RESTORE_WORDS_PER_CALL; // 2 calls x ~450 words
+  const subject = "Michael Smith";
+  const subjectFacts = "Michael Smith pleaded guilty to running the fraud. Michael Smith built the accounts.";
+  // A body that mentions the charged subject many times (person-id must NOT touch these) plus a
+  // figure repeated exactly 3 times in distinct sentences (repetition must NOT collapse at 3).
+  const body = [
+    "Michael Smith ran the operation from a bedroom in Cornelius.",
+    "Michael Smith registered thousands of cloud accounts to stream his own songs.",
+    "The catalog generated 88 million streams in its biggest month.",
+    "Those 88 million streams translated into a six-figure payout that month.",
+    "By the end, the 88 million monthly streams had become the signature of the whole scheme.",
+    "Michael Smith kept the operation quiet even as the numbers climbed.",
+    "Investigators eventually traced the money back to Michael Smith.",
+  ].join("\n\n");
+  const wordsIn = body.split(/\s+/).filter(Boolean).length;
+  let cut = body;
+  cut = dedupeAdjacentParagraphs(cut).text;
+  cut = collapseRepeatedAnchors(cut).text;
+  cut = stripUnnamedPartyNaming(cut, subject).text;
+  const wordsOut = cut.split(/\s+/).filter(Boolean).length;
+  check("primarySubjectName finds the charged subject", primarySubjectName(subjectFacts) === subject);
+  check("person-id does NOT cut the exempt charged subject", stripUnnamedPartyNaming(body, subject).cuts.length === 0);
+  check("repetition keeps a figure used 3x in distinct sentences", (() => {
+    const c = collapseRepeatedAnchors(body).cuts.length;
+    return c === 0; // 3 distinct-sentence mentions are below the aggressive 4+ collapse bar
+  })());
+  check(`net cut (${wordsIn - wordsOut}w) within refill rebuild capacity (${MAX_NET_CUT}w)`, wordsIn - wordsOut <= MAX_NET_CUT);
 }
 
 console.log(failures === 0 ? "\nALL PASS" : `\n${failures} FAILURE(S)`);

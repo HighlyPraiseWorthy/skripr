@@ -200,12 +200,43 @@ const _NAME = "[A-Z][a-zA-Z.'’-]+(?:\\s+[A-Z][a-zA-Z.'’-]+)+";
 const UNNAMED_ID_RE_A = new RegExp(`\\b(?:the )?${_DESIG}\\b[^.]{0,30}?(?:\\bwas\\b|\\bis\\b|\\bwere\\b|identified as|turned out to be|revealed to be|none other than|namely|,\\s*)\\s*(${_NAME})`, "i");
 const UNNAMED_ID_RE_B = new RegExp(`(${_NAME})\\b[^.]{0,35}?(?:\\bwas\\b|\\bis\\b|,\\s*(?:the\\s+)?)\\s*(?:the\\s+)?${_DESIG}\\b`, "i");
 export function namesAnUnnamedParty(s: string): boolean { return UNNAMED_ID_RE_A.test(s || "") || UNNAMED_ID_RE_B.test(s || ""); }
-export function stripUnnamedPartyNaming(text: string): { text: string; cuts: string[] } {
+// The name a matching sentence equates to a designation (RE_A: name is group 1; RE_B: name is group 1).
+function equatedName(s: string): string | null {
+  const clean = (n: string) => n.replace(/[.\s]+$/, "").trim(); // _NAME can capture a trailing period
+  const a = (s || "").match(UNNAMED_ID_RE_A); if (a && a[1]) return clean(a[1]);
+  const b = (s || "").match(UNNAMED_ID_RE_B); if (b && b[1]) return clean(b[1]);
+  return null;
+}
+// The PRIMARY subject of the story: the proper name that recurs most and co-occurs with a charge/
+// conviction verb. A public, charged/convicted person (Michael Smith pleaded guilty) is NOT an
+// "unnamed party" — describing them is not insinuation — so the person-id guard must EXEMPT them.
+export function primarySubjectName(facts: string | undefined): string | null {
+  if (!facts) return null;
+  const CHARGE = /\b(?:pleaded? guilty|plead(?:ed)? guilty|convicted|indicted|charged|sentenced|arrested|found guilty)\b/i;
+  const counts = new Map<string, number>();
+  for (const m of facts.matchAll(/\b[A-Z][a-z]+\s+[A-Z][a-z]+\b/g)) counts.set(m[0], (counts.get(m[0]) || 0) + 1);
+  let best: string | null = null, bestScore = 0;
+  for (const [name, n] of counts) {
+    // require the name to sit near a charge verb at least once, and score by frequency
+    const near = [...facts.matchAll(new RegExp(`\\b${name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "g"))]
+      .some((mm) => CHARGE.test(facts.slice(Math.max(0, (mm.index || 0) - 60), (mm.index || 0) + 60)));
+    if (near && n > bestScore) { best = name; bestScore = n; }
+  }
+  return best;
+}
+export function stripUnnamedPartyNaming(text: string, exemptName?: string | null): { text: string; cuts: string[] } {
   if (!text) return { text, cuts: [] };
   const cuts: string[] = [];
+  const exempt = (exemptName || "").trim().toLowerCase();
   const outParas = text.split(/\n\n+/).map((p) => {
     const kept = splitSentences(p).filter((s) => {
-      if (namesAnUnnamedParty(s)) { cuts.push(s.trim()); return false; }
+      if (namesAnUnnamedParty(s)) {
+        // EXEMPT the primary charged/convicted subject — equating a designation to the public
+        // defendant (or a sentence that merely mentions them) is not the defamation this guard is for.
+        const name = equatedName(s);
+        if (exempt && name && name.toLowerCase() === exempt) return true;
+        cuts.push(s.trim()); return false;
+      }
       return true;
     });
     return kept.join(" ").trim();
@@ -520,9 +551,24 @@ function durationYears(s: string): number | null {
 // thin or single-year fact set. Shared by the title reconciler and the body-duration backstop.
 export function researchedYearSpan(facts: string | undefined): number | null {
   if (!facts) return null;
-  const years = (facts.match(/\b(19[5-9]\d|20[0-4]\d)\b/g) || []).map(Number);
-  if (years.length < 2) return null;
-  const span = Math.max(...years) - Math.min(...years);
+  // The title span is the SCHEME's duration — start year to the year it was STOPPED (arrest / charge /
+  // indictment / raid). Post-arrest legal-milestone years (a 2026 guilty plea or sentencing) are NOT
+  // part of how long the fraud ran, and including them inflated 2017-2024 into a "9-year" title. So
+  // exclude a year whose immediate context is a plea/sentencing/conviction milestone.
+  const POST_ARREST = /\b(?:plead(?:ed|s)?\s+guilty|guilty\s+plea|sentenc\w*|will (?:be )?sentenc\w*|awaiting sentenc\w*|convicted|conviction)\b/i;
+  const YEAR_RE = /\b(19[5-9]\d|20[0-4]\d)\b/g;
+  const all: number[] = (facts.match(YEAR_RE) || []).map(Number);
+  if (all.length < 2) return null;
+  // Exclude a year that appears in a SENTENCE whose meaning is a post-arrest legal milestone (plea /
+  // sentencing / conviction) — that year is not part of how long the scheme RAN. Sentence-scoped, so
+  // a plea sentence can't taint the arrest year in the sentence before it.
+  const scheme: number[] = [];
+  for (const sent of facts.split(/(?<=[.!?])\s+/)) {
+    if (POST_ARREST.test(sent)) continue;
+    for (const y of (sent.match(YEAR_RE) || [])) scheme.push(Number(y));
+  }
+  const pool = scheme.length >= 2 ? scheme : all; // fall back if exclusion left too little
+  const span = Math.max(...pool) - Math.min(...pool);
   return span >= 1 && span <= 40 ? span : null;
 }
 
@@ -763,11 +809,13 @@ export function collapseRepeatedAnchors(text: string): { text: string; cuts: str
         const byLen = [...occ].sort((a, b) => flat[b].s.length - flat[a].s.length);
         const keepArr = byLen.slice(0, 2); // keep the two most elaborated occurrences
         const keep = new Set(keepArr);
-        // CAP AT FIRST MENTION + ONE CALLBACK. A figure stated 3+ times is padding however it is
-        // dressed, so keep the 2 most elaborated and cut ALL the rest — even long distinct-looking
-        // sentences (the "661,440 six times" / "$10M three times" cases that slipped the
-        // conservative per-cut check).
-        const heavy = occ.length >= 3;
+        // CAP: keep the 2 most elaborated occurrences. The AGGRESSIVE cut (removing even long,
+        // distinct-looking sentences that merely carry the anchor) only kicks in at 4+ occurrences —
+        // at exactly 3 we fall back to the conservative per-cut check (bare beat / near-duplicate
+        // only), so a figure woven into 3 genuinely-different sentences is left intact. Raised from
+        // >=3: the old bar cut ~96 sentences/run, more than the bounded refill could rebuild, which
+        // was a root cause of the chronic "shortfall" oscillation.
+        const heavy = occ.length >= 4;
         for (const k of occ) {
           if (keep.has(k)) { protectKeep.add(k); continue; }
           if (!heavy && !cutEligible(k, keepArr)) continue;

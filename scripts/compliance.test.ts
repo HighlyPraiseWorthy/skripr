@@ -527,9 +527,12 @@ const distinctUse = [
   filler2[2],
   "Spotify's own abuse team, which reviews 661,440-scale anomalies routinely, somehow never escalated this one to a human for years.",
 ].join("\n\n");
-// NOTE: the contract changed — a figure is now capped at first mention + one callback even across
-// distinct sentences (3+ restatement is padding), so 3 distinct uses collapse to 2.
-check("a figure used 3x across distinct long sentences is capped at 2", (collapseRepeatedAnchors(distinctUse).text.match(/661,440/g) || []).length <= 2);
+// CONTRACT (recalibrated): the AGGRESSIVE cap (removing even long, distinct sentences) kicks in only
+// at 4+ occurrences; at exactly 3 distinct long uses the figure is KEPT (over-collapsing was cutting
+// ~96 sentences/run, more than the bounded refill could rebuild). A 4th occurrence triggers the cap.
+check("a figure used 3x across distinct long sentences is KEPT (all 3)", (collapseRepeatedAnchors(distinctUse).text.match(/661,440/g) || []).length === 3);
+const distinctUse4 = distinctUse + "\n\nEven after the case closed, that 661,440-a-day figure kept surfacing in every retrospective written about the fraud.";
+check("a figure used 4x IS capped at 2", (collapseRepeatedAnchors(distinctUse4).text.match(/661,440/g) || []).length <= 2);
 
 console.log("inference / speculation-as-fact guard:");
 const spec = (s: string) => stripSpeculation("He was charged with wire fraud in 2024. " + s + " The court ordered a forfeiture.");
@@ -654,7 +657,7 @@ const thrice = [
   "To picture 661,440 daily plays, imagine an arena selling out forty times before lunch, every day.",
   "Spotify's abuse team, which reviews 661,440-scale anomalies, somehow never escalated this to a human.",
 ].join("\n\n");
-check("a figure stated 3x is capped at first mention + one callback", (collapseRepeatedAnchors(thrice).text.match(/661,440/g) || []).length <= 2);
+check("a figure stated 3x across distinct long sentences is kept (all 3)", (collapseRepeatedAnchors(thrice).text.match(/661,440/g) || []).length === 3);
 
 // Abbreviation-atomic sentence split — a cut removes the WHOLE sentence, no "Former U.S." orphan.
 console.log("abbreviation-atomic cuts:");

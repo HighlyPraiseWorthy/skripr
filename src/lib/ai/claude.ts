@@ -1,7 +1,7 @@
 import { Anthropic } from "@anthropic-ai/sdk";
 import { fingerprintToBrief, readProhibitions, stripStandaloneTics, type VoiceFingerprint } from "@/lib/voice-metrics";
 import { buildStorytellingBlock } from "@/lib/storytelling";
-import { stripInsinuations, stripUnnamedPartyNaming, stripSpeculation, stripImpliedRevelation, dedupeAdjacentParagraphs, stripDuplicateHook, collapseRepeatedAnchors, stripSchemeDurationClaim, stripStaleFutureDates, stripSourceLeaks, mergeOrphanFragments, correctDatesToFacts, stripUnitConflation, stripInventedInference, flagOverstatementRisk, splitSentences, stripLeakedLabels, stripFalseEquality, stripUnsourcedStat, researchedYearSpan } from "@/lib/script-compliance";
+import { stripInsinuations, stripUnnamedPartyNaming, stripSpeculation, stripImpliedRevelation, dedupeAdjacentParagraphs, stripDuplicateHook, collapseRepeatedAnchors, stripSchemeDurationClaim, stripStaleFutureDates, stripSourceLeaks, mergeOrphanFragments, correctDatesToFacts, stripUnitConflation, stripInventedInference, flagOverstatementRisk, splitSentences, stripLeakedLabels, stripFalseEquality, stripUnsourcedStat, researchedYearSpan, primarySubjectName } from "@/lib/script-compliance";
 import { buildVarietyBlock } from "@/lib/ai/phrase-variety";
 
 let _anthropic: Anthropic | null = null;
@@ -78,6 +78,10 @@ export interface ScriptGenerationInput {
   // The title the user explicitly chose (e.g. by picking an angle card). When
   // set, it LOCKS the title — generation must use it as-is, not invent its own.
   selectedTitle?: string;
+  // Epoch ms when the HTTP request began, so the finalize deadline is measured from ROUTE start (which
+  // includes section-writing time in the one-shot path), not from finalize start. Optional; falls back
+  // to the finalize start time when absent.
+  routeStartedAt?: number;
   // Freeform creator instruction on HOW the story is told (casting, staging, tone,
   // where to aim the climax). Shapes craft only; it can never override accuracy.
   directorNote?: string;
@@ -844,8 +848,12 @@ export function factNoveltyScore(fact: string): number {
 // body beats a timed-out request.
 const MAX_REFILL_CALLS = 2;
 const MAX_REFILL_MS = 70_000;
+export const REFILL_RESTORE_WORDS_PER_CALL = 450; // the ~envelope one refill call can rebuild
 type RefillResult = { text: string; status: "ok" | "shortfall" };
 async function extendWithUnusedFacts(fullScript: string, factsBlob: string, targetWords: number, startedAt: number, deadline: number): Promise<RefillResult> {
+  // SHED A CALL WHEN THE ROUTE BUDGET IS NEARLY SPENT: each call is ~35s, so allow the full 2 only
+  // when >140s remain; with less, cap at 1 so refill can never push the request past the deadline.
+  const maxCalls = (deadline - Date.now()) > 140_000 ? MAX_REFILL_CALLS : 1;
   const count = (s: string) => s.split(/\s+/).filter(Boolean).length;
   const facts = parseFactList(factsBlob);
   const refillStart = Date.now();
@@ -856,7 +864,7 @@ async function extendWithUnusedFacts(fullScript: string, factsBlob: string, targ
   const addedBeats: string[] = []; // the new fact-beats, collected so they can be WOVEN, not tailed
   const report = (status: RefillResult["status"]) => console.log(`[expand] invoked=true parsedFacts=${facts.length} unusedFacts=${unusedAtStart} calls=${calls} stoppedBecause=${stoppedBecause} startWords=${count(fullScript)} finalWords=${count(body)} target=${targetWords} status=${status}`);
   if (facts.length < 3) { stoppedBecause = "too-few-facts"; report("shortfall"); return { text: fullScript, status: "shortfall" }; }
-  for (calls = 0; calls < MAX_REFILL_CALLS; ) {
+  for (calls = 0; calls < maxCalls; ) {
     const w = count(body);
     if (w >= targetWords * 0.92) { stoppedBecause = "length-reached"; break; }
     if (Date.now() - refillStart > MAX_REFILL_MS) { stoppedBecause = "refill-time-budget"; break; }
@@ -1383,7 +1391,11 @@ export async function finalizeScript(
   // minimum run time still fits. If it doesn't, we SKIP that stage and mark the pipeline DEGRADED —
   // a script missing one polish stage beats a lost request. Any stage that fails (e.g. an unparseable
   // JSON reply) also marks DEGRADED and logs LOUDLY; a stage NEVER fails into a silent SUCCESS.
-  const DEADLINE = startedAt + 270_000;
+  // Measured from ROUTE start when the caller provides it (the one-shot path spends ~70-80s writing
+  // sections BEFORE finalize, and a finalize-scoped deadline let the whole request drift to ~292s).
+  // 255s from route start leaves a 45s hard margin under the 300s cap.
+  const routeStart = input.routeStartedAt && input.routeStartedAt > 0 ? input.routeStartedAt : startedAt;
+  const DEADLINE = routeStart + 255_000;
   const pipeline: { status: "SUCCESS" | "DEGRADED"; skipped: string[]; failed: string[] } = {
     status: "SUCCESS", skipped: [], failed: [],
   };
@@ -1410,6 +1422,7 @@ export async function finalizeScript(
     (script as any).title = reconcileTitle((script as any).title, input.sourceMaterial);
   }
   const researchedSpan = researchedYearSpan(input.sourceMaterial);
+  const subjectName = primarySubjectName(input.sourceMaterial); // exempt from the person-id guard
 
   const bodyKey = ["fullScript", "script", "body", "content"].find(
     (k) => typeof (script as any)[k] === "string" && (script as any)[k].trim().length > 0,
@@ -1645,7 +1658,7 @@ export async function finalizeScript(
   // company. The deeper mining surfaces real names next to "CC-N" designations, so this guard
   // matters more now — a named living person identified as an uncharged co-conspirator must not
   // reach the finished script.
-  applyBodyPass(stripUnnamedPartyNaming, "person-id");
+  applyBodyPass((t) => stripUnnamedPartyNaming(t, subjectName), "person-id");
   // Seam cleanup runs LAST, after the cuts, so any fragment a cut left stranded is folded back in.
   applyBodyPass(mergeOrphanFragments, "seam");
 
@@ -1730,7 +1743,7 @@ export async function finalizeScript(
         filled = stripInsinuations(filled).text;
         filled = stripSpeculation(filled).text;
         filled = stripInventedInference(filled).text; // refill is where invented roles/motives appear
-        filled = stripUnnamedPartyNaming(filled).text;
+        filled = stripUnnamedPartyNaming(filled, subjectName).text;
         for (const k of ["fullScript", "script", "body", "content"]) {
           if (typeof (script as any)[k] === "string") (script as any)[k] = filled;
         }

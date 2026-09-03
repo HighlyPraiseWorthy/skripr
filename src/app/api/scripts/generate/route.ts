@@ -90,6 +90,7 @@ async function handleSectionMode(userId: string, raw: any) {
 }
 
 export async function POST(req: Request) {
+  const routeStartedAt = Date.now(); // for the finalize deadline (measured from ROUTE start)
   const { userId } = await auth();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
@@ -337,6 +338,7 @@ export async function POST(req: Request) {
       selectedTitle: typeof selectedTitle === "string" && selectedTitle.trim() ? selectedTitle.trim() : undefined,
       directorNote: typeof directorNote === "string" && directorNote.trim() ? directorNote.trim() : undefined,
       sourceEntities: Array.isArray(sourceEntities) ? sourceEntities.filter((e: any) => typeof e === "string") : undefined,
+      routeStartedAt,
     };
 
     // PLAN mode: the head of a chunked build. Return the presetHook (one cheap hook call) and the
