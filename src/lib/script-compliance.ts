@@ -243,6 +243,15 @@ export function looksLikeSpeculation(s: string): boolean { return SPECULATION_RE
 // to essentially everything".
 export const INVENTED_INFERENCE_RE = /\b(?:(?:the )?(?:publicist|promoter|manager|distributor|executive|producer|accountant|attorney|lawyer|partner|collaborator)\b[^.]{0,35}?\b(?:provides?|provided|supplies|supplied|handles?|handled|brings?|brought|is|was|means?|meant)\b[^.]{0,35}?\b(?:legitimacy|cover|the surface|placement|access|credibility|distribution|the front|plausibility|respectability)\b|(?:apparently|seemingly|evidently|presumably|either)\s+(?:unaware|unconcerned|indifferent|oblivious|untroubled)\b|\b(?:unaware|unconcerned|oblivious)\b\s*,?\s*or\s+(?:unaware|unconcerned|indifferent|oblivious)\b|(?:someone|somebody|investigators?|analysts?|agents?|they)\b[^.]{0,40}?\b(?:had to|would have had to|must have)\b[^.]{0,30}?\b(?:line by line|record by record|one by one|by hand|entry by entry)\b|\b(?:reflects?|shows?|traces?|maps?)\b[^.]{0,45}?\b(?:expanding|growing|scaling|compounding)\b[^.]{0,25}?\byear over year\b|\banswers? to (?:essentially|virtually|almost|nearly) everything\b|\b(?:a |his |the )?(?:spreadsheet|excel (?:file|sheet)|cloud dashboard|dashboard|control panel|command center)\b[^.]{0,40}?\b(?:track\w*|log\w*|record\w*|monitor\w*|manage\w*|show\w*|listing|tallied|every)\b)/i;
 export function looksLikeInventedInference(s: string): boolean { return INVENTED_INFERENCE_RE.test(s || ""); }
+
+// CERTAINTY-DISCIPLINE — STAGE 1 (deterministic pre-filter, FLAG only, NEVER edit). The Dramatic
+// Truth Rule: a sentence may intensify emotion, imagery, contrast, pacing, and narrative implication
+// freely, but NOT the evidence's scope, certainty, causation, exclusivity, quantity, or knowledge/
+// intent. This regex is intentionally LIBERAL — it only decides which sentences a downstream LLM
+// judge looks at against the approved facts. It must not itself cut or swap words (that would gut the
+// voice); metaphor and contrast are judged, never auto-removed. Cheap, runs on every sentence.
+const OVERSTATEMENT_FLAG_RE = /\b(?:every|all|none|no one|not a single|never|always|only|completely|entirely|nothing|everything|first(?: ever)?|last|largest|biggest|unprecedented|never before|in history|proved|confirmed|definitely|certainly|undeniably|without question|no doubt|the industry|the platforms?|everyone|nobody|law enforcement|investigators|the public|caused|led directly to|resulted in|therefore|which meant|ensured|guaranteed)\b/i;
+export function flagOverstatementRisk(sentence: string): boolean { return OVERSTATEMENT_FLAG_RE.test(sentence || ""); }
 export function stripInventedInference(text: string): { text: string; cuts: string[] } {
   if (!text) return { text, cuts: [] };
   const cuts: string[] = [];

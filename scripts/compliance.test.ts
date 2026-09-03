@@ -1,7 +1,7 @@
 // Offline test for the post-generation compliance check, using the real shapes from the
 // session: the final Queen script (should largely pass) vs. an early flat draft.
 //   node --experimental-strip-types --loader ./scripts/alias-loader.mjs scripts/compliance.test.ts
-import { checkCompliance, complianceScore, structuralScore, checkSourceStructural, accuracyChecks, STRUCTURAL_SET, stripInsinuations, stripUnnamedPartyNaming, stripSpeculation, stripImpliedRevelation, dedupeAdjacentParagraphs, stripDuplicateHook, collapseRepeatedAnchors, stripSchemeDurationClaim, stripStaleFutureDates, stripSourceLeaks, mergeOrphanFragments, correctDatesToFacts, stripUnitConflation, stripInventedInference } from "../src/lib/script-compliance.ts";
+import { checkCompliance, complianceScore, structuralScore, checkSourceStructural, accuracyChecks, STRUCTURAL_SET, stripInsinuations, stripUnnamedPartyNaming, stripSpeculation, stripImpliedRevelation, dedupeAdjacentParagraphs, stripDuplicateHook, collapseRepeatedAnchors, stripSchemeDurationClaim, stripStaleFutureDates, stripSourceLeaks, mergeOrphanFragments, correctDatesToFacts, stripUnitConflation, stripInventedInference, flagOverstatementRisk } from "../src/lib/script-compliance.ts";
 
 let failures = 0;
 function check(name: string, cond: boolean) {
@@ -690,6 +690,18 @@ check("records a repetition cut for the quote", qrep.cuts.some((c) => /repetitio
 const platformLine = "the songs were spread across Spotify, Apple Music, Amazon Music, and YouTube to avoid detection";
 const listRepeat = [`${platformLine} in the first phase.`, between(1), `Again, ${platformLine} throughout 2019.`, between(2), `${platformLine}, the same four services every time.`, between(3), `${platformLine}, right up to the end.`].join("\n\n");
 check("a four-platform enumeration repeated 4x is capped at 2", (collapseRepeatedAnchors(listRepeat).text.match(/spotify, apple music, amazon music, and youtube/gi) || []).length <= 2);
+
+// CERTAINTY DISCIPLINE — Stage 1 flag (deterministic pre-filter; over-flags by design, the LLM judge
+// decides keep-vs-rewrite). Only the six risk dimensions trip it; the judge protects the sexy.
+console.log("certainty-discipline stage-1 flag:");
+check("flags an absolute-scope claim", flagOverstatementRisk("Every distributor raised the alarm and none were heard.") === true);
+check("flags a historical superlative", flagOverstatementRisk("It was the first scheme of its kind in history.") === true);
+check("flags a causal escalator", flagOverstatementRisk("The AI songs directly caused the royalty pool to collapse.") === true);
+check("flags a universal-institution claim", flagOverstatementRisk("The industry never saw it coming.") === true);
+// Metaphor / contrast / plain sourced statements do NOT trip Stage 1 (nothing to judge).
+check("does NOT flag a metaphor", flagOverstatementRisk("The operation became a factory for fake plays.") === false);
+check("does NOT flag a contrast line", flagOverstatementRisk("The streams were fake. The money was real.") === false);
+check("does NOT flag a plainly sourced sentence", flagOverstatementRisk("In January 2024 he pleaded guilty and agreed to forfeit $8,091,843.64.") === false);
 
 console.log(failures === 0 ? "\nALL PASS" : `\n${failures} FAILURE(S)`);
 process.exit(failures === 0 ? 0 : 1);

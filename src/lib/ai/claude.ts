@@ -1,7 +1,7 @@
 import { Anthropic } from "@anthropic-ai/sdk";
 import { fingerprintToBrief, readProhibitions, stripStandaloneTics, type VoiceFingerprint } from "@/lib/voice-metrics";
 import { buildStorytellingBlock } from "@/lib/storytelling";
-import { stripInsinuations, stripUnnamedPartyNaming, stripSpeculation, stripImpliedRevelation, dedupeAdjacentParagraphs, stripDuplicateHook, collapseRepeatedAnchors, stripSchemeDurationClaim, stripStaleFutureDates, stripSourceLeaks, mergeOrphanFragments, correctDatesToFacts, stripUnitConflation, stripInventedInference } from "@/lib/script-compliance";
+import { stripInsinuations, stripUnnamedPartyNaming, stripSpeculation, stripImpliedRevelation, dedupeAdjacentParagraphs, stripDuplicateHook, collapseRepeatedAnchors, stripSchemeDurationClaim, stripStaleFutureDates, stripSourceLeaks, mergeOrphanFragments, correctDatesToFacts, stripUnitConflation, stripInventedInference, flagOverstatementRisk, splitSentences } from "@/lib/script-compliance";
 import { buildVarietyBlock } from "@/lib/ai/phrase-variety";
 
 let _anthropic: Anthropic | null = null;
@@ -1582,6 +1582,21 @@ export async function finalizeScript(
     console.log(`[refill] skipped reason=${why}`);
   }
 
+  // CERTAINTY DISCIPLINE runs LAST, on the FINAL assembled body (including the woven refill beats,
+  // which is where overstatement lands): flag scope/certainty/causation risks, judge each against
+  // the facts, rewrite only the unsupported ones AROUND their true core — keeping the punch.
+  const certKey = ["fullScript", "script", "body", "content"].find(
+    (k) => typeof (script as any)[k] === "string" && (script as any)[k].trim().length > 0,
+  );
+  if (certKey && input.sourceMaterial && input.sourceMaterial.trim()) {
+    const judged = await applyCertaintyDiscipline((script as any)[certKey] as string, input.sourceMaterial, startedAt);
+    if (judged && judged !== (script as any)[certKey]) {
+      for (const k of ["fullScript", "script", "body", "content"]) {
+        if (typeof (script as any)[k] === "string") (script as any)[k] = judged;
+      }
+    }
+  }
+
   return script;
 }
 
@@ -1648,6 +1663,66 @@ HARD RULES: This is a SURGICAL edit — change as LITTLE as possible. The vast m
     return out;
   } catch (e) {
     console.error("[refine] semantic pass failed, keeping original:", (e as any)?.message);
+    return body;
+  }
+}
+
+// CERTAINTY-DISCIPLINE pass (the "Dramatic Truth Rule") — STAGES 2+3. Clears the accuracy ceiling
+// WITHOUT flattening the voice: it never swaps absolute words. Stage 1 (flagOverstatementRisk) is a
+// cheap deterministic pre-filter that only marks candidate sentences; this pass sends ONLY the
+// flagged sentences to a judge that, against the approved FACTS, KEEPs a sentence whose propositions
+// are supported/entailed (or are pure metaphor/contrast/framing) and REWRITEs one that intensifies
+// scope/certainty/causation/exclusivity/quantity/knowledge beyond the facts — rewriting AROUND the
+// true core so the dramatic proposition survives (often more memorable). Runs on the FINAL assembled
+// body (after refill/weave), which is where overstatement lands. One LLM round-trip; heavily guarded.
+async function applyCertaintyDiscipline(body: string, facts: string, startedAt: number): Promise<string> {
+  if (!body || !body.trim() || !facts || !facts.trim()) return body;
+  if (Date.now() - startedAt > 250_000) return body;
+  const paras = body.split(/\n\n+/);
+  // Flatten to sentences, tagging each with an id, and collect the flagged ones for the judge.
+  type Sent = { pi: number; si: number; text: string };
+  const all: Sent[] = [];
+  const sentsByPara: string[][] = paras.map((p) => splitSentences(p));
+  sentsByPara.forEach((ss, pi) => ss.forEach((text, si) => all.push({ pi, si, text })));
+  const flagged = all.filter((s) => flagOverstatementRisk(s.text)).slice(0, 30); // bound the batch
+  if (!flagged.length) { console.log("[certainty] no flagged sentences"); return body; }
+  try {
+    const resp = await getAnthropic().messages.create({
+      model: "claude-sonnet-4-6",
+      max_tokens: 4000,
+      temperature: 0.3,
+      system: `You enforce the DRAMATIC TRUTH RULE on flagged documentary sentences. A sentence may intensify emotion, imagery, contrast, pacing, and narrative IMPLICATION freely. It may NOT intensify the evidence's SCOPE, CERTAINTY, CAUSATION, EXCLUSIVITY, QUANTITY, or KNOWLEDGE/INTENT beyond the approved facts. For each sentence: identify its factual propositions; if all are directly supported OR reasonably inferable WITHOUT enlarging scope/certainty — or the intensity is pure metaphor, rhetorical contrast, vivid description, or narrative framing a reasonable viewer would NOT read as a factual claim — return KEEP. Otherwise return REWRITE: find the strongest TRUE proposition underneath, and rewrite AROUND it preserving the rhythm and the dramatic effect. NEVER flatten to a dry hedge, NEVER just swap "every"->"some", NEVER add a new fact. The accurate version should be as punchy as the original. Output ONLY JSON: {"results":[{"i":<index>,"action":"KEEP"|"REWRITE","rewrite":"<new sentence, only if REWRITE>"}]}.`,
+      messages: [{
+        role: "user",
+        content: `APPROVED FACTS (the only established truth):\n"""\n${facts.slice(0, 8000)}\n"""\n\nFLAGGED SENTENCES:\n${flagged.map((s, i) => `${i}. ${s.text}`).join("\n")}\n\nJudge each by the Dramatic Truth Rule and output the JSON.`,
+      }],
+    });
+    const c = resp.content[0];
+    const raw = c.type === "text" ? c.text : "";
+    const m = raw.match(/\{[\s\S]*\}/);
+    const parsed = m ? JSON.parse(m[0]) : null;
+    const results: any[] = Array.isArray(parsed?.results) ? parsed.results : [];
+    let rewrites = 0;
+    for (const r of results) {
+      if (r?.action !== "REWRITE") continue;
+      const idx = Number(r.i);
+      const rw = typeof r.rewrite === "string" ? r.rewrite.trim() : "";
+      if (!Number.isInteger(idx) || idx < 0 || idx >= flagged.length) continue;
+      if (!rw || rw.length < 8) continue;
+      // Guard: a rewrite should be a comparable-length recast, not a balloon (invention) or a stub.
+      const orig = flagged[idx].text;
+      if (rw.length > orig.length * 2.2) continue;
+      const tgt = flagged[idx];
+      if (sentsByPara[tgt.pi] && sentsByPara[tgt.pi][tgt.si] === orig) { sentsByPara[tgt.pi][tgt.si] = rw; rewrites++; }
+    }
+    if (!rewrites) { console.log(`[certainty] flagged=${flagged.length} rewrites=0 (all KEEP)`); return body; }
+    const rebuilt = sentsByPara.map((ss) => ss.join(" ").trim()).filter(Boolean).join("\n\n");
+    // Never let the pass gut the script; a certainty recast is length-neutral-ish.
+    if (rebuilt.split(/\s+/).filter(Boolean).length < body.split(/\s+/).filter(Boolean).length * 0.75) return body;
+    console.log(`[certainty] flagged=${flagged.length} rewrites=${rewrites}`);
+    return rebuilt;
+  } catch (e) {
+    console.error("[certainty] pass failed, keeping original:", (e as any)?.message);
     return body;
   }
 }
