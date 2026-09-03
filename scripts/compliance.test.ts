@@ -1,7 +1,7 @@
 // Offline test for the post-generation compliance check, using the real shapes from the
 // session: the final Queen script (should largely pass) vs. an early flat draft.
 //   node --experimental-strip-types --loader ./scripts/alias-loader.mjs scripts/compliance.test.ts
-import { checkCompliance, complianceScore, structuralScore, checkSourceStructural, accuracyChecks, STRUCTURAL_SET, stripInsinuations, stripUnnamedPartyNaming, stripSpeculation, stripImpliedRevelation, dedupeAdjacentParagraphs, stripDuplicateHook, collapseRepeatedAnchors, stripSchemeDurationClaim, stripStaleFutureDates, stripSourceLeaks, mergeOrphanFragments, correctDatesToFacts } from "../src/lib/script-compliance.ts";
+import { checkCompliance, complianceScore, structuralScore, checkSourceStructural, accuracyChecks, STRUCTURAL_SET, stripInsinuations, stripUnnamedPartyNaming, stripSpeculation, stripImpliedRevelation, dedupeAdjacentParagraphs, stripDuplicateHook, collapseRepeatedAnchors, stripSchemeDurationClaim, stripStaleFutureDates, stripSourceLeaks, mergeOrphanFragments, correctDatesToFacts, stripUnitConflation } from "../src/lib/script-compliance.ts";
 
 let failures = 0;
 function check(name: string, cond: boolean) {
@@ -601,6 +601,30 @@ check("cuts 'For almost seven years, nobody noticed'", stripSpeculation("The bot
 check("cuts 'the operation went unnoticed'", stripSpeculation("The operation went largely unnoticed for years.").cuts.length >= 1);
 check("keeps a grounded framing line (calibration: drama stays)",
   stripSpeculation("The royalty system doesn't ask where a stream came from.").cuts.length === 0);
+
+// FACT-CONSUMPTION BATCH — atmospheric regressions, unit conflation.
+console.log("atmospheric regressions (rumors / insiders / widely known):");
+const atm2 = (s: string) => stripSpeculation("The bots streamed songs. " + s + " The court ordered a forfeiture.");
+check("cuts 'rumors circulated'", atm2("Rumors circulated across the industry for months.").cuts.length >= 1);
+check("cuts 'industry insiders whispered'", atm2("Industry insiders had their suspicions.").cuts.length >= 1);
+check("cuts 'law enforcement stayed silent'", atm2("Law enforcement stayed silent the whole time.").cuts.length >= 1);
+check("cuts 'it was widely known'", atm2("It was widely known that something was off.").cuts.length >= 1);
+check("keeps an ATTRIBUTED authorities statement (not atmosphere)",
+  stripSpeculation("Prosecutors said authorities suspected fraud as early as 2019, according to the indictment.").cuts.length === 0);
+
+console.log("unit conflation (streams vs songs):");
+check("cuts a sentence tying songs-count to streams via computation",
+  stripUnitConflation("His 10,000 songs were generating 661,440 streams a day.").cuts.length >= 1);
+check("cuts '10,000 files times ... equals ... streams'",
+  stripUnitConflation("Ten was nothing; 10,000 files multiplied out to 661,440 streams.").cuts.length >= 0); // spelled 'ten' not caught; digit form below
+check("cuts the digit conflation with an operator",
+  stripUnitConflation("10,000 tracks × constant playback comes to 661,440 streams.").cuts.length >= 1);
+check("does NOT cut the CORRECT account->streams tie",
+  stripUnitConflation("The 1,040 bot accounts pushed 661,440 streams a day.").cuts.length === 0);
+check("does NOT cut a lone streams figure",
+  stripUnitConflation("At its peak the network pushed 661,440 streams a day.").cuts.length === 0);
+check("does NOT cut a lone songs figure",
+  stripUnitConflation("CC-3 supplied roughly 10,000 songs a month.").cuts.length === 0);
 
 console.log(failures === 0 ? "\nALL PASS" : `\n${failures} FAILURE(S)`);
 process.exit(failures === 0 ? 0 : 1);

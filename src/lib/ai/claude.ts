@@ -1,7 +1,7 @@
 import { Anthropic } from "@anthropic-ai/sdk";
 import { fingerprintToBrief, readProhibitions, stripStandaloneTics, type VoiceFingerprint } from "@/lib/voice-metrics";
 import { buildStorytellingBlock } from "@/lib/storytelling";
-import { stripInsinuations, stripUnnamedPartyNaming, stripSpeculation, stripImpliedRevelation, dedupeAdjacentParagraphs, stripDuplicateHook, collapseRepeatedAnchors, stripSchemeDurationClaim, stripStaleFutureDates, stripSourceLeaks, mergeOrphanFragments, correctDatesToFacts } from "@/lib/script-compliance";
+import { stripInsinuations, stripUnnamedPartyNaming, stripSpeculation, stripImpliedRevelation, dedupeAdjacentParagraphs, stripDuplicateHook, collapseRepeatedAnchors, stripSchemeDurationClaim, stripStaleFutureDates, stripSourceLeaks, mergeOrphanFragments, correctDatesToFacts, stripUnitConflation } from "@/lib/script-compliance";
 import { buildVarietyBlock } from "@/lib/ai/phrase-variety";
 
 let _anthropic: Anthropic | null = null;
@@ -753,6 +753,20 @@ export function factIsUsed(fact: string, bodyLc: string): boolean {
   if (proper && !/^(The|A|An|In|On|By|He|She|They|It|His|Her|And|But|For|Of)\b/.test(proper[0])) return has(proper[0]);
   return true; // no distinctive marker to track -> don't chase it
 }
+// NOVELTY score for the unused-fact pool: pull the highest-value evidence first. A NEW
+// transaction/quote/dated-event outranks a generic context line, so the $1.3M trail, the dated
+// email, and 88M/$110k get consumed before another soft restatement. This is the new-evidence
+// override in ranking form — a fact carrying a fresh number/date/quote/entity scores high even if
+// it reads thematically similar to already-covered text.
+export function factNoveltyScore(fact: string): number {
+  let s = 0;
+  if (/["“][^"”]{8,}["”]|\b(email|message|wrote|texted|memo|statement)\b/i.test(fact)) s += 3; // quote / communication
+  if (/\btransfer|forfeit|laundered|wired|paid|deposit|\bLLC\b|entity|account\b/i.test(fact)) s += 3; // money movement / entity
+  if (/[$£€]\s?\d|\b\d[\d,]{2,}(?:\.\d+)?\b|\b\d+(?:\.\d+)?\s*(?:million|billion|thousand)\b/i.test(fact)) s += 2; // a figure
+  if (/\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s+\d|\b(19|20)\d{2}\b/i.test(fact)) s += 2; // a date/milestone
+  if (/\bC\.?C\.?-?\s?\d\b|\b[A-Z][a-zA-Z.'’-]+\s+[A-Z][a-zA-Z.'’-]+\b/.test(fact)) s += 2; // named entity / CC-N
+  return s;
+}
 async function extendWithUnusedFacts(fullScript: string, factsBlob: string, targetWords: number, startedAt: number): Promise<string> {
   const count = (s: string) => s.split(/\s+/).filter(Boolean).length;
   const facts = parseFactList(factsBlob);
@@ -764,13 +778,14 @@ async function extendWithUnusedFacts(fullScript: string, factsBlob: string, targ
   const report = () => console.log(`[expand] invoked=true parsedFacts=${facts.length} unusedFacts=${unusedAtStart} passes=${passes} stoppedBecause=${stoppedBecause} startWords=${count(fullScript)} finalWords=${count(body)} target=${targetWords}`);
   let body = fullScript;
   if (facts.length < 3) { console.log(`[expand] invoked=true parsedFacts=${facts.length} stoppedBecause=too-few-facts finalWords=${count(body)} target=${targetWords}`); return fullScript; }
-  for (let iter = 0; iter < 4; iter++) {
+  for (let iter = 0; iter < 5; iter++) {
     const w = count(body);
     if (w >= targetWords * 0.92) { stoppedBecause = "length-reached"; break; }
     if (Date.now() - startedAt > 200_000) { stoppedBecause = "time-budget"; break; }
     const bodyLc = body.toLowerCase();
-    const unused = facts.filter((f) => !factIsUsed(f, bodyLc));
-    if (!unused.length) { stoppedBecause = "facts-exhausted"; break; }
+    // REFILL IS FACT-CONSUMPTION: operate on the UNUSED pool only, highest-novelty first.
+    const unused = facts.filter((f) => !factIsUsed(f, bodyLc)).sort((a, b) => factNoveltyScore(b) - factNoveltyScore(a));
+    if (!unused.length) { stoppedBecause = "facts-exhausted"; break; } // shortfall over padding
     const batch = unused.slice(0, 12);
     const paras = body.split(/\n\n+/);
     const conclusion = paras.length > 3 ? paras.pop()! : "";
@@ -781,18 +796,23 @@ async function extendWithUnusedFacts(fullScript: string, factsBlob: string, targ
         model: "claude-sonnet-4-6",
         max_tokens: 8000,
         temperature: 0.7,
-        system: "You are extending a documentary YouTube script mid-production, matching its existing voice, sentence rhythm, and TTS style exactly. You write NEW body segments that WALK a set of documented facts as beats — each fact rendered in causal detail (what it was, when, the figure, why it mattered), never merely mentioned. Use ONLY the facts given; invent nothing, add no statistic/name/quote not present. Output ONLY the new segments as plain speakable prose — no preamble, no headers, no conclusion, no wrap-up.",
+        system: "You are extending a documentary YouTube script mid-production, matching its existing voice, sentence rhythm, and TTS style exactly. Your ONLY job is to CONSUME a set of documented facts: each assigned fact must become a beat that substantively communicates THAT fact (what it was, when, the figure, why it mattered), never merely name-dropped. Use ONLY the facts given; invent nothing, add no statistic/name/quote not present. Do NOT restate a concept the script already covered — if you cannot say something NEW with a fact, omit it. Output ONLY the new segments as plain speakable prose — no preamble, no headers, no conclusion.",
         messages: [{
           role: "user",
-          content: `The script so far (its conclusion is held out and will follow your segments):\n"""\n${mid.slice(-6000)}\n"""\n\nThese DOCUMENTED facts are approved but NOT yet used in the script — each is a real, sourced detail. Turn them into new body beats, walked in causal detail, in the script's voice:\n${batch.map((f, i) => `${i + 1}. ${f}`).join("\n")}\n\nWrite about ${needed} words of NEW body segments built from these facts. Each fact becomes a concrete beat (a dated email quoted, a money movement traced, a named entity introduced, a milestone reached), continuing the story's causal chain. Match the existing sentence rhythm. Do NOT repeat anything already in the script, do NOT write a conclusion, and do NOT state any fact not in the list above.`,
+          content: `The script so far (its conclusion is held out and will follow your segments):\n"""\n${mid.slice(-6000)}\n"""\n\nWrite NEW body beats that CONSUME these approved, not-yet-used facts — each becomes a concrete beat (a dated email quoted, a money movement traced, a named entity introduced, a milestone reached), continuing the causal chain:\n${batch.map((f, i) => `${i + 1}. ${f}`).join("\n")}\n\nAbout ${needed} words. Every beat must substantively deliver at least one of the numbered facts above. Do NOT restate anything already in the script, do NOT write a conclusion, do NOT state any fact not in the list.`,
         }],
       });
       const c = resp.content[0];
       const seg = c.type === "text" ? c.text.trim() : "";
       if (!seg || count(seg) < 40) { stoppedBecause = "empty-segment"; break; }
+      // REJECT A NON-CONSUMING BEAT: the segment must actually USE at least one assigned fact, else
+      // it is padding masquerading as a beat — drop it and stop rather than append filler.
+      const segLc = seg.toLowerCase();
+      const consumed = batch.filter((f) => factIsUsed(f, segLc)).length;
+      if (consumed === 0) { stoppedBecause = "non-consuming-segment-rejected"; break; }
       body = [mid, seg, conclusion].filter(Boolean).join("\n\n");
       passes++;
-      console.log(`[extend-facts] iter ${iter}: +${count(seg)} words (${w} -> ${count(body)}, target ${targetWords}, ${unused.length} unused facts)`);
+      console.log(`[extend-facts] iter ${iter}: +${count(seg)} words consuming ${consumed}/${batch.length} facts (${w} -> ${count(body)}, target ${targetWords}, ${unused.length} unused)`);
     } catch (e) {
       stoppedBecause = "llm-error";
       console.error("[extend-facts] failed, keeping current body:", (e as any)?.message);
@@ -1399,6 +1419,9 @@ export async function finalizeScript(
   // Date integrity: correct a case-event date the script shifted off the sourced date (March 20 ->
   // March 19), when the fact set uniquely fixes it. Verbatim dates, silently.
   if (input.sourceMaterial && input.sourceMaterial.trim()) applyBodyPass((t) => correctDatesToFacts(t, input.sourceMaterial), "date-fix");
+  // Numeric conflation: cut a sentence that arithmetically ties a songs/files figure to a streams
+  // figure (the 661,440-from-10,000 error); the correct account->streams tie is untouched.
+  applyBodyPass(stripUnitConflation, "unit-conflation");
   // Inference/speculation-as-fact: cut a sentence that asserts a cause, motive, or conclusion the
   // record doesn't support ("must have required...", "did not do this alone", "...or both"). Like
   // the insinuation cut, this is an accuracy/credibility guard — the safe default is to remove it.
@@ -1476,9 +1499,13 @@ export async function finalizeScript(
         ? await extendWithUnusedFacts((script as any)[refillKey], facts, finalTarget, startedAt)
         : await extendScriptToLength((script as any)[refillKey], finalTarget, input.targetTopic || "", input.targetNiche || "", startedAt);
       if (filled !== (script as any)[refillKey]) {
-        // Deterministic safety re-sweep on the (now longer) body — a re-fill beat is fact-walked and
-        // low-risk, but re-run the cheap regex guards so nothing new slips the safety net.
+        // Deterministic re-sweep on the (now longer) body — de-rep AFTER refill (so refill can't
+        // reintroduce a repeated concept), plus the cheap safety guards so a new beat can't slip the
+        // net. This is the de-rep -> refill -> de-rep ordering: the refill added novel unused facts,
+        // and these passes collapse any accidental echo and re-check safety.
         filled = healMidSentenceBreaks(filled);
+        filled = dedupeAdjacentParagraphs(filled).text;
+        filled = collapseRepeatedAnchors(filled).text;
         filled = stripInsinuations(filled).text;
         filled = stripSpeculation(filled).text;
         filled = stripUnnamedPartyNaming(filled).text;

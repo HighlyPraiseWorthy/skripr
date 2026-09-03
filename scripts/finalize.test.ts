@@ -8,7 +8,7 @@
 // a clean withholding hook (hook-rewrite guard false), a trailing tease that trips the
 // deterministic cut but NOT endingTeasesWithoutLanding (the LLM ending-rewrite is skipped), and
 // no repeated section-openers (anaphora rewrite skipped). Only the deterministic passes run.
-import { finalizeScript, hookIsVague, hookDumpsPayoff, endingTeasesWithoutLanding, parseFactList, factIsUsed } from "../src/lib/ai/claude.ts";
+import { finalizeScript, hookIsVague, hookDumpsPayoff, endingTeasesWithoutLanding, parseFactList, factIsUsed, factNoveltyScore } from "../src/lib/ai/claude.ts";
 
 let failures = 0;
 function check(name: string, cond: boolean) {
@@ -208,6 +208,16 @@ check("an unused figure fact (10,000 files) reads as unused", factIsUsed(parsed[
 // Once the body incorporates them, they read as used (so the expander stops).
 const bodyUsedAll = ("he boasted of 4 billion streams and $12 million. cc-3 supplied 10,000 files per month. he moved $1.3 million to smh entertainment. 1,040 bot accounts ran it.").toLowerCase();
 check("a fact becomes used once the body walks it", factIsUsed(parsed[0], bodyUsedAll) && factIsUsed(parsed[2], bodyUsedAll));
+
+// NOVELTY RANKING — the deep evidence (transaction / dated email / figure) must outrank a generic
+// context line, so the refill consumes it first.
+console.log("fact novelty ranking:");
+const transactionFact = "Smith transferred about $1.3 million to an entity called SMH Entertainment in 2020.";
+const emailFact = 'In an Oct 2018 email a co-conspirator wrote, "we need a TON of content."';
+const genericContext = "The streaming economy pays creators based on their share of total plays.";
+check("a money-transfer fact outranks a generic context line", factNoveltyScore(transactionFact) > factNoveltyScore(genericContext));
+check("a dated quoted-email fact outranks a generic context line", factNoveltyScore(emailFact) > factNoveltyScore(genericContext));
+check("a generic context line scores low", factNoveltyScore(genericContext) <= 2);
 
 console.log(failures === 0 ? "\nALL PASS" : `\n${failures} FAILURE(S)`);
 process.exit(failures === 0 ? 0 : 1);
