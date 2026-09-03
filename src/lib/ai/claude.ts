@@ -1,7 +1,7 @@
 import { Anthropic } from "@anthropic-ai/sdk";
 import { fingerprintToBrief, readProhibitions, stripStandaloneTics, type VoiceFingerprint } from "@/lib/voice-metrics";
 import { buildStorytellingBlock } from "@/lib/storytelling";
-import { stripInsinuations, stripUnnamedPartyNaming, stripSpeculation, stripImpliedRevelation, dedupeAdjacentParagraphs, stripDuplicateHook, collapseRepeatedAnchors, stripSchemeDurationClaim, stripStaleFutureDates, stripSourceLeaks, mergeOrphanFragments, correctDatesToFacts, stripUnitConflation, stripInventedInference, flagOverstatementRisk, splitSentences } from "@/lib/script-compliance";
+import { stripInsinuations, stripUnnamedPartyNaming, stripSpeculation, stripImpliedRevelation, dedupeAdjacentParagraphs, stripDuplicateHook, collapseRepeatedAnchors, stripSchemeDurationClaim, stripStaleFutureDates, stripSourceLeaks, mergeOrphanFragments, correctDatesToFacts, stripUnitConflation, stripInventedInference, flagOverstatementRisk, splitSentences, stripLeakedLabels, stripFalseEquality, stripUnsourcedStat } from "@/lib/script-compliance";
 import { buildVarietyBlock } from "@/lib/ai/phrase-variety";
 
 let _anthropic: Anthropic | null = null;
@@ -565,7 +565,16 @@ export async function writeSection(
     model: "claude-sonnet-4-6",
     max_tokens: Math.min(8000, spec.targetWords * 3 + 800),
     temperature: 0.8,
-    system: `You write one section of a YouTube voiceover script IN A SPECIFIC CREATOR'S VOICE. The voice is not a finishing touch — it is how you write every sentence from the first word. Output ONLY that section's prose — no headings, no labels, no commentary, no JSON. Plain speakable text. NEVER use these generic narrator tics, in any variation: "read that again", "pause on that", "sit with that", "let that sink in", "think about what that means", "here's the thing", "that's not a metaphor", or "That's not X. That's Y." They belong to no creator and mark writing as machine-made.`,
+    system: `You write one section of a YouTube voiceover script IN A SPECIFIC CREATOR'S VOICE. The voice is not a finishing touch — it is how you write every sentence from the first word. Output ONLY that section's prose — no headings, no labels (never write "HOOK:" or a section name), no commentary, no JSON. Plain speakable text. NEVER use these generic narrator tics, in any variation: "read that again", "pause on that", "sit with that", "let that sink in", "think about what that means", "here's the thing", "that's not a metaphor", or "That's not X. That's Y." They belong to no creator and mark writing as machine-made.
+
+THE DRAMATIC TRUTH RULE (non-negotiable — write disciplined from the FIRST draft): you may intensify emotion, imagery, contrast, pacing, and narrative IMPLICATION freely, but you may NOT intensify the evidence's SCOPE, CERTAINTY, CAUSATION, EXCLUSIVITY, QUANTITY, or KNOWLEDGE/INTENT beyond the sourced facts. Make the interpretation vivid; keep the measurement exact. Concretely, do NOT write:
+- absolutes about human listening or scope ("no human audience at all", "not a single real listener", "the industry never saw it coming");
+- anything beyond an official's own words — if the DOJ called it "the first criminal case involving artificially inflated music streaming", do NOT upgrade to "the first in American history";
+- a ROLE or FUNCTION for a co-conspirator the record doesn't define ("his job was to improve the AI", "a partner with skin in the game") — say only what is sourced ("financially incentivized", "paid a share");
+- that a platform DETECTED the scheme or DROVE the investigation — a platform limiting its own exposure to ~$60,000 is NOT catching him or tipping investigators;
+- zero-sum / one-for-one economic claims ("every dollar he took was a dollar stolen from a real artist"), invented mysteries ("where did the other two million go"), or a stat attributed to a named body (RIAA, a study) that is not in your facts;
+- "same number"/"identical" about two figures that differ.
+Write the TRUE version with the same punch. Model recasts: "no human choosing to hear it" -> "The stream didn't need a fan. It needed a system capable of generating the play." | "the first criminal case in history" -> "one of the earliest criminal cases to put AI-generated music inside the scheme." | "every dollar he took was stolen from a real artist" -> "The streams were fake. The money they generated wasn't." Metaphor and contrast are fine ("the operation became a factory"); only invented factual scope is banned.`,
     messages: [{
       role: "user",
       content: `VIDEO: "${context.title}"
@@ -1462,9 +1471,15 @@ export async function finalizeScript(
   // about this subject; remove it before anything else reasons about the body.
   applyBodyPass((t) => stripSourceLeaks(t, input.sourceEntities, input.sourceMaterial), "source-leak");
   applyBodyPass(dedupeAdjacentParagraphs, "dedupe");
+  // Strip a leaked structural label ("HOOK:", "SECTION 1:") the writer emitted as literal text.
+  applyBodyPass(stripLeakedLabels, "leaked-label");
   // Cut a duplicated HOOK re-emitted later in the body (a chunked-gen artifact the adjacent/3+
   // dedupers miss): the real opening stays, the later restatement goes.
   applyBodyPass(stripDuplicateHook, "dup-hook");
+  // False equality between two documented figures (the "$8.09M and $10M are the same number"
+  // self-contradiction), and a fabricated external stat (an RIAA "$25k-$50k average" with no fact).
+  applyBodyPass(stripFalseEquality, "false-equality");
+  applyBodyPass((t) => stripUnsourcedStat(t, input.sourceMaterial), "unsourced-stat");
   // De-repetition: collapse an anchor fact drummed 3+ times across the whole body, keeping the
   // elaborated instances and cutting the bare restatements. Runs after dedupe (adjacent copies
   // already gone) and on the assembled body, so it catches an anchor spread across sections.
@@ -1594,6 +1609,15 @@ export async function finalizeScript(
       for (const k of ["fullScript", "script", "body", "content"]) {
         if (typeof (script as any)[k] === "string") (script as any)[k] = judged;
       }
+    }
+  }
+
+  // FINAL de-dup of the opening — a later pass (refill/weave/certainty rewrite) can restack or
+  // re-label the hook, so run these idempotent cleanups once more on the settled body.
+  for (const k of ["fullScript", "script", "body", "content"]) {
+    if (typeof (script as any)[k] === "string") {
+      (script as any)[k] = stripLeakedLabels((script as any)[k]).text;
+      (script as any)[k] = stripDuplicateHook((script as any)[k]).text;
     }
   }
 

@@ -1,7 +1,7 @@
 // Offline test for the post-generation compliance check, using the real shapes from the
 // session: the final Queen script (should largely pass) vs. an early flat draft.
 //   node --experimental-strip-types --loader ./scripts/alias-loader.mjs scripts/compliance.test.ts
-import { checkCompliance, complianceScore, structuralScore, checkSourceStructural, accuracyChecks, STRUCTURAL_SET, stripInsinuations, stripUnnamedPartyNaming, stripSpeculation, stripImpliedRevelation, dedupeAdjacentParagraphs, stripDuplicateHook, collapseRepeatedAnchors, stripSchemeDurationClaim, stripStaleFutureDates, stripSourceLeaks, mergeOrphanFragments, correctDatesToFacts, stripUnitConflation, stripInventedInference, flagOverstatementRisk } from "../src/lib/script-compliance.ts";
+import { checkCompliance, complianceScore, structuralScore, checkSourceStructural, accuracyChecks, STRUCTURAL_SET, stripInsinuations, stripUnnamedPartyNaming, stripSpeculation, stripImpliedRevelation, dedupeAdjacentParagraphs, stripDuplicateHook, collapseRepeatedAnchors, stripSchemeDurationClaim, stripStaleFutureDates, stripSourceLeaks, mergeOrphanFragments, correctDatesToFacts, stripUnitConflation, stripInventedInference, flagOverstatementRisk, stripLeakedLabels, stripFalseEquality, stripUnsourcedStat, splitSentences } from "../src/lib/script-compliance.ts";
 
 let failures = 0;
 function check(name: string, cond: boolean) {
@@ -712,6 +712,30 @@ check("flags a universal-institution claim", flagOverstatementRisk("The industry
 check("does NOT flag a metaphor", flagOverstatementRisk("The operation became a factory for fake plays.") === false);
 check("does NOT flag a contrast line", flagOverstatementRisk("The streams were fake. The money was real.") === false);
 check("does NOT flag a plainly sourced sentence", flagOverstatementRisk("In January 2024 he pleaded guilty and agreed to forfeit $8,091,843.64.") === false);
+
+// PUBLISH-BLOCKER BUGS from the 5.0 run.
+console.log("leaked structural labels:");
+check("strips a leaked 'HOOK:' label", stripLeakedLabels("HOOK: A song no human ever chose to play.").text === "A song no human ever chose to play.");
+check("strips 'SECTION 2 -' label", stripLeakedLabels("SECTION 2 - The money started moving.").text === "The money started moving.");
+check("leaves normal prose alone", stripLeakedLabels("The scheme ran for years.").cuts.length === 0);
+
+console.log("false equality between figures:");
+const feqBody = "He agreed to forfeit $8,091,843.64. The forfeiture figure and the collected-royalties figure are the same number. Prosecutors alleged he generated over $10,000,000.";
+const feq = stripFalseEquality(feqBody);
+check("cuts the false 'are the same number' sentence", !/are the same number/.test(feq.text));
+check("keeps the two real figures", /\$8,091,843\.64/.test(feq.text) && /\$10,000,000/.test(feq.text));
+check("does NOT fire when no equality claim is made", stripFalseEquality("He forfeited $8 million; prosecutors alleged $10 million.").cuts.length === 0);
+
+console.log("unsourced external stat:");
+const statFacts = "The court ordered an $8,091,843.64 forfeiture. The scheme used 1,040 bot accounts.";
+check("cuts a fabricated RIAA stat not in facts",
+  stripUnsourcedStat("The RIAA says the average musician earns $25,000 to $50,000 a year.", statFacts).cuts.length >= 1);
+check("cuts 'on average ... $X' with no backing fact",
+  stripUnsourcedStat("On average an independent artist takes home about $4,000 a year.", statFacts).cuts.length >= 1);
+check("keeps a figure that IS in the facts",
+  stripUnsourcedStat("According to the filing, the forfeiture was $8,091,843.64.", statFacts).cuts.length === 0);
+check("does NOT fire on an attribution with no figure",
+  stripUnsourcedStat("A recent report described the streaming economy as opaque.", statFacts).cuts.length === 0);
 
 console.log(failures === 0 ? "\nALL PASS" : `\n${failures} FAILURE(S)`);
 process.exit(failures === 0 ? 0 : 1);

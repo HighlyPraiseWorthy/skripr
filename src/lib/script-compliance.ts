@@ -146,7 +146,7 @@ const QUOTE_RE = /["“]([^"”\n]{6,240})["”]|(?:^|[\s(\[])['‘]([^'’\n]{6
 // removed the real sentence ("Former U.S. Attorney Damian Williams said X.") left an orphan fragment
 // ("Former U.S."). This merges a fragment ending in a known abbreviation back into the next piece,
 // so every cut is SENTENCE-ATOMIC — a strip removes a whole sentence, never a dangling clause.
-const _ABBR_TAIL = /(?:\b(?:U\.S|U\.K|U\.N|E\.U|D\.C|Mr|Mrs|Ms|Dr|Jr|Sr|St|Inc|Corp|Ltd|Co|vs|etc|No|Nos|Vol|Sen|Rep|Gov|Gen|Lt|Col|Sgt|Adm|Rev|Hon|Prof|Ave|Blvd|Dept|a\.m|p\.m)\.|\b[A-Z]\.)["'”’)\]]?\s*$/;
+const _ABBR_TAIL = /(?:\b(?:U\.S|U\.K|U\.N|E\.U|D\.C|Mr|Mrs|Ms|Dr|Jr|Sr|St|Inc|Corp|Ltd|Co|vs|etc|No|Nos|Vol|Sen|Rep|Gov|Gen|Lt|Col|Sgt|Adm|Rev|Hon|Prof|Ave|Blvd|Dept|a\.m|p\.m|Pub|Stat|Cong|Sess|Reg|art|sec|§)\.|\b[A-Z]\.)["'”’)\]]?\s*$/;
 export function splitSentences(text: string): string[] {
   const rough = (text || "").split(/(?<=[.!?])\s+/);
   const out: string[] = [];
@@ -406,6 +406,74 @@ export function stripDuplicateHook(text: string): { text: string; cuts: string[]
     out.push(p);
   }
   return { text: out.filter(Boolean).join("\n\n"), cuts };
+}
+
+// GOVERNING PRINCIPLE — silent fix. Strip a LEAKED STRUCTURAL LABEL. A section writer occasionally
+// emits its slot name as a literal prefix ("HOOK: ...", "SECTION 1: ...", "INTRO —"); that label is
+// production scaffolding, never spoken text. Remove it from the start of any paragraph.
+const LEAKED_LABEL_RE = /^\s*(?:hook|intro(?:duction)?|cold open|section(?:\s*\d+)?|part\s*\d+|act\s*\d+|setup|mechanism|climax|aftermath|conclusion|outro|cta|beat)\s*[:\-–—]\s*/i;
+export function stripLeakedLabels(text: string): { text: string; cuts: string[] } {
+  if (!text) return { text, cuts: [] };
+  const cuts: string[] = [];
+  const out = text.split(/\n\n+/).map((p) => {
+    const m = p.match(LEAKED_LABEL_RE);
+    if (m) { cuts.push(m[0].trim()); return p.replace(LEAKED_LABEL_RE, "").trim(); }
+    return p.trim();
+  }).filter(Boolean).join("\n\n");
+  return { text: out, cuts };
+}
+
+// GOVERNING PRINCIPLE — silent fix (CORRECTNESS). Cut a FALSE EQUALITY between two figures. The build
+// asserted "the forfeiture figure and the collected-royalties figure the DOJ cites are the same
+// number", then used $8.09M and $10M two sentences apart — a self-contradiction. Cut a sentence that
+// claims two named/dollar amounts are the same/identical when the body actually carries two DIFFERENT
+// distinctive figures. Conservative: needs an equality phrase AND two figure references in the
+// sentence (or a body with 2+ distinct big figures).
+const EQUALITY_RE = /\b(?:the same (?:number|figure|amount|value)|identical|exactly the same|one and the same|are equal|is equal to)\b/i;
+export function stripFalseEquality(text: string): { text: string; cuts: string[] } {
+  if (!text) return { text, cuts: [] };
+  const bigFigs = new Set(digitNumbersIn(text).map((d) => d.value).filter((v) => Math.abs(v) >= 1_000_000).map((v) => Math.round(v / 1e5)));
+  const bodyHasTwoBig = bigFigs.size >= 2; // e.g. $8.09M and $10M
+  const cuts: string[] = [];
+  const outParas = text.split(/\n\n+/).map((para) => {
+    const kept = splitSentences(para).filter((s) => {
+      if (!EQUALITY_RE.test(s)) return true;
+      const figsHere = digitNumbersIn(s).filter((d) => Math.abs(d.value) >= 1_000_000).length;
+      // Two figures in THIS sentence claimed equal, or an equality claim while the body carries two
+      // different big figures the claim can't be true of.
+      if (figsHere >= 2 || bodyHasTwoBig) { cuts.push(s.trim()); return false; }
+      return true;
+    });
+    return kept.join(" ").trim();
+  }).filter((p) => p.length > 0);
+  return { text: outParas.join("\n\n"), cuts };
+}
+
+// GOVERNING PRINCIPLE — silent fix (no fabricated stats). Cut a sentence citing an EXTERNAL STAT that
+// is not in the approved facts: a named body (RIAA, IFPI, Nielsen, a "study"/"report"/"survey") or an
+// "on average"/"the average X earns/makes" claim carrying a dollar figure the facts don't contain.
+// The build invented an RIAA "$25,000-$50,000 average musician" comparison with no backing fact.
+const STAT_ATTR_RE = /\b(?:RIAA|IFPI|Nielsen|Luminate|MRC|Billboard|Statista|Pew|a (?:recent )?(?:study|report|survey|analysis)|studies show|reports? (?:show|found)|on average|the average \w+ (?:earns?|makes?|takes home|brings? in)|industry average)\b/i;
+export function stripUnsourcedStat(text: string, factBlob: string | undefined): { text: string; cuts: string[] } {
+  if (!text) return { text, cuts: [] };
+  const factLc = (factBlob || "").toLowerCase();
+  const cuts: string[] = [];
+  const outParas = text.split(/\n\n+/).map((para) => {
+    const kept = splitSentences(para).filter((s) => {
+      if (!STAT_ATTR_RE.test(s)) return true;
+      const figs = digitNumbersIn(s).filter((d) => d.unit || Math.abs(d.value) >= 1000);
+      if (!figs.length) return true; // an attribution with no figure is not a stat claim
+      // Cut when NONE of the sentence's figures appear in the facts (a fabricated external stat).
+      const anySupported = figs.some((f) => {
+        const surf = f.surface.toLowerCase().replace(/[$,]/g, "");
+        return factLc.includes(surf) || factLc.includes(String(Math.round(f.value))) || (factBlob ? spelledNumbersIn(factBlob).some((sp) => numbersMatch(sp.value, f.value)) || digitNumbersIn(factBlob).some((d) => numbersMatch(d.value, f.value)) : false);
+      });
+      if (!anySupported) { cuts.push(s.trim()); return false; }
+      return true;
+    });
+    return kept.join(" ").trim();
+  }).filter((p) => p.length > 0);
+  return { text: outParas.join("\n\n"), cuts };
 }
 
 // GOVERNING PRINCIPLE — silent fix (CORRECTNESS). Cut a stated SCHEME-DURATION count. Two failure
