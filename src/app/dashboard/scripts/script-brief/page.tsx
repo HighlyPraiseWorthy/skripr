@@ -19,7 +19,18 @@ const EMOTION_COLOR: Record<string, string> = {
   excitement: "#34d399", surprise: "#9de4ff",
 };
 
-type Phase = "loading" | "pick-case" | "angles" | "research" | "storytelling" | "generating" | "result";
+type Phase = "loading" | "pick-case" | "research" | "angles" | "storytelling" | "finish" | "generating" | "result";
+type MagnetWordOption = { id: string; word: string; grade: string; why_it_works?: string };
+const HOOK_TYPES = [
+  { type: "CONTROVERSY", label: "Controversy", emoji: "⚡" },
+  { type: "CURIOSITY GAP", label: "Curiosity Gap", emoji: "🧠" },
+  { type: "REFRAME", label: "Reframe", emoji: "🪞" },
+  { type: "MYTH-BUST", label: "Myth-Bust", emoji: "💥" },
+  { type: "STORY", label: "Story", emoji: "🎬" },
+  { type: "PATTERN INTERRUPT", label: "Pattern Interrupt", emoji: "🔄" },
+  { type: "FEAR/STAKES", label: "Fear / Stakes", emoji: "🔥" },
+  { type: "OVERLOOKED MECHANISM", label: "Overlooked Mechanism", emoji: "🔑" },
+];
 type Angle = { hookType: string; hookPremise: string; titleSuggestion: string; whyItWorks: string; audienceEmotion: string; warnings?: string[]; };
 type Brief = { topic: string; niche: string; videoLength: string; hookTypeFilter?: string | null; voiceProfileId?: string | null; angles: Angle[]; };
 
@@ -64,14 +75,25 @@ export default function ScriptBriefPage() {
   const [researchCase, setResearchCase] = useState<{ name: string; summary?: string; when?: string; sources?: string[] } | null>(null);
   const [researchFacts, setResearchFacts] = useState<{ fact: string; source: string | null }[]>([]);
   const approvedFactsRef = useRef<{ fact: string; source: string | null }[]>([]);
+  // Hook type now lives on the Angle step (moved off the Brief). Changing it regenerates the angles.
+  const [hookFilter, setHookFilter] = useState<string | null>(null);
+  const [refetchingAngles, setRefetchingAngles] = useState(false);
+  // Viral Magnet + storytelling choices live on the FINISH step (after Storytelling, before Generate).
+  const [magnetWords, setMagnetWords] = useState<MagnetWordOption[]>([]);
+  const [magnetGrade, setMagnetGrade] = useState<string>("all");
+  const [selectedViralWord, setSelectedViralWord] = useState<string | null>(null);
+  const storyChoiceRef = useRef<{ mode: string; techniques: string[]; note?: string }>({ mode: "", techniques: [] });
 
   useEffect(() => {
     fetch("/api/user/plan").then(r => r.json()).then(d => setUserPlan(d.plan || "free")).catch(() => {});
+    fetch("/api/magnet-words").then(r => r.json()).then(d => setMagnetWords(d.words || [])).catch(() => {});
     try {
       const stored = sessionStorage.getItem("skripr_script_brief");
       if (!stored) { window.location.href = "/dashboard/scripts/new"; return; }
       const b: Brief = JSON.parse(stored);
       setBrief(b);
+      setHookFilter(b.hookTypeFilter || null);
+      if ((b as any).viralMagnetWord) setSelectedViralWord((b as any).viralMagnetWord);
       if (b.voiceProfileId) setVoiceId(b.voiceProfileId);
       // Restore grounding so a reload does not lose the case the cards were built on.
       const gb = (b as any).grounding;
@@ -177,20 +199,31 @@ export default function ScriptBriefPage() {
     await fetchAngles(brief, g);
   }
 
-  async function fetchAngles(b: Brief, g?: any) {
+  async function fetchAngles(b: Brief, g?: any, hookOverride?: string | null) {
     setPhase("loading");
+    const hook = hookOverride !== undefined ? hookOverride : (hookFilter ?? b.hookTypeFilter ?? null);
     try {
       const res = await fetch("/api/suggest-script-angles", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ topic: b.topic, niche: b.niche, videoLength: b.videoLength, hookTypeFilter: b.hookTypeFilter || null, viralMagnetWord: (b as any).viralMagnetWord || null, grounding: (g ?? grounding) || undefined, lockedTitle: (b as any).lockTitle ? b.topic : undefined }),
+        body: JSON.stringify({ topic: b.topic, niche: b.niche, videoLength: b.videoLength, hookTypeFilter: hook, viralMagnetWord: (b as any).viralMagnetWord || null, grounding: (g ?? grounding) || undefined, lockedTitle: (b as any).lockTitle ? b.topic : undefined }),
       });
       const data = await res.json();
       if (data.error) throw new Error(data.error);
-      const updated = { ...b, angles: data.angles ?? [], grounding: (g ?? grounding) || undefined, topicKind: topicKind || undefined, sourceVerdict: sourceVerdict || undefined };
+      const updated = { ...b, hookTypeFilter: hook, angles: data.angles ?? [], grounding: (g ?? grounding) || undefined, topicKind: topicKind || undefined, sourceVerdict: sourceVerdict || undefined };
       sessionStorage.setItem("skripr_script_brief", JSON.stringify(updated));
       setBrief(updated);
       setPhase("angles");
     } catch (e: any) { setError(e?.message || "Failed to generate angles"); setPhase("angles"); }
+  }
+
+  // Hook type chosen ON the angle step: set it and regenerate the angles for that hook, from the
+  // SAME approved grounding (no re-research).
+  async function chooseHook(hook: string | null) {
+    setHookFilter(hook);
+    if (!brief) return;
+    setRefetchingAngles(true);
+    await fetchAngles(brief, grounding, hook);
+    setRefetchingAngles(false);
   }
 
   // The grounded case, formatted for the script prompt, so skipping the research
@@ -227,7 +260,7 @@ export default function ScriptBriefPage() {
           transcript: "", topic: brief.topic, niche: brief.niche,
           videoLength: brief.videoLength || "medium",
           targetMinutes: (brief as any).targetMinutes ?? undefined,
-          viralMagnetWord: (brief as any).viralMagnetWord || undefined,
+          viralMagnetWord: selectedViralWord || (brief as any).viralMagnetWord || undefined,
           voiceProfileId: voiceId || undefined,
           companionCta,
           softCta,
@@ -332,7 +365,9 @@ export default function ScriptBriefPage() {
       niche={brief?.niche}
       angle={selectedAngle.hookPremise || selectedAngle.titleSuggestion}
       angleLabel={selectedAngle.titleSuggestion || selectedAngle.hookPremise}
-      onGenerate={generateWithStory}
+      // Storytelling technique is its own decision; capture it and advance to the FINISH step
+      // (voice / viral magnet / CTAs) rather than generating straight away.
+      onGenerate={(mode, techniques, note) => { storyChoiceRef.current = { mode, techniques, note }; setPhase("finish"); }}
       onBack={() => setPhase("angles")}
     />
   );
@@ -396,6 +431,65 @@ export default function ScriptBriefPage() {
       </div>
     </div>
   );
+  // FINISH — the last decision screen: voice, viral magnet, CTAs. Then Generate.
+  if (phase === "finish" && selectedAngle) {
+    const gradeColor: Record<string, string> = { S: "#f59e0b", A: "#4db8ff", B: "#34d399", C: "#a6c0d8" };
+    const filtered = magnetWords.filter((w) => magnetGrade === "all" || w.grade === magnetGrade);
+    return (
+      <div style={{ minHeight: "100vh", background: C.bg, padding: "32px 40px", fontFamily: "system-ui, sans-serif" }}>
+        <div style={{ maxWidth: 640, margin: "0 auto" }}>
+          <button onClick={() => setPhase("storytelling")} style={{ background: "none", border: "none", padding: 0, cursor: "pointer", fontSize: 12, color: C.textDim, marginBottom: 16 }}>&#8592; Back</button>
+          <h1 style={{ fontSize: 22, fontWeight: 700, color: C.textBright, letterSpacing: -0.3, marginBottom: 6 }}>Finishing touches</h1>
+          <p style={{ fontSize: 13, color: C.textDim, marginBottom: 20 }}>Pick a voice, an optional viral magnet word, and calls to action. Then generate.</p>
+
+          <VoiceSelect value={voiceId} onChange={setVoiceId} />
+          <CompanionCtaToggle value={companionCta} onChange={setCompanionCta} />
+          <SoftCtaToggle value={softCta} onChange={setSoftCta} />
+
+          {magnetWords.length > 0 && (
+            <div style={{ marginTop: 16, borderRadius: 14, border: "1px solid rgba(77,184,255,0.16)", background: "rgba(77,184,255,0.04)", padding: "14px 16px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+                <span style={{ fontSize: 14 }}>🧲</span>
+                <span style={{ fontSize: 15, fontWeight: 700, color: C.textBright }}>Viral Magnet</span>
+                <span style={{ fontSize: 12, color: C.textDim }}>optional, a word baked into the title</span>
+                {selectedViralWord && <button onClick={() => setSelectedViralWord(null)} style={{ marginLeft: "auto", fontSize: 10, color: C.textDim, background: "none", border: "none", cursor: "pointer" }}>Clear</button>}
+                {userPlan === "free" && <span style={{ marginLeft: selectedViralWord ? 4 : "auto", fontSize: 10, fontWeight: 700, padding: "2px 7px", borderRadius: 5, background: "rgba(77,184,255,0.11)", color: C.accentDim }}>STARTER+</span>}
+              </div>
+              <div style={{ display: "flex", gap: 5, marginBottom: 8 }}>
+                {["all", "S", "A", "B", "C"].map((g) => {
+                  const gc = g === "all" ? "#4db8ff" : gradeColor[g];
+                  const isA = magnetGrade === g;
+                  return (
+                    <button key={g} onClick={() => setMagnetGrade(g)} style={{ padding: "5px 12px", borderRadius: 6, fontSize: 13, fontWeight: 700, cursor: "pointer", border: isA ? `1.5px solid ${gc}` : "1px solid rgba(77,184,255,0.14)", background: isA ? `${gc}18` : "transparent", color: isA ? gc : C.textDim }}>{g === "all" ? "All" : `${g}-tier`}</button>
+                  );
+                })}
+              </div>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 10, maxHeight: 180, overflowY: "auto", filter: userPlan === "free" ? "blur(3px)" : "none", pointerEvents: userPlan === "free" ? "none" : "auto" }}>
+                {filtered.map((mw) => {
+                  const gc = gradeColor[mw.grade] || "#a6c0d8";
+                  const sel = selectedViralWord === mw.word;
+                  return (
+                    <button key={mw.id} onClick={() => setSelectedViralWord(sel ? null : mw.word)} title={mw.why_it_works} style={{ display: "flex", alignItems: "center", gap: 4, padding: "4px 9px", borderRadius: 6, cursor: "pointer", border: sel ? `1.5px solid ${gc}` : "1px solid rgba(77,184,255,0.12)", background: sel ? `${gc}18` : "rgba(0,0,0,0.08)" }}>
+                      <span style={{ fontSize: 14, fontWeight: 700, color: sel ? gc : C.textBright }}>{mw.word}</span>
+                      <span style={{ fontSize: 12, fontWeight: 700, padding: "2px 5px", borderRadius: 4, background: `${gc}22`, color: gc }}>{mw.grade}</span>
+                    </button>
+                  );
+                })}
+              </div>
+              {userPlan === "free" && <div style={{ marginTop: 8, fontSize: 11, color: C.textDim }}>Upgrade to Starter to bake a viral magnet word into your title.</div>}
+            </div>
+          )}
+
+          <button
+            onClick={() => { const s = storyChoiceRef.current; void generateWithStory(s.mode, s.techniques, s.note); }}
+            style={{ marginTop: 22, width: "100%", padding: "13px 24px", borderRadius: 14, background: "linear-gradient(135deg,#0e6499,#1a8fd1,#4db8ff)", color: "#fff", fontSize: 15, fontWeight: 700, border: "none", cursor: "pointer", boxShadow: "0 4px 24px rgba(77,184,255,0.35)" }}>
+            ✦ Generate Script
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   if (phase === "generating") return (
     <GenerationProgress
       label="Building your script..."
@@ -646,9 +740,27 @@ export default function ScriptBriefPage() {
 
         {error && <div style={{ padding: "12px 16px", borderRadius: 10, background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.25)", color: "#fca5a5", fontSize: 13, marginBottom: 16 }}>{error}</div>}
 
-        <VoiceSelect value={voiceId} onChange={setVoiceId} />
-        <CompanionCtaToggle value={companionCta} onChange={setCompanionCta} />
-              <SoftCtaToggle value={softCta} onChange={setSoftCta} />
+        {/* HOOK TYPE lives here now (moved off the Brief). Changing it regenerates the angles for
+            that hook, from the same approved research. */}
+        <div style={{ marginBottom: 18 }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: C.textDim, letterSpacing: 0.5, marginBottom: 10 }}>
+            HOOK TYPE <span style={{ fontWeight: 400 }}>· optional, pick a psychological approach{refetchingAngles ? " · regenerating…" : ""}</span>
+          </div>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 8, opacity: refetchingAngles ? 0.6 : 1, pointerEvents: refetchingAngles ? "none" : "auto" }}>
+            {HOOK_TYPES.map(({ type, label, emoji }) => {
+              const active = hookFilter === type;
+              return (
+                <button key={type} onClick={() => void chooseHook(active ? null : type)}
+                  style={{ padding: "6px 12px", borderRadius: 8, fontSize: 12, fontWeight: 600, cursor: "pointer",
+                    border: active ? "1.5px solid rgba(77,184,255,0.50)" : "1px solid rgba(99,102,241,0.2)",
+                    background: active ? "rgba(77,184,255,0.13)" : "rgba(77,184,255,0.04)",
+                    color: active ? "#7ed8ff" : "#a6c0d8", transition: "all 0.15s" }}>
+                  {emoji} {label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           {(brief?.angles ?? []).map((a, i) => {

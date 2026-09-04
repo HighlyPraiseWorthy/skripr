@@ -577,16 +577,18 @@ export default function NewScriptPage() {
               </div>
             )}
 
-            {/* ─── Voice picker (pre-gen) ─── */}
+            {/* ─── Voice picker (pre-gen) — url/paste only; the topic wizard moves this to its Finish step ─── */}
+            {inputMode !== "topic" && (
             <div style={{ marginTop: 16 }}>
               <VoiceSelect value={voiceId} onChange={setVoiceId} />
               <CompanionCtaToggle value={companionCta} onChange={setCompanionCta} />
               <SoftCtaToggle value={softCta} onChange={setSoftCta} />
             </div>
+            )}
 
-            {/* ─── Viral Magnet Picker (pre-gen) ─── */}
+            {/* ─── Viral Magnet Picker (pre-gen) — url/paste only; topic wizard moves this to Finish ─── */}
 
-            {magnetWords.length > 0 && (
+            {inputMode !== "topic" && magnetWords.length > 0 && (
               <div style={{ marginTop: 16, marginBottom: 16, borderRadius: 14, border: "1px solid rgba(77,184,255,0.16)", background: "rgba(77,184,255,0.04)", padding: "14px 16px" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
                   <span style={{ fontSize: 14 }}>🧲</span>
@@ -695,42 +697,6 @@ export default function NewScriptPage() {
                 <span>10 min</span><span>12 min</span><span>15 min</span><span>18 min</span><span>20 min</span>
               </div>
             </div>
-
-            {/* Hook type picker, topic mode */}
-            {inputMode === "topic" && (
-              <div style={{ marginTop: 20 }}>
-                <div style={{ fontSize: 11, fontWeight: 700, color: "#a6c0d8", letterSpacing: 0.5, marginBottom: 10 }}>
-                  HOOK TYPE <span style={{ fontWeight: 400, color: "#a6c0d8" }}>,  optional, pick a psychological approach</span>
-                </div>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-                  {[
-                    { type: "CONTROVERSY", label: "Controversy", emoji: "⚡" },
-                    { type: "CURIOSITY GAP", label: "Curiosity Gap", emoji: "🧠" },
-                    { type: "REFRAME", label: "Reframe", emoji: "🪞" },
-                    { type: "MYTH-BUST", label: "Myth-Bust", emoji: "💥" },
-                    { type: "STORY", label: "Story", emoji: "🎬" },
-                    { type: "PATTERN INTERRUPT", label: "Pattern Interrupt", emoji: "🔄" },
-                    { type: "FEAR/STAKES", label: "Fear / Stakes", emoji: "🔥" },
-                    { type: "OVERLOOKED MECHANISM", label: "Overlooked Mechanism", emoji: "🔑" },
-                  ].map(({ type, label, emoji }) => {
-                    const active = selectedHookType === type;
-                    return (
-                      <button key={type}
-                        onClick={() => setSelectedHookType(active ? null : type)}
-                        style={{
-                          padding: "6px 12px", borderRadius: 8, fontSize: 12, fontWeight: 600, cursor: "pointer",
-                          border: active ? "1.5px solid rgba(77,184,255,0.50)" : "1px solid rgba(99,102,241,0.2)",
-                          background: active ? "rgba(77,184,255,0.13)" : "rgba(77,184,255,0.04)",
-                          color: active ? "#7ed8ff" : "#a6c0d8",
-                          transition: "all 0.15s",
-                        }}>
-                        {emoji} {label}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
 
             {/* Keep the typed topic as the title. When the topic already IS the
                 title the creator wants, the hook cards should vary the hook, not
