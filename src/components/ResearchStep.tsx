@@ -56,6 +56,9 @@ export default function ResearchStep(props: {
   // The chosen video length in minutes. Drives the research budget (~2.5 facts/min) so a 10-min
   // video researches ~25 facts and a 20-min ~50, instead of the length-blind default.
   targetMinutes?: number;
+  // The resolved topic kind for a PHENOMENON seed (no case to pick). Lets the seeded verdict banner
+  // read as "grounded" rather than an event that failed to check out.
+  presetKind?: TopicKind;
 }) {
   const [sourceMaterial, setSourceMaterial] = useState("");
   const [researching, setResearching] = useState(false);
@@ -215,25 +218,35 @@ export default function ResearchStep(props: {
     finally { setResearching(false); }
   }
 
-  // Reordered flow: a case was already resolved upstream. Deepen it on mount and
-  // skip the picker, so this step just confirms it and lets the creator review facts.
+  // Reordered flow: research was already deepened upstream. Seed those facts on mount
+  // instead of re-fetching, so the creator reviews the FULL deep set (event case OR
+  // phenomenon), and the shallow topic-level lookup never clobbers it.
   useEffect(() => {
+    // Facts already deepened upstream — seed them whether or not there is a case to pick.
+    // Without this the phenomenon path (no presetCase) dropped its ~130 deep facts, rendered
+    // empty, and the user's "Find research for me" click re-ran a thin ~6-fact lookup.
+    if (props.presetFacts && props.presetFacts.length) {
+      if (props.presetCase) {
+        setKind("event");
+        setPickedSubject(props.presetCase);
+        setVerdictNote(`Grounded on a real documented case: ${props.presetCase.name}${props.presetCase.when ? ` (${props.presetCase.when})` : ""}.`);
+      } else {
+        // Phenomenon / no specific case: a real, documented, two-tier set still stands.
+        setKind(props.presetKind || "claim");
+      }
+      setVerdict("documented");
+      setFacts(props.presetFacts);
+      setPicked(new Set(props.presetFacts.map((_, i) => i)));
+      setConflicts(props.presetConflicts || []);
+      setDeepenStatus("ok");
+      // Upgrade the seeded facts to the id-bearing library view so hide/add work.
+      void loadLibrary();
+      return;
+    }
+    // No preset facts, but a case was resolved: deepen it here.
     if (props.presetCase) {
       setKind("event");
-      // Already deepened upstream: seed the facts instead of fetching them again.
-      if (props.presetFacts && props.presetFacts.length) {
-        setPickedSubject(props.presetCase);
-        setVerdict("documented");
-        setVerdictNote(`Grounded on a real documented case: ${props.presetCase.name}${props.presetCase.when ? ` (${props.presetCase.when})` : ""}.`);
-        setFacts(props.presetFacts);
-        setPicked(new Set(props.presetFacts.map((_, i) => i)));
-        setConflicts(props.presetConflicts || []);
-        setDeepenStatus("ok");
-        // Upgrade the seeded facts to the id-bearing library view so hide/add work.
-        void loadLibrary();
-      } else {
-        void pickSubject(props.presetCase);
-      }
+      void pickSubject(props.presetCase);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

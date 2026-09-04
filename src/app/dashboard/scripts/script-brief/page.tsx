@@ -368,6 +368,7 @@ export default function ScriptBriefPage() {
       angle={brief.topic}
       angleLabel={researchCase?.name || brief.topic}
       targetMinutes={(brief as any).targetMinutes}
+      presetKind={(topicKind as any) || undefined}
       presetCase={researchCase ? { name: researchCase.name, summary: researchCase.summary || "", when: researchCase.when || "", whyItFits: "", sources: researchCase.sources || [] } : undefined}
       presetFacts={researchFacts.length ? researchFacts : undefined}
       onFactsApproved={(fs) => { approvedFactsRef.current = fs; }}
