@@ -1505,14 +1505,35 @@ Each question seeks a single concrete, citable fact. Output ONLY this JSON, no p
     // AI-artist alias names, the month-by-month streaming milestones, the platform warnings and
     // denials, and the payment halt that ended it. Mine the primary source to completeness so the
     // script is MORE detailed than a well-read model's memory, not less.
-    const primaryQs = [
+    // TWO-TIER CONTEXT POOL. Case topics mine the primary source (indictment/court filing) — that is
+    // where their length lives. PHENOMENON topics (isExplainer) have no charging document and only a
+    // handful of hard stats, so the case-shaped questions returned almost nothing and the set stopped
+    // at ~7. They get a purpose-built Pool B instead — history, mechanism, economics, comparisons,
+    // cultural/psychological context — each seeking NEW sourced facts, so the length-scaled fill loop
+    // below can actually reach ~2.5 facts/min (~40-50 for a 20-min brief) on sourced context.
+    const primaryQs = isExplainer ? [] : [
       `From the PRIMARY SOURCE on ${canonicalCaseName} (the indictment, complaint, charging document, plea agreement, or official report), extract the FULL CHRONOLOGICAL TIMELINE: every dated milestone, month by month or year by year, each with the specific figures attached (streams, dollars, accounts, dates). List them in order, sourced.`,
       `Trace EVERY MOVEMENT OF MONEY documented in the ${canonicalCaseName} primary source: each transfer, the amounts and dates, the accounts or instruments used (bank accounts, debit cards, shell entities, payment processors), how funds were funneled or laundered, and the per-day or per-month rate where stated.`,
       `List EVERY NAMED ENTITY, ALIAS, PRODUCT, ACCOUNT, or CODE-NAME in the ${canonicalCaseName} primary source — the specific names of fronts, shell companies, fake artists or products, aliases, platforms, and counterparties, exactly as written, with what each was used for.`,
       `What WARNINGS, red flags, audits, or challenges did ${canonicalCaseName} receive from platforms, distributors, regulators, or partners BEFORE it ended — the dates, who raised them, and exactly how the subject responded or denied each one? This "they were warned and lied to keep it running" thread is documented; retrieve it in detail.`,
       `Exactly HOW DID ${canonicalCaseName} UNRAVEL and get caught — the specific event, audit, halt, or investigation that ended it, who acted, on what date, and the concrete step-by-step of the detection and takedown?`,
     ];
-    const contextQs = [
+    // Pool B for a PHENOMENON / explainer subject: every question seeks NEW, cited context material.
+    // These carry real citations exactly like hard facts (reviewed + adjudicated below) — context is
+    // not a hallucination backdoor.
+    const phenomenonContextQs = [
+      `HISTORY & BACKGROUND of ${canonicalCaseName}: how it developed over time, the key dated shifts and turning points, each with specific figures and a source. Give the timeline of how it got to where it is now.`,
+      `THE MECHANISM of ${canonicalCaseName}: explain step by step, in causal order, HOW it actually works and what drives it — the specific process and the factors behind it, sourced.`,
+      `ECONOMIC / INDUSTRY CONTEXT of ${canonicalCaseName}: the market structure, costs, margins, wages, prices, or spending involved — the concrete sourced figures that show the economics, and how they have changed with dates.`,
+      `DOCUMENTED COMPARISONS for ${canonicalCaseName}: published comparisons that make the scale real — then vs now, vs other categories, vs other countries, vs inflation or wages — each with the numbers and a source. Never invent a comparison; retrieve reported ones.`,
+      `CULTURAL & PSYCHOLOGICAL CONTEXT of ${canonicalCaseName}: what surveys, studies, or documented sentiment show about how people perceive it and behave around it, with named sources and figures.`,
+      `SCALE & STAKES of ${canonicalCaseName}: who is affected and by how much — the population, the dollar totals, the rates — the sourced figures that show how big and who it hits hardest.`,
+      `WHAT EXPERTS, economists, analysts, or officials have SAID about ${canonicalCaseName} — named commentary and sourced analysis of why it is happening and what it means, not generalities.`,
+      `The COUNTERINTUITIVE or DISPUTED part of ${canonicalCaseName}: the finding most people get wrong, or what is genuinely debated among experts, with sources; mark clearly what is contested vs settled.`,
+      `BROADER TREND ${canonicalCaseName} belongs to — the larger economic, technological, or social shift it is part of, and why it accelerated when it did. Sourced specifics.`,
+      `REGULATION, POLICY, or INDUSTRY RESPONSE relevant to ${canonicalCaseName}: what has been proposed or done about it, by whom, with dates and figures, sourced.`,
+    ];
+    const contextQs = isExplainer ? phenomenonContextQs : [
       ...primaryQs,
       `Explain in concrete, sourced detail HOW THE SYSTEM WORKS that ${canonicalCaseName} exploited or operated within — the mechanics of the industry, technology, market, payment or royalty flow, step by step.`,
       `Name the closest PRIOR OR SIMILAR documented cases to ${canonicalCaseName} SPECIFICALLY, by name, with their own dates, figures, and outcomes, and how each compares in scale and method.`,

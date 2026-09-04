@@ -21,7 +21,7 @@ const C = {
 // A fact as the library stores it: same shape the deepen path returns, plus a stable
 // id (present once it has been through the library) so a user's "hide" survives later
 // runs re-adding the same fact, and manual facts can be marked as the user's own.
-type LibFact = { fact: string; source: string | null; id?: string; manual?: boolean };
+type LibFact = { fact: string; source: string | null; id?: string; manual?: boolean; context?: boolean };
 
 export default function ResearchStep(props: {
   topic: string;
@@ -51,7 +51,7 @@ export default function ResearchStep(props: {
   // Research-before-cards: when the case was already deepened upstream (to build the
   // slot cards), pass those facts/conflicts here so this step SEEDS them instead of
   // re-running the whole deepen — same fact set, no second round-trip.
-  presetFacts?: { fact: string; source: string | null }[];
+  presetFacts?: { fact: string; source: string | null; context?: boolean }[];
   presetConflicts?: { fact: string; source: string | null; note: string }[];
   // The chosen video length in minutes. Drives the research budget (~2.5 facts/min) so a 10-min
   // video researches ~25 facts and a 20-min ~50, instead of the length-blind default.
@@ -423,8 +423,13 @@ export default function ResearchStep(props: {
           <div style={{ marginTop: 12, border: `1px solid ${C.purple}45`, borderRadius: 12, padding: 14, background: `${C.purple}0e` }}>
             <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 0.4, color: "#b9adff", marginBottom: 3 }}>✓ {includedCount} FACTS WILL BE USED IN YOUR SCRIPT</div>
             <div style={{ fontSize: 11.5, color: C.dim, marginBottom: 10 }}>These are added automatically, uncheck any you don't want. A citation isn't a guarantee, so verify before publishing.</div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
-              {facts.map((f, i) => {
+            {(() => {
+              // TWO-TIER DISPLAY: hard evidence ("Key stats") and sourced context ("Background &
+              // context"), grouped so a phenomenon brief's ~40 context facts read as a coherent pool,
+              // not an undifferentiated wall. Every fact stays individually checkable and cited; the
+              // checkbox is still keyed on the fact's ORIGINAL index so `picked` and Continue are
+              // unchanged. A section renders only when it has members.
+              const factRow = (f: LibFact, i: number) => {
                 const on = picked.has(i);
                 return (
                   <div key={f.id || i} onClick={() => setPicked((p) => { const n = new Set(p); n.has(i) ? n.delete(i) : n.add(i); return n; })}
@@ -435,9 +440,6 @@ export default function ResearchStep(props: {
                       {f.manual && <span style={{ fontSize: 9.5, fontWeight: 800, letterSpacing: 0.4, color: C.green, marginLeft: 6, verticalAlign: "middle" }}>YOURS</span>}
                       {f.source && <a href={f.source} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} style={{ display: "block", fontSize: 11, color: "#7ed8ff", marginTop: 2, wordBreak: "break-all" }}>{f.source}</a>}
                     </span>
-                    {/* Hide, not delete: only offered once a fact carries a library id, so
-                        the removal actually persists (reversible) rather than vanishing for
-                        this run and returning on the next. */}
                     {f.id && (
                       <button title="Hide this fact" aria-label="Hide this fact"
                         onClick={(e) => { e.stopPropagation(); void hideFact(f.id!); }}
@@ -445,8 +447,22 @@ export default function ResearchStep(props: {
                     )}
                   </div>
                 );
-              })}
-            </div>
+              };
+              const idx = facts.map((_, i) => i);
+              const hard = idx.filter((i) => !facts[i].context);
+              const ctx = idx.filter((i) => facts[i].context);
+              const groupHeader = (label: string, n: number) => (
+                <div style={{ fontSize: 10.5, fontWeight: 800, letterSpacing: 0.5, color: "#b9adff", margin: "4px 0 2px" }}>{label} · {n}</div>
+              );
+              return (
+                <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
+                  {ctx.length > 0 && hard.length > 0 && groupHeader("KEY STATS", hard.length)}
+                  {hard.map((i) => factRow(facts[i], i))}
+                  {ctx.length > 0 && groupHeader("BACKGROUND & CONTEXT", ctx.length)}
+                  {ctx.map((i) => factRow(facts[i], i))}
+                </div>
+              );
+            })()}
           </div>
         )}
 

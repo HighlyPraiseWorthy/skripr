@@ -73,7 +73,7 @@ export default function ScriptBriefPage() {
   // seeds them (no re-research), and the angles are then written from EXACTLY the facts the creator
   // approved there. approvedFactsRef captures the checked set on continue.
   const [researchCase, setResearchCase] = useState<{ name: string; summary?: string; when?: string; sources?: string[] } | null>(null);
-  const [researchFacts, setResearchFacts] = useState<{ fact: string; source: string | null }[]>([]);
+  const [researchFacts, setResearchFacts] = useState<{ fact: string; source: string | null; context?: boolean }[]>([]);
   const approvedFactsRef = useRef<{ fact: string; source: string | null }[]>([]);
   // Hook type now lives on the Angle step (moved off the Brief). Changing it regenerates the angles.
   const [hookFilter, setHookFilter] = useState<string | null>(null);
@@ -110,7 +110,7 @@ export default function ScriptBriefPage() {
 
   // Store the resolved case + any pre-deepened facts, then show the VISIBLE ResearchStep. Angles are
   // written AFTER, from the approved facts — the research-before-angles order the wizard now enforces.
-  function goToResearch(b: Brief, caseObj: { name: string; summary?: string; when?: string; sources?: string[] } | null, factObjs: { fact: string; source: string | null }[], g?: any) {
+  function goToResearch(b: Brief, caseObj: { name: string; summary?: string; when?: string; sources?: string[] } | null, factObjs: { fact: string; source: string | null; context?: boolean }[], g?: any) {
     if (caseObj) { setResearchCase(caseObj); setGroundedOn(caseObj); }
     setResearchFacts(factObjs);
     if (g) setGrounding(g);
@@ -147,7 +147,7 @@ export default function ScriptBriefPage() {
           g = { ...g, caseName: c.name, caseSummary: c.summary, when: c.when, sources: c.sources || [] };
           // Deepen the identified case at the LENGTH-SIZED budget, then hand the fact objects to the
           // research review (no re-research there). Angles are written after, from the approved set.
-          let factObjs: { fact: string; source: string | null }[] = [];
+          let factObjs: { fact: string; source: string | null; context?: boolean }[] = [];
           try {
             const rr = await fetch("/api/research/find", {
               method: "POST", headers: { "Content-Type": "application/json" },
@@ -155,7 +155,7 @@ export default function ScriptBriefPage() {
             });
             const rd = await rr.json();
             if (rr.ok && Array.isArray(rd.facts)) {
-              factObjs = rd.facts.filter((f: any) => f && typeof f.fact === "string").map((f: any) => ({ fact: f.fact, source: f.source ?? null }));
+              factObjs = rd.facts.filter((f: any) => f && typeof f.fact === "string").map((f: any) => ({ fact: f.fact, source: f.source ?? null, context: !!f.context }));
               g.facts = factObjs.map((f) => (f.source ? `${f.fact} (source: ${f.source})` : f.fact));
             }
           } catch { /* keep the topic-level facts */ }
@@ -167,7 +167,7 @@ export default function ScriptBriefPage() {
         // into the research review so the creator still approves them before angles are written.
         const topicFactObjs = (Array.isArray(gd.facts) ? gd.facts : [])
           .filter((f: any) => f && typeof f.fact === "string")
-          .map((f: any) => ({ fact: f.fact, source: f.source ?? null }));
+          .map((f: any) => ({ fact: f.fact, source: f.source ?? null, context: !!f.context }));
         setGrounding(g);
         goToResearch(b, null, topicFactObjs, g);
         return;
@@ -396,7 +396,7 @@ export default function ScriptBriefPage() {
                   const b = brief;
                   void (async () => {
                     setPhase("loading");
-                    let factObjs: { fact: string; source: string | null }[] = [];
+                    let factObjs: { fact: string; source: string | null; context?: boolean }[] = [];
                     try {
                       const rr = await fetch("/api/research/find", {
                         method: "POST", headers: { "Content-Type": "application/json" },
@@ -404,7 +404,7 @@ export default function ScriptBriefPage() {
                       });
                       const rd = await rr.json();
                       if (rr.ok && Array.isArray(rd.facts)) {
-                        factObjs = rd.facts.filter((f: any) => f && typeof f.fact === "string").map((f: any) => ({ fact: f.fact, source: f.source ?? null }));
+                        factObjs = rd.facts.filter((f: any) => f && typeof f.fact === "string").map((f: any) => ({ fact: f.fact, source: f.source ?? null, context: !!f.context }));
                         g.facts = factObjs.map((f) => (f.source ? `${f.fact} (source: ${f.source})` : f.fact));
                         setGrounding({ ...g });
                       }
