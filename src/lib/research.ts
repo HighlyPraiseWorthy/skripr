@@ -1390,6 +1390,9 @@ Each question seeks a single concrete, citable fact. Output ONLY this JSON, no p
     // accumulated on an earlier run (the $10M the safety-gate TTL couldn't shed), so the
     // angle page and script never see a superseded number.
     const reconciledHit = capFacts((await reconcileFacts(returnHit)).facts, factCap);
+    // CACHE HIT — the context loop is SKIPPED entirely. If a phenomenon brief returns a small set,
+    // this line proves it came from a stale/shallow cached row (bump RESEARCH_BRIEF_VERSION to bust).
+    console.log(`[deepen] CACHE-HIT isExplainer=${isExplainer ? "T" : "F"} kind=${input.kind ?? "undef"} budget=${budget} cached=${cached.facts.length} final=${reconciledHit.length} finalContext=${reconciledHit.filter((f) => f.context).length} — context loop SKIPPED`);
     return withHonesty({ facts: reconciledHit, conflicts: cached.conflicts, status: "ok", caseName: cached.caseName || correction.caseName, when: whenHit });
   }
 
@@ -1492,6 +1495,10 @@ Each question seeks a single concrete, citable fact. Output ONLY this JSON, no p
   // moment or trend it belongs to, the stakes and who it affects, and how the response/regulation
   // works. Each is sourced and adjudicated like any other fact, marked context:true — never
   // padding, never invention. This is what lets the honest-length math clear a 20-min target.
+  // INSTRUMENTATION for the two-tier fill: which stage the phenomenon pool breaks at. Summarized in
+  // one [deepen] line at the end.
+  let poolBCount = 0, ctxGathered = 0, ctxSurvived = 0, ctxRoundsRun = 0;
+  let ctxStop = freshFacts.length >= target ? "target-already-met" : (Date.now() - t0 >= ctxDeadline ? "deadline-before-context" : "entered");
   if (freshFacts.length < target && Date.now() - t0 < ctxDeadline) {
     // MOVE #9(3) — CONTEXT DEPTH. The earlier set was too shallow: an 11-min build still padded by
     // repeating five numbers. Beating ChatGPT means bringing the SOURCED version of the breadth it
@@ -1544,22 +1551,28 @@ Each question seeks a single concrete, citable fact. Output ONLY this JSON, no p
       `Where did the MONEY actually go in ${canonicalCaseName} — the financial forensics, the accounts, the flow, what was recovered or forfeited and what was not?`,
       `What have EXPERTS, journalists, or officials SAID about why ${canonicalCaseName} matters or what it reveals — sourced analysis and named commentary, not generalities?`,
     ];
+    poolBCount = contextQs.length;
     let cAsk = [...contextQs];
     // Up to 4 rounds (time-guarded): the first asks the full category set at once for breadth,
     // later rounds broaden whatever is still thin. Stops early when a round adds nothing new.
-    for (let round = 0; freshFacts.length < target && round < ctxRounds && Date.now() - t0 < ctxDeadline; round++) {
+    let round = 0;
+    for (; freshFacts.length < target && round < ctxRounds && Date.now() - t0 < ctxDeadline; round++) {
       const qs = round === 0 ? contextQs : await reformulateQuestions(canonicalCaseName, cAsk.slice(0, 8));
       const fresh = qs.filter((q) => round === 0 || !cAsk.includes(q));
-      if (!fresh.length) break;
+      if (!fresh.length) { ctxStop = "no-new-questions"; break; }
       cAsk = cAsk.concat(fresh);
       const cPairs = await fetchPerplexityAnswers(pkey, canonicalCaseName, input.summary, canonical, fresh);
-      if (!cPairs.length) break;
+      ctxGathered += cPairs.length;
+      if (!cPairs.length) { ctxStop = "perplexity-returned-nothing"; break; }
       const reviewed = await reviewDeepenedFacts(canonicalCaseName, cPairs, input.summary, watchlist);
+      ctxSurvived += reviewed.keep.length;
       const ctx = reviewed.keep.map((f) => ({ ...f, context: true as const }));
       const before = freshFacts.length;
       freshFacts = capFacts(unionFacts([...freshFacts, ...ctx]), factCap);
-      if (freshFacts.length <= before) break; // context well is dry too — honesty ceiling will speak
+      if (freshFacts.length <= before) { ctxStop = "no-new-facts-after-review"; break; } // context well is dry too
     }
+    ctxRoundsRun = round;
+    if (ctxStop === "entered") ctxStop = freshFacts.length >= target ? "target-reached" : (round >= ctxRounds ? "rounds-max" : "deadline");
   }
 
   // PRIMARY-SOURCE DOCUMENT MINING (the depth fix). Perplexity gave the summary layer; now read the
@@ -1617,5 +1630,9 @@ Each question seeks a single concrete, citable fact. Output ONLY this JSON, no p
   // library accumulated earlier) is dropped and the angle page states one authoritative
   // figure — the "$8M beats $10M, age-52 drops" adjudication, with zero human intervention.
   const reconciled = capFacts((await reconcileFacts(returnFacts)).facts, factCap);
+  // ONE-LINE DIAGNOSIS of the two-tier fill: classification, the fill target, how many Pool-B
+  // questions ran, context facts gathered vs survived the reviewer, rounds run, why it stopped, and
+  // the final count. This single line says exactly where the phenomenon pool breaks.
+  console.log(`[deepen] isExplainer=${isExplainer ? "T" : "F"} kind=${input.kind ?? "undef"} target=${target} budget=${budget} poolB-questions=${poolBCount} context-gathered=${ctxGathered} context-survived=${ctxSurvived} ctx-rounds=${ctxRoundsRun} stopped=${ctxStop} final=${reconciled.length} finalContext=${reconciled.filter((f) => f.context).length}`);
   return withHonesty({ facts: reconciled, conflicts, status: "ok", caseName: correction.caseName, when: finalWhen });
 }

@@ -151,7 +151,7 @@ export default function ScriptBriefPage() {
           try {
             const rr = await fetch("/api/research/find", {
               method: "POST", headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ action: "deepen", caseName: c.name, caseSummary: c.summary || "", niche: b.niche, targetMinutes: (b as any).targetMinutes }),
+              body: JSON.stringify({ action: "deepen", caseName: c.name, caseSummary: c.summary || "", niche: b.niche, kind: "event", targetMinutes: (b as any).targetMinutes }),
             });
             const rd = await rr.json();
             if (rr.ok && Array.isArray(rd.facts)) {
@@ -163,13 +163,30 @@ export default function ScriptBriefPage() {
           goToResearch(b, { name: c.name, summary: c.summary, when: c.when, sources: c.sources || [] }, factObjs, g);
           return;
         }
-        // No specific case (non-event, or an event with none identified): take the topic-level facts
-        // into the research review so the creator still approves them before angles are written.
-        const topicFactObjs = (Array.isArray(gd.facts) ? gd.facts : [])
-          .filter((f: any) => f && typeof f.fact === "string")
-          .map((f: any) => ({ fact: f.fact, source: f.source ?? null, context: !!f.context }));
+        // PHENOMENON / no-specific-case (non-event, or an event with none identified). The resolve
+        // returns only a thin handful of facts; we must DEEPEN to trigger the two-tier gather (Pool A
+        // hard + Pool B sourced context), passing kind so isExplainer is true and the phenomenon
+        // context questions fire. Without this the wizard seeded the ~6 shallow resolve facts and the
+        // deep pass never ran, which is why a 20-min phenomenon brief returned 6 facts.
+        let phenomFactObjs: { fact: string; source: string | null; context?: boolean }[] = [];
+        try {
+          const rr = await fetch("/api/research/find", {
+            method: "POST", headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ action: "deepen", caseName: b.topic, caseSummary: b.niche || "", niche: b.niche, kind: gd.kind || "claim", targetMinutes: (b as any).targetMinutes }),
+          });
+          const rd = await rr.json();
+          if (rr.ok && Array.isArray(rd.facts)) {
+            phenomFactObjs = rd.facts.filter((f: any) => f && typeof f.fact === "string").map((f: any) => ({ fact: f.fact, source: f.source ?? null, context: !!f.context }));
+            g.facts = phenomFactObjs.map((f) => (f.source ? `${f.fact} (source: ${f.source})` : f.fact));
+          }
+        } catch { /* fall back to the thin resolve facts below */ }
+        if (!phenomFactObjs.length) {
+          phenomFactObjs = (Array.isArray(gd.facts) ? gd.facts : [])
+            .filter((f: any) => f && typeof f.fact === "string")
+            .map((f: any) => ({ fact: f.fact, source: f.source ?? null, context: !!f.context }));
+        }
         setGrounding(g);
-        goToResearch(b, null, topicFactObjs, g);
+        goToResearch(b, null, phenomFactObjs, g);
         return;
       }
     } catch { /* grounding is best effort */ }
@@ -400,7 +417,7 @@ export default function ScriptBriefPage() {
                     try {
                       const rr = await fetch("/api/research/find", {
                         method: "POST", headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ action: "deepen", caseName: c.name, caseSummary: c.summary || "", niche: b.niche, targetMinutes: (b as any).targetMinutes }),
+                        body: JSON.stringify({ action: "deepen", caseName: c.name, caseSummary: c.summary || "", niche: b.niche, kind: "event", targetMinutes: (b as any).targetMinutes }),
                       });
                       const rd = await rr.json();
                       if (rr.ok && Array.isArray(rd.facts)) {
