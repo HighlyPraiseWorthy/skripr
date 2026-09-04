@@ -76,7 +76,7 @@ export function honestMinutes(factCount: number): number {
 // mining-gate decouple + depth floor (so they hold only ~23 facts). Those stale rows were being
 // served on cached runs (parsedFacts=23), starving the re-fill; v6 forces re-derivation with the
 // full mining (~120 facts). Combined with MAX_FACTS 80->130 so the full set survives the cap.
-export const RESEARCH_BRIEF_VERSION = 6;
+export const RESEARCH_BRIEF_VERSION = 7;
 
 // Whether the record actually supports the premise the script is about to assert.
 //   documented  a real, citable source describes THIS specific event or claim
@@ -1093,6 +1093,7 @@ async function minePrimarySourceDocs(
   deadlineMs: number,
   pkey?: string,
   summary?: string,
+  isExplainer?: boolean,
 ): Promise<ResearchFact[]> {
   // PDFs are now READ, not skipped — the deepest facts (aliases, milestones, quoted lines) are
   // PDF-only in a charging document, and Claude reads a PDF natively via a base64 document block,
@@ -1115,8 +1116,18 @@ async function minePrimarySourceDocs(
     }
   }
   if (!primary.length) { console.log("[primary-doc] no primary-source URL found (citations or lookup) — skipping"); return []; }
-  const SYSTEM = `You extract granular facts from a PRIMARY-SOURCE official document (indictment, complaint, court opinion, agency report, press release). Output ONLY facts the document literally states — never add, infer, or recall anything from your own knowledge. ENUMERATE, do not summarize or select highlights: aim for 50-80 distinct items, each ONE concrete specific. Read the WHOLE document, and mine the DETAILED-ALLEGATIONS / OVERT-ACTS / "Manner and Means" section hardest — that is where the granularity a summary drops lives: every DATED email or message with its quoted words and date (e.g. an Oct 2018 email about needing content), every DOLLAR movement (amount, date, instrument, from/to), every NAMED entity/alias/account/product/song exactly as written, every co-conspirator designation exactly as labeled (e.g. "CC-1", "CC-2", "Co-Conspirator 3"), every month-by-month milestone (streams, accounts, income), and every WARNING or challenge and the response to it. Skip navigation, boilerplate, and legal-standard disclaimers.`;
-  const ASK = `CASE: ${caseName}\n\nEnumerate EVERY granular fact this document states — read the entire document, mine the detailed-allegations / overt-acts section hardest (dated quoted emails, each dollar movement, CC-N designations, month-by-month milestones), aim for 50-80 items, the specific over the general, nothing invented. Output ONLY JSON: {"facts":["...", "..."]}`;
+  // A CASE topic mines a charging document for overt acts. A PHENOMENON/EXPLAINER topic mines an
+  // agency report or study, where the failure mode is the OPPOSITE: a dashboard page (e.g. the BLS
+  // CPI landing page) lists dozens of numbers that have nothing to do with the subject — airline
+  // fares, used-car prices, the office phone number. Enumerating those pollutes the pool with
+  // off-topic "facts". So for an explainer the extraction is RELEVANCE-GATED: keep only facts that
+  // materially bear on the specific subject, and explicitly drop generic/contact/unrelated rows.
+  const SYSTEM = isExplainer
+    ? `You extract facts from an official document (agency report, study, dataset page) that are DIRECTLY RELEVANT to a specific subject. Output ONLY facts the document literally states — never add, infer, or recall from your own knowledge. RELEVANCE IS THE FILTER: keep a fact only if it materially bears on the subject given below. A page often lists many numbers on unrelated topics (other spending categories, unrelated indexes, contact details, navigation, release schedules) — DROP all of those. Prefer facts that explain, quantify, or contextualize the subject: the specific metric for the subject, its drivers/mechanism, comparisons that frame it, and study findings about it. Each item ONE concrete specific with its number/date where stated. Skip anything off-subject, boilerplate, contact info, and office/administrative details.`
+    : `You extract granular facts from a PRIMARY-SOURCE official document (indictment, complaint, court opinion, agency report, press release). Output ONLY facts the document literally states — never add, infer, or recall anything from your own knowledge. ENUMERATE, do not summarize or select highlights: aim for 50-80 distinct items, each ONE concrete specific. Read the WHOLE document, and mine the DETAILED-ALLEGATIONS / OVERT-ACTS / "Manner and Means" section hardest — that is where the granularity a summary drops lives: every DATED email or message with its quoted words and date (e.g. an Oct 2018 email about needing content), every DOLLAR movement (amount, date, instrument, from/to), every NAMED entity/alias/account/product/song exactly as written, every co-conspirator designation exactly as labeled (e.g. "CC-1", "CC-2", "Co-Conspirator 3"), every month-by-month milestone (streams, accounts, income), and every WARNING or challenge and the response to it. Skip navigation, boilerplate, and legal-standard disclaimers.`;
+  const ASK = isExplainer
+    ? `SUBJECT: ${caseName}${summary ? `\nCONTEXT: ${summary}` : ""}\n\nExtract every fact this document states that is DIRECTLY RELEVANT to the subject above — the metric for the subject itself, its drivers, comparisons that frame it, and study findings about it, each with its number/date. DROP every off-subject row (unrelated categories, unrelated indexes, release schedules, contact/office details, navigation). Better to return 15 on-subject facts than 60 padded with unrelated numbers. Output ONLY JSON: {"facts":["...", "..."]}`
+    : `CASE: ${caseName}\n\nEnumerate EVERY granular fact this document states — read the entire document, mine the detailed-allegations / overt-acts section hardest (dated quoted emails, each dollar movement, CC-N designations, month-by-month milestones), aim for 50-80 items, the specific over the general, nothing invented. Output ONLY JSON: {"facts":["...", "..."]}`;
   const out: ResearchFact[] = [];
   for (const url of primary) {
     if (Date.now() > deadlineMs) break;
@@ -1590,7 +1601,7 @@ Each question seeks a single concrete, citable fact. Output ONLY this JSON, no p
   console.log(`[primary-doc] gate: deep=${deep} target=${target} targetMinutes=${input.targetMinutes ?? "undefined"} elapsedMs=${_pdElapsed} -> ${_pdEligible ? "MINING" : "SKIPPED (out of time budget)"}`);
   if (_pdEligible) {
     const citedUrls = freshFacts.map((f) => f.source).filter((s): s is string => !!s);
-    const docFacts = await minePrimarySourceDocs(canonicalCaseName, citedUrls, watchlist, _pdDeadline, pkey, input.summary);
+    const docFacts = await minePrimarySourceDocs(canonicalCaseName, citedUrls, watchlist, _pdDeadline, pkey, input.summary, isExplainer);
     // Existing facts lead the union so a flood of newly-mined doc facts can't push an established
     // high-value figure (e.g. the $1.3M forfeiture) out when capFacts trims to the cap.
     if (docFacts.length) freshFacts = capFacts(unionFacts([...freshFacts, ...docFacts]), factCap);
