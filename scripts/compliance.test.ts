@@ -532,7 +532,7 @@ const distinctUse = [
 // ~96 sentences/run, more than the bounded refill could rebuild). A 4th occurrence triggers the cap.
 check("a figure used 3x across distinct long sentences is KEPT (all 3)", (collapseRepeatedAnchors(distinctUse).text.match(/661,440/g) || []).length === 3);
 const distinctUse4 = distinctUse + "\n\nEven after the case closed, that 661,440-a-day figure kept surfacing in every retrospective written about the fraud.";
-check("a figure used 4x IS capped at 2", (collapseRepeatedAnchors(distinctUse4).text.match(/661,440/g) || []).length <= 2);
+check("a figure used 4x in DISTINCT sentences is KEPT (semantic-refine handles real dups, not this)", (collapseRepeatedAnchors(distinctUse4).text.match(/661,440/g) || []).length === 4);
 
 console.log("inference / speculation-as-fact guard:");
 const spec = (s: string) => stripSpeculation("He was charged with wire fraud in 2024. " + s + " The court ordered a forfeiture.");
@@ -638,19 +638,19 @@ check("does NOT cut a lone streams figure",
 check("does NOT cut a lone songs figure",
   stripUnitConflation("CC-3 supplied roughly 10,000 songs a month.").cuts.length === 0);
 
-// HEAVY figure repetition (661,440 six times, all in distinct long sentences) -> collapse to <=2.
-console.log("heavy figure repetition (4+):");
-const sixTimes = [
-  "At its peak the network was pushing 661,440 fraudulent streams a day, a scale prosecutors called industrial.",
-  "The distributor's own analytics, had anyone read them, showed 661,440 streams a day flowing through the accounts.",
-  "To fund that, the bots needed content, and content is what fed the 661,440 streams a day at the core of it.",
-  "Investigators later fixed the daily figure at 661,440 streams, the number that anchored the forfeiture math.",
-  "Every morning the same machine woke up and produced 661,440 streams a day without a single human listener.",
-  "By 2023 the 661,440 streams a day had compounded into a figure large enough to draw the MLC's attention.",
+// TRUE near-duplicate restatements of a figure (high token overlap) -> collapse to <=2. Distinct
+// content is left to the LLM semantic-refine pass; this deterministic pass only catches restatements.
+console.log("near-duplicate figure restatements:");
+const nearDup = [
+  "The network pushed 661,440 fraudulent streams every single day.",
+  "The network pushed 661,440 fake streams every single day.",
+  "Every single day, the network pushed 661,440 fraudulent streams.",
+  "The network was pushing 661,440 fraudulent streams every day.",
+  "661,440 streams a day.",
 ].join("\n\n");
-const six = collapseRepeatedAnchors(sixTimes);
-check("a figure drummed 6x in long distinct sentences collapses to <=2", (six.text.match(/661,440/g) || []).length <= 2);
-check("still records the figure repetition cuts", six.cuts.some((c) => /repetition \(figure\)/.test(c)));
+const near = collapseRepeatedAnchors(nearDup);
+check("near-duplicate restatements of a figure collapse to <=2", (near.text.match(/661,440/g) || []).length <= 2);
+check("still records the figure repetition cuts", near.cuts.some((c) => /repetition \(figure\)/.test(c)));
 // A figure used exactly 3x stays conservative (distinct long uses are kept).
 const thrice = [
   "The network pushed 661,440 streams a day, a number prosecutors used to anchor the forfeiture against Smith.",

@@ -873,14 +873,16 @@ async function extendWithUnusedFacts(fullScript: string, factsBlob: string, targ
     // REFILL IS FACT-CONSUMPTION: operate on the UNUSED pool only, highest-novelty first.
     const unused = facts.filter((f) => !factIsUsed(f, bodyLc)).sort((a, b) => factNoveltyScore(b) - factNoveltyScore(a));
     if (!unused.length) { stoppedBecause = "facts-exhausted"; break; } // shortfall over padding
-    // Assign a whole batch that can honestly fill the remaining deficit at ~130 w/fact, capped so ONE
-    // call stays a ~450-word envelope (roughly 4-6 facts) rather than a giant ask that invites padding.
-    const deficitFacts = Math.ceil((targetWords - w) / 130);
-    const batch = unused.slice(0, Math.min(unused.length, Math.max(3, Math.min(6, deficitFacts))));
+    // Assign a LARGER batch (6-8 facts) so ONE call produces a substantial ~450-500-word envelope:
+    // calls were under-producing (~185 words off 3-4 facts), and with a 2-call cap that couldn't
+    // rebuild what the cut passes removed. More facts per call = more the model must deliver, so 2
+    // calls yield ~800-900 words — enough to restore the length. Still bounded, so it can't pad.
+    const deficitFacts = Math.ceil((targetWords - w) / 110);
+    const batch = unused.slice(0, Math.min(unused.length, Math.max(6, Math.min(8, deficitFacts))));
     const paras = body.split(/\n\n+/);
     const conclusion = paras.length > 3 ? paras.pop()! : "";
     const mid = paras.join("\n\n");
-    const needed = Math.min(450, batch.length * 130);
+    const needed = Math.min(520, batch.length * 90);
     try {
       calls++;
       const resp = await getAnthropic().messages.create({
@@ -890,7 +892,7 @@ async function extendWithUnusedFacts(fullScript: string, factsBlob: string, targ
         system: "You are extending a documentary YouTube script mid-production, matching its existing voice and rhythm. Your ONLY job is to CONSUME documented facts: write ONE beat per assigned fact, and each beat must DELIVER that fact — stating its specific figure, date, name or quoted words verbatim so it is unmistakably communicated. You are NOT writing connective narration, scene-setting, or analysis to reach a word count. Never invent: no statistic, name, quote, motive, role, method, or physical detail that is not in the assigned facts. If a fact cannot be delivered without inventing something, SKIP that fact and write fewer words — a shorter, fully-sourced passage is the correct outcome. Output ONLY the new beats as plain speakable prose — no preamble, no headers, no conclusion.",
         messages: [{
           role: "user",
-          content: `The script so far (its conclusion is held out and will follow your beats):\n"""\n${mid.slice(-6000)}\n"""\n\nWrite ONE beat for EACH of these approved, not-yet-used facts, in order. Each beat must state that fact's specific figure/date/name/quote verbatim:\n${batch.map((f, i) => `${i + 1}. ${f}`).join("\n")}\n\nAbout ${needed} words total (roughly ${Math.round(needed / Math.max(1, batch.length))} per beat). Deliver as many of the numbered facts as you honestly can. Do NOT pad with narration to reach the length, do NOT restate anything already in the script, do NOT write a conclusion, do NOT state anything not in the list. Fewer words with every fact delivered beats more words with invented connective tissue.`,
+          content: `The script so far (its conclusion is held out and will follow your beats):\n"""\n${mid.slice(-6000)}\n"""\n\nWrite ONE beat for EACH of these approved, not-yet-used facts, in order. Each beat must state that fact's specific figure/date/name/quote verbatim:\n${batch.map((f, i) => `${i + 1}. ${f}`).join("\n")}\n\nWRITE ABOUT ${needed} WORDS TOTAL — roughly ${Math.round(needed / Math.max(1, batch.length))} words per beat, which is 2-4 full sentences each: state the fact, then DEEPEN it (what it means in concrete terms, how it connects to the mechanism, who it affected and by how much) using only what the fact and the script already establish. This is a real length target, not a ceiling — deliver all ${batch.length} beats at that depth. Do NOT invent a statistic, name, quote, motive, or role beyond the facts; do NOT restate anything already in the script; do NOT write a conclusion. Depth on the sourced fact is how you reach the length — never filler.`,
         }],
       });
       const c = resp.content[0];
@@ -1622,6 +1624,10 @@ export async function finalizeScript(
     }
   };
   const nowMs = Date.now();
+  // The main body word count at the START of the deterministic strips — the baseline for the runtime
+  // over-cut guard on the repetition pass below.
+  const mainWords = () => { const k = ["fullScript", "script", "body", "content"].find((kk) => typeof (script as any)[kk] === "string" && (script as any)[kk].trim()); return k ? wc((script as any)[k]) : 0; };
+  const wordsAtStripStart = mainWords();
   // Source-leak CUT first — a leaked proper noun from the source video's story is a fabrication
   // about this subject; remove it before anything else reasons about the body.
   applyBodyPass((t) => stripSourceLeaks(t, input.sourceEntities, input.sourceMaterial), "source-leak");
@@ -1635,10 +1641,27 @@ export async function finalizeScript(
   // self-contradiction), and a fabricated external stat (an RIAA "$25k-$50k average" with no fact).
   applyBodyPass(stripFalseEquality, "false-equality");
   applyBodyPass((t) => stripUnsourcedStat(t, input.sourceMaterial), "unsourced-stat");
-  // De-repetition: collapse an anchor fact drummed 3+ times across the whole body, keeping the
-  // elaborated instances and cutting the bare restatements. Runs after dedupe (adjacent copies
-  // already gone) and on the assembled body, so it catches an anchor spread across sections.
-  applyBodyPass(collapseRepeatedAnchors, "repetition");
+  // De-repetition: collapse an anchor fact drummed across the whole body, keeping the elaborated
+  // instances and cutting the bare/near-duplicate restatements. RUNTIME OVER-CUT GUARD: repetition is
+  // the most aggressive cut and the last big one, so if the cumulative strip cut (start-of-strips ->
+  // after repetition) would exceed what the bounded refill can rebuild (~2 x 450w), it BACKS OFF —
+  // we snapshot the body, apply repetition, and revert it if the total net cut blows the budget. A
+  // slightly-repetitive script the refill can't fix beats a gutted one that lands short every run.
+  {
+    const snapshot: Record<string, any> = {};
+    for (const k of ["fullScript", "script", "body", "content", "outro"]) snapshot[k] = (script as any)[k];
+    const snapSections = (script as any).sections;
+    const autoCutsLen = autoCuts.length;
+    applyBodyPass(collapseRepeatedAnchors, "repetition");
+    const MAX_RESTORE = 2 * REFILL_RESTORE_WORDS_PER_CALL; // words a 2-call refill can rebuild
+    const cutWithRep = wordsAtStripStart - mainWords();
+    if (cutWithRep > MAX_RESTORE) {
+      for (const k of ["fullScript", "script", "body", "content", "outro"]) (script as any)[k] = snapshot[k];
+      (script as any).sections = snapSections;
+      autoCuts.length = autoCutsLen; // drop the repetition cuts we just reverted
+      console.log(`[pass] repetition BACKED OFF: cumulative strip cut ${cutWithRep}w would exceed refill capacity ${MAX_RESTORE}w`);
+    }
+  }
   applyBodyPass((t) => stripSchemeDurationClaim(t, (script as any).title, researchedSpan), "duration");
   applyBodyPass((t) => stripStaleFutureDates(t, nowMs), "stale-date");
   // Date integrity: correct a case-event date the script shifted off the sourced date (March 20 ->

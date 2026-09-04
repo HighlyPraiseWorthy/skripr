@@ -783,7 +783,7 @@ export function collapseRepeatedAnchors(text: string): { text: string; cuts: str
   // inside full sentences that merely reword the same point (the outside-review finding: repeated
   // anchors in long sentences slipped the old short-only rule). A long sentence that carries
   // genuinely DISTINCT content around the anchor has low overlap and is left alone.
-  const restatesAKept = (idx: number, keepIdxs: number[]) => keepIdxs.some((k) => tokenOverlap(flat[idx].s, flat[k].s) >= 0.5);
+  const restatesAKept = (idx: number, keepIdxs: number[]) => keepIdxs.some((k) => tokenOverlap(flat[idx].s, flat[k].s) >= 0.6);
   // Cut a non-kept occurrence when it near-duplicates a kept one (any length — catches a drummed
   // anchor reworded across long sentences) OR it is a tiny bare beat (< 10 words, almost certainly a
   // restatement, e.g. "661,440 streams a day."). A medium/long sentence with DISTINCT content around
@@ -809,16 +809,14 @@ export function collapseRepeatedAnchors(text: string): { text: string; cuts: str
         const byLen = [...occ].sort((a, b) => flat[b].s.length - flat[a].s.length);
         const keepArr = byLen.slice(0, 2); // keep the two most elaborated occurrences
         const keep = new Set(keepArr);
-        // CAP: keep the 2 most elaborated occurrences. The AGGRESSIVE cut (removing even long,
-        // distinct-looking sentences that merely carry the anchor) only kicks in at 4+ occurrences —
-        // at exactly 3 we fall back to the conservative per-cut check (bare beat / near-duplicate
-        // only), so a figure woven into 3 genuinely-different sentences is left intact. Raised from
-        // >=3: the old bar cut ~96 sentences/run, more than the bounded refill could rebuild, which
-        // was a root cause of the chronic "shortfall" oscillation.
-        const heavy = occ.length >= 4;
+        // CAP: keep the 2 most elaborated occurrences and cut ONLY the restatements that are a bare
+        // beat OR a genuine near-duplicate (cutEligible). We do NOT blanket-cut long, distinct-content
+        // sentences that merely share the figure — the LLM semantic-refine pass runs BEFORE this and
+        // already removed true semantic dups, so a blanket figure cut here just double-cuts distinct
+        // prose and guts length below what the bounded refill can rebuild (the shortfall oscillation).
         for (const k of occ) {
           if (keep.has(k)) { protectKeep.add(k); continue; }
-          if (!heavy && !cutEligible(k, keepArr)) continue;
+          if (!cutEligible(k, keepArr)) continue;
           remove.add(k); cuts.push(`repetition (figure): ${flat[k].s}`);
         }
       }
