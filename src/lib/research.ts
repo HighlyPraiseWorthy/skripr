@@ -76,7 +76,7 @@ export function honestMinutes(factCount: number): number {
 // mining-gate decouple + depth floor (so they hold only ~23 facts). Those stale rows were being
 // served on cached runs (parsedFacts=23), starving the re-fill; v6 forces re-derivation with the
 // full mining (~120 facts). Combined with MAX_FACTS 80->130 so the full set survives the cap.
-export const RESEARCH_BRIEF_VERSION = 7;
+export const RESEARCH_BRIEF_VERSION = 8;
 
 // Whether the record actually supports the premise the script is about to assert.
 //   documented  a real, citable source describes THIS specific event or claim
@@ -1065,6 +1065,27 @@ Output ONLY a JSON array, no prose: [{"i":1,"status":"keep|drop|conflict|tempora
  * the anti-fabrication guarantee holds while the grounding gets much richer.
  */
 
+// OFF-SUBJECT / NON-FACT JUNK sanitizer for EXPLAINER (phenomenon) topics. A stats-dashboard page
+// (e.g. the BLS CPI landing page) or an academic PDF leaks three shapes of noise into the context
+// pool that are topic-AGNOSTIC and never the subject of a specific explainer: (1) agency admin
+// chrome — office address/phone, who produces it, next-release schedules, definitional boilerplate;
+// (2) raw index-table rows ("<Category> CPI 12-month percent change in <Month YYYY>: X%") and the
+// seasonally-adjusted headline lines — we keep the PROSE versions of the on-subject numbers, these
+// colon-table dumps are duplicative padding; (3) study methodology/provenance ("data were obtained
+// from ACCRA", "the study examined…", "deflated by…"). This MUST run at the deepen RETURN path, not
+// only at extraction: the cache unions facts across brief versions (getBestAcrossVersions), so junk
+// cached under an older version resurfaces on every later run unless it is stripped on the way out.
+const PHENOM_JUNK_RE = /(telephone number|is located at|is produced by|office of prices|federal center|scheduled to be released|next release|news release headline|is described as a measure|indexes are available|average price data for select|monthly labor review|beyond the numbers|payroll employment was|unemployment rate was|productivity was|employment cost index|import price index|export price index|producer price index|12-month percent change in .*\d{4}\s*:|rose \d[\d.]* percent in .*\d{4}|index for all items less food and energy|were obtained from|was obtained from|were drawn from|data were obtained|the study (?:examined|used)|outcome variable|named in the survey|price index was computed|deflated by|weighted based on|expenditure shares|census \d{4}|\bSIC code\b|random effects model)/i;
+
+function stripPhenomenonJunk(facts: ResearchFact[]): { kept: ResearchFact[]; dropped: number } {
+  let dropped = 0;
+  const kept = facts.filter((f) => {
+    if (f && typeof f.fact === "string" && PHENOM_JUNK_RE.test(f.fact)) { dropped++; return false; }
+    return true;
+  });
+  return { kept, dropped };
+}
+
 // PRIMARY-SOURCE DOCUMENT MINING. Perplexity returns the NEWS-SUMMARY layer — the big round
 // numbers everyone reports — but the vivid, script-winning granularity (a $1.3M debit-card trail,
 // AI-artist aliases, month-by-month milestones, the warnings-and-denials thread) lives in the
@@ -1234,14 +1255,11 @@ async function minePrimarySourceDocs(
       // macro indicators — that can never be the SUBJECT of a specific explainer, so drop them
       // outright regardless of what the model returned. (Category-row over-inclusion is handled by
       // the strengthened prompt; this catches only the unambiguous non-facts.)
-      const ADMIN_JUNK = isExplainer
-        ? /(telephone number|is located at|federal center|scheduled to be released|next release|news release headline|is described as a measure|indexes are available|average price data for select|not seasonally adjusted\.?$|seasonally adjusted\.?$|\bmonthly labor review\b|\bbeyond the numbers\b|payroll employment was|unemployment rate was|productivity was|employment cost index|import price index|export price index|producer price index - final demand)/i
-        : null;
       let droppedJunk = 0;
       for (const f of facts.slice(0, 80)) {
         // Guard the living-person watchlist the same way the other paths do.
         if (watchlist.some((w) => f.toLowerCase().includes(w.toLowerCase()))) continue;
-        if (ADMIN_JUNK && ADMIN_JUNK.test(f)) { droppedJunk++; continue; }
+        if (isExplainer && PHENOM_JUNK_RE.test(f)) { droppedJunk++; continue; }
         out.push({ fact: f.trim(), source: url, context: true });
       }
       if (droppedJunk) console.log(`[primary-doc] backstop dropped ${droppedJunk} administrative/off-subject line(s) from ${url}`);
@@ -1413,10 +1431,15 @@ Each question seeks a single concrete, citable fact. Output ONLY this JSON, no p
     // MOVE #2: supersede stale/weaker facts before returning — including any the LIBRARY
     // accumulated on an earlier run (the $10M the safety-gate TTL couldn't shed), so the
     // angle page and script never see a superseded number.
-    const reconciledHit = capFacts((await reconcileFacts(returnHit)).facts, factCap);
+    const reconciledHitRaw = capFacts((await reconcileFacts(returnHit)).facts, factCap);
+    // Sanitize on the way out. The union across brief versions (getBestAcrossVersions) can drag in
+    // junk cached under an older version, so a cache HIT must be cleaned here or the phone number /
+    // CPI-table dump resurfaces forever even after the extraction gate was fixed.
+    const hitStrip = isExplainer ? stripPhenomenonJunk(reconciledHitRaw) : { kept: reconciledHitRaw, dropped: 0 };
+    const reconciledHit = hitStrip.kept;
     // CACHE HIT — the context loop is SKIPPED entirely. If a phenomenon brief returns a small set,
     // this line proves it came from a stale/shallow cached row (bump RESEARCH_BRIEF_VERSION to bust).
-    console.log(`[deepen] CACHE-HIT isExplainer=${isExplainer ? "T" : "F"} kind=${input.kind ?? "undef"} budget=${budget} cached=${cached.facts.length} final=${reconciledHit.length} finalContext=${reconciledHit.filter((f) => f.context).length} — context loop SKIPPED`);
+    console.log(`[deepen] CACHE-HIT isExplainer=${isExplainer ? "T" : "F"} kind=${input.kind ?? "undef"} budget=${budget} cached=${cached.facts.length} junkStripped=${hitStrip.dropped} final=${reconciledHit.length} finalContext=${reconciledHit.filter((f) => f.context).length} — context loop SKIPPED`);
     return withHonesty({ facts: reconciledHit, conflicts: cached.conflicts, status: "ok", caseName: cached.caseName || correction.caseName, when: whenHit });
   }
 
@@ -1625,7 +1648,13 @@ Each question seeks a single concrete, citable fact. Output ONLY this JSON, no p
   // earlier run's hard facts — 54 indicted, 53 convicted, 28 months, full patch — must
   // NOT be lost. Fresh facts lead (they carry the new material); prior uniques fill in.
   const prior = await getBestAcrossVersions(baseKey);
-  const facts = capFacts(unionFacts([...freshFacts, ...(prior?.facts || [])]), factCap);
+  // Sanitize the cross-version union BEFORE caching it: prior versions may hold junk (phone number,
+  // CPI-table dump) cached before the extraction gate existed, and line 1662 would otherwise persist
+  // it right back under the new version. For explainer topics, strip it here so the cache heals.
+  const _unioned = capFacts(unionFacts([...freshFacts, ...(prior?.facts || [])]), factCap);
+  const _freshStrip = isExplainer ? stripPhenomenonJunk(_unioned) : { kept: _unioned, dropped: 0 };
+  const facts = _freshStrip.kept;
+  if (_freshStrip.dropped) console.log(`[deepen] junk-stripped ${_freshStrip.dropped} off-subject/admin line(s) from union before caching`);
 
   // Prefer a date range the SOURCED FACTS state explicitly over the resolver's guess,
   // so a confidently-wrong 1999-2001 gives way to the 1998-2000 the record actually says.
@@ -1653,7 +1682,11 @@ Each question seeks a single concrete, citable fact. Output ONLY this JSON, no p
   // MOVE #2: reconcile before returning, so a superseded number (this run's or one the
   // library accumulated earlier) is dropped and the angle page states one authoritative
   // figure — the "$8M beats $10M, age-52 drops" adjudication, with zero human intervention.
-  const reconciled = capFacts((await reconcileFacts(returnFacts)).facts, factCap);
+  const reconciledRaw = capFacts((await reconcileFacts(returnFacts)).facts, factCap);
+  // Final return guard: the user's LIBRARY (returnFacts) can carry junk accumulated on prior runs,
+  // so strip once more on the way out — same clean set the cache-hit path returns.
+  const freshOutStrip = isExplainer ? stripPhenomenonJunk(reconciledRaw) : { kept: reconciledRaw, dropped: 0 };
+  const reconciled = freshOutStrip.kept;
   // ONE-LINE DIAGNOSIS of the two-tier fill: classification, the fill target, how many Pool-B
   // questions ran, context facts gathered vs survived the reviewer, rounds run, why it stopped, and
   // the final count. This single line says exactly where the phenomenon pool breaks.
