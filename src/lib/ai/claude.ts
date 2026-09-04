@@ -569,6 +569,10 @@ export interface SectionSpec {
   targetWords: number;
   isPeak: boolean;
   triggers: string[];
+  // TOPIC BLUEPRINT only: the facts assigned to THIS beat (disjoint across beats), so the section
+  // writer draws from its own slice instead of the whole pool — two beats then physically cannot
+  // state the same number. Empty/undefined on the remix path, which keeps its whole-pool behavior.
+  assignedFacts?: string[];
 }
 
 // Build the per-section plan from the source's measured structure, scaled to the user's
@@ -616,6 +620,88 @@ export function buildSectionPlan(
   });
 }
 
+// Parse the "- fact (source: url)" lines out of the joined source material. A topic/phenomenon
+// brief's source material is the approved research pool in exactly this shape; a case brief may
+// also carry a "REAL CASE THIS VIDEO IS ABOUT" header block, which is not a numbered fact and is
+// skipped. Returns the fact lines verbatim (source tag kept) so a beat can carry its own citations.
+function parseFactLines(sourceMaterial?: string): string[] {
+  if (!sourceMaterial) return [];
+  return sourceMaterial
+    .split("\n")
+    .map((l) => l.replace(/^\s*[-•]\s+/, "").trim())
+    .filter((l) => l.length > 12 && !/^REAL CASE THIS VIDEO IS ABOUT/i.test(l) && !/^\(sources?:/i.test(l));
+}
+
+// TOPIC STORY BLUEPRINT (phenomenon / topic mode, where there is no source video to measure).
+// One planning call turns the approved facts + the angle into a beat outline that ESCALATES toward
+// a controlling thesis, with each fact ASSIGNED to exactly one beat. The result is a SectionSpec[]
+// the same chunked writer consumes — so the draft arrives near length with facts already spread
+// across beats, instead of every section drawing the same pool and the refill loop carrying length.
+//
+// Fact-count-adaptive (the honest-length principle): the beat count is capped so each beat holds a
+// real slice of facts (≈2+), rather than stretching a thin pool across too many beats. If a topic's
+// honest yield is small, the video is built from fewer, denser beats — not padded to a beat count
+// the material cannot support. Returns [] on any failure so the caller falls back to the one-shot
+// path (current behavior), never a broken plan.
+export async function buildTopicBlueprint(
+  sourceMaterial: string | undefined,
+  targetWords: number,
+  targetMinutes: number,
+  angle: string | undefined,
+  opts?: { hookType?: string; storytelling?: string },
+): Promise<SectionSpec[]> {
+  const facts = parseFactLines(sourceMaterial);
+  // Below ~6 facts there is nothing to distribute — the one-shot writer handles a thin brief fine.
+  if (facts.length < 6) return [];
+
+  // Beats scaled to duration (~1 per 100s) but capped so each beat gets ≈2+ facts. A 20-min brief
+  // wants ~12 beats; a 29-fact pool caps that near ceil(29/2)=15, so 12 stands; a thin pool shrinks it.
+  const byTime = Math.round((targetMinutes * 60) / 100);
+  const byFacts = Math.ceil(facts.length / 2);
+  const beatCount = Math.max(4, Math.min(byTime, byFacts, 14));
+
+  const numbered = facts.map((f, i) => `[${i}] ${f}`).join("\n");
+  const sys = `You are a documentary story architect. You design the BEAT STRUCTURE of a ${targetMinutes}-minute YouTube video from a set of sourced facts, then assign each fact to the one beat it best serves. Rules: (1) The video is an ARGUMENT, not a list — state a single controlling thesis and order the beats so each RAISES THE STAKES over the last (setup → mechanism → who/how much → escalation → payoff). (2) Assign EVERY useful fact to EXACTLY ONE beat (its factIndices); it is fine to leave a weak/duplicative fact unassigned. Do not put the same fact in two beats. (3) Give each beat a distinct narrative FUNCTION in one line. (4) Weight each beat 1-3 for how much runtime it deserves (the climax/mechanism beats earn more). Output ONLY JSON: {"thesis":"...","beats":[{"name":"...","purpose":"...","factIndices":[0,3,7],"weight":2}, ...]}. Exactly ${beatCount} beats.`;
+  const ask = `ANGLE / FRAMING: ${angle || "(none given — infer the strongest thesis from the facts)"}${opts?.hookType ? `\nHOOK TYPE: ${opts.hookType}` : ""}${opts?.storytelling ? `\nSTORYTELLING MODE: ${opts.storytelling}` : ""}\n\nFACTS (assign by index):\n${numbered}\n\nDesign exactly ${beatCount} escalating beats and assign the facts. Output ONLY the JSON.`;
+
+  try {
+    const msg = await getAnthropic().messages.create({
+      model: "claude-sonnet-4-6",
+      max_tokens: 2000,
+      temperature: 0.4,
+      system: sys,
+      messages: [{ role: "user", content: ask }],
+    });
+    const text = msg.content[0]?.type === "text" ? msg.content[0].text : "";
+    const m = text.match(/\{[\s\S]*\}/);
+    const parsed = m ? JSON.parse(m[0]) : null;
+    const beats: any[] = Array.isArray(parsed?.beats) ? parsed.beats : [];
+    if (beats.length < 2) return [];
+
+    // Proportional word budgets from the weights, summing to the length target. Peak = heaviest beat.
+    const weights = beats.map((b) => Math.max(1, Math.min(3, Number(b?.weight) || 1)));
+    const totalW = weights.reduce((a, b) => a + b, 0) || beats.length;
+    const peakIdx = weights.indexOf(Math.max(...weights));
+    const used = new Set<number>();
+    return beats.map((b, i) => {
+      const idxs: number[] = Array.isArray(b?.factIndices) ? b.factIndices.filter((n: any) => Number.isInteger(n) && n >= 0 && n < facts.length) : [];
+      // Enforce disjointness even if the model double-assigned: first beat to claim a fact keeps it.
+      const mine = idxs.filter((n: number) => !used.has(n));
+      mine.forEach((n) => used.add(n));
+      return {
+        name: String(b?.name || `Beat ${i + 1}`).slice(0, 80),
+        purpose: String(b?.purpose || "").slice(0, 220),
+        targetWords: Math.max(90, Math.round((weights[i] / totalW) * targetWords)),
+        isPeak: i === peakIdx,
+        triggers: [],
+        assignedFacts: mine.map((n) => facts[n]),
+      };
+    });
+  } catch {
+    return [];
+  }
+}
+
 // Write one section against its own brief. Small, focused calls: the model has one job,
 // one word budget, and the beats that belong here — nothing to trade the structure against.
 export async function writeSection(
@@ -656,7 +742,8 @@ THIN SECTION? KEEP IT SHORT — NEVER PAD WITH INFERENCE. If the facts you have 
 ${spec.isPeak ? `THIS IS THE PEAK OF THE VIDEO. It is the longest section by design. Slow down, go beat by beat, and let it breathe. Do not summarize what happens here — render it.\n` : ""}
 ${spec.triggers.length ? `RETENTION BEATS THAT BELONG IN THIS SECTION (place them here, reproduce the MECHANIC not the wording):\n${spec.triggers.map((t) => `- ${t}`).join("\n")}\n` : ""}
 ${context.previousTail ? `THE SECTION BEFORE THIS ONE ENDED LIKE THIS (continue naturally, never repeat it):\n"...${context.previousTail}"\n` : "This is the OPENING section — it carries the hook.\n"}
-${context.sourceMaterial ? `\nSOURCE MATERIAL — every specific you state must come from here. Do not add a number, name, date, or claim that is not present:\n${context.sourceMaterial.slice(0, 5000)}\n` : ""}
+${spec.assignedFacts && spec.assignedFacts.length ? `\nTHE FACTS ASSIGNED TO THIS BEAT — build this section on THESE. They are yours to spend here; other sections carry the rest of the research, so lead with these and render them as scenes/steps. State a NUMBER only if it appears in the assigned facts (or, for light connective context, elsewhere in the pool) — do not pull another beat's headline figure into this one:\n${spec.assignedFacts.map((f) => `- ${f}`).join("\n").slice(0, 4000)}\n` : ""}
+${context.sourceMaterial ? `\n${spec.assignedFacts && spec.assignedFacts.length ? "THE FULL RESEARCH POOL (context + anti-fabrication guardrail only — every specific you state must exist SOMEWHERE here; but SPEND the assigned facts above, not these):" : "SOURCE MATERIAL — every specific you state must come from here. Do not add a number, name, date, or claim that is not present:"}\n${context.sourceMaterial.slice(0, 5000)}\n` : ""}
 ${context.voice ? `\nWRITE THIS ENTIRE SECTION IN THIS CREATOR'S VOICE — their sentence rhythm, fragment use, diction, energy and way of addressing (or not addressing) the viewer. Obey their never-does absolutely:\n${context.voice.slice(0, 1600)}\n` : ""}
 
 Write only this section's prose now.`,

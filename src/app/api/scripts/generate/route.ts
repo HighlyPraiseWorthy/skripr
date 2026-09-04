@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import { generateScript, buildSectionPlan, generateHookFirst, writeSection, assembleFinalizeScript, reconcileTitle } from "@/lib/ai/claude";
+import { generateScript, buildSectionPlan, buildTopicBlueprint, generateHookFirst, writeSection, assembleFinalizeScript, reconcileTitle, type SectionSpec } from "@/lib/ai/claude";
 import { checkScriptLimit, incrementGenerationCount, refundGenerationCount } from "@/lib/usage";
 import { getMagnetSuggestions } from "@/lib/magnet-word";
 import { supabaseAdmin } from "@/lib/db/supabase";
@@ -297,6 +297,29 @@ export async function POST(req: Request) {
       Array.isArray(storytellingTechniques) && storytellingTechniques.length ? storytellingTechniques : null
     );
 
+    // SECTION PLAN. Remix mode measures the SOURCE video's structure. Topic/phenomenon mode has no
+    // source to measure, so when there is no measurable structure we synthesize a fact-assigned STORY
+    // BLUEPRINT from the approved research: beats that escalate toward a thesis, each with its own
+    // disjoint slice of facts and word budget, so the draft arrives near length with facts already
+    // spread — the refill loop stops being load-bearing. Computed ONCE here (one-shot "full" path),
+    // so there is no per-section-call non-determinism. Falls back to undefined (one-shot writer) if
+    // the blueprint can't be built. The chunked "section" mode keeps its deterministic buildSectionPlan.
+    let resolvedSectionPlan: SectionSpec[] | undefined;
+    if (targetMinutes) {
+      const measured = buildSectionPlan(contentStructure, retentionTriggers, Math.round(targetMinutes * 150));
+      if (measured.length >= 2) {
+        resolvedSectionPlan = measured;
+      } else {
+        const bpMaterial = typeof sourceMaterial === "string" && sourceMaterial.trim() ? sourceMaterial.trim() : undefined;
+        const bp = await buildTopicBlueprint(bpMaterial, Math.round(targetMinutes * 165), targetMinutes, enhancedAngle, { hookType: hookType || undefined, storytelling: resolvedStoryMode });
+        if (bp.length >= 2) {
+          resolvedSectionPlan = bp;
+          const assigned = bp.reduce((n, b) => n + (b.assignedFacts?.length || 0), 0);
+          console.log(`[blueprint] topic story blueprint: ${bp.length} beats, ${assigned} facts assigned, target ${Math.round(targetMinutes * 165)} words`);
+        }
+      }
+    }
+
     const scriptInput: Parameters<typeof generateScript>[0] = {
       sourceTranscript: truncated,
       targetTopic: topic || "",
@@ -314,11 +337,9 @@ export async function POST(req: Request) {
       nicheTitleFormulas: titleFormulas || undefined,
       voiceProfile: voiceProfile || undefined,
       voiceName: voiceName || undefined,
-      // Section-by-section: the source's measured structure, scaled to the chosen
-      // length, so each section is written against its own function and word budget.
-      sectionPlan: targetMinutes
-        ? buildSectionPlan(contentStructure, retentionTriggers, Math.round(targetMinutes * 150))
-        : undefined,
+      // Section-by-section: remix uses the source's measured structure; topic uses the synthesized
+      // story blueprint (resolved just above), each section written against its own budget + facts.
+      sectionPlan: resolvedSectionPlan,
       remixRecipe: remixFramework || undefined,
       // Hook-first inputs: the hook is written and archetype-validated before the body.
       hookArchetype: hookType || undefined,
