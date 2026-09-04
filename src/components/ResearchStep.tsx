@@ -53,6 +53,9 @@ export default function ResearchStep(props: {
   // re-running the whole deepen — same fact set, no second round-trip.
   presetFacts?: { fact: string; source: string | null }[];
   presetConflicts?: { fact: string; source: string | null; note: string }[];
+  // The chosen video length in minutes. Drives the research budget (~2.5 facts/min) so a 10-min
+  // video researches ~25 facts and a 20-min ~50, instead of the length-blind default.
+  targetMinutes?: number;
 }) {
   const [sourceMaterial, setSourceMaterial] = useState("");
   const [researching, setResearching] = useState(false);
@@ -182,7 +185,7 @@ export default function ResearchStep(props: {
     try {
       const res = await fetch("/api/research/find", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "deepen", caseName: c.name, caseSummary: c.summary, niche: props.niche, sourcePayoff: props.sourcePayoff, sourceSubject: props.sourceSubject, topicAnchor: anchor }),
+        body: JSON.stringify({ action: "deepen", caseName: c.name, caseSummary: c.summary, niche: props.niche, sourcePayoff: props.sourcePayoff, sourceSubject: props.sourceSubject, topicAnchor: anchor, targetMinutes: props.targetMinutes }),
       });
       const d = await res.json();
       const fs = Array.isArray(d?.facts) ? d.facts : [];

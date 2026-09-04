@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import GenerationProgress from "@/components/GenerationProgress";
 import { joinHookBody, bodyStartsWithHook } from "@/lib/script-text";
 import { VoiceSelect } from "@/components/VoiceSelect";
@@ -58,6 +58,12 @@ export default function ScriptBriefPage() {
   const [groundedOn, setGroundedOn] = useState<any | null>(null);
   const [groundNote, setGroundNote] = useState("");
   const [userPlan, setUserPlan] = useState<string>("free");
+  // RESEARCH-BEFORE-ANGLES: the case + deepened fact objects are held so the visible ResearchStep
+  // seeds them (no re-research), and the angles are then written from EXACTLY the facts the creator
+  // approved there. approvedFactsRef captures the checked set on continue.
+  const [researchCase, setResearchCase] = useState<{ name: string; summary?: string; when?: string; sources?: string[] } | null>(null);
+  const [researchFacts, setResearchFacts] = useState<{ fact: string; source: string | null }[]>([]);
+  const approvedFactsRef = useRef<{ fact: string; source: string | null }[]>([]);
 
   useEffect(() => {
     fetch("/api/user/plan").then(r => r.json()).then(d => setUserPlan(d.plan || "free")).catch(() => {});
@@ -73,12 +79,21 @@ export default function ScriptBriefPage() {
       if ((b as any).topicKind) setTopicKind((b as any).topicKind);
       if ((b as any).sourceVerdict) setSourceVerdict((b as any).sourceVerdict);
       if (b.angles?.length > 0) setPhase("angles");
-      // A case was already chosen on the previous screen: honor it, do not
-      // re-resolve and ask again. Just write the hook cards on that case.
-      else if (gb?.caseName) fetchAngles(b, gb);
+      // A case was already chosen on the previous screen: honor it, do not re-resolve. Go straight to
+      // the research review (facts get deepened there), then angles are written from what's approved.
+      else if (gb?.caseName) goToResearch(b, { name: gb.caseName, summary: gb.caseSummary, when: gb.when, sources: gb.sources || [] }, [], gb);
       else groundThenAngles(b);
     } catch { window.location.href = "/dashboard/scripts/new"; }
   }, []);
+
+  // Store the resolved case + any pre-deepened facts, then show the VISIBLE ResearchStep. Angles are
+  // written AFTER, from the approved facts — the research-before-angles order the wizard now enforces.
+  function goToResearch(b: Brief, caseObj: { name: string; summary?: string; when?: string; sources?: string[] } | null, factObjs: { fact: string; source: string | null }[], g?: any) {
+    if (caseObj) { setResearchCase(caseObj); setGroundedOn(caseObj); }
+    setResearchFacts(factObjs);
+    if (g) setGrounding(g);
+    setPhase("research");
+  }
 
   // Look it up first, then write the cards. If several real cases fit the title,
   // ask which one before writing anything, since composing five cards about the
@@ -105,32 +120,61 @@ export default function ScriptBriefPage() {
           setGrounding(g); setGroundCases(cands); setPhase("pick-case");
           return;
         }
-        // No case identified: drop the facts rather than build cards on material
-        // that may describe a different story than the title.
-        if (gd.kind === "event" && cands.length === 0) {
-          g = { ...g, facts: [] };
-        }
         if (gd.kind === "event" && cands.length === 1) {
           const c = cands[0];
-          setGroundedOn(c);
           g = { ...g, caseName: c.name, caseSummary: c.summary, when: c.when, sources: c.sources || [] };
-          // Re-research the identified case: the hook cards may only use facts they
-          // are given, so case-specific facts raise the ceiling on their concreteness.
+          // Deepen the identified case at the LENGTH-SIZED budget, then hand the fact objects to the
+          // research review (no re-research there). Angles are written after, from the approved set.
+          let factObjs: { fact: string; source: string | null }[] = [];
           try {
             const rr = await fetch("/api/research/find", {
               method: "POST", headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ action: "deepen", caseName: c.name, caseSummary: c.summary || "", niche: b.niche }),
+              body: JSON.stringify({ action: "deepen", caseName: c.name, caseSummary: c.summary || "", niche: b.niche, targetMinutes: (b as any).targetMinutes }),
             });
             const rd = await rr.json();
-            if (rr.ok && Array.isArray(rd.facts) && rd.facts.length) {
-              g.facts = rd.facts.map((f: any) => f?.source ? `${f.fact} (source: ${f.source})` : f?.fact).filter(Boolean);
+            if (rr.ok && Array.isArray(rd.facts)) {
+              factObjs = rd.facts.filter((f: any) => f && typeof f.fact === "string").map((f: any) => ({ fact: f.fact, source: f.source ?? null }));
+              g.facts = factObjs.map((f) => (f.source ? `${f.fact} (source: ${f.source})` : f.fact));
             }
           } catch { /* keep the topic-level facts */ }
+          setGrounding(g);
+          goToResearch(b, { name: c.name, summary: c.summary, when: c.when, sources: c.sources || [] }, factObjs, g);
+          return;
         }
+        // No specific case (non-event, or an event with none identified): take the topic-level facts
+        // into the research review so the creator still approves them before angles are written.
+        const topicFactObjs = (Array.isArray(gd.facts) ? gd.facts : [])
+          .filter((f: any) => f && typeof f.fact === "string")
+          .map((f: any) => ({ fact: f.fact, source: f.source ?? null }));
         setGrounding(g);
+        goToResearch(b, null, topicFactObjs, g);
+        return;
       }
-    } catch { /* grounding is best effort, the cards still get written */ }
-    await fetchAngles(b, g);
+    } catch { /* grounding is best effort */ }
+    // Resolve failed entirely: still show the research review so the user can research the topic.
+    goToResearch(b, null, [], g);
+  }
+
+  // ResearchStep -> angles. Build the grounding from EXACTLY the approved (checked) facts, then write
+  // the hook angles from it. This is the research-before-angles handoff.
+  async function continueFromResearch(sm?: string, v?: any, k?: any) {
+    if (!brief) return;
+    setSourceMaterial(sm || "");
+    if (v) setSourceVerdict(v);
+    if (k) setTopicKind(k);
+    const approved = approvedFactsRef.current.length ? approvedFactsRef.current : researchFacts;
+    const c = researchCase;
+    const g: any = {
+      ...(grounding || {}),
+      kind: k || topicKind || "event", verdict: "documented",
+      caseName: c?.name || (grounding as any)?.caseName,
+      caseSummary: c?.summary || (grounding as any)?.caseSummary || "",
+      when: c?.when || (grounding as any)?.when || "",
+      sources: c?.sources || (grounding as any)?.sources || [],
+      facts: approved.map((f) => (f.source ? `${f.fact} (source: ${f.source})` : f.fact)),
+    };
+    setGrounding(g);
+    await fetchAngles(brief, g);
   }
 
   async function fetchAngles(b: Brief, g?: any) {
@@ -163,12 +207,13 @@ export default function ScriptBriefPage() {
     return parts.join("\n");
   }
 
-  // Pick an angle → research step → storytelling step → generate.
+  // Research already happened BEFORE the angles (research-before-angles). Picking an angle now goes
+  // straight to the storytelling step, then generate — no second research pass.
   function handlePickAngle(angle: Angle) {
     if (!brief) return;
     setSelectedAngle(angle); setError(null);
     setSelectedMagnet(null); setAppliedMagnetTitle(null);
-    setPhase("research");
+    setPhase("storytelling");
   }
 
   async function generateWithStory(storytellingMode: string, storytellingTechniques: string[], directorNote?: string) {
@@ -264,14 +309,20 @@ export default function ScriptBriefPage() {
     setCopied(true); setTimeout(() => setCopied(false), 2000);
   }
 
-  if (phase === "research" && selectedAngle) return (
+  // RESEARCH comes BEFORE the angles now — no angle exists yet, so this gates on the brief/case.
+  if (phase === "research" && brief) return (
     <ResearchStep
-      topic={brief?.topic || selectedAngle.titleSuggestion || ""}
-      niche={brief?.niche}
-      angle={selectedAngle.hookPremise || selectedAngle.titleSuggestion}
-      angleLabel={selectedAngle.titleSuggestion || selectedAngle.hookPremise}
-      onContinue={(sm, v, k) => { setSourceMaterial(sm || ""); setSourceVerdict(v || null); setTopicKind(k || null); setPhase("storytelling"); }}
-      onBack={() => setPhase("angles")}
+      topic={researchCase?.name || brief.topic || ""}
+      topicAnchor={brief.topic}
+      niche={brief.niche}
+      angle={brief.topic}
+      angleLabel={researchCase?.name || brief.topic}
+      targetMinutes={(brief as any).targetMinutes}
+      presetCase={researchCase ? { name: researchCase.name, summary: researchCase.summary || "", when: researchCase.when || "", whyItFits: "", sources: researchCase.sources || [] } : undefined}
+      presetFacts={researchFacts.length ? researchFacts : undefined}
+      onFactsApproved={(fs) => { approvedFactsRef.current = fs; }}
+      onContinue={(sm, v, k) => { void continueFromResearch(sm, v, k); }}
+      onBack={() => (window.location.href = "/dashboard/scripts/new")}
     />
   );
 
@@ -282,7 +333,7 @@ export default function ScriptBriefPage() {
       angle={selectedAngle.hookPremise || selectedAngle.titleSuggestion}
       angleLabel={selectedAngle.titleSuggestion || selectedAngle.hookPremise}
       onGenerate={generateWithStory}
-      onBack={() => setPhase("research")}
+      onBack={() => setPhase("angles")}
     />
   );
 
@@ -310,18 +361,21 @@ export default function ScriptBriefPage() {
                   const b = brief;
                   void (async () => {
                     setPhase("loading");
+                    let factObjs: { fact: string; source: string | null }[] = [];
                     try {
                       const rr = await fetch("/api/research/find", {
                         method: "POST", headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ action: "deepen", caseName: c.name, caseSummary: c.summary || "", niche: b.niche }),
+                        body: JSON.stringify({ action: "deepen", caseName: c.name, caseSummary: c.summary || "", niche: b.niche, targetMinutes: (b as any).targetMinutes }),
                       });
                       const rd = await rr.json();
-                      if (rr.ok && Array.isArray(rd.facts) && rd.facts.length) {
-                        g.facts = rd.facts.map((f: any) => f?.source ? `${f.fact} (source: ${f.source})` : f?.fact).filter(Boolean);
+                      if (rr.ok && Array.isArray(rd.facts)) {
+                        factObjs = rd.facts.filter((f: any) => f && typeof f.fact === "string").map((f: any) => ({ fact: f.fact, source: f.source ?? null }));
+                        g.facts = factObjs.map((f) => (f.source ? `${f.fact} (source: ${f.source})` : f.fact));
                         setGrounding({ ...g });
                       }
                     } catch { /* keep the topic-level facts */ }
-                    await fetchAngles(b, g);
+                    // Research-before-angles: review the facts, THEN write the hook angles.
+                    goToResearch(b, { name: c.name, summary: c.summary, when: c.when, sources: c.sources || [] }, factObjs, g);
                   })();
                 }
               }}
@@ -335,7 +389,7 @@ export default function ScriptBriefPage() {
             </button>
           ))}
         </div>
-        <button onClick={() => { if (brief) void fetchAngles(brief, grounding); }}
+        <button onClick={() => { if (brief) goToResearch(brief, null, researchFacts, grounding); }}
           style={{ marginTop: 16, background: "none", border: "none", padding: 0, cursor: "pointer", fontSize: 12.5, color: C.textDim }}>
           None of these, continue without a specific case
         </button>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import GenerationProgress from "@/components/GenerationProgress";
@@ -118,18 +118,6 @@ export default function NewScriptPage() {
   const [suggestingAngles, setSuggestingAngles] = useState(false);
   const [angleSuggestions, setAngleSuggestions] = useState<string[]>([]);
   const [angleWarnings, setAngleWarnings] = useState<string[][]>([]);
-  // RESEARCH-BEFORE-ANGLES (topic path): grounding runs first and shows the visible, reviewable
-  // ResearchStep; angles are then generated FROM the approved facts. topicFlow flags that the
-  // ResearchStep continue should route to angle-suggestion (not straight to storytelling), and the
-  // preset case/facts let ResearchStep seed the deepen result WITHOUT a second research round-trip.
-  const [topicFlow, setTopicFlow] = useState(false);
-  // Set once the creator has reviewed the research and angles were generated from it: the final
-  // "generate" proceed then SKIPS the research step (straight to storytelling) so the topic path
-  // never re-runs /api/research/find a second time.
-  const [researchReviewed, setResearchReviewed] = useState(false);
-  const [researchCase, setResearchCase] = useState<{ name: string; summary?: string; when?: string; sources?: string[] } | null>(null);
-  const [researchFacts, setResearchFacts] = useState<{ fact: string; source: string | null }[]>([]);
-  const approvedFactsRef = useRef<{ fact: string; source: string | null }[]>([]);
   const [selectedHookType, setSelectedHookType] = useState<string | null>(null);
   const [lockTitle, setLockTitle] = useState(false);
 
@@ -280,82 +268,10 @@ export default function NewScriptPage() {
   // Interactive path: hold the transcript and show the storytelling step before
   // writing. The query-param auto-gen path keeps generating directly (server
   // auto-selects the mode there).
+  // Interactive path: hold the transcript and show the research step before writing.
   function runGenerate(transcript: string) {
     setPendingTranscript(transcript);
-    // Topic path that already reviewed research + built angles from it: skip a second research
-    // round-trip and go straight to storytelling with the facts already approved.
-    setStep(researchReviewed ? "storytelling" : "research");
-  }
-
-  // The grounded case resolved at the topic stage, formatted for the script prompt.
-  // Without this, skipping the research step would throw away the grounding the
-  // angles were already built on.
-  // Ground on ONE specific case: research it, set it as the grounding, and rewrite
-  // the angles from it. Shared so the picker and the manual override behave
-  // identically. The manual path is the deterministic escape hatch when live
-  // search keeps drifting: type "Christopher Boyce" and you get Boyce, every time.
-  async function groundOnCase(c: { name: string; summary?: string; when?: string; sources?: string[] }) {
-    setGroundedOn({ name: c.name, summary: c.summary || "", when: c.when || "", sources: c.sources || [] });
-    setGroundUnresolved(false);
-    setManualOpen(false);
-    setSourceVerdict("documented");
-    setSuggestingAngles(true);
-    setAngleSuggestions([]);
-    // RESEARCH-BEFORE-ANGLES: deepen the case now, then hand the fact set to the VISIBLE ResearchStep
-    // for the creator to review and approve. Angles are generated afterwards, FROM the approved facts
-    // (suggestGroundedAngles), so an angle can no longer overstate past the evidence the way the old
-    // deepen->suggest-in-one-shot path did. The deepen result is passed as presetFacts so ResearchStep
-    // does NOT re-research (no double /api/research/find call).
-    let factObjs: { fact: string; source: string | null }[] = [];
-    try {
-      const rr = await fetch("/api/research/find", {
-        method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "deepen", caseName: c.name, caseSummary: c.summary || "", niche }),
-      });
-      const rd = await rr.json();
-      if (rr.ok && Array.isArray(rd.facts)) {
-        factObjs = rd.facts.filter((f: any) => f && typeof f.fact === "string").map((f: any) => ({ fact: f.fact, source: f.source ?? null }));
-        if (typeof rd.when === "string" && rd.when.trim()) c = { ...c, when: rd.when.trim() };
-      }
-    } catch { /* fresh research failed: ResearchStep will deepen from the case name instead */ }
-    setResearchCase({ name: c.name, summary: c.summary || "", when: c.when || "", sources: c.sources || [] });
-    setResearchFacts(factObjs);
-    setSuggestingAngles(false);
-    setTopicFlow(true);
     setStep("research");
-  }
-
-  // Grounding page -> angles. Build the angle suggestions from EXACTLY the facts the creator approved
-  // on the ResearchStep, then return to the input step where the grounded angle cards render (and the
-  // rest of the setup — voice, hook type, magnet word, length — stays put). This is the topic-path
-  // equivalent of the Viral Remixer's continueFromGrounding -> fetchAngles.
-  async function suggestGroundedAngles(sm?: string, v?: any, k?: any) {
-    setSourceMaterial(sm || "");
-    if (v) setSourceVerdict(v);
-    if (k) setTopicKind(k);
-    const approved = approvedFactsRef.current.length ? approvedFactsRef.current : researchFacts;
-    const c = researchCase;
-    const g: any = {
-      kind: k || "event", verdict: "documented",
-      caseName: c?.name, caseSummary: c?.summary || "", when: c?.when || "", sources: c?.sources || [],
-      facts: approved.map((f) => (f.source ? `${f.fact} (source: ${f.source})` : f.fact)),
-    };
-    if (c) setGroundedOn({ name: c.name, summary: c.summary || "", when: c.when || "", sources: c.sources || [] });
-    setGrounding(g);
-    setTopicFlow(false);
-    setResearchReviewed(true);
-    setSuggestingAngles(true);
-    setAngleSuggestions([]);
-    setStep("input");
-    try {
-      const res = await fetch("/api/suggest-angles", {
-        method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ topic, niche, grounding: g }),
-      });
-      const data = await res.json();
-      if (data.angles) { setAngleSuggestions(data.angles); setAngleWarnings(Array.isArray(data.warnings) ? data.warnings : []); }
-    } catch {}
-    setSuggestingAngles(false);
   }
 
   function buildUpstreamSourceMaterial(): string {
@@ -561,239 +477,11 @@ export default function NewScriptPage() {
                   </div>
                   <p style={{ fontSize: 15, color: C.textDim, margin: 0, lineHeight: 1.4 }}>What should your script be about? Be specific, the more focused the topic, the better the script.</p>
                 </div>
-                <input type="text" value={topic} onChange={e => { setTopic(e.target.value); setResearchReviewed(false); }}
+                <input type="text" value={topic} onChange={e => setTopic(e.target.value)}
                   placeholder="e.g., morning routine, product review" style={inputStyle}
                   onFocus={e => e.currentTarget.style.borderColor = "rgba(77,184,255,0.30)"}
                   onBlur={e => e.currentTarget.style.borderColor = C.border} />
               </div>
-
-              {/* ── Suggest Angles, between topic and angle ── */}
-              {topic.trim().length > 3 && (
-                <div style={{ marginTop: 14 }}>
-                  <button
-                    onClick={async () => {
-                      setSuggestingAngles(true);
-                      setAngleSuggestions([]);
-                      setGroundUnresolved(false);
-                      setResearchReviewed(false);
-                      // RESEARCH FIRST. Resolve the real subject, then route to the VISIBLE ResearchStep
-                      // so the creator reviews the grounded facts BEFORE any angle is written. Angles are
-                      // generated from the approved facts afterwards (suggestGroundedAngles). This is why
-                      // the button no longer writes angles here.
-                      try {
-                        const gr = await fetch("/api/research/find", {
-                          method: "POST", headers: { "Content-Type": "application/json" },
-                          body: JSON.stringify({ topic, niche }),
-                        });
-                        const gd = await gr.json();
-                        if (gr.ok) {
-                          setTopicKind(gd.kind || null);
-                          setSourceVerdict(gd.verdict || null);
-                          setGroundNote(typeof gd.verdictNote === "string" ? gd.verdictNote : "");
-                          const cands = Array.isArray(gd.candidates) ? gd.candidates : [];
-                          setGroundCases(cands);
-                          // EVENT with one clear match: ground on it and go to the research review.
-                          if (gd.kind === "event" && cands.length === 1) {
-                            await groundOnCase(cands[0]); // sets step -> "research"
-                            return;
-                          }
-                          // Several real cases fit: show the picker; each pick calls groundOnCase,
-                          // which then routes to the research review.
-                          if (gd.kind === "event" && cands.length > 1) { setSuggestingAngles(false); return; }
-                          // No case identified for an EVENT: don't guess — let the creator name it
-                          // (the manual path below also calls groundOnCase -> research).
-                          if (gd.kind === "event" && cands.length === 0) { setGroundUnresolved(true); setSuggestingAngles(false); return; }
-                          // NON-EVENT (claim / explainer / hypothetical): no single case to pin. Take the
-                          // topic-level facts straight into the research review as the preset fact set, so
-                          // the creator still reviews them before angles are written. ResearchStep seeds
-                          // these without a second research call.
-                          const topicFacts = (Array.isArray(gd.facts) ? gd.facts : [])
-                            .filter((f: any) => f && typeof f.fact === "string")
-                            .map((f: any) => ({ fact: f.fact, source: f.source ?? null }));
-                          setResearchCase({ name: topic, summary: "", when: "", sources: [] });
-                          setResearchFacts(topicFacts);
-                          setSuggestingAngles(false);
-                          setTopicFlow(true);
-                          setStep("research");
-                          return;
-                        }
-                      } catch { /* grounding is best effort; fall through to let the user proceed */ }
-                      setSuggestingAngles(false);
-                    }}
-                    disabled={suggestingAngles}
-                    style={{
-                      display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-                      width: "100%", padding: "12px 20px", borderRadius: 12,
-                      cursor: suggestingAngles ? "wait" : "pointer",
-                      background: suggestingAngles ? "rgba(77,184,255,0.09)" : "linear-gradient(135deg,rgba(77,184,255,0.16),rgba(77,184,255,0.15))",
-                      border: "1px solid rgba(77,184,255,0.40)",
-                      color: "#7ed8ff", fontSize: 14, fontWeight: 700,
-                      opacity: suggestingAngles ? 0.7 : 1, transition: "all 150ms",
-                      boxShadow: suggestingAngles ? "none" : "0 0 20px rgba(77,184,255,0.16)",
-                    }}
-                  >
-                    <span style={{ fontSize: 16 }}>{suggestingAngles ? "⟳" : "✦"}</span>
-                    {suggestingAngles ? "Reading up on this first…" : "✦ Find the real story"}
-                  </button>
-                  {/* Grounded-on line: what the script will actually be about.
-                      One line when a single real case fits, a picker when several do. */}
-                  {groundedOn && (
-                    <div style={{ marginTop: 12, padding: "10px 12px", borderRadius: 10, background: "rgba(52,211,153,0.08)", border: "1px solid rgba(52,211,153,0.28)" }}>
-                      <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 0.4, color: "#34d399" }}>GROUNDED ON A REAL CASE</div>
-                      <div style={{ fontSize: 13, color: "#e8edf5", lineHeight: 1.5, marginTop: 3 }}>
-                        {groundedOn.name}{groundedOn.when ? ` · ${groundedOn.when}` : ""}
-                      </div>
-                      {groundedOn.summary && <div style={{ fontSize: 12, color: "#a6c0d8", lineHeight: 1.55, marginTop: 3 }}>{groundedOn.summary}</div>}
-                      <div style={{ display: "flex", gap: 14, marginTop: 6 }}>
-                        {groundCases.length > 1 && (
-                          <button onClick={() => setGroundedOn(null)}
-                            style={{ background: "none", border: "none", padding: 0, cursor: "pointer", fontSize: 11.5, color: "#4db8ff", fontWeight: 600 }}>
-                            other matches
-                          </button>
-                        )}
-                        <button onClick={() => setManualOpen((v) => !v)}
-                          style={{ background: "none", border: "none", padding: 0, cursor: "pointer", fontSize: 11.5, color: "#4db8ff", fontWeight: 600 }}>
-                          wrong case? name it
-                        </button>
-                      </div>
-                      {manualOpen && (
-                        <div style={{ marginTop: 10, display: "flex", gap: 7, flexWrap: "wrap" as const }}>
-                          <input
-                            value={manualCase}
-                            onChange={(e) => setManualCase(e.target.value)}
-                            onKeyDown={(e) => { if (e.key === "Enter" && manualCase.trim()) groundOnCase({ name: manualCase.trim() }); }}
-                            placeholder="Name the person or case, e.g. Christopher Boyce"
-                            style={{ flex: 1, minWidth: 200, padding: "8px 11px", borderRadius: 8, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(77,184,255,0.25)", color: "#e8edf5", fontSize: 13, outline: "none" }}
-                          />
-                          <button onClick={() => manualCase.trim() && groundOnCase({ name: manualCase.trim() })}
-                            style={{ padding: "8px 14px", borderRadius: 8, border: "none", background: "linear-gradient(135deg,#0e6499,#1a8fd1)", color: "#fff", fontSize: 12.5, fontWeight: 700, cursor: "pointer" }}>
-                            Use this
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  )}
-                  {!groundedOn && groundCases.length > 0 && (
-                    <div style={{ marginTop: 12, padding: "11px 12px", borderRadius: 10, background: "rgba(77,184,255,0.06)", border: "1px solid rgba(77,184,255,0.2)" }}>
-                      <div style={{ fontSize: 12.5, fontWeight: 700, color: "#4db8ff" }}>Which real case is this about?</div>
-                      <div style={{ fontSize: 11.5, color: "#a6c0d8", marginTop: 2, lineHeight: 1.5 }}>
-                        Pick one and the angles and script use its real names and dates.
-                      </div>
-                      <div style={{ display: "flex", flexDirection: "column", gap: 7, marginTop: 9 }}>
-                        {groundCases.map((c: any, i: number) => (
-                          <button key={i}
-                            onClick={() => groundOnCase(c)}
-                            style={{ textAlign: "left", cursor: "pointer", padding: "9px 11px", borderRadius: 9, border: "1px solid rgba(77,184,255,0.16)", background: "rgba(255,255,255,0.03)", color: "#e8edf5" }}>
-                            <div style={{ fontSize: 13, fontWeight: 700 }}>{c.name}{c.when && <span style={{ color: "#a6c0d8", fontWeight: 500 }}> · {c.when}</span>}</div>
-                            {c.summary && <div style={{ fontSize: 12, color: "#a6c0d8", lineHeight: 1.5, marginTop: 2 }}>{c.summary}</div>}
-                          </button>
-                        ))}
-                      </div>
-                      <button onClick={() => setManualOpen((v) => !v)}
-                        style={{ marginTop: 10, background: "none", border: "none", padding: 0, cursor: "pointer", fontSize: 11.5, color: "#4db8ff", fontWeight: 600 }}>
-                        None of these? Name the case
-                      </button>
-                      {manualOpen && (
-                        <div style={{ marginTop: 10, display: "flex", gap: 7, flexWrap: "wrap" as const }}>
-                          <input
-                            value={manualCase}
-                            onChange={(e) => setManualCase(e.target.value)}
-                            onKeyDown={(e) => { if (e.key === "Enter" && manualCase.trim()) groundOnCase({ name: manualCase.trim() }); }}
-                            placeholder="Name the person or case, e.g. Christopher Boyce"
-                            style={{ flex: 1, minWidth: 200, padding: "8px 11px", borderRadius: 8, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(77,184,255,0.25)", color: "#e8edf5", fontSize: 13, outline: "none" }}
-                          />
-                          <button onClick={() => manualCase.trim() && groundOnCase({ name: manualCase.trim() })}
-                            style={{ padding: "8px 14px", borderRadius: 8, border: "none", background: "linear-gradient(135deg,#0e6499,#1a8fd1)", color: "#fff", fontSize: 12.5, fontWeight: 700, cursor: "pointer" }}>
-                            Use this
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  )}
-                  {groundUnresolved && !groundedOn && (
-                    <div style={{ marginTop: 12, padding: "12px 14px", borderRadius: 10, background: "rgba(251,191,36,0.08)", border: "1px solid rgba(251,191,36,0.3)" }}>
-                      <div style={{ fontSize: 12.5, fontWeight: 700, color: "#fbbf24" }}>Could not pin this to one real case</div>
-                      {groundNote && <div style={{ fontSize: 12.5, color: "#e8edf5", lineHeight: 1.55, marginTop: 4 }}>{groundNote}</div>}
-                      <div style={{ fontSize: 12, color: "#a6c0d8", lineHeight: 1.55, marginTop: 5 }}>
-                        The research came back about the subject area rather than one story, so building angles on it risks a video about the wrong thing. Name the exact person or case and Skripr grounds on that, or continue and write your own angle below.
-                      </div>
-                      <div style={{ marginTop: 9, display: "flex", gap: 7, flexWrap: "wrap" as const }}>
-                        <input
-                          value={manualCase}
-                          onChange={(e) => setManualCase(e.target.value)}
-                          onKeyDown={(e) => { if (e.key === "Enter" && manualCase.trim()) groundOnCase({ name: manualCase.trim() }); }}
-                          placeholder="Name the person or case, e.g. Christopher Boyce"
-                          style={{ flex: 1, minWidth: 200, padding: "8px 11px", borderRadius: 8, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(251,191,36,0.35)", color: "#e8edf5", fontSize: 13, outline: "none" }}
-                        />
-                        <button onClick={() => manualCase.trim() && groundOnCase({ name: manualCase.trim() })}
-                          style={{ padding: "8px 14px", borderRadius: 8, border: "none", background: "linear-gradient(135deg,#0e6499,#1a8fd1)", color: "#fff", fontSize: 12.5, fontWeight: 700, cursor: "pointer" }}>
-                          Ground on this
-                        </button>
-                      </div>
-                      <button
-                        onClick={async () => {
-                          setGroundUnresolved(false);
-                          setSuggestingAngles(true);
-                          try {
-                            // Deliberately WITHOUT grounding: unpinned facts would
-                            // ground the angles in a story we cannot vouch for.
-                            const res = await fetch("/api/suggest-angles", {
-                              method: "POST", headers: { "Content-Type": "application/json" },
-                              body: JSON.stringify({ topic, niche }),
-                            });
-                            const data = await res.json();
-                            if (data.angles) { setAngleSuggestions(data.angles); setAngleWarnings(Array.isArray(data.warnings) ? data.warnings : []); }
-                          } catch {}
-                          setSuggestingAngles(false);
-                        }}
-                        style={{ marginTop: 9, background: "none", border: "1px solid rgba(251,191,36,0.35)", borderRadius: 8, padding: "6px 12px", cursor: "pointer", fontSize: 12, color: "#fbbf24", fontWeight: 600 }}>
-                        Suggest angles anyway
-                      </button>
-                    </div>
-                  )}
-                  {groundNote && !groundUnresolved && !groundedOn && groundCases.length === 0 && (
-                    <p style={{ fontSize: 11.5, color: "#a6c0d8", marginTop: 10, lineHeight: 1.5 }}>{groundNote}</p>
-                  )}
-                  {angleSuggestions.length > 0 && (
-                    <div style={{ marginTop: 14, display: "flex", flexDirection: "column", gap: 10 }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                        <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: 0.4, color: "#34d399" }}>GROUNDED HOOK ANGLES</span>
-                        <span style={{ fontSize: 11, color: "#a6c0d8" }}>built from the research you just reviewed — pick one, or edit it below</span>
-                      </div>
-                      {angleSuggestions.map((s, i) => {
-                        const active = angle === s;
-                        const warns = Array.isArray(angleWarnings[i]) ? angleWarnings[i] : [];
-                        return (
-                          <button
-                            key={i}
-                            onClick={() => setAngle(s)}
-                            style={{
-                              textAlign: "left", padding: "13px 15px", borderRadius: 13, cursor: "pointer",
-                              background: active ? "rgba(77,184,255,0.12)" : "rgba(255,255,255,0.03)",
-                              border: `1px solid ${active ? "rgba(77,184,255,0.42)" : "rgba(77,184,255,0.15)"}`,
-                              boxShadow: active ? "0 0 18px rgba(77,184,255,0.14)" : "none",
-                              transition: "all 0.12s",
-                            }}
-                          >
-                            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: warns.length ? 6 : 0 }}>
-                              <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: 0.4, color: active ? "#7ed8ff" : "#8fb0cc", background: active ? "rgba(77,184,255,0.16)" : "rgba(77,184,255,0.08)", border: "1px solid rgba(77,184,255,0.2)", padding: "2px 7px", borderRadius: 5 }}>
-                                ANGLE {i + 1}
-                              </span>
-                              {active && <span style={{ fontSize: 12, color: "#34d399", fontWeight: 700 }}>✓ selected</span>}
-                            </div>
-                            <div style={{ fontSize: 13.5, lineHeight: 1.55, color: active ? "#e8edf5" : "#c2d4e6" }}>{s}</div>
-                            {warns.length > 0 && (
-                              <div style={{ marginTop: 8, paddingTop: 8, borderTop: "1px solid rgba(251,191,36,0.18)", fontSize: 11, color: "#fbbf24", lineHeight: 1.5 }}>
-                                {warns.map((w, j) => (<span key={j} style={{ display: "block" }}>&#9888; {w}</span>))}
-                              </div>
-                            )}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
-              )}
 
               {/* ── YOUR ANGLE ── */}
               <div style={{ marginTop: 16 }}>
@@ -841,7 +529,7 @@ export default function NewScriptPage() {
 
               {/* ── Topic optional in url/paste mode ── */}
               <InputGroup label="Topic (optional)" hint="What should the script be about?" style={{ marginTop: 16 }}>
-                <input type="text" value={topic} onChange={e => { setTopic(e.target.value); setResearchReviewed(false); }}
+                <input type="text" value={topic} onChange={e => setTopic(e.target.value)}
                   placeholder="e.g., morning routine, product review" style={inputStyle}
                   onFocus={e => e.currentTarget.style.borderColor = "rgba(77,184,255,0.30)"}
                   onBlur={e => e.currentTarget.style.borderColor = C.border} />
@@ -1099,22 +787,13 @@ export default function NewScriptPage() {
         {/* ─── RESEARCH STEP ─── */}
         {step === "research" && (
           <ResearchStep
-            topic={researchCase?.name || topic || lastUsedTranscript.slice(0, 120)}
+            topic={topic || lastUsedTranscript.slice(0, 120)}
             niche={niche}
             angle={angle}
-            angleLabel={researchCase?.name || angle || undefined}
-            // Topic path: seed the case + facts the "Find the real story" deepen already produced, so
-            // this review does NOT re-research (no double /api/research/find call).
-            presetCase={topicFlow && researchCase ? { name: researchCase.name, summary: researchCase.summary || "", when: researchCase.when || "", whyItFits: "", sources: researchCase.sources || [] } : undefined}
-            presetFacts={topicFlow && researchFacts.length ? researchFacts : undefined}
-            onFactsApproved={topicFlow ? ((fs) => { approvedFactsRef.current = fs; }) : undefined}
-            // Topic path: after the review, generate the angle cards FROM the approved facts and return
-            // to the input step (where the cards render and setup continues). Transcript path is
-            // unchanged: straight to storytelling.
-            onContinue={topicFlow
-              ? ((sm, v, k) => { void suggestGroundedAngles(sm, v, k); })
-              : ((sm, v, k) => { setSourceMaterial(sm || ""); setSourceVerdict(v || null); setTopicKind(k || null); setStep("storytelling"); })}
-            onBack={() => { setTopicFlow(false); setStep("input"); }}
+            angleLabel={angle || undefined}
+            targetMinutes={videoMinutes}
+            onContinue={(sm, v, k) => { setSourceMaterial(sm || ""); setSourceVerdict(v || null); setTopicKind(k || null); setStep("storytelling"); }}
+            onBack={() => setStep("input")}
           />
         )}
 
