@@ -31,7 +31,7 @@ function truncateTranscript(text: string, maxWords = 400): string {
 // then fails with a clear message; it never silently drops to an ungrounded fallback.
 async function handleSectionMode(userId: string, raw: any) {
   try {
-    const { topic, selectedTitle, sourceMaterial, remixFramework, contentStructure, retentionTriggers, targetMinutes, voiceProfileId, sectionIndex, priorTail } = raw;
+    const { topic, selectedTitle, sourceMaterial, remixFramework, contentStructure, retentionTriggers, targetMinutes, voiceProfileId, sectionIndex, priorTail, blueprint } = raw;
     const index = Number(sectionIndex);
     if (!Number.isInteger(index) || index < 0) {
       return NextResponse.json({ error: "Invalid section index." }, { status: 400 });
@@ -39,7 +39,12 @@ async function handleSectionMode(userId: string, raw: any) {
     if (!targetMinutes) {
       return NextResponse.json({ error: "A section build needs a target length." }, { status: 400 });
     }
-    const plan = buildSectionPlan(contentStructure, retentionTriggers, Math.round(targetMinutes * 150));
+    // TOPIC path: the client passes back the STORY BLUEPRINT computed once at plan time (an LLM plan
+    // is not deterministic, so it can't be re-derived per call). REMIX path: no blueprint travels, so
+    // re-derive the deterministic measured plan as before. Either way we end with a stable plan[index].
+    const plan: SectionSpec[] = Array.isArray(blueprint) && blueprint.length >= 2
+      ? (blueprint as SectionSpec[])
+      : buildSectionPlan(contentStructure, retentionTriggers, Math.round(targetMinutes * 150));
     if (!plan || plan.length < 2) {
       return NextResponse.json({ error: "This video has no measurable section structure — use the one-shot path." }, { status: 409 });
     }
@@ -305,11 +310,18 @@ export async function POST(req: Request) {
     // so there is no per-section-call non-determinism. Falls back to undefined (one-shot writer) if
     // the blueprint can't be built. The chunked "section" mode keeps its deterministic buildSectionPlan.
     let resolvedSectionPlan: SectionSpec[] | undefined;
-    if (targetMinutes) {
+    if (Array.isArray(raw.blueprint) && raw.blueprint.length >= 2) {
+      // The client echoed back the blueprint from the plan call (finalize mode) — reuse it verbatim,
+      // never rebuild (an LLM plan is not deterministic, and finalize just needs the same section set).
+      resolvedSectionPlan = raw.blueprint as SectionSpec[];
+    } else if (targetMinutes) {
       const measured = buildSectionPlan(contentStructure, retentionTriggers, Math.round(targetMinutes * 150));
       if (measured.length >= 2) {
         resolvedSectionPlan = measured;
-      } else {
+      } else if (mode !== "finalize") {
+        // Topic/phenomenon: synthesize the story blueprint. Only for "plan" and one-shot "full" —
+        // finalize with no measured structure reaches here without a blueprint, and that's fine
+        // (assembleFinalizeScript works off the client-provided sections; no plan needed to stitch).
         const bpMaterial = typeof sourceMaterial === "string" && sourceMaterial.trim() ? sourceMaterial.trim() : undefined;
         const bp = await buildTopicBlueprint(bpMaterial, Math.round(targetMinutes * 165), targetMinutes, enhancedAngle, { hookType: hookType || undefined, storytelling: resolvedStoryMode });
         if (bp.length >= 2) {
@@ -385,7 +397,10 @@ export async function POST(req: Request) {
         sourceMaterial: planFacts,
         voiceProfile: voiceProfile || undefined,
       });
-      return NextResponse.json({ mode: "plan", total: planned.length, presetHook, title: reconciledTitle });
+      // Return the blueprint ONLY when it is a synthesized topic plan (carries assignedFacts). The
+      // remix measured plan re-derives deterministically per section call, so it need not travel.
+      const isBlueprint = planned.some((s) => Array.isArray(s.assignedFacts));
+      return NextResponse.json({ mode: "plan", total: planned.length, presetHook, title: reconciledTitle, blueprint: isBlueprint ? planned : undefined });
     }
 
     let script: any;

@@ -82,6 +82,9 @@ export default function ScriptBriefPage() {
   const [magnetWords, setMagnetWords] = useState<MagnetWordOption[]>([]);
   const [magnetGrade, setMagnetGrade] = useState<string>("all");
   const [selectedViralWord, setSelectedViralWord] = useState<string | null>(null);
+  // Chunked-generation progress: {done, total} while the client loops the section writes; null on
+  // the one-shot path (no per-section steps to report).
+  const [genProgress, setGenProgress] = useState<{ done: number; total: number } | null>(null);
   const storyChoiceRef = useRef<{ mode: string; techniques: string[]; note?: string }>({ mode: "", techniques: [] });
 
   useEffect(() => {
@@ -269,34 +272,73 @@ export default function ScriptBriefPage() {
   async function generateWithStory(storytellingMode: string, storytellingTechniques: string[], directorNote?: string) {
     const angle = selectedAngle;
     if (!brief || !angle) return;
-    setPhase("generating"); setError(null);
-    try {
+    setPhase("generating"); setError(null); setGenProgress(null);
+    // Shared payload — identical across the one-shot path and every chunked call, so plan, each
+    // section, and finalize all see the same inputs.
+    const payload: any = {
+      transcript: "", topic: brief.topic, niche: brief.niche,
+      videoLength: brief.videoLength || "medium",
+      targetMinutes: (brief as any).targetMinutes ?? undefined,
+      viralMagnetWord: selectedViralWord || (brief as any).viralMagnetWord || undefined,
+      voiceProfileId: voiceId || undefined,
+      companionCta,
+      softCta,
+      sourceVerdict: sourceVerdict || undefined,
+      topicKind: topicKind || undefined,
+      hookType: angle.hookType,
+      angle: `Hook type: ${angle.hookType}. Opening hook to adapt: "${angle.hookPremise}". Suggested title: ${angle.titleSuggestion}`,
+      storytellingMode, storytellingTechniques, directorNote: directorNote || undefined,
+      sourceMaterial: [buildUpstreamSourceMaterial(), sourceMaterial].filter(Boolean).join("\n\n") || undefined,
+      selectedTitle: ((brief as any)?.lockTitle ? brief?.topic : angle.titleSuggestion) || undefined,
+    };
+    const post = async (extra: any) => {
       const res = await fetch("/api/scripts/generate", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          transcript: "", topic: brief.topic, niche: brief.niche,
-          videoLength: brief.videoLength || "medium",
-          targetMinutes: (brief as any).targetMinutes ?? undefined,
-          viralMagnetWord: selectedViralWord || (brief as any).viralMagnetWord || undefined,
-          voiceProfileId: voiceId || undefined,
-          companionCta,
-          softCta,
-          sourceVerdict: sourceVerdict || undefined,
-          topicKind: topicKind || undefined,
-          hookType: angle.hookType,
-          angle: `Hook type: ${angle.hookType}. Opening hook to adapt: "${angle.hookPremise}". Suggested title: ${angle.titleSuggestion}`,
-          storytellingMode, storytellingTechniques, directorNote: directorNote || undefined,
-          sourceMaterial: [buildUpstreamSourceMaterial(), sourceMaterial].filter(Boolean).join("\n\n") || undefined,
-          selectedTitle: ((brief as any)?.lockTitle ? brief?.topic : angle.titleSuggestion) || undefined,
-        }),
+        body: JSON.stringify({ ...payload, ...extra }),
       });
-      const data = await res.json().catch(() => null);
+      return res.json().catch(() => null);
+    };
+    try {
+      // CHUNKED GENERATION — the 20-min timeout fix for topic scripts. The plan call builds the story
+      // blueprint (once); each section is its own short request carrying that blueprint back so the
+      // plan is stable; finalize runs the tail passes on the assembled whole. Falls back to the
+      // one-shot path if the blueprint can't be built or any step fails.
+      let data: any = null;
+      const plan = await post({ mode: "plan" });
+      if (plan?.limitReached) { window.location.href = "/dashboard/settings?upgrade=1"; return; }
+      if (plan && !plan.error && typeof plan.total === "number" && plan.total >= 2) {
+        const total: number = plan.total;
+        const blueprint = plan.blueprint; // undefined for a measured plan; present for a topic blueprint
+        const sections: { title: string; content: string }[] = [];
+        let priorTail = "";
+        setGenProgress({ done: 0, total });
+        let chunkFailed = false;
+        for (let i = 0; i < total; i++) {
+          const sec = await post({ mode: "section", sectionIndex: i, priorTail, blueprint });
+          if (!sec || sec.error || typeof sec.text !== "string" || !sec.text.trim()) { chunkFailed = true; break; }
+          sections.push({ title: sec.name || `Section ${i + 1}`, content: sec.text });
+          priorTail = typeof sec.tail === "string" ? sec.tail : sec.text.split(/\s+/).slice(-40).join(" ");
+          setGenProgress({ done: i + 1, total });
+        }
+        if (!chunkFailed && sections.length >= 2) {
+          data = await post({ mode: "finalize", sections, presetHook: plan.presetHook ?? null, blueprint });
+          if (!data || data.error) {
+            if (data?.limitReached) { window.location.href = "/dashboard/settings?upgrade=1"; return; }
+            setError(data?.error || "The script was written but the final pass didn't complete. Please try again."); setPhase("finish"); setGenProgress(null); return;
+          }
+        }
+      }
+      // Fallback: no blueprint/measurable structure, or a step failed — one-shot path.
+      if (!data || data.error) {
+        setGenProgress(null);
+        data = await post({});
+      }
       if (!data || data.error) {
         if (data?.limitReached) { window.location.href = "/dashboard/settings?upgrade=1"; return; }
-        setError(data?.error || "The connection dropped while generating. Please try again."); setPhase("angles"); return;
+        setError(data?.error || "The connection dropped while generating. Please try again."); setPhase("finish"); setGenProgress(null); return;
       }
-      setScript(data); setSavedId(data.savedId ?? null); setPhase("result");
-    } catch (e: any) { setError(e?.message || "Failed to generate script"); setPhase("angles"); }
+      setScript(data); setSavedId(data.savedId ?? null); setPhase("result"); setGenProgress(null);
+    } catch (e: any) { setError(e?.message || "Failed to generate script"); setPhase("finish"); setGenProgress(null); }
   }
 
   async function handleSave() {
@@ -511,7 +553,7 @@ export default function ScriptBriefPage() {
   if (phase === "generating") return (
     <GenerationProgress
       label="Building your script..."
-      sub={(selectedAngle?.hookType || "") + " hook"}
+      sub={genProgress ? `writing section ${genProgress.done} of ${genProgress.total}` : (selectedAngle?.hookType || "") + " hook"}
       expectedMs={45000 + ((brief as any)?.targetMinutes || 5) * 5000}
     />
   );
