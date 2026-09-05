@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import Anthropic from "@anthropic-ai/sdk";
+import { stripEmDashes } from "@/lib/script-text";
 import { getNicheHookExamplesBlock, getNicheTitleFormulasBlock } from "@/lib/viral-frameworks";
 import { getPickedAnglesBlock } from "@/lib/angle-picks";
 import { EXPERT_ATTRIBUTION_RULE, PROVENANCE_RULE } from "@/lib/ai/claude";
@@ -50,7 +51,13 @@ export async function POST(req: Request) {
     // Hard guarantee: strip a carried-over source expert from each blend title.
     const sourceExpert = extractTrailingExpert(videoTitle);
     const angles = Array.isArray(parsed)
-      ? parsed.map((a: any) => ({ ...a, titleSuggestion: stripCarriedExpert(a?.titleSuggestion || "", sourceExpert) }))
+      ? parsed.map((a: any) => {
+          const cleaned = { ...a, titleSuggestion: stripCarriedExpert(a?.titleSuggestion || "", sourceExpert) };
+          // HOUSE RULE: no em dashes in any user-facing angle string.
+          const o: any = {};
+          for (const k in cleaned) o[k] = typeof cleaned[k] === "string" ? stripEmDashes(cleaned[k]) : cleaned[k];
+          return o;
+        })
       : parsed;
     return NextResponse.json({ angles });
   } catch (e: any) {

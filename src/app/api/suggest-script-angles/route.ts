@@ -6,6 +6,7 @@ import { getPickedAnglesBlock } from "@/lib/angle-picks";
 import { EXPERT_ATTRIBUTION_RULE, PROVENANCE_RULE } from "@/lib/ai/claude";
 import { buildGroundingBlock, type GroundingContext } from "@/lib/research";
 import { vetAngles, groundingToSourceText } from "@/lib/ai/angle-vet";
+import { stripEmDashes } from "@/lib/script-text";
 
 const client = new Anthropic();
 export const maxDuration = 120;
@@ -92,7 +93,16 @@ ${groundingBlock || `GROUNDING (critical): this topic is a string the creator ty
     // Vet each angle's hook + title against the grounding facts before returning.
     const vetText = lockedOut.map((a: any) => `${a?.hookPremise || ""} ${a?.titleSuggestion || ""}`.trim());
     const warnings = await vetAngles(vetText, groundingToSourceText(grounding)).catch(() => lockedOut.map(() => []));
-    const withWarnings = lockedOut.map((a: any, i: number) => ({ ...a, warnings: warnings[i] || [] }));
+    // HOUSE RULE: strip em dashes from every user-facing string on each angle (premise, title, the
+    // "why it works" explanation, and each vetting warning) before it reaches the cards.
+    const withWarnings = lockedOut.map((a: any, i: number) => ({
+      ...a,
+      hookPremise: stripEmDashes(a?.hookPremise),
+      titleSuggestion: stripEmDashes(a?.titleSuggestion),
+      whyItWorks: stripEmDashes(a?.whyItWorks),
+      audienceEmotion: stripEmDashes(a?.audienceEmotion),
+      warnings: (warnings[i] || []).map((w: any) => stripEmDashes(w)),
+    }));
     return NextResponse.json({ angles: withWarnings, topic, niche, hookTypeFilter: hookTypeFilter || null });
   } catch (e: any) {
     console.error("[suggest-script-angles]", e?.message);

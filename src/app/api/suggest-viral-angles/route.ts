@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import Anthropic from "@anthropic-ai/sdk";
+import { stripEmDashes } from "@/lib/script-text";
 import { getNicheHookExamplesBlock, getNicheTitleFormulasBlock } from "@/lib/viral-frameworks";
 import { getPickedAnglesBlock } from "@/lib/angle-picks";
 import { extractTrailingExpert, stripCarriedExpert } from "@/lib/title-utils";
@@ -246,6 +247,14 @@ A title containing NO proper noun is a FAILURE — "How a Gun to His Head Almost
             .join(" ");
         }
       }
+    }
+    // HOUSE RULE: no em dashes in any user-facing angle string (title, description, etc.).
+    if (Array.isArray(angles)) {
+      angles = angles.map((a: any) => {
+        const o: any = {};
+        for (const k in a) o[k] = typeof a[k] === "string" ? stripEmDashes(a[k]) : a[k];
+        return o;
+      });
     }
     return NextResponse.json({ angles });
   } catch (e: any) {
