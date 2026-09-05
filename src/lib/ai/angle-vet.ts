@@ -81,7 +81,12 @@ Output ONLY JSON, an array with one entry per angle index that has a problem (om
             const i = Number(entry?.i);
             if (Number.isInteger(i) && i >= 0 && i < warnings.length && Array.isArray(entry.issues)) {
               for (const issue of entry.issues) {
-                if (typeof issue === "string" && issue.trim()) warnings[i].push(issue.trim().slice(0, 200));
+                if (typeof issue === "string" && issue.trim()) {
+                  // Cap length to avoid a runaway warning, but round back to the last full word so it
+                  // never cuts mid-word ("...affordability thre[shold]"). 320 fits a full 2-sentence note.
+                  const t = issue.trim();
+                  warnings[i].push(t.length > 320 ? t.slice(0, 320).replace(/\s+\S*$/, "") + "…" : t);
+                }
               }
             }
           }
