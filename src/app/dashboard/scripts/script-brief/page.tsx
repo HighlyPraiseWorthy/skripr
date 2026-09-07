@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import GenerationProgress from "@/components/GenerationProgress";
-import { joinHookBody, bodyStartsWithHook } from "@/lib/script-text";
+import { joinHookBody } from "@/lib/script-text";
 import { VoiceSelect } from "@/components/VoiceSelect";
 import { CompanionCtaToggle, SoftCtaToggle } from "@/components/CompanionCtaToggle";
 import StorytellingPicker from "@/components/StorytellingPicker";
@@ -395,8 +395,11 @@ export default function ScriptBriefPage() {
     const t = appliedMagnetTitle || script.title || "";
     if (t) parts.push("TITLE: " + t);
     const b = script.fullScript || script.script || script.body || script.content || "";
-    if (script.hook && !bodyStartsWithHook(b, script.hook)) parts.push("HOOK:\n" + script.hook);
+    // The body already opens with the hook (the opening section carries it), so copy the body as the
+    // single source of truth — never separately prepend the hook. The old startsWith check duplicated
+    // the hook whenever a finalize pass edited the body's opening so it no longer matched script.hook.
     if (b) parts.push(b);
+    else if (script.hook) parts.push(script.hook);
     navigator.clipboard.writeText(parts.join("\n\n"));
     setCopied(true); setTimeout(() => setCopied(false), 2000);
   }

@@ -1608,9 +1608,13 @@ export async function finalizeScript(
   const bodyKeyEarly = ["fullScript", "script", "body", "content"].find((k) => typeof (script as any)[k] === "string" && (script as any)[k].trim());
   const bodyOpener = bodyKeyEarly ? ((script as any)[bodyKeyEarly] as string).trim().split(/(?<=[.!?])\s/).slice(0, 3).join(" ") : "";
   const openerText = [hookText, bodyOpener].filter(Boolean).join(" ");
-  if (hookText && (hookIsVague(openerText) || hookDumpsPayoff(openerText))) {
-    const rewritten = await rewriteVagueHook(hookText, input.sourceMaterial, input.voiceProfile, startedAt);
-    const withholds = isUsableRewrite(rewritten, 60) && !hookDumpsPayoff((rewritten as string).trim());
+  // The creator CHOSE a hook archetype. A stat/data/curiosity/controversy hook is SUPPOSED to lead
+  // with the number, so the money-dump trigger must not fire for it — otherwise a correct number-led
+  // hook gets flagged and homogenized into the paradox rewrite (why every hook came back "Imagine…").
+  const numberLedArchetype = /stat|data|number|controvers|curiosity/i.test(input.hookArchetype || "");
+  if (hookText && (hookIsVague(openerText) || hookDumpsPayoff(openerText, { allowMoney: numberLedArchetype }))) {
+    const rewritten = await rewriteVagueHook(hookText, input.sourceMaterial, input.voiceProfile, startedAt, input.hookArchetype);
+    const withholds = isUsableRewrite(rewritten, 60) && !hookDumpsPayoff((rewritten as string).trim(), { allowMoney: numberLedArchetype });
     const chosen = withholds ? (rewritten as string).trim() : hookText;
     if (chosen !== hookText) { hookText = chosen; (script as any).hook = chosen; }
   }
@@ -2148,10 +2152,14 @@ export function hookIsVague(hook: string): boolean {
 // gap: the hook answers its own question, which is exactly why even Skripr's "good" number-led
 // hooks don't pull and why the open-loop check correctly flags "nothing deferred". The fix is to
 // make the hook WITHHOLD the payoff (lead with the strange situation), not to loosen the check.
-export function hookDumpsPayoff(hook: string): boolean {
+export function hookDumpsPayoff(hook: string, opts?: { allowMoney?: boolean }): boolean {
   const h = (hook || "");
   const mechanism = /\b(bots?|bot accounts?|artificial intelligence|\bA\.?I\.?\b|fraud\w*|scheme|indict\w+|laundered|money laundering|algorithm|shell compan\w+)\b/i.test(h);
-  const money = /[$£€]\s?\d|\b\d+(?:\.\d+)?\s*million\b|\bmillion dollars\b/i.test(h);
+  // A money/number lead is only a "payoff dump" when the payoff IS the figure (a fraud's scale, the
+  // total stolen). For a stat/data/curiosity/controversy archetype the creator DELIBERATELY leads
+  // with the number — that price or percentage IS the curiosity hook, not a spoiled reveal — so the
+  // caller passes allowMoney to skip the money trigger and stop rewriting a correctly number-led hook.
+  const money = opts?.allowMoney ? false : /[$£€]\s?\d|\b\d+(?:\.\d+)?\s*million\b|\bmillion dollars\b/i.test(h);
   return mechanism || money;
 }
 
@@ -2222,7 +2230,7 @@ export function chooseRewrite(original: string, rewritten: string | null | undef
 
 // LLM rewrite of ONLY the hook (preview-gated). Targeted, device-from-facts, defers the payoff,
 // respects the voice. Returns null on any failure so the guard keeps the original.
-async function rewriteVagueHook(originalHook: string, sourceMaterial: string | undefined, voiceProfile: string | undefined, startedAt: number): Promise<string | null> {
+async function rewriteVagueHook(originalHook: string, sourceMaterial: string | undefined, voiceProfile: string | undefined, startedAt: number, hookType?: string): Promise<string | null> {
   if (Date.now() - startedAt > 245_000) return null;
   const facts = (sourceMaterial || "").slice(0, 2200);
   if (!facts.trim()) return null;
@@ -2230,20 +2238,21 @@ async function rewriteVagueHook(originalHook: string, sourceMaterial: string | u
     const msg = await getAnthropic().messages.create({
       model: "claude-sonnet-4-6",
       max_tokens: 260,
-      temperature: 0.5,
+      temperature: 0.7,
       system: "You rewrite the cold-open hook of a documentary script. Output ONLY the new hook as plain speakable prose — no label, no quotes, no commentary.",
-      messages: [{ role: "user", content: `The current hook FAILS because it hands over the answer instead of creating a mystery ("${originalHook}"). Rewrite it to WITHHOLD.
-
+      messages: [{ role: "user", content: `The current hook FAILS because it opens on a vague windup instead of a concrete image, or it hands over the answer instead of creating a mystery ("${originalHook}"). Rewrite it so it opens on something concrete and WITHHOLDS the explanation.
+${hookType ? `\nHOOK ARCHETYPE (serve this — it is the shape the creator chose): ${hookType}. Honor its mechanic — a curiosity/data hook may lead with the striking figure, a myth-bust opens by naming the belief it will break, a reframe flips an assumption, a question hook poses the question. Do NOT convert every archetype into the same paradox opener.\n` : ""}
 FACTS (use ONLY these; invent nothing):
 ${facts}
 
-The best hooks work like this benchmark, which leads with a paradox and withholds the explanation: "Imagine opening Spotify and discovering one of the biggest artists in the world has billions of streams. Except there is no superstar. No concerts. No fans. No human audience at all. The music is mostly AI. And the listeners? They're bots." It makes you ask HOW before it ever explains.
+The MECHANIC to reproduce is: open on the strangest concrete thing the facts give you, then STOP before explaining it — make the viewer ask "how is that possible?" That mechanic is the only thing to copy from any example; it is NOT a template for the wording.
 
 Rules for the new hook (2 to 4 short sentences, at most ~55 words):
-- LEAD WITH THE STRANGE SITUATION OR PARADOX drawn from the facts — the thing that makes no sense and makes the viewer ask "how is that possible?" (e.g. a song playing that no human ever chose to hear; an artist with millions of streams and zero fans). NOT the biggest number.
-- WITHHOLD THE EXPLANATION. Do NOT put the mechanism or the payoff in the hook: no "bots", no "AI", no "fraud", no "scheme", no "indictment", no dollar figure. Those are the reveal — save them for later. The hook states the mystery; the video answers it.
-- BUILD WITH RHYTHM where it helps — an accumulating list of absences lands hard ("No fans. No concerts. No human audience.").
-- Use only what the facts state; invent nothing.${voiceProfile ? `\n- Render the wording in this creator's voice, but keep the paradox and the withholding. If the voice never uses second person ("imagine you..."), do NOT use it: ${voiceProfile.slice(0, 400)}` : "\n- You may address the viewer directly (\"Imagine opening Spotify...\") — it pulls the viewer in."}` }],
+- VARY THE OPENER. Do NOT default to the word "Imagine" — it is one option among many and it is overused. Open however the archetype and the facts land hardest: a bare paradox, a concrete scene, the striking figure itself, the belief you are about to break, a direct question. Reach for the opener that fits THIS hook, not a reflex.
+- LEAD WITH THE STRANGE, CONCRETE THING drawn from the facts — the specific image, contradiction, or figure that makes the viewer ask "how is that possible?" — never a vague abstract windup ("something was quietly changing").
+- WITHHOLD THE MECHANISM. Do NOT name the cause or the how in the hook (no "because", no explanation of the driver). The hook states the situation; the video answers it. (A number the archetype is built on may stay; the EXPLANATION of it may not.)
+- BUILD WITH RHYTHM where it helps — a short accumulating list can land hard.
+- Use only what the facts state; invent nothing.${voiceProfile ? `\n- Render the wording in this creator's voice, but keep the withholding. If the voice never uses second person ("imagine you..."), do NOT use it: ${voiceProfile.slice(0, 400)}` : ""}` }],
     });
     const t = msg.content[0]?.type === "text" ? msg.content[0].text.trim() : "";
     return t || null;
