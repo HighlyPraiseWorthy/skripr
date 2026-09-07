@@ -502,6 +502,13 @@ export async function generateHookFirst(input: {
   hookType?: string;
   hookWhyItWorks?: string;
   hookScript?: string;
+  // The SPECIFIC angle the creator chose on the angle page (its hook premise). The hook must DELIVER
+  // this angle, not independently grab the single biggest fact — that is what made every hook type
+  // open on the same statistic. Distinct from hookScript (a remix source's own opening, shape-only).
+  anglePremise?: string;
+  // Learned proven hooks for the niche (view-ranked + creator-kept from analyzed viral videos), so
+  // the hook writer improves from real winners, the same signal the angle + body writers use.
+  nicheHookExamples?: string;
   sourceMaterial?: string;
   voiceProfile?: string;
 }): Promise<string | null> {
@@ -519,8 +526,10 @@ export async function generateHookFirst(input: {
         content: `VIDEO TITLE: "${input.title}"
 TOPIC: ${input.topic}
 ${input.hookType ? `\nHOOK ARCHETYPE (required): ${input.hookType}. ${wantsStat ? `A stat/controversy hook is not just "has a number". Its engine is: a SUPERLATIVE CLAIM about the subject, then a STACKED COMPARISON that proves it — the figure set against two or three familiar things people already fear or understand, combined ("more than terrorism, wars and car accidents combined"). Keep it to two sentences, roughly 25-30 words. If the facts contain a stacked comparison, build the hook on it. If they do not, make the strongest single superlative claim the facts support and prove it with the biggest documented figure — do NOT invent a comparison.` : wantsQuote ? "Real quoted speech must open it." : ""}` : ""}
+${input.anglePremise ? `\nTHE ANGLE THE CREATOR CHOSE (deliver THIS specific angle — its opening move is the point, not the single biggest number): "${String(input.anglePremise).slice(0, 300)}"\nBuild the hook to open the way THIS angle opens. A curiosity-gap angle opens on the gap it teases; a reframe opens by flipping the assumption; a myth-bust opens by naming the belief it breaks; a fear/stakes angle opens on what's at risk. Do NOT default to leading with the top statistic unless THIS angle leads there. Adapt the wording to the voice and length; keep the angle's specific move.` : ""}
 ${input.hookWhyItWorks ? `\nWHY THE SOURCE'S HOOK WORKED (reproduce this mechanism, not its wording): ${String(input.hookWhyItWorks).slice(0, 400)}` : ""}
 ${input.hookScript ? `\nThe source's own opening, for shape only — never reuse its wording: "${String(input.hookScript).slice(0, 200)}"` : ""}
+${input.nicheHookExamples ? `\nPROVEN HOOKS IN THIS NICHE (view-ranked, from real videos — model the MECHANIC and energy, never copy wording):\n${String(input.nicheHookExamples).slice(0, 900)}` : ""}
 ${input.sourceMaterial ? `\nSOURCED FACTS — any number or specific you use must come from here, exactly as stated:\n${input.sourceMaterial.slice(0, 2500)}` : ""}
 ${input.voiceProfile ? `\nWRITE IT IN THIS CREATOR'S VOICE:\n${input.voiceProfile.slice(0, 900)}` : ""}
 ${retryNote ? `\nYOUR PREVIOUS ATTEMPT FAILED: ${retryNote} Fix that.` : ""}

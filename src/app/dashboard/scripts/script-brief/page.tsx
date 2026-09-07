@@ -286,6 +286,9 @@ export default function ScriptBriefPage() {
       sourceVerdict: sourceVerdict || undefined,
       topicKind: topicKind || undefined,
       hookType: angle.hookType,
+      // The specific premise of the angle the user picked — so the hook generator delivers THIS
+      // angle instead of every hook type opening on the same top fact.
+      anglePremise: angle.hookPremise || undefined,
       angle: `Hook type: ${angle.hookType}. Opening hook to adapt: "${angle.hookPremise}". Suggested title: ${angle.titleSuggestion}`,
       storytellingMode, storytellingTechniques, directorNote: directorNote || undefined,
       sourceMaterial: [buildUpstreamSourceMaterial(), sourceMaterial].filter(Boolean).join("\n\n") || undefined,
