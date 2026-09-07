@@ -12,7 +12,7 @@ import { saveAnglePick } from "@/lib/angle-picks";
 import { autoSelectMode, resolveTechniques } from "@/lib/storytelling";
 import { factCheckAgainstSource } from "@/lib/fact-check";
 import { reviewAndCorrectScript } from "@/lib/ai/self-review";
-import { getActiveVoiceMeta, getVoiceMetaById } from "@/lib/voice-profile";
+import { getActiveVoiceMeta, getVoiceMetaById, SKRIPR_HOUSE_VOICE } from "@/lib/voice-profile";
 import { captureFrameworkInBackground } from "@/lib/framework-capture";
 // semantic-grounding is now on-demand only (see below) — not run on the generation path.
 
@@ -61,6 +61,9 @@ async function handleSectionMode(userId: string, raw: any) {
         : await getActiveVoiceMeta(userId).catch(() => null);
       if (meta) voiceProfile = meta.styleGuide;
     }
+    // No custom Voice Match profile → use the Skripr HOUSE voice, not a generic narrator, so a
+    // default-voice script still has a recognizable Skripr identity.
+    if (!voiceProfile) voiceProfile = SKRIPR_HOUSE_VOICE;
 
     const facts = typeof sourceMaterial === "string" && sourceMaterial.trim() ? sourceMaterial.trim() : undefined;
     const context = {
@@ -258,13 +261,16 @@ export async function POST(req: Request) {
     let voiceProfile: string | null = null;
     let voiceName: string | null = null;
     let voiceFingerprint: any = undefined;
-    if (voiceProfileId === "default") { /* explicit Skripr Default — no voice */ }
+    if (voiceProfileId === "default") { /* explicit Skripr Default — house voice applied below */ }
     else {
       const meta = voiceProfileId
         ? await getVoiceMetaById(userId, String(voiceProfileId)).catch(() => null)
         : await getActiveVoiceMeta(userId).catch(() => null);
       if (meta) { voiceProfile = meta.styleGuide; voiceName = meta.name; voiceFingerprint = meta.fingerprint; }
     }
+    // No custom Voice Match profile → fall to the Skripr HOUSE voice (a deliberate signature), not a
+    // generic narrator, so "Skripr Default" still sounds like Skripr.
+    if (!voiceProfile) { voiceProfile = SKRIPR_HOUSE_VOICE; voiceName = "Skripr House"; }
     if (voiceProfile) console.log(`[voice] profile injected: ${voiceName} (${voiceProfile.length} chars)`);
 
     // Learning loop: if this is a remix of a real YouTube video (New Script URL),

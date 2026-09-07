@@ -7,6 +7,21 @@ import { measureVoice, type VoiceFingerprint } from "@/lib/voice-metrics";
 
 export const MAX_PROFILES = 5;
 
+// SKRIPR HOUSE VOICE — the signature default. When a user has NOT selected a Voice Match profile,
+// generation used to fall through to a generic narrator register, so every default script sounded
+// the same AND sounded like nobody. This is a deliberate house identity injected in that case, so a
+// Skripr script is recognizable as a Skripr script. It is written in the same shape as a Voice Match
+// styleGuide so it slots into the exact same prompt slot; a real Voice Match profile still overrides
+// it. Essentials are front-loaded because downstream prompts slice the voice string.
+export const SKRIPR_HOUSE_VOICE = `SKRIPR HOUSE VOICE: a deliberate signature identity, not a neutral narrator. Write every sentence in it.
+IDENTITY: the investigator who found what the surface numbers were hiding and is walking the viewer through it, calm, precise, quietly relentless. The tone of a very smart friend who did the homework and genuinely wants to know what it all adds up to. Curious and even-handed, unhurried, but always moving toward a point. Not a hype channel, not a lecturer.
+RHYTHM: mostly flowing paragraphs of three to five sentences that build one idea, sentence length varied inside them for cadence. Land the key beat of a section on ONE short, hard declarative that stops the reader, at most once per section, earned by the build before it. Power comes from control, never from stacking fragments or choppy one-line paragraphs.
+DICTION: plain, concrete, exact. Reach for the specific noun and the real number over any adjective. Prefer understatement to intensifiers; the facts are dramatic enough, so the voice stays level and lets them land.
+NEVER-DOES (absolute): never the machine tics ("read that again", "let that sink in", "sit with that", "here's the thing", "that's not X, that's Y", "make no mistake"); never hype adjectives as punctuation ("insane", "crazy", "staggering", "mind-blowing"); never a throat-clearing opener ("in today's world", "now more than ever"); never an em dash; never editorial mind-reading about what people "must have felt" unless the record states it; never break the fourth wall about the research itself.
+STANCE: investigative and fair. Test the easy explanation instead of naming a villain, earn every conclusion from what the evidence supports, name the disagreement when the research disagrees, and when the record is silent say so plainly.
+ADDRESS: speak to the viewer as "you" as a sparing entry point, never a fictional character with a backstory; widen from one person's experience out to the system.
+SIGNATURE MOVE: open a beat on the concrete image or number, never a windup; run the piece as "that explains part of it, but not all of it, so what is left?"; land sections on what it means, not on a caveat.`;
+
 export interface VoiceProfileRow {
   id: string;
   name: string;
