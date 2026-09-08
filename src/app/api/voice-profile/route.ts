@@ -98,7 +98,7 @@ export async function POST(req: Request) {
 
     const msg = await getClient().messages.create({
       model: "claude-sonnet-4-6",
-      max_tokens: 900,
+      max_tokens: 1400,
       system: "You are a forensic writing-style analyst for YouTube voiceover scripts. Output plain text only — no markdown headers, no preamble.",
       messages: [{
         role: "user",
@@ -109,24 +109,24 @@ SAMPLES:
 ${text.slice(0, 24000)}
 """
 
-Write a compact profile (max 340 words) covering, in this order:
-- Sentence rhythm: typical length, fragment usage, how they build and release tension
-- Opening / hook style: how they START a video — do they open on a metaphor, a question, a cold scene, a stat, a bold claim? Describe their signature opening move and quote one.
-- Imagery and metaphor: do they explain through analogies, metaphors, or vivid comparisons? How often, and what kind (physical/sensory, pop-culture, scientific, everyday)? Quote 1-2 verbatim examples. If they rarely use imagery, say so explicitly.
+Write a compact profile (max 480 words) covering, in this order:
+- NARRATIVE MECHANICS (the most important section — this is how they SHAPE a story, and it must transfer to ANY subject): their signature OPENING MOVE (quote one); their TRANSITION mechanic, how they shift between ideas (e.g. a rhetorical question as a gear-shift, a hard cut, a callback); their TENSION pattern, how they build and then turn (e.g. accumulation then pivot, setup then reversal); their SECTION-ENDING pattern (e.g. apparent resolution then a darker complication, or a clean landing); and their PAYOFF/CALLBACK behavior (e.g. return to the opening image at the end). Describe each as a repeatable move, not a one-off.
+- Sentence rhythm: typical length, fragment usage, the build-and-release pattern (e.g. long, medium, short punch)
+- Imagery and metaphor: do they explain through analogies or vivid comparisons? How often, and what kind (physical/sensory, pop-culture, scientific, everyday)? Quote 1-2 verbatim examples. If they rarely use imagery, say so explicitly.
 - Vocabulary and diction: simple/technical, slang, contractions, words they favor
 - Energy and tone: where they sit between calm-documentary and hype, how serious vs playful
 - Person and address: how they talk to the viewer (you/we/I), how personal they get
 - Humor: type, frequency, and an example pattern
-- Signature phrases & structural moves: exact recurring words/phrases (quote verbatim) AND any repeated structural patterns (e.g. numbered beats, "First… Second…", recurring segment shapes)
-- Transitions: how they move between ideas
+- Signature phrases: exact recurring words/phrases, quoted verbatim
 - CTA style: how they ask for subscribes/comments
 - Never-does: things notably absent from their style
+- CHARACTERISTIC STRENGTH (end with this, one short block): name the 2-4 DOMINANT traits that define the voice and should be imitated heavily, and separately the OCCASIONAL traits to use only where they fit. Explicitly flag any single trait (e.g. sentence fragments, a catchphrase, a metaphor type) that would read as a machine-made TIC if overused — so a writer applies it at the creator's real frequency, not on every line.
 
-Be specific and concrete. No generic filler like "engaging" or "conversational" without evidence.`,
+Be specific and concrete. No generic filler like "engaging" or "conversational" without evidence. Quote the creator verbatim wherever you can.`,
       }],
     });
 
-    const styleGuide = (msg.content[0].type === "text" ? msg.content[0].text : "").trim().slice(0, 2600);
+    const styleGuide = (msg.content[0].type === "text" ? msg.content[0].text : "").trim().slice(0, 3800);
     if (!styleGuide) throw new Error("Style analysis came back empty — please try again");
 
     const profile = reanalyzeId
