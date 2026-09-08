@@ -2434,6 +2434,7 @@ export interface GeneratedMetadata {
     timeElement?: string;
     stakes?: string;
     viewerPromise?: string;
+    openLoops?: string[];
   };
   packagingAngle?: string;
   coreHookWhy?: string;
@@ -2470,6 +2471,7 @@ Fill each field from ONLY what the script/title support, invent nothing:
 - timeElement: any span/date that adds weight ("20 years", "2017 to 2024"), or ""
 - stakes: what was at risk / who was affected
 - viewerPromise: what the viewer gets by watching
+- openLoops: the 2 to 4 unanswered questions the story raises that a viewer would want resolved (who found her, how did they recognize her, why did investigators miss her, how did she hold the identity). These are the strongest raw material for browse titles and thumbnails, a title can POSE one of these loops without answering it
 
 ━━━ STEP 2: CORE HOOK ━━━
 In one sentence ("packagingAngle"), the single most sellable framing of this story, the hook every asset points at (e.g. "the wanted fugitive hiding behind an ordinary suburban identity"). Choose the framing the DNA best supports, not the flashiest. Then in one sentence ("coreHookWhy"), say WHY it is the strongest hook, leading with the SINGLE sharpest contradiction (e.g. wanted fugitive vs ordinary suburban life), not a mix of several details.
@@ -2488,7 +2490,8 @@ BROWSE (next 4): curiosity, contradiction, or stakes, no keyword stuffing, 6 to 
 HYBRID (last 2): a recognizable entity plus a curiosity/story promise, works on both surfaces. It must keep a real curiosity mechanism, never just an informational label. "Kathleen Soliah Hid in Plain Sight for 20 Years. Then TV Exposed Her." works (name + specificity + curiosity + payoff tease); "The SLA Fugitive Who Was Caught by a Television Broadcast" is too flat, it only informs.
 
 CONCRETE OVER GENERIC (applies to every title): a specific image beats a vague claim. "Raised three kids while the FBI searched for her" beats "fooled everyone for two decades"; give the viewer a picture, not an abstraction. Cut generic filler like "fooled everyone", "shocking truth", "you won't believe".
-BUT NOT HYPER-SPECIFIC TRIVIA: do not jam a precise factual detail into a title just because it is in the script when it adds no curiosity. "disappeared into suburbia for two decades" beats "disappeared into a five-bedroom Tudor and stayed there for two decades". Keep the detail if it sharpens the hook, cut it if it only makes the title longer.
+BUT NOT HYPER-SPECIFIC TRIVIA: do not jam a precise factual detail into a title just because it is in the script. The editorial test for ANY specific detail (in a title, thumbnail, or the description) is NOT "is this interesting?" but "does this detail strengthen the video's central promise?" A house size (five-bedroom), a neighborhood name (St. Paul), a docket number, an exact address almost never strengthen the hook, they just make it longer. "disappeared into suburbia for two decades" beats "disappeared into a five-bedroom Tudor". Reject a title whose main distinguishing feature is an incidental detail, and never recommend one as the best title.
+STRICT IDENTITY: use a person's EXACT name or verified alias as the script gives it. Do not compress or invent a familiar form ("Sara" for "Sara Jane Olson"), and do not assert a name/alias the script does not establish. Avoid unwarranted second person: "lived next door and nobody knew" beats "lived next door to YOU and nobody knew" unless the story is genuinely about the viewer.
 FACTUAL COHERENCE (hard): every title must accurately characterize what happened and make logical sense. Do not mischaracterize the event to sound punchy: "a TV viewer recognized her" is accurate, "a TV viewer solved the indictment" is not. And do not write a contradiction that does not parse ("20 YEARS. NO HIDING." is nonsense). If a punchy phrasing distorts the fact or reads as a non-sequitur, use the accurate version.
 
 ━━━ STEP 4: PACKAGING PICKS + SCORES ━━━
@@ -2503,7 +2506,7 @@ Do not just list titles, make the packaging call:
 ━━━ STEP 5: DESCRIPTION (sounds like the creator typed it, never a keyword paragraph) ━━━
 The first 2 to 3 sentences appear ABOVE the fold and are indexed most heavily by YouTube search, so front-load the core hook and the primary entity naturally.
 Structure, each block separated by a blank line:
-- 2 to 3 sentence opening: the core hook plus the primary entity, compelling and keyword-natural. Prioritize the strongest SEARCH ENTITIES and the STORY, not an exhaustive list of facts. A secondary detail that is neither searchable nor part of the hook (a docket number, a minor date) does not belong in the opening.
+- 2 to 3 sentence opening: the core hook plus the primary entity, compelling and keyword-natural. Prioritize the strongest SEARCH ENTITIES and the STORY, not an exhaustive list of facts. Apply the same editorial test as the titles: an incidental detail (a docket number, a house size, a neighborhood name, a minor date) that does not strengthen the central promise does NOT belong here, however interesting it is.
 - a short block on what the viewer will discover (the promise, the stakes)
 - one line of channel-appropriate CTA (subscribe, or a related-video nudge)
 - final line: 3 to 5 relevant hashtags
@@ -2544,7 +2547,7 @@ This metadata is published under the creator's name, so it has to sound like the
 ━━━ OUTPUT FORMAT ━━━
 Return ONLY valid JSON, no markdown fences. Fill videoDna and packagingAngle FIRST, then generate the rest from them:
 {
-  "videoDna": { "centralStory": "...", "primaryEntities": ["..."], "coreConflict": "...", "mostSurprisingFact": "...", "strongestNumber": "...", "timeElement": "...", "stakes": "...", "viewerPromise": "..." },
+  "videoDna": { "centralStory": "...", "primaryEntities": ["..."], "coreConflict": "...", "mostSurprisingFact": "...", "strongestNumber": "...", "timeElement": "...", "stakes": "...", "viewerPromise": "...", "openLoops": ["...", "..."] },
   "packagingAngle": "one-sentence core hook every asset points at",
   "coreHookWhy": "one sentence on why it is the strongest hook",
   "titles": ["SEARCH: [title]", "SEARCH: [title]", "SEARCH: [title]", "SEARCH: [title]", "BROWSE: [title]", "BROWSE: [title]", "BROWSE: [title]", "BROWSE: [title]", "HYBRID: [title]", "HYBRID: [title]"],
