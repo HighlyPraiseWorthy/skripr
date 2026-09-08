@@ -159,7 +159,8 @@ export default function MetadataPage() {
               <p style={{ fontSize: 15, fontWeight: 600, color: C.accent, letterSpacing: 0.4, marginBottom: metadata.packagingAngle ? 6 : 12 }}>TITLE OPTIONS</p>
               {metadata.packagingAngle && (
                 <p style={{ fontSize: 13.5, color: C.textDim, lineHeight: 1.5, marginBottom: 14 }}>
-                  <span style={{ color: C.accent, fontWeight: 600 }}>Packaging angle: </span>{metadata.packagingAngle}
+                  <span style={{ color: C.accent, fontWeight: 600 }}>Core hook: </span>{metadata.packagingAngle}
+                  {metadata.coreHookWhy && <span style={{ display: "block", marginTop: 3, opacity: 0.85 }}><span style={{ fontWeight: 600 }}>Why it works: </span>{metadata.coreHookWhy}</span>}
                 </p>
               )}
               {(() => {

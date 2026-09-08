@@ -2436,6 +2436,7 @@ export interface GeneratedMetadata {
     viewerPromise?: string;
   };
   packagingAngle?: string;
+  coreHookWhy?: string;
   bestTitle?: string;
   bestTitleWhy?: string;
 }
@@ -2466,8 +2467,8 @@ Fill each field from ONLY what the script/title support, invent nothing:
 - stakes: what was at risk / who was affected
 - viewerPromise: what the viewer gets by watching
 
-━━━ STEP 2: PACKAGING ANGLE ━━━
-In one sentence, the single most sellable framing of this story. This is the hook every asset points at (e.g. "the wanted fugitive hiding behind an ordinary suburban identity"). Choose the angle the DNA best supports, not the flashiest.
+━━━ STEP 2: CORE HOOK ━━━
+In one sentence ("packagingAngle"), the single most sellable framing of this story, the hook every asset points at (e.g. "the wanted fugitive hiding behind an ordinary suburban identity"). Choose the framing the DNA best supports, not the flashiest. Then in one sentence ("coreHookWhy"), say WHY it is the strongest hook (the contradiction, stake, or curiosity gap it opens).
 
 ━━━ FACTUAL INHERITANCE (hard rule, inherited from the script) ━━━
 No title, thumbnail, or description may claim MORE than the script establishes. No invented outcome, superlative, number, causal link, or "first/biggest/only" the script does not support. A packaging angle SHARPENS the true story, it never upgrades it. If the script does not establish it, the package cannot assert it.
@@ -2476,7 +2477,7 @@ No title, thumbnail, or description may claim MORE than the script establishes. 
 ${EXPERT_ATTRIBUTION_RULE}
 4 SEARCH, then 4 BROWSE, then 2 HYBRID. Every title delivers the packaging angle, but each uses a DIFFERENT archetype so these are 10 distinct concepts, never 10 rewrites of one line.
 
-SEARCH (first 4): keyword/entity first, under 60 characters, the primary entity or topic in the first 5 words. Rotate archetypes across the four: Entity + Investigation ("how they were found"), Entity + Hidden Life, Entity + Time span, Entity + Event.
+SEARCH (first 4): keyword-AWARE, not a keyword string. Include the strongest searchable entity or topic naturally in the first 5 words, under 60 characters, but it must still read like a title a human would click, never a search query. "Kathleen Soliah SLA fugitive caught after 20 years hiding" is a query and is WRONG; "How Kathleen Soliah Hid From the FBI for 20 Years" carries the same entities and is right. Rotate archetypes across the four: Entity + Investigation ("how they were found"), Entity + Hidden Life, Entity + Time span, Entity + Event.
 BROWSE (next 4): curiosity, contradiction, or stakes, no keyword stuffing, 6 to 11 words, opens a loop the viewer must click to close. Rotate archetypes: Hidden Identity, Ordinary vs Extraordinary, Time ("They vanished for 20 years. Then..."), Unexpected Discovery, Contradiction.
 HYBRID (last 2): a recognizable entity plus a curiosity/story promise, works on both surfaces.
 
@@ -2484,9 +2485,9 @@ HYBRID (last 2): a recognizable entity plus a curiosity/story promise, works on 
 Pick the single strongest title for THIS video and return it verbatim in "bestTitle" (drop the SEARCH/BROWSE/HYBRID prefix, keep the title text exactly). Judge it on click-through potential, clarity, curiosity, accuracy to the script, and how well it pairs with a thumbnail. In "bestTitleWhy", one short sentence on why it wins.
 
 ━━━ STEP 5: DESCRIPTION (sounds like the creator typed it, never a keyword paragraph) ━━━
-The first 2 to 3 sentences appear ABOVE the fold and are indexed most heavily by YouTube search, so front-load the packaging angle and the primary entity naturally.
+The first 2 to 3 sentences appear ABOVE the fold and are indexed most heavily by YouTube search, so front-load the core hook and the primary entity naturally.
 Structure, each block separated by a blank line:
-- 2 to 3 sentence opening: the packaging angle plus the primary entity, compelling and keyword-natural
+- 2 to 3 sentence opening: the core hook plus the primary entity, compelling and keyword-natural. Prioritize the strongest SEARCH ENTITIES and the STORY, not an exhaustive list of facts. A secondary detail that is neither searchable nor part of the hook (a docket number, a minor date) does not belong in the opening.
 - a short block on what the viewer will discover (the promise, the stakes)
 - one line of channel-appropriate CTA (subscribe, or a related-video nudge)
 - final line: 3 to 5 relevant hashtags
@@ -2527,7 +2528,8 @@ This metadata is published under the creator's name, so it has to sound like the
 Return ONLY valid JSON, no markdown fences. Fill videoDna and packagingAngle FIRST, then generate the rest from them:
 {
   "videoDna": { "centralStory": "...", "primaryEntities": ["..."], "coreConflict": "...", "mostSurprisingFact": "...", "strongestNumber": "...", "timeElement": "...", "stakes": "...", "viewerPromise": "..." },
-  "packagingAngle": "one-sentence sellable framing every asset points at",
+  "packagingAngle": "one-sentence core hook every asset points at",
+  "coreHookWhy": "one sentence on why it is the strongest hook",
   "titles": ["SEARCH: [title]", "SEARCH: [title]", "SEARCH: [title]", "SEARCH: [title]", "BROWSE: [title]", "BROWSE: [title]", "BROWSE: [title]", "BROWSE: [title]", "HYBRID: [title]", "HYBRID: [title]"],
   "bestTitle": "the single recommended title, verbatim, no prefix",
   "bestTitleWhy": "one short sentence",
