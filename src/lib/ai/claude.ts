@@ -2439,6 +2439,9 @@ export interface GeneratedMetadata {
   coreHookWhy?: string;
   bestTitle?: string;
   bestTitleWhy?: string;
+  bestTitleScores?: { curiosity?: number; clarity?: number; browse?: number; search?: number; overall?: number };
+  searchWinner?: string;
+  thumbnailWinner?: string;
 }
 
 export async function generateMetadata(input: MetadataGenerationInput): Promise<GeneratedMetadata> {
@@ -2481,8 +2484,16 @@ SEARCH (first 4): keyword-AWARE, not a keyword string. Include the strongest sea
 BROWSE (next 4): curiosity, contradiction, or stakes, no keyword stuffing, 6 to 11 words, opens a loop the viewer must click to close. Rotate archetypes: Hidden Identity, Ordinary vs Extraordinary, Time ("They vanished for 20 years. Then..."), Unexpected Discovery, Contradiction.
 HYBRID (last 2): a recognizable entity plus a curiosity/story promise, works on both surfaces.
 
-━━━ STEP 4: BEST TITLE ━━━
-Pick the single strongest title for THIS video and return it verbatim in "bestTitle" (drop the SEARCH/BROWSE/HYBRID prefix, keep the title text exactly). Judge it on click-through potential, clarity, curiosity, accuracy to the script, and how well it pairs with a thumbnail. In "bestTitleWhy", one short sentence on why it wins.
+CONCRETE OVER GENERIC (applies to every title): a specific image beats a vague claim. "Raised three kids while the FBI searched for her" beats "fooled everyone for two decades"; give the viewer a picture, not an abstraction. Cut generic filler like "fooled everyone", "shocking truth", "you won't believe".
+FACTUAL COHERENCE (hard): every title must accurately characterize what happened and make logical sense. Do not mischaracterize the event to sound punchy: "a TV viewer recognized her" is accurate, "a TV viewer solved the indictment" is not. And do not write a contradiction that does not parse ("20 YEARS. NO HIDING." is nonsense). If a punchy phrasing distorts the fact or reads as a non-sequitur, use the accurate version.
+
+━━━ STEP 4: PACKAGING PICKS + SCORES ━━━
+Do not just list titles, make the packaging call:
+- "bestTitle": the single strongest overall title, verbatim, no SEARCH/BROWSE/HYBRID prefix. Judge on click-through, curiosity, clarity, accuracy, and thumbnail pairing.
+- "bestTitleWhy": one short sentence on why it wins.
+- "bestTitleScores": integer 0-10 for each of curiosity, clarity, browse, search, and overall, scoring THIS bestTitle honestly (a strong browse title may score lower on search, that is fine and useful).
+- "searchWinner": the single best SEARCH title (verbatim, no prefix) for someone actively searching this topic.
+- "thumbnailWinner": the single strongest thumbnail-text option (verbatim, from your thumbnailText list).
 
 ━━━ STEP 5: DESCRIPTION (sounds like the creator typed it, never a keyword paragraph) ━━━
 The first 2 to 3 sentences appear ABOVE the fold and are indexed most heavily by YouTube search, so front-load the core hook and the primary entity naturally.
@@ -2500,7 +2511,7 @@ Build a search/entity map from the Video DNA, not a keyword dump. Work the tiers
 - Tier 3, name and search variants: alternate names and forms a viewer might type ("X case", "X FBI", a person's other known name)
 - Tier 4, long-tail viewer queries: specific questions people search ("how X was caught", "where X was hiding")
 - Tier 5, accurate adjacent context: closely related concepts that genuinely describe the video
-Every tag must be truthful to the script. Aim for about 20 after deduping, fewer is fine if padding would add noise.
+Every tag must be truthful to the script. DEDUPE AND PRIORITIZE, do not pad: drop near-duplicates that add no new search coverage (keep "Kathleen Soliah" and the alternate name "Sara Jane Olson", but you do not need "Kathleen Soliah story", "Kathleen Soliah arrest", AND "how Kathleen Soliah was caught" all at once, keep the one or two strongest). Fewer, distinct, high-value tags beat 20 filler phrases. Spell every entity name EXACTLY correctly (this matters most in tags and hashtags, a misspelled name is a dead tag).
 
 ━━━ STEP 7: THUMBNAIL TEXT (exactly 5 options, max 4 words each) ━━━
 Thumbnail text drives CTR on Browse and Suggested. Each option should:
@@ -2511,6 +2522,7 @@ Thumbnail text drives CTR on Browse and Suggested. Each option should:
 QUOTE-FIRST THUMBNAIL TEXT (do this whenever the script allows it): the single best thumbnail text is a SHORT VERBATIM QUOTE spoken by someone in the story, taken word for word from the script above. Three words in someone's actual voice ("YOU A COP?") beats any phrase you could write, because it is real, it is specific, and it makes the viewer hear a person rather than read a label. Scan the script for quoted speech and lead your options with the sharpest one that fits in four words. Never invent a quote or alter its wording to fit; if the script has no quoted speech, write normal thumbnail text instead.
 
 THUMBNAIL AND TITLE MUST NOT SAY THE SAME THING. They are two halves of one information gap: the title names the ordeal ("How an ATF Agent Survived the Mongols' Loyalty Test"), the thumbnail shows the sharpest moment ("YOU A COP?"). Together they pose a question the video answers. If an option merely restates words already in the title, replace it.
+EACH OPTION MUST PARSE AND EARN ITS PLACE. Prefer a clean, instantly-readable contradiction or image ("HIDING IN PLAIN SIGHT", "BOMBS. THEN BOOK CLUB.") over a literal or awkward line. Avoid the merely literal ("TV SHOW CAUGHT HER") and the non-sequitur ("20 YEARS. NO HIDING." does not parse). If a line needs the video to make sense, cut it.
 
 ━━━ STEP 8: HASHTAGS (3 to 5 only, each prefixed with #) ━━━
 YouTube only surfaces the first few, and a long list reads as spam. Use 3 to 5, no more: primary subject, primary topic, then the broader niche. Do not pad to a number.
@@ -2533,6 +2545,9 @@ Return ONLY valid JSON, no markdown fences. Fill videoDna and packagingAngle FIR
   "titles": ["SEARCH: [title]", "SEARCH: [title]", "SEARCH: [title]", "SEARCH: [title]", "BROWSE: [title]", "BROWSE: [title]", "BROWSE: [title]", "BROWSE: [title]", "HYBRID: [title]", "HYBRID: [title]"],
   "bestTitle": "the single recommended title, verbatim, no prefix",
   "bestTitleWhy": "one short sentence",
+  "bestTitleScores": { "curiosity": 9, "clarity": 9, "browse": 9, "search": 7, "overall": 9 },
+  "searchWinner": "the single best SEARCH title, verbatim, no prefix",
+  "thumbnailWinner": "the single strongest thumbnail-text option, verbatim",
   "description": "Full description following STEP 5 (no timestamps, no chapters)",
   "tags": ["tier1 entity", "tier1 entity", "core topic", "search variant", "search variant", "long tail query", "long tail query", "long tail query", "adjacent context", "adjacent context"],
   "thumbnailText": ["OPTION 1", "OPTION 2", "OPTION 3", "OPTION 4", "OPTION 5"],
@@ -2571,6 +2586,19 @@ Return ONLY valid JSON, no markdown fences. Fill videoDna and packagingAngle FIR
   metadata.thumbnailText = (metadata.thumbnailText || []).map(deDash);
   metadata.tags = metadata.tags.map(deDash);
   if (typeof metadata.bestTitle === "string") metadata.bestTitle = deDash(metadata.bestTitle);
+  if (typeof metadata.searchWinner === "string") metadata.searchWinner = deDash(metadata.searchWinner);
+  if (typeof metadata.thumbnailWinner === "string") metadata.thumbnailWinner = deDash(metadata.thumbnailWinner);
+  // Belt-and-suspenders tag dedup: drop exact case-insensitive duplicates the model may have emitted
+  // despite the dedup instruction (keeps first occurrence, preserves order).
+  {
+    const seen = new Set<string>();
+    metadata.tags = (metadata.tags || []).filter((t) => {
+      const k = t.toLowerCase().trim();
+      if (!k || seen.has(k)) return false;
+      seen.add(k);
+      return true;
+    });
+  }
   if (typeof metadata.description === "string") {
     // Belt-and-suspenders: chapters/timestamps are removed from this feature, so strip any line the
     // model still emitted that is a timestamp/chapter marker ("0:00 Intro", "1:23 - The Turn"),

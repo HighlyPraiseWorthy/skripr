@@ -163,6 +163,31 @@ export default function MetadataPage() {
                   {metadata.coreHookWhy && <span style={{ display: "block", marginTop: 3, opacity: 0.85 }}><span style={{ fontWeight: 600 }}>Why it works: </span>{metadata.coreHookWhy}</span>}
                 </p>
               )}
+              {metadata.bestTitle && (
+                <div style={{ borderRadius: 12, background: "rgba(16,185,129,0.05)", border: "1px solid rgba(16,185,129,0.28)", padding: "14px 16px", marginBottom: 16 }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: "#10b981", letterSpacing: 0.6, marginBottom: 6 }}>🥇 RECOMMENDED PACKAGE</div>
+                  <div style={{ fontSize: 16, color: C.textBright, fontWeight: 600, lineHeight: 1.4 }}>{metadata.bestTitle}</div>
+                  {metadata.bestTitleScores && (
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 8 }}>
+                      {([["Overall", metadata.bestTitleScores.overall], ["Curiosity", metadata.bestTitleScores.curiosity], ["Clarity", metadata.bestTitleScores.clarity], ["Browse", metadata.bestTitleScores.browse], ["Search", metadata.bestTitleScores.search]] as [string, number | undefined][])
+                        .filter(([, v]) => typeof v === "number")
+                        .map(([label, v]) => (
+                          <span key={label} style={{ fontSize: 12, color: C.textDim }}>
+                            <span style={{ fontWeight: 700, color: (v as number) >= 8 ? "#10b981" : (v as number) >= 6 ? C.accent : "#e0a458" }}>{v}</span>
+                            <span style={{ opacity: 0.7 }}> {label}</span>
+                          </span>
+                        ))}
+                    </div>
+                  )}
+                  {metadata.bestTitleWhy && <p style={{ fontSize: 13, color: C.textDim, lineHeight: 1.5, marginTop: 8, marginBottom: 0 }}>{metadata.bestTitleWhy}</p>}
+                  {(metadata.searchWinner || metadata.thumbnailWinner) && (
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: 18, marginTop: 10, paddingTop: 10, borderTop: "1px solid rgba(16,185,129,0.15)" }}>
+                      {metadata.searchWinner && <div style={{ fontSize: 12.5, color: C.textDim }}><span style={{ fontWeight: 600, color: C.accent }}>Search winner: </span>{metadata.searchWinner}</div>}
+                      {metadata.thumbnailWinner && <div style={{ fontSize: 12.5, color: C.textDim }}><span style={{ fontWeight: 600, color: C.accent }}>Thumbnail winner: </span>{metadata.thumbnailWinner}</div>}
+                    </div>
+                  )}
+                </div>
+              )}
               {(() => {
                 const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
                 const best = metadata.bestTitle ? norm(metadata.bestTitle) : "";
@@ -172,9 +197,9 @@ export default function MetadataPage() {
                 };
                 const parsed: {type: string; text: string}[] = (metadata.titles || []).map(parse);
                 const sections = [
-                  { type: "SEARCH", label: "Search", color: "#1a8fd1", desc: "Keyword-first, surfaces when viewers search YouTube" },
-                  { type: "BROWSE", label: "Browse", color: "#1a8fd1", desc: "Hook-first, surfaces on home feed and recommendations" },
-                  { type: "HYBRID", label: "Hybrid", color: "#10b981", desc: "Works for both Search and Browse surfaces" },
+                  { type: "SEARCH", label: "Search", color: "#1a8fd1", desc: "Search-intent titles built around the video's strongest searchable entities" },
+                  { type: "BROWSE", label: "Browse", color: "#1a8fd1", desc: "Curiosity-first titles designed for Home and Recommended" },
+                  { type: "HYBRID", label: "Hybrid", color: "#10b981", desc: "Balances search relevance with browse appeal" },
                 ];
                 return sections.map(section => {
                   const titles = parsed.filter(p => p.type === section.type);
