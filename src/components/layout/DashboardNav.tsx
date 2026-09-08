@@ -112,7 +112,7 @@ const navItems: {
   },
   {
     href: "/dashboard/metadata",
-    label: "Metadata",
+    label: "Video Packaging",
     isActive: (p) => p.startsWith("/dashboard/metadata"),
     icon: (
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}

@@ -43,7 +43,7 @@ const PRODUCT_FACTS = [
   "Transcript extracted in under 5 seconds",
   "Scripts adapted to your niche and voice",
   "Viral Magnet words graded S · A · B",
-  "Metadata suite: title, description, tags",
+  "Video Packaging: titles, thumbnail text, description, tags",
   "Niche Bend produces 10 fresh angles",
   "A/B title variants generated per script",
   "Viral Remixer rebuilds any video concept",
@@ -732,14 +732,14 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {/* 07 - Metadata Suite */}
+        {/* 07 - Video Packaging */}
         <div className="hn-feat-row">
           <div style={{ fontSize: 11, fontWeight: 400, letterSpacing: "0.1em", color: T.dim, padding: "32px 24px", borderRight: `1px solid ${T.border}` }}>07</div>
           <div style={{ padding: "32px 24px" }}>
-            <SectionLabel>Metadata Suite</SectionLabel>
-            <div style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.5px", color: T.text, marginBottom: 10, lineHeight: 1.1 }}>Titles, tags,<br />descriptions.</div>
+            <SectionLabel>Video Packaging</SectionLabel>
+            <div style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.5px", color: T.text, marginBottom: 10, lineHeight: 1.1 }}>One story,<br />one package.</div>
             <div style={{ fontSize: 14, fontWeight: 400, color: "#d4e4f3", lineHeight: 1.7 }}>
-              SEO-optimized titles, YouTube descriptions, and a full 30-tag set, generated from your script content. Never leave search discovery value on the table before you publish.
+              Skripr finds your video's strongest hook, then builds the whole package around it: titles, thumbnail text, description, and tags that work together, with a recommended package it scores and explains. Not ten disconnected titles, one packaging strategy.
             </div>
             <FeatTag color={T.green}>All plans</FeatTag>
           </div>
@@ -949,7 +949,7 @@ export default function LandingPage() {
             </div>
             <div style={{ fontSize: 11, color: T.dim, marginBottom: 20 }}>20 scripts / month</div>
             <div style={{ height: 1, background: T.border, margin: "16px 0" }} />
-            {["20 scripts / month","Niche Bend Engine","Viral Remixer","Viral Magnet Titles","Metadata & A/B Testing"].map(f => (
+            {["20 scripts / month","Niche Bend Engine","Viral Remixer","Viral Magnet Titles","Video Packaging & A/B Testing"].map(f => (
               <div key={f} style={{ fontSize: 12, color: T.muted, padding: "4px 0", display: "flex", alignItems: "center", gap: 8, fontWeight: 300 }}>
                 <Check /> {f}
               </div>
@@ -991,7 +991,7 @@ export default function LandingPage() {
                 "Niche Bend Engine",
                 "Viral Remixer",
                 "Viral Magnet Titles",
-                "Metadata & A/B Testing",
+                "Video Packaging & A/B Testing",
                 "Compliance Checker (20/mo)",
                 "Priority generation",
               ].map(f => (
@@ -1021,7 +1021,7 @@ export default function LandingPage() {
               "Niche Bend Engine",
               "Viral Remixer",
               "Viral Magnet Titles",
-              "Metadata & A/B Testing",
+              "Video Packaging & A/B Testing",
               "Compliance Checker (100/mo)",
               "Priority generation",
               "5 team seats",

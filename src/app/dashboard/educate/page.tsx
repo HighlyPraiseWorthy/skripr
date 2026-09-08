@@ -305,7 +305,7 @@ const lessons = [
             "Copy the full script to your TTS tool (ElevenLabs, Murf, Play.ht)",
             "Use the generated title as your YouTube title starting point",
             "Run the script through Compliance check before upload if it covers a sensitive topic",
-            "Use Metadata tab to generate SEO-optimized tags and description",
+            "Use the Video Packaging tab to build titles, thumbnail text, description, and tags that work together",
           ]} />
         </Section>
         <Tip>The fastest workflow: Topic Only → Suggest Angles → pick one → Generate → Rewrite Hook once → Copy. Under 3 minutes from idea to script if you know your topic.</Tip>
@@ -415,7 +415,7 @@ const lessons = [
         </Section>
         <Section title="How to use Skripr's A/B Titles feature">
           <Bullet items={[
-            "Generate metadata in the Metadata Generator, you get 4 Search, 4 Browse, and 2 Hybrid titles",
+            "Open Video Packaging, you get a recommended package plus 4 Search, 4 Browse, and 2 Hybrid titles",
             "Star any titles you want to save, they appear in the A/B Titles section in the sidebar",
             "Pick one title for upload, use it for 48 hours and check CTR in YouTube Studio Analytics",
             "If CTR is below 4%, copy the next title from your A/B Titles list and paste it into YouTube Studio",
@@ -573,8 +573,8 @@ const lessons = [
       <div>
         <Section title="The My Scripts shortcuts">
           <Bullet items={[
-            "Every saved script has 🏷 Metadata and 🛡 Compliance buttons (on Starter and above)",
-            "🏷 Metadata opens the Metadata tool with the script's title, content, and niche already filled in, just hit Generate for titles, description, tags, and thumbnail text",
+            "Every saved script has 🏷 Packaging and 🛡 Compliance buttons (on Starter and above)",
+            "🏷 Packaging opens Video Packaging with the script's title, content, and niche already filled in, just hit Generate for a recommended package plus titles, thumbnail text, description, and tags",
             "🛡 Compliance opens the checker pre-filled, scan for demonetization risk before you upload",
             "No copy-pasting your script across pages, the handoff carries everything over for you",
           ]} />
@@ -583,11 +583,11 @@ const lessons = [
           <Bullet items={[
             "Generate a script (with your chosen voice and optional magnet word)",
             "It auto-saves to My Scripts, nothing to remember to click",
-            "From the saved card: run Compliance to clear demonetization flags, then Metadata for your title/description/tags",
+            "From the saved card: run Compliance to clear demonetization flags, then Video Packaging for your titles, thumbnail text, description, and tags",
             "Copy the voiceover-clean script into your editor and publish",
           ]} />
         </Section>
-        <Tip>Run Compliance before Metadata. There's no point optimizing a title and description for a script that has a demonetization flag you'd need to rewrite around first.</Tip>
+        <Tip>Run Compliance before Video Packaging. There's no point optimizing a title and description for a script that has a demonetization flag you'd need to rewrite around first.</Tip>
       </div>
     ),
   },

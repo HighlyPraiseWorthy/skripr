@@ -194,10 +194,10 @@ export function ScriptList({ scripts, isPaid = false }: { scripts: Script[]; isP
                   <>
                     <button
                       onClick={() => sendToTool("/dashboard/metadata", script)}
-                      title="Generate metadata for this script"
+                      title="Package this script: titles, thumbnail text, description, tags"
                       style={{ padding: "7px 13px", borderRadius: 10, backgroundColor: "rgba(77,184,255,0.07)", color: C.accent, fontSize: 14, fontWeight: 500, border: "1px solid rgba(77,184,255,0.16)", cursor: "pointer" }}
                     >
-                      🏷 Metadata
+                      🏷 Packaging
                     </button>
                     <button
                       onClick={() => sendToTool("/dashboard/compliance", script)}

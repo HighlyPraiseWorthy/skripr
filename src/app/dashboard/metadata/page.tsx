@@ -84,8 +84,8 @@ export default function MetadataPage() {
       <div style={{ padding: "28px", minHeight: "100vh", background: C.bg, boxSizing: "border-box" }}>
         <div style={{ maxWidth: 720, margin: "0 auto" }}>
           <div style={{ borderRadius: 24, background: C.cardBg, border: `1px solid ${C.border}`, padding: 64, textAlign: "center" }}>
-            <p style={{ color: C.textBright, fontSize: 20, fontWeight: 700, marginBottom: 12 }}>Sign in to use Metadata Generator</p>
-            <p style={{ color: C.textDim, fontSize: 16, marginBottom: 28 }}>Generate titles, descriptions, tags, and thumbnail text</p>
+            <p style={{ color: C.textBright, fontSize: 20, fontWeight: 700, marginBottom: 12 }}>Sign in to use Video Packaging</p>
+            <p style={{ color: C.textDim, fontSize: 16, marginBottom: 28 }}>Turn your script into titles, thumbnail text, a description, and tags designed to work together</p>
             <button onClick={() => openSignIn?.()} style={{ padding: "12px 28px", borderRadius: 14, background: "linear-gradient(135deg,#0e6499,#1a8fd1,#4db8ff)", color: "#fff", fontSize: 16, fontWeight: 600, border: "none", cursor: "pointer", boxShadow: "0 0 22px rgba(77,184,255,0.26)" }}>
               Sign In
             </button>
@@ -112,8 +112,8 @@ export default function MetadataPage() {
 
       <div style={{ position: "relative", zIndex: 1, maxWidth: 960, margin: "0 auto", width: "100%" }}>
         <div style={{ marginBottom: 28 }}>
-          <h1 style={{ fontSize: 26, fontWeight: 700, color: C.textBright, letterSpacing: -0.4, marginBottom: 6 }}>Metadata Generator</h1>
-          <p style={{ color: C.textDim, fontSize: 16, lineHeight: 1.6 }}>Generate titles, descriptions, tags, and thumbnail text</p>
+          <h1 style={{ fontSize: 26, fontWeight: 700, color: C.textBright, letterSpacing: -0.4, marginBottom: 6 }}>Video Packaging</h1>
+          <p style={{ color: C.textDim, fontSize: 16, lineHeight: 1.6 }}>Turn your script into titles, thumbnail text, a description, and tags designed to work together</p>
         </div>
 
         <div style={{ borderRadius: 20, background: C.cardBg, border: `1px solid ${C.border}`, padding: "22px 26px", marginBottom: 20 }}>
@@ -148,7 +148,7 @@ export default function MetadataPage() {
             disabled={isLoading || !script.trim() || !title.trim()}
             style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "13px 28px", borderRadius: 14, background: "linear-gradient(135deg,#0e6499,#1a8fd1,#4db8ff)", color: "#fff", fontSize: 16, fontWeight: 600, border: "none", cursor: isLoading || !script.trim() || !title.trim() ? "not-allowed" : "pointer", opacity: isLoading || !script.trim() || !title.trim() ? 0.5 : 1, boxShadow: "0 0 22px rgba(77,184,255,0.26)" }}
           >
-            {isLoading ? "Generating…" : "✦ Generate Metadata"}
+            {isLoading ? "Generating…" : "✦ Generate Package"}
           </button>
           {error && <p style={{ color: C.danger, fontSize: 15, marginTop: 10 }}>{error}</p>}
         </div>

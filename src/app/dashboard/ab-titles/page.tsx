@@ -57,7 +57,7 @@ export default function ABTitlesPage() {
           )}
         </div>
         <p style={{ fontSize: 16, color: C.textDim, margin: 0 }}>
-          Titles you starred in the Metadata Generator. Use one at a time, check CTR after 48 hours, then swap.
+          Titles you starred in Video Packaging. Use one at a time, check CTR after 48 hours, then swap.
         </p>
       </div>
 
@@ -67,13 +67,13 @@ export default function ABTitlesPage() {
           <div style={{ fontSize: 36, marginBottom: 14 }}>☆</div>
           <p style={{ fontSize: 16, fontWeight: 600, color: C.textBright, marginBottom: 8 }}>No saved titles yet</p>
           <p style={{ fontSize: 15, color: C.textDim, marginBottom: 24, lineHeight: 1.6 }}>
-            Go to Metadata Generator, generate titles for your video,<br />and click the ☆ star on any title to save it here.
+            Go to Video Packaging, generate titles for your video,<br />and click the ☆ star on any title to save it here.
           </p>
           <Link
             href="/dashboard/metadata"
             style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "10px 22px", borderRadius: 12, background: "linear-gradient(135deg,#0e6499,#1a8fd1)", color: "#fff", fontSize: 16, fontWeight: 600, textDecoration: "none" }}
           >
-            Open Metadata Generator
+            Open Video Packaging
           </Link>
         </div>
       ) : (
@@ -123,7 +123,7 @@ export default function ABTitlesPage() {
               href="/dashboard/metadata"
               style={{ fontSize: 15, color: C.textDim, textDecoration: "none" }}
             >
-              ☆ Add more titles from Metadata Generator
+              ☆ Add more titles from Video Packaging
             </Link>
           </div>
         </>
