@@ -156,8 +156,15 @@ export default function MetadataPage() {
         {metadata && (
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             <div style={{ borderRadius: 18, background: C.cardBg, border: `1px solid ${C.border}`, padding: "20px 22px" }}>
-              <p style={{ fontSize: 15, fontWeight: 600, color: C.accent, letterSpacing: 0.4, marginBottom: 12 }}>TITLE OPTIONS</p>
+              <p style={{ fontSize: 15, fontWeight: 600, color: C.accent, letterSpacing: 0.4, marginBottom: metadata.packagingAngle ? 6 : 12 }}>TITLE OPTIONS</p>
+              {metadata.packagingAngle && (
+                <p style={{ fontSize: 13.5, color: C.textDim, lineHeight: 1.5, marginBottom: 14 }}>
+                  <span style={{ color: C.accent, fontWeight: 600 }}>Packaging angle: </span>{metadata.packagingAngle}
+                </p>
+              )}
               {(() => {
+                const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+                const best = metadata.bestTitle ? norm(metadata.bestTitle) : "";
                 const parse = (t: string) => {
                   const m = t.match(/^(SEARCH|BROWSE|HYBRID):\s*(.+)$/);
                   return m ? { type: m[1], text: m[2] } : { type: "SEARCH", text: t };
@@ -179,8 +186,11 @@ export default function MetadataPage() {
                       </div>
                       <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                         {titles.map((t, i) => (
-                          <div key={i} style={{ padding: "10px 14px", borderRadius: 10, background: "#0a1220", border: `1px solid ${section.color}1a`, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
-                            <span style={{ fontSize: 16, color: C.textBright, fontWeight: 500, flex: 1, lineHeight: 1.4 }}>{t.text}</span>
+                          <div key={i} style={{ padding: "10px 14px", borderRadius: 10, background: "#0a1220", border: `1px solid ${best && norm(t.text) === best ? "rgba(16,185,129,0.5)" : section.color + "1a"}`, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
+                            <span style={{ fontSize: 16, color: C.textBright, fontWeight: 500, flex: 1, lineHeight: 1.4 }}>
+                              {best && norm(t.text) === best && <span title={metadata.bestTitleWhy || "Recommended"} style={{ display: "inline-block", fontSize: 11, fontWeight: 700, color: "#10b981", background: "rgba(16,185,129,0.12)", border: "1px solid rgba(16,185,129,0.35)", borderRadius: 6, padding: "1px 7px", marginRight: 8, letterSpacing: 0.4, verticalAlign: "middle" }}>RECOMMENDED</span>}
+                              {t.text}
+                            </span>
                             <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
                               <button
                                 onClick={() => setSavedTitles(prev => prev.includes(t.text) ? prev.filter((x: string) => x !== t.text) : [...prev, t.text])}

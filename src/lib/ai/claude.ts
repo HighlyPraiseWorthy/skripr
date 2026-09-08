@@ -2423,63 +2423,85 @@ export interface GeneratedMetadata {
   tags: string[];
   thumbnailText: string[];
   hashtags: string[];
+  // PACKAGING ENGINE: the shared brief every asset is generated from, plus the single recommended
+  // title. All optional so older callers/UI keep working.
+  videoDna?: {
+    centralStory?: string;
+    primaryEntities?: string[];
+    coreConflict?: string;
+    mostSurprisingFact?: string;
+    strongestNumber?: string;
+    timeElement?: string;
+    stakes?: string;
+    viewerPromise?: string;
+  };
+  packagingAngle?: string;
+  bestTitle?: string;
+  bestTitleWhy?: string;
 }
 
 export async function generateMetadata(input: MetadataGenerationInput): Promise<GeneratedMetadata> {
   const currentYear = new Date().getFullYear();
 
-  const userPrompt = `You are a YouTube SEO and algorithm expert. Generate metadata that optimizes for all three YouTube discovery surfaces: Search, Browse (home feed), and Suggested Videos.
+  const userPrompt = `You are a YouTube PACKAGING engineer. Do NOT write the assets independently. FIRST extract the video's story, then pick ONE packaging angle, then generate every asset (titles, description, tags, thumbnail text, hashtags) FROM that same brief, each optimized for its own YouTube job. The whole package must feel like one intentional thing built around one story, not five separate generations.
 
 VIDEO INFO:
 Title: "${input.title}"
 Niche: ${input.niche}
-Script (first 1200 chars):
+Script (first 2000 chars):
 """
-${input.script.slice(0, 1200)}
+${input.script.slice(0, 2000)}
 """
 ${input.targetKeywords ? `Target keywords: ${input.targetKeywords.join(", ")}` : ""}
 Current year: ${currentYear}
 
-━━━ TITLES (generate exactly 10) ━━━
+━━━ STEP 1: VIDEO DNA (extract from the script and title, ground everything else in it) ━━━
+Fill each field from ONLY what the script/title support, invent nothing:
+- centralStory: one sentence, what the video is actually about
+- primaryEntities: the exact names/subjects a viewer would type into search (people, orgs, events)
+- coreConflict: the central tension or contradiction
+- mostSurprisingFact: the single most striking true detail
+- strongestNumber: the most compelling real figure from the script, or "" if none
+- timeElement: any span/date that adds weight ("20 years", "2017 to 2024"), or ""
+- stakes: what was at risk / who was affected
+- viewerPromise: what the viewer gets by watching
+
+━━━ STEP 2: PACKAGING ANGLE ━━━
+In one sentence, the single most sellable framing of this story. This is the hook every asset points at (e.g. "the wanted fugitive hiding behind an ordinary suburban identity"). Choose the angle the DNA best supports, not the flashiest.
+
+━━━ FACTUAL INHERITANCE (hard rule, inherited from the script) ━━━
+No title, thumbnail, or description may claim MORE than the script establishes. No invented outcome, superlative, number, causal link, or "first/biggest/only" the script does not support. A packaging angle SHARPENS the true story, it never upgrades it. If the script does not establish it, the package cannot assert it.
+
+━━━ STEP 3: TITLES (exactly 10, each PREFIXED with SEARCH:, BROWSE:, or HYBRID:) ━━━
 ${EXPERT_ATTRIBUTION_RULE}
+4 SEARCH, then 4 BROWSE, then 2 HYBRID. Every title delivers the packaging angle, but each uses a DIFFERENT archetype so these are 10 distinct concepts, never 10 rewrites of one line.
 
-The three YouTube discovery surfaces need different title strategies:
+SEARCH (first 4): keyword/entity first, under 60 characters, the primary entity or topic in the first 5 words. Rotate archetypes across the four: Entity + Investigation ("how they were found"), Entity + Hidden Life, Entity + Time span, Entity + Event.
+BROWSE (next 4): curiosity, contradiction, or stakes, no keyword stuffing, 6 to 11 words, opens a loop the viewer must click to close. Rotate archetypes: Hidden Identity, Ordinary vs Extraordinary, Time ("They vanished for 20 years. Then..."), Unexpected Discovery, Contradiction.
+HYBRID (last 2): a recognizable entity plus a curiosity/story promise, works on both surfaces.
 
-SEARCH titles (first 4) — These surface when users type queries into YouTube search.
-Rules: Primary keyword in the first 5 words. Under 60 characters. Informational framing.
-Example pattern: "How to [keyword] in [timeframe]" or "[Keyword]: [specific benefit]"
+━━━ STEP 4: BEST TITLE ━━━
+Pick the single strongest title for THIS video and return it verbatim in "bestTitle" (drop the SEARCH/BROWSE/HYBRID prefix, keep the title text exactly). Judge it on click-through potential, clarity, curiosity, accuracy to the script, and how well it pairs with a thumbnail. In "bestTitleWhy", one short sentence on why it wins.
 
-BROWSE titles (next 4) — These surface on home feeds and recommendations.
-Rules: Lead with emotion, curiosity, or a specific number. No keyword stuffing. 
-Create an open loop the viewer must click to close. 7-10 words.
-Example pattern: "I [did X] for [N days] and [surprising result]" or "The [thing] nobody tells you about [topic]"
+━━━ STEP 5: DESCRIPTION (sounds like the creator typed it, never a keyword paragraph) ━━━
+The first 2 to 3 sentences appear ABOVE the fold and are indexed most heavily by YouTube search, so front-load the packaging angle and the primary entity naturally.
+Structure, each block separated by a blank line:
+- 2 to 3 sentence opening: the packaging angle plus the primary entity, compelling and keyword-natural
+- a short block on what the viewer will discover (the promise, the stakes)
+- one line of channel-appropriate CTA (subscribe, or a related-video nudge)
+- final line: 3 to 5 relevant hashtags
+DO NOT include timestamps, chapter markers, "0:00 Intro" lines, or a chapter list anywhere in the description. This video has no timestamps.
 
-HYBRID titles (last 2) — Work for both surfaces.
-Rules: Primary keyword present but framed as a curiosity gap or personal result.
+━━━ STEP 6: TAGS (about 20, plain text, NO # prefix, entity-first taxonomy) ━━━
+Build a search/entity map from the Video DNA, not a keyword dump. Work the tiers in order, then dedupe and drop anything not truly about this video:
+- Tier 1, primary entities: the exact names/subjects from the DNA (people, orgs, events), plus their closest exact-match forms
+- Tier 2, core topic: the subject the video covers
+- Tier 3, name and search variants: alternate names and forms a viewer might type ("X case", "X FBI", a person's other known name)
+- Tier 4, long-tail viewer queries: specific questions people search ("how X was caught", "where X was hiding")
+- Tier 5, accurate adjacent context: closely related concepts that genuinely describe the video
+Every tag must be truthful to the script. Aim for about 20 after deduping, fewer is fine if padding would add noise.
 
-━━━ DESCRIPTION ━━━
-The first 2-3 sentences appear ABOVE the fold (before Show More) and are indexed most heavily by YouTube search. Front-load the primary keyword naturally.
-
-Structure:
-- Sentence 1: Hook + primary keyword (what this video is about, make it compelling)
-- Sentence 2-3: Secondary keywords + what viewer will learn/get
-- [blank line]
-- Timestamps (if applicable): 0:00 Intro, etc.
-- [blank line]
-- 2-3 related resource links or channel info
-- [blank line]
-- End with exactly 3 relevant hashtags on the final line
-
-━━━ TAGS (exactly 20, plain text, NO # prefix) ━━━
-Tags determine which "topic cluster" YouTube places your video in — affecting Suggested Videos placement alongside similar content.
-
-Tag strategy:
-- Tags 1-3: Exact match primary keyword and its closest variations (these are your anchor tags)
-- Tags 4-10: Long-tail phrases (3-5 words) that viewers actually search — be specific
-- Tags 11-16: Niche category terms that major channels in this space would use (cluster-matching tags)
-- Tags 17-20: Broad discovery terms that expand reach beyond the core audience
-
-━━━ THUMBNAIL TEXT (exactly 5 options, max 4 words each) ━━━
+━━━ STEP 7: THUMBNAIL TEXT (exactly 5 options, max 4 words each) ━━━
 Thumbnail text drives CTR on Browse and Suggested. Each option should:
 - Create an open loop or strong emotion
 - Work WITHOUT seeing the video
@@ -2489,8 +2511,8 @@ QUOTE-FIRST THUMBNAIL TEXT (do this whenever the script allows it): the single b
 
 THUMBNAIL AND TITLE MUST NOT SAY THE SAME THING. They are two halves of one information gap: the title names the ordeal ("How an ATF Agent Survived the Mongols' Loyalty Test"), the thumbnail shows the sharpest moment ("YOU A COP?"). Together they pose a question the video answers. If an option merely restates words already in the title, replace it.
 
-━━━ HASHTAGS (exactly 10, each prefixed with #) ━━━
-Mix: 3 niche-specific, 4 topic-specific, 3 broad discovery
+━━━ STEP 8: HASHTAGS (3 to 5 only, each prefixed with #) ━━━
+YouTube only surfaces the first few, and a long list reads as spam. Use 3 to 5, no more: primary subject, primary topic, then the broader niche. Do not pad to a number.
 
 ━━━ VOICE: WRITE LIKE A PERSON, NOT A MARKETING BOT (critical) ━━━
 This metadata is published under the creator's name, so it has to sound like they typed it.
@@ -2502,18 +2524,22 @@ This metadata is published under the creator's name, so it has to sound like the
 - Write the description in short blocks of 2 to 3 sentences, the way a creator actually writes, not one dense keyword paragraph.
 
 ━━━ OUTPUT FORMAT ━━━
-Return ONLY valid JSON, no markdown fences:
+Return ONLY valid JSON, no markdown fences. Fill videoDna and packagingAngle FIRST, then generate the rest from them:
 {
+  "videoDna": { "centralStory": "...", "primaryEntities": ["..."], "coreConflict": "...", "mostSurprisingFact": "...", "strongestNumber": "...", "timeElement": "...", "stakes": "...", "viewerPromise": "..." },
+  "packagingAngle": "one-sentence sellable framing every asset points at",
   "titles": ["SEARCH: [title]", "SEARCH: [title]", "SEARCH: [title]", "SEARCH: [title]", "BROWSE: [title]", "BROWSE: [title]", "BROWSE: [title]", "BROWSE: [title]", "HYBRID: [title]", "HYBRID: [title]"],
-  "description": "Full description following the structure above",
-  "tags": ["exact match keyword", "keyword variation", "keyword 2", "long tail phrase 1", "long tail phrase 2", "long tail phrase 3", "long tail phrase 4", "long tail phrase 5", "long tail phrase 6", "long tail phrase 7", "niche category 1", "niche category 2", "niche category 3", "niche category 4", "niche category 5", "niche category 6", "broad term 1", "broad term 2", "broad term 3", "broad term 4"],
+  "bestTitle": "the single recommended title, verbatim, no prefix",
+  "bestTitleWhy": "one short sentence",
+  "description": "Full description following STEP 5 (no timestamps, no chapters)",
+  "tags": ["tier1 entity", "tier1 entity", "core topic", "search variant", "search variant", "long tail query", "long tail query", "long tail query", "adjacent context", "adjacent context"],
   "thumbnailText": ["OPTION 1", "OPTION 2", "OPTION 3", "OPTION 4", "OPTION 5"],
-  "hashtags": ["#tag1", "#tag2", "#tag3", "#tag4", "#tag5", "#tag6", "#tag7", "#tag8", "#tag9", "#tag10"]
+  "hashtags": ["#tag1", "#tag2", "#tag3"]
 }`;
 
   const response = await getAnthropic().messages.create({
     model: "claude-sonnet-4-6",
-    max_tokens: 2500,
+    max_tokens: 3200,
     system: buildSystemPrompt(),
     messages: [{ role: "user", content: userPrompt }],
   });
@@ -2542,12 +2568,19 @@ Return ONLY valid JSON, no markdown fences:
   metadata.titles = (metadata.titles || []).map(deDash);
   metadata.thumbnailText = (metadata.thumbnailText || []).map(deDash);
   metadata.tags = metadata.tags.map(deDash);
+  if (typeof metadata.bestTitle === "string") metadata.bestTitle = deDash(metadata.bestTitle);
   if (typeof metadata.description === "string") {
-    // Preserve the blank-line structure of the description, clean each line.
+    // Belt-and-suspenders: chapters/timestamps are removed from this feature, so strip any line the
+    // model still emitted that is a timestamp/chapter marker ("0:00 Intro", "1:23 - The Turn"),
+    // then clean each surviving line and collapse the blank lines the removal can leave behind.
+    const isTimestampLine = (l: string) => /^\s*\(?\d{1,2}:\d{2}(?::\d{2})?\)?\s*[-–—:.)]?\s*\S/.test(l) || /^\s*(chapters?|timestamps?)\s*:?\s*$/i.test(l);
     metadata.description = metadata.description
       .split("\n")
+      .filter((line) => !isTimestampLine(line))
       .map((line) => (line.trim() ? deDash(line) : ""))
-      .join("\n");
+      .join("\n")
+      .replace(/\n{3,}/g, "\n\n")
+      .trim();
   }
 
   return metadata;
