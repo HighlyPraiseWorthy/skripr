@@ -98,7 +98,7 @@ export async function POST(req: Request) {
 
     const msg = await getClient().messages.create({
       model: "claude-sonnet-4-6",
-      max_tokens: 1400,
+      max_tokens: 2200,
       system: "You are a forensic writing-style analyst for YouTube voiceover scripts. Output plain text only — no markdown headers, no preamble.",
       messages: [{
         role: "user",
@@ -126,7 +126,12 @@ Be specific and concrete. No generic filler like "engaging" or "conversational" 
       }],
     });
 
-    const styleGuide = (msg.content[0].type === "text" ? msg.content[0].text : "").trim().slice(0, 3800);
+    // Trim to a sentence/line boundary so the profile never ends mid-word (the "short fragme…" /
+    // "trapdoor section en…" bug) — a hard character slice cut the last section off in the middle.
+    const rawStyle = (msg.content[0].type === "text" ? msg.content[0].text : "").trim();
+    const styleGuide = rawStyle.length > 5000
+      ? rawStyle.slice(0, 5000).replace(/\s+\S*$/, "").replace(/[,;:\s]+$/, "")
+      : rawStyle;
     if (!styleGuide) throw new Error("Style analysis came back empty — please try again");
 
     const profile = reanalyzeId
