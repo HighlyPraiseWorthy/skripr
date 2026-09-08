@@ -165,11 +165,20 @@ export default function MetadataPage() {
               )}
               {metadata.bestTitle && (
                 <div style={{ borderRadius: 12, background: "rgba(16,185,129,0.05)", border: "1px solid rgba(16,185,129,0.28)", padding: "14px 16px", marginBottom: 16 }}>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: "#10b981", letterSpacing: 0.6, marginBottom: 6 }}>🥇 RECOMMENDED PACKAGE</div>
-                  <div style={{ fontSize: 16, color: C.textBright, fontWeight: 600, lineHeight: 1.4 }}>{metadata.bestTitle}</div>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: "#10b981", letterSpacing: 0.6, marginBottom: 8 }}>🥇 RECOMMENDED PACKAGE{typeof metadata.bestTitleScores?.overall === "number" ? `  ·  ${metadata.bestTitleScores.overall}/10 PACKAGING SCORE` : ""}</div>
+                  <div style={{ display: "flex", gap: 8, alignItems: "baseline" }}>
+                    <span style={{ fontSize: 10.5, fontWeight: 700, color: C.textDim, letterSpacing: 0.5, minWidth: 66 }}>TITLE</span>
+                    <span style={{ fontSize: 16, color: C.textBright, fontWeight: 600, lineHeight: 1.4 }}>{metadata.bestTitle}</span>
+                  </div>
+                  {metadata.thumbnailWinner && (
+                    <div style={{ display: "flex", gap: 8, alignItems: "baseline", marginTop: 5 }}>
+                      <span style={{ fontSize: 10.5, fontWeight: 700, color: C.textDim, letterSpacing: 0.5, minWidth: 66 }}>THUMBNAIL</span>
+                      <span style={{ fontSize: 15, color: C.textBright, fontWeight: 700, letterSpacing: 0.3 }}>{metadata.thumbnailWinner}</span>
+                    </div>
+                  )}
                   {metadata.bestTitleScores && (
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 8 }}>
-                      {([["Overall", metadata.bestTitleScores.overall], ["Curiosity", metadata.bestTitleScores.curiosity], ["Clarity", metadata.bestTitleScores.clarity], ["Browse", metadata.bestTitleScores.browse], ["Search", metadata.bestTitleScores.search]] as [string, number | undefined][])
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 10 }}>
+                      {([["Packaging", metadata.bestTitleScores.overall], ["Curiosity", metadata.bestTitleScores.curiosity], ["Clarity", metadata.bestTitleScores.clarity], ["Browse", metadata.bestTitleScores.browse], ["Search", metadata.bestTitleScores.search]] as [string, number | undefined][])
                         .filter(([, v]) => typeof v === "number")
                         .map(([label, v]) => (
                           <span key={label} style={{ fontSize: 12, color: C.textDim }}>
@@ -180,10 +189,9 @@ export default function MetadataPage() {
                     </div>
                   )}
                   {metadata.bestTitleWhy && <p style={{ fontSize: 13, color: C.textDim, lineHeight: 1.5, marginTop: 8, marginBottom: 0 }}>{metadata.bestTitleWhy}</p>}
-                  {(metadata.searchWinner || metadata.thumbnailWinner) && (
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: 18, marginTop: 10, paddingTop: 10, borderTop: "1px solid rgba(16,185,129,0.15)" }}>
-                      {metadata.searchWinner && <div style={{ fontSize: 12.5, color: C.textDim }}><span style={{ fontWeight: 600, color: C.accent }}>Search winner: </span>{metadata.searchWinner}</div>}
-                      {metadata.thumbnailWinner && <div style={{ fontSize: 12.5, color: C.textDim }}><span style={{ fontWeight: 600, color: C.accent }}>Thumbnail winner: </span>{metadata.thumbnailWinner}</div>}
+                  {metadata.searchWinner && (
+                    <div style={{ marginTop: 10, paddingTop: 10, borderTop: "1px solid rgba(16,185,129,0.15)", fontSize: 12.5, color: C.textDim }}>
+                      <span style={{ fontWeight: 600, color: C.accent }}>Search winner: </span>{metadata.searchWinner}
                     </div>
                   )}
                 </div>

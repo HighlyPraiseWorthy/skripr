@@ -2475,6 +2475,7 @@ In one sentence ("packagingAngle"), the single most sellable framing of this sto
 
 ━━━ FACTUAL INHERITANCE (hard rule, inherited from the script) ━━━
 No title, thumbnail, or description may claim MORE than the script establishes. No invented outcome, superlative, number, causal link, or "first/biggest/only" the script does not support. A packaging angle SHARPENS the true story, it never upgrades it. If the script does not establish it, the package cannot assert it.
+CLASSIFICATION DISCIPLINE (labels matter, especially for real people): a loaded label ("terrorist", "killer", "fraudster", "extremist", "predator") may be used ONLY at the level the script/record supports. Distinguish a VERIFIED descriptor (the record states it as fact), a LEGAL/HISTORICAL allegation (indicted, charged, accused, alleged, suspected), and an EDITORIAL characterization (your framing). If the record only alleges or indicts, the package must say "indicted for", "accused of", "alleged", never state the flat verified label as settled fact. When unsure, use the more precise, less absolute wording. This is the packaging engine, so an aggressive label that outruns the record is a real legal and factual problem, not just a style note.
 
 ━━━ STEP 3: TITLES (exactly 10, each PREFIXED with SEARCH:, BROWSE:, or HYBRID:) ━━━
 ${EXPERT_ATTRIBUTION_RULE}
@@ -2482,7 +2483,7 @@ ${EXPERT_ATTRIBUTION_RULE}
 
 SEARCH (first 4): keyword-AWARE, not a keyword string. Include the strongest searchable entity or topic naturally in the first 5 words, under 60 characters, but it must still read like a title a human would click, never a search query. "Kathleen Soliah SLA fugitive caught after 20 years hiding" is a query and is WRONG; "How Kathleen Soliah Hid From the FBI for 20 Years" carries the same entities and is right. Rotate archetypes across the four: Entity + Investigation ("how they were found"), Entity + Hidden Life, Entity + Time span, Entity + Event.
 BROWSE (next 4): curiosity, contradiction, or stakes, no keyword stuffing, 6 to 11 words, opens a loop the viewer must click to close. Rotate archetypes: Hidden Identity, Ordinary vs Extraordinary, Time ("They vanished for 20 years. Then..."), Unexpected Discovery, Contradiction.
-HYBRID (last 2): a recognizable entity plus a curiosity/story promise, works on both surfaces.
+HYBRID (last 2): a recognizable entity plus a curiosity/story promise, works on both surfaces. It must keep a real curiosity mechanism, never just an informational label. "Kathleen Soliah Hid in Plain Sight for 20 Years. Then TV Exposed Her." works (name + specificity + curiosity + payoff tease); "The SLA Fugitive Who Was Caught by a Television Broadcast" is too flat, it only informs.
 
 CONCRETE OVER GENERIC (applies to every title): a specific image beats a vague claim. "Raised three kids while the FBI searched for her" beats "fooled everyone for two decades"; give the viewer a picture, not an abstraction. Cut generic filler like "fooled everyone", "shocking truth", "you won't believe".
 FACTUAL COHERENCE (hard): every title must accurately characterize what happened and make logical sense. Do not mischaracterize the event to sound punchy: "a TV viewer recognized her" is accurate, "a TV viewer solved the indictment" is not. And do not write a contradiction that does not parse ("20 YEARS. NO HIDING." is nonsense). If a punchy phrasing distorts the fact or reads as a non-sequitur, use the accurate version.
@@ -2491,9 +2492,9 @@ FACTUAL COHERENCE (hard): every title must accurately characterize what happened
 Do not just list titles, make the packaging call:
 - "bestTitle": the single strongest overall title, verbatim, no SEARCH/BROWSE/HYBRID prefix. Judge on click-through, curiosity, clarity, accuracy, and thumbnail pairing.
 - "bestTitleWhy": one short sentence on why it wins.
-- "bestTitleScores": integer 0-10 for each of curiosity, clarity, browse, search, and overall, scoring THIS bestTitle honestly (a strong browse title may score lower on search, that is fine and useful).
+- "bestTitleScores": integer 0-10 for each of curiosity, clarity, browse, search, and overall, scoring THIS bestTitle honestly (a strong browse title may score lower on search, that is fine and useful). "overall" is the PACKAGING SCORE: how strong this is as YouTube packaging, not the title's quality in a vacuum.
 - "searchWinner": the single best SEARCH title (verbatim, no prefix) for someone actively searching this topic.
-- "thumbnailWinner": the single strongest thumbnail-text option (verbatim, from your thumbnailText list).
+- "thumbnailWinner": the thumbnail-text option (verbatim, from your thumbnailText list) that best COMPLEMENTS the bestTitle, forming one package. It must add the mystery or the sharp moment the title does NOT already state, never repeat the title's own contrast. If bestTitle is "She Planted Bombs. Then She Coached Community Theater.", do NOT pick "BOMBS. THEN BOOK CLUB." (same contrast restated), pick one that adds a new layer like "WANTED. UNDETECTED." Title says what happened; thumbnail says the mystery.
 
 ━━━ STEP 5: DESCRIPTION (sounds like the creator typed it, never a keyword paragraph) ━━━
 The first 2 to 3 sentences appear ABOVE the fold and are indexed most heavily by YouTube search, so front-load the core hook and the primary entity naturally.
