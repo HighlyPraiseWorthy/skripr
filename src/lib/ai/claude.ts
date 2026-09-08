@@ -2439,6 +2439,7 @@ export interface GeneratedMetadata {
   coreHookWhy?: string;
   bestTitle?: string;
   bestTitleWhy?: string;
+  strategy?: string;
   bestTitleScores?: { curiosity?: number; clarity?: number; browse?: number; search?: number; overall?: number };
   searchWinner?: string;
   thumbnailWinner?: string;
@@ -2471,11 +2472,12 @@ Fill each field from ONLY what the script/title support, invent nothing:
 - viewerPromise: what the viewer gets by watching
 
 ━━━ STEP 2: CORE HOOK ━━━
-In one sentence ("packagingAngle"), the single most sellable framing of this story, the hook every asset points at (e.g. "the wanted fugitive hiding behind an ordinary suburban identity"). Choose the framing the DNA best supports, not the flashiest. Then in one sentence ("coreHookWhy"), say WHY it is the strongest hook (the contradiction, stake, or curiosity gap it opens).
+In one sentence ("packagingAngle"), the single most sellable framing of this story, the hook every asset points at (e.g. "the wanted fugitive hiding behind an ordinary suburban identity"). Choose the framing the DNA best supports, not the flashiest. Then in one sentence ("coreHookWhy"), say WHY it is the strongest hook, leading with the SINGLE sharpest contradiction (e.g. wanted fugitive vs ordinary suburban life), not a mix of several details.
 
 ━━━ FACTUAL INHERITANCE (hard rule, inherited from the script) ━━━
 No title, thumbnail, or description may claim MORE than the script establishes. No invented outcome, superlative, number, causal link, or "first/biggest/only" the script does not support. A packaging angle SHARPENS the true story, it never upgrades it. If the script does not establish it, the package cannot assert it.
 CLASSIFICATION DISCIPLINE (labels matter, especially for real people): a loaded label ("terrorist", "killer", "fraudster", "extremist", "predator") may be used ONLY at the level the script/record supports. Distinguish a VERIFIED descriptor (the record states it as fact), a LEGAL/HISTORICAL allegation (indicted, charged, accused, alleged, suspected), and an EDITORIAL characterization (your framing). If the record only alleges or indicts, the package must say "indicted for", "accused of", "alleged", never state the flat verified label as settled fact. When unsure, use the more precise, less absolute wording. This is the packaging engine, so an aggressive label that outruns the record is a real legal and factual problem, not just a style note.
+SAME FOR SUPERLATIVES AND RANKINGS: do not introduce "most wanted", "first", "biggest", "deadliest", "worst", "#1", or any ranking/superlative unless the script explicitly establishes it. "FBI's Most Wanted" is a specific status; use it only if the source says so, otherwise "wanted by the FBI".
 
 ━━━ STEP 3: TITLES (exactly 10, each PREFIXED with SEARCH:, BROWSE:, or HYBRID:) ━━━
 ${EXPERT_ATTRIBUTION_RULE}
@@ -2486,13 +2488,15 @@ BROWSE (next 4): curiosity, contradiction, or stakes, no keyword stuffing, 6 to 
 HYBRID (last 2): a recognizable entity plus a curiosity/story promise, works on both surfaces. It must keep a real curiosity mechanism, never just an informational label. "Kathleen Soliah Hid in Plain Sight for 20 Years. Then TV Exposed Her." works (name + specificity + curiosity + payoff tease); "The SLA Fugitive Who Was Caught by a Television Broadcast" is too flat, it only informs.
 
 CONCRETE OVER GENERIC (applies to every title): a specific image beats a vague claim. "Raised three kids while the FBI searched for her" beats "fooled everyone for two decades"; give the viewer a picture, not an abstraction. Cut generic filler like "fooled everyone", "shocking truth", "you won't believe".
+BUT NOT HYPER-SPECIFIC TRIVIA: do not jam a precise factual detail into a title just because it is in the script when it adds no curiosity. "disappeared into suburbia for two decades" beats "disappeared into a five-bedroom Tudor and stayed there for two decades". Keep the detail if it sharpens the hook, cut it if it only makes the title longer.
 FACTUAL COHERENCE (hard): every title must accurately characterize what happened and make logical sense. Do not mischaracterize the event to sound punchy: "a TV viewer recognized her" is accurate, "a TV viewer solved the indictment" is not. And do not write a contradiction that does not parse ("20 YEARS. NO HIDING." is nonsense). If a punchy phrasing distorts the fact or reads as a non-sequitur, use the accurate version.
 
 ━━━ STEP 4: PACKAGING PICKS + SCORES ━━━
 Do not just list titles, make the packaging call:
 - "bestTitle": the single strongest overall title, verbatim, no SEARCH/BROWSE/HYBRID prefix. Judge on click-through, curiosity, clarity, accuracy, and thumbnail pairing.
+- "strategy": the bestTitle's packaging strategy in a few words (e.g. "Contradiction + identity mystery", "Entity + hidden life", "Reversal + ticking clock").
 - "bestTitleWhy": one short sentence on why it wins.
-- "bestTitleScores": integer 0-10 for each of curiosity, clarity, browse, search, and overall, scoring THIS bestTitle honestly (a strong browse title may score lower on search, that is fine and useful). "overall" is the PACKAGING SCORE: how strong this is as YouTube packaging, not the title's quality in a vacuum.
+- "bestTitleScores": integer 0-10 for curiosity, clarity, browse, search, and overall. Score curiosity/clarity/browse/search HONESTLY per dimension (a browse-first title may genuinely be a 5 on search, keep that, it is useful information). But "overall" is the GOAL-DEPENDENT PACKAGING SCORE: how strong this title is as packaging FOR ITS OWN STRATEGY, NOT a flat average. Do NOT let a deliberately low search score drag it down when the title is browse-first: a strong browse title with search 5 should still score about 9 overall, because it is doing its job. Weight overall toward the surface the title is built for.
 - "searchWinner": the single best SEARCH title (verbatim, no prefix) for someone actively searching this topic.
 - "thumbnailWinner": the thumbnail-text option (verbatim, from your thumbnailText list) that best COMPLEMENTS the bestTitle, forming one package. It must add the mystery or the sharp moment the title does NOT already state, never repeat the title's own contrast. If bestTitle is "She Planted Bombs. Then She Coached Community Theater.", do NOT pick "BOMBS. THEN BOOK CLUB." (same contrast restated), pick one that adds a new layer like "WANTED. UNDETECTED." Title says what happened; thumbnail says the mystery.
 
@@ -2545,6 +2549,7 @@ Return ONLY valid JSON, no markdown fences. Fill videoDna and packagingAngle FIR
   "coreHookWhy": "one sentence on why it is the strongest hook",
   "titles": ["SEARCH: [title]", "SEARCH: [title]", "SEARCH: [title]", "SEARCH: [title]", "BROWSE: [title]", "BROWSE: [title]", "BROWSE: [title]", "BROWSE: [title]", "HYBRID: [title]", "HYBRID: [title]"],
   "bestTitle": "the single recommended title, verbatim, no prefix",
+  "strategy": "the packaging strategy in a few words",
   "bestTitleWhy": "one short sentence",
   "bestTitleScores": { "curiosity": 9, "clarity": 9, "browse": 9, "search": 7, "overall": 9 },
   "searchWinner": "the single best SEARCH title, verbatim, no prefix",

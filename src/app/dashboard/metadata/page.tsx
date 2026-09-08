@@ -165,7 +165,8 @@ export default function MetadataPage() {
               )}
               {metadata.bestTitle && (
                 <div style={{ borderRadius: 12, background: "rgba(16,185,129,0.05)", border: "1px solid rgba(16,185,129,0.28)", padding: "14px 16px", marginBottom: 16 }}>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: "#10b981", letterSpacing: 0.6, marginBottom: 8 }}>🥇 RECOMMENDED PACKAGE{typeof metadata.bestTitleScores?.overall === "number" ? `  ·  ${metadata.bestTitleScores.overall}/10 PACKAGING SCORE` : ""}</div>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: "#10b981", letterSpacing: 0.6, marginBottom: metadata.strategy ? 3 : 8 }}>🥇 RECOMMENDED PACKAGE{typeof metadata.bestTitleScores?.overall === "number" ? `  ·  ${metadata.bestTitleScores.overall}/10 PACKAGING SCORE` : ""}</div>
+                  {metadata.strategy && <div style={{ fontSize: 12, color: C.textDim, marginBottom: 8 }}><span style={{ fontWeight: 600, color: C.accent }}>Strategy: </span>{metadata.strategy}</div>}
                   <div style={{ display: "flex", gap: 8, alignItems: "baseline" }}>
                     <span style={{ fontSize: 10.5, fontWeight: 700, color: C.textDim, letterSpacing: 0.5, minWidth: 66 }}>TITLE</span>
                     <span style={{ fontSize: 16, color: C.textBright, fontWeight: 600, lineHeight: 1.4 }}>{metadata.bestTitle}</span>
