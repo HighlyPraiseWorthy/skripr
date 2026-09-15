@@ -1,7 +1,7 @@
 {
   "_comment": "Skripr SEO opportunity ledger AND learning memory. /seo-page reads this before building and appends a page entry after. /seo-review pulls real outcomes (GSC + PostHog) into each page's `actual`, compares to `predicted`, writes a `verdict`, and appends durable lessons to `learnings`, then recalibrates `scoring_method`. This is how the SEO agent self-improves: predictions are scored against reality every review cycle and the heuristics update.",
-  "updated": "2026-09-01",
-  "scoring_method": "Rank candidates by: (1) combined volume, (2) tool-intent (a generator beats a blog post), (3) low competition, (4) backed by an engine Skripr already ships, (5) tight product-to-funnel fit, (6) index-likelihood on a new domain. Tool pages index within 48h but earn GSC impressions slowly; guide/content pages earn impressions faster but convert less. Weight tool-intent pages higher for conversion, content pages higher for fast impression signals. /seo-review recalibrates these weights from observed outcomes; record any change here with a date and the evidence that drove it. Updated 2026-06-29: prior scoring over-pessimized indexLikelihoodWeeks for tool pages (predicted 8wk; actual <48h). Also: impression lag on tool pages is separate from indexing speed \u2014 indexed fast, ranking slowly. Updated 2026-07-06: impression lag for tool pages is faster than thought \u2014 first GSC signals appear in 7-10 days, not 4-8wk. Revise first-signal estimate to 1-2wk; meaningful volume still 4-8wk. New flag: any page 'unknown to Google' after 7+ days must be manually request-indexed AND given a direct inbound link from an already-indexed high-authority page (homepage or pillar). Do not rely on sitemap alone. Updated 2026-07-13: compare pages index same-day (faster than tool pages); confirmed /compare/skripr-vs-retti indexed within hours of deploy on 2026-07-10. Tool page lastCrawlTime is stagnant (all show 2026-06-28 despite 15+ days passing) \u2014 add inbound links from high-impression content pages to trigger Googlebot recrawls. Hub-outranking-spoke observed: /youtube-seo-tools at pos 8 for 'youtube tag generator free' while spoke sits at pos 77 \u2014 fix with explicit anchor-text links from hub to spoke. Updated 2026-07-20: inbound links added 2026-07-13 from highest-impression content page (demonetization guide, 53 impressions) to tool pages have NOT triggered a recrawl after 7 days. Internal links alone are insufficient on a new low-authority domain. External backlinks (Reddit, directories, Product Hunt) are the only real crawl-budget lever at this stage. Tool page impressions completely stagnant (zero new Jul 14-20). Near-top-10 positions emerging on content pages (niche-bend-examples pos 6.9, best-ai-tools-for-faceless-channels pos 6.2, grow-small-channel pos 10.8) \u2014 these are the closest-to-breakthrough pages and warrant internal-link attention. Updated 2026-07-27: the crawl-budget lull limits BREADTH, not just staleness \u2014 17 of 18 Channel Name Generator niche spokes (49k/mo, low competition, the single highest-upside cluster on the domain) are still 'URL is unknown to Google' a full month after launch, despite verified sitemap entries and hub links to all 18. When shipping a large spoke set (10+ pages) on a low-authority domain, do NOT assume the sitemap will carry them all; budget for staggered manual request-indexing of the top few spokes at launch rather than shipping the full set and waiting. Also: the 'near-top-10 breakthrough' pages flagged 2026-07-20 did not continue climbing this cycle (niche-bend-examples 6.9->8.6, best-ai-tools-for-faceless-channels 6.2->8, grow-small-channel 10.8->11.4, all softened slightly). Correction: treat single-cycle sub-10 positions on <10-impression samples as noise, not momentum, until they hold or improve across 2+ consecutive cycles.",
+  "updated": "2026-09-15",
+  "scoring_method": "Rank candidates by: (1) combined volume, (2) tool-intent (a generator beats a blog post), (3) low competition, (4) backed by an engine Skripr already ships, (5) tight product-to-funnel fit, (6) index-likelihood on a new domain. Tool pages index within 48h but earn GSC impressions slowly; guide/content pages earn impressions faster but convert less. Weight tool-intent pages higher for conversion, content pages higher for fast impression signals. /seo-review recalibrates these weights from observed outcomes; record any change here with a date and the evidence that drove it. Updated 2026-06-29: prior scoring over-pessimized indexLikelihoodWeeks for tool pages (predicted 8wk; actual <48h). Also: impression lag on tool pages is separate from indexing speed \u2014 indexed fast, ranking slowly. Updated 2026-07-06: impression lag for tool pages is faster than thought \u2014 first GSC signals appear in 7-10 days, not 4-8wk. Revise first-signal estimate to 1-2wk; meaningful volume still 4-8wk. New flag: any page 'unknown to Google' after 7+ days must be manually request-indexed AND given a direct inbound link from an already-indexed high-authority page (homepage or pillar). Do not rely on sitemap alone. Updated 2026-07-13: compare pages index same-day (faster than tool pages); confirmed /compare/skripr-vs-retti indexed within hours of deploy on 2026-07-10. Tool page lastCrawlTime is stagnant (all show 2026-06-28 despite 15+ days passing) \u2014 add inbound links from high-impression content pages to trigger Googlebot recrawls. Hub-outranking-spoke observed: /youtube-seo-tools at pos 8 for 'youtube tag generator free' while spoke sits at pos 77 \u2014 fix with explicit anchor-text links from hub to spoke. Updated 2026-07-20: inbound links added 2026-07-13 from highest-impression content page (demonetization guide, 53 impressions) to tool pages have NOT triggered a recrawl after 7 days. Internal links alone are insufficient on a new low-authority domain. External backlinks (Reddit, directories, Product Hunt) are the only real crawl-budget lever at this stage. Tool page impressions completely stagnant (zero new Jul 14-20). Near-top-10 positions emerging on content pages (niche-bend-examples pos 6.9, best-ai-tools-for-faceless-channels pos 6.2, grow-small-channel pos 10.8) \u2014 these are the closest-to-breakthrough pages and warrant internal-link attention. Updated 2026-07-27: the crawl-budget lull limits BREADTH, not just staleness \u2014 17 of 18 Channel Name Generator niche spokes (49k/mo, low competition, the single highest-upside cluster on the domain) are still 'URL is unknown to Google' a full month after launch, despite verified sitemap entries and hub links to all 18. When shipping a large spoke set (10+ pages) on a low-authority domain, do NOT assume the sitemap will carry them all; budget for staggered manual request-indexing of the top few spokes at launch rather than shipping the full set and waiting. Also: the 'near-top-10 breakthrough' pages flagged 2026-07-20 did not continue climbing this cycle (niche-bend-examples 6.9->8.6, best-ai-tools-for-faceless-channels 6.2->8, grow-small-channel 10.8->11.4, all softened slightly). Correction: treat single-cycle sub-10 positions on <10-impression samples as noise, not momentum, until they hold or improve across 2+ consecutive cycles. Updated 2026-09-15: confirmed identical sitemap lastmod does not guarantee uniform recrawl across sibling pages (4 SEO Toolkit spokes share one lastmod, only 1 recrawled); and a recrawl alone is not evidence a fix worked, wait for actual impressions before declaring success.",
   "schema": {
     "pages[]": {
       "url": "string, the live path",
@@ -94,15 +94,15 @@
         "indexLikelihoodWeeks": 8
       },
       "actual": {
-        "asOf": "2026-07-27",
+        "asOf": "2026-09-15",
         "indexedOn": "2026-06-28",
         "impressions": 0,
         "clicks": 0,
         "avgPosition": null,
         "ctr": null,
-        "signupsAttributed": null
+        "signupsAttributed": 0
       },
-      "verdict": "indexed-not-ranking (day 29, zero recrawl, 5th straight cycle unchanged): zero GSC impressions. URL Inspection confirms Submitted and indexed but lastCrawlTime is still 2026-06-28, a full month with no recrawl. PostHog shows 0 views this window (the prior 5 direct-traffic views aged out of the rolling 28d window). High-competition SERP. Not expected to move until crawl budget increases via external backlinks."
+      "verdict": "indexed-not-ranking (day 79, zero recrawl despite sitemap fix): zero GSC impressions again. URL Inspection confirms Submitted and indexed but lastCrawlTime still 2026-06-28, unchanged even after the 2026-09-01 honest-lastmod sitemap fix landed and gave this page the same 2026-08-02 lastmod as youtube-title-generator (which DID get recrawled 2026-08-22). Same signal, no recrawl here: crawl budget selection on this domain is not purely lastmod-driven. No PostHog signup touches this window."
     },
     {
       "url": "/youtube-video-ideas-generator",
@@ -115,15 +115,15 @@
         "indexLikelihoodWeeks": 4
       },
       "actual": {
-        "asOf": "2026-07-27",
+        "asOf": "2026-09-15",
         "indexedOn": null,
         "impressions": 0,
         "clicks": 0,
         "avgPosition": null,
         "ctr": null,
-        "signupsAttributed": null
+        "signupsAttributed": 1
       },
-      "verdict": "not-indexed (29 days, persistent): still 'URL is unknown to Google', lastCrawlTime null (never crawled once). PostHog shows 7 views/6 visitors this window (up from 5), all direct/non-search traffic, so real demand exists with zero search visibility. All on-page signals correct (200, canonical, sitemap, linked from homepage + guides). Three request-index attempts across prior cycles have failed to change coverageState. This is a crawl-budget problem, not a submission problem; queue one more manual request now that domain authority has had time to grow, but do not expect it alone to work."
+      "verdict": "not-indexed (79 days, persistent): still 'URL is unknown to Google', lastCrawlTime null, never crawled once. PostHog shows 1 signup touched this page before converting, so real demand keeps showing up with zero search visibility. Three request-index attempts already failed in prior cycles; per standing guidance, not spending more manual-request quota here. This is a crawl-budget/authority problem, not a submission problem."
     },
     {
       "url": "/youtube-tag-generator",
@@ -136,15 +136,15 @@
         "indexLikelihoodWeeks": 3
       },
       "actual": {
-        "asOf": "2026-07-27",
+        "asOf": "2026-09-15",
         "indexedOn": "2026-06-28",
-        "impressions": 4,
+        "impressions": 0,
         "clicks": 0,
-        "avgPosition": 95.8,
-        "ctr": 0.0,
-        "signupsAttributed": null
+        "avgPosition": null,
+        "ctr": null,
+        "signupsAttributed": 0
       },
-      "verdict": "indexed-not-ranking (declining as old signal ages out): impressions down 5->4 and avgPosition worse 77->95.8 vs last cycle, as the original early-crawl signal exits the rolling 28d window with nothing new replacing it. lastCrawlTime still 2026-06-28, 29 days stale. topQueries still 'youtube tag generator free' (3 imp, pos 95.3) and 'free tag generator youtube' (1 imp, pos 97). Confirms: without a fresh recrawl, early positional signals decay rather than compound."
+      "verdict": "indexed-not-ranking (signal fully decayed to zero, as predicted last cycle): impressions 4->0, page no longer appears in GSC at all. lastCrawlTime unchanged at 2026-06-28, 79 days stale, and NOT swept into the 2026-08-22 recrawl wave despite sharing title-generator's 2026-08-02 sitemap lastmod. Confirms: without an actual recrawl, positional signal does not just decline, it disappears."
     },
     {
       "url": "/youtube-title-generator",
@@ -157,15 +157,15 @@
         "indexLikelihoodWeeks": 3
       },
       "actual": {
-        "asOf": "2026-07-27",
+        "asOf": "2026-09-15",
         "indexedOn": "2026-06-28",
-        "impressions": 4,
+        "impressions": 0,
         "clicks": 0,
-        "avgPosition": 5.0,
-        "ctr": 0.0,
-        "signupsAttributed": null
+        "avgPosition": null,
+        "ctr": null,
+        "signupsAttributed": 1
       },
-      "verdict": "recrawled-awaiting-signal: recrawled 2026-08-22 after 55 days frozen (first tool-page recrawl since launch), triggered by the honest-lastmod sitemap fix, in newest-lastmod order as predicted. Impressions still 0 (recrawl ~10 days old, 1-2wk lag). Next cycle's impressions are the real test of the sitemap-fix theory."
+      "verdict": "indexed-not-ranking (recrawl did not convert to ranking, 24 days later): the 2026-08-22 recrawl triggered by the sitemap fix has produced zero new GSC impressions; lastCrawlTime still 2026-08-22, no further recrawl since. The pre-recrawl signal (4 impressions, avgPosition 5.0 as of 2026-07-27) has fully rolled off with nothing replacing it. 1 PostHog signup touched this page. Lesson: a recrawl is not itself validation of the sitemap fix, only fresh impressions are. Watch one more cycle before calling this closed."
     },
     {
       "url": "/youtube-description-generator",
@@ -178,15 +178,15 @@
         "indexLikelihoodWeeks": 3
       },
       "actual": {
-        "asOf": "2026-07-27",
+        "asOf": "2026-09-15",
         "indexedOn": "2026-06-28",
         "impressions": 0,
         "clicks": 0,
         "avgPosition": null,
         "ctr": null,
-        "signupsAttributed": null
+        "signupsAttributed": 0
       },
-      "verdict": "indexed-not-ranking (day 29, unchanged for 4th straight cycle): zero GSC impressions. Confirmed indexed; lastCrawlTime still 2026-06-28, 29 days stale. No new signal since last review. Blocked by the same crawl-budget lull as the other tool pages."
+      "verdict": "indexed-not-ranking (unchanged, now 79 days stale): zero GSC impressions, no change since last recorded cycle. lastCrawlTime still 2026-06-28; also not swept into the title-generator recrawl despite an identical sitemap lastmod. Same crawl-budget-lull pattern as hook-generator and tag-generator."
     },
     {
       "url": "/youtube-channel-name-generator",
@@ -199,15 +199,15 @@
         "indexLikelihoodWeeks": 3
       },
       "actual": {
-        "asOf": "2026-07-27",
+        "asOf": "2026-09-15",
         "indexedOn": "2026-06-28",
         "impressions": 0,
         "clicks": 0,
         "avgPosition": null,
         "ctr": null,
-        "signupsAttributed": null
+        "signupsAttributed": 0
       },
-      "verdict": "indexed-not-ranking (highest-upside cluster stalling, new spoke finding): zero GSC impressions on the hub, unchanged; lastCrawlTime still 2026-06-28, 29 days stale. New this cycle: URL Inspection on all 18 niche spokes shows 17 of 18 are still 'URL is unknown to Google' a full month after launch (only /sports is indexed, since 2026-06-29); all 18 are verified present in the sitemap and linked from the hub via curl, so this is a pure crawl-budget breadth problem, not a wiring bug. This is the single highest-upside cluster on the domain (49k/mo, low competition) and the top priority for the next manual request-index batch."
+      "verdict": "indexed-not-ranking (breadth completely stalled, 7 weeks flat): hub still zero GSC impressions, lastCrawlTime unchanged at 2026-06-28. Re-inspected all 18 niche spokes: still exactly 5/18 indexed (gaming, tech, finance, faceless, sports, all crawled 2026-07-27) and 13/18 'URL is unknown to Google', identical to the 2026-07-27 finding with zero movement either direction in 7 weeks. Per standing guidance, not spending manual-request quota on the thin spokes; this cluster's breadth is now clearly gated on domain authority, not linking or submission."
     },
     {
       "url": "/compare/skripr-vs-retti",
@@ -220,15 +220,15 @@
         "indexLikelihoodWeeks": 1
       },
       "actual": {
-        "asOf": "2026-07-27",
+        "asOf": "2026-09-15",
         "indexedOn": "2026-07-10",
         "impressions": 0,
         "clicks": 0,
         "avgPosition": null,
         "ctr": null,
-        "signupsAttributed": null
+        "signupsAttributed": 0
       },
-      "verdict": "indexed-not-ranking (day 17): still zero GSC impressions. lastCrawlTime unchanged at 2026-07-10, 17 days without a recrawl despite being the fastest-indexing page type on the domain. PostHog shows 1 direct-traffic view. The 2-4wk first-impression window from last cycle has not fully closed, but the lack of any recrawl since indexing suggests this page is heading toward the same recrawl-stagnation pattern as the tool pages. Recheck next cycle before calling it stalled."
+      "verdict": "indexed-not-ranking (67 days since indexing, zero recrawls, longest freeze of any tracked page): lastCrawlTime still 2026-07-10, unchanged since it first indexed same-day. Zero GSC impressions the entire time. Unlike the tool pages this page has no scheduled content refresh to bump its lastmod, so it has no mechanism to attract a recrawl. Watch item: if still frozen with zero signal next cycle, treat as a kill-candidate rather than continuing to hold it as indexed-not-ranking."
     },
     {
       "url": "/youtube-transcript-generator",
@@ -241,15 +241,15 @@
         "indexLikelihoodWeeks": 2
       },
       "actual": {
-        "asOf": "2026-09-01",
+        "asOf": "2026-09-15",
         "indexedOn": "2026-08-02",
-        "impressions": 2,
+        "impressions": 1,
         "clicks": 0,
-        "avgPosition": 50.0,
+        "avgPosition": 10.0,
         "ctr": 0.0,
-        "signupsAttributed": null
+        "signupsAttributed": 0
       },
-      "verdict": "indexed-not-ranking: impressions 1->2, position 90->50 this cycle. Tiny sample, treat as noise until it holds, but only tracked page moving the right way. 110k/mo keyword, on-mechanism, long ramp expected."
+      "verdict": "indexed-not-ranking (mixed signal, treat as noise): impressions ticked down 2->1 but avgPosition improved sharply 50->10 on a 1-impression sample. lastCrawlTime unchanged at 2026-08-02, no new recrawl. Per the standing discipline against over-reading single-cycle moves on tiny samples, this needs to hold or improve across 2+ consecutive cycles before it counts as real momentum. Still the only tracked page trending toward page 1 at all."
     }
   ],
   "learnings": [
@@ -403,6 +403,21 @@
       "date": "2026-09-01",
       "lesson": "CRITICAL PROCESS FIX: fixes deployed via `vercel deploy` but NOT git-committed are fragile and WILL silently regress. The sitemap fix (deployed 2026-08-22) was reverted when a later working-tree operation restored the committed old file, and a subsequent deploy shipped new Date() back to prod, undoing a fix that had already worked. Re-applied and git-committed 2026-09-01 (commit e284312, sitemap.ts only). RULE: any durable code fix must be git-committed, not just deployed. This whole project has run on an uncommitted working tree (deploys via vercel only); that is the root fragility. Consider committing the SEO surface. Separately: `tsc --noEmit` locally flags scripts/*.test.ts errors that Next's build IGNORES, so the strict 'tsc exit 0' pre-deploy gate over-reports; trust the actual vercel build result for test-file-only errors.",
       "evidence": "Working tree sitemap.ts found reverted to new Date(); prod sitemap.xml showed 50 URLs all dated 2026-09-02; after re-apply+commit+deploy, prod shows 9 distinct honest dates. Deploy succeeded despite 7 scripts/*.test.ts tsc errors."
+    },
+    {
+      "date": "2026-09-15",
+      "lesson": "Identical sitemap lastmod does not guarantee synchronized recrawl on this domain.",
+      "evidence": "hook/tag/title/description all carry the same 2026-08-02 lastmod entry in sitemap.ts (SeoToolPage cross-link change), but only youtube-title-generator was recrawled (2026-08-22, confirmed via URL Inspection 2026-09-15); the other 3 remain frozen at 2026-06-28 seven weeks later."
+    },
+    {
+      "date": "2026-09-15",
+      "lesson": "A recrawl does not itself validate a sitemap/indexing fix; only new impressions do.",
+      "evidence": "youtube-title-generator recrawled 2026-08-22 but produced zero GSC impressions in the following 24 days (checked 2026-09-15); its pre-recrawl position-5 signal from 2026-07-27 fully rolled off with nothing replacing it."
+    },
+    {
+      "date": "2026-09-15",
+      "lesson": "Channel Name Generator spoke breadth needs external authority, not more internal signal; internal linking and sitemap presence alone have not moved it in 7 weeks.",
+      "evidence": "Re-inspected all 18 niche spokes 2026-09-15: exactly the same 5/18 indexed as found 2026-07-27 (gaming, tech, finance, faceless, sports), 13/18 still 'URL is unknown to Google', zero change either direction across the interval despite all 18 being in the sitemap and linked from the hub the entire time."
     }
   ]
 }
