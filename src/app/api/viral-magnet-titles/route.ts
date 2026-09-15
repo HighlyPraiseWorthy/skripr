@@ -69,17 +69,27 @@ RULES:
 - Every magnet word used must feel INEVITABLE — like it belongs there — not inserted
 - No title should start with the same word as another title (the "minimal" title is exempt from this)
 
+USE THE WORD AS A CREATIVE CONSTRAINT, NOT A REQUIRED STRING INSERTION (same-formula and new-formula groups): you may rewrite the title so the word reads inevitable ("Fast Food Quietly Became So Expensive", never "Fast Food Became Quietly So Unaffordable"). Only the "minimal" group keeps the original structure.
+
+SCORE EACH TITLE IN CONTEXT (0-10 integers): a word's power depends on THIS title, not a universal tier. For every title give "scores": pull (click power), naturalness (reads like a real title, not jammed in), accuracy (does not overstate what the context supports), curiosity. A hype word that hurts accuracy MUST score low on accuracy even if pull is high.
+
+BEST OVERALL + NO-FORCED-MAGNET VERDICT: score the ORIGINAL TITLE too ("originalScore", a single 0-10 packaging score). Pick the strongest variation as "bestOverall". If NO variation genuinely beats the original without hurting clarity or accuracy, set "verdict": "original-strongest" and make bestOverall the original title, otherwise "verdict": "variation-wins". Be honest, a great original title that no word improves is a real and useful answer.
+
 ${EXPERT_ATTRIBUTION_RULE}
 
 Return ONLY valid JSON, no markdown fences, no explanation:
 {
   "detectedFormula": "brief name of the original title's formula type",
+  "originalScore": 8,
+  "verdict": "variation-wins",
+  "bestOverall": { "title": "the single strongest title (a variation, or the original if it wins)", "packagingScore": 9, "why": "one sentence" },
   "titles": [
     {
       "title": "string",
       "type": "same-formula",
       "formula": "string — which formula pattern was used",
       "magnetWords": ["each selected magnet word that actually appears in this title"],
+      "scores": { "pull": 9, "naturalness": 9, "accuracy": 9, "curiosity": 8 },
       "whyItWorks": "string — one tight sentence on why this title will perform"
     }
   ]

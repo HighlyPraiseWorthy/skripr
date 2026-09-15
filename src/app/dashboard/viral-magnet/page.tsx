@@ -9,6 +9,8 @@ interface MagnetWord {
 
 interface MagnetPair { word: string; why: string; proofCount?: number; }
 
+interface Scores { pull?: number; naturalness?: number; accuracy?: number; curiosity?: number; }
+
 interface TitleResult {
   title: string;
   type: "minimal" | "same-formula" | "new-formula";
@@ -16,12 +18,31 @@ interface TitleResult {
   magnetWords?: string[];
   magnetWord?: string;
   whyItWorks: string;
+  scores?: Scores;
 }
 
 interface GenerateResult {
   detectedFormula: string;
   titles: TitleResult[];
+  originalScore?: number;
+  verdict?: "variation-wins" | "original-strongest";
+  bestOverall?: { title: string; packagingScore?: number; why?: string };
 }
+
+interface MagnetRec {
+  word: string; pullType: string; strengthens: string; example?: string;
+  scores?: Scores; caution?: string;
+}
+interface Analysis {
+  coreHook?: string; bestMatch?: string | null; noStrongMatch?: boolean;
+  recommended?: MagnetRec[];
+}
+
+const PULL_COLORS: Record<string, string> = {
+  "Hidden/Discovery": "#4db8ff", "Contradiction/Surprise": "#f59e0b",
+  "Mechanism/Intelligence": "#a78bfa", "Escalation/Consequences": "#fb7185",
+  "Truth/Correction": "#34d399", "High Intensity": "#f87171",
+};
 
 const C = {
   bg: "#080c12", cardBg: "#0d1520", border: "rgba(77,184,255,0.11)",
@@ -45,6 +66,22 @@ export default function ViralMagnetPage() {
   const [pairs, setPairs] = useState<MagnetPair[]>([]);
   const [pairsFor, setPairsFor] = useState<string | null>(null);
   const [pairsLoading, setPairsLoading] = useState(false);
+  const [analysis, setAnalysis] = useState<Analysis | null>(null);
+  const [analyzing, setAnalyzing] = useState(false);
+
+  const handleAnalyze = async () => {
+    if (!title.trim()) return;
+    setAnalyzing(true); setError(null); setAnalysis(null);
+    try {
+      const res = await fetch("/api/magnet-analyze", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title: title.trim(), script: script.trim() || undefined }),
+      });
+      const data = await res.json();
+      if (data.error) { setError(data.error); return; }
+      setAnalysis(data);
+    } catch (e: any) { setError(e.message); } finally { setAnalyzing(false); }
+  };
 
   useEffect(() => {
     fetch("/api/user/plan").then(r=>r.json()).then(d=>setPlan(d.plan||"free")).catch(()=>setPlan("free"));
@@ -167,7 +204,7 @@ export default function ViralMagnetPage() {
             <h1 style={{ fontSize: 24, fontWeight: 700, color: C.textBright, letterSpacing: -0.4, margin: 0 }}>Viral Magnet Titles</h1>
           </div>
           <p style={{ color: C.textDim, fontSize: 16, margin: 0 }}>
-            Add one high-pull word to any title and generate 8 click-optimized variations
+            Find the word that gives your title more pull, without forcing hype. Skripr analyzes your story first, then recommends the words that fit it.
           </p>
         </div>
 
@@ -210,6 +247,72 @@ export default function ViralMagnetPage() {
               }}
             />
           </div>
+
+          {/* Analyze first: a word's power depends on THIS story, so recommend before browsing. */}
+          <button
+            onClick={handleAnalyze}
+            disabled={analyzing || !title.trim()}
+            style={{
+              width: "100%", height: 44, marginBottom: 16,
+              background: !title.trim() ? "rgba(77,184,255,0.12)" : "rgba(77,184,255,0.10)",
+              color: "#7ed8ff", border: "1px solid rgba(77,184,255,0.28)", borderRadius: 12,
+              fontSize: 15, fontWeight: 700, cursor: analyzing || !title.trim() ? "default" : "pointer",
+            }}
+          >
+            {analyzing ? "⟳ Analyzing your story…" : "🎯 Analyze title, find best magnet words"}
+          </button>
+
+          {analysis && (
+            <div style={{ marginBottom: 18, padding: "14px 16px", borderRadius: 12, background: "rgba(16,185,129,0.05)", border: "1px solid rgba(16,185,129,0.22)" }}>
+              {analysis.coreHook && (
+                <p style={{ fontSize: 13, color: C.textDim, lineHeight: 1.5, margin: "0 0 12px" }}>
+                  <span style={{ color: "#34d399", fontWeight: 700 }}>Core hook: </span>{analysis.coreHook}
+                </p>
+              )}
+              {analysis.noStrongMatch && (
+                <p style={{ fontSize: 13.5, color: "#fcd34d", lineHeight: 1.5, margin: "0 0 12px", fontWeight: 600 }}>
+                  Your original title is already strong. No magnet word improves it without hurting clarity or accuracy, so don't force one.
+                </p>
+              )}
+              <div style={{ fontSize: 11, fontWeight: 700, color: "#34d399", letterSpacing: 0.5, marginBottom: 10 }}>✨ BEST MATCHES FOR THIS VIDEO</div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                {(analysis.recommended || []).map((r, i) => {
+                  const pc = PULL_COLORS[r.pullType] || C.accent;
+                  const isSel = selectedWords.some(w => w.word.toLowerCase() === r.word.toLowerCase());
+                  const isBest = analysis.bestMatch && r.word.toLowerCase() === analysis.bestMatch.toLowerCase();
+                  return (
+                    <div key={i} style={{ padding: "11px 13px", borderRadius: 10, background: "#0a1220", border: `1px solid ${isBest ? "rgba(16,185,129,0.45)" : C.border}` }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                        <span style={{ fontSize: 16, fontWeight: 700, color: C.textBright }}>{r.word}</span>
+                        {isBest && <span style={{ fontSize: 10, fontWeight: 700, color: "#10b981", background: "rgba(16,185,129,0.14)", border: "1px solid rgba(16,185,129,0.35)", borderRadius: 5, padding: "1px 6px" }}>BEST MATCH</span>}
+                        <span style={{ fontSize: 10, fontWeight: 700, color: pc, background: `${pc}18`, border: `1px solid ${pc}44`, borderRadius: 5, padding: "1px 7px" }}>{r.pullType}</span>
+                        <button
+                          onClick={() => addWordByName(r.word)}
+                          disabled={isSel || selected.length >= 3}
+                          style={{ marginLeft: "auto", fontSize: 12, fontWeight: 700, padding: "3px 10px", borderRadius: 7, cursor: isSel || selected.length >= 3 ? "default" : "pointer", background: isSel ? "rgba(16,185,129,0.14)" : "rgba(77,184,255,0.09)", border: `1px solid ${isSel ? "rgba(16,185,129,0.35)" : "rgba(77,184,255,0.2)"}`, color: isSel ? "#34d399" : "#4db8ff", opacity: !isSel && selected.length >= 3 ? 0.4 : 1 }}
+                        >
+                          {isSel ? "✓ Added" : "+ Add"}
+                        </button>
+                      </div>
+                      {r.strengthens && <p style={{ fontSize: 12.5, color: C.textDim, margin: "6px 0 0", lineHeight: 1.45 }}><span style={{ fontWeight: 600 }}>Strengthens: </span>{r.strengthens}</p>}
+                      {r.scores && (
+                        <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 6 }}>
+                          {([["Pull", r.scores.pull], ["Natural", r.scores.naturalness], ["Accuracy", r.scores.accuracy], ["Curiosity", r.scores.curiosity]] as [string, number | undefined][])
+                            .filter(([, v]) => typeof v === "number")
+                            .map(([lab, v]) => (
+                              <span key={lab} style={{ fontSize: 11.5, color: C.textDim }}>
+                                <span style={{ fontWeight: 700, color: (v as number) >= 8 ? "#34d399" : (v as number) >= 6 ? "#7ed8ff" : "#e0a458" }}>{v}</span> {lab}
+                              </span>
+                            ))}
+                        </div>
+                      )}
+                      {r.caution && <p style={{ fontSize: 12, color: "#fcd34d", margin: "6px 0 0", lineHeight: 1.4 }}>⚠ {r.caution}</p>}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           {/* #2 Trending in proven titles, real occurrences from the captured pool */}
           {trending.length > 0 && (
@@ -260,7 +363,7 @@ export default function ViralMagnetPage() {
           <div>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
               <label style={{ fontSize: 15, fontWeight: 600, color: C.text }}>
-                Select 1-3 Viral Magnet Words <span style={{ color: "#f87171" }}>*</span>
+                {analysis ? "Or browse all words" : "Select 1-3 Viral Magnet Words"} <span style={{ color: "#f87171" }}>*</span>
               </label>
               <span style={{ fontSize: 13, color: selected.length === 3 ? "#fb923c" : C.textDim, fontWeight: 600 }}>
                 {selected.length}/3 selected
@@ -277,7 +380,7 @@ export default function ViralMagnetPage() {
                 return (
                   <div key={grade} style={{ marginBottom: 10 }}>
                     <div style={{ fontSize: 10, fontWeight: 700, color: gc, letterSpacing: 1, marginBottom: 6, textTransform: "uppercase" }}>
-                      {grade}-Tier · {grade === "S" ? "Exceptional" : grade === "A" ? "Strong" : grade === "B" ? "Good" : "Standard"}
+                      {grade === "S" ? "Most proven" : grade === "A" ? "Strong track record" : grade === "B" ? "Situational" : "Use with care"} · past YouTube lift, not this story
                     </div>
                     <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
                       {gradeWords.map(w => {
@@ -356,6 +459,21 @@ export default function ViralMagnetPage() {
               <div style={{ fontSize: 10, fontWeight: 700, color: C.textDim, letterSpacing: 1, marginBottom: 5 }}>YOUR ORIGINAL</div>
               <p style={{ fontSize: 16, fontWeight: 600, color: "#cbd5e1", margin: 0, lineHeight: 1.4 }}>{title}</p>
             </div>
+            {result.bestOverall?.title && (
+              <div style={{ marginBottom: 16, borderRadius: 14, background: "rgba(16,185,129,0.05)", border: "1px solid rgba(16,185,129,0.3)", padding: "14px 16px" }}>
+                <div style={{ fontSize: 11, fontWeight: 700, color: "#10b981", letterSpacing: 0.6, marginBottom: 6 }}>
+                  {result.verdict === "original-strongest" ? "✓ ORIGINAL REMAINS STRONGEST" : "🥇 BEST OVERALL"}
+                  {typeof result.bestOverall.packagingScore === "number" ? `  ·  ${result.bestOverall.packagingScore}/10` : ""}
+                  {typeof result.originalScore === "number" && result.verdict !== "original-strongest" ? `   (original ${result.originalScore}/10)` : ""}
+                </div>
+                <div style={{ fontSize: 16.5, fontWeight: 700, color: C.textBright, lineHeight: 1.4 }}>{result.bestOverall.title}</div>
+                {result.bestOverall.why && <p style={{ fontSize: 13, color: C.textDim, lineHeight: 1.5, margin: "7px 0 0" }}>{result.bestOverall.why}</p>}
+                {result.verdict === "original-strongest" && <p style={{ fontSize: 12.5, color: "#fcd34d", margin: "7px 0 0", lineHeight: 1.45 }}>No magnet word beat your original without hurting clarity or accuracy. The variations below are still here if you want a different angle.</p>}
+                <button onClick={() => copyTitle(result.bestOverall!.title)} style={{ marginTop: 10, padding: "6px 14px", borderRadius: 9, fontSize: 13, fontWeight: 600, cursor: "pointer", background: copied === result.bestOverall.title ? "rgba(52,211,153,0.12)" : "rgba(16,185,129,0.1)", border: `1px solid ${copied === result.bestOverall.title ? "rgba(52,211,153,0.35)" : "rgba(16,185,129,0.3)"}`, color: "#34d399" }}>
+                  {copied === result.bestOverall.title ? "✓ Copied" : "Copy"}
+                </button>
+              </div>
+            )}
             {result.detectedFormula && (
               <div style={{ marginBottom: 16, display: "inline-flex", alignItems: "center", gap: 6, padding: "7px 14px", borderRadius: 10, background: "rgba(77,184,255,0.06)", border: "1px solid rgba(77,184,255,0.13)" }}>
                 <span style={{ fontSize: 13, color: C.textDim }}>Original formula detected:</span>
@@ -427,6 +545,17 @@ function TitleCard({ t, copied, onCopy }: { t: TitleResult; copied: string | nul
           })()}
           {t.formula && <span style={{ fontSize: 10, color: "#a6c0d8", fontStyle: "italic" }}>{t.formula}</span>}
         </div>
+        {t.scores && (
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 6 }}>
+            {([["Pull", t.scores.pull], ["Natural", t.scores.naturalness], ["Accuracy", t.scores.accuracy], ["Curiosity", t.scores.curiosity]] as [string, number | undefined][])
+              .filter(([, v]) => typeof v === "number")
+              .map(([lab, v]) => (
+                <span key={lab} style={{ fontSize: 11.5, color: "#a6c0d8" }}>
+                  <span style={{ fontWeight: 700, color: (v as number) >= 8 ? "#34d399" : (v as number) >= 6 ? "#7ed8ff" : "#e0a458" }}>{v}</span> {lab}
+                </span>
+              ))}
+          </div>
+        )}
         {t.whyItWorks && (
           <p style={{ fontSize: 13, color: "#a6c0d8", margin: "6px 0 0 0", lineHeight: 1.5 }}>{t.whyItWorks}</p>
         )}
