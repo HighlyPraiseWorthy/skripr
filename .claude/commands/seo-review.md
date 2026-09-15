@@ -49,4 +49,4 @@ A fix deployed but not yet recrawled looks identical to a missing fix in GSC. Be
 After editing `docs/seo-opportunities.json`, run `git add docs/seo-opportunities.json && git commit -m "SEO review <date>: ledger update"`. Do NOT open a PR; do NOT commit other working-tree files. Hard-won lesson 2026-09-01: an uncommitted ledger silently reverts to the last committed state on routine git operations across sessions, discarding weeks of memory. Committing every run is how the agent's memory stays durable.
 
 ## 6. Cadence
-Bi-weekly (1st and 15th) while the bottleneck is authority, not content. Revisit weekly once pages rank and there is real week-over-week movement.
+MONTHLY autopilot (1st) as of 2026-09-15: the machine is built and the only lever is off-site authority (distribution/backlinks), so this loop MEASURES and remembers, it does not propose fixes. Escalate only if a page earns real impressions/clicks/signups, breaks, or crawl budget visibly expands. Otherwise the honest report is one line.
