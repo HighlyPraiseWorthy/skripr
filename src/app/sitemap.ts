@@ -2,7 +2,7 @@ import { MetadataRoute } from "next";
 import { articles } from "./youtube-strategy/articles";
 import { comparisons } from "./compare/comparisons";
 import { roundups } from "./best/roundups";
-import { NAME_NICHES } from "@/lib/data/channel-name-niches";
+import { NAME_NICHES, INDEXABLE_NICHE_IDS } from "@/lib/data/channel-name-niches";
 import { SEO_TOOLS } from "@/lib/data/seo-tools";
 
 // ---------------------------------------------------------------------------
@@ -94,7 +94,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const seoToolUrls = SEO_TOOLS.map((t) => entry(`/${t.slug}`, 0.9, "monthly", "2026-08-02"));
   const comparisonUrls = comparisons.map((c) => entry(`/compare/${c.slug}`, 0.8, "monthly", "2026-06-29"));
   const roundupUrls = roundups.map((r) => entry(`/best/${r.slug}`, 0.8, "monthly", "2026-06-29"));
-  const nameNicheUrls = NAME_NICHES.map((n) =>
+  const nameNicheUrls = NAME_NICHES.filter((n) => INDEXABLE_NICHE_IDS.has(n.id)).map((n) =>
     entry(`/youtube-channel-name-generator/${n.id}`, 0.7, "monthly", LAUNCH)
   );
 

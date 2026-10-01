@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { NAME_NICHES, getNameNiche } from "@/lib/data/channel-name-niches";
+import { NAME_NICHES, getNameNiche, INDEXABLE_NICHE_IDS } from "@/lib/data/channel-name-niches";
 import ChannelNameGenerator from "@/components/ChannelNameGenerator";
 
 const T = {
@@ -26,6 +26,7 @@ export async function generateMetadata({ params }: { params: Promise<{ niche: st
     openGraph: { title, description, type: "website", url },
     twitter: { card: "summary_large_image", title, description },
     alternates: { canonical: url },
+    ...(INDEXABLE_NICHE_IDS.has(n.id) ? {} : { robots: { index: false, follow: true } }),
   };
 }
 

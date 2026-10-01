@@ -108,3 +108,10 @@ export const NAME_NICHES: NameNiche[] = [
 export function getNameNiche(id: string): NameNiche | undefined {
   return NAME_NICHES.find((n) => n.id === id);
 }
+
+// Only these spokes are indexable. The other 13 were near-identical ~278-word
+// templated pages that Google never crawled in 3 months; thin programmatic
+// pages like that are what the Aug 2026 spam update penalized (scaled content
+// abuse), so they are noindex + out of the sitemap. They still work for users.
+// To re-include a spoke, give it genuinely unique content first, then add it here.
+export const INDEXABLE_NICHE_IDS = new Set(["gaming", "tech", "finance", "faceless", "sports"]);

@@ -270,10 +270,10 @@ export default function LandingPage() {
       <div style={{ paddingTop: 56, position: "relative" as const }}>
         <div className="hero-glow" aria-hidden style={{ position: "absolute" as const, top: 70, left: "50%", transform: "translateX(-50%)", width: 920, height: 540, maxWidth: "100%", borderRadius: "50%", background: "radial-gradient(circle, rgba(77,184,255,0.22) 0%, rgba(124,111,255,0.10) 42%, transparent 70%)", pointerEvents: "none" as const, zIndex: 0 }} />
         <div style={{ padding: "80px 48px 0", width: "100%", display: "flex", flexDirection: "column" as const, alignItems: "center" as const, animation: "fadein .6s ease both", position: "relative" as const, zIndex: 1 }}>
-          <div style={{ fontSize: 72, fontWeight: 700, lineHeight: 0.95, letterSpacing: "-2.5px", color: T.text, marginBottom: 20, textAlign: "center" as const }}>
+          <h1 style={{ fontSize: 72, fontWeight: 700, lineHeight: 0.95, letterSpacing: "-2.5px", color: T.text, marginTop: 0, marginBottom: 20, textAlign: "center" as const }}>
             Your next video starts with<br />
             <span style={{ fontWeight: 200, color: T.accent }}>what already works.</span>
-          </div>
+          </h1>
           <p style={{ fontSize: 18, fontWeight: 300, lineHeight: 1.6, color: T.muted, maxWidth: 640, marginBottom: 40, textAlign: "center" as const }}>
             Idea to upload-ready script in 60 seconds. Paste a topic or any proven video, and Skripr writes it in your voice. Hooks, retention structure, title, and metadata, all done.
           </p>
