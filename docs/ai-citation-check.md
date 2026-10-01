@@ -42,6 +42,35 @@ and ChatGPT and Google AI Mode have no usable API for this anyway.
 
 ## Log
 
+### 2026-10-01 (baseline)
+Run by Claude via the in-app browser, logged out. ChatGPT and Google AI Mode
+complete. Perplexity ("Sign up and repeat your request") and Claude.ai need a
+login, so they are blank: run those two yourself, logged in, and fill them in.
+
+| # | ChatGPT | Perplexity | Google AI Mode | Claude | Top cited instead |
+|---|---|---|---|---|---|
+| 1 | N | - | N | - | Claude, ChatGPT, vidIQ, Jasper (GPT); Poppy AI, Tube Magic, OverseerOS (Google) |
+| 2 | N | - | N | - | vidIQ, TubeMagic, Maekersuite (GPT); OverseerOS, 1of10, YouScript, TubeMagic (Google) |
+| 3 | N | - | N | - | ScriptLark, ytultra, ViralDNA (GPT); Poppy AI (Google) |
+| 4 | N | - | N | - | YouTube built-in, Tactiq, NoteGPT |
+| 5 | N | - | N | - | ChatGPT, ElevenLabs, Runway (GPT); InVideo AI, Fliki (Google) |
+| 6 | N | - | N | - | How-to answer, no tools; cites Google Help (GPT), Quora, Treza Labs (Google) |
+| 7 | N | - | N | - | TubeCheckers (GPT); YouTube Studio Inspiration tab, vidIQ (Google) |
+| 8 | N | - | N | - | Claude, Subscribr (GPT); Subscribr, Poppy AI, Claude (Google) |
+| 9 | N | - | N | - | Buffer, vidIQ (GPT); vidIQ, Hootsuite, Squarespace (Google) |
+| 10 | N | - | N | - | Video.yt (GPT); Hootsuite (Google) |
+
+Score: ChatGPT 0/10, Google AI Mode 0/10.
+
+Notes:
+- Q3 is Skripr's exact mechanism (reverse-engineer a viral video into a new
+  script). Both engines answer it confidently and credit others: Poppy AI,
+  ScriptLark, ytultra, ViralDNA. This is the question to win first.
+- OverseerOS and DepthHQ show up as sources repeatedly. They publish
+  comparison and roundup articles that AI engines quote. Being listed in pages
+  like theirs is a realistic, free path to citations.
+- Subscribr is named by both engines for Q8, so competitor brands do get cited.
+
 <!-- Copy this block for each month. Y/N per engine, then who was cited. -->
 <!--
 ### YYYY-MM-DD
