@@ -3,9 +3,12 @@ import { useState, useEffect, useRef } from "react";
 import GenerationProgress from "@/components/GenerationProgress";
 import { joinHookBody } from "@/lib/script-text";
 import { VoiceSelect } from "@/components/VoiceSelect";
-import { CompanionCtaToggle, SoftCtaToggle } from "@/components/CompanionCtaToggle";
+import { CompanionCtaToggle, SoftCtaToggle, NoCtaToggle } from "@/components/CompanionCtaToggle";
 import StorytellingPicker from "@/components/StorytellingPicker";
 import ResearchStep from "@/components/ResearchStep";
+import { toHookFamily } from "@/lib/hook-families";
+import { validateTitle } from "@/lib/title-validate";
+import { applyFinalCheck } from "@/lib/final-check-client";
 
 const C = {
   bg: "#080c12", card: "#0d1520", cardHover: "#111d2e",
@@ -20,7 +23,6 @@ const EMOTION_COLOR: Record<string, string> = {
 };
 
 type Phase = "loading" | "pick-case" | "research" | "angles" | "storytelling" | "finish" | "generating" | "result";
-type MagnetWordOption = { id: string; word: string; grade: string; why_it_works?: string };
 const HOOK_TYPES = [
   { type: "CONTROVERSY", label: "Controversy", emoji: "⚡" },
   { type: "CURIOSITY GAP", label: "Curiosity Gap", emoji: "🧠" },
@@ -31,8 +33,9 @@ const HOOK_TYPES = [
   { type: "FEAR/STAKES", label: "Fear / Stakes", emoji: "🔥" },
   { type: "OVERLOOKED MECHANISM", label: "Overlooked Mechanism", emoji: "🔑" },
 ];
-type Angle = { hookType: string; hookPremise: string; titleSuggestion: string; whyItWorks: string; audienceEmotion: string; warnings?: string[]; };
-type Brief = { topic: string; niche: string; videoLength: string; hookTypeFilter?: string | null; voiceProfileId?: string | null; angles: Angle[]; };
+type Angle = { hookType: string; hookPremise: string; titleSuggestion: string; whyItWorks: string; audienceEmotion: string; warnings?: string[]; factCount?: number; spineName?: string; viewerQuestion?: string; checked?: boolean; corrections?: string[]; fixes?: { why: string[]; diffs: { field: string; was: string; now: string }[] }; };
+type HookRanking = { scope: "niche" | "all"; ranks: { type: string; label: string; share: number; n: number }[] };
+type Brief = { topic: string; niche: string; videoLength: string; hookTypeFilter?: string | null; voiceProfileId?: string | null; angles: Angle[]; hookRanking?: HookRanking | null; };
 
 const Spinner = ({ label, sub }: { label: string; sub?: string }) => (
   <div style={{ minHeight: "100vh", background: C.bg, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: 14, fontFamily: "system-ui, sans-serif" }}>
@@ -53,11 +56,11 @@ export default function ScriptBriefPage() {
   const [copied, setCopied] = useState(false);
   const [savedId, setSavedId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
-  const [selectedMagnet, setSelectedMagnet] = useState<number | null>(null);
-  const [appliedMagnetTitle, setAppliedMagnetTitle] = useState<string | null>(null);
+  const [appliedMagnetTitle] = useState<string | null>(null);
   const [voiceId, setVoiceId] = useState<string | null>(null);
   const [companionCta, setCompanionCta] = useState(false);
   const [softCta, setSoftCta] = useState(false);
+  const [noCta, setNoCta] = useState(false);
   const [sourceVerdict, setSourceVerdict] = useState<string | null>(null);
   const [verifying, setVerifying] = useState(false);
   const [topicKind, setTopicKind] = useState<string | null>(null);
@@ -74,22 +77,71 @@ export default function ScriptBriefPage() {
   // approved there. approvedFactsRef captures the checked set on continue.
   const [researchCase, setResearchCase] = useState<{ name: string; summary?: string; when?: string; sources?: string[] } | null>(null);
   const [researchFacts, setResearchFacts] = useState<{ fact: string; source: string | null; context?: boolean }[]>([]);
+  // The upstream deepen's adjudication flags, held so the visible ResearchStep can seed its
+  // SOURCES-DISAGREE and DOUBLE-CHECK panels (the step skips its own deepen when facts are preset,
+  // so without threading these the panels never appear on the common cache-hit re-run).
+  const [researchConflicts, setResearchConflicts] = useState<{ fact: string; source: string | null; note: string }[]>([]);
+  const [researchVerify, setResearchVerify] = useState<{ fact: string; source: string | null; note: string }[]>([]);
   const approvedFactsRef = useRef<{ fact: string; source: string | null }[]>([]);
   // Hook type now lives on the Angle step (moved off the Brief). Changing it regenerates the angles.
   const [hookFilter, setHookFilter] = useState<string | null>(null);
+  const [openFix, setOpenFix] = useState<number | null>(null);
   const [refetchingAngles, setRefetchingAngles] = useState(false);
-  // Viral Magnet + storytelling choices live on the FINISH step (after Storytelling, before Generate).
-  const [magnetWords, setMagnetWords] = useState<MagnetWordOption[]>([]);
-  const [magnetGrade, setMagnetGrade] = useState<string>("all");
   const [selectedViralWord, setSelectedViralWord] = useState<string | null>(null);
   // Chunked-generation progress: {done, total} while the client loops the section writes; null on
   // the one-shot path (no per-section steps to report).
   const [genProgress, setGenProgress] = useState<{ done: number; total: number } | null>(null);
+  const [finalChecking, setFinalChecking] = useState(false);
   const storyChoiceRef = useRef<{ mode: string; techniques: string[]; note?: string }>({ mode: "", techniques: [] });
+  // ONE-MOVE (auto-pilot): set from the brief. When true, script-brief drives every phase itself —
+  // auto-approve the (already auto-resolved) facts, auto-pick the best-scoring angle, use Skripr's
+  // recommended storytelling, and generate — so the creator goes setup -> finished script in one move.
+  const autoMode = !!(brief as any)?.auto;
+  const autoFiredRef = useRef<Record<string, boolean>>({});
+
+  // Auto-pilot orchestration: advance each phase the moment it is reached, once. Guarded so each
+  // step fires exactly once. The intermediate phases render a single progress screen (below).
+  useEffect(() => {
+    if (!autoMode || !brief) return;
+    if (phase === "research" && !autoFiredRef.current.research) {
+      autoFiredRef.current.research = true;
+      void continueFromResearch();
+    } else if (phase === "angles" && Array.isArray(brief.angles) && brief.angles.length && !autoFiredRef.current.angles) {
+      autoFiredRef.current.angles = true;
+      void autoAngleToGenerate(brief.angles);
+    }
+  }, [autoMode, phase, brief?.angles?.length]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Pick the best angle deterministically (fewest title-validator warnings = cleanest/most accurate;
+  // ties keep list order, which already leads with the strongest), fetch Skripr's recommended
+  // storytelling for the topic, then generate — no user stops.
+  async function autoAngleToGenerate(angles: Angle[]) {
+    if (!brief) return;
+    // Fewest title warnings first; on a tie, prefer the hook type proven winners in this niche open
+    // with most (brief.hookRanking). Evidence breaks ties, it never overrides a cleaner title.
+    const top = brief.hookRanking?.ranks?.[0]?.type || null;
+    const isTop = (a: Angle) => (top && toHookFamily(a.hookType) === top ? 0 : 1);
+    const best = [...angles].sort((a, b) =>
+      (validateTitle(a.titleSuggestion || "").length - validateTitle(b.titleSuggestion || "").length) || (isTop(a) - isTop(b)))[0] || angles[0];
+    setSelectedAngle(best);
+    let mode = "", techniques: string[] = [];
+    try {
+      const r = await fetch("/api/storytelling/recommend", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ topic: brief.topic, niche: brief.niche, angle: best.hookPremise || best.titleSuggestion, videoLength: brief.videoLength }),
+      });
+      const d = await r.json();
+      mode = d?.mode?.id || "";
+      // Same selection the StorytellingPicker uses: a source video's original style if present,
+      // otherwise the recommended set for the topic. (Outlier topic path has no source -> recommended.)
+      const techs = (Array.isArray(d?.originalStyle) && d.originalStyle.length) ? d.originalStyle : (Array.isArray(d?.recommended) ? d.recommended : []);
+      techniques = techs.map((t: any) => (typeof t === "string" ? t : t?.id)).filter(Boolean);
+    } catch { /* fall through: generation uses its own storytelling defaults */ }
+    await generateWithStory(mode, techniques, undefined, best);
+  }
 
   useEffect(() => {
     fetch("/api/user/plan").then(r => r.json()).then(d => setUserPlan(d.plan || "free")).catch(() => {});
-    fetch("/api/magnet-words").then(r => r.json()).then(d => setMagnetWords(d.words || [])).catch(() => {});
     try {
       const stored = sessionStorage.getItem("skripr_script_brief");
       if (!stored) { window.location.href = "/dashboard/scripts/new"; return; }
@@ -98,6 +150,10 @@ export default function ScriptBriefPage() {
       setHookFilter(b.hookTypeFilter || null);
       if ((b as any).viralMagnetWord) setSelectedViralWord((b as any).viralMagnetWord);
       if (b.voiceProfileId) setVoiceId(b.voiceProfileId);
+      // Carry CTA prefs chosen on the setup screen (esp. one-move/auto, which skips the Finish step).
+      if (typeof (b as any).companionCta === "boolean") setCompanionCta((b as any).companionCta);
+      if (typeof (b as any).softCta === "boolean") setSoftCta((b as any).softCta);
+      if (typeof (b as any).noCta === "boolean") setNoCta((b as any).noCta);
       // Restore grounding so a reload does not lose the case the cards were built on.
       const gb = (b as any).grounding;
       if (gb) { setGrounding(gb); if (gb.caseName) setGroundedOn({ name: gb.caseName, summary: gb.caseSummary, when: gb.when, sources: gb.sources || [] }); }
@@ -141,12 +197,14 @@ export default function ScriptBriefPage() {
         setSourceVerdict(gd.verdict || null);
         setGroundNote(typeof gd.verdictNote === "string" ? gd.verdictNote : "");
         const cands = Array.isArray(gd.candidates) ? gd.candidates : [];
-        if (gd.kind === "event" && cands.length > 1) {
+        // AUTO skips the pick-case hop: use the top authority-ranked candidate (cands[0]) and proceed
+        // exactly as the single-case path. Guided mode still asks when several cases fit.
+        if (gd.kind === "event" && cands.length > 1 && !(b as any).auto) {
           setGrounding(g); setGroundCases(cands); setPhase("pick-case");
           return;
         }
-        if (gd.kind === "event" && cands.length === 1) {
-          const c = cands[0];
+        if (gd.kind === "event" && cands.length >= 1) {
+          let c = cands[0];
           g = { ...g, caseName: c.name, caseSummary: c.summary, when: c.when, sources: c.sources || [] };
           // Deepen the identified case at the LENGTH-SIZED budget, then hand the fact objects to the
           // research review (no re-research there). Angles are written after, from the approved set.
@@ -154,12 +212,16 @@ export default function ScriptBriefPage() {
           try {
             const rr = await fetch("/api/research/find", {
               method: "POST", headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ action: "deepen", caseName: c.name, caseSummary: c.summary || "", niche: b.niche, kind: "event", targetMinutes: (b as any).targetMinutes }),
+              body: JSON.stringify({ action: "deepen", caseName: c.name, caseSummary: c.summary || "", niche: b.niche, kind: "event", targetMinutes: (b as any).targetMinutes, topicAnchor: b.topic }),
             });
             const rd = await rr.json();
             if (rr.ok && Array.isArray(rd.facts)) {
               factObjs = rd.facts.filter((f: any) => f && typeof f.fact === "string").map((f: any) => ({ fact: f.fact, source: f.source ?? null, context: !!f.context }));
               g.facts = factObjs.map((f) => (f.source ? `${f.fact} (source: ${f.source})` : f.fact));
+              // The case label came from memory; use the version checked against the sourced facts.
+              if (typeof rd.cleanCaseName === "string" && rd.cleanCaseName) { c = { ...c, name: rd.cleanCaseName, summary: typeof rd.cleanCaseSummary === "string" ? rd.cleanCaseSummary : c.summary }; g.caseName = c.name; g.caseSummary = c.summary; }
+              setResearchConflicts(Array.isArray(rd.conflicts) ? rd.conflicts : []);
+              setResearchVerify(Array.isArray(rd.verify) ? rd.verify : []);
             }
           } catch { /* keep the topic-level facts */ }
           setGrounding(g);
@@ -175,12 +237,14 @@ export default function ScriptBriefPage() {
         try {
           const rr = await fetch("/api/research/find", {
             method: "POST", headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ action: "deepen", caseName: b.topic, caseSummary: b.niche || "", niche: b.niche, kind: gd.kind || "claim", targetMinutes: (b as any).targetMinutes }),
+            body: JSON.stringify({ action: "deepen", caseName: b.topic, caseSummary: b.niche || "", niche: b.niche, kind: gd.kind || "claim", targetMinutes: (b as any).targetMinutes, topicAnchor: b.topic }),
           });
           const rd = await rr.json();
           if (rr.ok && Array.isArray(rd.facts)) {
             phenomFactObjs = rd.facts.filter((f: any) => f && typeof f.fact === "string").map((f: any) => ({ fact: f.fact, source: f.source ?? null, context: !!f.context }));
             g.facts = phenomFactObjs.map((f) => (f.source ? `${f.fact} (source: ${f.source})` : f.fact));
+            setResearchConflicts(Array.isArray(rd.conflicts) ? rd.conflicts : []);
+            setResearchVerify(Array.isArray(rd.verify) ? rd.verify : []);
           }
         } catch { /* fall back to the thin resolve facts below */ }
         if (!phenomFactObjs.length) {
@@ -219,17 +283,17 @@ export default function ScriptBriefPage() {
     await fetchAngles(brief, g);
   }
 
-  async function fetchAngles(b: Brief, g?: any, hookOverride?: string | null) {
+  async function fetchAngles(b: Brief, g?: any, hookOverride?: string | null, exclude?: Angle[]) {
     setPhase("loading");
     const hook = hookOverride !== undefined ? hookOverride : (hookFilter ?? b.hookTypeFilter ?? null);
     try {
       const res = await fetch("/api/suggest-script-angles", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ topic: b.topic, niche: b.niche, videoLength: b.videoLength, hookTypeFilter: hook, viralMagnetWord: (b as any).viralMagnetWord || null, grounding: (g ?? grounding) || undefined, lockedTitle: (b as any).lockTitle ? b.topic : undefined }),
+        body: JSON.stringify({ topic: b.topic, niche: b.niche, videoLength: b.videoLength, hookTypeFilter: hook, viralMagnetWord: (b as any).viralMagnetWord || null, grounding: (g ?? grounding) || undefined, lockedTitle: (b as any).lockTitle ? b.topic : undefined, seedAngle: (b as any).seedAngle || undefined, excludeAngles: exclude && exclude.length ? exclude.map((a) => `${a.titleSuggestion} | ${a.hookPremise}`) : undefined }),
       });
       const data = await res.json();
       if (data.error) throw new Error(data.error);
-      const updated = { ...b, hookTypeFilter: hook, angles: data.angles ?? [], grounding: (g ?? grounding) || undefined, topicKind: topicKind || undefined, sourceVerdict: sourceVerdict || undefined };
+      const updated = { ...b, thinFacts: data.thinResearch ? Number(data.factCount) || 0 : null, niche: data.detectedNiche || b.niche, hookTypeFilter: hook, angles: data.angles ?? [], hookRanking: data.hookRanking ?? b.hookRanking ?? null, grounding: (g ?? grounding) || undefined, topicKind: topicKind || undefined, sourceVerdict: sourceVerdict || undefined };
       sessionStorage.setItem("skripr_script_brief", JSON.stringify(updated));
       setBrief(updated);
       setPhase("angles");
@@ -265,16 +329,18 @@ export default function ScriptBriefPage() {
   function handlePickAngle(angle: Angle) {
     if (!brief) return;
     setSelectedAngle(angle); setError(null);
-    setSelectedMagnet(null); setAppliedMagnetTitle(null);
     setPhase("storytelling");
   }
 
-  async function generateWithStory(storytellingMode: string, storytellingTechniques: string[], directorNote?: string) {
-    const angle = selectedAngle;
+  async function generateWithStory(storytellingMode: string, storytellingTechniques: string[], directorNote?: string, angleOverride?: Angle) {
+    const angle = angleOverride || selectedAngle;
     if (!brief || !angle) return;
     setPhase("generating"); setError(null); setGenProgress(null);
     // Shared payload — identical across the one-shot path and every chunked call, so plan, each
     // section, and finalize all see the same inputs.
+    // The card's own research warnings travel with it (seen live: the card flagged "a decade behind bars"
+    // against "10 to 20 years", and the script still opened with "a decade-long prison sentence").
+    const corrections = Array.isArray(angle.warnings) && angle.warnings.length ? ` RESEARCH CORRECTIONS (follow these over the hook's wording where they conflict): ${angle.warnings.join(" | ")}` : "";
     const payload: any = {
       transcript: "", topic: brief.topic, niche: brief.niche,
       videoLength: brief.videoLength || "medium",
@@ -283,14 +349,18 @@ export default function ScriptBriefPage() {
       voiceProfileId: voiceId || undefined,
       companionCta,
       softCta,
+      noCta,
       sourceVerdict: sourceVerdict || undefined,
       topicKind: topicKind || undefined,
       hookType: angle.hookType,
       // The specific premise of the angle the user picked — so the hook generator delivers THIS
       // angle instead of every hook type opening on the same top fact.
-      anglePremise: angle.hookPremise || undefined,
-      angle: `Hook type: ${angle.hookType}. Opening hook to adapt: "${angle.hookPremise}". Suggested title: ${angle.titleSuggestion}`,
-      storytellingMode, storytellingTechniques, directorNote: directorNote || undefined,
+      anglePremise: angle.hookPremise ? angle.hookPremise + corrections : undefined,
+      angle: `Hook type: ${angle.hookType}. Opening hook to adapt: "${angle.hookPremise}". Suggested title: ${angle.titleSuggestion}${angle.viewerQuestion ? `. The question the hook opens, held unanswered until the payoff: ${angle.viewerQuestion}` : ""}${corrections}`,
+      storytellingMode, storytellingTechniques,
+      // Carry the Outlier-DNA seed (if this brief came from "Research this idea") into the
+      // director note so the script is built on the proven structure, not a generic one.
+      directorNote: [(brief as any)?.seedAngle ? `Structural pattern to follow (from a proven outlier): ${(brief as any).seedAngle}` : "", directorNote].filter(Boolean).join(" ") || undefined,
       sourceMaterial: [buildUpstreamSourceMaterial(), sourceMaterial].filter(Boolean).join("\n\n") || undefined,
       selectedTitle: ((brief as any)?.lockTitle ? brief?.topic : angle.titleSuggestion) || undefined,
     };
@@ -317,7 +387,7 @@ export default function ScriptBriefPage() {
         setGenProgress({ done: 0, total });
         let chunkFailed = false;
         for (let i = 0; i < total; i++) {
-          const sec = await post({ mode: "section", sectionIndex: i, priorTail, blueprint });
+          const sec = await post({ mode: "section", sectionIndex: i, priorTail, blueprint, priorText: sections.map((x) => x.content).join("\n\n"), presetHook: plan.presetHook ?? null });
           if (!sec || sec.error || typeof sec.text !== "string" || !sec.text.trim()) { chunkFailed = true; break; }
           sections.push({ title: sec.name || `Section ${i + 1}`, content: sec.text });
           priorTail = typeof sec.tail === "string" ? sec.tail : sec.text.split(/\s+/).slice(-40).join(" ");
@@ -340,6 +410,10 @@ export default function ScriptBriefPage() {
         if (data?.limitReached) { window.location.href = "/dashboard/settings?upgrade=1"; return; }
         setError(data?.error || "The connection dropped while generating. Please try again."); setPhase("finish"); setGenProgress(null); return;
       }
+      // FINAL CHECK: a whole-script read against the research, as its own request (shared helper).
+      setFinalChecking(true);
+      data = await applyFinalCheck(data, { sourceMaterial: payload.sourceMaterial, blueprint: plan?.blueprint, topic: payload.topic });
+      setFinalChecking(false);
       setScript(data); setSavedId(data.savedId ?? null); setPhase("result"); setGenProgress(null);
     } catch (e: any) { setError(e?.message || "Failed to generate script"); setPhase("finish"); setGenProgress(null); }
   }
@@ -407,6 +481,18 @@ export default function ScriptBriefPage() {
     setCopied(true); setTimeout(() => setCopied(false), 2000);
   }
 
+  // ONE-MOVE: in auto-pilot, every intermediate phase (grounding, research review, angle pick) is
+  // driven automatically, so show ONE progress screen instead of flashing each step's UI. The
+  // "generating" phase keeps its own section-progress screen below.
+  if (autoMode && (phase === "loading" || phase === "pick-case" || phase === "research" || phase === "angles")) {
+    // Show the actual stage, not a bare spinner, so the creator sees Skripr working through the flow.
+    const stage =
+      phase === "angles" ? { n: 3, label: "Shaping the winning angle & structure…" }
+      : phase === "research" ? { n: 2, label: "Pulling and cross-checking the facts…" }
+      : { n: 1, label: "Finding the real case behind the idea…" };
+    return <Spinner label={`Step ${stage.n} of 4 — ${stage.label}`} sub="Skripr is building the whole script for you — no steps to click. Writing begins once the research and angle are locked." />;
+  }
+
   // RESEARCH comes BEFORE the angles now — no angle exists yet, so this gates on the brief/case.
   if (phase === "research" && brief) return (
     <ResearchStep
@@ -419,6 +505,8 @@ export default function ScriptBriefPage() {
       presetKind={(topicKind as any) || undefined}
       presetCase={researchCase ? { name: researchCase.name, summary: researchCase.summary || "", when: researchCase.when || "", whyItFits: "", sources: researchCase.sources || [] } : undefined}
       presetFacts={researchFacts.length ? researchFacts : undefined}
+      presetConflicts={researchFacts.length ? researchConflicts : undefined}
+      presetVerify={researchFacts.length ? researchVerify : undefined}
       onFactsApproved={(fs) => { approvedFactsRef.current = fs; }}
       onContinue={(sm, v, k) => { void continueFromResearch(sm, v, k); }}
       onBack={() => (window.location.href = "/dashboard/scripts/new")}
@@ -431,6 +519,11 @@ export default function ScriptBriefPage() {
       niche={brief?.niche}
       angle={selectedAngle.hookPremise || selectedAngle.titleSuggestion}
       angleLabel={selectedAngle.titleSuggestion || selectedAngle.hookPremise}
+      // The research, so the notes step can derive producer and research notes (it never received
+      // it here, so only a hidden channel default was ever sent).
+      sourceMaterial={buildUpstreamSourceMaterial() || undefined}
+      caseName={groundedOn?.name}
+      topicKind={(topicKind as any) || undefined}
       // Storytelling technique is its own decision; capture it and advance to the FINISH step
       // (voice / viral magnet / CTAs) rather than generating straight away.
       onGenerate={(mode, techniques, note) => { storyChoiceRef.current = { mode, techniques, note }; setPhase("finish"); }}
@@ -463,20 +556,25 @@ export default function ScriptBriefPage() {
                   void (async () => {
                     setPhase("loading");
                     let factObjs: { fact: string; source: string | null; context?: boolean }[] = [];
+                    let shown: any = c;
                     try {
                       const rr = await fetch("/api/research/find", {
                         method: "POST", headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ action: "deepen", caseName: c.name, caseSummary: c.summary || "", niche: b.niche, kind: "event", targetMinutes: (b as any).targetMinutes }),
+                        body: JSON.stringify({ action: "deepen", caseName: c.name, caseSummary: c.summary || "", niche: b.niche, kind: "event", targetMinutes: (b as any).targetMinutes, topicAnchor: b.topic }),
                       });
                       const rd = await rr.json();
                       if (rr.ok && Array.isArray(rd.facts)) {
                         factObjs = rd.facts.filter((f: any) => f && typeof f.fact === "string").map((f: any) => ({ fact: f.fact, source: f.source ?? null, context: !!f.context }));
                         g.facts = factObjs.map((f) => (f.source ? `${f.fact} (source: ${f.source})` : f.fact));
+                        // The case label came from memory; use the version checked against the sourced facts.
+                        if (typeof rd.cleanCaseName === "string" && rd.cleanCaseName) { shown = { ...c, name: rd.cleanCaseName, summary: typeof rd.cleanCaseSummary === "string" ? rd.cleanCaseSummary : c.summary }; g.caseName = shown.name; g.caseSummary = shown.summary; setGroundedOn(shown); }
                         setGrounding({ ...g });
+                        setResearchConflicts(Array.isArray(rd.conflicts) ? rd.conflicts : []);
+                        setResearchVerify(Array.isArray(rd.verify) ? rd.verify : []);
                       }
                     } catch { /* keep the topic-level facts */ }
                     // Research-before-angles: review the facts, THEN write the hook angles.
-                    goToResearch(b, { name: c.name, summary: c.summary, when: c.when, sources: c.sources || [] }, factObjs, g);
+                    goToResearch(b, { name: shown.name, summary: shown.summary, when: shown.when, sources: shown.sources || [] }, factObjs, g);
                   })();
                 }
               }}
@@ -499,52 +597,17 @@ export default function ScriptBriefPage() {
   );
   // FINISH — the last decision screen: voice, viral magnet, CTAs. Then Generate.
   if (phase === "finish" && selectedAngle) {
-    const gradeColor: Record<string, string> = { S: "#f59e0b", A: "#4db8ff", B: "#34d399", C: "#a6c0d8" };
-    const filtered = magnetWords.filter((w) => magnetGrade === "all" || w.grade === magnetGrade);
     return (
       <div style={{ minHeight: "100vh", background: C.bg, padding: "32px 40px", fontFamily: "system-ui, sans-serif" }}>
         <div style={{ maxWidth: 640, margin: "0 auto" }}>
           <button onClick={() => setPhase("storytelling")} style={{ background: "none", border: "none", padding: 0, cursor: "pointer", fontSize: 12, color: C.textDim, marginBottom: 16 }}>&#8592; Back</button>
           <h1 style={{ fontSize: 22, fontWeight: 700, color: C.textBright, letterSpacing: -0.3, marginBottom: 6 }}>Finishing touches</h1>
-          <p style={{ fontSize: 13, color: C.textDim, marginBottom: 20 }}>Pick a voice, an optional viral magnet word, and calls to action. Then generate.</p>
+          <p style={{ fontSize: 13, color: C.textDim, marginBottom: 20 }}>Pick a voice and calls to action. Then generate.</p>
 
           <VoiceSelect value={voiceId} onChange={setVoiceId} />
-          <CompanionCtaToggle value={companionCta} onChange={setCompanionCta} />
-          <SoftCtaToggle value={softCta} onChange={setSoftCta} />
-
-          {magnetWords.length > 0 && (
-            <div style={{ marginTop: 16, borderRadius: 14, border: "1px solid rgba(77,184,255,0.16)", background: "rgba(77,184,255,0.04)", padding: "14px 16px" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
-                <span style={{ fontSize: 14 }}>🧲</span>
-                <span style={{ fontSize: 15, fontWeight: 700, color: C.textBright }}>Viral Magnet</span>
-                <span style={{ fontSize: 12, color: C.textDim }}>optional, a word baked into the title</span>
-                {selectedViralWord && <button onClick={() => setSelectedViralWord(null)} style={{ marginLeft: "auto", fontSize: 10, color: C.textDim, background: "none", border: "none", cursor: "pointer" }}>Clear</button>}
-                {userPlan === "free" && <span style={{ marginLeft: selectedViralWord ? 4 : "auto", fontSize: 10, fontWeight: 700, padding: "2px 7px", borderRadius: 5, background: "rgba(77,184,255,0.11)", color: C.accentDim }}>STARTER+</span>}
-              </div>
-              <div style={{ display: "flex", gap: 5, marginBottom: 8 }}>
-                {["all", "S", "A", "B", "C"].map((g) => {
-                  const gc = g === "all" ? "#4db8ff" : gradeColor[g];
-                  const isA = magnetGrade === g;
-                  return (
-                    <button key={g} onClick={() => setMagnetGrade(g)} style={{ padding: "5px 12px", borderRadius: 6, fontSize: 13, fontWeight: 700, cursor: "pointer", border: isA ? `1.5px solid ${gc}` : "1px solid rgba(77,184,255,0.14)", background: isA ? `${gc}18` : "transparent", color: isA ? gc : C.textDim }}>{g === "all" ? "All" : `${g}-tier`}</button>
-                  );
-                })}
-              </div>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 10, maxHeight: 180, overflowY: "auto", filter: userPlan === "free" ? "blur(3px)" : "none", pointerEvents: userPlan === "free" ? "none" : "auto" }}>
-                {filtered.map((mw) => {
-                  const gc = gradeColor[mw.grade] || "#a6c0d8";
-                  const sel = selectedViralWord === mw.word;
-                  return (
-                    <button key={mw.id} onClick={() => setSelectedViralWord(sel ? null : mw.word)} title={mw.why_it_works} style={{ display: "flex", alignItems: "center", gap: 4, padding: "4px 9px", borderRadius: 6, cursor: "pointer", border: sel ? `1.5px solid ${gc}` : "1px solid rgba(77,184,255,0.12)", background: sel ? `${gc}18` : "rgba(0,0,0,0.08)" }}>
-                      <span style={{ fontSize: 14, fontWeight: 700, color: sel ? gc : C.textBright }}>{mw.word}</span>
-                      <span style={{ fontSize: 12, fontWeight: 700, padding: "2px 5px", borderRadius: 4, background: `${gc}22`, color: gc }}>{mw.grade}</span>
-                    </button>
-                  );
-                })}
-              </div>
-              {userPlan === "free" && <div style={{ marginTop: 8, fontSize: 11, color: C.textDim }}>Upgrade to Starter to bake a viral magnet word into your title.</div>}
-            </div>
-          )}
+          <NoCtaToggle value={noCta} onChange={(v) => { setNoCta(v); if (v) { setCompanionCta(false); setSoftCta(false); } }} />
+          {!noCta && <CompanionCtaToggle value={companionCta} onChange={setCompanionCta} />}
+          {!noCta && <SoftCtaToggle value={softCta} onChange={setSoftCta} />}
 
           <button
             onClick={() => { const s = storyChoiceRef.current; void generateWithStory(s.mode, s.techniques, s.note); }}
@@ -559,7 +622,7 @@ export default function ScriptBriefPage() {
   if (phase === "generating") return (
     <GenerationProgress
       label="Building your script..."
-      sub={genProgress ? `writing section ${genProgress.done} of ${genProgress.total}` : (selectedAngle?.hookType || "") + " hook"}
+      sub={finalChecking ? "final check against the research" : genProgress ? `writing section ${genProgress.done} of ${genProgress.total}` : (selectedAngle?.hookType || "") + " hook"}
       expectedMs={45000 + ((brief as any)?.targetMinutes || 5) * 5000}
     />
   );
@@ -645,92 +708,10 @@ export default function ScriptBriefPage() {
 
           {/* Deterministic fact scan: dates and dollar figures in the script that
               were not in the researched source material. Verify these before voice. */}
-          {Array.isArray(script.factCheck?.unverified) && script.factCheck.unverified.length > 0 && (
-            <div style={{ background: "rgba(251,191,36,0.08)", border: "1px solid rgba(251,191,36,0.3)", borderRadius: 12, padding: "14px 18px", marginBottom: 16 }}>
-              <div style={{ fontSize: 11, fontWeight: 700, color: "#fbbf24", letterSpacing: 0.4, marginBottom: 5 }}>VERIFY BEFORE PUBLISHING</div>
-              <div style={{ fontSize: 12.5, color: C.textDim, lineHeight: 1.6, marginBottom: 9 }}>
-                These dates or figures are in the script but were not in the sourced research, so they may be the model&apos;s own recall. Check each against a source before you record.
-              </div>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
-                {script.factCheck.unverified.map((u: string, i: number) => (
-                  <span key={i} style={{ fontSize: 12, fontWeight: 600, color: "#fbbf24", background: "rgba(251,191,36,0.12)", border: "1px solid rgba(251,191,36,0.3)", borderRadius: 7, padding: "4px 10px" }}>{u}</span>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Viral Magnet */}
-          {script.magnetSuggestions && script.magnetSuggestions.length > 0 && (
-            <div style={{ marginBottom: 16, borderRadius: 14, border: "1px solid rgba(77,184,255,0.18)", background: "rgba(77,184,255,0.04)", padding: "16px 18px" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
-                <span style={{ fontSize: 15 }}>&#129522;</span>
-                <span style={{ fontSize: 13, fontWeight: 700, color: C.textBright }}>Viral Magnet</span>
-                <span style={{ fontSize: 11, color: C.textDim }}>Add one word to pull more clicks</span>
-                {userPlan === "free" && (
-                  <span style={{ marginLeft: "auto", fontSize: 10, fontWeight: 700, padding: "2px 7px", borderRadius: 5, background: "rgba(77,184,255,0.11)", color: "#7ed8ff" }}>STARTER+</span>
-                )}
-              </div>
-              {userPlan === "free" ? (
-                // Sell at the wall: preview the top suggested words but gate applying.
-                <div>
-                  <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 12 }}>
-                    {script.magnetSuggestions.slice(0, 3).map((s: any, i: number) => {
-                      const gc: Record<string, string> = { S: "#f59e0b", A: "#4db8ff", B: "#34d399", C: "#a6c0d8" };
-                      const col = gc[s.word?.grade] || C.accentDim;
-                      return (
-                        <span key={i} style={{ display: "inline-flex", alignItems: "center", gap: 5, padding: "5px 11px", borderRadius: 8, border: `1px solid ${col}55`, background: `${col}14` }}>
-                          <span style={{ fontSize: 13, fontWeight: 700, color: C.textBright }}>{s.word?.word}</span>
-                          <span style={{ fontSize: 10, fontWeight: 700, padding: "1px 5px", borderRadius: 4, background: `${col}22`, color: col }}>{s.word?.grade}</span>
-                        </span>
-                      );
-                    })}
-                  </div>
-                  <p style={{ fontSize: 12, color: C.textDim, lineHeight: 1.6, marginBottom: 12 }}>
-                    Bake a proven word into your title, our AI rewrites it to pull more clicks.
-                  </p>
-                  <a href="/dashboard/settings" style={{ display: "inline-block", fontSize: 12, fontWeight: 700, padding: "8px 18px", borderRadius: 8, background: "linear-gradient(135deg,#0e6499,#1a8fd1)", color: "#fff", textDecoration: "none" }}>Get Starter →</a>
-                </div>
-              ) : (
-                <>
-                  <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: selectedMagnet !== null ? 10 : 0 }}>
-                    {script.magnetSuggestions.map((s: any, i: number) => {
-                      const gc: Record<string, string> = { S: "#f59e0b", A: "#4db8ff", B: "#34d399", C: "#a6c0d8" };
-                      const active = selectedMagnet === i;
-                      const col = gc[s.word?.grade] || C.accentDim;
-                      return (
-                        <button key={i} onClick={() => setSelectedMagnet(active ? null : i)} style={{ padding: "5px 12px", borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: "pointer", border: active ? `1.5px solid ${col}` : "1px solid rgba(77,184,255,0.16)", background: active ? "rgba(77,184,255,0.11)" : "transparent", color: active ? col : C.textDim, transition: "all 0.15s" }}>
-                          {s.word?.word} <span style={{ fontSize: 10, opacity: 0.8 }}>{s.word?.grade}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                  {selectedMagnet !== null && script.magnetSuggestions[selectedMagnet] && (() => {
-                    const s = script.magnetSuggestions[selectedMagnet];
-                    const gc: Record<string, string> = { S: "#f59e0b", A: "#4db8ff", B: "#34d399", C: "#a6c0d8" };
-                    const col = gc[s.word?.grade] || C.accentDim;
-                    const isApplied = appliedMagnetTitle === s.injectedTitle;
-                    return (
-                      <div style={{ borderRadius: 10, background: "rgba(0,0,0,0.18)", border: "1px solid rgba(77,184,255,0.12)", padding: "12px 14px" }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
-                          <span style={{ fontSize: 16, fontWeight: 800, color: col }}>{s.word?.word}</span>
-                          <span style={{ fontSize: 10, fontWeight: 700, padding: "2px 6px", borderRadius: 4, background: col + "22", color: col }}>{s.word?.grade}-tier</span>
-                          <span style={{ marginLeft: "auto", fontSize: 12, fontWeight: 700, color: C.green }}>{s.word?.lift_range} lift</span>
-                        </div>
-                        <p style={{ fontSize: 12, color: C.textDim, lineHeight: 1.6, marginBottom: 10 }}>{s.word?.why_it_works}</p>
-                        <div style={{ borderRadius: 8, background: "rgba(77,184,255,0.05)", padding: "8px 12px", marginBottom: 10, fontSize: 12 }}>
-                          <div style={{ color: C.textDim, marginBottom: 4 }}>Before: {script.title}</div>
-                          <div style={{ color: C.textBright, fontWeight: 600 }}>After: {s.injectedTitle}</div>
-                        </div>
-                        <button onClick={() => setAppliedMagnetTitle(isApplied ? null : s.injectedTitle)} style={{ width: "100%", padding: "9px", borderRadius: 9, fontSize: 13, fontWeight: 600, cursor: "pointer", border: "none", background: isApplied ? "rgba(248,113,113,0.10)" : "linear-gradient(135deg,#0e6499,#1a8fd1)", color: isApplied ? "#f87171" : "#fff" }}>
-                          {isApplied ? "Remove Viral Magnet" : "Apply Viral Magnet"}
-                        </button>
-                      </div>
-                    );
-                  })()}
-                </>
-              )}
-            </div>
-          )}
+          {/* The "VERIFY BEFORE PUBLISHING" figure panel was removed on purpose: surfacing "these
+             numbers might be the model's recall" makes the output feel untrustworthy. Skripr verifies
+             figures itself (the self-review pass), so nothing is punted to the creator. factCheck data
+             is still produced internally for that pass; it is just never shown. */}
 
           {hook && (
             <div style={{ background: C.card, border: "1px solid " + C.border, borderRadius: 12, padding: "14px 18px", marginBottom: 16 }}>
@@ -757,7 +738,7 @@ export default function ScriptBriefPage() {
               </div>
             )}
             <div style={{ display: "flex", gap: 10 }}>
-              <button onClick={() => { setPhase("angles"); setScript(null); setSelectedAngle(null); setSavedId(null); setAppliedMagnetTitle(null); }} style={{ flex: 1, height: 40, borderRadius: 10, background: "rgba(77,184,255,0.05)", border: "1px solid rgba(77,184,255,0.13)", color: C.textDim, fontSize: 12, fontWeight: 600, cursor: "pointer" }}>Try another hook</button>
+              <button onClick={() => { setPhase("angles"); setScript(null); setSelectedAngle(null); setSavedId(null); }} style={{ flex: 1, height: 40, borderRadius: 10, background: "rgba(77,184,255,0.05)", border: "1px solid rgba(77,184,255,0.13)", color: C.textDim, fontSize: 12, fontWeight: 600, cursor: "pointer" }}>Try another hook</button>
               <a href="/dashboard/scripts/new" style={{ flex: 1, height: 40, display: "flex", alignItems: "center", justifyContent: "center", borderRadius: 10, background: "rgba(77,184,255,0.05)", border: "1px solid rgba(77,184,255,0.13)", color: C.textDim, fontSize: 12, fontWeight: 600, textDecoration: "none" }}>New topic</a>
             </div>
           </div>
@@ -805,6 +786,11 @@ export default function ScriptBriefPage() {
         )}
 
         {error && <div style={{ padding: "12px 16px", borderRadius: 10, background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.25)", color: "#fca5a5", fontSize: 13, marginBottom: 16 }}>{error}</div>}
+        {typeof (brief as any)?.thinFacts === "number" && (
+          <div style={{ padding: "10px 14px", borderRadius: 10, background: "rgba(251,191,36,0.06)", border: "1px solid rgba(251,191,36,0.25)", color: "#fcd34d", fontSize: 12.5, lineHeight: 1.5, marginBottom: 16 }}>
+            {(brief as any).thinFacts === 0 ? "No research behind these cards, so they're built from the title alone." : `Only ${(brief as any).thinFacts} fact${(brief as any).thinFacts === 1 ? "" : "s"} in your research, so these cards can only retell one story.`} Go back and add research for different angles and a stronger video.
+          </div>
+        )}
 
         {/* HOOK TYPE lives here now (moved off the Brief). Changing it regenerates the angles for
             that hook, from the same approved research. */}
@@ -813,8 +799,17 @@ export default function ScriptBriefPage() {
             HOOK TYPE <span style={{ fontWeight: 400 }}>· optional, pick a psychological approach{refetchingAngles ? " · regenerating…" : ""}</span>
           </div>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 8, opacity: refetchingAngles ? 0.6 : 1, pointerEvents: refetchingAngles ? "none" : "auto" }}>
+            <button key="__all" onClick={() => { if (hookFilter) void chooseHook(null); }}
+              style={{ padding: "6px 12px", borderRadius: 8, fontSize: 12, fontWeight: 600, cursor: "pointer",
+                border: !hookFilter ? "1.5px solid rgba(77,184,255,0.50)" : "1px solid rgba(99,102,241,0.2)",
+                background: !hookFilter ? "rgba(77,184,255,0.13)" : "rgba(77,184,255,0.04)",
+                color: !hookFilter ? "#7ed8ff" : "#a6c0d8", transition: "all 0.15s" }}>
+              ✨ All types
+            </button>
             {HOOK_TYPES.map(({ type, label, emoji }) => {
               const active = hookFilter === type;
+              const rank = brief?.hookRanking?.ranks?.findIndex((r) => r.type === type) ?? -1;
+              const rk = rank >= 0 ? brief!.hookRanking!.ranks[rank] : null;
               return (
                 <button key={type} onClick={() => void chooseHook(active ? null : type)}
                   style={{ padding: "6px 12px", borderRadius: 8, fontSize: 12, fontWeight: 600, cursor: "pointer",
@@ -822,6 +817,12 @@ export default function ScriptBriefPage() {
                     background: active ? "rgba(77,184,255,0.13)" : "rgba(77,184,255,0.04)",
                     color: active ? "#7ed8ff" : "#a6c0d8", transition: "all 0.15s" }}>
                   {emoji} {label}
+                  {rank === 0 && rk && (
+                    <span title={`${Math.round(rk.share * 100)}% of the breakout videos Skripr has studied${brief?.hookRanking?.scope === "niche" ? " in this niche" : ""} open this way`}
+                      style={{ marginLeft: 6, fontSize: 10, fontWeight: 700, padding: "1px 6px", borderRadius: 4, background: "rgba(52,211,153,0.14)", color: "#34d399" }}>
+                      🏆 Top {brief?.hookRanking?.scope === "niche" ? "in niche" : "pick"}
+                    </span>
+                  )}
                 </button>
               );
             })}
@@ -840,6 +841,17 @@ export default function ScriptBriefPage() {
                   <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                     <span style={{ fontSize: 12, fontWeight: 800, color: ec, letterSpacing: 0.5 }}>{a.hookType}</span>
                     <span style={{ fontSize: 10, fontWeight: 600, padding: "2px 7px", borderRadius: 4, background: ec + "22", color: ec, border: "1px solid " + ec + "44" }}>triggers {a.audienceEmotion}</span>
+                    {typeof a.factCount === "number" && a.factCount > 0 && (
+                      <span title={a.spineName ? `Story: ${a.spineName}` : undefined} style={{ fontSize: 10, fontWeight: 600, padding: "2px 7px", borderRadius: 4, background: "rgba(77,184,255,0.08)", color: C.accentDim, border: "1px solid rgba(77,184,255,0.2)" }}>built on {a.factCount} facts</span>
+                    )}
+                    {a.checked && !(a.warnings && a.warnings.length) && (
+                      <span role={a.fixes && a.fixes.diffs.length ? "button" : undefined}
+                        onClick={(e) => { if (a.fixes && a.fixes.diffs.length) { e.stopPropagation(); setOpenFix(openFix === i ? null : i); } }}
+                        title={a.fixes && a.fixes.diffs.length ? "See what was fixed" : "Every claim on this card was checked against your research"}
+                        style={{ fontSize: 10, fontWeight: 600, padding: "2px 7px", borderRadius: 4, background: "rgba(34,197,94,0.08)", color: "#86efac", border: "1px solid rgba(34,197,94,0.25)", cursor: a.fixes && a.fixes.diffs.length ? "pointer" : "default" }}>
+                        ✓ checked{a.fixes && a.fixes.diffs.length ? ` · ${a.fixes.why.length || a.fixes.diffs.length} fixed ${openFix === i ? "▴" : "▾"}` : ""}
+                      </span>
+                    )}
                   </div>
                   <div style={{ flexShrink: 0, width: 32, height: 32, borderRadius: 8, background: "linear-gradient(135deg, #0e6499 0%, #1a8fd1 100%)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, color: "#fff" }}>&#8594;</div>
                 </div>
@@ -850,7 +862,25 @@ export default function ScriptBriefPage() {
                     <div style={{ fontSize: 13, fontWeight: 600, color: "#9de4ff", lineHeight: 1.4 }}>{a.titleSuggestion}</div>
                   </div>
                 )}
+                {a.viewerQuestion && (
+                  <div title="The question this hook opens. The video holds the answer until the payoff." style={{ fontSize: 12, color: C.textBright, opacity: 0.85, lineHeight: 1.45, marginBottom: 8 }}>
+                    <span style={{ fontSize: 10, fontWeight: 700, color: C.accentDim, marginRight: 6 }}>VIEWER ASKS</span>{a.viewerQuestion}
+                  </div>
+                )}
                 <div style={{ fontSize: 11, color: C.textDim, fontStyle: "italic" }}>{a.whyItWorks}</div>
+                {openFix === i && a.fixes && a.fixes.diffs.length > 0 && (
+                  <div onClick={(e) => e.stopPropagation()} style={{ marginTop: 10, padding: "10px 12px", borderRadius: 8, background: "rgba(34,197,94,0.05)", border: "1px solid rgba(34,197,94,0.18)", cursor: "default" }}>
+                    <div style={{ fontSize: 10, fontWeight: 700, color: "#86efac", letterSpacing: 0.4, marginBottom: 6 }}>FIXED BEFORE YOU SAW IT</div>
+                    {a.fixes.why.map((w, k) => <div key={k} style={{ fontSize: 11.5, color: C.textBright, lineHeight: 1.45, marginBottom: 4 }}>• {w}</div>)}
+                    {a.fixes.diffs.map((d, k) => (
+                      <div key={k} style={{ marginTop: 8 }}>
+                        <div style={{ fontSize: 10, fontWeight: 700, color: C.textDim }}>{d.field.toUpperCase()}</div>
+                        <div style={{ fontSize: 11.5, color: "#fca5a5", textDecoration: "line-through", lineHeight: 1.45 }}>{d.was}</div>
+                        <div style={{ fontSize: 11.5, color: "#bbf7d0", lineHeight: 1.45 }}>{d.now}</div>
+                      </div>
+                    ))}
+                  </div>
+                )}
                 {Array.isArray(a.warnings) && a.warnings.length > 0 && (
                   <div style={{ marginTop: 9, paddingTop: 9, borderTop: "1px solid rgba(251,191,36,0.2)" }}>
                     {a.warnings.map((w, j) => (
@@ -865,7 +895,7 @@ export default function ScriptBriefPage() {
 
         {(brief?.angles ?? []).length > 0 && (
           <div style={{ marginTop: 16, textAlign: "center" }}>
-            <button onClick={() => brief && fetchAngles(brief)} style={{ background: "none", border: "none", color: C.textDim, fontSize: 12, cursor: "pointer", textDecoration: "underline" }}>
+            <button onClick={() => brief && fetchAngles(brief, undefined, undefined, brief.angles)} style={{ background: "none", border: "none", color: C.textDim, fontSize: 12, cursor: "pointer", textDecoration: "underline" }}>
               Generate different hook angles
             </button>
           </div>

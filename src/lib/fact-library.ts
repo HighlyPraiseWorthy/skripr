@@ -85,7 +85,7 @@ export async function addToLibrary(
     if (!f?.fact?.trim()) continue;
     const id = factId(f.fact);
     if (!id || byId.has(id)) continue;
-    byId.set(id, { id, fact: f.fact.trim(), source: f.source ?? null, addedAt: new Date().toISOString(), manual: !!opts?.manual, context: (f as any).context || undefined });
+    byId.set(id, { id, fact: f.fact.trim(), source: f.source ?? null, addedAt: new Date().toISOString(), manual: !!opts?.manual, context: (f as any).context || undefined, feature: (f as any).feature || undefined });
     added++;
   }
   const merged: FactLibrary = { facts: [...byId.values()], dismissed: current.dismissed };
@@ -129,4 +129,30 @@ export function activeFacts(lib: FactLibrary): LibraryFact[] {
   return lib.facts
     .filter((f) => !hidden.has(f.id))
     .sort((a, b) => Number(!!b.manual) - Number(!!a.manual));
+}
+
+// REPLACE IN PLACE. A correction (e.g. a quote fixed against its source) must NOT be "dismiss old + add
+// new": factId is the first 72 letters, so a fix that only changes later words gets the SAME id. The add
+// is then skipped as a duplicate and the id is dismissed, and the fact silently vanishes (seen live: the
+// cleaned Goodyear photo quote, the case's climax, disappeared from the library). Swap the text under
+// the old id, move it to the new id, and un-dismiss the new id.
+export async function replaceInLibrary(userId: string, topic: string, swaps: { from: string; to: ResearchFact }[]): Promise<void> {
+  if (!supabaseAdmin || !userId || !topic || !swaps.length) return;
+  try {
+    const current = await getLibrary(userId, topic);
+    let facts = [...current.facts];
+    const dismissed = new Set(current.dismissed);
+    for (const { from, to } of swaps) {
+      const fromId = factId(from), toId = factId(to.fact);
+      if (!toId) continue;
+      const prev = facts.find((f) => f.id === fromId || f.fact === from);
+      facts = facts.filter((f) => f.id !== fromId && f.fact !== from && f.id !== toId);
+      facts.push({ ...(prev || {}), id: toId, fact: to.fact.trim(), source: to.source ?? prev?.source ?? null, addedAt: prev?.addedAt || new Date().toISOString() } as any);
+      if (fromId !== toId) dismissed.add(fromId);
+      dismissed.delete(toId);
+    }
+    await supabaseAdmin.from("topic_fact_library").upsert({
+      user_id: userId, topic_key: topicKey(topic), facts, dismissed: [...dismissed].slice(0, 400), fact_count: facts.length, updated_at: new Date().toISOString(),
+    }, { onConflict: "user_id,topic_key" });
+  } catch { /* best effort */ }
 }

@@ -55,10 +55,22 @@ export default function StorytellingPicker(props: {
   // Auto-derived notes from the grounded research + angle. Recomputed only when the
   // inputs change; the user checks/unchecks each and the checked set is prepended to
   // whatever they type, so they never have to hand-write the derivable guidance.
-  const derivedNotes = useMemo(
+  const baseNotes = useMemo(
     () => deriveDirectorNotes({ sourceMaterial: props.sourceMaterial, angle: props.angle, caseName: props.caseName, slot: props.slot, topicKind: props.topicKind }),
     [props.sourceMaterial, props.angle, props.caseName, props.slot, props.topicKind],
   );
+  // PRODUCER'S NOTES: written from the chosen card + research (opening scene, act order, payoff,
+  // attribution, privacy), so a creator who doesn't know what to write still gets producer guidance.
+  const [producerNotes, setProducerNotes] = useState<{ source: string; note: string; on: boolean }[]>([]);
+  useEffect(() => {
+    if (!props.sourceMaterial || !props.angle) return;
+    let alive = true;
+    fetch("/api/director-note", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ topic: props.topic, angle: props.angle, title: props.angleLabel, sourceMaterial: props.sourceMaterial }) })
+      .then((r) => r.json()).then((d) => { if (alive && Array.isArray(d?.notes)) { setProducerNotes(d.notes.map((n: any) => ({ source: String(n.source || "Producer"), note: String(n.note || ""), on: true })).filter((n: any) => n.note)); setDropped(new Set()); } })
+      .catch(() => {});
+    return () => { alive = false; };
+  }, [props.sourceMaterial, props.angle]);
+  const derivedNotes = useMemo(() => [...producerNotes, ...baseNotes], [producerNotes, baseNotes]);
   const [dropped, setDropped] = useState<Set<number>>(new Set());
   const checkedNotes = derivedNotes.filter((_, i) => !dropped.has(i)).map((n) => n.note);
   const finalDirectorNote = () => composeDirectorNote(checkedNotes, directorNote);

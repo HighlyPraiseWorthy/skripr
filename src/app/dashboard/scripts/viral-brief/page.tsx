@@ -6,6 +6,7 @@ import { VoiceSelect } from "@/components/VoiceSelect";
 import { CompanionCtaToggle, SoftCtaToggle } from "@/components/CompanionCtaToggle";
 import StorytellingPicker from "@/components/StorytellingPicker";
 import ResearchStep from "@/components/ResearchStep";
+import { applyFinalCheck } from "@/lib/final-check-client";
 
 const C = {
   bg: "#080c12", card: "#0d1520", cardHover: "#111d2e",
@@ -235,7 +236,8 @@ export default function ViralBriefPage() {
           setHonesty({ honestMinutes: rd.honestMinutes, requestedMinutes: rd.requestedMinutes, factCount: rd.factCount, contextCount: rd.contextCount, budget: rd.budget });
           if (typeof rd.caseName === "string" && rd.caseName.trim()) caseName = rd.caseName.trim();
           if (typeof rd.when === "string" && rd.when.trim()) when = rd.when.trim();
-          if (caseName !== c.name || when !== c.when) setGroundedCase({ ...c, name: caseName, when });
+          const summary = typeof rd.cleanCaseSummary === "string" ? rd.cleanCaseSummary : c.summary;
+          if (caseName !== c.name || when !== c.when || summary !== c.summary) setGroundedCase({ ...c, name: caseName, when, summary });
         }
       } catch { /* fall through to blurb-grounded angles */ }
     }
@@ -486,7 +488,7 @@ export default function ViralBriefPage() {
         setGenProgress({ done: 0, total });
         let chunkFailed = false;
         for (let i = 0; i < total; i++) {
-          const sec = await post({ mode: "section", sectionIndex: i, priorTail });
+          const sec = await post({ mode: "section", sectionIndex: i, priorTail, priorText: sections.map((x) => x.content).join("\n\n"), presetHook: plan.presetHook ?? null });
           if (!sec || sec.error || typeof sec.text !== "string" || !sec.text.trim()) { chunkFailed = true; break; }
           sections.push({ title: sec.name || `Section ${i + 1}`, content: sec.text });
           priorTail = typeof sec.tail === "string" ? sec.tail : sec.text.split(/\s+/).slice(-40).join(" ");
@@ -514,6 +516,8 @@ export default function ViralBriefPage() {
         if (data?.limitReached) { window.location.href = "/dashboard/settings?upgrade=1"; return; }
         setError(data?.error || "The connection dropped while generating. Please try again."); setPhase("angles"); setGenProgress(null); return;
       }
+      // FINAL CHECK against the research (shared with every script page). Never blocks the result.
+      data = await applyFinalCheck(data, { sourceMaterial: payload.sourceMaterial, topic: payload.topic });
       setScript(data); setSavedId(data.savedId ?? null); setPhase("result"); setGenProgress(null);
     } catch (e: any) { setError(e?.message || "Failed to generate script"); setPhase("angles"); setGenProgress(null); }
   }

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
+import { validateTitle } from "@/lib/title-validate";
 
 const C = {
   bg: "#080c12",
@@ -92,29 +93,49 @@ export default function ABTitlesPage() {
 
           {/* Title list */}
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-            {savedTitles.map((t, i) => (
+            {savedTitles.map((t, i) => {
+              // Same shared validator used by Video Packaging + Viral Magnet. No source script
+              // here, so the numeric gate no-ops; the phrase-based checks (absolutes, institutional
+              // overreach, superlatives, causal overreach, over-length) still flag risky titles
+              // before you spend an A/B slot on them.
+              const warnings = validateTitle(t);
+              const over = warnings.some(w => w.type === "length");
+              return (
               <div
                 key={i}
-                style={{ borderRadius: 14, background: C.cardBg, border: `1px solid ${C.border}`, padding: "14px 16px", display: "flex", alignItems: "center", gap: 12 }}
+                style={{ borderRadius: 14, background: C.cardBg, border: `1px solid ${warnings.length ? "rgba(251,191,36,0.3)" : C.border}`, padding: "14px 16px" }}
               >
-                <span style={{ fontSize: 15, fontWeight: 600, color: C.textDim, minWidth: 20 }}>{i + 1}</span>
-                <span style={{ flex: 1, fontSize: 16, color: C.textBright, fontWeight: 500, lineHeight: 1.4 }}>{t}</span>
-                <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
-                  <button
-                    onClick={() => copyTitle(t)}
-                    style={{ padding: "6px 14px", borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: "pointer", background: copiedTitle === t ? "rgba(16,185,129,0.12)" : "rgba(77,184,255,0.09)", border: `1px solid ${copiedTitle === t ? "rgba(16,185,129,0.35)" : "rgba(77,184,255,0.22)"}`, color: copiedTitle === t ? C.success : C.accent, transition: "all 0.12s", whiteSpace: "nowrap" }}
-                  >
-                    {copiedTitle === t ? "✓ Copied" : "Copy"}
-                  </button>
-                  <button
-                    onClick={() => removeTitle(t)}
-                    style={{ padding: "6px 10px", borderRadius: 8, fontSize: 14, cursor: "pointer", background: "rgba(248,113,113,0.08)", border: "1px solid rgba(248,113,113,0.2)", color: C.danger }}
-                  >
-                    ✕
-                  </button>
+                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                  <span style={{ fontSize: 15, fontWeight: 600, color: C.textDim, minWidth: 20 }}>{i + 1}</span>
+                  <span style={{ flex: 1, fontSize: 16, color: C.textBright, fontWeight: 500, lineHeight: 1.4 }}>
+                    {t}
+                    <span style={{ fontSize: 11, fontWeight: 600, color: over ? "#fbbf24" : C.textDim, marginLeft: 8, opacity: 0.75 }}>{t.length} chars</span>
+                  </span>
+                  <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
+                    <button
+                      onClick={() => copyTitle(t)}
+                      style={{ padding: "6px 14px", borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: "pointer", background: copiedTitle === t ? "rgba(16,185,129,0.12)" : "rgba(77,184,255,0.09)", border: `1px solid ${copiedTitle === t ? "rgba(16,185,129,0.35)" : "rgba(77,184,255,0.22)"}`, color: copiedTitle === t ? C.success : C.accent, transition: "all 0.12s", whiteSpace: "nowrap" }}
+                    >
+                      {copiedTitle === t ? "✓ Copied" : "Copy"}
+                    </button>
+                    <button
+                      onClick={() => removeTitle(t)}
+                      style={{ padding: "6px 10px", borderRadius: 8, fontSize: 14, cursor: "pointer", background: "rgba(248,113,113,0.08)", border: "1px solid rgba(248,113,113,0.2)", color: C.danger }}
+                    >
+                      ✕
+                    </button>
+                  </div>
                 </div>
+                {warnings.length > 0 && (
+                  <div style={{ marginTop: 8, paddingLeft: 32, display: "flex", flexDirection: "column", gap: 3 }}>
+                    {warnings.map((w, j) => (
+                      <div key={j} style={{ fontSize: 12, color: "#fcd34d", lineHeight: 1.4 }}>⚠ {w.note}</div>
+                    ))}
+                  </div>
+                )}
               </div>
-            ))}
+              );
+            })}
           </div>
 
           {/* Add more link */}

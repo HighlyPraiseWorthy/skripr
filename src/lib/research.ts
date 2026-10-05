@@ -1,7 +1,7 @@
 import { Anthropic } from "@anthropic-ai/sdk";
 import { caseKey, getCachedFactSet, getBestAcrossVersions, putCachedFactSet, unionFacts, CACHE_GOOD_ENOUGH } from "@/lib/case-cache";
 import { getContaminationWatchlist, recordCaseEntities } from "@/lib/contamination";
-import { addToLibrary, activeFacts } from "@/lib/fact-library";
+import { addToLibrary, activeFacts, getLibrary, setDismissed, factId, replaceInLibrary } from "@/lib/fact-library";
 
 let _anthropic: Anthropic | null = null;
 function anthropic(): Anthropic {
@@ -21,6 +21,9 @@ export interface ResearchFact {
   // detection operates, a prior similar case) fetched to fill honest minutes once the core
   // case is tapped out — never padding, always sourced and adjudicated like any other fact.
   context?: boolean;
+  // Mined from a long-form FEATURE article about the subject (scenes, quotes, life details). Exempt
+  // from the fact cap, so the richest material in the research can't be trimmed away.
+  feature?: boolean;
 }
 
 // MOVE #5 — HONEST LENGTH. Length is an OUTPUT of the evidence, not an input: never force a
@@ -414,7 +417,7 @@ Only include a fact you can attribute to a real source URL. Output ONLY this JSO
     const resolved = await resolveSubjects({ topic: resolveSubject, niche: input.niche }).catch(() => null);
     if (resolved?.ok) {
       kind = resolved.kind;
-      candidates = resolved.candidates;
+      candidates = groundCandidates(resolved.candidates, input.topic, [...facts.map((f) => f.fact), verdictNote || ""], verdictNote || "");
     }
 
     // Log the resolution outcome so an intermittent "0 candidates" run is diagnosable. The
@@ -557,6 +560,7 @@ Rules:
 - Never include a case while noting it does not really fit. If it does not fit, omit it.
 - ONE case, ONE candidate. If the same underlying events could be named two ways (an official operation name and a nickname or a "the X affair" phrasing), return it ONCE under its canonical name, and mention the alias inside the summary. Never list the same case twice under different labels — that lets a user pick the wrong name.
 - NEVER INVENT AN OPERATION CODENAME. Do not attach an "Operation X" codename unless you are certain it is the real, documented name of this operation. A fabricated codename ("Operation Ivan", "Operation Rough Rider") is worse than none, because the user confirms it as the case identity. When you are not certain of the official codename, name the case by the PERSON and ORGANIZATION instead (e.g. "Billy Queen — ATF infiltration of the Mongols MC"), never a guessed codename.
+- KEEP THE LABEL AND SUMMARY TO WHAT YOU ARE SURE OF. You are recalling from memory with no sources, and a wrong place in the label becomes the "confirmed" identity the whole script builds on. Do NOT put a location, country, or how/where the case ENDED (captured in X, died in Y, fled to Z) in the "name" descriptor or the "summary" unless you are certain of it. A plain descriptor ("— fugitive manhunt", "— prison escape") beats a specific wrong one. The sourced research fills in the specifics later.
 - INTERNAL CONSISTENCY: the "when" range and any duration you state in the summary must agree. If "when" is 1998-2000, do not write "nearly three years"; two years and a 1998-2000 range must match. Get the duration and the dates consistent before returning.
 - DATES: only give a "when" range you are genuinely confident is correct. A guessed range that is off by a year (1999-2001 when it was really 1998-2000) becomes the confirmed identity and misleads. If you are not sure of the exact years, return "when" as an EMPTY STRING and let the sourced facts settle the dates later. An omitted date beats a wrong one.
 - Use canonical VOCABULARY, not just canonical names. Rank and status terms are facts: "prospect", "hang-around", and "full-patch member" are distinct stages and must not be blended (never write something like "fully patched prospect"). If a person reached full membership, say full-patch member.
@@ -585,6 +589,13 @@ Output ONLY this JSON, no prose, no markdown:
     // MOVE #1: rank the event candidates by authoritative coverage and attach the
     // living-person/company guard, so the confirm card leads with the DOJ-documented case
     // and flags an uncharged individual. Scope questions (other kinds) are not ranked.
+    // ONE CASE, ONE CARD, enforced in code (seen live: "Frank Freshwaters · 1957-2015" and "Frank
+    // Freshwaters — fugitive manhunt" listed as two cases). Same distinctive anchor (surname / core
+    // entity name) = same case; keep the first (best-ranked) label.
+    if (kind === "event" && candidates.length > 1) {
+      const seenAnchors = new Set<string>();
+      candidates = candidates.filter((c: any) => { const a = (caseAnchorToken(String(c?.name || "")) || String(c?.name || "")).toLowerCase(); if (seenAnchors.has(a)) return false; seenAnchors.add(a); return true; });
+    }
     const preRank = candidates.length;
     if (kind === "event" && candidates.length) {
       candidates = await rankAndGuardCandidates(topic, candidates);
@@ -663,6 +674,11 @@ export interface DeepenResult {
   // (one run said 42 defendants, another said 16). Surfaced to the creator to
   // decide, never silently resolved by shipping whichever one came back.
   conflicts: { fact: string; source: string | null; note: string }[];
+  // KEPT facts flagged for a human double-check: a high-stakes, error-prone single-source
+  // specific (how a named person died, where/when someone was released or arrested) that no
+  // other fact corroborates. Unlike conflicts, these STAY in the script — they are shown so the
+  // creator confirms the one detail most likely to be wrong and most costly if it is.
+  verify?: { fact: string; source: string | null; note: string }[];
   // Three states the UI must never blur into one another. "no-key" means the
   // Perplexity leg could not run (prod-only key) — a service outage, NOT a case
   // with no findable facts. "no-facts" means research ran and genuinely found
@@ -687,7 +703,7 @@ export interface DeepenResult {
 // One Perplexity round: number the questions, get sourced answers, pair each answer
 // back to its question, and drop refusals-with-citations by reading the text. Pulled
 // out so retry-on-refusal can run it a second time on reformulated questions.
-async function fetchPerplexityAnswers(
+export async function fetchPerplexityAnswers(
   pkey: string,
   caseName: string,
   summary: string | undefined,
@@ -984,9 +1000,9 @@ async function reviewDeepenedFacts(
   pairs: { question: string; fact: string; source: string | null }[],
   caseSummary?: string,
   watchlist?: string[],
-): Promise<{ keep: ResearchFact[]; conflicts: DeepenResult["conflicts"] }> {
-  const keepAll = () => ({ keep: pairs.map((p) => ({ fact: p.fact, source: p.source })), conflicts: [] as DeepenResult["conflicts"] });
-  if (!pairs.length) return { keep: [], conflicts: [] };
+): Promise<{ keep: ResearchFact[]; conflicts: DeepenResult["conflicts"]; verify: DeepenResult["conflicts"] }> {
+  const keepAll = () => ({ keep: pairs.map((p) => ({ fact: p.fact, source: p.source })), conflicts: [] as DeepenResult["conflicts"], verify: [] as DeepenResult["conflicts"] });
+  if (!pairs.length) return { keep: [], conflicts: [], verify: [] };
   try {
     const msg = await anthropic().messages.create({
       model: "claude-sonnet-4-6",
@@ -1001,6 +1017,7 @@ Each item is a QUESTION that was asked and the ANSWER that came back with a cita
 - "drop": the answer refuses or does not answer ("could not verify", "no documented source"); is NON-RESPONSIVE (asks a date, answers about a different subject); states a NEGATIVE or absence (no connection exists); shows ENTITY DRIFT (silently swaps in a different operation, person, or org than the question named); or is CROSS-CASE CONTAMINATION — a well-formed fact that is actually about a DIFFERENT case, person, place, or operation than the CASE above. This is the most dangerous kind because it reads perfectly: an answer about a different undercover agent, a different infiltrator's aftermath, or the wrong chapter/city/operation must be dropped even though it is fluent and sourced. If a fact's central person, location, or operation does not match this specific case, drop it.
 - "temporal": the two answers give DIFFERENT VALUES FOR THE SAME METRIC because they describe it at DIFFERENT POINTS IN TIME, so BOTH are true — e.g. "13 officers were charged" (initial indictment) and "27 officers were charged" (after later indictments), or a casualty/arrest/damage count that grew as the case developed. This is the SINGLE MOST COMMON false conflict on a legal case: a number that rose over time is not a contradiction, it is a timeline. Use "temporal" whenever a figure differs but both figures can be true at their own moment. Put a short note naming the two moments on BOTH items (e.g. "13 at first indictment, 27 after later charges"). Both items are KEPT.
 - "conflict": this answer states an INCOMPATIBLE VALUE FOR THE SAME FACT AT THE SAME TIME as another answer in this set — e.g. one says 42 defendants and another says 16 for the same indictment, or two different dates for the same single event. Two answers about DIFFERENT aspects (one about how many were indicted, one about whether the case was later dismissed on appeal) are NOT a conflict; they are both keepers. And a figure that simply GREW OVER TIME is "temporal", NOT "conflict". Only use "conflict" when the two answers cannot both be true at any point in time. When you do, put the SAME note on BOTH items.
+- "verify": KEEP the fact, but flag it. Use this ONLY for a HIGH-STAKES, EASILY-CONFUSED specific that NO OTHER item here corroborates AND that is a known error-prone class: (a) HOW a named person died or was injured (shot vs beaten vs stabbed), or (b) WHERE or WHEN a person was released, arrested, held, or where a key event happened (released in Miami vs Algeria). These are the details that are most often reported wrong and are most damaging when wrong. Do not "verify" ordinary figures, dates, or well-corroborated facts — cap yourself to at most the 2 or 3 riskiest single-source claims of these two kinds. The "note" is a short "Double-check: <what to confirm>" phrase.
 - "keep": a specific, responsive fact safe to read on camera. This is the default; most items should be "keep".
 
 Be strict about drops, but do not invent conflicts. If two facts are simply about different things, keep them both. If they differ only because time passed, that is "temporal", not "conflict".
@@ -1019,6 +1036,7 @@ Output ONLY a JSON array, no prose: [{"i":1,"status":"keep|drop|conflict|tempora
     if (!Array.isArray(arr)) return keepAll();
     const keep: ResearchFact[] = [];
     const conflicts: DeepenResult["conflicts"] = [];
+    const verify: DeepenResult["conflicts"] = [];
     for (const v of arr) {
       const i = Number(v?.i) - 1;
       if (!Number.isInteger(i) || i < 0 || i >= pairs.length) continue;
@@ -1043,6 +1061,12 @@ Output ONLY a JSON array, no prose: [{"i":1,"status":"keep|drop|conflict|tempora
         keep.push({ fact: qualifier && !p.fact.includes(note) ? `${p.fact}${qualifier}` : p.fact, source: p.source });
       } else if (status === "conflict" && !selfConsistent) {
         conflicts.push({ fact: p.fact, source: p.source, note: leaked ? "Sources give different figures for this detail." : note });
+      } else if (status === "verify") {
+        // KEPT in the script, but surfaced in a separate "double-check" list (NOT the
+        // sources-disagree list): a high-stakes single-source specific (cause of death,
+        // release/custody location) that no sibling corroborates.
+        keep.push({ fact: p.fact, source: p.source });
+        verify.push({ fact: p.fact, source: p.source, note: leaked || !note ? "Confirm this detail against the source before publishing." : (/^(double-?check|confirm)/i.test(note) ? note : `Double-check: ${note}`) });
       } else {
         keep.push({ fact: p.fact, source: p.source });
       }
@@ -1050,8 +1074,318 @@ Output ONLY a JSON array, no prose: [{"i":1,"status":"keep|drop|conflict|tempora
     // A malformed judgement that kept nothing is more likely a parse miss than a
     // real "everything is bad", so fall back to the deterministically-filtered set.
     if (!keep.length && !conflicts.length) return keepAll();
-    return { keep, conflicts };
+    return { keep, conflicts, verify };
   } catch { return keepAll(); }
+}
+
+// FINAL-SET RESOLUTION. The per-round review only sees ONE fetch round's answers, but the
+// returned set is a UNION of rounds + the accumulated library + cache — so a $500k ransom from
+// round A and a $1M ransom from round B both survive. Older builds FLAGGED these and made the
+// creator decide; that is the opposite of what the product promises — a script you trust the way
+// you trust a good answer, with no second-guessing. So this pass DECIDES. It runs ONCE over the
+// FINAL facts, finds every same-metric contradiction, picks the correct value using (a) source
+// authority — contemporary primary reporting and official/court records outrank a lone secondary
+// page — (b) cross-source consensus, and (c) known facts of this documented case, then returns the
+// 1-based indices of the WRONG facts to DROP. It never invents a value and never touches a fact
+// that has no better-supported rival, so every fact that ships is still exactly what its cited
+// source says — the set is just made self-consistent, and the loser of each conflict is removed.
+// DETERMINISTIC numeric-conflict detector. An LLM asked to both FIND and RESOLVE conflicts across a
+// 30-fact set is unreliable at the FIND half — at temp 0 it caught 4 conflicts one run and 0 the next
+// on near-identical sets, silently skipping an obvious "17 years vs 17½ years". So detection is done
+// in code (reliable every run) and only the JUDGMENT (which value wins / are these different
+// measurements) is left to the LLM. This extracts comparable figures — money, durations in years,
+// heights — tags each with a measurement CONTEXT (a prison sentence vs time as a fugitive; a fraud
+// total vs one financing tranche) so genuinely different measurements never cluster together, and
+// returns candidate clusters (same category+context, ≥2 distinct values across ≥2 facts) for the LLM
+// to adjudicate. It NEVER drops on its own — it only guarantees the LLM SEES every numeric candidate.
+const NUM_MULT: Record<string, number> = { thousand: 1e3, k: 1e3, million: 1e6, m: 1e6, billion: 1e9, bn: 1e9 };
+const DECADE_WORD: Record<string, number> = { one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10 };
+const MONTH_NUM: Record<string, number> = { january: 1, february: 2, march: 3, april: 4, may: 5, june: 6, july: 7, august: 8, september: 9, october: 10, november: 11, december: 12, jan: 1, feb: 2, mar: 3, apr: 4, jun: 6, jul: 7, aug: 8, sep: 9, sept: 9, oct: 10, nov: 11, dec: 12 };
+type NumSignal = { cat: "money" | "dur" | "height" | "date"; ctx: string; value: number; raw: string };
+
+export function extractNumericSignals(fact: string): NumSignal[] {
+  const out: NumSignal[] = [];
+  const f = fact, low = f.toLowerCase();
+  const tag = (sets: [string, RegExp][]) => { for (const [n, re] of sets) if (re.test(low)) return n; return "?"; };
+  const moneyCtx = () => tag([
+    ["tranche", /project star|financing|equipment financ|one program|tranche/],
+    ["recovered", /trac(e|ed|ing)|frozen|froze|recover|seized|invest|stocks?/],
+    ["total", /defraud|fraud|scheme|lend|loan|stole|stolen|ransom|demand|extort|out of|cost|lost|purchas/],
+  ]);
+  const durCtx = () => tag([
+    ["sentence", /sentenc|prison|behind bars|\bterm\b/],
+    ["fugitive", /fugitive|\blam\b|fled|flee|flew|evad|disappear|manhunt|on the run|at large|decades? as|years as|ever since/],
+    ["age", /-year-old|years old|\baged\b|\bborn\b/],
+  ]);
+  let m: RegExpExecArray | null;
+  const moneyRe = /\$\s?([\d,]+(?:\.\d+)?)\s*(billion|million|thousand|bn|m|k)?\b/gi;
+  while ((m = moneyRe.exec(f))) { let v = parseFloat(m[1].replace(/,/g, "")); const u = (m[2] || "").toLowerCase(); if (u && NUM_MULT[u]) v *= NUM_MULT[u]; if (v >= 1000) out.push({ cat: "money", ctx: moneyCtx(), value: v, raw: m[0].trim() }); }
+  const moneyWordRe = /([\d,]+(?:\.\d+)?)\s*(billion|million|thousand)\s+dollars/gi;
+  while ((m = moneyWordRe.exec(f))) out.push({ cat: "money", ctx: moneyCtx(), value: parseFloat(m[1].replace(/,/g, "")) * NUM_MULT[m[2].toLowerCase()], raw: m[0].trim() });
+  const rangeSpans: [number, number][] = [];
+  const rangeRe = /\b\d{1,3}\s+to\s+\d{1,3}\s+years?\b/gi;
+  while ((m = rangeRe.exec(f))) rangeSpans.push([m.index, m.index + m[0].length]);
+  const inRange = (i: number) => rangeSpans.some(([a, b]) => i >= a && i < b);
+  const yrRe = /\b(\d{1,3})\s*(½|1\s*\/\s*2|\.5)?\s*[- ]?\s*years?\b/gi;
+  while ((m = yrRe.exec(f))) { if (inRange(m.index)) continue; if (/^[- ]?old\b/i.test(f.slice(m.index + m[0].length, m.index + m[0].length + 5))) continue; /* an AGE ("24-year-old"), not a duration */ const n = parseInt(m[1], 10); if (n >= 1000) continue; out.push({ cat: "dur", ctx: durCtx(), value: n + (m[2] ? 0.5 : 0), raw: m[0].trim() }); }
+  const decRe = /\b(\d{1,2}|one|two|three|four|five|six|seven|eight|nine|ten)\s+decades?\b/gi;
+  while ((m = decRe.exec(f))) { const n = /\d/.test(m[1]) ? parseInt(m[1], 10) : DECADE_WORD[m[1].toLowerCase()]; const c = durCtx(); out.push({ cat: "dur", ctx: c === "?" ? "fugitive" : c, value: n * 10, raw: m[0].trim() }); }
+  const htRe = /(\d)\s*(?:feet|foot|ft|')\s*(\d{1,2})\s*(?:inches|inch|in|")?/gi;
+  while ((m = htRe.exec(f))) out.push({ cat: "height", ctx: "height", value: parseInt(m[1], 10) * 12 + parseInt(m[2], 10), raw: m[0].trim() });
+  // DATES keyed by YEAR-MONTH, value = DAY. Only day-level dates cluster, and only within the same
+  // year+month — that is exactly the subtle "same event, one day off" slip the LLM misses (Feb 4 vs
+  // Feb 5; Sep 26 vs 28). Gross date conflicts a month or year apart are DIFFERENT year-month buckets,
+  // so they never cluster here — the LLM's own scan already catches those reliably (Jul 31 vs Aug 31).
+  const dMdy = /\b([A-Za-z]{3,9})\.?\s+(\d{1,2}),?\s+(\d{4})\b/g;
+  while ((m = dMdy.exec(f))) { const mo = MONTH_NUM[m[1].toLowerCase()]; if (!mo) continue; out.push({ cat: "date", ctx: `${m[3]}-${String(mo).padStart(2, "0")}`, value: parseInt(m[2], 10), raw: m[0].trim() }); }
+  const dDmy = /\b(\d{1,2})\s+([A-Za-z]{3,9})\.?\s+(\d{4})\b/g;
+  while ((m = dDmy.exec(f))) { const mo = MONTH_NUM[m[2].toLowerCase()]; if (!mo) continue; out.push({ cat: "date", ctx: `${m[3]}-${String(mo).padStart(2, "0")}`, value: parseInt(m[1], 10), raw: m[0].trim() }); }
+  return out;
+}
+
+// Candidate clusters: same category+context, ≥2 distinct VALUES across ≥2 distinct FACTS (so two
+// different figures inside ONE fact — "$200M traced, of which $180M invested" — never form a cluster).
+export function detectNumericClusters(facts: ResearchFact[]): { label: string; members: { i: number; value: number; raw: string }[] }[] {
+  const groups = new Map<string, { i: number; value: number; raw: string }[]>();
+  facts.forEach((f, i) => { for (const s of extractNumericSignals(f.fact)) { const k = `${s.cat}:${s.ctx}`; if (!groups.has(k)) groups.set(k, []); groups.get(k)!.push({ i: i + 1, value: s.value, raw: s.raw }); } });
+  const clusters: { label: string; members: { i: number; value: number; raw: string }[] }[] = [];
+  for (const [key, members] of groups) {
+    if (new Set(members.map((x) => x.value)).size < 2) continue;
+    if (new Set(members.map((x) => x.i)).size < 2) continue;
+    const seen = new Set<number>();
+    const mem = members.filter((x) => (seen.has(x.i) ? false : (seen.add(x.i), true)));
+    clusters.push({ label: key, members: mem });
+  }
+  return clusters;
+}
+
+export async function resolveFinalConflicts(
+  caseName: string,
+  facts: ResearchFact[],
+  summary?: string,
+): Promise<{ drop: number[]; decisions: { keep: string; dropped: string; why: string }[] }> {
+  const empty = { drop: [] as number[], decisions: [] as { keep: string; dropped: string; why: string }[] };
+  if (!Array.isArray(facts) || facts.length < 2) return empty;
+  // Deterministic recall: hand the LLM the numeric candidate clusters so it can never silently skip
+  // an obvious rounding/contradiction. Empty is fine — the LLM still free-scans for non-numeric ones.
+  const clusters = detectNumericClusters(facts);
+  const clusterBlock = clusters.length
+    ? `\nDETECTED NUMERIC CANDIDATES (these facts state the SAME kind of measurement with different values — resolve EACH: if it is one figure rounded/mis-stated, keep the most precise/consensus value and drop the other(s); if they are genuinely DIFFERENT measurements, leave them all):\n${clusters.map((c) => `- ${c.label}: ${c.members.map((mm) => `fact ${mm.i} = "${mm.raw}"`).join(" vs ")}`).join("\n")}\n`
+    : "";
+  const placeP = findPlaceConflicts(facts).catch(() => ({ drop: [] as number[], why: [] as string[] })); // parallel, own job
+  // EVERY exit merges the place-conflict result: the main resolver's reply is sometimes unparseable,
+  // and an early return there was silently discarding a verified place drop.
+  const mergePlace = async (base: number[], decisions: { keep: string; dropped: string; why: string }[]) => {
+    const set = new Set(base);
+    const place = await placeP;
+    for (const d of place.drop) if (!set.has(d)) { set.add(d); decisions.push({ keep: "", dropped: facts[d - 1]?.fact.slice(0, 60) || "", why: place.why.join(" | ").slice(0, 160) }); }
+    const cap = Math.floor(facts.length / 3);
+    return { drop: [...set].sort((a, b) => a - b).slice(0, cap), decisions };
+  };
+  try {
+    const msg = await anthropic().messages.create({
+      model: "claude-sonnet-4-6",
+      max_tokens: 900,
+      temperature: 0,
+      messages: [{
+        role: "user",
+        content: `You are the final fact-checking editor for a documentary about this real, documented case. Your job is to make the fact set SELF-CONSISTENT so the script never states two different numbers for the same thing. You DECIDE — you do not defer.
+CASE: ${caseName}${summary ? `\nWHAT THIS CASE IS: ${summary}` : ""}
+
+FACTS (index. text — source domain):
+${facts.map((f, i) => `${i + 1}. ${f.fact}${f.source ? ` — ${(() => { try { return new URL(f.source).hostname.replace(/^www\./, ""); } catch { return f.source; } })()}` : ""}`).join("\n")}
+${clusterBlock}
+Find SAME-METRIC CONFLICTS — TWO kinds:
+(A) INCOMPATIBLE values for the SAME thing where one is WRONG — a ransom stated as $500,000 in one and $1 million in another; one single event dated July 31 in one and August 31 in another; an arrest on Sep 26 vs Sep 28; a duration of "over 23 years" vs "more than four decades". Drop the wrong value.
+(C) CONFLICTING PLACE for the SAME event — one fact says the escape/arrest/death happened at place X, another says place Y, and both cannot be true ("disappeared from the Ohio State Reformatory in Mansfield" vs "moved to an honor camp near Sandusky and was reported missing"). Keep the version MORE independent sources agree on, and among equals the more SPECIFIC one (the camp he actually walked away from, not the institution he was first sent to). Drop the other. A place mentioned only as an EARLIER step ("imprisoned at Mansfield, then moved to Sandusky") is NOT a conflict.
+(B) NEAR-EQUAL ROUNDING of the SAME measurement — the SAME underlying figure written to different precision: "17 years" vs "17½ years"; "about 5 feet 10 inches" vs "5 feet 11 inches"; "more than 40 years" vs "43 years". Keep the most precise and drop the rounded DUPLICATE(S) — ALL the facts that merely restate the rounded figure — so the set states that measurement once.
+
+DECIDE using, in order: (1) Source authority — contemporary primary reporting, official/court/agency records, and major outlets outrank a lone encyclopedia page or obscure source; a general Wikipedia article often carries a transcription slip a specialized source does not. (2) Cross-source consensus — the value most independent sources in THIS list agree on. (3) Your own knowledge of this documented case.
+
+HARD RULES — obey exactly, they protect accuracy:
+- CONSENSUS BEATS PRECISION. NEVER drop a value that MORE independent sources agree on in favor of a lone differing figure, even if the lone one looks more precise or specific. (E.g. if five sources say "$350 million" and one says "$323.5 million", the $350M is the total to keep — do NOT switch to the lone figure.)
+- DIFFERENT MEASUREMENTS ARE NOT A CONFLICT. Two figures that differ by more than simple rounding may be DIFFERENT things — a total vs one tranche, an amount demanded vs recovered, a charge vs a conviction count. If they COULD be different measurements, LEAVE BOTH. ("$350 million" total vs "$323.5 million" for one financing program = different, leave both.)
+- A figure that legitimately GREW over time, or two genuinely different events, is NOT a conflict.
+- UNIQUE INFO IS PROTECTED. Do NOT drop a fact that carries important information found nowhere else, even if it repeats a rounded number. BUT a fact that merely RE-SUMMARIZES facts already present (e.g. a wanted-poster line restating an amount + sentence that other facts already state) is NOT unique — collapse its rounded figure too.
+- Never drop BOTH sides of any conflict — one value must always survive. If you cannot tell which is right, drop nothing for that conflict.
+Then list the index(es) of the LOSING fact(s) to drop.
+
+Output ONLY JSON:
+{"resolutions":[{"drop":[22],"keep":31,"why":"July 31 1972 is the contemporary/consensus date; the general-article line mis-dated it Aug 31"}]}`,
+      }],
+    });
+    const text = msg.content[0]?.type === "text" ? msg.content[0].text : "";
+    const m = text.match(/\{[\s\S]*\}/);
+    const parsed = m ? JSON.parse(m[0]) : null;
+    if (!parsed) return mergePlace([], []);
+    const valid = (n: any) => Number.isInteger(n) && n >= 1 && n <= facts.length;
+    const dropSet = new Set<number>();
+    const decisions: { keep: string; dropped: string; why: string }[] = [];
+    for (const r of Array.isArray(parsed.resolutions) ? parsed.resolutions : []) {
+      const drops = (Array.isArray(r?.drop) ? r.drop : []).filter(valid) as number[];
+      if (!drops.length) continue;
+      // SAFETY: never let a resolution empty out a metric — at least one winner must survive. The
+      // model returns "keep" as EITHER a single index OR an array of corroborating indices, so accept
+      // both shapes (an earlier build required a single int and silently skipped every array-shaped
+      // resolution, which is why nothing was ever dropped). Any valid keep index that is NOT itself in
+      // the drop list proves a survivor exists; drops that overlap keep are removed defensively.
+      const keepList = (Array.isArray(r?.keep) ? r.keep : [r?.keep]).filter(valid) as number[];
+      const survivor = keepList.some((k) => !drops.includes(k));
+      if (!survivor) continue;
+      // SELF-CONTRADICTING RESOLUTION: the model sometimes explains that two values measure DIFFERENT
+      // things and then drops one anyway (seen live: "two decades in Melbourne" vs "56 years as a
+      // fugitive" -> "These measure different..." -> dropped). If its own reason says it isn't a
+      // conflict, the drop is refused.
+      const why = String(r?.why || "");
+      if (/measure (?:\w+ )?different|different (?:things|measurements?|quantit|periods?|spans?|events?)|not (?:a|an actual|really a) conflict|not conflicting|both (?:can be|are) (?:true|correct)|compatible/i.test(why)) continue;
+      for (const d of drops) if (!keepList.includes(d)) dropSet.add(d);
+      const keptLabel = keepList.find((k) => !drops.includes(k));
+      decisions.push({ keep: keptLabel ? facts[keptLabel - 1].fact.slice(0, 120) : "", dropped: drops.map((d) => facts[d - 1]?.fact.slice(0, 60)).filter(Boolean).join(" | "), why: typeof r?.why === "string" ? r.why.slice(0, 160) : "resolved conflict" });
+    }
+    // Hard cap: never drop more than a third of the set, no matter what the model returns — a runaway
+    // resolution that guts the research is worse than a little inconsistency.
+    return mergePlace([...dropSet], decisions);
+  } catch { return mergePlace([], []); }
+}
+
+// Persist a resolution: the losing facts must not just be filtered out of THIS response — they
+// have to leave the topic's library, or loadLibrary() on the client re-reads them and every
+// future script pulls them back in. Dismissal (reversible, id-keyed) is exactly the mechanism the
+// user's own "hide" uses, so a resolver-dropped loser behaves identically to one the user hid: it
+// stays stored but is filtered from activeFacts forever. Best-effort; a failure just means the
+// response is still resolved even if the library heals on the next run.
+// PLACE CONFLICTS — their own check. The general resolver was told about place conflicts (type C) and
+// caught one 0 of 3 runs (it juggles many conflict types; the rare one loses). Same fix as voice and
+// fact-checking: one job, then code verifies the answer. A drop is accepted only if the dropped fact
+// literally names the wrong place, a kept fact literally names the right one, and the kept place has
+// at least as many supporting facts as the dropped one (consensus).
+export async function findPlaceConflicts(facts: { fact: string }[]): Promise<{ drop: number[]; why: string[] }> {
+  const none = { drop: [] as number[], why: [] as string[] };
+  if (facts.length < 4) return none;
+  try {
+    const msg = await anthropic().messages.create({
+      model: "claude-sonnet-4-6", max_tokens: 700, temperature: 0,
+      system: 'You find facts that place the SAME single event at two DIFFERENT locations (e.g. one fact says he escaped from Prison X, another says he walked away from Camp Y). A place mentioned as an EARLIER step ("sent to X, then moved to Y, where he went missing") is NOT a conflict. For each real conflict give the place that MORE facts support (and among equals the more specific one), the facts that support it, and the facts stating the other place. Output ONLY JSON: {"conflicts":[{"event":"...","keepPlace":"exact words from the facts","keep":[n,...],"dropPlace":"exact words from the facts","drop":[n,...]}]} or {"conflicts":[]}.',
+      messages: [{ role: "user", content: facts.map((f, i) => `${i + 1}. ${f.fact}`).join("\n") }],
+    });
+    const t = msg.content[0]?.type === "text" ? msg.content[0].text : "";
+    const j = JSON.parse(t.slice(t.indexOf("{"), t.lastIndexOf("}") + 1));
+    const has = (n: number, place: string) => !!facts[n - 1] && facts[n - 1].fact.toLowerCase().includes(String(place).toLowerCase());
+    const drop: number[] = [], why: string[] = [];
+    for (const c of Array.isArray(j?.conflicts) ? j.conflicts : []) {
+      const kp = String(c?.keepPlace || "").trim(), dp = String(c?.dropPlace || "").trim();
+      if (kp.length < 3 || dp.length < 3 || kp.toLowerCase() === dp.toLowerCase()) continue;
+      const keep = (Array.isArray(c?.keep) ? c.keep : []).filter((n: number) => has(n, kp));
+      const d = (Array.isArray(c?.drop) ? c.drop : []).filter((n: number) => has(n, dp) && !has(n, kp) && !keep.includes(n));
+      if (!keep.length || !d.length || keep.length < d.length) continue;
+      drop.push(...d); why.push(`place: "${dp}" vs "${kp}" (${keep.length} fact(s) support "${kp}")`);
+    }
+    return { drop: [...new Set(drop)], why };
+  } catch { return none; }
+}
+
+// RESEARCH QUOTE CHECK. A research fact that puts words in quotation marks is claiming someone said
+// exactly that. Summaries drift (seen live: a fact said "A Florida U.S. Marshals account said ... 'the
+// longest manhunt in the history'", but the cited Guardian page says, in the REPORTER's own words,
+// "the longest successful manhunt in the history of the marshal's service": wrong speaker, dropped
+// word). For each fact with a quoted phrase of 2+ words, fetch its cited page; if the phrase is not on
+// the page, rewrite the fact FROM the page passage (verbatim words, correct speaker), or drop it if
+// the page doesn't support it. Unreadable page -> left as is (nothing to check against).
+const QNORM = (t: string) => t.toLowerCase().replace(/[‘’“”"'.,!?;:—–()-]/g, " ").replace(/\s+/g, " ").trim();
+// Quote FORMATTING cleanup (seen live: a correction saved as  according to Major Tod Goodyear,
+// "he said he hadn't seen that guy in a long time," before admitting "'You got me.'"  -> a stray
+// "he said" inside the speaker's own quote and quotes nested in quotes, which a card then copied).
+export function cleanQuoteFormatting(fact: string): string {
+  return fact
+    .replace(/[“"]\s*[‘']([^‘’'"“”]+?)[’']\s*[”"]/g, '"$1"')
+    .replace(/[‘']\s*[“"]([^“”"]+?)[”"]\s*[’']/g, '"$1"')
+    .replace(/([“"])\s*(?:he|she|they)\s+said\s+(?=\S+\s+\S+)/gi, "$1");
+}
+export function quotedPhrases(fact: string): string[] {
+  return [...fact.matchAll(/[“"]([^“”"]{6,200})[”"]|(?:^|[\s(])'([^']{6,200})'(?=[\s.,;:)]|$)/g)]
+    .map((m) => (m[1] || m[2] || "").trim())
+    .filter((q) => q.split(/\s+/).length >= 2);
+}
+function passageAround(page: string, phrase: string): string {
+  const words = QNORM(phrase).split(" ").filter((w) => w.length > 3);
+  const low = page.toLowerCase();
+  let best = -1, bestScore = 0;
+  for (let i = 0; i < low.length; i += 200) {
+    const win = low.slice(i, i + 600);
+    const score = words.filter((w) => win.includes(w)).length;
+    if (score > bestScore) { bestScore = score; best = i; }
+  }
+  if (best < 0 || bestScore < Math.min(2, words.length)) return "";
+  return page.slice(Math.max(0, best - 350), best + 950);
+}
+export async function verifyFactQuotes<T extends { fact: string; source?: string | null }>(facts: T[], deadlineMs: number, knownPages?: Map<string, string>): Promise<{ replace: { from: T; to: T | null }[]; checked: number }> {
+  const candidates = facts.filter((f) => f.source && /^https?:/.test(String(f.source)) && quotedPhrases(f.fact).length).slice(0, 10);
+  if (!candidates.length) return { replace: [], checked: 0 };
+  const pages = new Map<string, Promise<string>>();
+  const pageText = (url: string) => {
+    // Pages the caller already read (e.g. a feature article fetched via the Internet Archive because the
+    // live site blocks bots) are used as-is; re-fetching them directly would get the block page.
+    if (!pages.has(url) && knownPages?.has(url)) pages.set(url, Promise.resolve(knownPages.get(url) as string));
+    if (!pages.has(url)) pages.set(url, fetchReadableDoc(url, deadlineMs).then((d) => (d && !d.isPdf ? String(d.text || "") : "")).catch(() => ""));
+    return pages.get(url)!;
+  };
+  // Other pages already cited in this research: a quote credited to the WRONG article (seen live: the
+  // photo quote is on a CBS page, not the ABC7 page cited) is found there instead of being lost.
+  const otherUrls = [...new Set(facts.map((f) => String(f.source || "")).filter((u) => /^https?:/.test(u)))].slice(0, 12);
+  const unquote = (t: string) => t.replace(/[“"]([^“”"]{6,200})[”"]/g, "$1").replace(/(^|[\s(])'([^']{6,200})'(?=[\s.,;:)]|$)/g, "$1$2");
+  const results = await Promise.all(candidates.map(async (f) => {
+    const page = await pageText(String(f.source));
+    if (page.length < 300) return null; // unreadable: can't verify, leave it
+    const missing = quotedPhrases(f.fact).filter((q) => !QNORM(page).includes(QNORM(q)));
+    if (!missing.length) {
+      // Quotes are real: only fix messy FORMATTING if any (and the cleaned quotes must still be on the page).
+      const tidy = cleanQuoteFormatting(f.fact);
+      const tidyOk = quotedPhrases(tidy).every((q) => QNORM(page).includes(QNORM(q)));
+      return tidy !== f.fact && tidyOk ? { from: f, to: { ...f, fact: tidy } as T } : null;
+    }
+    // Find the page that actually carries this passage: the cited one first, then the others.
+    let usePage = "", useUrl = "", passage = passageAround(page, missing[0]);
+    if (passage) { usePage = page; useUrl = String(f.source); } // the cited page discusses it: correct against it
+    if (!usePage) {
+      for (const u of otherUrls) {
+        if (u === f.source) continue;
+        const pg = await pageText(u);
+        if (pg.length > 300 && QNORM(pg).includes(QNORM(missing[0]))) { usePage = pg; useUrl = u; passage = passageAround(pg, missing[0]); break; }
+      }
+    }
+    // Nowhere in the research: keep the detail, drop the claim of exact words.
+    if (!usePage || !passage) {
+      const plain = unquote(f.fact);
+      return plain !== f.fact ? { from: f, to: { ...f, fact: plain } as T } : null;
+    }
+    const pageN = QNORM(usePage);
+    try {
+      const msg = await anthropic().messages.create({
+        model: "claude-sonnet-4-6", max_tokens: 400, temperature: 0,
+        system: 'You correct one research fact against its source passage. The fact quotes words the passage does not contain verbatim. Rewrite the fact so that: (1) any words in quotation marks are copied EXACTLY from the passage; (2) they are attributed to whoever the passage says said them, and if they are the writer\'s or publication\'s own words, attribute them to the publication (e.g. "The Guardian described it as..."), never to an agency or person who did not say them; (3) quote ONLY the spoken words, once, in plain double quotes: never nest quotes inside quotes and never put \"he said\" inside a quote; (4) nothing else is added. If the passage CONTRADICTS the fact, output {"drop":true}. Output ONLY JSON: {"fact":"..."} or {"drop":true}.',
+        messages: [{ role: "user", content: `SOURCE URL: ${useUrl}\n\nFACT:\n${f.fact}\n\nSOURCE PASSAGE:\n<<<\n${passage}\n>>>` }],
+      });
+      const t = msg.content[0]?.type === "text" ? msg.content[0].text : "";
+      const j = JSON.parse(t.slice(t.indexOf("{"), t.lastIndexOf("}") + 1));
+      if (j?.drop) return { from: f, to: null as T | null };
+      const fixed = typeof j?.fact === "string" ? cleanQuoteFormatting(j.fact.trim()) : "";
+      if (!fixed || quotedPhrases(fixed).some((q) => !pageN.includes(QNORM(q)))) return { from: f, to: { ...f, fact: unquote(f.fact) } as T };
+      return { from: f, to: { ...f, fact: fixed, source: useUrl } as T };
+    } catch { return null; }
+  }));
+  const replace = results.filter((r): r is { from: T; to: T | null } => !!r);
+  return { replace, checked: candidates.length };
+}
+
+async function dismissResolvedLosers(userId: string | undefined, topic: string, losers: ResearchFact[]): Promise<void> {
+  if (!userId || !topic || !losers.length) return;
+  try {
+    const lib = await getLibrary(userId, topic);
+    const add = losers.map((f) => factId(f.fact)).filter(Boolean);
+    if (!add.length) return;
+    const next = Array.from(new Set([...lib.dismissed, ...add]));
+    if (next.length !== lib.dismissed.length) await setDismissed(userId, topic, next);
+  } catch { /* best effort */ }
 }
 
 /**
@@ -1075,6 +1409,13 @@ Output ONLY a JSON array, no prose: [{"i":1,"status":"keep|drop|conflict|tempora
 // from ACCRA", "the study examined…", "deflated by…"). This MUST run at the deepen RETURN path, not
 // only at extraction: the cache unions facts across brief versions (getBestAcrossVersions), so junk
 // cached under an older version resurfaces on every later run unless it is stripped on the way out.
+// FILE/LANDING-PAGE METADATA junk — TOPIC-AGNOSTIC, applies to EVENT cases too (not just explainer).
+// A primary-source URL that points at a document LANDING page (e.g. an FBI Vault "/view" listing)
+// rather than the document itself yields "facts" about the FILE — its size in kB/bytes, that it is a
+// PDF, its part number, that it lives in a records repository. These are never facts about the case.
+// The Wayback fallback can now recover such landing pages, so this must strip their metadata for all
+// topics or that noise ships (O.J. Vault run put 7 of these in the set).
+export const FILE_META_JUNK_RE = /\b\d[\d,]*\s*(?:kb|mb|gb|bytes)\b|available as (?:a |an )?pdf\b|pdf (?:document|file) size|hosted on\b.{0,50}?(?:vault|repository)|\bcategorized under\b|\brecords system\b|\bis labeled\b|\bthe (?:file|document|record|subject)\b.{0,55}?\b(?:is (?:identified|available|categorized|hosted|listed))/i;
 const PHENOM_JUNK_RE = /(telephone number|is located at|is produced by|office of prices|federal center|scheduled to be released|next release|news release headline|is described as a measure|indexes are available|average price data for select|monthly labor review|beyond the numbers|payroll employment was|unemployment rate was|productivity was|employment cost index|import price index|export price index|producer price index|12-month percent change in .*\d{4}\s*:|rose \d[\d.]* percent in .*\d{4}|rose \d[\d.]* percent over the last 12 months|percentage change data presented|\(preliminary\) in |index for all items less food and energy|were obtained from|was obtained from|were drawn from|data were obtained|the study (?:examined|used)|outcome variable|named in the survey|price index was computed|deflated by|weighted based on|expenditure shares|census \d{4}|\bSIC code\b|random effects model)/i;
 
 function stripPhenomenonJunk(facts: ResearchFact[]): { kept: ResearchFact[]; dropped: number } {
@@ -1107,6 +1448,162 @@ function htmlToText(html: string): string {
     .replace(/\s+/g, " ")
     .trim();
 }
+// Fetch and normalize ONE document to readable HTML text or PDF bytes. Returns null (with a
+// telemetry line) when the document can't be read, so the caller can try a fallback or move on.
+// `via` labels the attempt ("direct" vs "wayback") in the logs.
+type ReadableDoc = { isPdf: boolean; text: string; pdfB64: string; docBytes: number };
+async function fetchReadableDoc(url: string, deadlineMs: number, via: "direct" | "wayback" = "direct"): Promise<ReadableDoc | null> {
+  if (Date.now() > deadlineMs) return null;
+  try {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 25_000);
+    // A FULL browser User-Agent is required: .gov hosts (justice.gov confirmed) return 403 to a
+    // bot-style UA but 200 to a real browser UA.
+    const res = await fetch(url, {
+      signal: ctrl.signal,
+      headers: {
+        "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+        "accept": "application/pdf,text/html,application/xhtml+xml,*/*;q=0.8",
+        "accept-language": "en-US,en;q=0.9",
+      },
+    });
+    clearTimeout(timer);
+    if (!res.ok) { console.error(`[primary-doc] fetch_failed ${JSON.stringify({ url, via, status: res.status, reason: "http_error", source_type: "government_doc" })}`); return null; }
+    const ctype = res.headers.get("content-type") || "";
+    const isPdf = /pdf/i.test(ctype) || /\.pdf(\?|$)/i.test(url);
+    if (isPdf) {
+      const buf = Buffer.from(await res.arrayBuffer());
+      if (buf.length > 24 * 1024 * 1024) { console.error(`[primary-doc] fetch_failed ${JSON.stringify({ url, via, reason: "pdf_too_large", bytes: buf.length, source_type: "government_pdf" })}`); return null; }
+      return { isPdf: true, text: "", pdfB64: buf.toString("base64"), docBytes: buf.length };
+    }
+    if (/octet-stream|application\/(?!pdf)/i.test(ctype)) { console.error(`[primary-doc] fetch_failed ${JSON.stringify({ url, via, reason: "unreadable_binary", content_type: ctype, source_type: "government_doc" })}`); return null; }
+    const text = htmlToText(await res.text()).slice(0, 50_000);
+    if (text.length < 400) { console.error(`[primary-doc] fetch_failed ${JSON.stringify({ url, via, reason: "empty_after_htmlstrip", chars: text.length, source_type: "government_doc" })}`); return null; }
+    return { isPdf: false, text, pdfB64: "", docBytes: text.length };
+  } catch (e) {
+    console.error(`[primary-doc] fetch_failed ${JSON.stringify({ url, via, reason: "fetch_threw", detail: (e as any)?.message, source_type: "government_doc" })}`);
+    return null;
+  }
+}
+
+// WAYBACK FALLBACK. Government primary sources (usmarshals.gov, some justice.gov pages) increasingly
+// return 403/anti-bot to any automated request even with a browser UA, so the ORIGINAL wording never
+// gets read and we lean on secondary coverage. The Internet Archive keeps public snapshots of those
+// same pages. When the direct fetch fails, ask the availability API for the closest snapshot and read
+// its RAW capture (the `id_` form returns the original resource without the Wayback toolbar/rewrites),
+// so the primary document's exact language is recovered instead of lost.
+async function fetchViaWayback(url: string, deadlineMs: number): Promise<ReadableDoc | null> {
+  if (Date.now() > deadlineMs) return null;
+  // Direct latest-snapshot form: "/web/2id_/<url>" redirects to the capture nearest to now and the
+  // "id_" suffix serves the ORIGINAL bytes (PDF or clean HTML) with no Wayback toolbar or link
+  // rewriting. This avoids the availability API, which rate-limits (429) under load. Some pages were
+  // only ever archived AS a 403/"Access Denied" capture — fetchReadableDoc returns null for those,
+  // which is an honest miss (nothing readable exists), not an error.
+  const raw = `https://web.archive.org/web/2id_/${url}`;
+  const doc = await fetchReadableDoc(raw, deadlineMs, "wayback");
+  console.log(`[primary-doc] ${doc ? "wayback_ok" : "wayback_miss"} ${JSON.stringify({ url, kind: doc?.isPdf ? "pdf" : doc ? "html" : "none" })}`);
+  return doc;
+}
+
+// CASE LABEL CHECK. The case name/descriptor and summary come from resolveSubjects, which asks Claude
+// FROM MEMORY (no sources) which case a topic is about. It can mis-recall (seen live: "Frank Freshwaters
+// — Ohio fugitive captured in Morocco"; he was arrested in Florida), and that label then fed the
+// grounding line, the angle prompt, the angle checker, and the generator's source block, unchecked.
+// Once sourced facts exist, every proper noun and year in the label must appear somewhere in them:
+// a descriptor with ANY unsupported term is dropped (the bare case name stays), and each summary
+// sentence with one is dropped. Deterministic: no model judges this.
+export function unsupportedLabelTerms(text: string, factsText: string): string[] {
+  const hay = factsText.toLowerCase();
+  const words = String(text || "").match(/\b(?:[A-Z][a-zA-Z'’]{2,}|\d{4})\b/g) || [];
+  const vague = (String(text || "").match(/\b(?:abroad|overseas|foreign|internationally|another country|out of the country|outside the (?:u\.?s\.?|united states|country))\b/gi) || []);
+  return [...new Set([...words, ...vague])].filter((w) => !hay.includes(w.toLowerCase().replace(/['’]s$/, "")));
+}
+export function sanitizeCaseLabel(name: string, summary: string, facts: string[]): { name: string; summary: string; removed: string[] } {
+  const factsText = facts.join("\n");
+  if (!factsText.trim()) return { name, summary, removed: [] };
+  const removed: string[] = [];
+  const [entity, ...rest] = String(name || "").split(/\s+[—–]\s+/);
+  let outName = name;
+  const descriptor = rest.join(" — ");
+  if (descriptor) {
+    const bad = unsupportedLabelTerms(descriptor, factsText);
+    if (bad.length) { outName = entity; removed.push(...bad); }
+  }
+  // Initials ("D.B. Cooper", "U.S.") are not sentence ends: shield their dots while splitting
+  // (seen live: "D.B." split off a stray "B." that survived as the whole summary).
+  const DOT = "\u2024";
+  const shielded = String(summary || "").replace(/\b([A-Z])\.(?=\s?[A-Z][.\s])/g, `$1${DOT}`).replace(/\b([A-Z])\.(?=[A-Z]\.)/g, `$1${DOT}`);
+  const sentences = (shielded.match(/[^.!?]+[.!?]+["')\]]*|[^.!?]+$/g) || []).map((x) => x.split(DOT).join("."));
+  const kept = sentences.filter((sn) => { const bad = unsupportedLabelTerms(sn, factsText); if (bad.length) removed.push(...bad); return !bad.length; });
+  return { name: outName, summary: kept.join(" ").trim(), removed: [...new Set(removed)] };
+}
+
+// RELEVANCE GATE for mined primary documents. The URL lookup can return an UNRELATED official doc
+// (seen live: a bankruptcy opinion, Carlson v. Carlson, mined into a Frank Freshwaters fugitive case,
+// apparently because its judge is a "Frank"; 6 junk facts reached the script). A doc about the case
+// names the case's DISTINCTIVE token: the last proper-noun word of the case name (a surname or
+// a named entity's core name), never a first name. Generic words (case, scandal, fugitive...) never count.
+const ANCHOR_GENERIC = new Set(["case","scandal","fugitive","manhunt","murder","killing","heist","fraud","scheme","trial","story","escape","disappearance","death","investigation","affair","incident","crash","collapse","rise","fall","history","mystery","attack","shooting","robbery","hunt","killer","capture","arrest","united","states","america","american","federal","county","state","city","company","inc","corp","the","market","takedown","network","group","bank","road","ring","operation","gang","cartel","empire","files","papers","leak"]);
+// GROUND THE CASE CARDS. Candidates are named from model memory and the ranker can prepend a "more
+// famous" case, so a card can be about the wrong story (seen live: topic "Arthur Gerald Jones", an
+// identity-fraud fugitive found in 2011, got a D.B. Cooper card, and Jones's own card called him a
+// Cooper suspect; no source says so). (1) A short topic that is just a name keeps only cards that
+// involve that name. (2) Each card's label and summary lose any proper noun the grounded research
+// and the topic don't contain; a summary emptied that way falls back to the research note.
+export function groundCandidates<T extends { name: string; summary: string }>(cands: T[], topic: string, factTexts: string[], fallback: string): T[] {
+  const t = String(topic || "").trim();
+  const nameOnly = t.split(/\s+/).length <= 5 && (t.match(/\b[A-Z][A-Za-z'’.-]+/g) || []).length >= 2 && !/\b(?:the|how|why|what|who|when|he|she|they|his|her|a|an|of|in)\b/i.test(t);
+  const anchor = nameOnly ? caseAnchorToken(t) : null;
+  let out = anchor ? cands.filter((c) => c.name.toLowerCase().includes(anchor.toLowerCase())) : cands;
+  if (!out.length) out = cands;
+  // A "nothing found" placeholder is not a case (seen live: "Arthur Gerald Jones — identity unknown or
+  // insufficiently documented" shown beside the real case, forcing a pick). Drop it when a real one exists.
+  const NOT_A_CASE = /\b(?:identity unknown|identity unclear|multiple individuals|insufficiently documented|no (?:documented|verified|known) (?:historical )?(?:case|match|record)|not retrievable|cannot be confirmed|could not be (?:identified|confirmed)|unclear (?:which|who))\b/i;
+  const real = out.filter((c) => !NOT_A_CASE.test(`${c.name} ${c.summary}`));
+  if (real.length) out = real;
+  // Only a placeholder came back (seen live: auto-picked "Arthur Gerald Jones — identity unknown or
+  // insufficiently documented" as the case label). Keep the name, drop the "not found" wording, and
+  // describe it from the grounded research note instead.
+  else out = out.map((c) => ({ ...c, name: c.name.split(/\s+[—–-]\s+/)[0].trim() || c.name, summary: fallback || c.summary.replace(NOT_A_CASE, "").trim() }));
+  // A topic that is just a name: the label IS that name. Model descriptors after the dash are where the
+  // "identity unknown" / "identity unclear or multiple individuals" placeholders and invented framings
+  // live (seen live, three wordings), and a phrase list can't cover them all.
+  if (nameOnly) out = out.map((c) => { const entity = c.name.split(/\s+[—–]\s+/)[0].trim(); return entity && entity !== c.name ? { ...c, name: entity } : c; });
+  const support = [...factTexts, t].filter(Boolean);
+  if (!support.join("").trim() || factTexts.join("").trim().length < 40) return out;
+  return out.map((c) => {
+    const sc = sanitizeCaseLabel(c.name, c.summary, support);
+    if (!sc.removed.length) return c;
+    console.log(`[candidates] removed unsupported ${JSON.stringify(sc.removed)} from "${c.name.slice(0, 60)}"`);
+    return { ...c, name: sc.name, summary: sc.summary || fallback || c.summary };
+  });
+}
+
+export function caseAnchorToken(caseName: string): string | null {
+  const entity = String(caseName || "").split(/\s+[—–-]\s+|:\s/)[0];
+  const words = (entity.match(/[A-Z][A-Za-z'’.]{3,}/g) || [])
+    .map((w) => w.replace(/[.'’]+$/, ""))
+    .filter((w) => !ANCHOR_GENERIC.has(w.toLowerCase()));
+  if (!words.length) return null;
+  // The LAST distinctive word: a person's surname ("Wright", not "George"), or an entity's core name.
+  return words[words.length - 1];
+}
+export function docMentionsAnchor(textOrFacts: string, anchor: string | null): boolean {
+  if (!anchor) return true; // no distinctive token -> can't judge, don't block
+  return textOrFacts.toLowerCase().includes(anchor.toLowerCase());
+}
+
+// Same gate for facts ALREADY in a topic's library (mined before the gate existed): a source that
+// contributed 3+ facts, none of which names the case's anchor, is an unrelated document -> dismiss.
+export function offTopicSourceFacts<T extends { fact: string; source?: string | null }>(facts: T[], anchor: string | null): T[] {
+  if (!anchor) return [];
+  const bySrc = new Map<string, T[]>();
+  for (const f of facts) { const k = f.source || ""; if (k) (bySrc.get(k) || bySrc.set(k, []).get(k)!).push(f); }
+  const out: T[] = [];
+  for (const group of bySrc.values()) if (group.length >= 3 && !docMentionsAnchor(group.map((g) => g.fact).join("\n"), anchor)) out.push(...group);
+  return out;
+}
+
 async function minePrimarySourceDocs(
   caseName: string,
   urls: string[],
@@ -1152,48 +1649,15 @@ async function minePrimarySourceDocs(
   const out: ResearchFact[] = [];
   for (const url of primary) {
     if (Date.now() > deadlineMs) break;
-    let text = "";
-    let pdfB64 = "";
-    let isPdf = false;
-    let docBytes = 0;
-    try {
-      const ctrl = new AbortController();
-      const timer = setTimeout(() => ctrl.abort(), 25_000);
-      // A FULL browser User-Agent is required: .gov hosts (justice.gov confirmed) return 403 to a
-      // bot-style UA like "SkriprResearch/1.0" but 200 + application/pdf to a real browser UA. This
-      // was THE PDF-depth blocker — the document was never unreadable, the request was forbidden.
-      const res = await fetch(url, {
-        signal: ctrl.signal,
-        headers: {
-          "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-          "accept": "application/pdf,text/html,application/xhtml+xml,*/*;q=0.8",
-          "accept-language": "en-US,en;q=0.9",
-        },
-      });
-      clearTimeout(timer);
-      if (!res.ok) {
-        // Never silently drop a known primary source — record that it exists but wasn't read, so
-        // the gap is visible in telemetry rather than looking like "the case has no deep facts".
-        console.error(`[primary-doc] fetch_failed ${JSON.stringify({ url, status: res.status, reason: "http_error", source_type: "government_doc" })}`);
-        continue;
-      }
-      const ctype = res.headers.get("content-type") || "";
-      isPdf = /pdf/i.test(ctype) || /\.pdf(\?|$)/i.test(url);
-      if (isPdf) {
-        const buf = Buffer.from(await res.arrayBuffer());
-        docBytes = buf.length;
-        if (buf.length > 24 * 1024 * 1024) { console.error(`[primary-doc] fetch_failed ${JSON.stringify({ url, reason: "pdf_too_large", bytes: buf.length, source_type: "government_pdf" })}`); continue; }
-        pdfB64 = buf.toString("base64");
-      } else if (/octet-stream|application\/(?!pdf)/i.test(ctype)) {
-        console.error(`[primary-doc] fetch_failed ${JSON.stringify({ url, reason: "unreadable_binary", content_type: ctype, source_type: "government_doc" })}`);
-        continue; // some other binary we can't read
-      } else {
-        // Larger window: the granular specifics often sit deep in a filing, past the first screen.
-        text = htmlToText(await res.text()).slice(0, 50_000);
-        if (text.length < 400) { console.error(`[primary-doc] fetch_failed ${JSON.stringify({ url, reason: "empty_after_htmlstrip", chars: text.length, source_type: "government_doc" })}`); continue; }
-      }
-    } catch (e) {
-      console.error(`[primary-doc] fetch_failed ${JSON.stringify({ url, reason: "fetch_threw", detail: (e as any)?.message, source_type: "government_doc" })}`);
+    // Read the primary document directly; if it can't be read (403/anti-bot, timeout, empty), fall
+    // back to the Internet Archive's snapshot so the original wording is recovered rather than lost.
+    let doc = await fetchReadableDoc(url, deadlineMs, "direct");
+    if (!doc) doc = await fetchViaWayback(url, deadlineMs);
+    if (!doc) continue;
+    const { isPdf, text, pdfB64, docBytes } = doc;
+    const anchor = isExplainer ? null : caseAnchorToken(caseName);
+    if (!isPdf && text && !docMentionsAnchor(text, anchor)) {
+      console.log(`[primary-doc] SKIPPED unrelated doc (never mentions "${anchor}"): ${url}`);
       continue;
     }
     // Extract EXHAUSTIVELY. Claude reads the real document (PDF natively, or the HTML text) and
@@ -1256,10 +1720,16 @@ async function minePrimarySourceDocs(
       // outright regardless of what the model returned. (Category-row over-inclusion is handled by
       // the strengthened prompt; this catches only the unambiguous non-facts.)
       let droppedJunk = 0;
+      if (!docMentionsAnchor(facts.join("\n"), anchor)) {
+        console.log(`[primary-doc] DROPPED ${facts.length} facts from unrelated doc (no fact mentions "${anchor}"): ${url}`);
+        continue;
+      }
       for (const f of facts.slice(0, 80)) {
         // Guard the living-person watchlist the same way the other paths do.
         if (watchlist.some((w) => f.toLowerCase().includes(w.toLowerCase()))) continue;
         if (isExplainer && PHENOM_JUNK_RE.test(f)) { droppedJunk++; continue; }
+        // File/landing-page metadata is junk for EVERY topic type, not just explainers.
+        if (FILE_META_JUNK_RE.test(f)) { droppedJunk++; continue; }
         out.push({ fact: f.trim(), source: url, context: true });
       }
       if (droppedJunk) console.log(`[primary-doc] backstop dropped ${droppedJunk} administrative/off-subject line(s) from ${url}`);
@@ -1423,10 +1893,19 @@ Each question seeks a single concrete, citable fact. Output ONLY this JSON, no p
     // Cache hits feed the library too, and return it — otherwise a cached run would
     // hand back a smaller set than the user has already accumulated for this topic.
     let returnHit: ResearchFact[] = mergedHit;
+    let featureHit: ResearchFact[] = [];
     if (input.userId) {
-      const lib = await addToLibrary(input.userId, libraryAnchor, mergedHit, { topicLabel: canonicalCaseName });
+      let lib = await addToLibrary(input.userId, libraryAnchor, mergedHit, { topicLabel: canonicalCaseName });
+      // LONG-FORM FEATURES, once per topic: a cached case (researched before feature mining existed)
+      // gets its features read on the next load, then they live in the library like any fact.
+      if (!isExplainer && !lib.facts.some((f) => (f as any).feature)) {
+        const cur = activeFacts(lib);
+        const mined = await mineFeatureArticles(canonicalCaseName, cur.map((f) => f.source || ""), cur.map((f) => f.fact), Date.now() + 150_000).catch(() => []);
+        if (mined.length) lib = await addToLibrary(input.userId, libraryAnchor, mined, { topicLabel: canonicalCaseName });
+      }
       const all = activeFacts(lib);
-      if (all.length) returnHit = all.map((f) => ({ fact: f.fact, source: f.source }));
+      if (all.length) returnHit = all.map((f) => ({ fact: f.fact, source: f.source, ...((f as any).feature ? { feature: true } : {}) }));
+      featureHit = returnHit.filter((f) => f.feature);
     }
     // MOVE #2: supersede stale/weaker facts before returning — including any the LIBRARY
     // accumulated on an earlier run (the $10M the safety-gate TTL couldn't shed), so the
@@ -1436,11 +1915,44 @@ Each question seeks a single concrete, citable fact. Output ONLY this JSON, no p
     // junk cached under an older version, so a cache HIT must be cleaned here or the phone number /
     // CPI-table dump resurfaces forever even after the extraction gate was fixed.
     const hitStrip = isExplainer ? stripPhenomenonJunk(reconciledHitRaw) : { kept: reconciledHitRaw, dropped: 0 };
-    const reconciledHit = hitStrip.kept;
+    // File/landing-page metadata is junk for all topics — strip on the way out too, so a case that
+    // cached it before this guard existed (e.g. the O.J. Vault run) heals on its next run.
+    const reconciledHit = hitStrip.kept.filter((f) => !FILE_META_JUNK_RE.test(f.fact));
     // CACHE HIT — the context loop is SKIPPED entirely. If a phenomenon brief returns a small set,
     // this line proves it came from a stale/shallow cached row (bump RESEARCH_BRIEF_VERSION to bust).
     console.log(`[deepen] CACHE-HIT isExplainer=${isExplainer ? "T" : "F"} kind=${input.kind ?? "undef"} budget=${budget} cached=${cached.facts.length} junkStripped=${hitStrip.dropped} final=${reconciledHit.length} finalContext=${reconciledHit.filter((f) => f.context).length} — context loop SKIPPED`);
-    return withHonesty({ facts: reconciledHit, conflicts: cached.conflicts, status: "ok", caseName: cached.caseName || correction.caseName, when: whenHit });
+    // A cache HIT skips the whole context loop AND its per-round review, so the final-set
+    // RESOLUTION MUST run here too. CRITICAL: it runs on `returnHit` — the ACTIVE LIBRARY set the
+    // UI actually displays — NOT on reconciledHit (a reconciled/capped/stripped derivative). The UI
+    // renders activeFacts(library) after loadLibrary(), so a fact only disappears from the screen (and
+    // from future scripts) when it is DISMISSED from that active set. Judging a different, smaller set
+    // meant the resolver's indices and content did not line up with what the user saw — it evaluated
+    // 24 facts while 29 were on screen, found one conflict, and left the rest. Judge exactly what is
+    // shown, dismiss the losers, and both the screen and the response drop them.
+    const hitResolution = await resolveFinalConflicts(canonicalCaseName, returnHit, input.summary);
+    // File/landing-page metadata junk must be DISMISSED from the library (not just filtered from the
+    // response), or loadLibrary re-shows it — same reason the resolver losers are dismissed.
+    const hitAnchor = isExplainer ? null : caseAnchorToken(canonicalCaseName);
+    const hitJunk = [...returnHit.filter((f) => FILE_META_JUNK_RE.test(f.fact)), ...offTopicSourceFacts(returnHit, hitAnchor)];
+    const hitLosers = [...hitResolution.drop.map((n) => returnHit[n - 1]).filter(Boolean), ...hitJunk];
+    await dismissResolvedLosers(input.userId, libraryAnchor, hitLosers);
+    const hitLoserIds = new Set(hitLosers.map((f) => factId(f.fact)));
+    let resolvedHit = hitLoserIds.size ? reconciledHit.filter((f) => !hitLoserIds.has(factId(f.fact))) : reconciledHit;
+    const hitQ = await verifyFactQuotes(resolvedHit, Date.now() + 20_000).catch(() => ({ replace: [] as any[], checked: 0 }));
+    if (hitQ.replace.length) {
+      await dismissResolvedLosers(input.userId, libraryAnchor, hitQ.replace.filter((r: any) => !r.to).map((r: any) => r.from));
+
+      const fixedhit = hitQ.replace.map((r: any) => r.to).filter(Boolean) as ResearchFact[];
+      if (fixedhit.length && input.userId) await replaceInLibrary(input.userId, libraryAnchor, hitQ.replace.filter((r: any) => r.to).map((r: any) => ({ from: r.from.fact, to: r.to }))).catch(() => null);
+      const swaphit = new Map(hitQ.replace.map((r: any) => [r.from.fact, r.to]));
+      resolvedHit = resolvedHit.flatMap((f) => (swaphit.has(f.fact) ? (swaphit.get(f.fact) ? [swaphit.get(f.fact) as ResearchFact] : []) : [f]));
+      console.log(`[deepen] QUOTE-CHECK checked=${hitQ.checked} corrected=${fixedhit.length} dropped=${hitQ.replace.length - fixedhit.length} :: ${hitQ.replace.map((r: any) => r.to ? r.to.fact.slice(0, 140) : "DROPPED " + r.from.fact.slice(0, 80)).join(" || ")}`);
+    }
+    console.log(`[deepen] CACHE-HIT RESOLVE judged=${returnHit.length} resolutions=${hitResolution.decisions.length} dropped=${hitLosers.length}${hitResolution.decisions.length ? " :: " + hitResolution.decisions.map((d) => `[${d.dropped}] ${d.why}`).join(" || ") : ""}`);
+    // Feature facts are exempt from the cap: append any the capped set trimmed away (minus losers).
+    { const have = new Set(resolvedHit.map((f) => factId(f.fact))); const lose = new Set(hitLosers.map((f) => factId(f.fact)));
+      resolvedHit = [...resolvedHit, ...featureHit.filter((f) => !have.has(factId(f.fact)) && !lose.has(factId(f.fact)))]; }
+    return withHonesty({ facts: resolvedHit, conflicts: [], verify: [], status: "ok", caseName: cached.caseName || correction.caseName, when: whenHit });
   }
 
   if (!questions.length) return { facts: [], conflicts: [], status: "no-facts", ...correction };
@@ -1469,7 +1981,9 @@ Each question seeks a single concrete, citable fact. Output ONLY this JSON, no p
   // different infiltrator). The watchlist is the proper nouns from the user's other
   // recent cases, so the review can name exactly what must not bleed in.
   const watchlist = input.userId ? await getContaminationWatchlist(input.userId, canonicalCaseName) : [];
-  const { keep, conflicts } = await reviewDeepenedFacts(canonicalCaseName, pairs, input.summary, watchlist);
+  const { keep, conflicts, verify: verify0 } = await reviewDeepenedFacts(canonicalCaseName, pairs, input.summary, watchlist);
+  // Accumulate the "double-check this" flags from every review round; filtered to surviving facts at return.
+  const verifyFlags: DeepenResult["conflicts"] = [...(verify0 || [])];
 
   // 5) Source tiering. Drop facts carried only by a low-tier (self-published /
   // merch-SEO) source WHEN better-sourced facts remain, so a blogspot page never
@@ -1490,6 +2004,7 @@ Each question seeks a single concrete, citable fact. Output ONLY this JSON, no p
     const mechPairs = await fetchPerplexityAnswers(pkey, canonicalCaseName, input.summary, canonical, mechQs);
     if (mechPairs.length) {
       const reviewed = await reviewDeepenedFacts(canonicalCaseName, mechPairs, input.summary, watchlist);
+      verifyFlags.push(...(reviewed.verify || []));
       freshFacts = capFacts(unionFacts([...freshFacts, ...reviewed.keep]), factCap);
     }
   }
@@ -1530,6 +2045,7 @@ Each question seeks a single concrete, citable fact. Output ONLY this JSON, no p
     const morePairs = await fetchPerplexityAnswers(pkey, canonicalCaseName, input.summary, canonical, gaps);
     if (!morePairs.length) break;
     const reviewed = await reviewDeepenedFacts(canonicalCaseName, morePairs, input.summary, watchlist);
+      verifyFlags.push(...(reviewed.verify || []));
     const before = freshFacts.length;
     freshFacts = capFacts(unionFacts([...freshFacts, ...reviewed.keep]), factCap);
     if (freshFacts.length <= before) break; // nothing new — retrieval gravity; stop rather than loop
@@ -1612,6 +2128,7 @@ Each question seeks a single concrete, citable fact. Output ONLY this JSON, no p
       ctxGathered += cPairs.length;
       if (!cPairs.length) { ctxStop = "perplexity-returned-nothing"; break; }
       const reviewed = await reviewDeepenedFacts(canonicalCaseName, cPairs, input.summary, watchlist);
+      verifyFlags.push(...(reviewed.verify || []));
       ctxSurvived += reviewed.keep.length;
       const ctx = reviewed.keep.map((f) => ({ ...f, context: true as const }));
       const before = freshFacts.length;
@@ -1674,7 +2191,13 @@ Each question seeks a single concrete, citable fact. Output ONLY this JSON, no p
   // stops the fact set shrinking between runs: a thin retrieval can only ever add to what
   // is already known, never replace it.
   let returnFacts: ResearchFact[] = facts;
+  // LONG-FORM FEATURES (fresh research): read the in-depth articles among the cited sources.
+  let featureFresh: ResearchFact[] = [];
+  if (!isExplainer && Date.now() - t0 < 200_000) {
+    featureFresh = await mineFeatureArticles(canonicalCaseName, facts.map((f) => f.source || ""), facts.map((f) => f.fact), t0 + 265_000).catch(() => []);
+  }
   if (input.userId && facts.length) {
+    if (featureFresh.length) await addToLibrary(input.userId, libraryAnchor, featureFresh, { topicLabel: canonicalCaseName });
     const lib = await addToLibrary(input.userId, libraryAnchor, facts, { topicLabel: canonicalCaseName });
     const all = activeFacts(lib);
     if (all.length) returnFacts = all.map((f) => ({ fact: f.fact, source: f.source, context: f.context }));
@@ -1686,10 +2209,198 @@ Each question seeks a single concrete, citable fact. Output ONLY this JSON, no p
   // Final return guard: the user's LIBRARY (returnFacts) can carry junk accumulated on prior runs,
   // so strip once more on the way out — same clean set the cache-hit path returns.
   const freshOutStrip = isExplainer ? stripPhenomenonJunk(reconciledRaw) : { kept: reconciledRaw, dropped: 0 };
-  const reconciled = freshOutStrip.kept;
+  const reconciled = freshOutStrip.kept.filter((f) => !FILE_META_JUNK_RE.test(f.fact));
   // ONE-LINE DIAGNOSIS of the two-tier fill: classification, the fill target, how many Pool-B
   // questions ran, context facts gathered vs survived the reviewer, rounds run, why it stopped, and
   // the final count. This single line says exactly where the phenomenon pool breaks.
   console.log(`[deepen] isExplainer=${isExplainer ? "T" : "F"} kind=${input.kind ?? "undef"} target=${target} budget=${budget} poolB-questions=${poolBCount} context-gathered=${ctxGathered} context-survived=${ctxSurvived} ctx-rounds=${ctxRoundsRun} stopped=${ctxStop} final=${reconciled.length} finalContext=${reconciled.filter((f) => f.context).length}`);
-  return withHonesty({ facts: reconciled, conflicts, status: "ok", caseName: correction.caseName, when: finalWhen });
+  // FINAL-SET RESOLUTION over the assembled union (rounds + library + cache), which no per-round
+  // review ever saw as a whole — this DECIDES the $500k-vs-$1M ransom split and the July-31-vs-Aug-31
+  // date split rather than asking the creator to. It drops the losing side so the script sees one
+  // self-consistent set. Best-effort; time-boxed by the call. We surface NO conflict/verify panels:
+  // the promise is a script you trust without second-guessing, so resolution happens silently and the
+  // decisions are logged, not shown.
+  // Judge the ACTIVE LIBRARY set (returnFacts) — the exact facts the UI shows via loadLibrary() —
+  // not the reconciled/stripped derivative, so the resolver's indices line up with what is on screen
+  // and every loser it dismisses actually leaves the display and future scripts. (Same lesson as the
+  // cache-hit path: judging a smaller derived set left the on-screen contradictions untouched.)
+  const judgeSet = returnFacts.length ? returnFacts : reconciled;
+  const resolution = await resolveFinalConflicts(canonicalCaseName, judgeSet, input.summary);
+  // File/landing-page metadata junk must be dismissed from the library too (loadLibrary re-shows it
+  // otherwise), the same way the resolver's losers are dismissed.
+  const junkLosers = [...judgeSet.filter((f) => FILE_META_JUNK_RE.test(f.fact)), ...offTopicSourceFacts(judgeSet, isExplainer ? null : caseAnchorToken(canonicalCaseName))];
+  const resolvedLosers = [...resolution.drop.map((n) => judgeSet[n - 1]).filter(Boolean), ...junkLosers];
+  await dismissResolvedLosers(input.userId, libraryAnchor, resolvedLosers);
+  const loserIds = new Set(resolvedLosers.map((f) => factId(f.fact)));
+  let resolvedFacts = loserIds.size ? reconciled.filter((f) => !loserIds.has(factId(f.fact))) : reconciled;
+  const freshQ = await verifyFactQuotes(resolvedFacts, Date.now() + 20_000).catch(() => ({ replace: [] as any[], checked: 0 }));
+  if (freshQ.replace.length) {
+    await dismissResolvedLosers(input.userId, libraryAnchor, freshQ.replace.filter((r: any) => !r.to).map((r: any) => r.from));
+
+    const fixedfresh = freshQ.replace.map((r: any) => r.to).filter(Boolean) as ResearchFact[];
+    if (fixedfresh.length && input.userId) await replaceInLibrary(input.userId, libraryAnchor, freshQ.replace.filter((r: any) => r.to).map((r: any) => ({ from: r.from.fact, to: r.to }))).catch(() => null);
+    const swapfresh = new Map(freshQ.replace.map((r: any) => [r.from.fact, r.to]));
+    resolvedFacts = resolvedFacts.flatMap((f) => (swapfresh.has(f.fact) ? (swapfresh.get(f.fact) ? [swapfresh.get(f.fact) as ResearchFact] : []) : [f]));
+    console.log(`[deepen] QUOTE-CHECK checked=${freshQ.checked} corrected=${fixedfresh.length} dropped=${freshQ.replace.length - fixedfresh.length} :: ${freshQ.replace.map((r: any) => r.to ? r.to.fact.slice(0, 140) : "DROPPED " + r.from.fact.slice(0, 80)).join(" || ")}`);
+  }
+  console.log(`[deepen] RESOLVE judged=${judgeSet.length} resolutions=${resolution.decisions.length} dropped=${resolvedLosers.length}${resolution.decisions.length ? " :: " + resolution.decisions.map((d) => `[${d.dropped}] ${d.why}`).join(" || ") : ""}`);
+  { const have = new Set(resolvedFacts.map((f) => factId(f.fact))); const lose = new Set(resolvedLosers.map((f) => factId(f.fact)));
+    resolvedFacts = [...resolvedFacts, ...featureFresh.filter((f) => !have.has(factId(f.fact)) && !lose.has(factId(f.fact)))]; }
+  return withHonesty({ facts: resolvedFacts, conflicts: [], verify: [], status: "ok", caseName: correction.caseName, when: finalWhen });
+}
+
+// CENTRAL-SCENE RESEARCH (concept mode). Once the planner names the video's central moment, the
+// writer must render that moment as a SCENE, and with no scene detail in the research it invents one
+// (seen live, three runs, three different stagings: "laid down", "slid across the table"; CBS's real
+// account is that he was confronted as he left his trailer after a week of surveillance, identity
+// confirmed by a fingerprint ruse). One targeted research call pulls the documented specifics of that
+// moment: where, how it came about, who was there, what was said, what happened next. Each answer is
+// relevance-gated to the case and quote-checked against its page before it can be used.
+export async function researchCentralScene(caseName: string, concept: string, existing: string[], momentYear?: number | null): Promise<ResearchFact[]> {
+  const pkey = process.env.PERPLEXITY_API_KEY;
+  if (!pkey || !caseName || !concept) return [];
+  // Scope every question to the moment's YEAR (seen live: a 1975 governor concept pulled four facts about
+  // the 2015 Florida arrest, the most-reported "how they found him" answer, and the script told the
+  // wrong scene in its opening, then again later).
+  const moment = `${concept.slice(0, 300)}${momentYear ? ` (this moment happened in ${momentYear}; answer ONLY about what happened in ${momentYear}, not about earlier or later events)` : ""}`;
+  const qs = [
+    `Exactly where, physically, did this moment happen, and what was the setting? Moment: ${moment}`,
+    `What directly led up to this moment: how did investigators find the person and confirm who they were (surveillance, tips, fingerprints, ruses)? Moment: ${moment}`,
+    `Who was present at this moment, and what did each person say or do, verbatim where a source quotes them? Moment: ${moment}`,
+    `What happened in the minutes and hours immediately after this moment? Moment: ${moment}`,
+    `What specific, documented physical details of this moment (objects, place, time of day, how the person reacted) do news reports or official sources describe? Moment: ${moment}`,
+  ];
+  try {
+    const answers = await fetchPerplexityAnswers(pkey, caseName, undefined, [caseName], qs);
+    const seen = new Set(existing.map((f) => factId(f)));
+    const fresh: ResearchFact[] = answers
+      // The questions are already scoped to this case and moment, so scene answers often say "him"
+      // instead of repeating the name; requiring the name dropped 4 of 5 real, sourced scene facts.
+      .filter((a) => a.fact && a.fact.length > 20)
+      .filter((a) => !seen.has(factId(a.fact)))
+      .filter((a) => !FILE_META_JUNK_RE.test(a.fact))
+      // Year gate: a dated answer about a DIFFERENT year is a different scene.
+      .filter((a) => { if (!momentYear) return true; const ys = (a.fact.match(/\b(1[89]\d{2}|20\d{2})\b/g) || []).map(Number); return !ys.length || ys.some((y) => Math.abs(y - momentYear) <= 1); })
+      .map((a) => ({ fact: a.fact.trim(), source: a.source }));
+    if (!fresh.length) return [];
+    const q = await verifyFactQuotes(fresh, Date.now() + 20_000).catch(() => ({ replace: [] as any[], checked: 0 }));
+    const swap = new Map(q.replace.map((r: any) => [r.from.fact, r.to]));
+    const out = fresh.flatMap((f) => (swap.has(f.fact) ? (swap.get(f.fact) ? [swap.get(f.fact) as ResearchFact] : []) : [f]));
+    console.log(`[scene-research] ${out.length} scene fact(s) for "${moment.slice(0, 80)}" :: ${out.map((f) => f.fact.slice(0, 90)).join(" || ")}`);
+    return out.slice(0, 8);
+  } catch (e: any) {
+    console.error("[scene-research] failed:", e?.message);
+    return [];
+  }
+}
+
+// LONG-FORM FEATURE MINING. The best script material for a real case lives in long feature articles
+// (a newspaper series or in-depth profile): scenes, verbatim quotes, the people around the subject,
+// their jobs and daily life. Skripr's research collects short facts from many sources and never READ
+// those pieces (seen on Freshwaters: one Florida Today feature held the cubicle under the sink, the
+// trooper's quote, the governor's letter, "Cowboy", the mobile library, Joyce Wade, his sons, and the
+// victim's son's words; none of it was in the research). This finds such articles among the cited
+// sources plus a targeted search, reads each in full (direct, then the Internet Archive), keeps only
+// genuine long-form pieces about the subject, and extracts granular facts with the article as source.
+// Every extracted quote is then checked against the page it came from.
+const FEATURE_SKIP_HOST = /(?:^|\.)(?:wikipedia\.org|justice\.gov|\.gov|fbi\.gov|youtube\.com|facebook\.com|twitter\.com|x\.com|reddit\.com|instagram\.com|tiktok\.com)$/i;
+export async function mineFeatureArticles(caseName: string, candidateUrls: string[], existing: string[], deadlineMs: number): Promise<ResearchFact[]> {
+  const anchor = caseAnchorToken(caseName);
+  if (!anchor || Date.now() > deadlineMs) return [];
+  const host = (u: string) => { try { return new URL(u).hostname.replace(/^www\./, ""); } catch { return ""; } };
+  // 1) Candidates: cited sources, plus a search for in-depth pieces.
+  let urls = [...new Set(candidateUrls.filter((u) => /^https?:/.test(u) && !FEATURE_SKIP_HOST.test(host(u))))];
+  const pkey = process.env.PERPLEXITY_API_KEY;
+  if (pkey) {
+    try {
+      const qs = [
+        `What in-depth newspaper feature, multi-part series, or long-form profile tells the life story of ${caseName}? Give the URL of that article.`,
+        `Which long-form magazine or newspaper article describes ${caseName}'s daily life, family, jobs, and the people around him or her? Give its URL.`,
+        `What local newspaper published the most detailed narrative account of ${caseName}'s case? Give the article URL.`,
+      ];
+      const ans = await fetchPerplexityAnswers(pkey, caseName, undefined, [caseName], qs);
+      urls = [...new Set([...ans.map((a) => a.source || "").filter((u) => /^https?:/.test(u) && !FEATURE_SKIP_HOST.test(host(u))), ...urls])];
+    } catch { /* search is optional */ }
+  }
+  urls = urls.slice(0, 10);
+  // 2) Read them; keep only genuine long-form pieces that are about the subject.
+  const read = await Promise.all(urls.map(async (u) => {
+    if (Date.now() > deadlineMs) return null;
+    let d = await fetchReadableDoc(u, deadlineMs).catch(() => null);
+    if (!d || d.isPdf || (d.text || "").split(/\s+/).length < 1500) d = (await fetchViaWayback(u, deadlineMs).catch(() => null)) || d;
+    if (!d || d.isPdf) return null;
+    const words = (d.text || "").split(/\s+/).length;
+    const mentions = (d.text.match(new RegExp(`\\b${anchor}\\b`, "gi")) || []).length;
+    return words >= 1500 && mentions >= 6 ? { url: u, text: d.text, words, mentions } : null;
+  }));
+  const features = read.filter((x): x is { url: string; text: string; words: number; mentions: number } => !!x)
+    .sort((a, b) => b.mentions - a.mentions).slice(0, 2);
+  if (!features.length) { console.log(`[feature] no long-form feature found for "${caseName}" (checked ${urls.length})`); return []; }
+  // 3) Extract granular, sourced facts from each.
+  const seen = new Set(existing.map((f) => factId(f)));
+  const out: ResearchFact[] = [];
+  for (const f of features) {
+    if (Date.now() > deadlineMs) break;
+    try {
+      const msg = await anthropic().messages.create({
+        model: "claude-sonnet-4-6", max_tokens: 6000, temperature: 0,
+        system: `You extract facts from a long-form feature article for a documentary script. Output ONLY facts the article literally states, never inference or outside knowledge. Prioritize what a summary drops: SCENES (where, what happened, physical details), VERBATIM QUOTES with exactly who said them and to whom, the PEOPLE around the subject (names, relationships), JOBS, places lived, DAILY LIFE, and DATES. Each fact is ONE self-contained sentence that names ${anchor} (or the person quoted) so it reads correctly on its own. Quotes must be copied character for character inside double quotes. 25 to 45 facts. Skip navigation, ads, captions, and related-link text. Output ONLY JSON: {"facts":["...","..."]}`,
+        messages: [{ role: "user", content: `SUBJECT: ${caseName}\nARTICLE URL: ${f.url}\n\nARTICLE TEXT:\n<<<\n${f.text.slice(0, 48000)}\n>>>` }],
+      });
+      const t = msg.content[0]?.type === "text" ? msg.content[0].text : "";
+      const j = JSON.parse(t.slice(t.indexOf("{"), t.lastIndexOf("}") + 1));
+      for (const fact of (Array.isArray(j?.facts) ? j.facts : []).filter((x: any) => typeof x === "string" && x.trim().length > 20)) {
+        const id = factId(fact);
+        if (seen.has(id) || FILE_META_JUNK_RE.test(fact)) continue;
+        seen.add(id);
+        out.push({ fact: fact.trim(), source: f.url, feature: true });
+      }
+    } catch (e: any) { console.error(`[feature] extract failed for ${f.url}:`, e?.message); }
+  }
+  // 4) Quotes checked against the article itself (the pages are already known to be readable).
+  const q = await verifyFactQuotes(out, Math.min(deadlineMs, Date.now() + 25_000), new Map(features.map((x) => [x.url, x.text]))).catch(() => ({ replace: [] as any[], checked: 0 }));
+  const swap = new Map(q.replace.map((r: any) => [r.from.fact, r.to]));
+  const final = out.flatMap((f) => (swap.has(f.fact) ? (swap.get(f.fact) ? [{ ...(swap.get(f.fact) as ResearchFact), feature: true }] : []) : [f]));
+  console.log(`[feature] ${final.length} fact(s) from ${features.length} long-form feature(s): ${features.map((x) => `${host(x.url)} (${x.words}w, ${x.mentions} mentions)`).join(", ")}`);
+  return final;
+}
+
+// MIXED SUBJECTS: research that describes unrelated things sharing a name or keyword (seen live: "The
+// Phantom of the Open Source" returned a credential tool AND an astrophysics code, both called Phantom,
+// and the cards compared their licenses). One cheap call groups the facts by subject; the research page
+// asks which one the video is about. Different aspects of ONE story (the crime, the trial, the manhunt)
+// are never "mixed". Best effort: any failure means "not mixed".
+export interface SubjectGroup { label: string; idx: number[] }
+export async function detectMixedSubjects(topic: string, facts: string[]): Promise<{ mixed: boolean; subjects: SubjectGroup[]; note: string }> {
+  const none = { mixed: false, subjects: [] as SubjectGroup[], note: "" };
+  if (facts.length < 4) return none;
+  try {
+    const list = facts.slice(0, 120).map((f, i) => `${i}. ${String(f).slice(0, 300)}`).join("\n");
+    const msg = await anthropic().messages.create({
+      model: "claude-sonnet-4-6", max_tokens: 1500, temperature: 0,
+      messages: [{ role: "user", content: `A YouTube creator's video topic: "${String(topic).slice(0, 160)}".
+These facts were researched for it. Do they describe ONE subject (one case, person, company, project, event, or phenomenon), or do they MIX DIFFERENT, UNRELATED subjects that only share a name or keyword (two different software projects both called "Phantom"; two different people with the same name)?
+Only answer "mixed" when the subjects are genuinely unrelated. Different parts of one story (the crime, the trial, the escape, the people involved, the wider context) are ONE subject.
+
+FACTS:
+${list}
+
+Output ONLY JSON: {"mixed":false,"subjects":[{"label":"short name of the subject, 2-6 words","idx":[0,1,2]}],"note":"one plain sentence a creator would understand"}` }],
+    }, { timeout: 30_000, maxRetries: 0 });
+    const text = msg.content.filter((c: any) => c.type === "text").map((c: any) => c.text).join("\n");
+    const m = text.match(/\{[\s\S]*\}/);
+    if (!m) return none;
+    const j = JSON.parse(m[0]);
+    const n = Math.min(facts.length, 120);
+    const subjects: SubjectGroup[] = (Array.isArray(j?.subjects) ? j.subjects : []).map((s: any) => ({
+      label: String(s?.label || "").slice(0, 60),
+      idx: [...new Set<number>((Array.isArray(s?.idx) ? s.idx : []).map(Number).filter((k: number) => Number.isInteger(k) && k >= 0 && k < n))],
+    })).filter((s: SubjectGroup) => s.label && s.idx.length >= 2);
+    // Mixed only when at least two real groups exist; a stray fact or two isn't a second subject.
+    const mixed = !!j?.mixed && subjects.length >= 2;
+    return { mixed, subjects: mixed ? subjects : [], note: mixed ? String(j?.note || "").slice(0, 240) : "" };
+  } catch (e: any) {
+    console.error("[research] mixed-subject check failed:", e?.message || e);
+    return none;
+  }
 }

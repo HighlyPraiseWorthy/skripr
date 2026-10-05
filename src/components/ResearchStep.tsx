@@ -53,6 +53,10 @@ export default function ResearchStep(props: {
   // re-running the whole deepen — same fact set, no second round-trip.
   presetFacts?: { fact: string; source: string | null; context?: boolean }[];
   presetConflicts?: { fact: string; source: string | null; note: string }[];
+  // The upstream deepen's DOUBLE-CHECK flags. Threaded through the same way as presetConflicts —
+  // without this, a case deepened upstream (the preset path) never shows the verify panel because
+  // this step skips its own deepen and had no other source for it.
+  presetVerify?: { fact: string; source: string | null; note: string }[];
   // The chosen video length in minutes. Drives the research budget (~2.5 facts/min) so a 10-min
   // video researches ~25 facts and a 20-min ~50, instead of the length-blind default.
   targetMinutes?: number;
@@ -74,12 +78,26 @@ export default function ResearchStep(props: {
   const [pickedSubject, setPickedSubject] = useState<SubjectCandidate | null>(null);
   const [kind, setKind] = useState<TopicKind | null>(null);
   const [picked, setPicked] = useState<Set<number>>(new Set());
+  // Facts that describe unrelated things sharing a name (seen live: two different "Phantom" projects).
+  // Checked once per fact set; the creator picks which subject the video is about.
+  const [mixed, setMixed] = useState<{ subjects: { label: string; idx: number[] }[]; note: string } | null>(null);
+  const [mixedKey, setMixedKey] = useState("");
+  useEffect(() => {
+    const key = `${facts.length}:${facts[0]?.fact?.slice(0, 40) || ""}`;
+    if (facts.length < 4 || key === mixedKey) return;
+    setMixedKey(key);
+    fetch("/api/research/find", { method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "subjects", topic: props.topicAnchor || props.topic, facts: facts.map((f) => f.fact) }) })
+      .then((r) => r.json()).then((d) => setMixed(d?.mixed && Array.isArray(d.subjects) && d.subjects.length >= 2 ? { subjects: d.subjects, note: String(d.note || "") } : null))
+      .catch(() => setMixed(null));
+  }, [facts]); // eslint-disable-line react-hooks/exhaustive-deps
   const [error, setError] = useState<string | null>(null);
   // Answers Claude's review flagged as contradicting each other, shown to the
   // creator to resolve rather than silently picking one. Separate from the outage
   // state: "no-key" means the research service could not be reached, which must NOT
   // look like a case that simply had no findable facts.
   const [conflicts, setConflicts] = useState<{ fact: string; source: string | null; note: string }[]>([]);
+  const [verify, setVerify] = useState<{ fact: string; source: string | null; note: string }[]>([]);
   const [deepenStatus, setDeepenStatus] = useState<"ok" | "no-key" | "no-facts" | null>(null);
   // When the deepen pass renames the case (Rough Rider -> Black Biscuit), we show
   // it rather than swapping silently: the correction is model-derived, so the user
@@ -155,7 +173,7 @@ export default function ResearchStep(props: {
 
   async function findResearch() {
     if (researching) return;
-    setResearching(true); setError(null); setConflicts([]); setDeepenStatus(null); setCorrectionNote(null);
+    setResearching(true); setError(null); setConflicts([]); setVerify([]); setDeepenStatus(null); setCorrectionNote(null);
     try {
       const res = await fetch("/api/research/find", {
         method: "POST", headers: { "Content-Type": "application/json" },
@@ -181,7 +199,7 @@ export default function ResearchStep(props: {
   // one, which is what finally gives the script real names and dates to use.
   async function pickSubject(c: SubjectCandidate) {
     setPickedSubject(c);
-    setConflicts([]); setDeepenStatus(null); setCorrectionNote(null);
+    setConflicts([]); setVerify([]); setDeepenStatus(null); setCorrectionNote(null);
     setVerdict("documented");
     setVerdictNote(`Grounded on a real documented case: ${c.name}${c.when ? ` (${c.when})` : ""}.`);
     setResearching(true);
@@ -197,6 +215,7 @@ export default function ResearchStep(props: {
       // own pasted facts persist. Bonus layer — the deepen facts above already stand.
       void loadLibrary();
       setConflicts(Array.isArray(d?.conflicts) ? d.conflicts : []);
+      setVerify(Array.isArray(d?.verify) ? d.verify : []);
       setDeepenStatus(d?.status === "no-key" || d?.status === "no-facts" || d?.status === "ok" ? d.status : null);
       // Entity locking at the source: if the deepen pass corrected the case name or
       // date, relabel the case everywhere. This is what stops the wrong operation
@@ -238,6 +257,7 @@ export default function ResearchStep(props: {
       setFacts(props.presetFacts);
       setPicked(new Set(props.presetFacts.map((_, i) => i)));
       setConflicts(props.presetConflicts || []);
+      setVerify(props.presetVerify || []);
       setDeepenStatus("ok");
       // Upgrade the seeded facts to the id-bearing library view so hide/add work.
       void loadLibrary();
@@ -427,6 +447,41 @@ export default function ResearchStep(props: {
                   {c.source && <a href={c.source} target="_blank" rel="noopener noreferrer" style={{ display: "block", fontSize: 11, color: "#7ed8ff", marginTop: 2, wordBreak: "break-all" }}>{c.source}</a>}
                 </div>
               ))}
+            </div>
+          </div>
+        )}
+
+        {/* Double-check: high-stakes single-source specifics (cause of death, release/custody
+            location) that no other fact corroborates. KEPT in the script, flagged for a look. */}
+        {verify.length > 0 && (pickedSubject || !(kind === "event" && candidates && candidates.length > 0)) && (
+          <div style={{ marginTop: 12, border: "1px solid rgba(251,191,36,0.4)", borderRadius: 12, padding: 14, background: "rgba(251,191,36,0.07)" }}>
+            <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 0.4, color: "#fbbf24", marginBottom: 3 }}>🔎 DOUBLE-CHECK BEFORE PUBLISHING</div>
+            <div style={{ fontSize: 11.5, color: C.dim, marginBottom: 10 }}>These stay in your script, but they are the kind of detail most often reported wrong (how someone died, where or when they were released or arrested). Confirm each against its source.</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
+              {verify.map((c, i) => (
+                <div key={i} style={{ padding: "8px 10px", borderRadius: 8, border: `1px solid ${C.border}` }}>
+                  <span style={{ fontSize: 13, color: C.text, lineHeight: 1.45 }}>{c.fact}</span>
+                  {c.note && <span style={{ display: "block", fontSize: 11.5, color: "#fbbf24", marginTop: 3 }}>{c.note}</span>}
+                  {c.source && <a href={c.source} target="_blank" rel="noopener noreferrer" style={{ display: "block", fontSize: 11, color: "#7ed8ff", marginTop: 2, wordBreak: "break-all" }}>{c.source}</a>}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Mixed subjects: the research found unrelated things that share a name. */}
+        {mixed && facts.length > 0 && (
+          <div style={{ marginTop: 12, border: "1px solid rgba(251,191,36,0.45)", borderRadius: 12, padding: 14, background: "rgba(251,191,36,0.07)" }}>
+            <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 0.4, color: "#fbbf24", marginBottom: 3 }}>⚠ YOUR RESEARCH COVERS {mixed.subjects.length} DIFFERENT THINGS</div>
+            <div style={{ fontSize: 12, color: C.dim, marginBottom: 10, lineHeight: 1.5 }}>{mixed.note || "These facts describe unrelated subjects that share a name."} Which one is your video about? If it's none of them, go back and name the topic more specifically.</div>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+              {mixed.subjects.map((sub, k) => (
+                <button key={k} onClick={() => { setPicked(new Set(sub.idx.filter((i) => i < facts.length))); setMixed(null); }}
+                  style={{ padding: "7px 12px", borderRadius: 8, border: "1px solid rgba(251,191,36,0.5)", background: "transparent", color: "#fcd34d", fontSize: 12.5, cursor: "pointer" }}>
+                  Use only: {sub.label} ({sub.idx.length} facts)
+                </button>
+              ))}
+              <button onClick={() => setMixed(null)} style={{ padding: "7px 12px", borderRadius: 8, border: `1px solid ${C.border}`, background: "transparent", color: C.dim, fontSize: 12.5, cursor: "pointer" }}>Keep all</button>
             </div>
           </div>
         )}

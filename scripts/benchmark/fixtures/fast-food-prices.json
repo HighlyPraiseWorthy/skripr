@@ -1,0 +1,922 @@
+[
+ {
+  "fact": "Research on California’s $20 minimum wage found prices rose about 2.1% two quarters after the policy, indicating menu-price transmission can lag wage-cost shocks by months.",
+  "source": "https://irle.berkeley.edu/wp-content/uploads/2025/06/sosinskiy_reich_2025.pdf"
+ },
+ {
+  "fact": "A published consumer-price comparison found a fast-food combo meal price increase of about $6.50, or more than 100%, between 2014 and 2024, larger than the rise in gasoline, movie tickets, and median hourly wages over the same period.",
+  "source": "https://www.wsj.com/graphics/fast-food-prices-inflation/"
+ },
+ {
+  "fact": "A 2026 Berkeley IRLE paper estimated consumers bore about 50% of higher labor costs through prices in a $20 minimum wage case, while another cited study found only about half of restaurant cost increases were passed through, illustrating disagreement over whether pass-through is near-full or partial.",
+  "source": "https://irle.berkeley.edu/wp-content/uploads/2025/09/Effects-of-a-20-Minimum-Wage-Evidence-from-Granular-Data-on-Wages-Employment-and-Prices-April-1-2026.pdf"
+ },
+ {
+  "fact": "A FinanceBuzz-based report said McDonald’s Quarter Pounder with cheese meal rose from $5.39 in 2014 to $11.99 in 2024, while the same report found the item set at major chains had averaged a 77.4% increase since late 2019.",
+  "source": "https://www.thestreet.com/personal-finance/fast-food-chains-price-increases"
+ },
+ {
+  "fact": "The Harris Poll found 47% of U.S. adults said $5-$9.99 is a fair price for a full QSR meal, indicating the affordability threshold many consumers use.",
+  "source": "https://theharrispoll.com/wp-content/uploads/2024/08/Tear-Sheet-QSR-2024.pdf"
+ },
+ {
+  "fact": "Average Hourly Earnings changed +$0.10 (preliminary) in August 2026.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "The average fast food price (in 1982–84 deflated dollars) was $2.66 (mean = 2.662, SD = 0.168).",
+  "source": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3265116/"
+ },
+ {
+  "fact": "The average price of food at home (in 1982–84 deflated dollars) was $1.19 (mean = 1.185, SD = 0.136).",
+  "source": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3265116/"
+ },
+ {
+  "fact": "The average median household income at the zip code level was $47,560 (reported as 4.756 in $10,000 units, SD = 1.838).",
+  "source": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3265116/"
+ },
+ {
+  "fact": "Approximately 10.6% of children lived in families with parental income below $20,000.",
+  "source": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3265116/"
+ },
+ {
+  "fact": "Approximately 38.4% of children lived in families with income above $75,000.",
+  "source": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3265116/"
+ },
+ {
+  "fact": "A one-standard deviation increase in the price of fast food (a $0.17 increase) was associated with a reduction in fast food consumption of approximately 0.09 times per week.",
+  "source": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3265116/"
+ },
+ {
+  "fact": "A $10,000 rise in median household income was associated with a reduction in fast food consumption of 0.131 times per week (coefficient = −0.131, SE = 0.021, significant at 1%).",
+  "source": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3265116/"
+ },
+ {
+  "fact": "Parental income $20,000–$35,000 (vs. below $20,000) was associated with lower fast food consumption (coefficient = −0.635, SE = 0.207, significant at 1%).",
+  "source": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3265116/"
+ },
+ {
+  "fact": "Parental income $35,000–$50,000 was associated with lower fast food consumption (coefficient = −0.784, SE = 0.194, significant at 1%).",
+  "source": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3265116/"
+ },
+ {
+  "fact": "Parental income $50,000–$75,000 was associated with lower fast food consumption (coefficient = −0.825, SE = 0.195, significant at 1%).",
+  "source": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3265116/"
+ },
+ {
+  "fact": "Parental income $75,000–$100,000 was associated with lower fast food consumption (coefficient = −0.913, SE = 0.192, significant at 1%).",
+  "source": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3265116/"
+ },
+ {
+  "fact": "Parental income $100,000+ was associated with lower fast food consumption (coefficient = −0.776, SE = 0.192, significant at 1%).",
+  "source": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3265116/"
+ },
+ {
+  "fact": "In the subgroup analysis by income, the fast food price coefficient for the 0–$35K group was −0.627 (SE = 0.610, not significant), for the $36K–$75K group was −0.407 (SE = 0.443, not significant), and for the $75K+ group was −0.534 (SE = 0.292, not significant).",
+  "source": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3265116/"
+ },
+ {
+  "fact": "BLS reported limited service meals and snacks prices were up 5.0% over the year ended March 2024, while food at home prices were up 1.2% over the same period.",
+  "source": "https://www.bls.gov/opub/ted/2024/consumer-prices-up-3-5-percent-from-march-2023-to-march-2024.htm"
+ },
+ {
+  "fact": "In one restaurant sample, labor’s share of total costs was 36%, and minimum wage costs were estimated to be 4% to 10% of total costs, implying only a fraction of menu-price increases would be attributable directly to mandated wage hikes rather than other inputs.",
+  "source": "https://www.atlantafed.org/-/media/documents/news/conferences/2019/0411-snag-micro-labor-conference/brummund.pdf"
+ },
+ {
+  "fact": "BLS data show limited service meals and snacks rose 5.2% over the year ended February 2024, versus 1.0% for food at home, a gap that was larger than overall CPI inflation of 3.2% for the same period.",
+  "source": "https://www.bls.gov/opub/ted/2024/consumer-prices-up-3-2-percent-from-february-2023-to-february-2024.htm"
+ },
+ {
+  "fact": "A 2021–2023 producer-price run-up lifted key restaurant inputs sharply, with beef, chicken, and cooking-oil costs each peaking at double-digit percentage increases from their 2020 baselines, and National Restaurant Association models have attributed only a minority of QSR menu-price growth to commodity cost shocks.",
+  "source": "https://www.nraef.org/restaurant-trends/food-costs/"
+ },
+ {
+  "fact": "A restaurant-cost analysis found that a 1% increase in supply costs translates into roughly 0.33% higher COGS at constant menu prices, indicating partial pass-through rather than immediate full transmission.",
+  "source": "https://pentallect.com/foodservice-cost-inflation-and-full-service-restaurants-a-hazardous-gap/"
+ },
+ {
+  "fact": "A CNBC report said prices in the consumer price index category for limited-service meals and snacks surged by approximately 28% from 2019 to 2023, while grocery inflation was lower, helping explain why some consumers shifted behavior in response to fast-food price increases.",
+  "source": "https://www.cnbc.com/2024/05/04/why-fast-food-price-increases-have-surpassed-overall-inflation.html"
+ },
+ {
+  "fact": "A restaurant report noted that higher food prices led restaurants to shrink portion sizes on some menu items, a form of shrinkflation, while also raising prices; a separate article said restaurant menu prices were at their highest in over 40 years with limited-service and full-service restaurants raising prices by at least 7% over the past year.",
+  "source": "https://www.nbcnews.com/business/consumer/restaurants-smaller-portions-higher-food-prices-rcna39180"
+ },
+ {
+  "fact": "A study of restaurant pricing dynamics said the relationship between combined costs and food-away-from-home prices was relatively stable before the pandemic, indicating rapid pass-through of costs to prices, but it also implies that untangling cost effects from other factors remains difficult in practice.",
+  "source": "https://www.jsr.org/hs/index.php/path/article/download/8031/3676/55521"
+ },
+ {
+  "fact": "Industry reporting said beef, chicken, and cooking-oil costs spiked in the early 2020s and analysts linked those input-cost increases to higher fast-food menu prices.",
+  "source": "https://www.cnbc.com/2024/05/04/why-fast-food-price-increases-have-surpassed-overall-inflation.html"
+ },
+ {
+  "fact": "The literature contains both cost-pass-through estimates near 50% for fast-food wage shocks and arguments that labor’s share and market power can make price responses larger than simple cost-based models predict.",
+  "source": "https://www.atlantafed.org/-/media/documents/news/conferences/2019/0411-snag-micro-labor-conference/brummund.pdf"
+ },
+ {
+  "fact": "Numerator said quick-service restaurant prices have increased 53.9% since January 2018, well above the 33.2% rise in the overall consumer basket.",
+  "source": "https://www.convenience.org/stay-current/news/2026/august/14/gen-z-continues-to-experience-higher-inflation,-says-numerator"
+ },
+ {
+  "fact": "BLS data cited by Restaurant Business Online show fast-food menu prices were up 7.0% year over year in April 2022, and later reports said limited-service prices were up 4.8% since 2014.",
+  "source": "https://restaurantbusinessonline.com/financing/menu-price-inflation-full-service-restaurants-hit-record-april"
+ },
+ {
+  "fact": "Industry and analyst reporting most often points to labor, food, and other operating-cost pressures, with later coverage also linking higher prices to shrinkflation and value-menu changes.",
+  "source": "https://theharrispoll.com/wp-content/uploads/2024/08/Tear-Sheet-QSR-2024.pdf"
+ },
+ {
+  "fact": "USA Today reported that fast-food prices had climbed 4.8% over the prior year and 47% since 2014, compared with broader inflation figures in the same period.",
+  "source": "https://www.usatoday.com/story/money/2024/05/30/fast-food-inflation-upsets-consumers/73890639007/"
+ },
+ {
+  "fact": "LendingTree-related reporting found 62% of respondents said they were eating less fast food because it cost more, and 78% said fast food had become a luxury.",
+  "source": "https://www.usatoday.com/story/money/2024/05/30/fast-food-inflation-upsets-consumers/73890639007/"
+ },
+ {
+  "fact": "Restaurant Business Online reported that fast-food menu prices were up 7.0% year over year in April 2022, attributing the increase to inflationary pressures on operators.",
+  "source": "https://restaurantbusinessonline.com/financing/menu-price-inflation-full-service-restaurants-hit-record-april"
+ },
+ {
+  "fact": "Limited service meals and snacks CPI rose 26.0% from 2019 to 2024, compared with about 21.2% cumulative headline CPI inflation and roughly flat/slightly positive real wage growth over the same span.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "A Federal Reserve Bank of Chicago paper found fast-food restaurant prices rise about 0.139% for each 1% increase in the minimum wage, i.e. about 1.39% for a 10% increase, in the study 'Restaurant Prices and the Minimum Wage'.",
+  "source": "https://www.chicagofed.org/~/media/others/research/research-calendar-attachments/seminars-2008/sem-le-bihan060508-pdf.pdf"
+ },
+ {
+  "fact": "National Restaurant Association benchmarking data typically puts quick-service restaurant costs at roughly 30% labor, 30% food/commodity inputs, and 25% occupancy, with labor share rising from pre-2019 levels as wage pressure increased.",
+  "source": "https://restaurant.org/research-and-media/research/economics/restaurant-industry-performance/"
+ },
+ {
+  "fact": "A 10% increase in fast food prices was associated with a 5.7% lower frequency of weekly fast food consumption, implying a price elasticity of demand of -0.57 for fast food in one panel-data study.",
+  "source": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3265116/"
+ },
+ {
+  "fact": "A survey reported that restaurant costs rose 11.7% year over year, with the largest increases coming from raw materials and labor, indicating cost pressures moving from inputs into menu pricing.",
+  "source": "https://www.simon-kucher.com/sites/default/files/2022-06/FINAL%20VERSION%20-%20Simon-Kucher_Restaurant%20Cost%20Inflation%20and%20Price%20Increase%20Survey_May%202022.pdf"
+ },
+ {
+  "fact": "USDA research found that restaurant foods are generally more expensive than grocery-store foods in both dollars and calories, and that the cost per calorie is usually higher for restaurant foods.",
+  "source": "https://www.ers.usda.gov/amber-waves/2018/june/higher-incomes-and-greater-time-constraints-lead-to-purchasing-more-convenience-foods"
+ },
+ {
+  "fact": "The National Restaurant Association reported that average menu prices increased 36% between February 2020 and May 2026, reflecting the menu-price response to higher operating costs. (36% through May 2026 vs 27.2% through an earlier date)",
+  "source": "https://www.feda.com/news/rising-restaurant-costs-outpacing-inflation-industry-analysis-finds"
+ },
+ {
+  "fact": "An industry analysis reported that average menu prices increased 27.2% since February 2020 according to the Bureau of Labor Statistics, while restaurant operators aim to preserve about a 5% profit margin. (27.2% through earlier date vs 36% through May 2026)",
+  "source": "https://www.lra.org/2024/10/04/new-analysis-explains-challenges-of-higher-costs-menu-price-increases/"
+ },
+ {
+  "fact": "In a consumer survey, about half of respondents said they were going less often to fast food restaurants because of rising food prices, with fast food at 51.6% and cafes/coffee shops at 45.8%.",
+  "source": "https://farmdocdaily.illinois.edu/2024/06/fair-fare-us-consumers-perceptions-of-food-pricing-fairness-in-restaurants-and-grocery-stores.html"
+ },
+ {
+  "fact": "The BLS CPI shows limited service meals and snacks up 3.3% and full service meals and snacks up 3.4%, while the same BLS table shows U.S. average hourly earnings growth at 4.1% in the cited period.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "A Chicago Fed working paper estimated that a 1% increase in the minimum wage raised restaurant prices by about 0.11% under full pass-through assumptions, while more recent restaurant studies found much larger pass-through, including near-full pass-through in McDonald’s data and about 0.3% to 1.1% price increases for a 10% minimum wage increase.",
+  "source": "https://www.chicagofed.org/-/media/publications/working-papers/1997/wp97-3-pdf.pdf"
+ },
+ {
+  "fact": "A RePEc-indexed study found that from 1993–2014 a burger’s price had a robust 9% elasticity with respect to the minimum wage, indicating sizable fast-food price pass-through over the long run.",
+  "source": "https://ideas.repec.org/a/spr/jlabre/v37y2016i2d10.1007_s12122-016-9224-5.html"
+ },
+ {
+  "fact": "A Federal Reserve Bank of Chicago working paper found restaurant prices increased immediately after minimum wage changes, with the effect concentrated in the first months after the policy change.",
+  "source": "https://fraser.stlouisfed.org/files/docs/historical/frbchi/workingpapers/frbchi_workingpaper_2004-21.pdf"
+ },
+ {
+  "fact": "BLS reported that in July 2025 limited service meals and snacks were rising 3.3% year over year, while food at home was rising much more slowly, illustrating that restaurant prices were outpacing grocery inflation.",
+  "source": "https://www.bls.gov/news.release/cpi.htm"
+ },
+ {
+  "fact": "The BLS reported that within food away from home, limited service meals and snacks were up 3.2% over the 12 months ending February 2026, compared with 4.6% for full service meals and snacks.",
+  "source": "https://www.bls.gov/opub/ted/2026/consumer-prices-up-2-4-percent-over-year-ended-february-2026.htm"
+ },
+ {
+  "fact": "BLS shows limited service meals and snacks rose 7.2% in the 12 months ending February 2023, one of the fastest rates in the series and a key turning point in fast-food affordability.",
+  "source": "https://www.bls.gov/news.release/archives/cpi_03142023.pdf"
+ },
+ {
+  "fact": "BLS notes that mandatory service charges are included in food-away-from-home CPI categories, which matters because service charges can raise the measured price of quick meals even when menu stickers change little.",
+  "source": "https://www.bls.gov/cpi/questions-and-answers.htm"
+ },
+ {
+  "fact": "The Consumer Expenditure CPI concordance maps the CE category 'Food/Nonalc Bev - Fast Food' directly to the CPI item 'Limited Service Meals And Snacks,' showing how quick-service restaurant spending is tracked in official price data.",
+  "source": "https://www.bls.gov/cpi/additional-resources/ce-cpi-concordance.htm"
+ },
+ {
+  "fact": "A BLS TED release said prices for limited service meals increased 3.5% over the 12 months ending June 2025, a period when grocery inflation was far lower, making quick-service meals feel less affordable relative to cooking at home.",
+  "source": "https://www.bls.gov/opub/ted/2025/consumer-price-index-rose-2-7-percent-for-the-12-months-ending-june-2025.htm"
+ },
+ {
+  "fact": "BLS CPI data shows limited service meals and snacks were up 47% since 2014 and 4.8% year over year in May 2024, with reporting noting fast-food menu prices had surged sharply after 2019.",
+  "source": "https://www.usatoday.com/story/money/2024/05/26/fast-food-inflation-charted/73792477007/"
+ },
+ {
+  "fact": "Reporting tied fast-food price increases to a chain of higher commodity costs, labor costs, and corporate pricing decisions, with one analysis noting goods costs were up 31% since 2014 and inflation 22% since 2019.",
+  "source": "https://foodinstitute.com/focus/fast-flation-fast-food-restaurant-prices-surge-even-as-inflation-wanes/"
+ },
+ {
+  "fact": "CNN reported that in the 12 months through May 2024 grocery prices rose 1%, while menu prices rose 3.5% at full-service restaurants and 4.5% at limited-service restaurants.",
+  "source": "https://edition.cnn.com/2024/06/12/business/menu-prices-rising/index.html"
+ },
+ {
+  "fact": "The Harris Poll found only 32% of U.S. adults agreed QSRs offer affordable meal options, while 81% of adults who order from QSRs at least once a year said prices were higher than a year earlier.",
+  "source": "https://theharrispoll.com/wp-content/uploads/2024/08/Tear-Sheet-QSR-2024.pdf"
+ },
+ {
+  "fact": "USA Today reported that 78% of respondents considered fast food a luxury because of rising prices, 62% had reduced fast-food consumption, and 75% said cooking at home was more economical.",
+  "source": "https://www.usatoday.com/story/money/2024/05/30/fast-food-inflation-upsets-consumers/73890639007/"
+ },
+ {
+  "fact": "CNBC reported that the CPI category for limited-service meals and snacks rose about 28% from 2019 to 2023, compared with about 24% for full-service meals and snacks, showing fast-food inflation was higher but not uniquely extreme.",
+  "source": "https://www.cnbc.com/2024/05/04/why-fast-food-price-increases-have-surpassed-overall-inflation.html"
+ },
+ {
+  "fact": "The Bureau of Labor Statistics reported that limited service meals and snacks were up 3.3% year over year in the latest CPI data shown on its CPI page.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "The National Restaurant Association said average menu prices increased 31% between February 2020 and April 2025, alongside 35% five-year increases in both food and labor costs.",
+  "source": "https://restaurant.org/research-and-media/research/inflation"
+ },
+ {
+  "fact": "The National Restaurant Association reported that in the last 5 years, food and labor costs for the average restaurant each rose 35%, while average menu prices increased 31% between February 2020 and April 2025.",
+  "source": "https://restaurant.org/research-and-media/research/inflation"
+ },
+ {
+  "fact": "The BLS CPI page shows food at home inflation at 2.7% versus limited service meals and snacks at 3.3%, illustrating that restaurant prices are rising faster than groceries in the latest reading shown.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "A 2026 restaurant inflation analysis reported that 82% of operators increased menu prices in 2023 and 61% planned to do so again in 2024, reflecting widespread pass-through pressure.",
+  "source": "https://oysterlink.com/spotlight/inflation-impact-restaurant-industry/"
+ },
+ {
+  "fact": "NACS reported that the restaurant industry typically operates on slim 3% to 5% margins, making price increases especially consequential for affordability.",
+  "source": "https://www.convenience.org/stay-current/news/2026/june/2/inflation-hits-the-menu"
+ },
+ {
+  "fact": "The National Restaurant Association’s inflation page says menu price inflation has slowed enough that the 3.4% July 2026 pace was the slowest annual rate since January 2025, suggesting the debate has shifted from whether prices are still rising to how quickly they are cooling.",
+  "source": "https://www.restaurant.org/research-and-media/research/economic-indicators/menu-prices/"
+ },
+ {
+  "fact": "The Consumer Price Index (CPI) is described as a measure of the average change over time in the prices paid by urban consumers for a market basket of consumer goods and services.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "Indexes are available for the U.S. and various geographic areas.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "Average price data for select utility, automotive fuel, and food items are also available.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "The 12-month percentage change data presented is for July 2026, not seasonally adjusted.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "All items CPI 12-month percent change in July 2026: 3.4%.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "Food CPI 12-month percent change in July 2026: 3.0%.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "Food at home CPI 12-month percent change in July 2026: 2.7%.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "Cereals and bakery products CPI 12-month percent change in July 2026: 2.7%.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "Meats, poultry, fish, and eggs CPI 12-month percent change in July 2026: 1.9%.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "Dairy and related products CPI 12-month percent change in July 2026: -0.5%.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "Fruits and vegetables CPI 12-month percent change in July 2026: 5.1%.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "Nonalcoholic beverages and beverage materials CPI 12-month percent change in July 2026: 4.1%.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "Other food at home CPI 12-month percent change in July 2026: 2.5%.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "Food away from home CPI 12-month percent change in July 2026: 3.4%.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "Full service meals and snacks CPI 12-month percent change in July 2026: 3.4%.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "Limited service meals and snacks CPI 12-month percent change in July 2026: 3.3%.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "Energy CPI 12-month percent change in July 2026: 14.7%.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "Energy commodities CPI 12-month percent change in July 2026: 24.7%.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "Fuel oil CPI 12-month percent change in July 2026: 39.1%.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "Gasoline (all types) CPI 12-month percent change in July 2026: 24.6%.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "Energy services CPI 12-month percent change in July 2026: 4.3%.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "Electricity CPI 12-month percent change in July 2026: 4.2%.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "Natural gas (piped) CPI 12-month percent change in July 2026: 4.3%.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "All items less food and energy CPI 12-month percent change in July 2026: 2.5%.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "Commodities less food and energy commodities CPI 12-month percent change in July 2026: 0.8%.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "Apparel CPI 12-month percent change in July 2026: 3.9%.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "New vehicles CPI 12-month percent change in July 2026: 0.5%.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "Used cars and trucks CPI 12-month percent change in July 2026: -1.9%.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "Medical care commodities CPI 12-month percent change in July 2026: -2.7%.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "Alcoholic beverages CPI 12-month percent change in July 2026: 2.1%.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "Tobacco and smoking products CPI 12-month percent change in July 2026: 6.7%.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "Services less energy services CPI 12-month percent change in July 2026: 3.0%.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "Shelter CPI 12-month percent change in July 2026: 3.2%.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "Rent of primary residence CPI 12-month percent change in July 2026: 2.9%.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "Owners' equivalent rent of residences CPI 12-month percent change in July 2026: 3.2%.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "Medical care services CPI 12-month percent change in July 2026: 2.7%.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "Physicians' services CPI 12-month percent change in July 2026: 2.4%.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "Hospital services CPI 12-month percent change in July 2026: 5.2%.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "Transportation services CPI 12-month percent change in July 2026: 2.9%.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "Motor vehicle maintenance and repair CPI 12-month percent change in July 2026: 6.6%.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "Motor vehicle insurance CPI 12-month percent change in July 2026: -4.5%.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "Airline fare CPI 12-month percent change in July 2026: 25.5%.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "The Consumer Price Index for All Urban Consumers rose 0.1 percent in July 2026, seasonally adjusted.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "The Consumer Price Index for All Urban Consumers rose 3.4 percent over the last 12 months ending July 2026, not seasonally adjusted.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "The index for all items less food and energy rose 0.2 percent in July 2026, seasonally adjusted.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "The index for all items less food and energy rose 2.5 percent over the year ending July 2026, not seasonally adjusted.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "The CPI news release headline states: 'CPI for all items increases 0.1% in July; shelter rises,' dated 08/12/2026.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "The Consumer Price Index for August 2026 is scheduled to be released on September 11, 2026, at 8:30 A.M. Eastern Time.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "The Unemployment Rate was 4.1% in August 2026.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "Payroll Employment was +162,000 (preliminary) in August 2026.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "Producer Price Index - Final Demand was unchanged in July 2026.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "Employment Cost Index (ECI) was +0.9% in the 2nd Quarter of 2026.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "Productivity was +1.4% in the 2nd Quarter of 2026.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "U.S. Import Price Index was -0.4% in July 2026.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "U.S. Export Price Index was -1.3% in July 2026.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "A Beyond the Numbers publication states the Consumer Price Index increased 2.9 percent from December 2023 to December 2024.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "The publication states that between December 2023 and December 2024, consumer prices experienced disinflation, where prices still increased but by a smaller amount than before.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "The publication states the 2.9 percent increase from December 2023 to December 2024 was a slower rate of increase than in the three previous 12-month periods ending in December.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "A Monthly Labor Review article is titled 'Turning thrifty: incorporating secondhand apparel into the Consumer Price Index,' stating the BLS has incorporated used clothing into the CPI.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "The Economics Daily states real average hourly earnings for all employees decreased 0.2 percent from July 2025 to July 2026.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "The Economics Daily states the change in real average hourly earnings combined with a 0.3-percent increase in the average workweek resulted in a 0.1-percent increase in real average weekly earnings from July 2025 to July 2026.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "The CPI office is located at Suitland Federal Center, Floor 7, 4600 Silver Hill Road, Washington, DC 20212-0002.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "The CPI office telephone number is 202-691-7000.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "A fast-food-chain study found a $1 minimum wage increase raised average menu prices by 7 cents, implying a pass-through elasticity of about 0.13.",
+  "source": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5085147"
+ },
+ {
+  "fact": "A fast-food-chain study in SSRN found that a $1 minimum wage rise increased average prices by 7 cents, implying a pass-through elasticity of around 0.13.",
+  "source": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5085147"
+ },
+ {
+  "fact": "A 2024-2025 fast-food study found that a $1 minimum wage increase raised menu prices by 7 cents, corresponding to a pass-through elasticity of about 0.13, indicating relatively low demand-side price adjustment at the chain level.",
+  "source": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5085147"
+ },
+ {
+  "fact": "A restaurant price tracker cited a July 2026 food-away-from-home CPI equivalent of about $18.82, up 57% from a 2015 baseline of $12.00.",
+  "source": "https://keepingupwithinflation.com/tracker/restaurant/"
+ },
+ {
+  "fact": "A San Jose restaurant study estimated a minimum-wage price elasticity of 0.083 for limited-service restaurants, implying a 25% wage increase raised prices by about 2.1% in that segment.",
+  "source": "https://irle.berkeley.edu/wp-content/uploads/2016/11/Are-Local-Minimum-Wages-Absorbed-by-Price-Increases.pdf"
+ },
+ {
+  "fact": "BLS Producer Price Index data show the beef and veal slaughter index rising sharply in 2024–2025, reflecting a key input-cost pressure for restaurants.",
+  "source": "https://www.bls.gov/ppi/"
+ },
+ {
+  "fact": "A fast-food-chain study found that items requiring more labor to produce increased more after a minimum-wage hike, showing higher prices can be concentrated in higher-labor items rather than uniformly across the menu.",
+  "source": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5085147"
+ },
+ {
+  "fact": "Research on minimum-wage shocks found restaurant price increases were protracted, taking more than a year to fully pass through to retail prices.",
+  "source": "https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1538-4616.2010.00339.x"
+ },
+ {
+  "fact": "BLS notes that CPI excludes tips but includes mandatory service charges and fees, which are part of food-away-from-home indexes such as limited-service meals and snacks, a rule that helps capture some non-portion price changes but not every shrinkflation adjustment.",
+  "source": "https://www.bls.gov/cpi/questions-and-answers.htm"
+ },
+ {
+  "fact": "BLS shows limited service meals and snacks were up 3.3% year-over-year in July 2026, and its CPI release for January 2026 says food away from home prices were up 4.0% since January 2019, with limited service meals up 3.2% over that span.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "The National Restaurant Association reports that salaries and wages, including benefits, represented a median of 31.7% of sales among limited-service respondents in 2024, up from about 28% on average in the 2010, 2013, and 2016 reports.",
+  "source": "https://www.restaurant.org/research-and-media/research/restaurant-economic-insights/analysis-commentary/restaurant-labor-costs-are-well-above-historical-averages/"
+ },
+ {
+  "fact": "BLS data for January 2019 show food away from home inflation at 2.8%, food at home at 0.6%, and all items at 1.6%, while the same BLS release states food away from home prices rose 4.0% since January 2019.",
+  "source": "https://www.bls.gov/opub/ted/2026/consumer-prices-up-2-4-percent-over-the-year-ended-january-2026.htm"
+ },
+ {
+  "fact": "The BLS CPI release for January 2026 states food away from home prices rose 4.0% since January 2019, including limited service meals up 3.2% and full service meals up 4.7%, while the USDA Economic Research Service found the prices paid by retailers for beef and veal rose 20.4% in 2024 and chicken up 1.4% in 2024.",
+  "source": "https://www.bls.gov/opub/ted/2026/consumer-prices-up-2-4-percent-over-the-year-ended-january-2026.htm"
+ },
+ {
+  "fact": "The National Restaurant Association says limited-service labor costs were a median 31.7% of sales in 2024, which is materially above the roughly 28% average reported in its 2010, 2013, and 2016 surveys, showing how labor pressure is reflected in operating cost structure before being passed into menu pricing.",
+  "source": "https://www.restaurant.org/research-and-media/research/restaurant-economic-insights/analysis-commentary/restaurant-labor-costs-are-well-above-historical-averages/"
+ },
+ {
+  "fact": "BLS’s CPI for limited service meals and snacks rose 3.2% over the 12 months ending February 2026, while the broader food away from home category rose 4.0% since January 2019, a gap often cited alongside shrinkflation examples as evidence that menu-board prices can understate the real increase in unit cost to consumers.",
+  "source": "https://www.bls.gov/news.release/archives/cpi_03112026.pdf"
+ },
+ {
+  "fact": "BLS producer price data show the Producer Price Index for chicken from 2020 to 2022 rose much faster than many other food inputs, with poultry prices among the largest documented increases in that period.",
+  "source": "https://www.bls.gov/ppi/"
+ },
+ {
+  "fact": "A 2023 study of restaurant price elasticity found that a 1% increase in fast-food prices reduced demand by about 0.9% in transaction volume.",
+  "source": "https://www.nber.org/papers/w31610"
+ },
+ {
+  "fact": "Industry analysis found restaurant menu prices typically lag food inflation by several months, with cost increases often appearing in menu prices within 2 to 4 months after commodity shocks.",
+  "source": "https://www.restaurant.org/research-and-media/research/restaurant-economic-insights/"
+ },
+ {
+  "fact": "U.S. limited-service meals and snacks prices were 27.2% higher in February 2024 than in February 2020, according to Bureau of Labor Statistics data cited by the Louisiana Restaurant Association.",
+  "source": "https://www.lra.org/2024/10/04/new-analysis-explains-challenges-of-higher-costs-menu-price-increases/"
+ },
+ {
+  "fact": "The National Restaurant Association says food costs have risen 34% and labor costs 39% over the past six years, illustrating the cost pressures behind restaurant pricing.",
+  "source": "https://restaurant.org/education-and-resources/resource-library/rising-food-costs-tight-supplies-more-challenges-for-industry/"
+ },
+ {
+  "fact": "BLS reported that in the 12 months ending February 2026, prices for limited-service meals and snacks rose 3.2%, compared with 2.4% for overall CPI-U.",
+  "source": "https://www.bls.gov/opub/ted/2026/consumer-prices-up-2-4-percent-over-year-ended-february-2026.htm"
+ },
+ {
+  "fact": "A 2024 analysis cited by the Louisiana Restaurant Association said restaurants have been trying to maintain about a 5% profit margin while food and labor costs rose sharply.",
+  "source": "https://www.lra.org/2024/10/04/new-analysis-explains-challenges-of-higher-costs-menu-price-increases/"
+ },
+ {
+  "fact": "BLS reported that in July 2026 the 12-month inflation rate for limited-service meals and snacks was 3.3%, while full-service meals and snacks were 3.4%.",
+  "source": "https://www.bls.gov/news.release/cpi.htm"
+ },
+ {
+  "fact": "The National Restaurant Association reported in 2026 that menu prices in the food-away-from-home category were still rising even as overall inflation moderated, showing the sector’s continued cost pressure.",
+  "source": "https://restaurant.org/research-and-media/research/restaurant-economic-insights/economic-indicators/menu-prices/"
+ },
+ {
+  "fact": "A 2026 food-industry report said food costs were up 34% and labor costs up 39% compared with six years earlier, reflecting the broader post-pandemic cost reset for restaurants.",
+  "source": "https://restaurant.org/education-and-resources/resource-library/rising-food-costs-tight-supplies-more-challenges-for-industry/"
+ },
+ {
+  "fact": "The BLS CPI release for June 2025 said prices for full-service meals rose 4.0% and limited-service meals rose 3.5% over the prior 12 months, showing quick-service inflation remained elevated even as overall CPI cooled.",
+  "source": "https://www.bls.gov/opub/ted/2025/consumer-price-index-rose-2-7-percent-for-the-12-months-ending-june-2025.htm"
+ },
+ {
+  "fact": "In December 2025, restaurant prices were reported as 4.1% higher year over year, while grocery prices were up 2.4%, a comparison that highlighted the gap between eating out and eating at home.",
+  "source": "https://www.foodnavigator.com/Article/2026/01/14/dairy-bakery-goods-and-produce-climb-but-cheaper-eggs-offer-a-rare-break/"
+ },
+ {
+  "fact": "The National Restaurant Association said limited-service operators reported 31.7% of sales going to salaries, wages, and benefits, underscoring how labor-heavy the quick-service model remains.",
+  "source": "https://tastewise.io/blog/restaurant-inflation-and-the-road-ahead"
+ },
+ {
+  "fact": "Fast food costs have climbed 4.8% since last year and 47% since 2014, according to Bureau of Labor Statistics data reported in USA Today.",
+  "source": "https://www.usatoday.com/story/money/2024/05/30/fast-food-inflation-upsets-consumers/73890639007/"
+ },
+ {
+  "fact": "Morning Consult reported that restaurant price growth remains elevated because food-service places are passing on higher input costs for ingredients and labor to consumers.",
+  "source": "https://pro.morningconsult.com/analysis/rising-fast-food-prices-hit-consumers-where-it-hurts"
+ },
+ {
+  "fact": "Marcus by Goldman Sachs reported that limited-service meals rose 4.3% year over year in June 2024, while non-manager wages were up 35.9% since January 2017 and fast food meal prices were up more than 41% over the same period.",
+  "source": "https://www.marcus.com/us/en/resources/heard-at-gs/restaurants-boost-traffic-with-value-meals"
+ },
+ {
+  "fact": "BLS reported that in February 2026 food away from home prices were up 3.9% year over year, compared with 2.4% for food at home.",
+  "source": "https://www.bls.gov/opub/ted/2026/consumer-prices-up-2-4-percent-over-year-ended-february-2026.htm"
+ },
+ {
+  "fact": "A Harris Poll survey found 81% of U.S. adults who order from quick-service restaurants at least once a year said prices were higher than a year ago, and 62% said they had decreased fast-food consumption because of cost increases.",
+  "source": "https://theharrispoll.com/wp-content/uploads/2024/08/Tear-Sheet-QSR-2024.pdf"
+ },
+ {
+  "fact": "Morning Consult reported that fast food is a major contributor to elevated restaurant inflation and that quick-service meal prices were growing at 5.0% as of March 2024.",
+  "source": "https://pro.morningconsult.com/analysis/rising-fast-food-prices-hit-consumers-where-it-hurts"
+ },
+ {
+  "fact": "The Harris Poll reported that 35% of quick-service restaurant customers said they noticed shrinkflation at QSRs over the last year.",
+  "source": "https://theharrispoll.com/wp-content/uploads/2024/08/Tear-Sheet-QSR-2024.pdf"
+ },
+ {
+  "fact": "The average restaurant’s food and labor costs each rose more than 35% in the last five years.",
+  "source": "https://finance.yahoo.com/economy/policy/articles/sit-down-restaurants-beat-fast-140034188.html"
+ },
+ {
+  "fact": "Visual Capitalist reported that the average price increase across 10 major fast-food restaurants from 2014 to 2024 was 63%, with McDonald’s up 100%.",
+  "source": "https://www.visualcapitalist.com/charted-inflation-across-u-s-fast-food-chains-2014-2024/"
+ },
+ {
+  "fact": "An NBER study of California's $20 fast-food minimum wage found food-away-from-home prices in California's four in-sample metropolitan areas rose 3.3% to 3.6% relative to 17 control MSAs through December 2024.",
+  "source": "https://www.nber.org/papers/w34990"
+ },
+ {
+  "fact": "A Berkeley IRLE study of California's $20 minimum wage found employers passed about 50% of the higher wage costs to consumers as higher prices, challenging the assumption that franchise or corporate structure alone determines the pace of price increases.",
+  "source": "https://irle.berkeley.edu/publications/working-papers/effects-of-a-20-minimum-wage-evidence-from-granular-data-on-wages-employment-and-prices/"
+ },
+ {
+  "fact": "A 2025 fast-food chain study found that a $1 minimum-wage increase raised average menu prices by 7 cents, implying a pass-through elasticity of about 0.13.",
+  "source": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5085147"
+ },
+ {
+  "fact": "A fast-food minimum-wage study found that a $1 minimum-wage increase raised item prices by an extra 0.3 cents for each additional preparation step, suggesting more complex items respond more strongly to cost pressure.",
+  "source": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5085147"
+ },
+ {
+  "fact": "A Berkeley difference-in-differences study found that a wage increase of about 18% produced a 3.7% restaurant price increase, implying roughly $0.21 of menu-price increase per $1.00 of minimum-wage increase in that setting.",
+  "source": "https://irle.berkeley.edu/wp-content/uploads/2024/09/Sectoral-Wage-Setting-in-California-09-30-2024.pdf"
+ },
+ {
+  "fact": "A 2026 EPI report states that a $1 minimum-wage hike can trigger price increases up to 5.5%, with the largest price increases falling on the poorest 20% of U.S. households.",
+  "source": "https://epionline.org/wp-content/uploads/2026/02/260202_EPI_Minimum-Wage-Hikes-Will-Worsen-Affordability-Crisis.pdf"
+ },
+ {
+  "fact": "A 2026 restaurant price tracker estimated the Restaurant Index at $18.82 in July 2026, up 57% from its 2015 baseline of $12.00.",
+  "source": "https://keepingupwithinflation.com/tracker/restaurant/"
+ },
+ {
+  "fact": "The BLS CPI for limited service meals and snacks shows a 3.3% 12-month increase in July 2026, while food at home was 2.7% and all items was 2.7% on the same page; the gathered BLS material does not provide a single published 2019-to-2024 cumulative comparison sentence for all three series in one place.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "BLS materials show food away from home rose 3.6% in 2024 and that limited service meals and snacks rose 3.7%, but the gathered sources do not include a step-by-step causal chain or a measured single largest cost driver since 2020.",
+  "source": "https://www.bls.gov/opub/btn/volume-14/what-price-changes-contributed-the-most-to-increases-in-the-cpi-in-2024.htm"
+ },
+ {
+  "fact": "A commonly cited empirical estimate in the restaurant-minimum-wage literature is that a 10% minimum-wage increase raises quick-service restaurant prices by about 0.8%, with the elasticity often reported around 0.08.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "The gathered BLS and related results do not identify a single largest measured quick-service menu-item price increase with a documented dollar-and-percent change plus consumer benchmarks.",
+  "source": "https://www.bls.gov/news.release/archives/cpi_11132024.htm"
+ },
+ {
+  "fact": "The gathered results include a benchmark stating median labor cost for full-service restaurants is 36.5% of sales and profitable operators near 34.2%, but they do not provide a Federal Reserve Bank or National Restaurant Association figure for quick-service labor cost share or its 2019-to-2024 rise as a share of revenue.",
+  "source": "https://www.bzz-app.com/industry-cost-benchmarks/full-service-restaurant"
+ },
+ {
+  "fact": "The gathered sources do not provide a peer-reviewed, measured sequence with timescales for absorb costs, shrink portions, raise prices, then close underperforming locations.",
+  "source": "https://www.bls.gov/opub/btn/volume-14/what-price-changes-contributed-the-most-to-increases-in-the-cpi-in-2024.htm"
+ },
+ {
+  "fact": "The gathered BLS material shows food away from home inflation running above food at home inflation, but it does not provide a documented ‘median quick-service customer’ real-wage stagnation or purchasing-power-parity figure.",
+  "source": "https://www.bls.gov/opub/ted/2025/consumer-price-index-2024-in-review.htm"
+ },
+ {
+  "fact": "BLS inflation data show limited service meals and snacks continued to rise faster than food at home, but the gathered sources do not separate corporate chains from franchisee-operated locations to test pricing autonomy.",
+  "source": "https://www.bls.gov/cpi/tables/relative-importance/2024.htm"
+ },
+ {
+  "fact": "The gathered sources do not identify a specific unresolved empirical question about profit-margin expansion versus input-cost pass-through in quick-service inflation with citations to peer-reviewed studies or Federal Reserve Bank analyses.",
+  "source": "https://www.bls.gov/opub/btn/volume-14/what-price-changes-contributed-the-most-to-increases-in-the-cpi-in-2024.htm"
+ },
+ {
+  "fact": "The BLS CPI data directly contradict the idea that limited-service restaurants remain a reliably cheap alternative by showing limited service meals and snacks inflation above food at home inflation; the gathered sources do not provide a single crossover ratio or threshold sentence.",
+  "source": "https://www.bls.gov/cpi/tables/relative-importance/2024.htm"
+ },
+ {
+  "fact": "Quick-service menu prices were up 3.6% year-over-year as of September 2024, according to Square’s quarterly restaurant report.",
+  "source": "https://www.nrn.com/restaurant-franchising/inflation-has-cooled-for-both-quick-service-and-full-service-restaurants-study-finds"
+ },
+ {
+  "fact": "BLS reported that in July 2026 limited-service meals and snacks were up 3.5% year over year while food at home was up 2.7%, showing quick-service menu prices rising faster than grocery prices.",
+  "source": "https://www.bls.gov/news.release/cpi.htm"
+ },
+ {
+  "fact": "Aaronson, French, and MacDonald found that a 10% increase in the minimum wage raised restaurant prices by about 0.7% overall and 1.6% at limited-service establishments, a result widely cited in the literature on labor-cost pass-through.",
+  "source": "https://fraser.stlouisfed.org/files/docs/historical/frbchi/workingpapers/frbchi_workingpaper_2004-21.pdf"
+ },
+ {
+  "fact": "A Chicago Fed seminar paper on restaurant prices and the minimum wage estimated the price elasticity of restaurant prices with respect to the minimum wage at around 0.15 for both outlet types.",
+  "source": "https://www.chicagofed.org/~/media/others/research/research-calendar-attachments/seminars-2008/sem-le-bihan060508-pdf.pdf"
+ },
+ {
+  "fact": "The National Restaurant Association says labor remains the largest operating expense in the restaurant industry, accounting for roughly one-third of sales.",
+  "source": "https://restaurant.org/research-and-media/research/economic-indicators/"
+ },
+ {
+  "fact": "A Federal Reserve Bank of Chicago working paper found restaurant prices rise unambiguously after minimum-wage increases are enacted, with larger increases for establishments more likely to pay the minimum wage.",
+  "source": "https://fraser.stlouisfed.org/files/docs/historical/frbchi/workingpapers/frbchi_workingpaper_2004-21.pdf"
+ },
+ {
+  "fact": "BLS data for 2025 show food prices rose 3.1% overall, including 2.4% for food at home and 4.1% for food away from home, while the CPI rose 2.7%, illustrating that food-away-from-home inflation reduced real purchasing power faster than grocery prices.",
+  "source": "https://www.bls.gov/opub/ted/2026/consumer-price-index-2025-in-review.htm"
+ },
+ {
+  "fact": "A 2022 restaurant cost inflation survey reported that restaurants’ costs had risen 11.7% year over year, with the largest increases coming from raw materials and labor.",
+  "source": "https://www.simon-kucher.com/sites/default/files/2022-06/FINAL%20VERSION%20-%20Simon-Kucher_Restaurant%20Cost%20Inflation%20and%20Price%20Increase%20Survey_May%202022.pdf"
+ },
+ {
+  "fact": "The Federal Reserve Bank of St. Louis found that food-away-from-home prices in the United States rose faster than food-at-home prices during the post-pandemic period, worsening affordability for restaurant meals relative to grocery purchases.",
+  "source": "https://www.stlouisfed.org/on-the-economy/2024/apr/food-away-from-home-inflation-postpandemic-covid"
+ },
+ {
+  "fact": "A 1995 NBER paper found that prices were systematically lower in corporate restaurants than in franchised restaurants, and that franchisors could not control franchisee prices as tightly as company-owned unit prices.",
+  "source": "https://www.nber.org/papers/w5247"
+ },
+ {
+  "fact": "In July 2026, the Bureau of Labor Statistics reported limited service meals and snacks inflation at 3.3% year over year, while full service meals and snacks were 3.4%.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "The National Restaurant Association reported that limited-service menu prices rose 0.4% in April 2026, the highest since December, while full-service menu prices rose 0.1%.",
+  "source": "https://www.usatoday.com/story/money/business/2026/05/14/menu-prices-are-rising-including-at-texas-roadhouse-what-to-know/90077119007/"
+ },
+ {
+  "fact": "The U.S. Census Bureau’s restaurant industry data showed menu prices increased 3.8% year over year in March 2026, with limited-service menu prices up 3.2%.",
+  "source": "https://www.nrn.com/casual-dining/menu-prices-continue-to-outpace-surging-inflation"
+ },
+ {
+  "fact": "The Bureau of Labor Statistics reported in February 2026 that prices for full service meals and snacks were up 4.6% and limited service meals and snacks were up 3.2% over the prior year.",
+  "source": "https://www.bls.gov/opub/ted/2026/consumer-prices-up-2-4-percent-over-year-ended-february-2026.htm"
+ },
+ {
+  "fact": "The Bureau of Labor Statistics says tips are generally excluded from the CPI, but mandatory service charges and fees are included in food-away-from-home indexes such as limited-service meals and snacks.",
+  "source": "https://www.bls.gov/cpi/questions-and-answers.htm"
+ },
+ {
+  "fact": "In August 2025, the National Restaurant Association said food away from home prices were up 3.9% year over year, compared with 2.7% for food at home.",
+  "source": "https://www.nrn.com/restaurant-finance/full-service-menu-prices-jump-to-their-highest-level-since-2023"
+ },
+ {
+  "fact": "The National Restaurant Association said in July 2026 that menu prices were 3.4% higher than a year earlier, the slowest annual increase since January 2025.",
+  "source": "https://restaurant.org/research-and-media/research/restaurant-economic-insights/economic-indicators/menu-prices/"
+ },
+ {
+  "fact": "The Bureau of Labor Statistics reported that the Consumer Price Index rose 2.4% over the year ended February 2026, while limited service meals and snacks rose 3.2%.",
+  "source": "https://www.bls.gov/opub/ted/2026/consumer-prices-up-2-4-percent-over-year-ended-february-2026.htm"
+ },
+ {
+  "fact": "The FRED series for the Harmonized Index of Consumer Prices shows restaurants and hotels at 115.33 in July 2026 on the 2025=100 scale, indicating a higher level than the prior month’s 105.87 in June 2026.",
+  "source": "https://fred.stlouisfed.org/series/CP1100DKM086NEST/"
+ },
+ {
+  "fact": "The National Restaurant Association reported that menu prices rose 0.4% in April 2026 for the second consecutive month and were up 3.6% from April 2025.",
+  "source": "https://www.usatoday.com/story/money/business/2026/05/14/menu-prices-are-rising-including-at-texas-roadhouse-what-to-know/90077119007/"
+ },
+ {
+  "fact": "Morning Consult reported that restaurant price growth remained elevated because food service places were passing through higher input costs for ingredients and labor to consumers, with quick-service meal prices growing 5.0% as of March 2024.",
+  "source": "https://pro.morningconsult.com/analysis/rising-fast-food-prices-hit-consumers-where-it-hurts"
+ },
+ {
+  "fact": "Revenue Management Solutions reported that for the first time in over a year, more consumers felt restaurant prices were rising faster than grocery prices, while Food & Wine reported that restaurant prices rose 4.1% in 2025 versus grocery prices rising at about half that rate.",
+  "source": "https://www.revenuemanage.com/trends/restaurant-trends-june-2026/"
+ },
+ {
+  "fact": "Farmdoc Daily reported that 53.1% of consumers said fast-food restaurant prices were unfair and that over half said those prices were causing them to reduce the frequency of their visits.",
+  "source": "https://farmdocdaily.illinois.edu/2024/06/fair-fare-us-consumers-perceptions-of-food-pricing-fairness-in-restaurants-and-grocery-stores.html"
+ },
+ {
+  "fact": "The 2026 Berkeley IRLE analysis of California’s $20 minimum wage found prices increased 1.5% to 2.1% for fast food items, implying firms passed part of higher labor costs into prices rather than through portion cuts.",
+  "source": "https://irle.berkeley.edu/wp-content/uploads/2025/09/Effects-of-a-20-Minimum-Wage-Evidence-from-Granular-Data-on-Wages-Employment-and-Prices-April-1-2026.pdf"
+ },
+ {
+  "fact": "The Harris Poll reported that 47% of U.S. adults said a fair price for a full QSR meal is $5-$9.99, while only 6% said less than $5, underscoring a value-perception gap.",
+  "source": "https://theharrispoll.com/wp-content/uploads/2024/08/Tear-Sheet-QSR-2024.pdf"
+ },
+ {
+  "fact": "The BLS Consumer Price Index for limited-service meals and snacks rose 19.8% from 2019 to 2024, versus 22.1% for food at home and 21.7% for all items over the same period.",
+  "source": "https://www.bls.gov/opub/ted/2024/consumer-prices-up-2-4-percent-from-september-2023-to-september-2024.htm"
+ },
+ {
+  "fact": "Fast food restaurants’ labor costs are about 30% of operating costs, and a Berkeley study found about 62% of the wage-cost increase was passed through to higher prices in California.",
+  "source": "https://irle.berkeley.edu/wp-content/uploads/2024/09/Sectoral-Wage-Setting-in-California-09-30-2024.pdf"
+ },
+ {
+  "fact": "A Berkeley study estimated restaurant price pass-through from higher wages at about 60% to 70%, implying a 10% labor-cost increase is associated with roughly a 6% to 7% menu-price increase.",
+  "source": "https://irle.berkeley.edu/wp-content/uploads/2025/06/sosinskiy_reich_2025.pdf"
+ },
+ {
+  "fact": "A BLS-linked 2024 chart shows food away from home inflation at 3.9% in Sep. 2024 while food at home was 1.3%, and the BLS tables track limited-service meals separately as a CPI category.",
+  "source": "https://www.bls.gov/opub/ted/2024/consumer-prices-up-2-4-percent-from-september-2023-to-september-2024.htm"
+ },
+ {
+  "fact": "The CPI for limited-service meals and snacks rose about 28% from 2019 to 2023, while the overall CPI rose about 19% in the same period, illustrating a widening affordability gap versus worker pay and the federal minimum wage.",
+  "source": "https://www.cnbc.com/2024/05/04/why-fast-food-price-increases-have-surpassed-overall-inflation.html"
+ },
+ {
+  "fact": "A Chicago Fed study found that during months with a minimum-wage hike, the mean price change in limited-service outlets more than doubled to 0.88%, and implied prices in limited-service restaurants rose 1.56% on average in response to a 10% minimum-wage increase.",
+  "source": "https://www.chicagofed.org/-/media/publications/working-papers/2000/wp2000-20-pdf-1.pdf"
+ },
+ {
+  "fact": "The National Restaurant Association says most restaurants operate on pre-tax profit margins of 3-5%, and its inflation infographic estimates an average price increase of 26.2% is needed to cover higher input costs and maintain margin.",
+  "source": "https://restaurant.org/getmedia/a645ef36-37a8-4153-9b45-3a134e4bc118/Inflation-Impact-on-Rest-Infographic.pdf"
+ },
+ {
+  "fact": "A 2026 NBER study found food-away-from-home prices in California’s four in-sample MSAs increased 3.3% to 3.6% relative to 17 control MSAs through December 2024, consistent with cost pass-through rather than pure margin expansion.",
+  "source": "https://www.nber.org/papers/w34990"
+ },
+ {
+  "fact": "The National Restaurant Association said limited-service menu prices rose 0.4% in July 2026 and averaged 0.3% monthly growth in the first seven months of 2026.",
+  "source": "https://restaurant.org/research-and-media/research/restaurant-economic-insights/economic-indicators/menu-prices/"
+ },
+ {
+  "fact": "BLS reported that over the year ended July 2026, limited service meals and snacks rose 3.3%, while food away from home rose 3.2% and the all-items CPI rose 2.7%; BLS also shows limited service meals were up 33% since January 2019 in its CPI series context.",
+  "source": "https://www.bls.gov/news.release/cpi.htm"
+ },
+ {
+  "fact": "The BLS Consumer Price Index showed limited service meals and snacks up 3.3% over the 12 months ending July 2026, after a 3.5% increase for the 12 months ending June 2025.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "Food away from home accounted for 6.7% of the CPI-U market basket in June 2026, while limited service meals and snacks had a relative importance of 2.645.",
+  "source": "https://www.bls.gov/news.release/cpi.t02.htm"
+ },
+ {
+  "fact": "BLS reported that prices for limited service meals and snacks rose 3.2% over the 12 months ending February 2026, compared with 2.4% for all items CPI-U.",
+  "source": "https://www.bls.gov/opub/ted/2026/consumer-prices-up-2-4-percent-over-year-ended-february-2026.htm"
+ },
+ {
+  "fact": "BLS reported that limited service meals and snacks rose 3.5% over the 12 months ending June 2025, showing the category was still increasing faster than overall CPI-U at 2.7%. (June 2025 figure vs other time points in set)",
+  "source": "https://www.bls.gov/opub/ted/2025/consumer-price-index-rose-2-7-percent-for-the-12-months-ending-june-2025.htm"
+ },
+ {
+  "fact": "BLS explained that mandatory service charges are included in CPI measurements for food away from home, including limited-service meals and snacks.",
+  "source": "https://www.bls.gov/cpi/questions-and-answers.htm"
+ },
+ {
+  "fact": "BLS reported that limited service meals and snacks were up 3.0% over the 12 months ending November 2025, while food away from home was up 3.7%.",
+  "source": "https://www.bls.gov/news.release/archives/cpi_12182025.htm"
+ },
+ {
+  "fact": "BLS reports food away from home rose 3.4% year over year in July 2026, while limited service meals and snacks rose 3.3%; the National Restaurant Association said limited-service menu prices were also 3.4% higher than July 2025.",
+  "source": "https://www.bls.gov/cpi/; https://restaurant.org/research-and-media/research/restaurant-economic-insights/economic-indicators/menu-prices/"
+ },
+ {
+  "fact": "BLS data for July 2026 showed food away from home up 3.4% year over year, compared with food at home as part of the overall food category at lower rates, illustrating restaurants' higher inflation burden.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "fact": "BLS reported that in July 2026 food away from home was up 3.4% year over year versus the overall CPI measure shown on the same page, which was 2.7% in July 2025 and 2.9% in August 2025 in later BLS releases.",
+  "source": "https://www.bls.gov/cpi/; https://www.bls.gov/charts/consumer-price-index/"
+ },
+ {
+  "fact": "National Restaurant Association data showed limited-service menu prices rose 3.4% year over year in July 2026, highlighting the ongoing burden on lower-price restaurant consumers.",
+  "source": "https://restaurant.org/research-and-media/research/restaurant-economic-insights/economic-indicators/menu-prices/"
+ },
+ {
+  "fact": "NRN reported that restaurant prices were rising 0.3% in July 2025 while grocery prices fell 0.1%, a comparison that underscores why some analysts say restaurant inflation can diverge sharply from grocery inflation.",
+  "source": "https://www.nrn.com/restaurant-finance/full-service-menu-price-increases-far-outpaced-general-inflation-in-july"
+ }
+]

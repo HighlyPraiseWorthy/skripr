@@ -60,3 +60,18 @@ export function SoftCtaToggle({ value, onChange }: { value: boolean; onChange: (
     />
   );
 }
+
+// Per-script option: NO CTA at all. When on, the script ends on its final narrative
+// line with zero subscribe/like/comment/related-video ask — and the self-review pass
+// cuts any CTA the writer slips in. Off by default (a single end CTA is kept).
+export function NoCtaToggle({ value, onChange }: { value: boolean; onChange: (v: boolean) => void }) {
+  return (
+    <ToggleRow
+      icon="🚫"
+      label="NO CTA (END ON THE STORY)"
+      help="Turn on to end the script on its closing line with no subscribe/like/comment ask at all. Overrides the CTA options above."
+      value={value}
+      onChange={onChange}
+    />
+  );
+}

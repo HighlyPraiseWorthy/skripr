@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test:guards": "npx tsx scripts/regression-harness.test.ts && npx tsx scripts/conflict-resolution.test.ts && npx tsx scripts/title-validate.test.ts && npx tsx scripts/pattern-dedupe.test.ts && npx tsx scripts/voice-guards.test.ts && npx tsx scripts/hook-families.test.ts && npx tsx scripts/angle-vet.test.ts && npx tsx scripts/research-relevance.test.ts && npx tsx scripts/fact-discipline.test.ts",
+    "bench": "npx tsx --env-file=.env.local scripts/benchmark/run.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.95.2",

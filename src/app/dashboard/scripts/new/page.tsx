@@ -5,9 +5,10 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import GenerationProgress from "@/components/GenerationProgress";
 import { VoiceSelect } from "@/components/VoiceSelect";
-import { CompanionCtaToggle, SoftCtaToggle } from "@/components/CompanionCtaToggle";
+import { CompanionCtaToggle, SoftCtaToggle, NoCtaToggle } from "@/components/CompanionCtaToggle";
 import StorytellingPicker from "@/components/StorytellingPicker";
 import ResearchStep from "@/components/ResearchStep";
+import { applyFinalCheck } from "@/lib/final-check-client";
 
 const C = {
   bg: "#080c12", cardBg: "#0d1520", border: "rgba(77,184,255,0.11)",
@@ -82,6 +83,7 @@ export default function NewScriptPage() {
   const [voiceId, setVoiceId] = useState<string | null>(null);
   const [companionCta, setCompanionCta] = useState(false);
   const [softCta, setSoftCta] = useState(false);
+  const [noCta, setNoCta] = useState(false);
   const [sourceVerdict, setSourceVerdict] = useState<string | null>(null);
   const [topicKind, setTopicKind] = useState<string | null>(null);
   // Grounding resolved at the TOPIC stage, before angles, so the angle cards can
@@ -120,6 +122,10 @@ export default function NewScriptPage() {
   const [angleWarnings, setAngleWarnings] = useState<string[][]>([]);
   const [selectedHookType, setSelectedHookType] = useState<string | null>(null);
   const [lockTitle, setLockTitle] = useState(false);
+  const [outlierSeeded, setOutlierSeeded] = useState(false);
+  // One-move mode: this screen becomes the single SETUP step (length/voice/CTAs), then the whole
+  // pipeline (case + facts + angle + storytelling + generate) runs automatically in script-brief.
+  const [autoMode, setAutoMode] = useState(false);
 
   // ── Persist state across navigation ───────────────────────────────────────
   useEffect(() => {
@@ -134,7 +140,8 @@ export default function NewScriptPage() {
       if (s.pastedTranscript) setPastedTranscript(s.pastedTranscript);
       if (s.videoMinutes) setVideoMinutes(s.videoMinutes);
       if (s.extraSeconds) setExtraSeconds(s.extraSeconds);
-      if (s.selectedHookType !== undefined) setSelectedHookType(s.selectedHookType);
+      // Hook type is chosen on the angles page now; a remembered value from an old visit silently
+      // filtered every new topic to one hook type (seen live: always Controversy). Never restore it.
       if (s.magnetWords?.length) setMagnetWords(s.magnetWords);
       // Never restore "result"/"generating": the script object isn't persisted,
       // so restoring those steps renders a blank page. Fresh visits start at input.
@@ -173,7 +180,7 @@ export default function NewScriptPage() {
       fetch("/api/scripts/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ transcript: "", topic: topicVal, niche: nicheVal, videoLength: videoMinutes >= 14 ? "long" : "medium", targetMinutes: videoMinutes, viralMagnetWord: selectedViralWord || undefined, voiceProfileId: voiceId || undefined, companionCta, softCta, angle: undefined, remixFramework: rfParam || undefined, hookType: htParam || undefined, titleFormula: tfParam || undefined }),
+        body: JSON.stringify({ transcript: "", topic: topicVal, niche: nicheVal, videoLength: videoMinutes >= 14 ? "long" : "medium", targetMinutes: videoMinutes, viralMagnetWord: selectedViralWord || undefined, voiceProfileId: voiceId || undefined, companionCta, softCta, noCta, angle: undefined, remixFramework: rfParam || undefined, hookType: htParam || undefined, titleFormula: tfParam || undefined }),
       })
         .then(r => r.json().catch(() => null))
         .then(data => {
@@ -205,6 +212,17 @@ export default function NewScriptPage() {
       setInputMode("topic");
       setTopic(pending.trim());
       try { localStorage.removeItem("skripr_pending_topic"); } catch {}
+      // Outlier Finder "Research this idea" seeds the winning structure: pre-fill the
+      // suggested length + an editable angle carrying the outlier's DNA. Nothing
+      // auto-generates — the creator reviews everything and still runs the normal flow.
+      if (params.get("seed") === "outlier") {
+        const m = Number(params.get("seedMinutes"));
+        if (Number.isFinite(m) && m > 0) setVideoMinutes(Math.max(10, Math.min(20, Math.round(m))));
+        const a = params.get("seedAngle");
+        if (a && a.trim()) setAngle(a.trim());
+        setOutlierSeeded(true);
+        if (params.get("auto") === "1") setAutoMode(true);
+      }
       return;
     }
     // From the free transcript tool: carry the proven video's URL into URL mode.
@@ -309,13 +327,15 @@ export default function NewScriptPage() {
     try {
       const res = await fetch("/api/scripts/generate", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ transcript, niche: niche || undefined, topic: topic || undefined, videoLength: videoMinutes >= 14 ? "long" : "medium", targetMinutes: videoMinutes, voiceProfileId: voiceId || undefined, companionCta, softCta, sourceVerdict: sourceVerdict || undefined, topicKind: topicKind || undefined,
+        body: JSON.stringify({ transcript, niche: niche || undefined, topic: topic || undefined, videoLength: videoMinutes >= 14 ? "long" : "medium", targetMinutes: videoMinutes, voiceProfileId: voiceId || undefined, companionCta, softCta, noCta, sourceVerdict: sourceVerdict || undefined, topicKind: topicKind || undefined,
           sourceMaterial: [buildUpstreamSourceMaterial(), sourceMaterial].filter(Boolean).join("\n\n") || undefined,
           sourceVideoId: youtubeUrl ? youtubeUrl.match(/[?&]v=([^&]+)/)?.[1] : undefined, viralMagnetWord: selectedViralWord || undefined, angle: angle || undefined, remixFramework: viralFramework?.remixFramework || undefined, hookType: viralFramework?.hookType || undefined, titleFormula: viralFramework?.selectedTitle || viralFramework?.titleFormula || undefined,
           storytellingMode, storytellingTechniques, selectedTitle: lockTitle && topic.trim() ? topic.trim() : undefined }),
       });
-      const data = await res.json().catch(() => null);
+      let data = await res.json().catch(() => null);
       if (!res.ok || !data) throw new Error(data?.error || "The connection dropped while generating. Please try again.");
+      // FINAL CHECK against the research (shared with every script page). Never blocks the result.
+      data = await applyFinalCheck(data, { sourceMaterial: [buildUpstreamSourceMaterial(), sourceMaterial].filter(Boolean).join("\n\n") || undefined });
       setGeneratedScript({
         title: data.title, content: data.fullScript || data.content, hook: data.hook,
         structurePattern: data.sections?.length ? `${data.sections.length}-section` : undefined,
@@ -468,6 +488,14 @@ export default function NewScriptPage() {
             }
 
             {inputMode === "topic" ? (<>
+              {outlierSeeded && (
+                <div style={{ marginBottom: 14, padding: "11px 14px", borderRadius: 10, background: "rgba(167,139,250,0.08)", border: "1px solid rgba(167,139,250,0.3)" }}>
+                  <div style={{ fontSize: 12, fontWeight: 800, color: "#a78bfa", letterSpacing: 0.3, marginBottom: 3 }}>🧬 SEEDED FROM AN OUTLIER PATTERN</div>
+                  <p style={{ fontSize: 12.5, color: C.textDim, lineHeight: 1.5, margin: 0 }}>
+                    The length and angle below carry the winning structure from the outlier you picked, so this script borrows the proven shape (not its subject). Everything is editable — adjust anything, then continue.
+                  </p>
+                </div>
+              )}
               {/* ── Topic FIRST with red asterisk ── */}
               <div style={{ marginTop: 0 }}>
                 <div style={{ marginBottom: 8 }}>
@@ -577,12 +605,16 @@ export default function NewScriptPage() {
               </div>
             )}
 
-            {/* ─── Voice picker (pre-gen) — url/paste only; the topic wizard moves this to its Finish step ─── */}
-            {inputMode !== "topic" && (
+            {/* ─── Voice picker (pre-gen) — url/paste always; and the TOPIC wizard's Finish step. But in
+                ONE-MOVE (auto) mode we skip that Finish step, so this setup screen IS the only place to
+                pick voice/CTAs — surface them here so the creator never generates on the wrong voice. ─── */}
+            {(inputMode !== "topic" || autoMode) && (
             <div style={{ marginTop: 16 }}>
+              {autoMode && <div style={{ fontSize: 11, fontWeight: 700, color: "#7ed8ff", letterSpacing: 0.4, marginBottom: 8 }}>VOICE & CTAs FOR THIS SCRIPT</div>}
               <VoiceSelect value={voiceId} onChange={setVoiceId} />
-              <CompanionCtaToggle value={companionCta} onChange={setCompanionCta} />
-              <SoftCtaToggle value={softCta} onChange={setSoftCta} />
+              <NoCtaToggle value={noCta} onChange={(v) => { setNoCta(v); if (v) { setCompanionCta(false); setSoftCta(false); } }} />
+              {!noCta && <CompanionCtaToggle value={companionCta} onChange={setCompanionCta} />}
+              {!noCta && <SoftCtaToggle value={softCta} onChange={setSoftCta} />}
             </div>
             )}
 
@@ -714,7 +746,7 @@ export default function NewScriptPage() {
                 onClick={() => {
                   // Carry any case already grounded on this screen so script-brief
                   // does not re-resolve and ask "which real case" a second time.
-                  const brief: any = { topic: topic.trim(), niche: niche.trim(), videoLength: videoMinutes >= 14 ? "long" : "medium", targetMinutes: videoMinutes, hookTypeFilter: selectedHookType || null, lockTitle, viralMagnetWord: selectedViralWord || null, voiceProfileId: voiceId || null, angles: [] };
+                  const brief: any = { topic: topic.trim(), niche: niche.trim(), videoLength: videoMinutes >= 14 ? "long" : "medium", targetMinutes: videoMinutes, hookTypeFilter: null, lockTitle, viralMagnetWord: selectedViralWord || null, voiceProfileId: voiceId || null, companionCta, softCta, noCta, angles: [], seedAngle: (outlierSeeded && angle.trim()) ? angle.trim() : undefined, auto: autoMode || undefined };
                   if (grounding || groundedOn) {
                     brief.grounding = { ...(grounding || {}), ...(groundedOn ? { caseName: groundedOn.name, caseSummary: groundedOn.summary, when: groundedOn.when, sources: groundedOn.sources || [] } : {}) };
                     brief.topicKind = topicKind || undefined;
@@ -725,11 +757,11 @@ export default function NewScriptPage() {
                 }}
                 style={{
                   display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8,
-                  padding: "12px 24px", borderRadius: 14, background: grad, color: "#fff",
+                  padding: "12px 24px", borderRadius: 14, background: autoMode ? "linear-gradient(135deg, #16a34a 0%, #22c55e 100%)" : grad, color: "#fff",
                   fontSize: 14, fontWeight: 700, border: "none", width: "100%", marginTop: 16,
                   cursor: "pointer", boxShadow: "0 4px 24px rgba(77,184,255,0.35)",
                 }}>
-                ✦ Find My Hook Angle →
+                {autoMode ? "✦ Make the script →" : "✦ Find My Hook Angle →"}
               </button>
             )}
 
@@ -837,19 +869,8 @@ export default function NewScriptPage() {
                   </ul>
                 </div>
               )}
-                            {Array.isArray((generatedScript as any).factCheck?.unverified) && (generatedScript as any).factCheck.unverified.length > 0 && (
-                <div style={{ background: "rgba(251,191,36,0.08)", border: "1px solid rgba(251,191,36,0.3)", borderRadius: 12, padding: "13px 16px", marginBottom: 16 }}>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: "#fbbf24", letterSpacing: 0.4, marginBottom: 5 }}>VERIFY BEFORE PUBLISHING</div>
-                  <div style={{ fontSize: 12.5, color: C.textDim, lineHeight: 1.6, marginBottom: 9 }}>
-                    These dates or figures are in the script but were not in the sourced research, so they may be the model&apos;s own recall. Check each before you record.
-                  </div>
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
-                    {(generatedScript as any).factCheck.unverified.map((u: string, i: number) => (
-                      <span key={i} style={{ fontSize: 12, fontWeight: 600, color: "#fbbf24", background: "rgba(251,191,36,0.12)", border: "1px solid rgba(251,191,36,0.3)", borderRadius: 7, padding: "4px 10px" }}>{u}</span>
-                    ))}
-                  </div>
-                </div>
-              )}
+                            {/* "VERIFY BEFORE PUBLISHING" figure panel removed on purpose — Skripr verifies
+                                figures itself (self-review pass) rather than punting a distrust-inducing flag. */}
               {generatedScript.hook && (
                 <div style={{ borderRadius: 14, padding: "14px 16px", marginBottom: 16, background: "rgba(77,184,255,0.07)", border: "1px solid rgba(77,184,255,0.14)" }}>
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>

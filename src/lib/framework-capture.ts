@@ -3,7 +3,7 @@ import { supabaseAdmin } from "@/lib/db/supabase";
 import { saveViralFramework, fetchSourceViews, normalizeNiche } from "@/lib/viral-frameworks";
 import { getVideoMeta } from "@/lib/youtube-transcript";
 import { NICHES } from "@/lib/data/niches";
-import { HOOK_TYPE_NAMES } from "@/lib/ai/claude";
+import { HOOK_FAMILY_TYPES, HOOK_FAMILIES_PROMPT, toHookFamily } from "@/lib/hook-families";
 
 // Background framework capture: whenever a real YouTube video flows through ANY
 // surface (New Script URL, Voice Match channel, etc.), extract its viral
@@ -20,8 +20,11 @@ function getClient(): Anthropic {
 async function alreadyCaptured(videoId: string): Promise<boolean> {
   if (!supabaseAdmin) return true;
   try {
-    const { data } = await supabaseAdmin.from("viral_frameworks").select("video_id").eq("video_id", videoId).maybeSingle();
-    return !!data;
+    // A title-only row (banked by captureOutlierTitles moments earlier in the same Outlier scan) is NOT
+    // a capture: only a row that already has the hook counts. Checking mere existence made every
+    // breakout hook capture skip itself, so Outlier Finder banked titles but never a single hook.
+    const { data } = await supabaseAdmin.from("viral_frameworks").select("video_id, hook_text").eq("video_id", videoId).maybeSingle();
+    return !!(data && String((data as any).hook_text || "").trim());
   } catch {
     return true; // on error, skip rather than risk a duplicate analysis
   }
@@ -32,6 +35,9 @@ export interface CaptureInput {
   transcript: string;
   title?: string | null;
   views?: number | null;
+  // The caller's niche (an Outlier scan knows the channel's niche) wins over the model's guess (seen: a
+  // Visual Venture true-crime video filed under "storytelling").
+  niche?: string | null;
 }
 
 export async function captureFrameworkInBackground(input: CaptureInput): Promise<void> {
@@ -42,7 +48,7 @@ export async function captureFrameworkInBackground(input: CaptureInput): Promise
 
     const msg = await getClient().messages.create({
       model: "claude-haiku-4-5-20251001",
-      max_tokens: 1200,
+      max_tokens: 2500,
       system: `You output ONLY valid JSON. No prose, no markdown fences. Start with { and end with }.`,
       messages: [{
         role: "user",
@@ -57,7 +63,7 @@ ${input.transcript.slice(0, 7000)}
 
 Return JSON with EXACTLY these keys:
 {
-  "hookType": "the hook pattern used — pick the closest match from: ${HOOK_TYPE_NAMES.join(", ")}",
+  "hookType": "the hook type used — EXACTLY one of: ${HOOK_FAMILY_TYPES.join(", ")} (see definitions below)",
   "hook": "the opening hook line(s), verbatim from the content",
   "whyItWorks": "one sentence on the psychology of why this hook works",
   "structure": [{"section": "name", "description": "what happens"}],
@@ -65,9 +71,12 @@ Return JSON with EXACTLY these keys:
   "titleFormula": {"formula": "the reusable title template this video implies"},
   "remixFramework": "3 sentences: how to replicate this video's success for any topic",
   "niche": "exactly one id from: ${NICHES.map(n => n.id).join(", ")}"
-}`,
+}
+
+HOOK TYPE DEFINITIONS (classify by what the opening line DOES):
+${HOOK_FAMILIES_PROMPT}`,
       }],
-    });
+    }, { timeout: 25_000 }); // never let one slow analysis hold an Outlier scan past its limit
 
     const raw = msg.content[0].type === "text" ? msg.content[0].text : "";
     const parsed = JSON.parse(raw.replace(/```json|```/g, "").trim());
@@ -78,8 +87,8 @@ Return JSON with EXACTLY these keys:
     await saveViralFramework({
       video_id: input.videoId,
       video_title: title,
-      niche: normalizeNiche(parsed.niche),
-      hook_type: parsed.hookType ?? null,
+      niche: normalizeNiche(input.niche || parsed.niche),
+      hook_type: toHookFamily(parsed.hookType),
       hook_text: parsed.hook ?? null,
       why_it_works: parsed.whyItWorks ?? null,
       structure: parsed.structure ?? null,

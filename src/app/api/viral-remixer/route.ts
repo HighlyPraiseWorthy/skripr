@@ -1,3 +1,4 @@
+import { HOOK_FAMILY_TYPES, HOOK_FAMILIES_PROMPT, toHookFamily } from "@/lib/hook-families";
 import { NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { auth } from "@clerk/nextjs/server";
@@ -73,7 +74,7 @@ Return ONLY valid JSON, no markdown fences, with this exact shape:
 {
   "hookAnalysis": {
     "hook": "The exact first 1-2 sentences of the video",
-    "hookType": "One of: Challenge/Stat/Story/Controversy/Question/Result/Myth-bust/Teaser",
+    "hookType": "EXACTLY one of: ${HOOK_FAMILY_TYPES.join(", ")}. Definitions:\n${HOOK_FAMILIES_PROMPT}",
     "whyItWorks": "2 sentences on the psychological mechanism that stops the scroll"
   },
   "structure": [
@@ -136,7 +137,7 @@ ${EXPERT_ATTRIBUTION_RULE}`,
       video_id: videoId,
       video_title: meta.title || null,
       niche: normalizeNiche(analysis.niche),
-      hook_type: analysis.hookAnalysis?.hookType ?? null,
+      hook_type: toHookFamily(analysis.hookAnalysis?.hookType),
       hook_text: analysis.hookAnalysis?.hook ?? null,
       why_it_works: analysis.hookAnalysis?.whyItWorks ?? null,
       structure: analysis.structure ?? null,

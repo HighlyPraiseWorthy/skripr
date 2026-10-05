@@ -1,8 +1,10 @@
 import { Anthropic } from "@anthropic-ai/sdk";
 import { fingerprintToBrief, readProhibitions, stripStandaloneTics, type VoiceFingerprint } from "@/lib/voice-metrics";
 import { buildStorytellingBlock } from "@/lib/storytelling";
-import { stripInsinuations, stripUnnamedPartyNaming, stripSpeculation, stripImpliedRevelation, dedupeAdjacentParagraphs, stripDuplicateHook, collapseRepeatedAnchors, stripSchemeDurationClaim, stripStaleFutureDates, stripSourceLeaks, mergeOrphanFragments, correctDatesToFacts, stripUnitConflation, stripInventedInference, flagOverstatementRisk, splitSentences, stripLeakedLabels, stripFalseEquality, stripUnsourcedStat, researchedYearSpan, primarySubjectName } from "@/lib/script-compliance";
+import { stripInsinuations, stripUnnamedPartyNaming, stripSpeculation, stripImpliedRevelation, dedupeAdjacentParagraphs, stripDuplicateHook, collapseRepeatedAnchors, stripSchemeDurationClaim, stripStaleFutureDates, stripSourceLeaks, stripFactMetaLeaks, stripUngroundedActs, stripRepeatedSentences, stripStutters, stripDividers, fixDanglingBackrefs, BACKREF_RE, unquoteUnsourced, fixQuoteWordCounts, superlativeMismatches, stripLeaningFragments, restoreSuperlativeQualifiers, balanceQuotes, fixOrphanedItSays, dedupeEndingDates, stripPipelineWords, misattributedPhrases, mergeOrphanFragments, correctDatesToFacts, stripUnitConflation, stripInventedInference, flagOverstatementRisk, splitSentences, stripLeakedLabels, stripFalseEquality, stripUnsourcedStat, researchedYearSpan, primarySubjectName, quoteBalanceKept, fixWeekdayDates, attributionMismatch, introducesUnsupportedName, ageYearMismatches, stripStoryMeta, expandNounContractions, eventYearMismatches, retoldFacts, introducesPipelineWords, figurePairsInSentence, foreverContradicted, replaceMinorNames, replaceFamilyNames, dropForeverAdverbs, fixMostWantedWording } from "@/lib/script-compliance";
 import { buildVarietyBlock } from "@/lib/ai/phrase-variety";
+import { validateTitle } from "@/lib/title-validate";
+import { getNicheOutlierPatterns } from "@/lib/viral-frameworks";
 
 let _anthropic: Anthropic | null = null;
 function getAnthropic(): Anthropic {
@@ -13,6 +15,9 @@ function getAnthropic(): Anthropic {
 }
 
 export interface ScriptGenerationInput {
+  // The video's subject (the topic as typed), so family-name handling never treats the subject as
+  // "his son" when a fact quotes his father.
+  subjectName?: string;
   sourceTranscript: string;
   sourceTitle: string;
   sourceNiche: string;
@@ -58,6 +63,9 @@ export interface ScriptGenerationInput {
   // Opt-in second CTA around the 60-70% retention dip. Off by default: it used
   // to be forced on, which produced two full subscribe+comment asks per script.
   softCta?: boolean;
+  // Fully suppress the end CTA — no subscribe/like/comment/related-video ask at all.
+  // The script ends on its closing narrative line. Default false (keeps the one end CTA).
+  noCta?: boolean;
   // Result of the pre-generation source check (src/lib/research.ts). "partial" or
   // "unverified" means the premise is not documented, so the script is barred
   // from inventing specifics to make it feel concrete.
@@ -201,7 +209,7 @@ export const HOOK_TYPES: { name: string; how: string; ex: string }[] = [
 export const HOOK_TYPE_NAMES = HOOK_TYPES.map((h) => h.name);
 export const HOOK_TYPES_PROMPT = HOOK_TYPES.map((h, i) => `${i + 1}. ${h.name} — ${h.how} e.g. "${h.ex}"`).join("\n");
 
-const buildSystemPrompt = ({ softCta = false, sourceVerdict, topicKind = "event" }: { softCta?: boolean; sourceVerdict?: "documented" | "partial" | "unverified"; topicKind?: "event" | "explainer" | "hypothetical" | "claim" } = {}) => `You are Skripr's AI script engine. You specialize in writing YouTube scripts for faceless channels that are optimized for retention, algorithm performance, and AI voice (TTS) delivery.
+const buildSystemPrompt = ({ softCta = false, noCta = false, sourceVerdict, topicKind = "event" }: { softCta?: boolean; noCta?: boolean; sourceVerdict?: "documented" | "partial" | "unverified"; topicKind?: "event" | "explainer" | "hypothetical" | "claim" } = {}) => `You are Skripr's AI script engine. You specialize in writing YouTube scripts for faceless channels that are optimized for retention, algorithm performance, and AI voice (TTS) delivery.
 
 Your scripts follow these principles:
 1a. HOOK DEVICE — SELECT IT FROM THIS CASE'S OWN FACTS, DO NOT TRANSPLANT THE SOURCE'S (the highest-leverage craft decision). A hook device works only when the case's facts can fire it. The source video's device fit ITS case, not necessarily yours: a "resolve a spectacle the audience witnessed" open works for a case people saw happen (a livestreamed raid), and falls flat on a case with no witnessed spectacle. So do NOT copy the source's hook treatment. Instead, from this MENU pick the device the CASE'S FACTS best support and the voice allows:
@@ -217,6 +225,7 @@ Your scripts follow these principles:
    b) ESCALATING OPEN LOOPS: Place open loops at the 1/3 and 2/3 points of the script. The 2/3 loop must be more urgent and higher-stakes than the 1/3 loop — escalate intensity, don't just repeat the pattern. The viewer must feel it would be a mistake to stop now.
    c) CALLBACK THREADING — RETURN TO A CONCRETE OBJECT/IMAGE (mandatory, graded, fails often). Plant ONE specific CONCRETE IMAGE OR OBJECT in the hook — a physical thing or a vivid single image the story can orbit (the 2017 spreadsheet; "a song no human ever chose to play, streaming right now"; the shipping label in the Nike case). Thread it lightly through the middle, then in the final 20% RETURN to that exact image and land it on a REAL SOURCED FACT: the documented outcome, the forfeiture figure, the guilty plea. An abstract callback ("the calculation on a spreadsheet") is weak; a concrete object the viewer can picture is what produces "I can't believe that came back." The ending must not simply stop, must not resolve on a teased phantom, and must not imply a revelation the facts don't contain — it returns to the planted image and pays it off on a real number.
 3. VOICEOVER-READY: Short sentences (max 15 words). Natural conversational tone. Plain spoken prose ONLY — never include stage directions, bracket markers, or annotations of any kind (no [PAUSE], no [EMPHASIS], no [MUSIC], nothing in brackets). Creators paste this text directly into AI voiceover tools or read it aloud word-for-word; anything that is not speakable text breaks their workflow.
+3b. NO INVENTED ORDINARY LIFE: where the sources are silent about how someone lived (years on the run, life under an alias), never fill it with everyday texture (rent, bills, mail, a lease, neighbors, "a face people recognized", routines, jobs) or invented investigation texture (dead leads, months of pulling threads). Say once that the record shows little about that stretch, and move on. Never fill that silence with SUSPICION either (hinting that named people helped, funded, or hid someone, or that a possibility "hasn't been ruled out"): a hint is still a claim. Never state what an agency knew, intended, or failed to do, or how long it took, unless sourced; no "not unusual for the era" filler; never invent the terms of a sentence or probation.
 4. HUMANIZATION (critical): Write exactly like a real person talking — not an AI. Use:
    - Contractions always (don't, you're, it's, we've, that's)
    - Occasional sentence fragments for emphasis. Like this.
@@ -228,7 +237,9 @@ Your scripts follow these principles:
    - Avoid: "In conclusion", "Furthermore", "It is worth noting", "Delve", "Crucial", "Leverage", "It's important to"
    - Never use em-dashes mid-sentence — use commas or just end the sentence
    - No bullet-point-style lists read aloud. Flow naturally instead.
-4. CTA PLACEMENT: ${softCta
+4. CTA PLACEMENT: ${noCta
+  ? `WRITE NO CTA. This script must NOT ask the viewer to subscribe, like, comment, share, follow, or watch another video anywhere — not mid-script and not at the end — and must NOT tease that more videos exist ("there's more where this came from"). The script ends on its final NARRATIVE line, with nothing after it. The "cta" field must be an empty string.`
+  : softCta
   ? `Place ONE soft CTA at the 60-70% mark (where retention typically dips), then the hard CTA at the end. "SOFT" IS A HARD CONSTRAINT: exactly one sentence, and it may contain AT MOST a single subscribe ask. It must NOT ask for a comment, must NOT stack a second request, and must NOT restate what the ending will ask for. Only the final CTA may ask for both a subscribe and a comment. If you cannot make the early one a single unobtrusive sentence, leave it out entirely.`
   : `Place exactly ONE CTA, at the very end. Do NOT put a subscribe, comment, like, or "stick around" ask anywhere earlier in the script. A second earlier ask makes the video feel like it ends twice.`}
 5. STRUCTURE: Follow the exact structural pattern of the source viral video but apply it to the new topic.
@@ -511,6 +522,7 @@ export async function generateHookFirst(input: {
   nicheHookExamples?: string;
   sourceMaterial?: string;
   voiceProfile?: string;
+  directorNote?: string;
 }): Promise<string | null> {
   const wantsStat = /stat|data|number|controvers|figure/i.test(input.hookType || "");
   const wantsQuote = /quote|line|said/i.test(input.hookType || "");
@@ -532,11 +544,14 @@ ${input.hookScript ? `\nThe source's own opening, for shape only — never reuse
 ${input.nicheHookExamples ? `\nPROVEN HOOKS IN THIS NICHE (view-ranked, from real videos — model the MECHANIC and energy, never copy wording):\n${String(input.nicheHookExamples).slice(0, 900)}` : ""}
 ${input.sourceMaterial ? `\nSOURCED FACTS — any number or specific you use must come from here, exactly as stated:\n${input.sourceMaterial.slice(0, 2500)}` : ""}
 ${input.voiceProfile ? `\nWRITE IT IN THIS CREATOR'S VOICE:\n${input.voiceProfile.slice(0, 900)}` : ""}
+${input.directorNote && input.directorNote.trim() ? `\nDIRECTOR'S NOTES (obey for the OPEN): "${input.directorNote.trim().slice(0, 500)}". If a note says to HOLD or not reveal the outcome/verdict/twist in the open, the hook MUST NOT reveal it — set up the premise and withhold the payoff.` : ""}
 ${retryNote ? `\nYOUR PREVIOUS ATTEMPT FAILED: ${retryNote} Fix that.` : ""}
 
 Rules:
 - Do NOT restate the title or the thesis. The viewer just read the title; repeating it carries zero new information.
 - WITHHOLD THE EXPLANATION. Open on the PARADOX or the impossible situation and STOP there — do not name the mechanism, the method, or the cause in the hook. If the story's engine is "bots and AI generated billions of fake streams", the hook is the paradox ("A song racking up billions of streams that no human ever chose to play") and NOT the answer ("using AI songs and bot accounts"). The reveal is what the body is for; the hook's only job is to open the loop. A hook that hands over the how has nothing left to pull the viewer in.
+- WITHHOLD THE RESOLUTION, not just the method (critical for twist/reversal stories). Never state HOW the story RESOLVES or WHICH WAY a late reversal goes — the verdict, who won, the final status, where it ended up. You may tease that a reversal or payoff is coming and how high the stakes are; you may NOT reveal its result. If the engine is "you'd expect X, but Y happened", the hook sets up X and hides Y. Naming the ending ("the case that concluded in a Lisbon courtroom", "the hijacker who won in court") spoils the exact reason to keep watching. (This does not apply to an OUTCOME-KNOWN frame like "how X was caught", where the known outcome is the premise and the method is the withheld part.)
+- ONE QUESTION MAXIMUM. A rhetorical question can open a loop, but a STACK of them ("What if... What if... What if...") is a stall and an AI-writing tell. Ask at most one, then move into concrete setup.
 - Say something about the WORLD, not about the video.
 - No invented numbers. Every figure must appear in the facts above.
 - No em dashes. Plain speakable prose.
@@ -582,6 +597,16 @@ export interface SectionSpec {
   // writer draws from its own slice instead of the whole pool — two beats then physically cannot
   // state the same number. Empty/undefined on the remix path, which keeps its whole-pool behavior.
   assignedFacts?: string[];
+  // CONCEPT MODE: the video is built to deliver ONE script concept (the picked angle), not the
+  // subject's whole history. Every beat carries the concept and its own unique POINT.
+  concept?: string;
+  point?: string;
+  // Documented specifics of the central moment (scene research), on the opening beat.
+  sceneFacts?: string[];
+  // The words actually SPOKEN at the central moment, verbatim from the facts ("You got me."). The
+  // opening must quote them and the ending must echo them (seen live: a hook promised "three words"
+  // and the script never said them).
+  centralQuotes?: string[];
 }
 
 // Build the per-section plan from the source's measured structure, scaled to the user's
@@ -657,7 +682,7 @@ export async function buildTopicBlueprint(
   targetWords: number,
   targetMinutes: number,
   angle: string | undefined,
-  opts?: { hookType?: string; storytelling?: string },
+  opts?: { hookType?: string; storytelling?: string; directorNote?: string },
 ): Promise<SectionSpec[]> {
   const facts = parseFactLines(sourceMaterial);
   // Below ~6 facts there is nothing to distribute — the one-shot writer handles a thin brief fine.
@@ -670,8 +695,13 @@ export async function buildTopicBlueprint(
   const beatCount = Math.max(4, Math.min(byTime, byFacts, 14));
 
   const numbered = facts.map((f, i) => `[${i}] ${f}`).join("\n");
-  const sys = `You are a documentary story architect. You design the BEAT STRUCTURE of a ${targetMinutes}-minute YouTube video from a set of sourced facts, then assign each fact to the one beat it best serves. Rules: (1) The video is an ARGUMENT, not a list — state a single controlling thesis and order the beats so each RAISES THE STAKES over the last (setup → mechanism → who/how much → escalation → payoff). (2) Assign EVERY useful fact to EXACTLY ONE beat (its factIndices); it is fine to leave a weak/duplicative fact unassigned. Do not put the same fact in two beats. (3) Give each beat a distinct narrative FUNCTION in one line. (4) Weight each beat 1-3 for how much runtime it deserves (the climax/mechanism beats earn more). Output ONLY JSON: {"thesis":"...","beats":[{"name":"...","purpose":"...","factIndices":[0,3,7],"weight":2}, ...]}. Exactly ${beatCount} beats.`;
-  const ask = `ANGLE / FRAMING: ${angle || "(none given — infer the strongest thesis from the facts)"}${opts?.hookType ? `\nHOOK TYPE: ${opts.hookType}` : ""}${opts?.storytelling ? `\nSTORYTELLING MODE: ${opts.storytelling}` : ""}\n\nFACTS (assign by index):\n${numbered}\n\nDesign exactly ${beatCount} escalating beats and assign the facts. Output ONLY the JSON.`;
+  // CONCEPT MODE (benchmark-driven): every whole-history plan kept re-making the same points to fill
+  // the runtime. With an angle, build the video around ONE script concept instead: its central
+  // moment/claim, beats that each contribute a distinct point toward it, only the facts that serve it.
+  const conceptMode = !!(angle && angle.trim());
+  const conceptRules = conceptMode ? ` CONCEPT MODE (this overrides "assign every useful fact"): the ANGLE below is the SCRIPT CONCEPT. The video exists to deliver THAT concept, not to cover the subject's whole history. (a) Name the concept's single CENTRAL MOMENT or CLAIM in "concept" (one sentence, using ONLY details the facts state: no ages, numbers, or descriptions the facts don't give). (b) Beat 1 opens ON that moment or its tension. (c) Every later beat must earn its place by building toward or proving the concept; give each beat a "point": the ONE new thing it contributes that NO other beat says. Two beats may not share a point. (d) Assign ONLY facts that serve the concept; leave the rest unassigned even if true and interesting — breadth is what makes a video repeat itself. (e) Depth over breadth: fewer facts per beat, rendered as scenes. (f) The FINAL beat pays the concept off and calls back to the opening moment. (g) If beat 1 flashes forward, the later beat that reaches that moment in time order covers ONLY what the opening did not show (how they got there, what came after); it never re-stages the opening scene or re-uses its quotes. Output JSON: {"concept":"...","beats":[{"name":"...","purpose":"...","point":"...","when":1976,"factIndices":[...],"weight":2}, ...]}.` : "";
+  const sys = `You are a documentary story architect. You design the BEAT STRUCTURE of a ${targetMinutes}-minute YouTube video from a set of sourced facts, then assign each fact to the one beat it best serves. Rules: (1) The video is an ARGUMENT, not a list — state a single controlling thesis and order the beats so each RAISES THE STAKES over the last (setup → mechanism → who/how much → escalation → payoff). (2) Assign EVERY useful fact to EXACTLY ONE beat (its factIndices); it is fine to leave a weak/duplicative fact unassigned. Do not put the same fact in two beats. (3) Give each beat a distinct narrative FUNCTION in one line. (4) Weight each beat 1-3 for how much runtime it deserves (the climax/mechanism beats earn more). (5) TRUE STORIES RUN IN TIME ORDER: when the facts describe real events over time (a case, a person, a chase), beat 1 may flash forward to the most gripping moment as a cold open, but EVERY beat after it follows the order events happened. Escalate WITHIN that order. Never place a later stretch of time before an earlier event (life in Florida in the 2000s cannot come before a 1975 arrest). Give each beat a "when": the year its EVENTS happened, not the year they were reported or described in an interview (her 1976 escape, told in a 2008 interview, is 1976); use null for a beat that is not about events in time. Output ONLY JSON: {"thesis":"...","beats":[{"name":"...","purpose":"...","when":1976,"factIndices":[0,3,7],"weight":2}, ...]}. Exactly ${beatCount} beats.${conceptRules}`;
+  const ask = `ANGLE / FRAMING: ${angle || "(none given — infer the strongest thesis from the facts)"}${opts?.hookType ? `\nHOOK TYPE: ${opts.hookType}` : ""}${opts?.storytelling ? `\nSTORYTELLING MODE: ${opts.storytelling}` : ""}${opts?.directorNote ? `\nDIRECTOR'S NOTES (obey when planning beats — within the facts, they win over your defaults): "${opts.directorNote.slice(0, 600)}". If a note says to HOLD an outcome/reversal, the payoff beat goes LAST and no earlier beat reveals it. If a note names beats that must appear (only when the facts support them) or says a topic deserves as much time as another, weight the beats accordingly.` : ""}\n\nFACTS (assign by index):\n${numbered}\n\nDesign exactly ${beatCount} escalating beats and assign the facts. Output ONLY the JSON.`;
 
   try {
     const msg = await getAnthropic().messages.create({
@@ -686,13 +716,50 @@ export async function buildTopicBlueprint(
     const parsed = m ? JSON.parse(m[0]) : null;
     const beats: any[] = Array.isArray(parsed?.beats) ? parsed.beats : [];
     if (beats.length < 2) return [];
+    // CHRONOLOGY BACKSTOP (seen live: the "20 years in Florida" beat came BEFORE the 1975 arrest beat, so
+    // the viewer jumped forward then back). Date each beat after the opening by the median of its facts'
+    // first-mentioned years; if that sequence goes backwards, stable-sort those beats by year. Beat 1 (the
+    // cold open) stays put. Undated beats keep their slot relative to neighbors.
+    // The model's own "when" (event year) wins over fact years: facts are often dated by when they were
+    // REPORTED (seen live, LeFevre: her 1976 escape and 1980s life, told in 2008 interviews, sorted as
+    // 2008-2009 and landed after her 2009 release, scrambling a correct order).
+    {
+      const yearOf = (i: number) => { const m = String(facts[i] || "").match(/\b(1[89]\d{2}|20\d{2})\b/); return m ? Number(m[1]) : null; };
+      const whenOf = (b: any) => { const w = Number(b?.when); return Number.isInteger(w) && w >= 1800 && w <= 2099 ? w : null; };
+      const factYear = (b: any) => { const ys = (Array.isArray(b?.factIndices) ? b.factIndices : []).map(yearOf).filter((y: number | null): y is number => y !== null).sort((a: number, c: number) => a - c); return ys.length ? ys[Math.floor(ys.length / 2)] : null; };
+      const byWhen = beats.slice(1).filter((b) => whenOf(b) !== null).length >= Math.ceil((beats.length - 1) * 0.6);
+      const beatYear = (b: any) => (byWhen ? whenOf(b) : factYear(b));
+      const rest = beats.slice(1).map((b, k) => ({ b, k, y: beatYear(b) }));
+      const dated = rest.filter((r) => r.y !== null);
+      const backwards = dated.some((r, idx) => idx > 0 && (r.y as number) < (dated[idx - 1].y as number));
+      if (backwards && dated.length >= Math.ceil(rest.length * 0.6)) {
+        let last = -Infinity;
+        const keyed = rest.map((r) => { if (r.y !== null) last = r.y; return { ...r, key: r.y ?? last }; });
+        keyed.sort((a, c) => a.key - c.key || a.k - c.k);
+        beats.splice(1, beats.length - 1, ...keyed.map((r) => r.b));
+        console.log(`[blueprint] chronology re-sorted (${byWhen ? "event years" : "fact years"}): ${keyed.map((r) => r.key).join(" -> ")}`);
+      }
+    }
+
+    // The concept and points go into EVERY section's prompt, so an invented detail there spreads through
+    // the whole script (seen: "an 82-year-old man" for a man of 79, age not in the facts). Strip ages
+    // the facts don't support.
+    const factsBlob = facts.join("\n");
+    const cleanConcept = (t: string) => unsupportedAgeSentences([t], factsBlob).length
+      ? t.replace(/\b(a|an)\s+\d{1,3}[- ]year[- ]old\s+/gi, "a ").replace(/,?\s*(?:aged?|at age)\s+\d{1,3}\b/gi, "").replace(/\bin (?:his|her|their) (?:early |mid-?|late )?(?:twenties|thirties|forties|fifties|sixties|seventies|eighties|nineties)\b\s*/gi, "")
+      : t;
 
     // Proportional word budgets from the weights, summing to the length target. Peak = heaviest beat.
     const weights = beats.map((b) => Math.max(1, Math.min(3, Number(b?.weight) || 1)));
+    // CONCEPT MODE: the central moment is the spine, not a one-paragraph teaser (seen live: the photo
+    // moment opened the video and was never mentioned again; the ending landed somewhere else). The
+    // opening beat gets real weight and the FINAL beat is the peak, returning to the central moment.
+    if (conceptMode && beats.length >= 3) { weights[0] = Math.max(weights[0], 2); weights[weights.length - 1] = 3; }
     const totalW = weights.reduce((a, b) => a + b, 0) || beats.length;
-    const peakIdx = weights.indexOf(Math.max(...weights));
+    const peakIdx = conceptMode && beats.length >= 3 ? beats.length - 1 : weights.indexOf(Math.max(...weights));
+    if (conceptMode) console.log(`[blueprint] CONCEPT: ${String(parsed?.concept || "").slice(0, 240)} :: ${beats.map((b, i) => `${i + 1}. ${String(b?.point || b?.name || "").slice(0, 110)}`).join(" | ")}`);
     const used = new Set<number>();
-    return beats.map((b, i) => {
+    const planned = beats.map((b, i) => {
       const idxs: number[] = Array.isArray(b?.factIndices) ? b.factIndices.filter((n: any) => Number.isInteger(n) && n >= 0 && n < facts.length) : [];
       // Enforce disjointness even if the model double-assigned: first beat to claim a fact keeps it.
       const mine = idxs.filter((n: number) => !used.has(n));
@@ -700,15 +767,105 @@ export async function buildTopicBlueprint(
       return {
         name: String(b?.name || `Beat ${i + 1}`).slice(0, 80),
         purpose: String(b?.purpose || "").slice(0, 220),
+        ...(conceptMode ? { concept: cleanConcept(String(parsed?.concept || angle || "").slice(0, 300)), point: cleanConcept(String(b?.point || "").slice(0, 220)) } : {}),
         targetWords: Math.max(90, Math.round((weights[i] / totalW) * targetWords)),
         isPeak: i === peakIdx,
         triggers: [],
         assignedFacts: mine.map((n) => facts[n]),
       };
     });
+    return budgetByFacts(planned, targetWords);
   } catch {
     return [];
   }
+}
+
+// WORDS FOLLOW FACTS. A beat's budget comes from its weight, but a heavily weighted beat with few
+// facts gets padded with restatement (seen live, Jones "Innocent Victim" card: the Goodenough beats
+// had ~5 facts for minutes of runtime, so his IRS ordeal was told three times and one line about the
+// $11,400 appeared twice). Cap each beat at what its facts can carry and hand the excess to beats
+// with facts to spare. The opening and final beats keep a floor: they carry the concept.
+const WORDS_PER_FACT = 100;
+export function budgetByFacts<T extends { targetWords: number; assignedFacts?: string[] }>(beats: T[], targetWords: number): T[] {
+  if (beats.length < 2) return beats;
+  const cap = (b: T, i: number) => Math.max(i === 0 || i === beats.length - 1 ? 180 : 120, (b.assignedFacts?.length || 0) * WORDS_PER_FACT);
+  let excess = 0;
+  const notes: string[] = [];
+  const out = beats.map((b, i) => {
+    const c = cap(b, i);
+    if (b.targetWords <= c) return { ...b };
+    excess += b.targetWords - c;
+    notes.push(`beat ${i + 1} ${b.targetWords}->${c} (${b.assignedFacts?.length || 0} facts)`);
+    return { ...b, targetWords: c };
+  });
+  if (!excess) return beats;
+  // Redistribute to beats with room, in proportion to that room.
+  for (let pass = 0; pass < 3 && excess > 20; pass++) {
+    const room = out.map((b, i) => Math.max(0, cap(b, i) - b.targetWords));
+    const totalRoom = room.reduce((a, r) => a + r, 0);
+    if (!totalRoom) break;
+    let given = 0;
+    out.forEach((b, i) => { if (!room[i]) return; const add = Math.min(room[i], Math.round((excess * room[i]) / totalRoom)); b.targetWords += add; given += add; });
+    excess -= given;
+    if (!given) break;
+  }
+  const total = out.reduce((a, b) => a + b.targetWords, 0);
+  console.log(`[blueprint] words follow facts: ${notes.join(", ")}; total ${total}/${targetWords}${excess > 20 ? ` (${excess} words short of facts; refill tops up from unused facts)` : ""}`);
+  return out;
+}
+
+// SCENE FACTS OWNED ELSEWHERE. Central-scene research runs after planning and can hand the cold open a
+// fact that IS a later beat's point (seen live, LeFevre: the opening got "an anonymous caller tipped
+// Michigan officials... confirmed by the thumbprint on her driver's license" while beat 7's point was
+// "one tip, confirmed by the thumbprint on her own license", so the tip was told twice). A scene fact
+// sharing 3+ distinctive word stems with a later beat's point (and not with the opening's own point)
+// stays with that beat.
+export function sceneFactsOwnedElsewhere(lines: string[], beats: { point?: string; name?: string; assignedFacts?: string[] }[]): { keep: string[]; moved: string[] } {
+  const STOP = new Set(["about", "after", "again", "being", "could", "every", "first", "their", "there", "these", "those", "under", "where", "which", "while", "would", "years", "according", "reported", "source", "https"]);
+  const stems = (t: string) => new Set((String(t).toLowerCase().replace(/\(source:[^)]*\)/g, " ").match(/[a-z]{5,}/g) || []).filter((w) => !STOP.has(w)).map((w) => w.slice(0, 5)));
+  const own = stems(`${beats[0]?.point || ""} ${beats[0]?.name || ""}`);
+  const later = beats.slice(1).map((b) => stems(`${b.point || ""} ${b.name || ""}`));
+  // Or a later beat already holds the same fact (seen live: beat 6's point paraphrased the tip in too
+  // few shared words, but its assigned facts carried the tip and the thumbprint).
+  const laterFacts = beats.slice(1).flatMap((b) => (b.assignedFacts || []).map(stems));
+  const keep: string[] = [], moved: string[] = [];
+  for (const line of lines) {
+    const all = [...stems(line)];
+    const st = all.filter((x) => !own.has(x));
+    const inPoint = later.some((L) => st.filter((x) => L.has(x)).length >= 3);
+    const inFact = all.length >= 5 && laterFacts.some((F) => all.filter((x) => F.has(x)).length / all.length >= 0.6);
+    (inPoint || inFact ? moved : keep).push(line);
+  }
+  return { keep, moved };
+}
+
+// OPENING ECHOES. A cold open flashes forward to the central moment; the later beat that reaches that
+// moment in time order was also handed facts restating it, so the script staged the scene twice (seen
+// live, LeFevre: the front-yard arrest, "Are you sure?" and the thumbprint all told twice). Drop from
+// later beats any fact that repeats an opening fact's quote or most of its wording.
+export function dropOpeningEchoes(beats: { assignedFacts?: string[] }[], dropped_out?: string[]): number {
+  if (beats.length < 2) return 0;
+  const words = (t: string) => new Set(String(t).toLowerCase().replace(/\(source:[^)]*\)/g, " ").match(/[a-z0-9']{4,}/g) || []);
+  const quotes = (t: string) => [...String(t).matchAll(/[“"]([^“”"]{6,200})[”"]/g)].map((m) => m[1].toLowerCase().replace(/[^a-z0-9' ]/g, "").trim()).filter((q) => q.split(/\s+/).length >= 3);
+  const opening = beats[0].assignedFacts || [];
+  const openQuotes = new Set(opening.flatMap(quotes));
+  const openWords = opening.map(words);
+  let dropped = 0;
+  for (const b of beats.slice(1)) {
+    const keep = (b.assignedFacts || []).filter((f) => {
+      if (quotes(f).some((q) => openQuotes.has(q))) return false;
+      const w = words(f);
+      if (w.size < 6) return true;
+      // Measured against the LATER fact's own words: a fact that adds something new (the charge, the
+      // sting) survives even when a short opening fact shares its setup (seen live: "19, community
+      // college, no record" swallowed the heroin-sale fact and the script never said what she did).
+      return !openWords.some((o) => { let n = 0; w.forEach((x) => { if (o.has(x)) n++; }); return n / w.size >= 0.8; });
+    });
+    if (dropped_out) dropped_out.push(...(b.assignedFacts || []).filter((f) => !keep.includes(f)));
+    dropped += (b.assignedFacts || []).length - keep.length;
+    b.assignedFacts = keep;
+  }
+  return dropped;
 }
 
 // Write one section against its own brief. Small, focused calls: the model has one job,
@@ -717,8 +874,22 @@ export async function writeSection(
   spec: SectionSpec,
   index: number,
   total: number,
-  context: { topic: string; title: string; sourceMaterial?: string; previousTail: string; recipe?: string; voice?: string },
+  context: { topic: string; title: string; sourceMaterial?: string; previousTail: string; recipe?: string; voice?: string; directorNote?: string; alreadyTold?: string; reservedFacts?: string[]; otherPoints?: string[]; openingHook?: string },
 ): Promise<string> {
+  const conceptBlock = spec.concept
+    ? `\nTHE VIDEO'S CONCEPT (every sentence of this section serves it; this is not a history of the subject): ${spec.concept}\nTHIS SECTION'S ONE POINT: ${spec.point || spec.purpose}\n${spec.centralQuotes && spec.centralQuotes.length && (index === 0 || index === total - 1) ? `THE WORDS SPOKEN AT THE CENTRAL MOMENT (verbatim from the facts; never paraphrase, never drop): ${spec.centralQuotes.map((q) => `"${q}"`).join(" / ")}. ${index === 0 ? "This OPENING section must quote ALL of them, word for word, in the order they were said, with who reported them. If the hook teases them (\"he said three words\"), deliver them here." : "This FINAL section must echo the key line verbatim as the callback."}\n` : ""}${index === total - 1 ? "THIS IS THE FINAL SECTION: after making its point, RETURN to the central moment named in the concept (the scene the video opened on) and land the video THERE, so the ending pays off the opening. The last lines belong to that moment, not to a new topic. It is a CALLBACK: the viewer already saw that scene in the opening, so evoke it in a line or two and land its meaning; do NOT re-explain how it happened. " : ""}Make THIS point, deeply, as scenes from the facts. ${context.otherPoints && context.otherPoints.length ? `Do NOT make these points, other sections own them:\n${context.otherPoints.filter(Boolean).map((p) => `- ${p}`).join("\n").slice(0, 1500)}` : ""}\n`
+    : "";
+  // ALREADY TOLD: each section used to see only the previous section's last 40 words, so every section
+  // re-told the strongest beats (seen live: one twist told 3x, one quote 4x). Give it the real text.
+  // Keep the most recent material when long: the opening + the latest sections are what it must not echo.
+  const told = (context.alreadyTold || "").trim();
+  const toldBlock = told
+    ? `\nALREADY TOLD IN EARLIER SECTIONS (the viewer has HEARD all of this — do NOT re-tell any event, re-state any figure or quote, re-introduce any person, or re-describe any place below, and do NOT re-make any ARGUMENT, thesis, or insight already made there, even in fresh words (if an earlier section already said "his stillness was the strategy", this section must not say it again in any form). Refer back in a few words at most ("that 1975 arrest") and move FORWARD to a NEW point):\n"""\n${told.length > 9000 ? told.slice(0, 2500) + "\n[...]\n" + told.slice(-6500) : told}\n"""\n`
+    : "";
+  const reserved = (context.reservedFacts || []).filter(Boolean);
+  const reservedBlock = reserved.length
+    ? `\nRESERVED FOR LATER SECTIONS — do NOT reveal, state, or hint at these yet; later sections pay them off (this is how a twist or the climax stays a surprise):\n${reserved.map((f) => `- ${f}`).join("\n").slice(0, 3000)}\n`
+    : "";
   const msg = await getAnthropic().messages.create({
     model: "claude-sonnet-4-6",
     max_tokens: Math.min(8000, spec.targetWords * 3 + 800),
@@ -750,12 +921,26 @@ REACH FOR THE DISTINCTIVE FACTS, NOT THE ROUND HEADLINE NUMBERS. The source mate
 PULL THE QUOTED AND NAMED EVIDENCE, not just the numbers. What makes a section feel REAL is the verbatim primary-source line and the specific name — quote a dated email or message in the subject's own words when the facts carry one ("in order to not raise any issues... we need a TON of content"), name the aliases and entities exactly as written (the randomized AI song names, a shell/company name like an "SMH Entertainment" money trail), cite the dated milestone with its figure (an 88 million streams / $110,000 month, a "10x-20x better" quality email). Reach for these quoted/named specifics FIRST — they are the highest-value texture in the material and the thing a summary can never reproduce. A section built on a real quoted line and a named detail beats one built on round numbers every time.
 WALK THE MACHINE, do not just cite its numbers. If this section explains HOW the scheme worked, take the viewer STEP BY STEP through the mechanism using the granular figures AS THE STEPS, smallest unit up to the total — e.g. the number of cloud accounts, times the bots per account, gives the bot count; that many bots stream so many songs a day; that many songs make so many streams a day; at the per-stream rate that is so many dollars a day, which compounds to the monthly and yearly figures, which is where the money loop moves it. Each documented number is a LINK the previous one produces, shown as arithmetic the viewer can follow — never a pile of figures mentioned in passing. That walk-through IS the spine of the mechanism section; build it, don't summarize it.
 THIN SECTION? KEEP IT SHORT — NEVER PAD WITH INFERENCE. If the facts you have for this section are sparse (a role the record names but does not explain, an unnamed person, a gap the sources leave open), state plainly what the record DOES say, once, and move on — a short honest section is fine. Do NOT stretch thin facts to length by guessing at roles, motives, or cooperation ("the publicist provided the cover", "whether they cooperated"), by building a "mystery" the sources don't support, or by editorializing about what the record doesn't say. When the record is silent, say so briefly ("the indictment names them but does not detail their role") and go no further. Unsupported inference is the one thing worse than a short section.
+SHOW, NEVER ANNOUNCE THE FEELING: never tell the viewer how to feel or that a moment is powerful: no "the detail that stays with you", "this is the part that is genuinely hard to process", "and that is chilling", "it's worth sitting with that", "here's where it gets interesting", "what makes this remarkable". Deliver the moment; the viewer decides how it lands.
+NO INVENTED ORDINARY LIFE (the most common invention, and reviewers catch it): when the record is silent about how someone LIVED during a stretch of time (years on the run, a life under an alias, a career, a marriage), do NOT fill the silence with everyday texture: paying rent or bills, getting mail, holding a lease, neighbors, being "a face people recognized", "a place in the community", routines, jobs, habits, or what people around them thought. Also do not invent the texture of an INVESTIGATION (dead leads, file transfers, months of pulling threads, late nights). State what the record shows about that stretch, say plainly ONCE that it shows little more ("the record says almost nothing about those years"), and move on. Silence stated honestly is stronger than a life made up to fill it.
+NO INVENTED MINDS OR AGENCY KNOWLEDGE: never state what a real person or an agency/official THOUGHT, FELT, KNEW, believed, intended, or FAILED to do, or how long their work took, unless the facts say it: "the Marshals had no idea where he was", "nobody pursued him", "they closed his file", "they dismantled it in a matter of months" are all inventions. Say what the record shows they DID, with its date.
+NO ERA OR GEOGRAPHY FILLER, NO INVENTED LEGAL TERMS: no "that was not unusual for the era" / "common at the time" generalizations, no geographic description of a place beyond what the facts give, and never invent the TERMS of a sentence, probation, or parole ("stay out of trouble, do not drive"): state only the terms or violations the facts name.
+AND DO NOT FILL THE SILENCE WITH SUSPICION either. Never suggest, hint, or pose as an open question something the record does not say, especially about real people: "a small circle can shelter a person, it can also fund one", "neither possibility has been ruled out", "someone may have helped him", "it's hard not to wonder whether". A hint is still a claim. If the record names people around the subject without saying what they did, say exactly that and nothing more.
 ${spec.isPeak ? `THIS IS THE PEAK OF THE VIDEO. It is the longest section by design. Slow down, go beat by beat, and let it breathe. Do not summarize what happens here — render it.\n` : ""}${!spec.isPeak && total >= 6 && index === Math.floor(total / 2) ? `THIS IS THE MIDPOINT PIVOT. A long video needs one clear TURN near the middle where the framing flips and the viewer thinks "wait, THAT'S the real problem." Do not just add another point here — REFRAME what came before: the obvious explanation the first half built up is not the whole story, and this section names the sharper question the rest of the video will chase. Land that turn in a crisp line, then open the new loop it creates. (Only if the material genuinely supports a turn — never manufacture a fake twist.)\n` : ""}
 ${spec.triggers.length ? `RETENTION BEATS THAT BELONG IN THIS SECTION (place them here, reproduce the MECHANIC not the wording):\n${spec.triggers.map((t) => `- ${t}`).join("\n")}\n` : ""}
-${context.previousTail ? `THE SECTION BEFORE THIS ONE ENDED LIKE THIS (continue naturally, never repeat it):\n"...${context.previousTail}"\n` : "This is the OPENING section — it carries the hook.\n"}
-${spec.assignedFacts && spec.assignedFacts.length ? `\nTHE FACTS ASSIGNED TO THIS BEAT — build this section on THESE. They are yours to spend here; other sections carry the rest of the research, so lead with these and render them as scenes/steps. State a NUMBER only if it appears in the assigned facts (or, for light connective context, elsewhere in the pool) — do not pull another beat's headline figure into this one:\n${spec.assignedFacts.map((f) => `- ${f}`).join("\n").slice(0, 4000)}\n` : ""}
-${context.sourceMaterial ? `\n${spec.assignedFacts && spec.assignedFacts.length ? "THE FULL RESEARCH POOL (context + anti-fabrication guardrail only — every specific you state must exist SOMEWHERE here; but SPEND the assigned facts above, not these):" : "SOURCE MATERIAL — every specific you state must come from here. Do not add a number, name, date, or claim that is not present:"}\n${context.sourceMaterial.slice(0, 5000)}\n` : ""}
+${conceptBlock}${toldBlock}${reservedBlock}${context.previousTail ? `THE SECTION BEFORE THIS ONE ENDED LIKE THIS (continue naturally, never repeat it):\n"...${context.previousTail}"\n` : (context.openingHook ? `THE HOOK THAT PLAYS RIGHT BEFORE THIS SECTION (already heard):\n"""\n${context.openingHook.slice(0, 1200)}\n"""\nStart where the hook leaves off. Do NOT re-stage its scene, re-state its date or place as a fresh dateline, or re-describe the action it just showed. Move to what the viewer does not know yet.\n` : "This is the OPENING section — it carries the hook.\n")}
+${context.directorNote && context.directorNote.trim() ? `\nDIRECTOR'S NOTES from the creator — treat as HARD, MUST-OBEY instructions for HOW to tell this (they never override the sourced facts, but within the facts they win over your defaults): "${context.directorNote.trim().slice(0, 800)}"\n- If a note says to HOLD or not reveal something in the open (an outcome, a verdict, a twist), this ${index === 0 ? "OPENING section MUST NOT reveal it — set up the premise and withhold the payoff" : "section must respect that hold until the point the note names (e.g. 'the middle', 'the end'); if the note names no point, hold it until the video's final act. The RESERVED list above tells you which beats belong to later sections"}.\n- If a note names beats that must appear, work in the ones this section is responsible for (only when the facts support them).\n${index === total - 1 ? `- FINAL SECTION: if a note names an EXACT closing line, this section MUST end on that line, verbatim, as the very last sentence — nothing after it.\n` : ""}` : ""}
+${spec.assignedFacts && spec.assignedFacts.length ? `\nTHE FACTS ASSIGNED TO THIS BEAT — build this section on THESE. They are yours to spend here; other sections carry the rest of the research, so lead with these and render them as scenes/steps. State a NUMBER only if it appears in the assigned facts (or, for light connective context, elsewhere in the pool) — do not pull another beat's headline figure into this one. NEVER narrate the bookkeeping: do not mention fact numbers, do not say a fact was "delivered above"/"already covered"/"skipped", and never write that facts are duplicates. If an assigned fact repeats something already told, simply skip it silently and write the narrative — the viewer must never hear the machinery:\n${spec.assignedFacts.map((f) => `- ${f}`).join("\n").slice(0, 4000)}\n` : ""}
+${context.sourceMaterial ? `\n${spec.assignedFacts && spec.assignedFacts.length ? "THE FULL RESEARCH POOL (context + anti-fabrication guardrail only — every specific you state must exist SOMEWHERE here; but SPEND the assigned facts above, not these):" : "SOURCE MATERIAL — every specific you state must come from here. Do not add a number, name, date, or claim that is not present:"}\n${context.sourceMaterial.slice(0, 10000)}\n\nFacts tagged [his own account] come only from the subject himself (his memoir, interviews, letters), and [family account] only from his family: when you use one, attribute it in the narration (\"he later wrote\", \"by his own account\", \"his son said\"), never state it as established fact, and never say the tag itself.\n\nNO FAMOUS-FACT REACH-OUT (hard): being confident a real-world detail is true is NOT permission to state it. If a named law or Act, an agency, a program, a court case, a named report, an aftermath or "what changed" event, or a person is NOT in the material above, you may not name it — even if it is well known and genuinely connected (e.g. do not add "the Sarbanes-Oxley Act" or "this led to new regulation" unless the material contains it). The same bars invented texture ("borrowed equipment", "in a cramped office"). And do NOT assert a CAUSAL/aftermath link ("a direct response to", "which led to", "resulting in") between the story and any consequence the material does not state. When tempted to close with legacy or aftermath, end on the material you have, not on a famous fact you happen to know.
+TERMS OF ART ARE VERBATIM: a legal plea, charge, verdict, or institution name is used EXACTLY as the facts state it — never paraphrase or "translate" it. "nolo contendere" or "no contest" stays that; do NOT render it "no defense" (a different meaning). A prison, court, or agency keeps its exact name from the facts (do not turn "Bayside State Prison in Leesburg" into "Leesburg State Prison"). If the facts give a term, quote the term.
+PICK ONE, DO NOT HEDGE ON AIR: if the facts give two values for the same date, number, or figure, state ONE and say it once. Never narrate the disagreement ("the FBI records it as X, though some reporting places it at Y, either way…") — sources arguing with each other is machinery the viewer must never hear. Choose the more authoritative value and move on.` : ""}
 ${context.voice ? `\nWRITE THIS ENTIRE SECTION IN THIS CREATOR'S VOICE — their sentence rhythm, fragment use, narrative shape, diction, energy and way of addressing (or not addressing) the viewer. Obey their never-does absolutely. STYLE NOT SUBJECT: borrow the creator's writing MECHANICS only, never their usual topics — the subject and facts of THIS section are fixed above and do not bend toward what that creator normally covers. APPLY BY STRENGTH: reproduce their dominant traits at their real frequency; do not seize one trait (a fragment habit, a catchphrase) and repeat it on every line — that is a tic, not the voice. VOICE IS NOT LICENSE: a confident or explanatory voice must never turn an inference into a stated fact to make a cleaner explanation; if the record does not give the WHY, mark it as inference or leave it out.\n${context.voice.slice(0, 5200)}\n` : ""}
+
+PROSE DISCIPLINE (human, not AI-tell):
+- NO CRUTCH ABSTRACT NOUN. Do not lean on one abstract word to carry the section — if you have used "mechanism", "architecture", "dynamic", "framework", or "apparatus" once, say it a different way the next time (the scheme, the setup, how it worked, the move). A word repeated four+ times reads as a machine reaching for it.
+- BAN THESE AI-TELL PHRASES outright: "boundary condition", "the architecture of the system", "in all the ways that practically mattered", "the ground disappearing underfoot", "it's worth noting", "in a very real sense", "at the end of the day". Write the concrete thing instead.
+- ONE RHETORICAL QUESTION MAX per section, and never stack them ("What if... What if... What if..." is an AI tell). Prefer a declarative sentence.
+- Do NOT restate a sentence you already wrote. If a beat needs emphasis, land it once, in its strongest form.
 
 Write only this section's prose now.`,
     }],
@@ -780,7 +965,7 @@ export async function generateBySections(
       break;
     }
     try {
-      const text = await writeSection(plan[i], i, plan.length, { ...context, previousTail });
+      const text = await writeSection(plan[i], i, plan.length, { ...context, previousTail, alreadyTold: written.map((w) => w.content).join("\n\n"), reservedFacts: plan.slice(i + 1).flatMap((p) => p.assignedFacts || []), otherPoints: plan.filter((_, k) => k !== i).map((p) => p.point || "").filter(Boolean) });
       if (!text) continue;
       written.push({ title: plan[i].name, content: text });
       previousTail = text.split(/\s+/).slice(-40).join(" ");
@@ -836,6 +1021,7 @@ ABSOLUTE CONSTRAINTS — breaking any of these makes the rewrite useless:
 - Do NOT change the opening beat's function or the final line. If it ends on a quote, it still ends on that quote.
 - Keep the length within about 10% of the original.
 - Never use these stock narrator tics: "pause on that for a second", "sit with that", "think about what that means", "read that again", "let that sink in", "here's the thing", "that's not a metaphor", or "That's not X. That's Y." They belong to no creator.
+- Never use these abstract AI-tell phrases: "boundary condition", "the architecture of the system", "in all the ways that practically mattered", "the ground disappearing underfoot", "a structure built on absence", "designed to hold no visible seam", "the sequence completed itself", "it's worth noting", "at the end of the day". Write the concrete thing instead. And do not lean on one abstract noun (mechanism, architecture, dynamic, framework) repeatedly — vary it.
 - Plain speakable prose only. No stage directions, no bracketed markers, no em dashes.
 
 Rewrite for rhythm, diction, sentence length, and address so it sounds like this specific person read it aloud.
@@ -1035,27 +1221,47 @@ async function extendWithUnusedFacts(fullScript: string, factsBlob: string, targ
 // Relocate new beat-paragraphs into an original body at contextual homes: each beat goes right after
 // the original paragraph it shares the most distinctive vocabulary with; a beat with no clear home is
 // placed before the conclusion (the old tail behavior). No text is added or changed — only order.
-function weaveBeats(originalBody: string, beats: string[]): string {
+export function weaveBeats(originalBody: string, beats: string[]): string {
+  // Placement rules (seen live, Jones: six refill paragraphs about the 1995 IRS records, the DMV and the
+  // 1986 death declaration piled up inside the May 1979 departure scene, right after "That's all she
+  // got."): (1) overlap is measured against the BEAT's own words, so a 3-word paragraph is no magnet,
+  // and a home needs 8+ content words; (2) a dated beat only goes where the story's clock fits its
+  // year; (3) nothing goes inside the cold open (the flash-forward before the story first goes back).
   const norm = (s: string) => (s || "").toLowerCase().replace(/[^a-z0-9 ]/g, " ").replace(/\s+/g, " ").trim();
   const contentTokens = (s: string) => new Set(norm(s).split(" ").filter((w) => w.length > 3));
-  const overlap = (a: string, b: string) => {
-    const ta = contentTokens(a), tb = contentTokens(b);
-    if (!ta.size || !tb.size) return 0;
-    let shared = 0; for (const w of ta) if (tb.has(w)) shared++;
-    return shared / Math.min(ta.size, tb.size);
-  };
+  const yearOf = (s: string) => { const m = String(s).match(/\b(1[89]\d{2}|20\d{2})\b/); return m ? Number(m[1]) : null; };
   const paras = originalBody.split(/\n\n+/).map((p) => p.trim()).filter(Boolean);
   if (paras.length < 2) return [originalBody, ...beats].join("\n\n");
   const conclusion = paras.length > 3 ? paras.pop()! : null; // keep the ending last
+  // Cold open: everything before the first paragraph dated EARLIER than one before it, when that
+  // happens in the first third of the script.
+  let coldEnd = 0;
+  { let maxY = -Infinity; for (let i = 0; i < paras.length; i++) { const y = yearOf(paras[i]); if (y === null) continue; if (y < maxY - 1 && i <= Math.ceil(paras.length / 3)) { coldEnd = i; break; } maxY = Math.max(maxY, y); } }
+  // The story clock at each paragraph: its own year, else the last year seen (from the cold open's end).
+  const clock = (list: string[]) => { let last: number | null = null; return list.map((p, i) => { if (i < coldEnd) return null; const y = yearOf(p); if (y !== null) last = y; return last; }); };
   for (const beat of beats) {
     if (!beat) continue;
+    const bt = contentTokens(beat);
+    const by = yearOf(beat);
+    const clk = clock(paras);
     let bestI = -1, best = 0;
-    for (let i = 0; i < paras.length; i++) {
-      const o = overlap(beat, paras[i]);
+    for (let i = Math.max(0, coldEnd); i < paras.length; i++) {
+      const pt = contentTokens(paras[i]);
+      if (pt.size < 8 || !bt.size) continue;
+      // The clock must fit: this paragraph's time is at or before the beat's year, and the next dated
+      // paragraph is not earlier than it.
+      if (by !== null) {
+        const here = clk[i];
+        const nextY = clk.slice(i + 1).find((y) => y !== null && y !== here) ?? null;
+        if (here !== null && here > by + 1) continue;
+        if (nextY !== null && nextY < by - 1) continue;
+      }
+      let shared = 0; for (const w of bt) if (pt.has(w)) shared++;
+      const o = shared / bt.size;
       if (o > best) { best = o; bestI = i; }
     }
-    if (bestI >= 0 && best >= 0.16) paras.splice(bestI + 1, 0, beat); // insert after its topical home
-    else paras.push(beat); // no clear home -> tail (before the conclusion, which is re-added below)
+    if (bestI >= 0 && best >= 0.16) paras.splice(bestI + 1, 0, beat);
+    else paras.push(beat); // no fitting home -> before the conclusion
   }
   if (conclusion) paras.push(conclusion);
   return paras.join("\n\n");
@@ -1123,7 +1329,16 @@ export function reconcileTitle(title: string, facts: string | undefined): string
   // TIME SLOT — the researched span replaces the guessed one ("4 Years" -> "7 Years"). Only when the
   // span is clearly established (>=2 distinct in-range years); otherwise keep the placeholder.
   const span = researchedYearSpan(facts);
-  if (span != null) {
+  // A duration the facts themselves state wins over the computed span (seen live, LeFevre: the card's
+  // correct "32 Years" became "40" because the span ran from the earliest to the latest year mentioned
+  // anywhere in the research). Only an unsupported number gets replaced.
+  const NUM_WORDS = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen", "twenty"];
+  const TENS = ["", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"];
+  const spell = (n: number) => (n <= 20 ? NUM_WORDS[n] : n < 100 ? TENS[Math.floor(n / 10)] + (n % 10 ? `[- ]${NUM_WORDS[n % 10]}` : "") : String(n));
+  const titleNum = out.match(/\b(\d+|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve)\s+Years?\b/i)?.[1];
+  const tn = titleNum ? (/^\d+$/.test(titleNum) ? Number(titleNum) : NUM_WORDS.indexOf(titleNum.toLowerCase())) : -1;
+  const stated = tn > 0 && new RegExp(`\\b(?:${tn}|${spell(tn)})[- ]years?\\b`, "i").test(facts);
+  if (span != null && !stated) {
     out = out.replace(/\b(\d+|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve)(\s+Years?\b)/i, `${span}$2`);
   }
 
@@ -1218,7 +1433,9 @@ CRITICAL LENGTH REQUIREMENT — scripts shorter than ${targetWords} words are FA
 - A viewer asked for a ${input.targetMinutes}-minute video. Delivering 8 minutes of content is a broken promise.` : ""}
 Tone: ${input.tone}
 Voiceover delivery: plain spoken prose only — no [PAUSE], [EMPHASIS], or any bracketed markers. Every word must be speakable.
-${input.companionCta
+${input.noCta
+  ? `NO CTA AT ALL: the creator turned the CTA off for this script. Write NO call to action of any kind — no subscribe, like, comment, share, follow, "apply this", or related-video ask, and no "there's more where this came from" tease. End on the final narrative line. Leave the "cta" field an empty string.`
+  : input.companionCta
   ? `COMPANION VIDEO CTA: End the script with a brief, natural call to action that points viewers to a RELATED video on this channel, phrased so it is true whether the creator places it on the end screen or in the description — e.g. "that video is either above this one right now or linked in the description." Keep the reference GENERAL — do NOT invent a specific title or topic for that video.`
   : `NO COMPANION VIDEO: The creator may not have a related video to point to. Do NOT reference, tease, or claim that another video exists on this channel — no "watch my other video", "the next video is already waiting", "the video right after this", "above this one", or "linked in the description". Close instead with only a subscribe / comment / apply-this-now style CTA.`}
 ${input.voiceProfile ? `
@@ -1381,7 +1598,7 @@ ANGLE OUTRANKS A CONFLICTING NOTE: if a note aims the climax at a moment that is
   const response = await getAnthropic().messages.create({
     model: "claude-sonnet-4-6",
     max_tokens: 16000,
-    system: buildSystemPrompt({ softCta: !!input.softCta, sourceVerdict: input.sourceVerdict, topicKind: input.topicKind }),
+    system: buildSystemPrompt({ softCta: !!input.softCta, noCta: !!input.noCta, sourceVerdict: input.sourceVerdict, topicKind: input.topicKind }),
     messages: [{ role: "user", content: userPrompt + directorNoteBlock }],
   });
 
@@ -1735,6 +1952,11 @@ export async function finalizeScript(
   // Source-leak CUT first — a leaked proper noun from the source video's story is a fabrication
   // about this subject; remove it before anything else reasons about the body.
   applyBodyPass((t) => stripSourceLeaks(t, input.sourceEntities, input.sourceMaterial), "source-leak");
+  applyBodyPass(stripFactMetaLeaks, "fact-meta-leak");
+  applyBodyPass(stripRepeatedSentences, "repeated-sentence");
+  // Grounded scripts only: cut a named Act/legislation the approved facts don't contain (with the
+  // unsupported aftermath claim it usually carries). No-op when there's no source material.
+  if (input.sourceMaterial) applyBodyPass((t) => stripUngroundedActs(t, input.sourceMaterial), "ungrounded-act");
   applyBodyPass(dedupeAdjacentParagraphs, "dedupe");
   // Strip a leaked structural label ("HOOK:", "SECTION 1:") the writer emitted as literal text.
   applyBodyPass(stripLeakedLabels, "leaked-label");
@@ -1852,7 +2074,10 @@ export async function finalizeScript(
   const finalTarget = input.targetMinutes ? Math.round(input.targetMinutes * 166) : null;
   if (finalTarget && finalTarget >= 1200 && refillKey && !budgetBlown("refill", 75_000)) {
     const beforeWords = (script as any)[refillKey].split(/\s+/).filter(Boolean).length;
-    const facts = input.sourceMaterial && input.sourceMaterial.trim() ? input.sourceMaterial : "";
+    // Concept mode: top up only from facts the concept plan assigned; re-adding the facts it left out
+    // on purpose would turn a focused video back into a whole-history one.
+    const conceptFacts = (input.sectionPlan || []).some((sp) => sp.concept) ? (input.sectionPlan || []).flatMap((sp) => sp.assignedFacts || []) : [];
+    const facts = conceptFacts.length ? conceptFacts.join("\n") : (input.sourceMaterial && input.sourceMaterial.trim() ? input.sourceMaterial : "");
     try {
       const refill = facts
         ? await extendWithUnusedFacts((script as any)[refillKey], facts, finalTarget, startedAt, DEADLINE)
@@ -1891,6 +2116,9 @@ export async function finalizeScript(
   const certKey = ["fullScript", "script", "body", "content"].find(
     (k) => typeof (script as any)[k] === "string" && (script as any)[k].trim().length > 0,
   );
+  // Text before the cutting passes, so the seam check can find every sentence they removed.
+  const preCutKey = ["fullScript", "script", "body", "content"].find((k) => typeof (script as any)[k] === "string" && (script as any)[k].trim().length > 0);
+  const preCut = preCutKey ? String((script as any)[preCutKey]) : "";
   if (certKey && input.sourceMaterial && input.sourceMaterial.trim() && !budgetBlown("certainty", 30_000)) {
     const cert = await applyCertaintyDiscipline((script as any)[certKey] as string, input.sourceMaterial, startedAt);
     if (cert.status === "failed") markDegraded("failed", "certainty", cert.reason || "unknown");
@@ -1901,13 +2129,95 @@ export async function finalizeScript(
     }
   }
 
+  // FACT DISCIPLINE — its own pass for invented and contradicted details (before the polish pass, so
+  // accuracy gets budget first when time is tight).
+  const fcKey = ["fullScript", "script", "body", "content"].find((k) => typeof (script as any)[k] === "string" && (script as any)[k].trim().length > 0);
+  if (fcKey && input.sourceMaterial && input.sourceMaterial.trim() && !budgetBlown("fact-check", 25_000)) {
+    const fc = await applyFactDiscipline((script as any)[fcKey] as string, input.sourceMaterial, startedAt);
+    if (fc.status === "failed") markDegraded("failed", "fact-check", fc.reason || "unknown");
+    if (fc.text && fc.text !== (script as any)[fcKey]) {
+      for (const k of ["fullScript", "script", "body", "content"]) if (typeof (script as any)[k] === "string") (script as any)[k] = fc.text;
+    }
+  }
+
+  // STRUCTURE PASS — restated arguments, false endings, announced feelings, overused openers, and an
+  // honest hook promise (the baseline's weakest craft areas). After the fact check, before self-review.
+  const stKey = ["fullScript", "script", "body", "content"].find((k) => typeof (script as any)[k] === "string" && (script as any)[k].trim().length > 0);
+  if (stKey && !budgetBlown("structure", 22_000)) {
+    const st = await applyStructurePass((script as any)[stKey] as string, startedAt, { voiceProfile: input.voiceProfile, facts: input.sourceMaterial || "" });
+    if (st.status === "failed") markDegraded("failed", "structure", "structure pass failed");
+    if (st.text && st.text !== (script as any)[stKey]) {
+      for (const k of ["fullScript", "script", "body", "content"]) if (typeof (script as any)[k] === "string") (script as any)[k] = st.text;
+    }
+  }
+
+  // SELF-REVIEW + AUTO-REVISE — the internalized ChatGPT check. Runs LAST (after accuracy/certainty),
+  // grades the whole script against a publish rubric and rewrites only the weakest lines (flat hook,
+  // AI-tells, telly lines, limp ending). Bounded so it polishes but never guts. Needs ~25s of budget.
+  const srKey = ["fullScript", "script", "body", "content"].find(
+    (k) => typeof (script as any)[k] === "string" && (script as any)[k].trim().length > 0,
+  );
+  if (srKey && !budgetBlown("self-review", 25_000)) {
+    const sr = await applySelfReview((script as any)[srKey] as string, input.sourceMaterial || "", startedAt, { noCta: !!input.noCta, voiceProfile: input.voiceProfile });
+    if (sr.status === "failed") markDegraded("failed", "self-review", sr.reason || "unknown");
+    if (sr.text && sr.text !== (script as any)[srKey]) {
+      for (const k of ["fullScript", "script", "body", "content"]) {
+        if (typeof (script as any)[k] === "string") (script as any)[k] = sr.text;
+      }
+    }
+  }
+
   // FINAL de-dup of the opening — a later pass (refill/weave/certainty rewrite) can restack or
   // re-label the hook, so run these idempotent cleanups once more on the settled body.
   for (const k of ["fullScript", "script", "body", "content"]) {
     if (typeof (script as any)[k] === "string") {
       (script as any)[k] = stripLeakedLabels((script as any)[k]).text;
       (script as any)[k] = stripDuplicateHook((script as any)[k]).text;
+      // Late passes (voice, certainty, fact-check, self-review) rewrite sentences and can leave a
+      // stutter or an exact echo; clean both on the settled body.
+      (script as any)[k] = stripDividers((script as any)[k]).text;
+      if (input.sourceMaterial) (script as any)[k] = unquoteUnsourced((script as any)[k], input.sourceMaterial).text;
+      if (input.sourceMaterial) (script as any)[k] = restoreSuperlativeQualifiers((script as any)[k], input.sourceMaterial).text;
+      (script as any)[k] = fixDanglingBackrefs((script as any)[k]).text;
+      (script as any)[k] = fixQuoteWordCounts((script as any)[k]).text;
+      (script as any)[k] = fixWeekdayDates((script as any)[k], input.sourceMaterial || "").text;
+      (script as any)[k] = stripLeaningFragments((script as any)[k]).text;
+      (script as any)[k] = balanceQuotes((script as any)[k]).text;
+      (script as any)[k] = fixOrphanedItSays((script as any)[k]).text;
+      (script as any)[k] = dedupeEndingDates((script as any)[k]).text;
+      (script as any)[k] = stripPipelineWords((script as any)[k]).text;
+      (script as any)[k] = stripStoryMeta((script as any)[k]).text;
+      (script as any)[k] = expandNounContractions((script as any)[k]).text;
+      // Family members by relationship, never by name (channel standard; minors are the strictest case).
+      if (input.sourceMaterial) (script as any)[k] = replaceFamilyNames((script as any)[k], input.sourceMaterial, input.subjectName || (input as any).targetTopic || "").text;
+      if (input.sourceMaterial) (script as any)[k] = dropForeverAdverbs((script as any)[k], input.sourceMaterial).text;
+      if (input.sourceMaterial) (script as any)[k] = fixMostWantedWording((script as any)[k], input.sourceMaterial).text;
+      // House rule: no dashes in narration. Typed double hyphens ("--") slipped past the em-dash strip.
+      (script as any)[k] = String((script as any)[k]).replace(/\s*--\s*/g, ", ").replace(/,\s*,/g, ",").replace(/,\s*([.!?])/g, "$1");
+      if (k === "fullScript" || (k === "body" && typeof (script as any).fullScript !== "string")) {
+        const final = String((script as any)[k]);
+        const cq = (input.sectionPlan || []).find((sp) => sp.centralQuotes?.length)?.centralQuotes || [];
+        const qn = (t: string) => t.toLowerCase().replace(/[^a-z0-9 ]+/g, " ").replace(/\s+/g, " ").trim();
+        const missing = cq.filter((q) => !qn(final).includes(qn(q)));
+        if (cq.length) console.log(`[central-quote] ${missing.length ? `MISSING ${JSON.stringify(missing)}` : `all ${cq.length} present`}`);
+        if (input.sourceMaterial) { const ma = misattributedPhrases(splitSentences(final.replace(/\n\n+/g, " ")), input.sourceMaterial.split("\n")); if (ma.length) console.log(`[attribution] STILL MISATTRIBUTED: ${ma.map((x) => `"${x.phrase}" credited to ${x.credited}, research says ${x.speaker}`).join(" || ")}`); }
+      }
+      // ENDING INTEGRITY: the script must not end on a dangling back-reference ("What it shows...").
+      { const ps = String((script as any)[k]).split(/\n\n+/); const lastS = splitSentences(ps[ps.length - 1] || ""); const tail = (lastS[lastS.length - 1] || "").trim();
+        if (lastS.length > 1 && BACKREF_RE.test(tail) && (BACKREF_RE.exec(tail)?.[0] || "").trim()) { lastS.pop(); ps[ps.length - 1] = lastS.join(" "); (script as any)[k] = ps.join("\n\n"); } }
+      (script as any)[k] = stripStutters((script as any)[k]).text;
+      (script as any)[k] = stripRepeatedSentences((script as any)[k]).text;
     }
+  }
+
+  // CUT SEAMS: repair any sentence a cut left stranded LAST, after every pass that removes sentences, the
+  // final cleanup loop included (seen live: a pair stranded by a late cleanup cut got through when this ran
+  // before the loop).
+  const seamKey = ["fullScript", "script", "body", "content"].find((k) => typeof (script as any)[k] === "string" && (script as any)[k].trim().length > 0);
+  if (seamKey && preCut && !budgetBlown("seams", 15_000)) {
+    const cur = String((script as any)[seamKey]);
+    const fixed = await repairCutSeams(preCut, cur, input.sourceMaterial || "").catch(() => cur);
+    if (fixed && fixed !== cur) for (const k of ["fullScript", "script", "body", "content"]) if (typeof (script as any)[k] === "string") (script as any)[k] = fixed;
   }
 
   // FINAL HOOK SYNC — the displayed hook MUST equal what actually opens the script. The hook is
@@ -1988,7 +2298,7 @@ This is a REPHRASE, not a cut: the sentence stays, just recast to what the evide
 HARD RULES: This is a SURGICAL edit — change as LITTLE as possible. The vast majority of this script is good and MUST be preserved verbatim; a 20-minute script should come back nearly the same length (keep AT LEAST ~85% of it). You are not rewriting or condensing — you are removing only a CLEAR redundancy (a point already fully made) or a CLEARLY unsupported line, and lightly rephrasing overstatement to the defensible claim. When in doubt, KEEP the line — especially a vivid, evidence-grounded framing line (those are the retention and must survive; only fabrications and direct contradictions of the record are cut). Do NOT add any NEW fact, claim, or figure not in the FACTS. Do NOT invent, do NOT change the voice/hook/structure, do NOT condense good prose. Preserve the opening line exactly. Output ONLY the revised script text, nothing else.`,
       messages: [{
         role: "user",
-        content: `FACTS — the only things the record establishes; PRESERVE their qualifiers (alleged/prosecutors-say, estimated/modeled), their scope (which platform, which sample, which range vs threshold, illustrative vs universal), and their attribution (which body said it):\n"""\n${facts.slice(0, 8000)}\n"""\n\nSCRIPT TO EDIT:\n"""\n${body}\n"""\n\nReturn the revised script — redundancy removed, unsupported inference cut, overstatement (including any statistic pushed past what its source frames) rephrased to the defensible claim, nothing new added.`,
+        content: `FACTS — the only things the record establishes; PRESERVE their qualifiers (alleged/prosecutors-say, estimated/modeled), their scope (which platform, which sample, which range vs threshold, illustrative vs universal), and their attribution (which body said it):\n"""\n${facts.slice(0, 40000)}\n"""\n\nSCRIPT TO EDIT:\n"""\n${body}\n"""\n\nReturn the revised script — redundancy removed, unsupported inference cut, overstatement (including any statistic pushed past what its source frames) rephrased to the defensible claim, nothing new added.`,
       }],
     });
     const out = msg.content[0]?.type === "text" ? msg.content[0].text.trim().replace(/^["“']|["”']$/g, "").trim() : "";
@@ -2064,7 +2374,7 @@ WORKED FIXTURES (input -> KEEP/REWRITE):
 - "the operation became a factory" -> KEEP (metaphor). "the streams were fake, the money was real" -> KEEP (contrast).
 
 Output ONLY JSON: {"results":[{"i":<index>,"action":"KEEP"|"REWRITE","rewrite":"<new sentence, only if REWRITE>"}]}.`;
-    const user = `APPROVED FACTS (the only established truth — anything beyond these, at greater scope/certainty, is unsupported):\n"""\n${facts.slice(0, 8000)}\n"""\n\nFLAGGED SENTENCES (each was flagged for an absolute/superlative/causal/institutional/exclusivity marker — REWRITE unless a fact entails it or it is pure metaphor/contrast):\n${flagged.map((s, i) => `${i}. ${s.text}`).join("\n")}\n\nJudge each by the Dramatic Truth Rule and output the JSON.`;
+    const user = `APPROVED FACTS (the only established truth — anything beyond these, at greater scope/certainty, is unsupported):\n"""\n${facts.slice(0, 40000)}\n"""\n\nFLAGGED SENTENCES (each was flagged for an absolute/superlative/causal/institutional/exclusivity marker — REWRITE unless a fact entails it or it is pure metaphor/contrast):\n${flagged.map((s, i) => `${i}. ${s.text}`).join("\n")}\n\nJudge each by the Dramatic Truth Rule and output the JSON.`;
     // Through the shared structured boundary: an unparseable/invalid reply is retried ONCE and then
     // reported as FAILED — never swallowed into a silent SUCCESS with the body unchanged (the old bug).
     const res = await callStructuredLLM<any[]>({
@@ -2087,6 +2397,7 @@ Output ONLY JSON: {"results":[{"i":<index>,"action":"KEEP"|"REWRITE","rewrite":"
       // Guard: a rewrite should be a comparable-length recast, not a balloon (invention) or a stub.
       const orig = flagged[idx].text;
       if (rw.length > orig.length * 2.2) continue;
+      if (attributionMismatch(orig, rw, facts.split("\n")) || introducesUnsupportedName(orig, rw, facts)) continue; // wrong person credited / invented name
       const tgt = flagged[idx];
       if (sentsByPara[tgt.pi] && sentsByPara[tgt.pi][tgt.si] === orig) { sentsByPara[tgt.pi][tgt.si] = rw; rewrites++; }
     }
@@ -2097,6 +2408,531 @@ Output ONLY JSON: {"results":[{"i":<index>,"action":"KEEP"|"REWRITE","rewrite":"
     console.log(`[certainty] flaggedTotal=${flaggedTotal} judged=${flagged.length} rewrites=${rewrites}`);
     return { text: rebuilt, status: "ok" };
   }
+}
+
+// SELF-REVIEW + AUTO-REVISE — the internalized "give it to ChatGPT for notes" step. After every other
+// pass has run, one editor-grade LLM call reads the WHOLE assembled script against a publish rubric
+// (hook strength, retention/pacing, natural voice, no AI-tells, accuracy of figures) and returns a
+// SMALL set of TARGETED sentence rewrites for only the weakest spots — a flat hook, a telly/generic
+// line, an AI-tell, a limp ending. It rewrites AROUND the weak spot keeping every fact and the voice,
+// never adds a new specific, and is bounded so it can polish but never gut or restructure the script.
+type SelfReviewResult = { text: string; status: "ok" | "failed"; reason?: string; rewrites?: number };
+// PROTECTED LINES — the lines that carry the voice (callbacks, character lines, the closing line,
+// refrains) are exactly what a polish pass sands down, because a distinctive line looks "unpolished"
+// to a rewriter (seen live: "Every line on it was love." -> "Every line on it was her looking after
+// her mother."). So they are LOCKED in code, not just asked nicely: (a) any sentence repeated 3+ times
+// verbatim is a deliberate refrain ("Your one page."), deterministically; (b) a fast parallel call
+// picks the 6-8 most distinctive voice-carrying lines. Self-review edits to these are discarded,
+// except accuracy (claim) and a required CTA cut, which always win.
+export function findRefrains(sentences: string[]): Set<number> {
+  const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9 ]/g, "").trim();
+  const counts = new Map<string, number>();
+  for (const s of sentences) { const k = norm(s); if (k) counts.set(k, (counts.get(k) || 0) + 1); }
+  const out = new Set<number>();
+  sentences.forEach((s, i) => { if ((counts.get(norm(s)) || 0) >= 3) out.add(i); });
+  return out;
+}
+async function pickProtectedLines(sentences: string[], voiceProfile?: string): Promise<Set<number>> {
+  const res = await callStructuredLLM<number[]>({
+    model: "claude-haiku-4-5-20251001", max_tokens: 300, temperature: 0, kind: "object", label: "protect-lines",
+    system: `You pick the lines an editor must NOT touch. Return the 6-8 sentences that carry this script's VOICE and emotional architecture: callbacks to the opening, lines that define the narrator's character, the most memorable emotional lines, and the final closing line. Prefer short, distinctive lines. Never pick a plain informational sentence. Output ONLY JSON: {"keep":[<sentence index>, ...]}`,
+    user: `${voiceProfile ? `CREATOR VOICE:\n${voiceProfile.slice(0, 900)}\n\n` : ""}SCRIPT SENTENCES (index. text):\n${sentences.map((s, i) => `${i}. ${s}`).join("\n")}`,
+    validate: (v) => { const k = (v as any)?.keep; return Array.isArray(k) ? k.map(Number).filter((x: number) => Number.isInteger(x)) : null; },
+  });
+  return new Set(res.ok ? (res.value as number[]).filter((i) => i >= 0 && i < sentences.length).slice(0, 8) : []);
+}
+
+export async function applySelfReview(body: string, facts: string, startedAt: number, opts?: { noCta?: boolean; voiceProfile?: string }): Promise<SelfReviewResult> {
+  if (!body || !body.trim()) return { text: body, status: "ok" };
+  if (Date.now() - startedAt > 250_000) return { text: body, status: "ok" };
+  const noCta = !!opts?.noCta;
+  const voice = (opts?.voiceProfile || "").trim();
+  const paras = body.split(/\n\n+/);
+  type Sent = { pi: number; si: number; text: string };
+  const sentsByPara: string[][] = paras.map((p) => splitSentences(p));
+  const all: Sent[] = [];
+  sentsByPara.forEach((ss, pi) => ss.forEach((text, si) => all.push({ pi, si, text })));
+  if (all.length < 6) return { text: body, status: "ok" };
+  const n = all.length;
+  // Kick off protected-line selection in PARALLEL with the review so it adds no wall-clock time.
+  const protectP = pickProtectedLines(all.map((s) => s.text), voice || undefined).catch(() => new Set<number>());
+  const voiceBlock = voice
+    ? `\n\nTHE CREATOR'S CHOSEN VOICE (this script is deliberately written in it — the VOICE WINS over the topic's or niche's usual conventions, e.g. a Kurzgesagt voice on a true-crime story stays Kurzgesagt):\n"""\n${voice.slice(0, 900)}\n"""\nThis voice's signature habits (its rhetorical questions, asides, refrains, fragments or long sentences, tidy summaries, repetition for effect) are ON PURPOSE. Never flag them as AI-tells or rhythm problems, and never rewrite a line toward a more generic style. Every rewrite must sound like THIS voice.`
+    : "";
+  const system = `You are a top-tier YouTube documentary script editor doing a FINAL polish pass — the notes a sharp editor gives before a script goes to record. The script already passed accuracy and structure checks. Your job is to find the genuine weak spots and either REWRITE or CUT just those, so the finished script reads like a great human-written video with nothing left to fix. Two actions: "rewrite" (replace a sentence) or "cut" (delete a sentence entirely).
+
+WHAT TO FIX (most sentences are fine — leave them):
+1. CLAIM / EVIDENCE BOUNDARY (high priority — REWRITE): a sentence that states an INTERPRETATION as hard fact, or intensifies a documented point past what the facts support. Keep the punch, pull the certainty back to what's earned. Examples of the failure: "the system was designed to exploit your psychology" (the facts show it was optimized for engagement — that's not the same as a designed intent to exploit), "X was the product" stated as literal fact when it's a rhetorical claim, "they all agreed" when the sources actually made different arguments. Rewrite to the strongest TRUE version ("optimized relentlessly for engagement", "had become how the product worked", "were pointing at the same underlying problem"), never a limp hedge.
+2. REDUNDANT RE-EXPLANATION (CUT): the script explains the same mechanism or makes the same point it already made earlier. Once a point has landed, a later sentence that re-explains it (the same "algorithm → engagement → outrage" loop a third time) is padding — CUT it. Cut the WEAKER restatement, never the first/strongest statement of a point. This is the most valuable fix for a script that sags in the middle.
+3. AI-TELLS / GENERIC LINES (REWRITE): hollow phrasing ("it's important to note", "plays a crucial role", "the reality is", "what's fascinating is", "in conclusion", "at the end of the day"), or a sentence that just announces what the next part will do. Make it something a person would actually say — or CUT it if it adds nothing.
+4. HOOK (REWRITE): if the opening 1-3 sentences don't create immediate tension, sharpen them (facts present only).
+5. TOO MANY ENDINGS (CUT): if the script "finishes" several times, keep the single strongest closing line and CUT the weaker between-endings so the ending accelerates to one clean landing.
+1b. UNSUPPORTED DETAIL (high priority — REWRITE to what the facts support, or CUT): a sentence that states a specific FACTUAL detail that appears NOWHERE in the approved facts. This covers: an action or event ("he applied, he tested, he was issued documentation"), a habit or behavior ("he paid his bills, kept to himself"), a relationship or role ("a network held around him"), a count ("through two arrests" when the facts give one), a named detail ("the booking photo"), and outside BACKGROUND or HISTORY ("the service has been hunting fugitives since the nineteenth century", "honor camps were a fixture of mid-century corrections"). Being true in the real world does NOT make it supported: if the facts don't say it, it isn't. Rewrite to the strongest version the facts DO support (keep the voice), or CUT it if nothing supports it. NOT this item: interpretation, emotion, framing, rhetorical lines, and transitions that assert no new fact ("He did not stay long enough to matter.", "That is not running.") — leave those alone. Compare against the WHOLE fact list before flagging; never flag a detail that a fact states in other words.
+6. COUNT MISMATCH (REWRITE): a sentence that announces a number of items ("Two failures", "three reasons") followed by a list with a DIFFERENT number. Fix the announced number to match what actually follows.
+6b. OFF-VOICE RHYTHM (REWRITE): this script will be READ ALOUD. ${voice ? `Judge rhythm against the CREATOR'S VOICE below, not a generic standard: fix only a sentence whose cadence breaks from how this creator talks (a long, written-style sentence in a punchy voice; a choppy fragment in a flowing voice; a stiff formal construction a person wouldn't say aloud).` : `Fix a sentence that reads as written rather than spoken (stiff formal construction, a mouthful a narrator would stumble on), or a run of sentences so alike in length and opening that the pace goes flat.`} NEVER "fix" deliberate repetition: refrains, parallel lists ("Two hundred here, ninety there."), or a run of short sentences that lands a beat ("I was a lawyer. I knew better.") are craft, not monotony.${noCta ? `
+7. UNWANTED CTA (CUT — REQUIRED): the creator turned the CTA OFF for this script, so it must NOT ask the viewer to subscribe, like, comment, or watch another video. CUT every sentence that makes any such ask (e.g. "subscribe", "if this is the kind of story...", "there are more stories like this"). End on the closing narrative line.` : ""}
+
+HARD RULES:
+- KEEP EVERY FACT. Add NO new specific (number, name, date, place, quote) not already in that sentence or the approved facts. Rephrase, never re-research.
+- Preserve the surrounding VOICE and rhythm — a rewrite must be indistinguishable in style from the lines around it.
+- Touch a sentence ONLY if genuinely weak/redundant/unsupported. At most 18 edits total; a clean script needs few. Spend edits on accuracy (claim, unsupported) FIRST. Never touch a strong sentence.
+- A rewrite is roughly the same length as the original (recast, not expansion/stub). A cut removes exactly one sentence.
+- RESTRAINT: do not rewrite a sentence merely because another version sounds more polished. A line with character, even slightly informal, is worth more than a smoother generic one. Change only what weakens accuracy, clarity, or flow.${voiceBlock}
+
+Output ONLY JSON: {"edits":[{"i":<sentence index>,"action":"rewrite"|"cut","issue":"claim|unsupported|redundant|ai-tell|hook|ending|count|rhythm|cta","rewrite":"<new sentence, only for rewrite>"}]}`;
+  const user = `APPROVED FACTS (the only established truth — never introduce a specific beyond these):\n"""\n${(facts || "").slice(0, 40000)}\n"""\n\nSCRIPT SENTENCES (index. text) — the first few are the HOOK, the last few are the ENDING${noCta ? " (this script must end with NO CTA)" : ""}:\n${all.map((s, i) => `${i}. ${s.text}`).join("\n")}\n\nReturn JSON: rewrite overstated/AI-tell/hook/ending lines, cut redundant re-explanations${noCta ? " and every CTA/subscribe ask" : ""}.`;
+  const res = await callStructuredLLM<any[]>({
+    model: "claude-sonnet-4-6", max_tokens: 4000, temperature: 0.4, system, user, kind: "object",
+    label: "self-review",
+    validate: (v) => { const o = v as any; const arr = Array.isArray(o?.edits) ? o.edits : (Array.isArray(o?.rewrites) ? o.rewrites : null); return arr; },
+  });
+  if (!res.ok) { console.error(`[self-review] FAILED reason=${res.reason} — body unchanged`); return { text: body, status: "failed", reason: res.reason }; }
+  const protectedIdx = new Set<number>([...findRefrains(all.map((s) => s.text)), ...(await protectP)]);
+  let rewrites = 0, cuts = 0, blocked = 0, unsupported = 0;
+  // Cut budget lowered (was 15%): the structure pass now owns repetition/endings, and stacked cuts
+  // were leaving fragments and gutted endings in the benchmark.
+  const MAX_CUTS = Math.max(3, Math.floor(n * 0.15)); // measured: the lower cap + rewrite-first scored worse (6.00 vs 6.57)
+  for (const r of (res.value as any[]).slice(0, 18)) {
+    const idx = Number(r?.i);
+    if (!Number.isInteger(idx) || idx < 0 || idx >= n) continue;
+    const t = all[idx];
+    const orig = t.text;
+    if (!sentsByPara[t.pi] || sentsByPara[t.pi][t.si] !== orig) continue; // already edited / mismatch
+    const action = r?.action === "cut" ? "cut" : "rewrite";
+    // Locked line: only an accuracy fix or a required CTA removal may touch it.
+    const issue = String(r?.issue || "");
+    if (protectedIdx.has(idx) && !(issue === "claim" || issue === "unsupported" || (noCta && issue === "cta"))) { blocked++; continue; }
+    if (action === "cut") {
+      if (cuts >= MAX_CUTS) continue;
+      // The ending is protected from cuts (only a CTA the creator turned off may go).
+      if (cutWithOrphans(sentsByPara, t.pi, t.si, issue === "unsupported" || issue === "claim" ? "accuracy" : "style") < 0) { blocked++; continue; }
+      cuts++; if (issue === "unsupported") unsupported++;
+    } else {
+      const rw = typeof r?.rewrite === "string" ? r.rewrite.trim() : "";
+      if (!rw || rw.length < 8 || rw === orig) continue;
+      if (rw.length > orig.length * 2.2) continue; // no ballooning (invention guard)
+      if (!quoteBalanceKept(orig, rw)) { blocked++; continue; }
+      if (attributionMismatch(orig, rw, facts.split("\n")) || introducesUnsupportedName(orig, rw, facts)) { blocked++; continue; }
+      sentsByPara[t.pi][t.si] = rw; rewrites++; if (issue === "unsupported") unsupported++;
+    }
+  }
+  if (!rewrites && !cuts) { console.log(`[self-review] sentences=${n} edits=0 protected=${protectedIdx.size} blocked=${blocked} voice=${voice ? "yes" : "no"}`); return { text: body, status: "ok", rewrites: 0 }; }
+  const rebuilt = sentsByPara.map((ss) => ss.filter(Boolean).join(" ").trim()).filter(Boolean).join("\n\n");
+  // Anti-gut floor: a polish (even with de-rep cuts + CTA removal) stays well above 80% of length.
+  if (rebuilt.split(/\s+/).filter(Boolean).length < body.split(/\s+/).filter(Boolean).length * 0.80) { console.log("[self-review] backed off — rebuilt too short"); return { text: body, status: "ok", rewrites: 0 }; }
+  console.log(`[self-review] sentences=${n} rewrites=${rewrites} cuts=${cuts} unsupported=${unsupported} protected=${protectedIdx.size} blocked=${blocked} voice=${voice ? "yes" : "no"}${noCta ? " noCta" : ""}`);
+  return { text: rebuilt, status: "ok", rewrites: rewrites + cuts };
+}
+
+// Cut a sentence AND any elliptical fragment it strands. A cut can orphan a short neighbor that only
+// made sense against it (seen live: "...and he stayed. Not for months." after the follow-up sentence
+// was cut). A neighbor of <= 4 words that opens elliptically ("Not...", "Just...", "Or...") goes too.
+const ELLIPTICAL_RE = /^(?:not|no|never|just|only|or|and|but|nor|even|instead|not even)\b/i;
+// A sentence whose subject lives in the sentence before it ("She denied it. Said they had the wrong
+// person."). Seen live: cutting the first left "Said they had the wrong person." as a subjectless line.
+export const SUBJECTLESS_RE = /^(?:Said|Told|Kept|Asked|Insisted|Claimed|Denied|Added|Admitted|Swore|Refused|Tried|Then\s+(?:said|told|asked|kept|denied|relented)|So\s+(?:was|were|did|had|is|are)|Neither\s+(?:was|were|did|had)|The\s+kind\s+(?:that|of\s+\w+\s+that))\b/;
+// "style" cuts (repetition, structure) are refused when they'd strand such a sentence; "accuracy" cuts
+// (the line is wrong) take the stranded continuation with them. Returns -1 when refused.
+function cutWithOrphans(sentsByPara: string[][], pi: number, si: number, mode: "style" | "accuracy" = "style"): number {
+  const row = sentsByPara[pi];
+  const after = row.slice(si + 1).find(Boolean);
+  if (after && SUBJECTLESS_RE.test(after.trim())) {
+    if (mode === "style") return -1;
+    row[row.indexOf(after, si + 1)] = "";
+  }
+  row[si] = "";
+  let extra = 0;
+  for (const j of [si - 1, si + 1]) {
+    const nb = row[j];
+    if (nb && nb.split(/\s+/).filter(Boolean).length <= 4 && ELLIPTICAL_RE.test(nb.trim())) { row[j] = ""; extra++; }
+  }
+  // The sentence AFTER a cut that answers it ("What it shows is...") now answers nothing: drop it.
+  const next = row[si + 1];
+  if (next && BACKREF_RE.test(next.trim()) && (BACKREF_RE.exec(next.trim())?.[0] || "").trim()) { row[si + 1] = ""; extra++; }
+  return extra;
+}
+
+// FACT DISCIPLINE — its own pass. The unsupported-detail check started as one of eight items in
+// self-review and was barely used on a real run (caught 1 of ~6 inventions: a guessed age "in his
+// eighties" for a man of 79, "he drifted, he kept moving" against a sourced "flawless 16-year
+// residency", invented neighbors/landlords). Same lesson as the voice and certainty passes: give
+// the hard thing its own turn with nothing competing. Judges EVERY sentence against the facts for
+// (a) specifics absent from the facts and (b) claims the facts contradict, then rewrites to what the
+// facts support or cuts. Interpretation and voice lines are out of scope. Bounded like the others.
+// Deterministic age check: an age stated in the script ("in his eighties", "a 79-year-old", "aged 79")
+// is supported only if the facts state an age in that same range. The model reliably GUESSES ages
+// (seen live: "a man in his eighties" for a man of 79), so detection can't be left to it.
+const DECADES: Record<string, number> = { teens: 10, twenties: 20, thirties: 30, forties: 40, fifties: 50, sixties: 60, seventies: 70, eighties: 80, nineties: 90 };
+const AGE_ONES: Record<string, number> = { one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10, eleven: 11, twelve: 12, thirteen: 13, fourteen: 14, fifteen: 15, sixteen: 16, seventeen: 17, eighteen: 18, nineteen: 19 };
+const AGE_TENS: Record<string, number> = { twenty: 20, thirty: 30, forty: 40, fifty: 50, sixty: 60, seventy: 70, eighty: 80, ninety: 90 };
+function spelledNum(w: string): number | null {
+  const m = w.toLowerCase().match(/^(twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety)?[\s-]?(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen)?$/);
+  if (!m || (!m[1] && !m[2])) return null;
+  return (m[1] ? AGE_TENS[m[1]] : 0) + (m[2] ? AGE_ONES[m[2]] : 0);
+}
+function agesIn(text: string): { lo: number; hi: number }[] {
+  const out: { lo: number; hi: number }[] = [];
+  const t = text.toLowerCase();
+  for (const m of t.matchAll(/\bin (?:his|her|their) (?:early |mid-?|late )?(teens|twenties|thirties|forties|fifties|sixties|seventies|eighties|nineties)\b/g)) out.push({ lo: DECADES[m[1]], hi: DECADES[m[1]] + 9 });
+  for (const m of t.matchAll(/\b(?:aged?|at age)\s+(\d{1,3})\b|\b(\d{1,3})[- ]years?[- ]old\b/g)) { const n = Number(m[1] || m[2]); out.push({ lo: n, hi: n }); }
+  for (const m of t.matchAll(/\b((?:twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety)(?:[\s-](?:one|two|three|four|five|six|seven|eight|nine))?|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen)[- ]years?[- ]old\b/g)) { const n = spelledNum(m[1]); if (n) out.push({ lo: n, hi: n }); }
+  return out;
+}
+// Ages the facts support by ARITHMETIC: a birth year ("born March 29, 1943", "born in 1936") and any
+// other year in the facts give age = year - birth (or one less, before the birthday). The model did
+// not do this math and cut a correct "nineteen years old" (born 1943, crime in 1962).
+function birthDerivedAges(facts: string): { lo: number; hi: number }[] {
+  const births = [...facts.matchAll(/\bborn\b[^.\n]{0,30}?\b(1[89]\d{2}|20\d{2})\b/gi)].map((m) => Number(m[1]));
+  if (!births.length) return [];
+  const years = [...new Set((facts.match(/\b(1[89]\d{2}|20\d{2})\b/g) || []).map(Number))];
+  return births.flatMap((b) => years.filter((y) => y > b).map((y) => ({ lo: y - b - 1, hi: y - b })));
+}
+function factAgeRanges(facts: string) { return [...agesIn(facts), ...birthDerivedAges(facts)]; }
+export function unsupportedAgeSentences(sentences: string[], facts: string): number[] {
+  const factAges = factAgeRanges(facts);
+  return sentences.flatMap((sn, i) => agesIn(sn).some((a) => !factAges.some((f) => a.lo <= f.hi && f.lo <= a.hi)) ? [i] : []);
+}
+// Sentences whose stated age IS supported (directly or by birth-date arithmetic): protected from edits.
+export function supportedAgeSentences(sentences: string[], facts: string): number[] {
+  const factAges = factAgeRanges(facts);
+  return sentences.flatMap((sn, i) => { const a = agesIn(sn); return a.length && a.every((x) => factAges.some((f) => x.lo <= f.hi && f.lo <= x.hi)) ? [i] : []; });
+}
+
+type FactCheckResult = { text: string; status: "ok" | "failed"; reason?: string; edits?: number };
+export async function applyFactDiscipline(body: string, facts: string, startedAt: number): Promise<FactCheckResult> {
+  if (!body || !body.trim() || !facts || !facts.trim()) return { text: body, status: "ok" };
+  if (Date.now() - startedAt > 245_000) return { text: body, status: "ok" };
+  const paras = body.split(/\n\n+/);
+  const sentsByPara: string[][] = paras.map((p) => splitSentences(p));
+  const all: { pi: number; si: number; text: string }[] = [];
+  sentsByPara.forEach((ss, pi) => ss.forEach((text, si) => all.push({ pi, si, text })));
+  if (all.length < 6) return { text: body, status: "ok" };
+  const n = all.length;
+  const mustFix = unsupportedAgeSentences(all.map((x) => x.text), facts);
+  // Superlatives whose scope drifted from the research ("longest fugitive hunt" vs the source's
+  // "longest successful manhunt"): must-fix, with the source's exact phrase handed over.
+  const supNotes: string[] = [];
+  // Misattributed borrowed phrases: must-fix, naming the research's actual speaker.
+  for (const ma of misattributedPhrases(all.map((x) => x.text), facts.split("\n"))) {
+    if (!mustFix.includes(ma.i)) mustFix.push(ma.i);
+    supNotes.push(`sentence ${ma.i}: credits the words "${ma.phrase}" to "${ma.credited}", but the research attributes them to ${ma.speaker}. Rewrite to credit ${ma.speaker}`);
+  }
+  // Names the research never mentions (seen live: "Ed was a Phoenix nurse"; the nurse is Clifton
+  // Goodenough). A capitalized word absent from the facts that never appears lowercase anywhere in the
+  // script is a name, not a sentence-opening word ("Thirteen", "Not" also appear lowercase).
+  const OPENERS = new Set(["it", "he", "she", "they", "we", "i", "you", "his", "her", "their", "its", "our", "the", "a", "an", "and", "but", "or", "so", "not", "no", "yes", "then", "now", "that", "this", "these", "those", "there", "here", "what", "when", "where", "why", "how", "who", "which", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "in", "on", "at", "by", "for", "from", "of", "to", "with", "after", "before", "until", "since", "while", "if", "as", "just", "still", "even", "only", "every", "each", "all", "some", "most", "none", "nobody", "nothing", "everyone", "everything", "maybe", "because", "though", "although", "yet", "once", "twice", "never", "always", "also", "back", "years", "year", "months", "days"]);
+  // Apostrophes split too, so "Hare" in "O'Hare" counts as in the research.
+  const lowerFacts = ` ${facts.toLowerCase().replace(/[^a-z0-9' ]+/g, " ")} ${facts.toLowerCase().replace(/[^a-z0-9 ]+/g, " ")} `;
+  all.forEach((x, i) => {
+    const names = [...new Set(x.text.match(/\b[A-Z][a-z]{1,}\b/g) || [])].filter((w) => !OPENERS.has(w.toLowerCase()) && !(w.length > 4 && /(?:ly|ed|ing|tion|ment|ness|ous|ive|able)$/.test(w)) && !lowerFacts.includes(` ${w.toLowerCase()} `) && !new RegExp(`(?:^|[^A-Za-z])${w.toLowerCase()}(?:[^A-Za-z]|$)`).test(body.replace(new RegExp(`\\b${w}\\b`, "g"), "")));
+    if (!names.length) return;
+    if (!mustFix.includes(i)) mustFix.push(i);
+    supNotes.push(`sentence ${i}: names ${names.map((w) => `"${w}"`).join(", ")}, which the research never mentions. If it is a person or place, replace it with the right one from the facts or remove it`);
+  });
+  for (const ey of eventYearMismatches(all.map((x) => x.text), facts)) {
+    if (!mustFix.includes(ey.i)) mustFix.push(ey.i);
+    supNotes.push(ey.missingYear
+      ? `sentence ${ey.i}: gives "${ey.event}" a month and day but no year, so after the script's ${ey.said} it sounds like ${ey.said}; the research has ${ey.research}. Add the year`
+      : `sentence ${ey.i}: puts "${ey.event}" in ${ey.said}, but the research has it in ${ey.research}. Fix the year (and any dateline or "N months earlier" that depends on it)`);
+  }
+  all.forEach((x, i) => { const fv = foreverContradicted(x.text, facts); if (fv) { if (!mustFix.includes(i)) mustFix.push(i); supNotes.push(`sentence ${i}: says "${fv}", but the research has him found later. Drop the absolute`); } });
+  for (const am of ageYearMismatches(all.map((x) => x.text), facts)) {
+    if (!mustFix.includes(am.i)) mustFix.push(am.i);
+    supNotes.push(`sentence ${am.i}: says ${am.said} years old in ${am.year}, but by the research's ages and dates he or she was about ${am.expected} then. Fix the age or drop it`);
+  }
+  all.forEach((x, i) => { const mm = superlativeMismatches(x.text, facts); if (mm.length) { if (!mustFix.includes(i)) mustFix.push(i); supNotes.push(`sentence ${i}: ${mm.map((q) => q.source ? `"${q.said}" must use the source's exact wording "${q.source}" and keep its attribution` : `"${q.said}" is a superlative the facts don't state: remove it`).join("; ")}`); } });
+  // Voice lines are locked here too (same picker as self-review, run in parallel): a softer
+  // "unsupported" edit must not strip a voice line; a hard contradiction or a must-fix still may.
+  const protectP = pickProtectedLines(all.map((x) => x.text)).catch(() => new Set<number>());
+  const system = `You are a documentary fact-checker. A script was written from an APPROVED FACT SHEET. Find every sentence that states a FACTUAL detail the facts do not support, and fix it. Three failures:
+1. UNSUPPORTED: a specific stated as fact that appears NOWHERE in the facts — an action, process, or event ("he applied, he tested"), a habit or behavior ("kept to himself", "paid his bills"), movement or whereabouts ("he drifted from state to state"), people or relationships ("neighbors", "landlords", "a network", "someone who helped him"), a number, age, or duration the facts don't give (an age is supported ONLY if the facts give it or give both a birth year and the date), a named detail ("the booking photo"), or outside background/history ("since the nineteenth century"). Being true in the real world does NOT make it supported.
+2. INSINUATION, SPECULATION, OR INTENT DRESSED AS NARRATIVE: a hint or open question that plants a claim the facts don't make, especially about real people ("a small circle can shelter a person. It can also fund one.", "neither one had been ruled out", "it's hard not to wonder"), a motive or intention the facts don't state ("a paper trail deliberately kept thin", "he chose to"), a softened guess that still plants a claim ("someone who might have helped him", "he probably"), or an invented duration or effort for a process ("months of pulling threads", "years of investigative work"). A hedge word does not make an unsupported claim acceptable.
+2b. A REAL PERSON'S THOUGHTS OR FEELINGS ("he seemed to have moved on", "he never looked back"), AGENCY KNOWLEDGE, INACTION, OR TIMING not in the facts ("had no idea where he was", "nobody pursued him", "closed his file", "in a matter of months"), ERA GENERALIZATIONS ("not unusual for the era"), outside GEOGRAPHY ("halfway down the Atlantic coast"), and invented TERMS of a sentence/probation/parole ("do not drive", "stay out of trouble") unless the facts state them.
+3. CONTRADICTED: a claim that conflicts with a fact, including one implied by facts taken together (if the facts say he had a "flawless 16-year residency" in one state, "he kept moving" contradicts it).
+4. ATTRIBUTED CLAIM STATED AS FACT: the facts give a claim only as someone's account ("his wife told investigators he gambled", "he said he sold it after a trading loss", "according to prosecutors"), and the script states it as plain truth ("He sold it because the gambling had stripped him"). Worst when the facts hold a different account from someone else. Rewrite to keep the attribution ("His wife told investigators it was gambling.") and, when the accounts differ, don't pick a side. This includes the SUBJECT'S OWN ACCOUNT: what the research gives only from his memoir, an interview, or his letters ("he crossed a border", "he sat on a rock near a foreign border") must be attributed ("By his own account, ...", "In his memoir, he wrote ..."). Facts tagged [his own account] or [family account] are exactly these.
+5. TWO FIGURES FOR ONE QUANTITY: under FIGURES ACROSS THE SCRIPT you get every dollar figure in the whole script. If this sentence gives a figure for the SAME quantity as a different figure elsewhere (the family "collected $47,000" vs restitution "covering the survivor payments" of $78,600), the viewer hears a contradiction. Rewrite the LATER of the two so the difference is explained, using only what the facts say about each figure (who reported it, when, or what it measures), e.g. "Early reports put the benefits at $47,000. The court's figure was more than $78,600." Different quantities that happen to differ are fine: leave them.
+FIX: "rewrite" to the strongest version the facts DO support, in the same voice and about the same length (drop or generalize only the unsupported part, e.g. "a man in his eighties" -> "an old man"); or "cut" if nothing in it is supported. Compare against the WHOLE fact sheet first; a fact phrased differently still supports it.
+OUT OF SCOPE (never flag): interpretation, emotion, rhetorical or transitional lines, framing that asserts no new fact ("That is not running.", "Boring is very hard to find."), and arithmetic correctly derived from fact dates.
+Output ONLY JSON: {"edits":[{"i":<sentence index>,"action":"rewrite"|"cut","kind":"unsupported"|"speculation"|"contradicted"|"attributed"|"figure","rewrite":"<new sentence, only for rewrite>"}]}`;
+  // Every dollar figure in the WHOLE script, so a window can see a conflicting figure outside itself
+  // (seen live, Jones: "$47,000" in one window, "$78,600 ... covering the survivor payments" in another).
+  const MONEY_RE = /\$\s?\d[\d,]*(?:\.\d+)?(?:\s?(?:million|billion|thousand))?/gi;
+  const figures = all.flatMap((x, i) => (x.text.match(MONEY_RE) || []).map((f) => ({ i, f: f.replace(/\s+/g, " "), text: x.text })));
+  const figBlock = new Set(figures.map((g) => g.f.toLowerCase())).size >= 2
+    ? `\nFIGURES ACROSS THE SCRIPT (sentence index: figure, in context):\n${figures.slice(0, 40).map((g) => `${g.i}: ${g.f} :: ${g.text.slice(0, 160)}`).join("\n")}\n`
+    : "";
+  // Likely pairs, found by code (the model alone left "$47,000 ... collected" and "$78,600 ... covering
+  // the survivor payments" both standing): two sentences with DIFFERENT dollar figures that share 2+
+  // topic words. The later one becomes must-fix with both figures named.
+  const FIG_STOP = new Set(["about", "after", "their", "there", "these", "which", "would", "years", "every", "first", "money", "dollars", "more", "than", "goes", "paid"]);
+  const topicWords = (t: string) => new Set((t.toLowerCase().replace(MONEY_RE, " ").match(/[a-z]{5,}/g) || []).filter((w) => !FIG_STOP.has(w)).map((w) => w.slice(0, 6)));
+  for (let x = 0; x < figures.length; x++) for (let y = x + 1; y < figures.length; y++) {
+    const A = figures[x], B = figures[y];
+    if (A.i === B.i || A.f.toLowerCase() === B.f.toLowerCase()) continue;
+    // Already explained: some sentence names both figures (a second explanation would repeat or
+    // contradict it; seen live).
+    const pairKey = [A.f, B.f].map((f) => f.replace(/[\s$,]/g, "").toLowerCase()).sort().join("|");
+    if (all.some((x2) => figurePairsInSentence(x2.text).includes(pairKey))) continue;
+    const ta = topicWords(A.text), tb = topicWords(B.text);
+    const shared = [...ta].filter((w) => tb.has(w));
+    if (shared.length < 2) continue;
+    const later = Math.max(A.i, B.i), [lf, ef, ei] = later === B.i ? [B.f, A.f, A.i] : [A.f, B.f, B.i];
+    if (!mustFix.includes(later)) mustFix.push(later);
+    supNotes.push(`sentence ${later}: gives ${lf} where sentence ${ei} gives ${ef}, and both seem to be about the same thing. If they are the same quantity, rewrite sentence ${later} so the viewer hears WHY they differ, from what the facts say about each figure (who reported it, when, what it covers). If they measure different things, make that plain in a few words`);
+  }
+  // CHUNKED + PARALLEL: one call over ~170 sentences caught about half the inventions on a fresh script.
+  // Each call now judges a window of ~60 sentences (with the WHOLE fact sheet), all windows at once,
+  // so recall goes up and wall-clock time does not.
+  const WIN = 60;
+  const windows: number[][] = [];
+  for (let a = 0; a < n; a += WIN) windows.push(Array.from({ length: Math.min(WIN, n - a) }, (_, k) => a + k));
+  const results = await Promise.all(windows.map((idxs) => {
+    const mf = mustFix.filter((i) => idxs.includes(i));
+    const user = `APPROVED FACTS:\n"""\n${facts.slice(0, 40000)}\n"""\n${figBlock}\nSCRIPT SENTENCES (index. text) — a window of the script; judge every one:\n${idxs.map((i) => `${i}. ${all[i].text}`).join("\n")}\n${mf.length ? `\nMUST FIX (an age the facts do not state, a superlative whose wording drifted from the source, words credited to the wrong source, a name the research never mentions, or two figures that clash; fix only that part, keep the rest): sentence ${mf.join(", ")}\n${supNotes.filter((n) => mf.some((i) => n.startsWith(`sentence ${i}:`))).join("\n")}\n` : ""}\nReturn JSON edits for every unsupported, speculative, or contradicted sentence in this window.`;
+    return callStructuredLLM<any[]>({
+      model: "claude-sonnet-4-6", max_tokens: 4000, temperature: 0, system, user, kind: "object", label: "fact-discipline",
+      validate: (v) => { const o = v as any; return Array.isArray(o?.edits) ? o.edits : null; },
+    });
+  }));
+  const okResults = results.filter((r) => r.ok);
+  if (!okResults.length) { const reason = (results[0] as any)?.reason; console.error(`[fact-check] FAILED reason=${reason} — body unchanged`); return { text: body, status: "failed", reason }; }
+  const edits: any[] = okResults.flatMap((r) => (r as any).value as any[]);
+  const protectedIdx = new Set<number>([...findRefrains(all.map((x) => x.text)), ...(await protectP)]);
+  const must = new Set(mustFix);
+  const ageOk = new Set(supportedAgeSentences(all.map((x) => x.text), facts)); // correct ages: hands off
+  let rewrites = 0, cuts = 0, orphans = 0, blocked = 0;
+  const byKind: Record<string, number> = {};
+  const MAX_CUTS = Math.max(5, Math.floor(n * 0.12));
+  for (const r of edits.slice(0, 40)) {
+    const idx = Number(r?.i);
+    if (!Number.isInteger(idx) || idx < 0 || idx >= n) continue;
+    const t = all[idx];
+    if (!sentsByPara[t.pi] || sentsByPara[t.pi][t.si] !== t.text) continue;
+    if (ageOk.has(idx)) { blocked++; continue; }
+    // Attribution and figure fixes are accuracy fixes: like a contradiction, they may rewrite a protected
+    // voice line (never cut it).
+    // Accuracy fixes (a contradiction, a misattribution, a figure clash, any must-fix) often need a
+    // clause more than the original (seen live: a 160-char fix for two clashing accounts of how Jones
+    // was found was refused against a 150 cap). They get the wider allowance.
+    const framing = r?.kind === "attributed" || r?.kind === "figure" || r?.kind === "contradicted" || must.has(idx) || supNotes.some((nt) => nt.startsWith(`sentence ${idx}: gives $`));
+    if (protectedIdx.has(idx) && r?.kind !== "contradicted" && !must.has(idx) && !(framing && r?.action !== "cut")) { blocked++; continue; }
+    if (r?.action === "cut") {
+      if (cuts >= MAX_CUTS) continue;
+      orphans += cutWithOrphans(sentsByPara, t.pi, t.si, "accuracy"); cuts++;
+    } else {
+      const rw = typeof r?.rewrite === "string" ? r.rewrite.trim() : "";
+      // An attribution or an explained figure needs a few more words than a plain correction.
+      // Short sentences need a fixed allowance, not a ratio (seen live: "More than $78,600 goes to the
+      // Social Security Administration." is ~60 chars, so every explanation of the $47,000 was dropped).
+      // A short sentence ("Garnished wages.", 16 chars) needs room to be corrected at all.
+      const maxLen = framing ? Math.max(t.text.length * 2.4, t.text.length + 220) : Math.max(t.text.length * 1.6, t.text.length + 60);
+      if (!rw || rw.length < 8 || rw === t.text) continue;
+      if (rw.length > maxLen) { console.log(`[fact-check] refused over-long rewrite (${rw.length} > ${Math.round(maxLen)}): ${rw.slice(0, 120)}`); continue; }
+      if (!quoteBalanceKept(t.text, rw)) { blocked++; continue; }
+      const misCredit = attributionMismatch(t.text, rw, facts.split("\n"));
+      if (misCredit) { blocked++; console.log(`[fact-check] refused rewrite: ${misCredit}`); continue; }
+      const newName = introducesUnsupportedName(t.text, rw, facts);
+      if (newName) { blocked++; console.log(`[fact-check] refused rewrite: new name "${newName}" not in the research`); continue; }
+      if (introducesPipelineWords(t.text, rw)) { blocked++; console.log(`[fact-check] refused rewrite: pipeline words: ${rw.slice(0, 100)}`); continue; }
+      sentsByPara[t.pi][t.si] = rw.replace(/\s*(?:—|–|--)\s*/g, ", "); rewrites++;
+      if (framing) byKind[r.kind] = (byKind[r.kind] || 0) + 1;
+    }
+  }
+  if (!rewrites && !cuts) { console.log(`[fact-check] sentences=${n} edits=0 mustFix=${mustFix.length} blocked=${blocked}`); return { text: body, status: "ok", edits: 0 }; }
+  const rebuilt = sentsByPara.map((ss) => ss.filter(Boolean).join(" ").trim()).filter(Boolean).join("\n\n");
+  if (rebuilt.split(/\s+/).length < body.split(/\s+/).length * 0.85) { console.log("[fact-check] backed off — rebuilt too short"); return { text: body, status: "ok", edits: 0 }; }
+  console.log(`[fact-check] sentences=${n} rewrites=${rewrites} cuts=${cuts} orphans=${orphans} mustFix=${mustFix.length} blocked=${blocked} framing=${JSON.stringify(byKind)} figures=${figures.length}`);
+  return { text: rebuilt, status: "ok", edits: rewrites + cuts };
+}
+
+// Overused sentence openers, counted in code (seen in the baseline: "I believe" x7 in one script,
+// "Unfortunately for..." x3 in a few minutes). A voice's signature opener is fine at its natural rate;
+// past ~2 uses (and ~3% of sentences) it's a tic. Returns the opener and the sentence indices using it.
+export function overusedOpeners(sentences: string[]): { opener: string; idx: number[] }[] {
+  const by = new Map<string, number[]>();
+  sentences.forEach((s, i) => {
+    const w = s.trim().replace(/^["“'‘(]+/, "").split(/\s+/).slice(0, 2).join(" ").toLowerCase().replace(/[^a-z' ]/g, "");
+    if (w.split(" ").length < 2 || /^(the|a|an|he|she|it|they|and|but|in|on|this|that|there|his|her|what|for|so|then|when|by)\b/.test(w) && !/^(i believe|i think|and that|but that|that is|this is|here is|what makes)/.test(w)) return;
+    by.set(w, [...(by.get(w) || []), i]);
+  });
+  const limit = Math.max(2, Math.round(sentences.length * 0.03));
+  return [...by.entries()].filter(([, ix]) => ix.length > limit).map(([opener, idx]) => ({ opener, idx }));
+}
+
+// Exact FIGURES stated more than once ("$8,091,843.64" twice, "$3.625 billion" twice): the second
+// mention should refer back, not restate. Distinctive figures only (money, or 4+ digit numbers).
+export function repeatedFigures(sentences: string[]): { figure: string; first: number; again: number[] }[] {
+  const seen = new Map<string, number[]>();
+  sentences.forEach((s, i) => {
+    for (const m of s.matchAll(/\$\s?\d[\d,]*(?:\.\d+)?(?:\s*(?:million|billion|trillion))?|\b\d{1,3}(?:,\d{3})+(?:\.\d+)?\b/gi)) {
+      const k = m[0].replace(/\s+/g, " ").toLowerCase();
+      if (k.replace(/[^0-9]/g, "").length < 3) continue;
+      seen.set(k, [...(seen.get(k) || []), i]);
+    }
+  });
+  return [...seen.entries()].filter(([, ix]) => new Set(ix).size > 1).map(([figure, ix]) => { const u = [...new Set(ix)]; return { figure, first: u[0], again: u.slice(1) }; });
+}
+// Repeated SENTENCE SHAPES: the "It wasn't X. It was Y." / "Not X. Y." kicker, and any 4-word sentence
+// stem used 3+ times ("This is consistent with what..."). The judge called it "an AI performing profundity".
+export function repeatedShapes(sentences: string[]): { shape: string; idx: number[] }[] {
+  const out: { shape: string; idx: number[] }[] = [];
+  const kick: number[] = [];
+  sentences.forEach((s, i) => {
+    const prev = sentences[i - 1] || "";
+    if (/^(?:it|that|this|he|she|they)\s+(?:was|is|wasn['’]t|isn['’]t)\s+(?:not\s+)?(?:a|an|the|just)?\b/i.test(s) && /\b(?:wasn['’]t|isn['’]t|was not|is not|not)\b/i.test(prev) && s.split(/\s+/).length <= 9) kick.push(i);
+  });
+  if (kick.length > 2) out.push({ shape: "\"It wasn't X. It was Y.\" kicker", idx: kick });
+  const stems = new Map<string, number[]>();
+  sentences.forEach((s, i) => { const w = s.toLowerCase().replace(/[^a-z' ]/g, "").split(/\s+/).filter(Boolean); if (w.length >= 6) { const k = w.slice(0, 4).join(" "); stems.set(k, [...(stems.get(k) || []), i]); } });
+  for (const [k, ix] of stems) if (ix.length >= 3) out.push({ shape: `"${k}..."`, idx: ix });
+  return out;
+}
+
+// STRUCTURE PASS — the baseline's lowest craft score was REPETITION (5.2/10): not repeated facts (those
+// are guarded) but the same ARGUMENT re-made in fresh words across sections ("stillness was the strategy"
+// x4, "costs rose, prices rose faster, the gap is unexplained" x4). Plus false endings, announced
+// feelings, overused openers, and a hook promising what the body never delivers. One structural editor
+// pass; every cut must cite the EARLIER sentence that already made the point (code verifies it's
+// earlier, so the first and strongest statement always survives). Bounded and protected-line aware.
+type StructureResult = { text: string; status: "ok" | "failed"; edits?: number };
+// CUT SEAMS. Every cutting pass (fact-check, structure, self-review) removes sentences one at a time,
+// and a cut can strand its neighbor: "Not years before, not at the start." after the line saying she
+// told her husband was cut as a restatement; "A 19-year-old girl, Michigan, mid-1970s." after the
+// mug-shot line went (seen live, LeFevre, 21 structure cuts). Phrase lists can't cover every shape, so
+// diff the text from before the cutting passes against the result, find each PURE deletion (sentences
+// gone with nothing in their place), and return the surviving sentences on either side of it.
+const seamNorm = (t: string) => t.toLowerCase().replace(/[^a-z0-9 ]+/g, " ").replace(/\s+/g, " ").trim();
+export function findCutSeams(before: string, after: string): { removed: string[]; prev: number; next: number }[] {
+  const A = splitSentences(before.replace(/\n\n+/g, " ")).map(seamNorm);
+  const Araw = splitSentences(before.replace(/\n\n+/g, " "));
+  const B = splitSentences(after.replace(/\n\n+/g, " ")).map(seamNorm);
+  const n = A.length, m = B.length;
+  if (!n || !m || n * m > 400_000) return [];
+  const L: Uint16Array[] = Array.from({ length: n + 1 }, () => new Uint16Array(m + 1));
+  for (let i = n - 1; i >= 0; i--) for (let j = m - 1; j >= 0; j--) L[i][j] = A[i] === B[j] ? L[i + 1][j + 1] + 1 : Math.max(L[i + 1][j], L[i][j + 1]);
+  const pairs: [number, number][] = [];
+  for (let i = 0, j = 0; i < n && j < m;) { if (A[i] === B[j]) { pairs.push([i, j]); i++; j++; } else if (L[i + 1][j] >= L[i][j + 1]) i++; else j++; }
+  const seams: { removed: string[]; prev: number; next: number }[] = [];
+  const bounds: [number, number][] = [[-1, -1], ...pairs, [n, m]];
+  for (let k = 1; k < bounds.length; k++) {
+    const [ia, ib] = bounds[k - 1], [ja, jb] = bounds[k];
+    // A pure deletion: sentences dropped from the old text, nothing new inserted at that spot.
+    if (ja - ia > 1 && jb - ib === 1) seams.push({ removed: Araw.slice(ia + 1, ja), prev: ib, next: jb < m ? jb : -1 });
+  }
+  return seams;
+}
+
+async function repairCutSeams(before: string, after: string, facts: string): Promise<string> {
+  const seams = findCutSeams(before, after).filter((sm) => sm.prev >= 0 || sm.next >= 0).slice(0, 30);
+  if (!seams.length) return after;
+  const paras = after.split(/\n\n+/);
+  const sentsByPara: string[][] = paras.map((p) => splitSentences(p));
+  const flat: { pi: number; si: number }[] = [];
+  sentsByPara.forEach((ss, pi) => ss.forEach((_, si) => flat.push({ pi, si })));
+  const textAt = (i: number) => (i >= 0 && flat[i] ? sentsByPara[flat[i].pi][flat[i].si] : "");
+  const list = seams.map((sm, k) => `[${k}]\nPREV: ${textAt(sm.prev) || "(start of script)"}\nREMOVED: ${sm.removed.join(" ")}\nNEXT: ${textAt(sm.next) || "(end of script)"}`).join("\n\n");
+  const system = `You check the SEAMS of a YouTube voiceover script after editing passes removed sentences. For each seam you see the sentence before (PREV), what was removed (REMOVED, cut as a repeat or as inaccurate), and the sentence after (NEXT). The removal is final. Your only job: does PREV or NEXT now fail to make sense when heard without REMOVED? Broken means: it has no subject, refers to something only REMOVED said ("Not years before." when REMOVED said when it happened; "The kind that tears." describing a noun only REMOVED had; "Which means..." concluding from REMOVED), answers or continues a line that is gone, or a fragment that only worked after REMOVED. If both read fine, skip the seam. If one is broken, fix THAT sentence so it stands on its own: rewrite it briefly, or cut it if it has nothing left to say. A rewrite may carry over the one detail from REMOVED it needs ONLY if the FACTS below support that detail; never add anything else, never add quote marks. Keep the creator's plain voice. Output ONLY JSON: {"fixes":[{"seam":0,"target":"next","action":"rewrite","text":"..."}]} (target "prev" or "next"; action "rewrite" or "cut"). Usually most seams are fine.`;
+  const res = await callStructuredLLM<any[]>({
+    model: "claude-sonnet-4-6", max_tokens: 3000, temperature: 0.2, system,
+    user: `FACTS (for any detail carried over):\n${facts.slice(0, 40_000)}\n\nSEAMS:\n${list}`,
+    kind: "object", label: "seams",
+    validate: (v) => (Array.isArray((v as any)?.fixes) ? (v as any).fixes : null),
+  });
+  if (!res.ok) { console.error(`[seams] FAILED reason=${res.reason}`); return after; }
+  let rewrites = 0, cuts = 0, refused = 0;
+  const done = new Set<number>();
+  for (const f of res.value) {
+    const sm = seams[Number(f?.seam)];
+    if (!sm) continue;
+    const idx = f?.target === "prev" ? sm.prev : sm.next;
+    if (idx < 0 || !flat[idx] || done.has(idx)) continue;
+    const { pi, si } = flat[idx];
+    const orig = sentsByPara[pi][si];
+    if (f?.action === "cut") { sentsByPara[pi][si] = ""; cuts++; done.add(idx); continue; }
+    const rw = typeof f?.text === "string" ? f.text.trim().replace(/\s*(?:—|–|--)\s*/g, ", ") : "";
+    if (!rw || rw === orig || rw.length > orig.length * 2 + 80 || !quoteBalanceKept(orig, rw) || attributionMismatch(orig, rw, facts.split("\n")) || introducesUnsupportedName(orig, rw, facts) || introducesPipelineWords(orig, rw)) { refused++; continue; }
+    sentsByPara[pi][si] = rw; rewrites++; done.add(idx);
+  }
+  console.log(`[seams] checked=${seams.length} rewrites=${rewrites} cuts=${cuts} refused=${refused}`);
+  return sentsByPara.map((ss) => ss.filter(Boolean).join(" ").trim()).filter(Boolean).join("\n\n");
+}
+
+export async function applyStructurePass(body: string, startedAt: number, opts?: { voiceProfile?: string; facts?: string }): Promise<StructureResult> {
+  if (!body || !body.trim()) return { text: body, status: "ok" };
+  if (Date.now() - startedAt > 245_000) return { text: body, status: "ok" };
+  const paras = body.split(/\n\n+/);
+  const sentsByPara: string[][] = paras.map((p) => splitSentences(p));
+  const all: { pi: number; si: number; text: string }[] = [];
+  sentsByPara.forEach((ss, pi) => ss.forEach((text, si) => all.push({ pi, si, text })));
+  const n = all.length;
+  if (n < 12) return { text: body, status: "ok" };
+  const texts = all.map((x) => x.text);
+  const tics = overusedOpeners(texts);
+  const protectP = pickProtectedLines(texts, opts?.voiceProfile).catch(() => new Set<number>());
+  const system = `You are the structural editor of a YouTube documentary script that will be HEARD, not read. The facts are already checked; do not touch accuracy. Fix only these, in priority order:
+1. RESTATED ARGUMENTS (CUT): a sentence that re-makes a point, thesis, or insight the script ALREADY made earlier, even in completely different words (e.g. "his stillness was the strategy" said again later as "staying put is what kept him hidden"). Cut the LATER restatement. For each cut you MUST give "same_as": the index of the EARLIER sentence that already made that point. Never cut the first statement of a point. Never cut a sentence that adds a new fact or a new turn.
+1b. RE-TOLD FACTS (CUT or SHRINK): a later sentence that re-explains a FACT an earlier section already delivered (the $800 purchase, who a person is, how a mechanism worked). Code lists likely ones under RE-TOLD below with the earlier sentence; judge each: CUT it (same_as = that earlier index) when it adds nothing; REWRITE it to a few-word back-reference ("that $800 card", "Goodenough, the Phoenix nurse") when the sentence must stay for flow; KEEP it when it adds a new fact or is the story arriving at a moment the opening only flashed forward to.
+2. FALSE ENDINGS (CUT): if the script wraps up, then keeps going, then wraps up again, cut the earlier wrap-up lines so it ends ONCE (give "same_as" = the final closing sentence's index).
+3. ANNOUNCED FEELINGS (REWRITE or CUT): a line that tells the viewer how to feel or that a moment is powerful ("the detail that stays with you", "this is the part that is genuinely hard to process", "and that is chilling", "it's worth sitting with that"). Rewrite it to simply deliver the content, or cut it.
+4. OVERUSED OPENERS (REWRITE): sentences listed under OVERUSED below; rewrite all but the first two to open differently, same meaning.
+5. HOOK PROMISE (REWRITE the hook only, sentences 0-2): if the hook promises a reveal or answer the body never delivers, rewrite the hook to promise what the body ACTUALLY delivers. Keep its tension and facts. Leave the hook alone if it is honest.
+Keep the voice: every rewrite must sound like the surrounding lines. A rewrite is about the same length. At most 25 edits.
+Output ONLY JSON: {"edits":[{"i":<index>,"action":"cut"|"rewrite","type":"restated|retold|ending|feeling|opener|hook|figure|shape","same_as":<earlier index, for cuts>,"rewrite":"<only for rewrite>"}]}`;
+  const figs = repeatedFigures(texts);
+  const shapes = repeatedShapes(texts);
+  // Figure/shape requirements were tried and measured worse (double run, 14 scripts each); the
+  // detectors stay for the benchmark's code checks.
+  const required: string[] = [];
+  // Re-told facts found by code, as HINTS the editor judges (hard requirements measured worse before).
+  const retold = retoldFacts(texts, all.map((x) => x.pi)).slice(0, 15);
+  const retoldBlock = retold.length ? `RE-TOLD (likely re-explanations of an earlier fact; cut, shrink to a back-reference, or keep if it adds something new):\n${retold.map((r) => `- sentence ${r.i} re-tells sentence ${r.same_as}`).join("\n")}\n\n` : "";
+  const user = `${retoldBlock}${required.length ? `REQUIRED (found by code):\n${required.join("\n")}\n\n` : ""}${tics.length ? `OVERUSED OPENERS (rewrite all but the first two of each):\n${tics.map((t) => `- "${t.opener}..." at sentences ${t.idx.join(", ")}`).join("\n")}\n\n` : ""}SCRIPT SENTENCES (index. text), paragraphs separated by blank lines:\n${all.map((x, i) => `${i > 0 && all[i - 1].pi !== x.pi ? "\n" : ""}${i}. ${x.text}`).join("\n")}`;
+  const res = await callStructuredLLM<any[]>({
+    model: "claude-sonnet-4-6", max_tokens: 5000, temperature: 0, system, user, kind: "object", label: "structure-pass",
+    validate: (v) => { const o = v as any; return Array.isArray(o?.edits) ? o.edits : null; },
+  });
+  if (!res.ok) { console.error(`[structure] FAILED reason=${res.reason} — body unchanged`); return { text: body, status: "failed" }; }
+  const protectedIdx = new Set<number>([...findRefrains(texts), ...(await protectP)]);
+  const ticIdx = new Set(tics.flatMap((t) => t.idx.slice(2)));
+  const figIdx = new Set(figs.flatMap((f) => f.again));
+  const shapeIdx = new Set(shapes.flatMap((sh) => sh.idx.slice(1)));
+  const lastPara = sentsByPara.length - 1;
+  let cuts = 0, rewrites = 0, refused = 0;
+  const MAX_CUTS = Math.max(4, Math.floor(n * 0.12));
+  const byType: Record<string, number> = {};
+  for (const r of (res.value as any[]).slice(0, 25)) {
+    const idx = Number(r?.i), type = String(r?.type || "");
+    if (!Number.isInteger(idx) || idx < 0 || idx >= n) continue;
+    const t = all[idx];
+    if (!sentsByPara[t.pi] || sentsByPara[t.pi][t.si] !== t.text) continue;
+    if (protectedIdx.has(idx) && !["opener", "figure", "shape"].includes(type)) { refused++; continue; }
+    if (type === "hook" && idx > 2) { refused++; continue; }
+    if (type === "opener" && !ticIdx.has(idx)) { refused++; continue; }
+    if (type === "figure" && !figIdx.has(idx)) { refused++; continue; }
+    if (type === "shape" && !shapeIdx.has(idx)) { refused++; continue; }
+    if (r?.action === "cut") {
+      const same = Number(r?.same_as);
+      // A cut must point at a DIFFERENT sentence that made the point: earlier for a restatement,
+      // the final close for a false ending. Otherwise it could delete the only statement of a point.
+      const valid = type === "ending" ? Number.isInteger(same) && same > idx : Number.isInteger(same) && same < idx && same >= 0;
+      if (!valid && type !== "feeling") { refused++; continue; }
+      if (cuts >= MAX_CUTS) continue;
+      if (cutWithOrphans(sentsByPara, t.pi, t.si) < 0) { refused++; continue; }
+      cuts++;
+    } else {
+      const rw = typeof r?.rewrite === "string" ? r.rewrite.trim() : "";
+      if (!rw || rw.length < 8 || rw === t.text || rw.length > t.text.length * 1.8) continue;
+      if (!quoteBalanceKept(t.text, rw)) { refused++; continue; }
+      if (opts?.facts && introducesUnsupportedName(t.text, rw, opts.facts)) { refused++; continue; }
+      sentsByPara[t.pi][t.si] = rw; rewrites++;
+    }
+    byType[type] = (byType[type] || 0) + 1;
+  }
+  if (!cuts && !rewrites) { console.log(`[structure] sentences=${n} edits=0 refused=${refused}`); return { text: body, status: "ok", edits: 0 }; }
+  const rebuilt = sentsByPara.map((ss) => ss.filter(Boolean).join(" ").trim()).filter(Boolean).join("\n\n");
+  if (rebuilt.split(/\s+/).length < body.split(/\s+/).length * 0.82) { console.log("[structure] backed off — rebuilt too short"); return { text: body, status: "ok", edits: 0 }; }
+  console.log(`[structure] sentences=${n} cuts=${cuts} rewrites=${rewrites} refused=${refused} retoldHints=${retold.length} ${JSON.stringify(byType)} tics=${JSON.stringify(tics.map((t) => `${t.opener}x${t.idx.length}`))}`);
+  return { text: rebuilt, status: "ok", edits: cuts + rewrites };
 }
 
 // CHUNKED PATH — assemble the client-written sections into one script object and run the ENTIRE
@@ -2441,13 +3277,16 @@ export interface GeneratedMetadata {
   bestTitle?: string;
   bestTitleWhy?: string;
   strategy?: string;
-  bestTitleScores?: { curiosity?: number; clarity?: number; browse?: number; search?: number; overall?: number };
+  bestTitleScores?: { curiosity?: number; clarity?: number; specificity?: number; accuracy?: number; browse?: number; search?: number; overall?: number };
   searchWinner?: string;
   thumbnailWinner?: string;
 }
 
 export async function generateMetadata(input: MetadataGenerationInput): Promise<GeneratedMetadata> {
   const currentYear = new Date().getFullYear();
+  // Learned from Outlier Finder: the story engines + packaging templates that recurred
+  // among real over-performers in this niche. Guides the packaging angle, never dictates it.
+  const learnedPatterns = await getNicheOutlierPatterns(input.niche);
 
   const userPrompt = `You are a YouTube PACKAGING engineer. Do NOT write the assets independently. FIRST extract the video's story, then pick ONE packaging angle, then generate every asset (titles, description, tags, thumbnail text, hashtags) FROM that same brief, each optimized for its own YouTube job. The whole package must feel like one intentional thing built around one story, not five separate generations.
 
@@ -2460,7 +3299,7 @@ ${input.script.slice(0, 2000)}
 """
 ${input.targetKeywords ? `Target keywords: ${input.targetKeywords.join(", ")}` : ""}
 Current year: ${currentYear}
-
+${learnedPatterns ? `\n${learnedPatterns}\nUse these only as structural guidance for the packaging angle and titles when they genuinely fit THIS story — imitate the shape, never the wording, and never bend the true story to match a pattern.\n` : ""}
 ━━━ STEP 1: VIDEO DNA (extract from the script and title, ground everything else in it) ━━━
 Fill each field from ONLY what the script/title support, invent nothing:
 - centralStory: one sentence, what the video is actually about
@@ -2475,6 +3314,7 @@ Fill each field from ONLY what the script/title support, invent nothing:
 
 ━━━ STEP 2: CORE HOOK ━━━
 In one sentence ("packagingAngle"), the single most sellable framing of this story, the hook every asset points at (e.g. "the wanted fugitive hiding behind an ordinary suburban identity"). Choose the framing the DNA best supports, not the flashiest. Then in one sentence ("coreHookWhy"), say WHY it is the strongest hook, leading with the SINGLE sharpest contradiction (e.g. wanted fugitive vs ordinary suburban life), not a mix of several details.
+NO ABSOLUTES IN THE HOOK: do not end the hook on an unverifiable universal like "and no one noticing", "nobody knew", "fooling everyone". State the DOCUMENTED outcome instead: "while maintaining the identity for 23 years" or "until her identity was uncovered in 1999". The documented outcome is stronger and safer than a universal claim.
 
 ━━━ FACTUAL INHERITANCE (hard rule, inherited from the script) ━━━
 No title, thumbnail, or description may claim MORE than the script establishes. No invented outcome, superlative, number, causal link, or "first/biggest/only" the script does not support. A packaging angle SHARPENS the true story, it never upgrades it. If the script does not establish it, the package cannot assert it.
@@ -2483,30 +3323,41 @@ SAME FOR SUPERLATIVES AND RANKINGS: do not introduce "most wanted", "first", "bi
 
 ━━━ STEP 3: TITLES (exactly 10, each PREFIXED with SEARCH:, BROWSE:, or HYBRID:) ━━━
 ${EXPERT_ATTRIBUTION_RULE}
-4 SEARCH, then 4 BROWSE, then 2 HYBRID. Every title delivers the packaging angle, but each uses a DIFFERENT archetype so these are 10 distinct concepts, never 10 rewrites of one line.
+COUNT IS MANDATORY: output EXACTLY 10 titles — EXACTLY 4 SEARCH, then EXACTLY 4 BROWSE, then EXACTLY 2 HYBRID. Not 5/4/1, not 4/5/1 — 4/4/2. Before you finish, COUNT the HYBRID titles: there must be two. Every title delivers the packaging angle, but each uses a DIFFERENT archetype so these are 10 distinct concepts, never 10 rewrites of one line.
+ONE SHARED STORY SPINE, THREE DISCOVERY CONTEXTS: all three buckets derive from the SAME video DNA and the SAME documented facts — they never invent different facts. They optimize for different contexts only: SEARCH answers "who is this?" (carry the searchable entities), BROWSE answers "why should I care?" (the story's contradiction and stakes), HYBRID answers "both". The factual core is identical across all ten; only the framing changes.
 
 SEARCH (first 4): keyword-AWARE, not a keyword string. Include the strongest searchable entity or topic naturally in the first 5 words, under 60 characters, but it must still read like a title a human would click, never a search query. "Kathleen Soliah SLA fugitive caught after 20 years hiding" is a query and is WRONG; "How Kathleen Soliah Hid From the FBI for 20 Years" carries the same entities and is right. Rotate archetypes across the four: Entity + Investigation ("how they were found"), Entity + Hidden Life, Entity + Time span, Entity + Event.
 BROWSE (next 4): curiosity, contradiction, or stakes, no keyword stuffing, 6 to 11 words, opens a loop the viewer must click to close. Rotate archetypes: Hidden Identity, Ordinary vs Extraordinary, Time ("They vanished for 20 years. Then..."), Unexpected Discovery, Contradiction.
 HYBRID (last 2): a recognizable entity plus a curiosity/story promise, works on both surfaces. It must keep a real curiosity mechanism, never just an informational label. "Kathleen Soliah Hid in Plain Sight for 20 Years. Then TV Exposed Her." works (name + specificity + curiosity + payoff tease); "The SLA Fugitive Who Was Caught by a Television Broadcast" is too flat, it only informs.
 
 CONCRETE OVER GENERIC (applies to every title): a specific image beats a vague claim. "Raised three kids while the FBI searched for her" beats "fooled everyone for two decades"; give the viewer a picture, not an abstraction. Cut generic filler like "fooled everyone", "shocking truth", "you won't believe".
+DO NOT SPOIL A TWIST: if the video's payoff is a late REVERSAL — an unexpected verdict, who-won, a surprise the viewer wouldn't predict — the title must set up the premise/stakes WITHOUT revealing which way it resolves. "The Hijacker Who Won His Case in Court" spoils it; "He Hijacked a Plane in 1972. 41 Years Later They Found Him." withholds it. An EXPECTED outcome ("how X was caught") is fine to state; only a genuine reversal must be held back.
+STRONGEST CONCRETE CONTRADICTION (the best packaging move, model the bestTitle on this): the strongest titles pair TWO DOCUMENTED specifics in tension and deliver the story's core absurdity concisely and accurately — the story's own contradiction, not an adjective, is the hook. "How a Pipe-Bomb Suspect Hid as a Church Volunteer for 23 Years" works because it frames the fugitive method with documented specifics — the criminal status (pipe-bomb SUSPECT) against the ordinary role (church volunteer) plus the real duration — in one clean line. Build from the sharpest documented role/identity contrast the facts give you (fugitive vs suburban mom, wanted vs churchgoer), and never reach for "insane/notorious/shocking" when the true contrast already carries it. A concise, accurate contradiction beats a hype word every time.
+LEGAL-STATUS + CLAIM-SCOPE PRECISION (hard): match the documented status and never upgrade involvement into a specific physical act. "pipe-bomb suspect" or "wanted in a pipe-bomb case" — NOT "she planted pipe bombs" unless the record says she personally placed them; "won an extradition ruling" not "beat the FBI"; "convicted in connection with a killing" not "killed". Use the less specific, accurate wording when unsure.
+INDICTMENT IS NOT CONVICTION: "indicted for bombing" reads as an established act/conviction. Prefer "indicted in a bombing case" / "wanted for a bombing" / "charged in connection with". Keep the accusation an accusation.
+ONE CANONICAL DURATION: if the facts contain more than one defensible span (e.g. 23 and 24 years from 1975 to 1999), pick ONE and use it consistently across EVERY title, thumbnail, and the description. Never mix spans across assets, and never invent a span outside the facts.
+NARRATIVE-COMPRESSION LADDER for the discovery/exposure beat: "a TV broadcast helped end her 23-year disappearance" or "a TV broadcast exposed her identity" are acceptable (the qualifier / the accurate verb keep them honest); "a TV show found/caught/ended it" overstates the cause. Keep the qualifier.
+NUMERIC CONSISTENCY (hard): every number in a title — a duration, age, year, count, dollar amount — must match a number in the researched facts. Never adjust one to sound better (if the facts say 23 years, never write 28). An invented or altered number is a factual error, not a style choice.
 BUT NOT HYPER-SPECIFIC TRIVIA: do not jam a precise factual detail into a title just because it is in the script. The editorial test for ANY specific detail (in a title, thumbnail, or the description) is NOT "is this interesting?" but "does this detail strengthen the video's central promise?" A house size (five-bedroom), a neighborhood name (St. Paul), a docket number, an exact address almost never strengthen the hook, they just make it longer. "disappeared into suburbia for two decades" beats "disappeared into a five-bedroom Tudor". Reject a title whose main distinguishing feature is an incidental detail, and never recommend one as the best title.
 STRICT IDENTITY: use a person's EXACT name or verified alias as the script gives it. Do not compress or invent a familiar form ("Sara" for "Sara Jane Olson"), and do not assert a name/alias the script does not establish. Avoid unwarranted second person: "lived next door and nobody knew" beats "lived next door to YOU and nobody knew" unless the story is genuinely about the viewer. Do NOT assign a gender, name, role, or identity to an UNNAMED person the script leaves unspecified: if the record says "a television viewer recognized her" without saying who, write "a TV viewer did", never "HE didn't" or "a man recognized her". An invented "he", "she", or role is an unsupported specific, same as an invented number.
 FACTUAL COHERENCE (hard): every title must accurately characterize what happened and make logical sense. Do not mischaracterize the event to sound punchy: "a TV viewer recognized her" is accurate, "a TV viewer solved the indictment" is not. And do not write a contradiction that does not parse ("20 YEARS. NO HIDING." is nonsense). If a punchy phrasing distorts the fact or reads as a non-sequitur, use the accurate version.
+NO ABSOLUTE / EXCLUSIVITY CLAIMS (hard, verified in code — a title that trips this is dropped as the recommended pick): never "fooled everyone", "no one noticed", "nobody knew", "the FBI missed her", "never left the country", or any universal/geographic claim the facts don't establish. Use the documented outcome: "living in Minnesota", "without her identity being uncovered until 1999", "she wasn't recognized for 23 years". The documented version is both safer and stronger.
+NO TABLOID COMPRESSION OF THE OFFENSE: match the documented legal wording. "wanted for bombing police cars" or "indicted for planting pipe bombs" (if the record supports personal placement) — not the loose "bombing cops". Keep the offense precise.
+NO INVENTED ORDINARY-LIFE DETAIL: the "ordinary role" half of a contradiction must be documented. "became a suburban mom" / "church volunteer" only if the facts state it; do NOT invent "joined the PTA", "ran a book club", "coached little league", "drove carpool", "coached the team" for color. Use ONLY the documented roles (e.g. mother of three, community theater actor, church volunteer, doctor's wife) — never a plausible-sounding activity the facts don't state. An invented ordinary activity is an unsupported specific exactly like an invented number. Also do not swap a documented role for a different or narrower one: "acted in community theater" is not "coached community theater", and "church volunteer" is not "church choir" (choir is a specific role the facts don't state). Keep the documented role's exact scope.
 
 ━━━ STEP 4: PACKAGING PICKS + SCORES ━━━
 Do not just list titles, make the packaging call:
-- "bestTitle": the single strongest overall title, verbatim, no SEARCH/BROWSE/HYBRID prefix. Judge on click-through, curiosity, clarity, accuracy, and thumbnail pairing.
+- "bestTitle": the single strongest overall title, verbatim, no SEARCH/BROWSE/HYBRID prefix. Judge on click-through, curiosity, clarity, accuracy, and thumbnail pairing. Prefer a title built on the story's strongest DOCUMENTED CONTRADICTION with concrete specifics (like the pipe-bomb-suspect / church-volunteer example) over one leaning on a hype adjective; specificity and an accurate contrast should win.
 - "strategy": the bestTitle's packaging strategy in a few words (e.g. "Contradiction + identity mystery", "Entity + hidden life", "Reversal + ticking clock").
 - "bestTitleWhy": one short sentence on why it wins.
-- "bestTitleScores": integer 0-10 for curiosity, clarity, browse, search, and overall. Score curiosity/clarity/browse/search HONESTLY per dimension (a browse-first title may genuinely be a 5 on search, keep that, it is useful information). But "overall" is the GOAL-DEPENDENT PACKAGING SCORE: how strong this title is as packaging FOR ITS OWN STRATEGY, NOT a flat average. Do NOT let a deliberately low search score drag it down when the title is browse-first: a strong browse title with search 5 should still score about 9 overall, because it is doing its job. Weight overall toward the surface the title is built for.
+- "bestTitleScores": integer 0-10 for curiosity, clarity, specificity (concrete verifiable anchors vs generic adjectives), accuracy (does not overstate or invent), browse, search, and overall. Score every dimension HONESTLY (a browse-first title may genuinely be a 5 on search, keep that, it is useful information — a low search score means the title is built for Browse, not that the package is weak). But "overall" is the GOAL-DEPENDENT PACKAGING SCORE: how strong this title is as packaging FOR ITS OWN STRATEGY, NOT a flat average. Do NOT let a deliberately low search score drag it down when the title is browse-first: a strong browse title with search 5 should still score about 9 overall, because it is doing its job. Weight overall toward the surface the title is built for.
 - "searchWinner": the single best SEARCH title (verbatim, no prefix) for someone actively searching this topic.
 - "thumbnailWinner": the thumbnail-text option (verbatim, from your thumbnailText list) that best COMPLEMENTS the bestTitle, forming one package. It must add the mystery or the sharp moment the title does NOT already state, never repeat the title's own contrast. If bestTitle is "She Planted Bombs. Then She Coached Community Theater.", do NOT pick "BOMBS. THEN BOOK CLUB." (same contrast restated), pick one that adds a new layer like "WANTED. UNDETECTED." Title says what happened; thumbnail says the mystery.
 
 ━━━ STEP 5: DESCRIPTION (sounds like the creator typed it, never a keyword paragraph) ━━━
 The first 2 to 3 sentences appear ABOVE the fold and are indexed most heavily by YouTube search, so front-load the core hook and the primary entity naturally.
 Structure, each block separated by a blank line:
-- 2 to 3 sentence opening: the core hook plus the primary entity, compelling and keyword-natural. Prioritize the strongest SEARCH ENTITIES and the STORY, not an exhaustive list of facts. Apply the same editorial test as the titles: an incidental detail (a docket number, a house size, a neighborhood name, a minor date) that does not strengthen the central promise does NOT belong here, however interesting it is.
+- 2 to 3 sentence opening: the core hook plus the primary entity, compelling and keyword-natural. Prioritize the strongest SEARCH ENTITIES and the STORY, not an exhaustive list of facts. Apply the same editorial test as the titles: an incidental detail (a docket number, a house size, a neighborhood name, a minor date) that does not strengthen the central promise does NOT belong here, however interesting it is. ATTRIBUTE ALLEGATIONS PRECISELY: keep the documented legal status (indicted for, accused of, alleged, linked to, implicated in) and do not compress several allegations into an implied personal act. "indicted in connection with pipe bombs and linked to a bank-robbery murder" is correct; wording that lets the reader assume she personally planted the bombs or fired the shot is not. Do NOT characterize the investigation as a failure ("how investigators failed to find her"); use the neutral documented framing ("why investigators couldn't locate her for more than two decades", "how investigators eventually tracked her down").
 - a short block on what the viewer will discover (the promise, the stakes)
 - one line of channel-appropriate CTA (subscribe, or a related-video nudge)
 - final line: 3 to 5 relevant hashtags
@@ -2526,6 +3377,7 @@ Thumbnail text drives CTR on Browse and Suggested. Each option should:
 - Create an open loop or strong emotion
 - Work WITHOUT seeing the video
 - Be specific over generic (numbers beat adjectives)
+- Obey the same factual rules as titles: no absolutes and no institutional-failure framing. "THE FBI MISSED HER" assigns failure the record doesn't establish; use "THE FBI COULDN'T FIND HER" or "23 YEARS. NO ARREST." A contradiction pair ("WANTED. VOLUNTEERING.") is ideal only if both halves are documented.
 
 QUOTE-FIRST THUMBNAIL TEXT (do this whenever the script allows it): the single best thumbnail text is a SHORT VERBATIM QUOTE spoken by someone in the story, taken word for word from the script above. Three words in someone's actual voice ("YOU A COP?") beats any phrase you could write, because it is real, it is specific, and it makes the viewer hear a person rather than read a label. Scan the script for quoted speech and lead your options with the sharpest one that fits in four words. Never invent a quote or alter its wording to fit; if the script has no quoted speech, write normal thumbnail text instead.
 
@@ -2554,7 +3406,7 @@ Return ONLY valid JSON, no markdown fences. Fill videoDna and packagingAngle FIR
   "bestTitle": "the single recommended title, verbatim, no prefix",
   "strategy": "the packaging strategy in a few words",
   "bestTitleWhy": "one short sentence",
-  "bestTitleScores": { "curiosity": 9, "clarity": 9, "browse": 9, "search": 7, "overall": 9 },
+  "bestTitleScores": { "curiosity": 9, "clarity": 9, "specificity": 9, "accuracy": 10, "browse": 9, "search": 7, "overall": 9 },
   "searchWinner": "the single best SEARCH title, verbatim, no prefix",
   "thumbnailWinner": "the single strongest thumbnail-text option, verbatim",
   "description": "Full description following STEP 5 (no timestamps, no chapters)",
@@ -2597,6 +3449,43 @@ Return ONLY valid JSON, no markdown fences. Fill videoDna and packagingAngle FIR
   if (typeof metadata.bestTitle === "string") metadata.bestTitle = deDash(metadata.bestTitle);
   if (typeof metadata.searchWinner === "string") metadata.searchWinner = deDash(metadata.searchWinner);
   if (typeof metadata.thumbnailWinner === "string") metadata.thumbnailWinner = deDash(metadata.thumbnailWinner);
+
+  // Deterministic factual gate on the packaging titles — the SAME validator Viral Magnet
+  // uses. A title that trips a warning (fabricated/altered number, absolute exclusivity like
+  // "fooled everyone", causal overreach like "a TV show found her", institutional-failure
+  // framing, or a scope upgrade) must not be the RECOMMENDED pick. We keep every title in the
+  // list (the creator can still choose one), but never let bestTitle or searchWinner carry a
+  // warning when a clean alternative exists. Titles may still carry a SEARCH/BROWSE/HYBRID prefix.
+  {
+    const stripBucketPrefix = (s: string) => s.replace(/^\s*(SEARCH|BROWSE|HYBRID)\s*:\s*/i, "").trim();
+    const pkgSource = `${input.title}\n${input.script.slice(0, 4000)}`;
+    // NON-DESTRUCTIVE. We never remove titles from the list — the creator sees every
+    // option. We only make sure the RECOMMENDED picks (bestTitle + searchWinner) don't
+    // lead with a clear PHRASE-BASED factual problem (an absolute like "the whole time"
+    // / "nobody thought to look", a causal overreach like "broadcast ended it", a scope /
+    // attachment / label error, or over-length). If a pick trips one, swap it for a
+    // clean alternative already in the list. We deliberately IGNORE the number rule here
+    // (it false-positives on thin sources that don't restate a real year/duration — that
+    // is what collapsed the list before) and interpretive "institutional" framing (a
+    // fair, creator-judgeable call). Titles carry a SEARCH/BROWSE/HYBRID prefix.
+    const phraseFlagged = (s?: string) =>
+      !!s && validateTitle(stripBucketPrefix(s), pkgSource).some((w) => w.type !== "institutional" && w.type !== "number");
+    const cleanAlts = (metadata.titles || []).filter((t) => !phraseFlagged(t));
+    if (phraseFlagged(metadata.bestTitle) && cleanAlts.length) {
+      metadata.bestTitle = stripBucketPrefix(cleanAlts[0]);
+    }
+    if (phraseFlagged(metadata.searchWinner) && cleanAlts.length) {
+      const altSearch = cleanAlts.find((t) => /^\s*SEARCH\s*:/i.test(t)) || cleanAlts[0];
+      metadata.searchWinner = stripBucketPrefix(altSearch);
+    }
+    // Same non-destructive rule for the recommended thumbnail: keep the full thumbnail
+    // list, but if the WINNER leads with a flagged claim ("23 YEARS. NEVER FOUND." — she
+    // was found), pair the title with a clean option from the list instead.
+    if (phraseFlagged(metadata.thumbnailWinner)) {
+      const cleanThumb = (metadata.thumbnailText || []).find((t) => !phraseFlagged(t));
+      if (cleanThumb) metadata.thumbnailWinner = cleanThumb;
+    }
+  }
   // Belt-and-suspenders tag dedup: drop exact case-insensitive duplicates the model may have emitted
   // despite the dedup instruction (keeps first occurrence, preserves order).
   {

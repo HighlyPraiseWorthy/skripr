@@ -1,4 +1,5 @@
 import { supabaseAdmin } from "@/lib/db/supabase";
+import { rankHookFamilies, type HookRank } from "@/lib/hook-families";
 import { NICHES } from "@/lib/data/niches";
 
 // Collective learning layer: every Viral Remixer analysis is captured as a
@@ -87,6 +88,219 @@ export async function captureOutlierTitles(
   }
 }
 
+// Deeper Outlier learning: bank the DNA PATTERNS themselves (the recurring story engines
+// and packaging templates found across a channel's outliers), not just titles. These are
+// the transferable STRUCTURES the generators should imitate. Stored in the same table under
+// a synthetic "pat:<niche>:<slug>" id so re-scans refresh (not ignore) the same pattern row,
+// and so the per-video title/framework readers can exclude them.
+export interface OutlierPatternRow {
+  name: string; kind: "story" | "packaging"; why: string; confidence: string;
+  examples: string[]; maxViews: number;
+  // universal = the pattern is a subject-independent PSYCHOLOGICAL / STORY mechanism that would work
+  // in any niche (e.g. "outcome known, mechanism withheld", "second-person address"). niche-bound
+  // (the default, false) = the pattern only coheres because of THIS niche's subject matter. Only
+  // universal patterns are allowed to cross niches; everything else stays siloed. Conservative by
+  // design: the LLM defaults to false and promotes to true only when the shape is unmistakably structural.
+  universal?: boolean;
+}
+const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 48);
+
+export async function captureOutlierPatterns(
+  rawNiche: string | null | undefined,
+  patterns: OutlierPatternRow[]
+): Promise<number> {
+  if (!supabaseAdmin) return 0;
+  const niche = normalizeNiche(rawNiche);
+  if (!niche || !patterns?.length) return 0;
+  const rows = patterns
+    .filter((p) => p.name && p.why)
+    .map((p) => ({
+      video_id: `pat:${niche}:${p.kind}:${slug(p.name)}`,
+      video_title: p.examples?.[0] || null,
+      niche,
+      hook_type: p.kind,
+      why_it_works: p.why.slice(0, 600),
+      remix_framework: p.name.slice(0, 200),
+      // jsonb column reused to carry the transferable detail for this pattern. "universal" gates
+      // whether getNicheOutlierPatterns is allowed to surface this pattern in OTHER niches.
+      title_formula: { confidence: p.confidence, examples: (p.examples || []).slice(0, 3), universal: !!p.universal },
+      source_views: Number.isFinite(p.maxViews) ? Math.round(p.maxViews) : null,
+    }));
+  if (!rows.length) return 0;
+  try {
+    // onConflict without ignoreDuplicates: a fresh scan REFRESHES the pattern (confidence,
+    // examples, strength) rather than freezing the first capture.
+    const { error } = await supabaseAdmin.from("viral_frameworks").upsert(rows, { onConflict: "video_id" });
+    if (error) { console.error("[outliers] pattern capture failed:", error.message); return 0; }
+    console.log(`[outliers] captured ${rows.length} patterns niche=${niche}`);
+    return rows.length;
+  } catch (e: any) {
+    console.error("[outliers] pattern capture threw:", e?.message);
+    return 0;
+  }
+}
+
+// Read the banked outlier DNA patterns for a niche and format a compact block the
+// generators can imitate the STRUCTURE of (never the wording). Time-boxed like the others.
+const PATTERN_STOP = new Set(["or", "and", "the", "of", "a", "an", "as", "to", "with", "into", "through", "versus", "vs", "plus", "subject", "framing", "frame", "pattern"]);
+export function patternTokens(name: unknown): Set<string> {
+  return new Set(
+    String(name || "").toLowerCase().split(/[^a-z]+/)
+      .filter((w) => w.length > 2 && !PATTERN_STOP.has(w))
+      .map((w) => w.replace(/(ies)$/, "y").replace(/s$/, ""))
+  );
+}
+export function samePattern(a: Set<string>, b: Set<string>): boolean {
+  if (!a.size || !b.size) return false;
+  let shared = 0;
+  for (const w of a) if (b.has(w)) shared++;
+  return shared >= 2 && shared / Math.min(a.size, b.size) >= 0.6;
+}
+
+// Pick which universal patterns from other niches to import into this one. Ranked by CROSS-NICHE
+// CONFIRMATION first: how many distinct niches independently surfaced the same idea (any tag, own
+// niche included). An idea three niches found on their own beats one a single scan called universal,
+// so one over-generous tag can't dominate. Ties fall back to peak views. Skips anything this niche
+// already has, and near-duplicates among the imports themselves.
+export function rankUniversalImports(ownRows: any[], crossRows: any[], max: number): any[] {
+  const all = [...ownRows, ...crossRows].map((r) => ({ niche: r.niche, t: patternTokens(r.remix_framework), tag: r?.title_formula?.universal }));
+  const own = ownRows.map((r) => patternTokens(r.remix_framework));
+  // VOTE across every tagged row describing the same idea: each re-scan names patterns slightly
+  // differently, so an old mis-tag survives as its own row. It only transfers when universal votes
+  // strictly outnumber niche-bound votes; a tie stays put (conservative). Untagged legacy rows don't vote.
+  const passesVote = (t: Set<string>) => {
+    let yes = 0, no = 0;
+    for (const a of all) if (samePattern(a.t, t)) { if (a.tag === true) yes++; else if (a.tag === false) no++; }
+    return yes > no;
+  };
+  const candidates = crossRows
+    .filter((r) => r?.title_formula?.universal === true)
+    .filter((r) => passesVote(patternTokens(r.remix_framework)))
+    .map((r) => {
+      const t = patternTokens(r.remix_framework);
+      const niches = new Set(all.filter((a) => samePattern(a.t, t)).map((a) => a.niche));
+      niches.add(r.niche);
+      return { r, t, confirm: niches.size, views: Number(r.source_views) || 0 };
+    })
+    .sort((a, b) => b.confirm - a.confirm || b.views - a.views);
+  const picked: typeof candidates = [];
+  for (const c of candidates) {
+    if (own.some((k) => samePattern(k, c.t))) continue;
+    if (picked.some((p) => samePattern(p.t, c.t))) continue;
+    picked.push(c);
+    if (picked.length >= max) break;
+  }
+  return picked.map((p) => ({ ...p.r, confirmedNiches: p.confirm }));
+}
+
+// Canonical pattern vocabulary handed to the Outlier scan so it REUSES an existing name when it
+// finds the same idea, instead of inventing a fresh synonym every scan (which piled up 35+ rows of
+// ~8 ideas in one niche, and let old mis-tags survive as separate rows). Near-duplicate rows are
+// clustered with samePattern; each cluster is represented by its most-used name (ties: peak views).
+// Returns this niche's ideas (any tag) and other niches' universal ideas, so cross-niche confirmation
+// counts land on one shared name too.
+export type CanonicalName = { name: string; kind: string };
+export function canonicalizeNames(rows: any[], max: number): CanonicalName[] {
+  const clusters: { t: Set<string>; names: Map<string, number>; kind: string; views: number; size: number }[] = [];
+  for (const r of rows) {
+    const name = String(r.remix_framework || "").trim();
+    if (!name) continue;
+    const t = patternTokens(name);
+    let c = clusters.find((c) => samePattern(c.t, t));
+    if (!c) { c = { t, names: new Map(), kind: r.hook_type, views: 0, size: 0 }; clusters.push(c); }
+    c.names.set(name, (c.names.get(name) || 0) + 1);
+    c.views = Math.max(c.views, Number(r.source_views) || 0);
+    c.size++;
+  }
+  return clusters
+    .sort((a, b) => b.size - a.size || b.views - a.views)
+    .slice(0, max)
+    .map((c) => ({ name: [...c.names.entries()].sort((a, b) => b[1] - a[1])[0][0], kind: c.kind }));
+}
+
+export async function getCanonicalPatternNames(rawNiche: string | null | undefined): Promise<{ own: CanonicalName[]; universal: CanonicalName[] }> {
+  const empty = { own: [], universal: [] };
+  if (!supabaseAdmin) return empty;
+  const niche = normalizeNiche(rawNiche);
+  if (!niche) return empty;
+  try {
+    const query = supabaseAdmin
+      .from("viral_frameworks")
+      .select("niche, hook_type, remix_framework, source_views, title_formula")
+      .like("video_id", "pat:%")
+      .limit(600);
+    const timeout = new Promise<null>((resolve) => setTimeout(() => resolve(null), 2500));
+    const res = (await Promise.race([query, timeout])) as { data: any[] | null } | null;
+    const rows = res?.data || [];
+    const ownRows = rows.filter((r) => r.niche === niche);
+    return {
+      own: canonicalizeNames(ownRows, 16),
+      // Same gate as the actual transfer: vote-passing, not already known to this niche, no synonyms.
+      // Offering a vote-blocked name would invite the scan to revive it.
+      universal: rankUniversalImports(ownRows, rows.filter((r) => r.niche !== niche), 10)
+        .map((r) => ({ name: String(r.remix_framework).trim(), kind: r.hook_type })),
+    };
+  } catch {
+    return empty;
+  }
+}
+
+export async function getNicheOutlierPatterns(rawNiche: string | null | undefined): Promise<string | null> {
+  if (!supabaseAdmin) return null;
+  const niche = normalizeNiche(rawNiche);
+  if (!niche) return null;
+  try {
+    // In-niche patterns: everything banked for THIS niche.
+    const nicheQuery = supabaseAdmin
+      .from("viral_frameworks")
+      .select("hook_type, why_it_works, remix_framework, source_views, title_formula, niche")
+      .eq("niche", niche)
+      .like("video_id", "pat:%")
+      .order("source_views", { ascending: false, nullsFirst: false })
+      // Fetch the niche's FULL pattern list (rows are tiny): the display only uses the top 4+4, but the
+      // cross-niche duplicate check must see every name the niche already knows, not just the top 10.
+      .limit(80);
+    // Cross-niche transfer: pull the highest-performing patterns banked in OTHER niches, then keep
+    // ONLY the ones tagged universal (subject-independent psychology). These are added as clearly
+    // labeled, capped extras — they BIAS the framing, never override the niche's own proven shapes.
+    const crossQuery = supabaseAdmin
+      .from("viral_frameworks")
+      .select("hook_type, why_it_works, remix_framework, source_views, title_formula, niche")
+      .neq("niche", niche)
+      .like("video_id", "pat:%")
+      .order("source_views", { ascending: false, nullsFirst: false })
+      // Every banked pattern, not just the top few: the confirmation ranking needs to see which
+      // ideas recur across niches (including untagged/niche-bound rows, which still count as evidence).
+      .limit(500);
+    const timeout = new Promise<null>((resolve) => setTimeout(() => resolve(null), 2500));
+    const [nicheRes, crossRes] = (await Promise.race([
+      Promise.all([nicheQuery, crossQuery]),
+      timeout.then(() => [null, null] as const),
+    ])) as [{ data: any[] | null } | null, { data: any[] | null } | null];
+
+    const rows = nicheRes?.data || [];
+    // De-dupe by pattern name so a universal pattern already proven in THIS niche isn't
+    // re-listed as a foreign import; keep only clearly-universal cross-niche patterns.
+    // Near-duplicate check, not exact-name: different scans name the same idea differently
+    // ("Extreme ranking or extreme characterization" vs "Extreme characterization anchor").
+    // Two names are the same pattern when they share >=2 meaningful words covering >=60% of the shorter.
+    const universal = rankUniversalImports(rows, crossRes?.data || [], 3);
+
+    if (rows.length === 0 && universal.length === 0) return null;
+    const story = rows.filter((r) => r.hook_type === "story").slice(0, 4);
+    const pack = rows.filter((r) => r.hook_type === "packaging").slice(0, 4);
+    const line = (r: any) => `- ${r.remix_framework}: ${r.why_it_works}`;
+    const parts: string[] = [];
+    if (story.length) parts.push(`STORY structures:\n${story.map(line).join("\n")}`);
+    if (pack.length) parts.push(`PACKAGING structures:\n${pack.map(line).join("\n")}`);
+    if (universal.length) parts.push(`UNIVERSAL structures (proven in other niches; transfer the psychological SHAPE only, never the subject):\n${universal.map(line).join("\n")}`);
+    if (!parts.length) return null;
+    return `PROVEN PATTERNS FROM REAL OVER-PERFORMERS IN THIS NICHE (learned from Outlier Finder scans — imitate the STRUCTURE, never the wording or subject):\n${parts.join("\n")}`;
+  } catch {
+    return null;
+  }
+}
+
 export async function fetchSourceViews(videoId: string): Promise<number | null> {
   const key = process.env.YOUTUBE_API_KEY;
   if (!key) return null;
@@ -119,6 +333,7 @@ export async function getNicheFrameworksBlock(rawNiche: string | null | undefine
       .from("viral_frameworks")
       .select("hook_type, hook_text, why_it_works, structure, remix_framework, source_views")
       .eq("niche", nicheId)
+      .not("video_id", "like", "pat:%") // exclude banked DNA-pattern rows; those feed getNicheOutlierPatterns
       .order("source_views", { ascending: false, nullsFirst: false })
       .order("created_at", { ascending: false })
       .limit(10);
@@ -352,5 +567,31 @@ export async function getPoolNicheStats(): Promise<PoolNicheStat[]> {
       .sort((a, b) => b.topViews - a.topViews);
   } catch {
     return [];
+  }
+}
+
+// Which of the 8 user-facing hook types pull the most views — in THIS niche when it has enough
+// banked hooks, otherwise across all niches (scope tells the UI which). Feeds the angle picker's
+// "top in your niche" badge and the one-click auto-pick. Time-boxed and null-safe like the others.
+export async function getHookFamilyRanking(rawNiche: string | null | undefined): Promise<{ scope: "niche" | "all"; ranks: HookRank[] } | null> {
+  if (!supabaseAdmin) return null;
+  const niche = normalizeNiche(rawNiche);
+  try {
+    const query = supabaseAdmin
+      .from("viral_frameworks")
+      .select("niche, hook_type, source_views")
+      .not("video_id", "like", "pat:%")
+      .not("hook_text", "is", null)
+      .limit(3000);
+    const timeout = new Promise<null>((resolve) => setTimeout(() => resolve(null), 2000));
+    const res = (await Promise.race([query, timeout])) as { data: any[] | null } | null;
+    const rows = res?.data || [];
+    const own = niche ? rankHookFamilies(rows.filter((r) => r.niche === niche)) : [];
+    // A niche ranking needs at least 2 ranked types to say anything comparative.
+    if (own.length >= 2) return { scope: "niche", ranks: own };
+    const all = rankHookFamilies(rows);
+    return all.length ? { scope: "all", ranks: all } : null;
+  } catch {
+    return null;
   }
 }

@@ -6,6 +6,7 @@ import { VoiceSelect } from "@/components/VoiceSelect";
 import { CompanionCtaToggle, SoftCtaToggle } from "@/components/CompanionCtaToggle";
 import StorytellingPicker from "@/components/StorytellingPicker";
 import ResearchStep from "@/components/ResearchStep";
+import { applyFinalCheck } from "@/lib/final-check-client";
 
 const C = {
   bg: "#080c12", card: "#0d1520", cardHover: "#111d2e",
@@ -159,11 +160,13 @@ export default function NicheBendBriefPage() {
           selectedTitle: angle.titleSuggestion || undefined,
         }),
       });
-      const data = await res.json().catch(() => null);
+      let data = await res.json().catch(() => null);
       if (!data || data.error) {
         if (data?.limitReached) { window.location.href = "/dashboard/settings?upgrade=1"; return; }
         setError(data?.error || "The connection dropped while generating. Please try again."); setPhase("angles"); return;
       }
+      // FINAL CHECK against the research (shared with every script page). Never blocks the result.
+      data = await applyFinalCheck(data, { sourceMaterial: sourceMaterial || undefined });
       setScript(data); setSavedId(data.savedId ?? null); setPhase("result");
     } catch (e: any) { setError(e?.message || "Failed to generate script"); setPhase("angles"); }
   }

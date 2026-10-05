@@ -1,0 +1,79 @@
+[
+  {
+    "id": "freshwaters",
+    "library": "frank freshwaters",
+    "topic": "Frank Freshwaters",
+    "title": "He Escaped Prison in 1959. They Found Him 56 Years Later.",
+    "angle": "In 1959, Frank Freshwaters walked away from an Ohio prison farm. Fifty-six years later, U.S. Marshals found him living under a fake name in a weathered trailer in Florida.",
+    "hookType": "STORY",
+    "kind": "event",
+    "voice": "Brew",
+    "minutes": 12
+  },
+  {
+    "id": "wright",
+    "library": "george edward wright",
+    "topic": "George Edward Wright",
+    "title": "He Hijacked a Plane in 1972. Portugal Refused to Send Him Back.",
+    "angle": "An escaped murderer hijacked a Delta jet to Algeria in 1972, vanished for four decades, and was found living as a Portuguese citizen, which is exactly why he was never extradited.",
+    "hookType": "CURIOSITY GAP",
+    "kind": "event",
+    "voice": "Kurzgesagt",
+    "minutes": 12
+  },
+  {
+    "id": "streaming-fraud",
+    "library": "michael smith ai music streaming fraud sdny",
+    "topic": "Michael Smith AI music streaming fraud",
+    "title": "He Made $10 Million From Songs Nobody Ever Heard",
+    "angle": "A North Carolina musician used AI-generated songs and bot accounts to stream music no human chose to play, and collected royalties for years before federal prosecutors charged him.",
+    "hookType": "OVERLOOKED MECHANISM",
+    "kind": "event",
+    "voice": "Brew",
+    "minutes": 12
+  },
+  {
+    "id": "fast-food-prices",
+    "library": "quick service restaurant price inflation",
+    "topic": "Why fast food got so expensive",
+    "title": "Fast Food Isn't Cheap Anymore. Here's What Actually Happened.",
+    "angle": "Fast food prices rose faster than inflation, and the usual explanations only cover part of it. What the data shows about where the rest of the increase came from.",
+    "hookType": "MYTH-BUST",
+    "kind": "explainer",
+    "voice": null,
+    "minutes": 12
+  },
+  {
+    "id": "ltcm",
+    "library": "long term capital management ltcm",
+    "topic": "Long-Term Capital Management collapse",
+    "title": "The Genius Fund That Nearly Broke Wall Street",
+    "angle": "A hedge fund run by Nobel laureates used enormous leverage on trades that looked safe, until 1998, when its losses threatened the whole financial system and the Fed organized a rescue.",
+    "hookType": "REFRAME",
+    "kind": "event",
+    "voice": "Clayspiracy",
+    "minutes": 12
+  },
+  {
+    "id": "psychopathy",
+    "library": "psychopathy intelligence cognitive functioning in homicidal offenders",
+    "topic": "Are psychopathic killers actually smarter?",
+    "title": "Are Psychopathic Killers Really Geniuses?",
+    "angle": "Pop culture says psychopathic killers are brilliant. What the research on intelligence in homicide offenders actually finds is more complicated.",
+    "hookType": "MYTH-BUST",
+    "kind": "claim",
+    "voice": "Kurzgesagt",
+    "minutes": 12
+  },
+  {
+    "id": "chapo-chicago",
+    "library": "dea hunt for chicago cartel boss",
+    "topic": "El Chapo, Chicago's Public Enemy No. 1",
+    "title": "Why Chicago Named a Mexican Cartel Boss Public Enemy No. 1",
+    "angle": "In 2013 the Chicago Crime Commission named Joaquín Guzmán its Public Enemy No. 1, because federal indictments said his cartel used Chicago as a distribution hub. How prosecutors built the case that ended in a life sentence and a $12.6 billion forfeiture order.",
+    "hookType": "STORY",
+    "kind": "event",
+    "voice": "fern",
+    "minutes": 12
+  }
+]

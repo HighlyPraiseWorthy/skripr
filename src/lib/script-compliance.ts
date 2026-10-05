@@ -725,6 +725,935 @@ export function stripStaleFutureDates(text: string, now: number): { text: string
 // user. This CUTS any sentence carrying a source-specific term (name/place/object from the source
 // video's story) that the user's OWN facts do not support — a term the facts carry is legitimately
 // theirs and is kept. Cut the whole sentence (safe default); reworded seams heal downstream.
+// Silent fix — FACT-MACHINERY META-LEAK. Chunked generation gives each section its assigned facts,
+// numbered; occasionally the model narrates the bookkeeping into the script itself ("Facts 3 and 4
+// are duplicates of facts already delivered above and are skipped here"). That is the sourcing
+// machinery leaking into the narrator's voice — never allowed. Cut any sentence that references the
+// fact-numbering, the delivery order, or the act of restating/skipping the record's facts.
+const FACT_META_PATTERNS: RegExp[] = [
+  /\bfacts?\s+\d+\b/i,                              // "Fact 7", "Facts 3 and 4"
+  /\b(?:already )?delivered above\b/i,
+  /\bskipped here\b/i,
+  /\b(?:to avoid|without) restating\b/i,
+  /\bthe record has already (?:established|stated|covered|delivered)\b/i,
+  /\bduplicates? of (?:the )?facts?\b/i,
+  /\b(?:as|are) (?:noted|listed|established|delivered) (?:above|earlier)\b/i,
+  /\brestating what the record\b/i,
+  // Source-machinery narration: the narrator must never make "the sources/the record/the
+  // file/the reporting" the SUBJECT of a sentence (banned in the system prompt; this is the
+  // deterministic backstop). Catches "The sources do not document...", "What the record does
+  // not itemize...", "documented in the record". Attribution to a real named actor
+  // ("prosecutors alleged", "the DOJ charged") is NOT matched and stays.
+  /\b(?:the\s+)?(?:sources?|record|file|documents?|reporting)\s+(?:do(?:es)?\s+not|don'?t|doesn'?t)\s+\w+/i,
+  /\bwhat the (?:record|sources?)\s+(?:do(?:es)?\s+not|shows?|establishe?s?|documents?|says?|item i?zes?)\b/i,
+  /\bdocumented in the record\b/i,
+  /\bthe (?:record|sources?)\s+(?:does|do)\s+not\b/i,
+];
+// Silent fix — UNGROUNDED NAMED SPECIFIC (grounded scripts only). When a script is built on an
+// approved fact set, the model sometimes reaches for a famous real-world specific that ISN'T in the
+// facts — most often a named piece of legislation and its supposed aftermath ("the Sarbanes-Oxley
+// Act, a direct legislative response to..."). It is true in the world but UNSOURCED here, and it
+// usually drags an unsupported causal claim with it. Legislation is a clean, high-precision class to
+// catch: a capitalized "... Act" (or "Act of YYYY") whose name does not appear in the fact blob is
+// ungrounded, so cut the sentence. Only runs when a fact blob exists (never on ungrounded topics).
+export function stripUngroundedActs(text: string, factBlob: string | undefined): { text: string; cuts: string[] } {
+  if (!text || !factBlob) return { text, cuts: [] };
+  const factLc = factBlob.toLowerCase();
+  // Named legislation: "Sarbanes-Oxley Act", "Dodd-Frank Act", "the CARES Act", "Act of 2002".
+  const ACT_RE = /\b([A-Z][A-Za-z.’'-]+(?:[- ][A-Z][A-Za-z.’'-]+){0,3}\s+Act\b|Act\s+of\s+\d{4})/g;
+  const cuts: string[] = [];
+  const outParas = text.split(/\n\n+/).map((para) => {
+    const kept = splitSentences(para).filter((s) => {
+      const matches = s.match(ACT_RE);
+      if (!matches) return true;
+      for (const m of matches) {
+        // The distinctive part of the name (drop a leading "the"/"The" and the word "Act").
+        const name = m.replace(/\bact\b/i, "").replace(/^the\s+/i, "").trim().toLowerCase();
+        const tokens = name.split(/[^a-z0-9]+/).filter((w) => w.length >= 4);
+        // Ungrounded if neither the full name nor any distinctive token is in the facts.
+        const grounded = (name && factLc.includes(name)) || tokens.some((w) => factLc.includes(w));
+        if (!grounded) { cuts.push(s.trim()); return false; }
+      }
+      return true;
+    });
+    return kept.join(" ").trim();
+  }).filter((p) => p.length > 0);
+  return { text: outParas.join("\n\n"), cuts };
+}
+
+// Silent fix — VERBATIM SENTENCE ECHO. A sentence (or a short sentence pair) repeated word-for-word
+// non-adjacently is padding/an AI stutter ("The capture was real. The handcuffs were real." twice).
+// collapseRepeatedAnchors targets a FACT drummed 3+ times; this catches an EXACT restatement on the
+// 2nd occurrence. Conservative: only exact (normalized) duplicates, only sentences of real length,
+// keeps the FIRST occurrence, never touches a one-off.
+export function stripRepeatedSentences(text: string): { text: string; cuts: string[] } {
+  if (!text) return { text, cuts: [] };
+  const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9 ]+/g, "").replace(/\s+/g, " ").trim();
+  const seen = new Set<string>();
+  const cuts: string[] = [];
+  const outParas = text.split(/\n\n+/).map((para) => {
+    const kept = splitSentences(para).filter((s) => {
+      const k = norm(s);
+      // Guard sentences of >= 4 words; 1-3 word connectives ("It was over.") can legitimately recur.
+      if (k.split(" ").length < 4) return true;
+      if (seen.has(k)) { cuts.push(s.trim()); return false; }
+      seen.add(k);
+      return true;
+    });
+    return kept.join(" ").trim();
+  }).filter((p) => p.length > 0);
+  return { text: outParas.join("\n\n"), cuts };
+}
+
+// Silent fix — PREFIX STUTTER. A rewrite pass can leave a sentence followed by a longer version of
+// itself ("What they were working against was not just time. What they were working against was not
+// just time, it was a case..."). stripRepeatedSentences only catches EXACT echoes, so this catches the
+// prefix case: when one of two ADJACENT sentences is the opening of the other, keep the longer one.
+// Only sentences of 4+ words, so a deliberate short refrain beat is never touched.
+export function stripStutters(text: string): { text: string; cuts: string[] } {
+  if (!text) return { text, cuts: [] };
+  const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9 ]+/g, " ").replace(/\s+/g, " ").trim();
+  const cuts: string[] = [];
+  const outParas = text.split(/\n\n+/).map((para) => {
+    const out: string[] = [];
+    for (const s of splitSentences(para)) {
+      const prev = out[out.length - 1];
+      if (prev) {
+        const a = norm(prev), b = norm(s);
+        const shorter = a.length <= b.length ? a : b, longer = a.length <= b.length ? b : a;
+        // Also a NEAR-duplicate: the same sentence with a phrase added or removed (seen live: "A man living
+        // under an open Ohio warrant, wanted since 1959, had apparently..." followed by the same sentence
+        // minus that clause plus a tail). 85%+ of the shorter one's words inside the longer, 8+ words.
+        const ta = new Set(a.split(" ")), tb = new Set(b.split(" "));
+        const small = ta.size <= tb.size ? ta : tb, big = ta.size <= tb.size ? tb : ta;
+        const contained = [...small].filter((w) => big.has(w)).length / Math.max(1, small.size);
+        // Or the same sentence re-opened and re-worded (seen live: "She was a teenager caught in an
+        // undercover sting alongside her boyfriend..." then "She was a teenager who got swept into an
+        // undercover sting alongside her boyfriend..."): same first three words, 70%+ of 12+ words.
+        const sameStart = a.split(" ").slice(0, 3).join(" ") === b.split(" ").slice(0, 3).join(" ");
+        const near = (small.size >= 8 && contained >= 0.85) || (sameStart && small.size >= 12 && contained >= 0.7);
+        // A 3-word sentence restated as the lead of the next ("Four felony charges. Four felony charges:
+        // identity theft and fraud") is a stutter too; a short refrain repeated whole is not.
+        const rawLonger = (a.length <= b.length ? s : prev).trim();
+        const leadIn = shorter.split(" ").length === 3 && longer.startsWith(shorter + " ") && new RegExp(`^[^:,]{0,${shorter.length + 4}}[:,]`).test(rawLonger);
+        if ((shorter.split(" ").length >= 4 && longer.startsWith(shorter)) || leadIn || near) {
+          if (b.length > a.length) { cuts.push(prev.trim()); out[out.length - 1] = s; } else cuts.push(s.trim());
+          continue;
+        }
+      }
+      out.push(s);
+    }
+    return out.join(" ").trim();
+  }).filter((p) => p.length > 0);
+  return { text: outParas.join("\n\n"), cuts };
+}
+
+// Silent fix — LEAKED DIVIDERS. Section joins can leak markdown rules ("---", "***", "___") into a
+// script meant to be read aloud. Drop any paragraph that is only a divider.
+export function stripDividers(text: string): { text: string; cuts: string[] } {
+  if (!text) return { text, cuts: [] };
+  const cuts: string[] = [];
+  const out = text.split(/\n\n+/).map((p) => p.trim()).filter((p) => {
+    if (/^(?:[-*_=~]\s*){3,}$/.test(p)) { cuts.push(p); return false; }
+    return p.length > 0;
+  });
+  return { text: out.join("\n\n"), cuts };
+}
+
+// Silent fix — DANGLING BACK-REFERENCE. "What it shows is..." / "What they do show is that..." only
+// make sense after a "the record doesn't show X" line. When a pass cut that line, the reply is left
+// pointing at nothing. If the PREVIOUS sentence has no negation to answer, strip the lead-in and keep
+// the claim ("What it shows is the direction: the unit traced him to Florida." -> "The unit traced
+// him to Florida."). A genuine "doesn't say X. What it shows is Y." pair is untouched.
+export const BACKREF_RE = /^(?:but\s+|and\s+)?what\s+(?:it|they|this|that|the\s+(?:record|reporting|sources?|facts|documents?|file))\s+(?:does\s+|do\s+|did\s+)?(?:shows?|says?|tells?\s+us|establish(?:es)?|confirms?)\s*(?:is|are)?\s*(?:the\s+\w+\s*:\s*|that\s+|this\s*:\s*|:\s*)?/i;
+// The previous sentence must be a real "the record doesn't say X" line for "What it shows..." to answer it.
+// A bare "not" is not enough (seen live: "...and then he was not." hid a dangling "What it shows is...").
+const NEGATION_RE = /\b(?:does not|doesn['’]t|did not|didn['’]t|do not|don['’]t|cannot|can['’]t|never)\s+(?:say|show|explain|detail|record|establish|tell|answer|reveal|describe|specify|name)\b|\b(?:record|reporting|sources?|documents?|file|facts)\b[^.]{0,60}\b(?:silent|unclear|unresolved|leaves? (?:open|unresolved)|says? (?:little|nothing|almost nothing))\b/i;
+export function fixDanglingBackrefs(text: string): { text: string; cuts: string[] } {
+  if (!text) return { text, cuts: [] };
+  const cuts: string[] = [];
+  let prev = "";
+  const out = text.split(/\n\n+/).map((para) => splitSentences(para).map((sn) => {
+    const m = sn.match(BACKREF_RE);
+    let res = sn;
+    if (m && m[0].trim() && !NEGATION_RE.test(prev)) {
+      const rest = sn.slice(m[0].length).trim();
+      if (rest.split(/\s+/).length >= 3) {
+        // "What it shows is that A, and that B" -> "A, and B": drop the parallel "that" too.
+        const fixed = /\bthat\s*$/i.test(m[0].trim()) ? rest.replace(/,\s+and that\s+/i, ", and ") : rest;
+        res = fixed[0].toUpperCase() + fixed.slice(1); cuts.push(sn.trim());
+      }
+    }
+    prev = res;
+    return res;
+  }).join(" ").trim()).filter(Boolean);
+  return { text: out.join("\n\n"), cuts };
+}
+
+// QUOTE CHECK. Text in quotation marks tells the viewer "someone said exactly this". A quoted span of
+// 2+ words must appear VERBATIM (case/punctuation-insensitive) somewhere in the research; otherwise it
+// is a fabricated or drifted quote (seen live: a card title "I Made a Mistake." in quote marks; a fact
+// that put "the longest manhunt" in the Marshals' mouths when the source was the reporter's own words).
+const qnorm = (t: string) => t.toLowerCase().replace(/[‘’“”"'.,!?;:—–-]/g, " ").replace(/\s+/g, " ").trim();
+export function quotedSpans(text: string): string[] {
+  const out: string[] = [];
+  const t = String(text || "");
+  for (const m of t.matchAll(/[“"]([^“”"]{3,240})[”"]/g)) if (!/^\s|\s$/.test(m[1]) && m[1].trim().split(/\s+/).length >= 2) out.push(m[1].trim());
+  // Single quotes too (seen live: a card hook quoted with '...'). A quote opens after a space/start/
+  // punctuation and closes before space/punctuation, so apostrophes inside words ("hadn't") don't count.
+  for (const m of t.matchAll(/(?:^|[\s(,:—–-])[‘']([^‘’'"“”]{3,240}?(?:\w[’']\w[^‘’'"“”]*?)*)[’'](?=[\s.,;:!?)—–-]|$)/g)) if (m[1].trim().split(/\s+/).length >= 2) out.push(m[1].trim());
+  return out;
+}
+export function unsourcedQuotes(text: string, sourceText: string): string[] {
+  const hay = qnorm(sourceText || "");
+  return quotedSpans(text).filter((q) => !hay.includes(qnorm(q)));
+}
+// In the script, an unsourced quote keeps its words but loses its quotation marks: it then reads as
+// narration, not as a claim that a real person said those exact words.
+export function unquoteUnsourced(text: string, sourceText: string): { text: string; cuts: string[] } {
+  if (!text || !sourceText || !sourceText.trim()) return { text, cuts: [] };
+  const bad = new Set(unsourcedQuotes(text, sourceText));
+  if (!bad.size) return { text, cuts: [] };
+  const cuts: string[] = [];
+  // A span that starts or ends with whitespace is the gap BETWEEN two quotes (straight quotes pair up
+  // ambiguously), not a quote; unquoting it would strip the marks off two real quotes.
+  const out = text.replace(/[“"]([^“”"]{3,240})[”"]/g, (all, inner) => { if (/^\s|\s$/.test(String(inner))) return all; if (bad.has(String(inner).trim())) { cuts.push(inner); return inner; } return all; });
+  return { text: out, cuts };
+}
+
+// Silent fix — QUOTE WORD COUNT. "Two words." about a quote that has three ("You got me.") is a
+// checkable error. When a sentence says "N words" and a quote appears within the previous 3 sentences
+// (or the same sentence), the number is corrected to the quote's real word count.
+const NUMW = ["zero","one","two","three","four","five","six","seven","eight","nine","ten"];
+export function fixQuoteWordCounts(text: string): { text: string; cuts: string[] } {
+  if (!text) return { text, cuts: [] };
+  const cuts: string[] = [];
+  // Work on the RAW text: sentence-splitting cuts a multi-sentence quote in half, and apostrophes
+  // ("didn't") look like single quotes. Look back up to ~900 characters for the last complete
+  // double-quoted span before each "N words" and count its words.
+  const out = text.replace(/\b(one|two|three|four|five|six|seven|eight|nine|ten)\s+words\b/gi, (all, num, offset: number) => {
+    // The quote can also come right AFTER the count (seen live: 'was three words: "I just hopped a
+    // fence."', five words). A quote opening within a few characters ahead wins over the look-back.
+    const ahead = text.slice(offset + all.length, offset + all.length + 420).match(/^[\s:,.—-]{0,4}[“"]([^“”"]{2,400})[”"]/);
+    const before = text.slice(Math.max(0, offset - 900), offset);
+    const spans = [...before.matchAll(/[“"]([^“”"]{2,400})[”"]/g)].map((m) => m[1]).filter((q) => !/^\s|\s$/.test(q));
+    const q = ahead ? ahead[1] : spans.pop();
+    if (!q) return all;
+    const n = q.replace(/[^\w\s'’-]/g, " ").trim().split(/\s+/).filter(Boolean).length;
+    const said = NUMW.indexOf(String(num).toLowerCase());
+    const cap = (w: string) => (num[0] === num[0].toUpperCase() ? w[0].toUpperCase() + w.slice(1) : w);
+    if (n === said) return all;
+    cuts.push(all);
+    if (n > 10) return `${cap("these")} words`; // "five words" before a long quote -> "these words"
+    return `${cap(NUMW[n])} words`;
+  });
+  return { text: out, cuts };
+}
+
+// SUPERLATIVE WORDING. A superlative is a factual claim with an exact scope ("the longest SUCCESSFUL
+// manhunt" is not "the longest fugitive hunt"). Seen live: the qualifier was dropped six batches in a
+// row. For each superlative in the text, the research must carry the same superlative word, and the
+// words right after it must match the research's phrase; otherwise report the research's exact phrase.
+const SUPER_RE = /\b(longest|shortest|largest|biggest|deadliest|highest|lowest|oldest|youngest|greatest|costliest|fastest|worst|best)\b((?:[\s-]+[a-z’']+){1,3})/gi;
+const SUP_STOP = new Set(["in", "of", "the", "to", "for", "ever", "and", "on", "at", "by", "that", "this", "from", "his", "her", "their", "its", "u", "s"]);
+function supTail(t: string): string[] { return t.toLowerCase().split(/[\s-]+/).filter(Boolean).filter((w) => !SUP_STOP.has(w)).slice(0, 2); }
+export function superlativeMismatches(text: string, sourceText: string): { said: string; source: string | null }[] {
+  const out: { said: string; source: string | null }[] = [];
+  const src = String(sourceText || "");
+  for (const m of String(text || "").matchAll(SUPER_RE)) {
+    const word = m[1].toLowerCase();
+    const trimStop = (x: string) => x.trim().replace(/(?:\s+(?:in|of|the|to|for|at|on|by|ever))+$/i, "");
+    const said = trimStop(m[1] + m[2]);
+    const srcPhrases = [...src.matchAll(new RegExp(`\\b${word}\\b((?:[\\s-]+[a-z’']+){1,3})`, "gi"))].map((x) => trimStop(word + x[1]));
+    if (!srcPhrases.length) { out.push({ said, source: null }); continue; }
+    const mine = supTail(m[2]);
+    const ok = srcPhrases.some((p) => { const t = supTail(p.slice(word.length)); return t.length && mine.length && t[0] === mine[0]; });
+    if (!ok) out.push({ said, source: srcPhrases[0] });
+  }
+  return out;
+}
+
+// Silent fix — LEANING FRAGMENTS. "The full accounting is not." only works directly after the
+// sentence it answers ("The cost is documented. The full accounting is not."). When a pass cut that
+// partner, the fragment is left leaning on nothing (seen in the benchmark). A short sentence (<= 7
+// words) ending on a bare auxiliary is kept only if the previous sentence carries the same auxiliary
+// verb it is contrasting with; otherwise it is removed. The script's last sentence gets the same check.
+const AUX = "is|was|were|are|am|did|does|do|had|has|have|would|could|can|will|should|might";
+const LEAN_RE = new RegExp(`^[^.!?]{1,60}?\\b(${AUX})(?:\\s+not|n['’]t)?[.!]$`, "i");
+export function stripLeaningFragments(text: string): { text: string; cuts: string[] } {
+  if (!text) return { text, cuts: [] };
+  const cuts: string[] = [];
+  const paras = text.split(/\n\n+/).map((p) => splitSentences(p));
+  const flat: { p: number; s: number }[] = [];
+  paras.forEach((ss, p) => ss.forEach((_, si) => flat.push({ p, s: si })));
+  flat.forEach(({ p, s }, k) => {
+    const sn = paras[p][s].trim();
+    if (sn.split(/\s+/).length > 7) return;
+    const m = sn.match(LEAN_RE);
+    if (!m) return;
+    const prevRef = flat[k - 1];
+    const prev = prevRef ? paras[prevRef.p][prevRef.s] : "";
+    const verb = m[1].toLowerCase();
+    if (prev && new RegExp(`\\b${verb}\\b`, "i").test(prev)) return; // a real contrast pair: keep
+    cuts.push(sn); paras[p][s] = "";
+  });
+  const out = paras.map((ss) => ss.filter(Boolean).join(" ").trim()).filter(Boolean);
+  return { text: out.join("\n\n"), cuts };
+}
+
+// Silent fix — RESTORE A DROPPED SUPERLATIVE QUALIFIER. When the script says "the longest manhunt" and
+// the research says "the longest SUCCESSFUL manhunt" about the SAME noun, the dropped qualifier changes
+// the claim's scope. Insert it back. Only when the noun matches exactly; a different phrasing
+// ("longest-running fugitive case") is left for the checkers.
+export function restoreSuperlativeQualifiers(text: string, sourceText: string): { text: string; cuts: string[] } {
+  if (!text || !sourceText) return { text, cuts: [] };
+  const cuts: string[] = [];
+  let out = text;
+  const SUP = "longest|shortest|largest|biggest|deadliest|highest|lowest|oldest|youngest|greatest|costliest|fastest|worst|best";
+  for (const m of sourceText.matchAll(new RegExp(`\\b(${SUP})\\s+((?:[a-z’'-]+\\s+){1,2}?)([a-z’'-]+)\\b`, "gi"))) {
+    const word = m[1].toLowerCase(), quals = m[2].trim(), noun = m[3].toLowerCase();
+    if (/^(?:in|of|the|to|for|ever|and|on|at|by|that|this|from)$/i.test(noun)) continue;
+    if (quals.split(/\s+/).some((q) => /^(?:in|of|the|to|for|and|on|at|by|that|this|from)$/i.test(q))) continue;
+    const re = new RegExp(`\\b(${word})\\s+(${noun})\\b`, "gi");
+    out = out.replace(re, (all, w) => { cuts.push(all); return `${w} ${quals} ${all.slice(w.length).trim()}`; });
+  }
+  return { text: out, cuts };
+}
+
+// Silent fix — UNBALANCED QUOTES (seen live: `Then he said, "You got me.` with the closing mark lost).
+// Per paragraph: an opening quote with no closing partner is closed right after the end of its sentence.
+export function balanceQuotes(text: string): { text: string; cuts: string[] } {
+  if (!text) return { text, cuts: [] };
+  const cuts: string[] = [];
+  const fix = (para: string, open: string, close: string) => {
+    let depth = 0, lastOpen = -1;
+    for (let i = 0; i < para.length; i++) {
+      const ch = para[i];
+      if (open === close ? ch === open : ch === open) {
+        if (open === close) { depth = depth ? 0 : 1; if (depth) lastOpen = i; }
+        else { depth++; lastOpen = i; }
+      } else if (open !== close && ch === close && depth > 0) depth--;
+    }
+    if (depth <= 0 || lastOpen < 0) return para;
+    const after = para.slice(lastOpen + 1);
+    const m = after.match(/[.!?]/);
+    const at = m ? lastOpen + 1 + (m.index as number) + 1 : para.length;
+    cuts.push(para.slice(lastOpen, at));
+    return para.slice(0, at) + close + para.slice(at);
+  };
+  const out = text.split(/\n\n/).map((p) => fix(fix(p, '"', '"'), "“", "”"));
+  return { text: out.join("\n\n"), cuts };
+}
+
+// Silent fix — ORPHANED "IT SAYS". "It says he vanished." only works after a sentence naming a record,
+// report, or document; when that sentence was cut, "It" points at nothing (seen live). If the previous
+// sentence names no such source, the lead-in is dropped: "It says he vanished." -> "He vanished."
+const IT_SAYS_RE = /^(?:and\s+)?(?:it|this|that)\s+(?:says|notes|records|reports|states|shows)\s+(?:that\s+)?/i;
+const SOURCE_NOUN_RE = /\b(?:record|records|report|reporting|document|documents|file|filing|statement|indictment|complaint|source|sources|article|account|letter|note|ruling|opinion|order)\b/i;
+export function fixOrphanedItSays(text: string): { text: string; cuts: string[] } {
+  if (!text) return { text, cuts: [] };
+  const cuts: string[] = [];
+  let prev = "";
+  const out = text.split(/\n\n+/).map((para) => splitSentences(para).map((sn) => {
+    let res = sn;
+    const m = sn.match(IT_SAYS_RE);
+    if (m && !SOURCE_NOUN_RE.test(prev)) {
+      const rest = sn.slice(m[0].length).trim();
+      if (rest.split(/\s+/).length >= 2) { res = rest[0].toUpperCase() + rest.slice(1); cuts.push(sn.trim()); }
+    }
+    prev = res;
+    return res;
+  }).join(" ").trim()).filter(Boolean);
+  return { text: out.join("\n\n"), cuts };
+}
+
+// Silent fix — ENDING RE-STATES A DATE. In the last three paragraphs, when the same full date
+// ("June 15, 2016") is stated in two sentences, the earlier short one goes and the closing line keeps it
+// (seen live: "He was actually released ... on June 15, 2016." then the final line repeating it).
+export function dedupeEndingDates(text: string): { text: string; cuts: string[] } {
+  if (!text) return { text, cuts: [] };
+  const paras = text.split(/\n\n+/).map((p) => splitSentences(p));
+  const start = Math.max(0, paras.length - 3);
+  const DATE_RE = /\b(?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},\s+\d{4}\b/g;
+  const occ: { p: number; s: number; date: string }[] = [];
+  for (let p = start; p < paras.length; p++) paras[p].forEach((sn, s) => { for (const d of sn.match(DATE_RE) || []) occ.push({ p, s, date: d }); });
+  const cuts: string[] = [];
+  const byDate = new Map<string, { p: number; s: number }[]>();
+  occ.forEach((o) => byDate.set(o.date, [...(byDate.get(o.date) || []), o]));
+  for (const list of byDate.values()) {
+    if (list.length < 2) continue;
+    for (const o of list.slice(0, -1)) {
+      const sn = paras[o.p][o.s];
+      if (sn && sn.split(/\s+/).length <= 22) { cuts.push(sn); paras[o.p][o.s] = ""; }
+    }
+  }
+  const out = paras.map((ss) => ss.filter(Boolean).join(" ").trim()).filter(Boolean);
+  return { text: out.join("\n\n"), cuts };
+}
+
+// Silent fix — PIPELINE WORDS IN NARRATION. "the sourced reporting", "the sourced facts", "the approved
+// facts" are Skripr's own vocabulary leaking into what the viewer hears (seen live, twice in one script).
+export function stripPipelineWords(text: string): { text: string; cuts: string[] } {
+  if (!text) return { text, cuts: [] };
+  const cuts: string[] = [];
+  // Only Skripr's own adjectives, only before a research noun: "the sourced reporting" -> "the reporting".
+  // ("cited", "available" etc. are left alone: they are ordinary words, often verbs.)
+  const out = text.replace(/\b(sourced|approved)\s+(?=(?:reporting|record|records|facts|material|sources|research|documents?)\b)/gi, (all) => { cuts.push(all.trim()); return ""; });
+  return { text: out, cuts };
+}
+
+// ATTRIBUTION CHECK. When a sentence credits words to someone ("the Marshals called it the longest
+// successful manhunt") and those words (4+ consecutive) come from a research fact, the credited party
+// must be the fact's own speaker. Seen live, repeatedly: the research says "The Guardian reported ...
+// 'the longest successful manhunt'", the script says the Marshals called it that.
+const ATTR_VERB = "called|described|recorded|labeled|labelled|termed|dubbed|would (?:later )?call|would (?:later )?describe|characterized|said|wrote";
+function factSpeaker(fact: string): string | null {
+  const m = fact.match(/^(?:according to\s+)?(.{3,70}?)\s+(?:reported|said|described|called|stated|wrote|noted|told|characterized)\b/i);
+  if (!m) return null;
+  const who = m[1].replace(/^(?:a|an|the)\s+/i, "").trim();
+  return /[A-Z]/.test(who) ? who : null;
+}
+// A sentence rewrite must keep the sentence's quote balance. Sentences are split inside multi-sentence
+// quotes, so a rewrite that adds or drops a quote mark breaks the pairing for the whole passage (seen
+// live: 'LeFevre told reporters: "...' inserted inside an open quote).
+export function quoteBalanceKept(orig: string, rw: string): boolean {
+  const odd = (t: string) => ((t.match(/"/g) || []).length + (t.match(/[“”]/g) || []).length) % 2;
+  return odd(orig) === odd(rw);
+}
+
+// WEEKDAY + DATE. "Wednesday, May 19, 2009" is checkable: May 19, 2009 was a Tuesday (seen live: the
+// release was Tuesday May 19 and the homecoming 12:15 a.m. Wednesday; the script merged them). On a
+// mismatch, keep whichever half the research backs: the weekday if the facts use it, else the date.
+const WEEKDAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+export function fixWeekdayDates(text: string, facts: string): { text: string; cuts: string[] } {
+  if (!text) return { text, cuts: [] };
+  const cuts: string[] = [];
+  const re = new RegExp(`\\b(${WEEKDAYS.join("|")}),?\\s+(${MONTHS.join("|")})\\s+(\\d{1,2}),\\s+(\\d{4})\\b`, "g");
+  const out = text.replace(re, (all, wd: string, mo: string, d: string, y: string) => {
+    const real = WEEKDAYS[new Date(Date.UTC(Number(y), MONTHS.indexOf(mo), Number(d))).getUTCDay()];
+    if (real === wd) return all;
+    cuts.push(all);
+    return new RegExp(`\\b${wd}\\b`, "i").test(facts || "") ? wd : `${mo} ${d}, ${y}`;
+  });
+  return { text: out, cuts };
+}
+
+// WHO A REWRITE CREDITS. A fix that adds an attribution must credit the right person (seen live,
+// Jones: told to attribute the gambling claim, the rewrite said "According to Jones, the gambling had
+// consumed everything"; the research gives that as his former WIFE's account, and Jones's own account
+// is a trading loss). Find the speaker the rewrite names; if a distinctive word of the claim appears
+// in a fact spoken by someone else and in NO fact spoken by the named speaker, the credit is wrong.
+const ROLE_WORDS = /\b(wife|husband|son|daughter|mother|father|brother|sister|prosecutors?|police|investigators?|authorities|officials|agents?|attorney|lawyer|neighbou?rs?|friends?|judge|family)\b/i;
+const SPEAKER_STOP = new Set(["his", "her", "their", "the", "former", "ex", "a", "an", "later", "also", "then"]);
+function speakerKeys(who: string): string[] {
+  return who.toLowerCase().replace(/[^a-z' ]+/g, " ").split(/\s+/).filter((w) => w.length >= 3 && !SPEAKER_STOP.has(w));
+}
+function namedSpeaker(sentence: string): string | null {
+  // A possessive speaker must be a role ("his former wife"), never "his own" (seen live: refused a fine
+  // rewrite as crediting "his own").
+  const ROLE = "(?:wife|husband|son|daughter|mother|father|brother|sister|attorney|lawyer|family|neighbou?rs?|friends?|employer|boss)";
+  const a = sentence.match(new RegExp(`\\b[Aa]ccording to ((?:his|her|their|the) (?:former |ex-)?${ROLE}|[A-Z][\\w.'’]+(?: [A-Z][\\w.'’]+){0,3})`));
+  if (a) return a[1];
+  const b = sentence.match(new RegExp(`(?:^|[,;:.]\\s+|\\bbut\\s+)((?:[Hh]is|[Hh]er|[Tt]heir|[Tt]he) (?:former |ex-)?${ROLE}|[A-Z][\\w.'’]+(?: [A-Z][\\w.'’]+){0,3}) (?:later )?(?:said|says|told|claimed|claims|insisted|maintained|described|admitted)\\b`));
+  return b ? b[1] : null;
+}
+// A late rewrite must not introduce a NAME the research never mentions (seen live, Jones: "Ed was a
+// Phoenix nurse with undeclared Nevada income" appeared after the fact check had run; the nurse is
+// Clifton Goodenough). A capitalized word new to the sentence whose lowercase form appears nowhere in
+// the facts or the original sentence is treated as an invented name and the rewrite is refused.
+// AGE AT A DATE. "In May 2008, a 73-year-old man walked into a DMV" is checkable: the research has
+// "Jones, 73" at his 2012 sentencing, so in 2008 he was about 69 (seen live on an angle card). Each fact
+// stating an age and a year gives a birth-year estimate (age vs the latest year in that fact); a
+// sentence pairing an age with a year is flagged when it fits no estimate but sits within 5 years of
+// one (same person, wrong age). Ages of other people (a 23-year-old daughter) fit their own estimate.
+const AGE_RE = /\b(\d{2})[- ]years?[- ]old\b|\b(?:aged?|now)\s+(\d{2})\b|,\s(\d{2}),/g; // "73-year-old" and "73 years old"
+function agesWithYear(t: string): { age: number; year: number }[] {
+  const years = (t.match(/\b(19\d{2}|20\d{2})\b/g) || []).map(Number);
+  if (!years.length) return [];
+  return [...t.matchAll(AGE_RE)].map((m) => Number(m[1] || m[2] || m[3])).filter((a) => a >= 15 && a <= 99).map((age) => ({ age, year: Math.max(...years) }));
+}
+export function ageYearMismatches(sentences: string[], facts: string): { i: number; said: number; year: number; expected: number }[] {
+  const births = facts.split("\n").flatMap((f) => agesWithYear(f).map((x) => x.year - x.age));
+  if (births.length < 2) return [];
+  const out: { i: number; said: number; year: number; expected: number }[] = [];
+  sentences.forEach((sn, i) => {
+    const years = (sn.match(/\b(19\d{2}|20\d{2})\b/g) || []).map(Number);
+    if (!years.length) return;
+    for (const m of sn.matchAll(AGE_RE)) {
+      const age = Number(m[1] || m[2] || m[3]);
+      if (!(age >= 15 && age <= 99)) continue;
+      const year = years[0];
+      const implied = year - age;
+      if (births.some((b) => Math.abs(b - implied) <= 2)) continue; // fits someone in the research
+      // Supported by two or more facts agreeing, and close enough to be the same person.
+      const near = births.filter((b) => Math.abs(b - implied) <= 5);
+      const best = near.find((b) => births.filter((x) => Math.abs(x - b) <= 1).length >= 2);
+      if (best !== undefined) out.push({ i, said: age, year, expected: year - best });
+    }
+  });
+  return out;
+}
+
+// NOUN + 'D. "The complaint'd later describe", "benefits'd carry", "documents'd finally attached":
+// a contraction on a noun reads badly aloud (seen in most runs). Pronouns keep theirs ("he'd", "it'd").
+// Expanded to "had" before a past participle, else "would".
+const KEEP_D = new Set(["i", "you", "he", "she", "it", "we", "they", "who", "that", "there", "what", "where", "how", "why", "which", "this", "here", "nobody", "everyone", "someone", "anyone", "no one"]);
+const PARTICIPLE = /^(?:\w+(?:ed|en)|been|gone|done|made|had|got|seen|left|built|paid|sold|found|bought|told|kept|spent|lost|become|come|run|put|set|cut|let|hit|read|won|met|said|heard|held|felt|brought|thought|taught|caught|fought|sought|known|grown|shown|drawn|flown|thrown|begun|sung|swum|stood|understood|won)$/i;
+export function expandNounContractions(text: string): { text: string; cuts: string[] } {
+  const cuts: string[] = [];
+  const out = String(text || "").replace(/\b([A-Za-z]+)['’]d\b(\s+)(?:(not|never|already|finally|later|just|also|still|once|then)\s+)?([A-Za-z]+)/g, (all, w: string, sp: string, adv: string | undefined, next: string) => {
+    if (KEEP_D.has(w.toLowerCase())) return all;
+    cuts.push(all);
+    const aux = PARTICIPLE.test(next) ? "had" : "would";
+    return `${w} ${aux}${sp}${adv ? adv + " " : ""}${next}`;
+  });
+  return { text: out, cuts };
+}
+
+// THE SCRIPT TALKING ABOUT ITSELF. "...belongs to the next part of this story", "the question the
+// second half of this story has to answer": narration about the video's own structure, never a fact.
+const STORY_META_RE = /\b(?:next|second|first|final|last|other|later|coming) (?:part|half|section|chapter|act) of (?:this|the|our) (?:story|video|script)\b|\bthis (?:video|script) (?:will|has to|must|is going to)\b/i;
+// "The record says almost nothing about those early stops." (seen live, from the writer) says nothing
+// a viewer can use: cut. "The record shows Jones paid $800." carries a fact: drop only the lead-in.
+const RECORD_EMPTY_RE = /\b(?:the|that|this) (?:record|research|reporting|sources?) (?:is silent|says (?:almost |very little|little|nothing)|doesn't say|does not say|leaves (?:open|that open)|is thin|offers (?:no|little|nothing)|goes quiet|stops)\b|\bthat's as far as the (?:facts|record) go\b|\b(?:that's |this is )?all the (?:record|research|reporting) (?:gives|has|offers|shows)\b/i;
+const RECORD_LEAD_RE = /^(?:(?:but|and|yet)\s+)?(?:what )?(?:the|his|her) (?:record|research|reporting|sources?) (?:does )?(?:says?|shows?|states?|confirms?)(?: is)?(?: that)?[:,]?\s*/i;
+// Source-talk as a trailing clause: "...$47,000 reported paid to the family, and reports don't explain
+// the gap." (seen live). The clause goes; the sentence stays.
+const SOURCE_CLAUSE_RE = /(?:[,;]\s*(?:(?:and|but|though|although)\s+)?|\s+(?:and|but|though|although)\s+)(?:the\s+|other\s+|news\s+)?(?:reports?|sources?|records?|accounts?|reporting)\s+(?:don't|do not|doesn't|does not|never|can't|cannot)\s+(?:explain|say|resolve|account for|reconcile|clarify)\b[^.;!?]*/gi;
+// "January 2008. In January 2008, a little over a year..." (seen live): a dateline line echoed by the
+// next sentence's opening. Keep the sentence, drop the bare dateline.
+const DATELINE_RE = /^((?:(?:January|February|March|April|May|June|July|August|September|October|November|December)\s+(?:\d{1,2},?\s+)?)?(?:19|20)\d{2})\.$/;
+function dropEchoedDatelines(sentences: string[], cuts: string[]): string[] {
+  return sentences.filter((sn, i) => {
+    const m = sn.trim().match(DATELINE_RE);
+    const next = (sentences[i + 1] || "").trim();
+    if (m && new RegExp(`^(?:In|On|By|Since|Until|That|By late|By early)?\\s*${m[1].replace(/\s+/g, "\\s+")}\\b`, "i").test(next)) { cuts.push(sn.trim()); return false; }
+    return true;
+  });
+}
+export function stripStoryMeta(text: string): { text: string; cuts: string[] } {
+  const cuts: string[] = [];
+  text = stripSourceTags(String(text || "")).replace(SOURCE_CLAUSE_RE, (m) => { cuts.push(m.trim()); return ""; });
+  const out = String(text || "").split(/\n\n+/).map((p) => splitSentences(p).flatMap((sn): string[] => {
+    if (STORY_META_RE.test(sn) || RECORD_EMPTY_RE.test(sn)) { cuts.push(sn.trim()); return []; }
+    const lead = sn.trim().match(RECORD_LEAD_RE);
+    if (lead) { const rest = sn.trim().slice(lead[0].length); if (rest.split(/\s+/).length >= 3) { cuts.push(lead[0].trim()); return [rest[0].toUpperCase() + rest.slice(1)]; } }
+    return [sn];
+  })).map((ss) => dropEchoedDatelines(ss, cuts).join(" ").trim()).filter(Boolean).join("\n\n");
+  return { text: out, cuts };
+}
+
+// EVENT YEARS. "July 2008. State and federal investigators arrive at the Rampart... arrested him" when
+// the research has the arrest in July 2011 (seen live; the day-level date fixer never checks years).
+// The research gives a year for each key event; a script sentence naming that event is checked against
+// the year in force there: one in the sentence itself, else the last dateline ("July 2008.") above it.
+const EVENTS: [string, RegExp][] = [
+  ["arrested", /\barrest(?:ed|s)?\b|\bbusted\b|\btaken into custody\b|\bpicked (?:him|her) up\b/i],
+  ["pleaded guilty", /\bplead(?:ed|s)? guilty\b|\bpled guilty\b|\bguilty plea\b/i],
+  ["sentenced", /\bsentenc(?:ed|ing)\b|\bhands? down (?:a |the |his |her )?sentence\b/i],
+  ["declared dead", /\bdeclared (?:him |her )?(?:legally )?dead\b/i],
+  ["indicted", /\bindicted\b/i],
+  ["convicted", /\bconvicted\b/i],
+  ["escaped", /\bescaped\b/i],
+];
+const YEAR_RE = /\b(19\d{2}|20\d{2})\b/g;
+export function eventYearMismatches(sentences: string[], facts: string): { i: number; event: string; said: number; research: number; missingYear?: boolean }[] {
+  const factYears = new Map<string, Set<number>>();
+  for (const f of facts.split(/\n|(?<=[.!?])\s+/)) {
+    const ys = (f.match(YEAR_RE) || []).map(Number);
+    if (ys.length !== 1) continue; // one year in the sentence, so it is unambiguously the event's
+    for (const [key, re] of EVENTS) if (re.test(f)) { if (!factYears.has(key)) factYears.set(key, new Set()); factYears.get(key)!.add(ys[0]); }
+  }
+  const out: { i: number; event: string; said: number; research: number; missingYear?: boolean }[] = [];
+  let dateline: number | null = null, sinceDateline = 99, lastYear: number | null = null;
+  const MONTH_DAY = /\b(?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2}\b(?!,?\s*\d{4})/;
+  sentences.forEach((sn, i) => {
+    const ys = (sn.match(YEAR_RE) || []).map(Number);
+    const prevYear = lastYear;
+    if (ys.length) lastYear = ys[ys.length - 1];
+    // A month and day with no year ("arrested him on July 19") is heard in the last year the script
+    // named (seen live: right after a "May 2008" section, for a July 2011 arrest).
+    if (!ys.length && MONTH_DAY.test(sn) && prevYear !== null && sinceDateline > 6) {
+      for (const [key, re] of EVENTS) {
+        if (!re.test(sn)) continue;
+        const known = factYears.get(key);
+        if (known && known.size === 1 && !known.has(prevYear)) out.push({ i, event: key, said: prevYear, research: [...known][0], missingYear: true });
+      }
+    }
+    // A short dated line ("July 2008.", "May 10, 1979.") sets the scene's year for what follows.
+    if (ys.length === 1 && sn.trim().split(/\s+/).length <= 6) { dateline = ys[0]; sinceDateline = 0; return; }
+    sinceDateline++;
+    const year = ys.length === 1 ? ys[0] : ys.length === 0 && sinceDateline <= 6 ? dateline : null;
+    if (year === null) return;
+    // Relative phrasing ("three years later", "since 2008") doesn't date the event itself.
+    if (/\b(?:since|before|after|until|earlier|later|ago)\b/i.test(sn) && ys.length === 0) return;
+    for (const [key, re] of EVENTS) {
+      if (!re.test(sn)) continue;
+      const known = factYears.get(key);
+      if (!known || known.size !== 1 || known.has(year)) continue;
+      out.push({ i, event: key, said: year, research: [...known][0] });
+    }
+  });
+  return out;
+}
+
+// RE-TOLD FACTS. Sections re-explain a fact an earlier section already delivered, far from it
+// (seen in most runs: "Here's where Goodenough's number came from. In 1979, Jones paid $800 for three
+// documents..." three paragraphs after the $800 scene; Goodenough's IRS ordeal told three times). A
+// later sentence, 2+ paragraphs away, that shares 4+ distinctive stems and most of its own content
+// with an earlier one is a re-telling. The final paragraph is exempt: callbacks there are intended.
+const RT_STOP = new Set(["about", "after", "again", "being", "could", "every", "first", "their", "there", "these", "those", "under", "where", "which", "while", "would", "years", "still", "never", "always", "because", "before", "other", "thing", "something", "nothing", "everything", "really", "where", "whose"]);
+export function retoldFacts(sentences: string[], paraOf: number[]): { i: number; same_as: number; shared: string[] }[] {
+  // Words of 5+ letters (as 6-letter stems) plus figures and years ("$800", "1979"): a re-told fact
+  // usually repeats its number.
+  const toks = (t: string) => new Set([
+    ...(t.toLowerCase().match(/[a-z]{5,}/g) || []).filter((w) => !RT_STOP.has(w)).map((w) => w.slice(0, 6)),
+    ...(t.match(/\d[\d,.]{2,}/g) || []).map((n) => n.replace(/[,.]+$/, "").replace(/,/g, "")),
+  ]);
+  const stems = sentences.map(toks);
+  const words = sentences.map((t) => t.split(/\s+/).filter(Boolean).length);
+  const lastPara = Math.max(...paraOf);
+  // An earlier PARAGRAPH can hold a fact across two sentences ("paid $800" / "three documents").
+  const paraStems = new Map<number, Set<string>>();
+  sentences.forEach((_, k) => { const p = paraOf[k]; if (!paraStems.has(p)) paraStems.set(p, new Set()); stems[k].forEach((x) => paraStems.get(p)!.add(x)); });
+  const out: { i: number; same_as: number; shared: string[] }[] = [];
+  for (let j = 0; j < sentences.length; j++) {
+    if (words[j] < 7 || paraOf[j] === lastPara || stems[j].size < 4) continue;
+    for (let p = 0; p <= paraOf[j] - 2; p++) {
+      const ps = paraStems.get(p);
+      if (!ps) continue;
+      const shared = [...stems[j]].filter((x) => ps.has(x));
+      if (shared.length < 4 || shared.length / stems[j].size < 0.55) continue;
+      // Point at the earlier sentence in that paragraph that carries most of it.
+      let best = -1, bestN = -1;
+      sentences.forEach((_, k) => { if (paraOf[k] !== p) return; const n = shared.filter((x) => stems[k].has(x)).length; if (n > bestN) { bestN = n; best = k; } });
+      out.push({ i: j, same_as: best, shared });
+      break;
+    }
+  }
+  return out;
+}
+
+// Pipeline words in narration ("...and the research doesn't explain the gap", seen live from a
+// figure fix). A rewrite may not introduce them; the viewer hears a documentary, not a fact-check.
+const PIPELINE_RE = /\b(?:the|our|my|its) (?:research|fact sheet|approved facts|sources?)\b|\bthis (?:script|video)\b|\b(?:the|our) facts (?:say|show|don't|do not|give)\b|\b(?:reports?|sources?|records?|accounts?) (?:don't|do not|doesn't|does not) (?:explain|say|resolve|account for|reconcile)\b/i;
+export function introducesPipelineWords(original: string, rewrite: string): boolean {
+  return PIPELINE_RE.test(rewrite) && !PIPELINE_RE.test(original);
+}
+
+// SAME FIGURE GAP EXPLAINED TWICE. When two passes each explain why two figures differ ("the
+// court's figure... the benefits totaled $47,000" and later "what one report put at $47,000... set at
+// more than $78,600"), the viewer hears the gap twice and the two versions can disagree (seen live).
+// Sentences naming the same two dollar figures, grouped by that pair, where a pair appears 2+ times.
+const FIG_RE = /\$\s?\d[\d,]*(?:\.\d+)?(?:\s?(?:million|billion|thousand))?/gi;
+const figKey = (f: string) => f.replace(/[\s$,]/g, "").toLowerCase();
+export function figurePairsInSentence(sn: string): string[] {
+  const figs = [...new Set((sn.match(FIG_RE) || []).map(figKey))].sort();
+  const out: string[] = [];
+  for (let a = 0; a < figs.length; a++) for (let b = a + 1; b < figs.length; b++) out.push(`${figs[a]}|${figs[b]}`);
+  return out;
+}
+export function repeatedFigureExplanations(sentences: string[]): { pair: string; idx: number[] }[] {
+  const by = new Map<string, number[]>();
+  sentences.forEach((sn, i) => figurePairsInSentence(sn).forEach((k) => { if (!by.has(k)) by.set(k, []); by.get(k)!.push(i); }));
+  return [...by.entries()].filter(([, idx]) => idx.length >= 2).map(([pair, idx]) => ({ pair: pair.split("|").map((x) => "$" + x).join(" vs "), idx }));
+}
+
+// VANISHED "FOREVER". "The night before Lee Price disappeared forever" (seen live, from a card into
+// the script's first line) when the research has him arrested 18 months later. The research itself can
+// say "left for good"; what decides it is a later finding, so check the facts for one.
+const FOREVER_RE = /\b(?:(?:vanish\w*|disappear\w*|gone|left|walked out|walked away)\b[^.!?]{0,40}?\b(?:forever|for good|permanently|never to return|never to be seen again|into thin air|without a trace|into the (?:ocean|sea|gulf|water|night))|never (?:seen|heard from|found|caught) again|(?:was|is) never (?:found|caught))\b/i;
+const FOUND_RE = /\b(?:arrested|captured|caught|found alive|located|apprehended|turned (?:himself|herself) in|surrendered|resurfaced|was found)\b/i;
+// When the research has him found later, the adverb simply goes: "the night before he left for good"
+// -> "the night before he left" (seen live: the research's own wording, carried into the script).
+export function dropForeverAdverbs(text: string, facts: string): { text: string; cuts: string[] } {
+  const cuts: string[] = [];
+  if (!FOUND_RE.test(facts || "")) return { text, cuts };
+  const out = String(text || "").replace(/\b(vanish\w*|disappear\w*|left|gone|walked out|walked away)(\s[^.!?]{0,25}?)?\s+(?:forever|for good|permanently)\b/gi, (all, verb: string, mid: string | undefined) => { cuts.push(all); return `${verb}${mid || ""}`; });
+  return { text: out, cuts };
+}
+export function foreverContradicted(text: string, facts: string): string | null {
+  const m = String(text || "").match(FOREVER_RE);
+  if (!m || !FOUND_RE.test(facts || "")) return null;
+  return m[0];
+}
+
+// MINORS. A person the research shows was under 18 at the time is referred to by relationship, not
+// by name (seen live: a 17-year-old daughter named in a card and throughout the script). The research
+// gives the age ("Hannah Price was seventeen years old") and the relationship ("her father").
+const TEEN_WORDS: Record<string, number> = { ten: 10, eleven: 11, twelve: 12, thirteen: 13, fourteen: 14, fifteen: 15, sixteen: 16, seventeen: 17 };
+export function minorsInFacts(facts: string): { name: string; first: string; relation: string }[] {
+  const out = new Map<string, { name: string; first: string; relation: string }>();
+  const lines = String(facts || "").split("\n");
+  const ageOf = (t: string) => (/^\d+$/.test(t) ? Number(t) : TEEN_WORDS[t.toLowerCase()] ?? 99);
+  const AGE = "(\\d{1,2}|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen)";
+  const found: { name: string }[] = [];
+  for (const l of lines) {
+    for (const m of l.matchAll(new RegExp(`\\b([A-Z][a-z]+(?: [A-Z][a-z]+)?)(?:,| was| who was|, who was)\\s+${AGE}(?:[- ]years?[- ]old)?\\b`, "g"))) if (ageOf(m[2]) < 18) found.push({ name: m[1] });
+    for (const m of l.matchAll(new RegExp(`\\b(?:his|her|their) ${AGE}-year-old (?:daughter|son|stepdaughter|stepson|niece|nephew|granddaughter|grandson),? ([A-Z][a-z]+)`, "g"))) if (ageOf(m[1]) < 18) found.push({ name: m[2] });
+  }
+  for (const f of found) {
+    const first = f.name.split(" ")[0];
+    if (out.has(first)) continue;
+    const withName = lines.filter((l) => l.includes(first));
+    let relation = "";
+    for (const l of withName) {
+      const r1 = l.match(new RegExp(`\\b([Hh]is|[Hh]er) (daughter|son|stepdaughter|stepson|niece|nephew|granddaughter|grandson),? ${escRe(first)}\\b`));
+      if (r1) { relation = `${r1[1].toLowerCase()} ${r1[2]}`; break; }
+      const r2 = l.match(new RegExp(`\\b${escRe(first)}\\b[^.]{0,80}?\\b(her|his) (father|mother)\\b`));
+      if (r2) { relation = `${r2[2] === "father" ? "his" : "her"} ${r2[1] === "her" ? "daughter" : "son"}`; break; }
+    }
+    if (relation) out.set(first, { name: f.name, first, relation });
+  }
+  return [...out.values()];
+}
+// FAMILY MEMBERS. Cards never name the subject's family (private people; seen live: his son and his
+// 17-year-old daughter named in every batch, the daughter as the opening image in four cards). The
+// research gives the relationship ("his oldest son Nathan", "Nathan, his son").
+const REL = "son|daughter|wife|husband|mother|father|brother|sister|stepson|stepdaughter|grandson|granddaughter|fiancee|fiance|girlfriend|boyfriend|children";
+export function familyInFacts(facts: string, subject = ""): { name: string; first: string; relation: string }[] {
+  const out = new Map<string, { name: string; first: string; relation: string }>();
+  const text = String(facts || "");
+  // The subject is nobody's "family member" here ("his son Lee" is the subject, as his father's son).
+  const self = new Set(String(subject).split(/\s+/).filter((w) => /^[A-Z]/.test(w)));
+  // "Her husband, Charles Darby" opens a sentence too: match His/Her in either case.
+  for (const m of text.matchAll(new RegExp(`\\b([Hh]is|[Hh]er) (?:oldest |eldest |youngest |middle |late |former |ex-)?(${REL}),? ([A-Z][a-z]+)(?: ([A-Z][a-z]+))?`, "g"))) {
+    const first = m[3]; if (out.has(first) || m[2] === "children" || self.has(first)) continue;
+    out.set(first, { name: m[4] ? `${first} ${m[4]}` : first, first, relation: `${m[1].toLowerCase()} ${m[2]}` });
+  }
+  for (const m of text.matchAll(new RegExp(`\\b([A-Z][a-z]+)(?: ([A-Z][a-z]+))?, (his|her) (?:oldest |eldest |youngest |middle |former |ex-)?(${REL})\\b`, "g"))) {
+    const first = m[1]; if (out.has(first) || m[4] === "children" || self.has(first)) continue;
+    out.set(first, { name: m[2] ? `${first} ${m[2]}` : first, first, relation: `${m[3]} ${m[4]}` });
+  }
+  for (const mn of minorsInFacts(text)) if (!out.has(mn.first) && !self.has(mn.first)) out.set(mn.first, mn);
+  return [...out.values()];
+}
+// Names go into patterns: escape them (seen live: topic "The Housewife of Pulaski (The Story of Linda Darby)"
+// gave the surname "Darby)" and the unescaped ")" crashed the whole card page).
+const escRe = (t: string) => String(t).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+function replacePeople(text: string, people: { name: string; first: string; relation: string }[], cuts: string[], surname = ""): string {
+  let out = String(text || "");
+  for (const mn of people) {
+    const forms = [...new Set([mn.name, surname ? `${mn.first} ${surname}` : "", mn.first].filter(Boolean))].sort((a, b) => b.length - a.length);
+    for (const form of forms) {
+      // "his oldest son Nathan": the relationship is already said, so the name just goes.
+      out = out.replace(new RegExp(`\\b((?:oldest |eldest |youngest |middle )?(?:${REL}))(,)? ${escRe(form).replace(/ /g, "\\s+")}\\b`, "g"), (all, rel: string) => { cuts.push(all); return rel; });
+      out = out.replace(new RegExp(`(^|[.!?]\\s+|\\n\\s*|"|“)?\\b${escRe(form).replace(/ /g, "\\s+")}(['’]s)?\\b`, "g"), (all, lead: string | undefined, poss: string | undefined) => {
+        cuts.push(all.trim());
+        const rel = lead !== undefined && lead !== "" ? mn.relation[0].toUpperCase() + mn.relation.slice(1) : mn.relation;
+        return `${lead ?? ""}${rel}${poss ?? ""}`;
+      });
+    }
+  }
+  return out.replace(/\b(his|her) (son|daughter|wife|husband|mother|father|brother|sister)(?:,)? (?:his|her) (?:oldest |youngest )?\2\b/gi, "$1 $2");
+}
+// CHANNEL POLICY (user, 2026-10-05): only people who were MINORS at the time of the events are kept
+// anonymous ("his daughter"). Adult family members on the public record may be named (a victim's child
+// later quoted as an adult, a spouse who testified), as in any documentary. Name kept for its callers.
+export function replaceFamilyNames(text: string, facts: string, subject = ""): { text: string; cuts: string[] } {
+  const cuts: string[] = [];
+  // Last real word of the subject, punctuation stripped ("(The Story of Linda Darby)" -> "Darby").
+  const surname = (String(subject).match(/[A-Za-z][A-Za-z'’-]*/g) || []).pop() || "";
+  const self = new Set(String(subject).split(/\s+/).filter((w) => /^[A-Z]/.test(w)));
+  const minors = minorsInFacts(facts).filter((m) => !self.has(m.first));
+  return { text: replacePeople(text, minors, cuts, /^[A-Z]/.test(surname) ? surname : ""), cuts };
+}
+
+export function replaceMinorNames(text: string, facts: string): { text: string; cuts: string[] } {
+  const cuts: string[] = [];
+  let out = String(text || "");
+  for (const mn of minorsInFacts(facts)) {
+    const forms = [...new Set([mn.name, mn.first])].sort((a, b) => b.length - a.length);
+    for (const form of forms) {
+      out = out.replace(new RegExp(`(^|[.!?]\\s+|\\n\\s*|"|“)?\\b${escRe(form).replace(/ /g, "\\s+")}(['’]s)?\\b`, "g"), (all, lead: string | undefined, poss: string | undefined) => {
+        cuts.push(all.trim());
+        const rel = lead !== undefined && lead !== "" ? mn.relation[0].toUpperCase() + mn.relation.slice(1) : mn.relation;
+        return `${lead ?? ""}${rel}${poss ?? ""}`;
+      });
+    }
+  }
+  // "his daughter Hannah" style leftovers become "his daughter his daughter": collapse.
+  out = out.replace(/\b(his|her) (daughter|son)(?:,)? (?:his|her) \2\b/gi, "$1 $2");
+  return { text: out, cuts };
+}
+
+// SOURCE-TYPE TAGS. A fact that comes only from the subject's own account (his memoir, interviews,
+// letters) or his family's account has to be attributed when it's told (seen live: "contemplated
+// jumping", "a rock near a foreign border", "crossed a border" stated as established). Tag those facts
+// where they enter the pipeline so every writer and checker sees it, instead of guessing from wording.
+export const OWN_TAG = "[his own account]";
+export const FAMILY_TAG = "[family account]";
+const SAY = "(?:wrote|writes|said|says|told|tells|recalled|recalls|described|describes|claimed|claims|admitted|admits|explained|insisted|insists|later wrote|later said)";
+export function tagFactSources(text: string, subject = ""): string {
+  const surname = (String(subject).trim().split(/\s+/).pop() || "").replace(/[^A-Za-z'-]/g, "");
+  const familyRe = new RegExp(`\\b(?:his|her|their) (?:former |ex-|late )?(?:wife|husband|son|daughter|father|mother|brother|sister|children|family)\\b[^.]{0,80}?\\b${SAY}\\b|\\b(?:wife|husband|son|daughter|father|mother|brother|sister)\\b,? [A-Z][a-z]+(?: [A-Z][a-z]+)?,? ${SAY}\\b|\\b${SAY}\\b[^.]{0,40}\\b(?:of )?(?:her|his) (?:father|mother|husband|wife|son|daughter)\\b`, "i");
+  // The subject as speaker: his surname NOT preceded by another first name ("Jim Price told..." is his
+  // father), or his own first/middle name before it.
+  const own = String(subject).trim().split(/\s+/).filter((w) => /^[A-Z]/.test(w));
+  const firsts = own.slice(0, -1).join("|");
+  const subj = surname ? `(?:${firsts ? `(?:${firsts}) ` : ""}${surname}|(?<![A-Z][a-z]+ )${surname})` : "";
+  const ownRe = new RegExp(`(?:${subj ? subj + "|" : ""}\\bhe|\\bshe)\\b(?:\\s+(?:later|also|then|once|himself|herself))?\\s+${SAY}\\b|\\b(?:his|her) (?:own |unpublished )?(?:memoir|diary|book|journal|manuscript)\\b|\\bby (?:his|her) (?:own )?account\\b|\\bin (?:an|his|her) interview\\b`, "i");
+  return String(text || "").split("\n").map((line) => {
+    const body = line.replace(/^\s*-\s*/, "");
+    if (!body.trim() || /^\s*\[/.test(body) || line.includes(OWN_TAG) || line.includes(FAMILY_TAG)) return line;
+    const lead = line.slice(0, line.length - body.length);
+    if (familyRe.test(body)) return `${lead}${FAMILY_TAG} ${body}`;
+    if (ownRe.test(body)) return `${lead}${OWN_TAG} ${body}`;
+    return line;
+  }).join("\n");
+}
+export function stripSourceTags(text: string): string {
+  return String(text || "").replace(/\s*\[(?:his|her|their) own account\]\s*|\s*\[family account\]\s*/gi, " ").replace(/ {2,}/g, " ").replace(/ ([.,;:!?])/g, "$1");
+}
+
+// GROUP WORDS. "Turns a Congregation Into Victims", "Robbed His Own Flock" when the research says
+// "many of whom had come through his church" (seen live, three batches). A group noun the research never
+// uses is a group the research never named.
+const GROUP_WORDS = ["congregation", "congregants", "flock", "parishioners", "church members", "churchgoers", "his whole church", "the whole town", "the entire town", "neighbors", "the community"];
+export function unsupportedGroupWords(text: string, facts: string): string[] {
+  const t = String(text || "").toLowerCase(), f = String(facts || "").toLowerCase();
+  return GROUP_WORDS.filter((g) => new RegExp(`\\b${g}\\b`).test(t) && !new RegExp(`\\b${g}\\b`).test(f));
+}
+
+// LINKED FIGURES. "He raised $40 million, and by May 2012, $480,000 of it was left" (seen live): the
+// $480,000 was what remained of the $36.9 million in one trading account, a different fact. Two dollar
+// figures joined in one sentence must appear together in at least one research fact.
+function moneyValues(t: string): number[] {
+  const out: number[] = [];
+  for (const m of String(t).matchAll(/\$\s?(\d[\d,]*(?:\.\d+)?)\s*(million|billion|thousand|[mbk]\b)?/gi)) {
+    let v = parseFloat(m[1].replace(/,/g, ""));
+    const u = (m[2] || "").toLowerCase();
+    if (u.startsWith("b")) v *= 1e9; else if (u.startsWith("m")) v *= 1e6; else if (u.startsWith("t") || u === "k") v *= 1e3;
+    if (v > 0) out.push(v);
+  }
+  return [...new Set(out)];
+}
+export function unlinkedFigures(text: string, facts: string): { sentence: string; figures: string[] }[] {
+  const factVals = String(facts || "").split(/\n|(?<=[.!?])\s+/).map(moneyValues).filter((v) => v.length >= 2);
+  const close = (a: number, b: number) => Math.abs(a - b) / Math.max(a, b) < 0.02;
+  const out: { sentence: string; figures: string[] }[] = [];
+  for (const sn of String(text || "").split(/(?<=[.!?])\s+/)) {
+    const vals = moneyValues(sn);
+    if (vals.length < 2) continue;
+    for (let i = 0; i < vals.length; i++) for (let j = i + 1; j < vals.length; j++) {
+      const fmt = (v: number) => `$${v >= 1e6 ? +(v / 1e6).toFixed(1) + " million" : v.toLocaleString("en-US")}`;
+      const shared = factVals.filter((fv) => fv.some((x) => close(x, vals[i])) && fv.some((x) => close(x, vals[j])));
+      if (!shared.length) { out.push({ sentence: sn.trim(), figures: [vals[i], vals[j]].map(fmt) }); i = vals.length; break; }
+      // Together in a fact, but only alongside a figure BETWEEN them that the sentence leaves out ("raised
+      // $40 million, $36.9 million of which went into an account; $480,000 was left"): the small figure
+      // belongs to the middle one, not the total.
+      const lo = Math.min(vals[i], vals[j]), hi = Math.max(vals[i], vals[j]);
+      const middles = shared.map((fv) => fv.filter((x) => x > lo * 1.02 && x < hi * 0.98 && !vals.some((v) => close(v, x))));
+      if (middles.every((m) => m.length)) { out.push({ sentence: sn.trim(), figures: [vals[i], vals[j]].map(fmt).concat(`(the research ties them through ${fmt(middles[0][0])})`) }); i = vals.length; break; }
+    }
+  }
+  return out;
+}
+
+// "MOST WANTED". "The FBI placed him on their most wanted list" reads as the Ten Most Wanted list; the
+// research says "one of their most wanted fugitives" (seen live). Use the research's wording.
+export function fixMostWantedWording(text: string, facts: string): { text: string; cuts: string[] } {
+  const cuts: string[] = [];
+  if (/ten most wanted/i.test(facts || "")) return { text, cuts };
+  const out = String(text || "")
+    .replace(/\b(placed|put|added|listed) (him )?(?:on|to) (?:the FBI['’]s |their |its |the )?(?:ten )?most[- ]wanted list\b/gi, (all, verb: string) => { cuts.push(all); return `listed him as one of its most wanted fugitives`; })
+    .replace(/\b(?:an |a )?FBI most[- ]wanted fugitive\b/gi, (all) => { cuts.push(all); return "a fugitive the FBI was hunting"; })
+    .replace(/\b(?:on|to) (?:the FBI['’]s|their|its) most[- ]wanted list\b/gi, (all) => { cuts.push(all); return "among the FBI's most wanted fugitives"; });
+  return { text: out, cuts };
+}
+
+// GROUNDED PHRASE. A short story beat ("the New Year's Eve traffic stop in Glynn County") is grounded when one
+// research fact carries most of its content words or numbers. Used to keep a card's payoff pointing only at
+// moments that exist (seen in the card benchmark: payoffs promising "sourced quotes from family", "his
+// congressional testimony", "why the myth survived" when the research had none of it).
+export function groundedInFacts(phrase: string, facts: string): boolean {
+  const toks = (t: string) => new Set([
+    ...(String(t).toLowerCase().match(/[a-z]{5,}/g) || []).filter((w) => !["about", "after", "their", "there", "which", "while", "would", "where", "before", "other", "video", "story", "moment", "lands", "middle"].includes(w)).map((w) => w.slice(0, 6)),
+    ...(String(t).match(/\d[\d,.]*/g) || []).map((n) => n.replace(/[,.]+$/, "").replace(/,/g, "")),
+  ]);
+  const p = toks(phrase);
+  if (p.size < 2) return true; // too short to judge
+  const lines = String(facts || "").split(/\n|(?<=[.!?])\s+(?=[A-Z])/);
+  return lines.some((l) => { const f = toks(l); let n = 0; p.forEach((x) => { if (f.has(x)) n++; }); return n / p.size >= 0.5; });
+}
+
+export function introducesUnsupportedName(original: string, rewrite: string, facts: string): string | null {
+  const low = (facts + " " + original).toLowerCase();
+  const hay = ` ${low.replace(/[^a-z0-9' ]+/g, " ")} ${low.replace(/[^a-z0-9 ]+/g, " ")} `; // "O'Hare" also counts as "hare"
+  for (const w of rewrite.match(/\b[A-Z][a-z]{1,}\b/g) || []) {
+    // Ordinary words that open a sentence ("Approximately", "Garnished", "Eventually") are not names.
+    if (w.length > 4 && /(?:ly|ed|ing|tion|ment|ness|ous|ive|able)$/.test(w)) continue;
+    if (!hay.includes(` ${w.toLowerCase()} `)) return w;
+  }
+  return null;
+}
+
+export function attributionMismatch(original: string, rewrite: string, factLines: string[]): string | null {
+  const spoken = factLines.map((f) => ({ f: f.toLowerCase(), who: factSpeaker(f) })).filter((x) => x.who);
+  const origKeys = speakerKeys(namedSpeaker(original) || "").join(" ");
+  // One clause per speaker: "Jones told authorities X; his former wife told investigators Y" credits
+  // two people, each with their own claim.
+  for (const clause of rewrite.split(/;\s+|,\s+but\s+|\.\s+/)) {
+    const who = namedSpeaker(clause);
+    if (!who) continue;
+    const keys = speakerKeys(who);
+    if (!keys.length || keys.join(" ") === origKeys) continue; // credit unchanged
+    const bySelf = spoken.filter((x) => speakerKeys(x.who!).some((k) => keys.includes(k)));
+    const byOther = spoken.filter((x) => !speakerKeys(x.who!).some((k) => keys.includes(k)) && (ROLE_WORDS.test(x.who!) || /[A-Z]/.test(x.who!)));
+    // The claim only: drop the attribution itself and who it was told to.
+    const claim = clause.toLowerCase().replace(/\baccording to [^,]+,?/, " ").replace(/\b(?:said|says|told|claimed|claims|insisted|maintained|described|admitted)\b(?:\s+(?:investigators|authorities|police|reporters|officials|agents|the court|prosecutors))?/g, " ");
+    const stems = [...new Set((claim.match(/[a-z]{7,}/g) || []).map((w) => w.slice(0, 6)))];
+    for (const st of stems) {
+      if (keys.some((k) => k.startsWith(st))) continue;
+      const inOther = byOther.find((x) => x.f.includes(st));
+      if (inOther && !bySelf.some((x) => x.f.includes(st))) return `credits "${who}" with "${st}…", which the research gives as ${inOther.who}'s account`;
+    }
+  }
+  return null;
+}
+
+export function misattributedPhrases(sentences: string[], facts: string[]): { i: number; credited: string; phrase: string; speaker: string }[] {
+  const out: { i: number; credited: string; phrase: string; speaker: string }[] = [];
+  const norm = (t: string) => t.toLowerCase().replace(/[^a-z0-9 ]+/g, " ").replace(/\s+/g, " ").trim();
+  const factN = facts.map((f) => ({ f, n: norm(f), who: factSpeaker(f) })).filter((x) => x.who);
+  sentences.forEach((sn, i) => {
+    const m = sn.match(new RegExp(`((?:the\\s+)?(?:u\\.s\\.\\s+)?[A-Za-z][\\w.' ]{1,40}?)\\s+(?:${ATTR_VERB})\\b`, "i"));
+    if (!m) return;
+    const credited = m[1].trim();
+    // A pronoun ("she said", "which she described") points back to whoever the narration last named;
+    // it can't be judged here (seen live: "credited to she" forced a rewrite that broke a quote).
+    if (/(?:^|\s)(?:he|she|they|it|we|i)(?:\s+(?:also|then|later|once|again|still|even|had|has|would))?$/i.test(credited)) return;
+    const w = norm(sn).split(" ");
+    for (const x of factN) {
+      let phrase = "";
+      for (let a = 0; a + 4 <= w.length && !phrase; a++) { const g = w.slice(a, a + 5).join(" "); if (g.split(" ").length >= 4 && x.n.includes(g)) phrase = g; }
+      if (!phrase) continue;
+      // Names are often short words ("Jim Cox"): any non-numeric word of 3+ letters counts. (A 4+ letter
+      // filter flagged Jim Cox's own quotes as misattributed and forced garbling rewrites.)
+      const whoWords = norm(x.who!).split(" ").filter((t) => t.length >= 3 && !/^\d+$/.test(t) && !["the", "and", "for", "said", "says"].includes(t));
+      const credN = norm(credited);
+      if (whoWords.some((t) => credN.includes(t))) return; // credited correctly
+      out.push({ i, credited, phrase, speaker: x.who! });
+      return;
+    }
+  });
+  return out;
+}
+
+export function stripFactMetaLeaks(text: string): { text: string; cuts: string[] } {
+  if (!text) return { text, cuts: [] };
+  const cuts: string[] = [];
+  const outParas = text.split(/\n\n+/).map((para) => {
+    const kept = splitSentences(para).filter((s) => {
+      if (FACT_META_PATTERNS.some((re) => re.test(s))) { cuts.push(s.trim()); return false; }
+      return true;
+    });
+    return kept.join(" ").trim();
+  }).filter((p) => p.length > 0);
+  return { text: outParas.join("\n\n"), cuts };
+}
+
 export function stripSourceLeaks(text: string, sourceEntities: string[] | undefined, factBlob: string | undefined): { text: string; cuts: string[] } {
   if (!text || !sourceEntities || sourceEntities.length === 0) return { text, cuts: [] };
   const factLc = (factBlob || "").toLowerCase();
@@ -1749,4 +2678,47 @@ export function checkSourceStructural(input: {
   });
   for (const c of checks) if (SOURCE_SELF_REFERENTIAL.has(c.id)) c.pass = true;
   return checks;
+}
+
+// HOOK CRAFT (code checks on an angle card). The hook benchmark showed three repeat failures: the
+// title or hook answers its own question (half the cards), the strongest fact stays in the research,
+// and vague hedges stand in for a specific ("found a way to exploit", "bigger than most people realize").
+// Each issue is phrased as an instruction the repair pass can act on.
+export const VAGUE_HOOK_RE = /\b(found a way to|more than (?:most )?(?:people|anyone|you) (?:realize|think|know)|bigger than (?:most )?(?:people|you) (?:realize|think)|what (?:he|she|they) did next|nobody (?:could have )?(?:expected|saw (?:it|this) coming)|everything changed|you won'?t believe|something (?:shocking|incredible|unbelievable|strange)|the truth (?:is|was) (?:darker|stranger|worse)|more complicated than|isn'?t what you think|not what (?:it|you) (?:seems|think))\b/i;
+export const WEAK_OPENING_RE = /^(?:for (?:decades|years|centuries)\b|imagine\b|this is the story of|in this video|have you ever|meet\b|what if i told you|today,? we|let'?s talk about|everyone knows|throughout history|once upon)/i;
+const CRAFT_STOP = new Set(["with", "from", "that", "this", "when", "then", "they", "them", "their", "into", "over", "were", "been", "have", "than", "more", "only", "just", "what", "how", "story", "video", "about", "after", "their", "there", "these", "which", "while", "would", "years", "where", "before", "never", "every", "under", "still", "other", "first", "later", "being", "money", "million", "billion", "through"]);
+const craftStems = (t: string, drop: Set<string>) => new Set((String(t).toLowerCase().match(/[a-z]{4,}/g) || []).filter((w) => !CRAFT_STOP.has(w)).map((w) => w.slice(0, 6)).filter((w) => !drop.has(w)));
+export function hookCraftIssues(c: { hookPremise?: string; titleSuggestion?: string; payoffMoment?: string; hookFact?: string; reveal?: string; hookFactsText?: string[] }, topic: string, opts: { lockedTitle?: boolean } = {}): string[] {
+  const out: string[] = [];
+  const hook = String(c.hookPremise || "").trim();
+  const title = opts.lockedTitle ? "" : String(c.titleSuggestion || "");
+  const v = `${hook} ${title}`.match(VAGUE_HOOK_RE);
+  if (v) out.push(`"${v[0]}" is a vague stand-in: replace it with the specific fact it hides`);
+  if (WEAK_OPENING_RE.test(hook)) out.push("the hook opens with a stock phrase: open on the event, the contradiction, or the hard fact");
+  // Give-away: the title or hook already contains the payoff moment (seen: "Caught at a New Year's Eve
+  // Traffic Stop" whose payoff is that traffic stop). Words of the subject and of the hook fact don't count.
+  const drop = new Set([...craftStems(topic, new Set()), ...craftStems(String(c.hookFact || ""), new Set())]);
+  const pay = craftStems(String(c.payoffMoment || ""), drop);
+  if (pay.size >= 2) {
+    const inTitle = [...pay].filter((w) => craftStems(title, new Set()).has(w)).length;
+    const inHook = [...pay].filter((w) => craftStems(hook, new Set()).has(w)).length;
+    if (inTitle >= 2) out.push("the title gives away the ending (it names the payoff moment): name the event and the stakes, keep how it ends for the video");
+    else if (inHook >= 3 && inHook / pay.size >= 0.5) out.push("the hook gives away the ending (it names the payoff moment): set up the question, keep the answer for the video");
+  }
+  // The spine's PAYOFF REVEAL (one research fact) stated in the title or hook. Only words the reveal has
+  // and the hook facts don't count, so a hook that rightly uses its own facts is never flagged for it.
+  if (c.reveal && !out.some((x) => /gives away/.test(x))) {
+    const allowed = new Set([...drop, ...craftStems((c.hookFactsText || []).join(" "), new Set())]);
+    const rev = craftStems(c.reveal, allowed);
+    if (rev.size >= 2) {
+      const inT = [...rev].filter((w) => craftStems(title, new Set()).has(w)).length;
+      const inH = [...rev].filter((w) => craftStems(hook, new Set()).has(w)).length;
+      if (inT >= 2) out.push(`the title gives away the payoff (${c.reveal.slice(0, 90)}): name the premise or the event instead`);
+      else if (inH >= 3 && inH / rev.size >= 0.4) out.push(`the hook gives away the payoff (${c.reveal.slice(0, 90)}): cut it and keep the hook on its hook facts`);
+    }
+  }
+  // The hook carries its strongest hard number.
+  const factNums = (String(c.hookFact || "").match(/\$?\d[\d,.]*(?:\s?(?:million|billion|percent|%))?/g) || []).map((n) => n.replace(/[^\d.]/g, "").replace(/\.$/, "")).filter((n) => n.length >= 2);
+  if (factNums.length && !factNums.some((n) => hook.replace(/,/g, "").includes(n))) out.push(`the hook leaves out its strongest fact (${String(c.hookFact).slice(0, 90)}): put that figure in the hook in plain words`);
+  return out;
 }

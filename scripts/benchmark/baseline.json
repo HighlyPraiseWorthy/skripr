@@ -1,0 +1,376 @@
+[
+ {
+  "id": "freshwaters",
+  "words": 1830,
+  "seconds": 255,
+  "accuracyIssues": 10,
+  "accuracyPer1k": 5.5,
+  "accuracyByType": {
+   "mind": 2,
+   "speculation": 2,
+   "invented": 5,
+   "misattributed": 1
+  },
+  "craftOverall": 7,
+  "craft": {
+   "hook": 8,
+   "retention": 7,
+   "specificity": 9,
+   "clarity": 8,
+   "ending": 8,
+   "voice": 7,
+   "repetition": 6
+  },
+  "weaknesses": [
+   "'William Harold Cox, a name that left no trail back to Ohio...' — this paragraph appears orphaned mid-script with no transition; it floats after the 'You got me' payoff before the rhetorical questions, breaking the narrative logic and confusing listeners who can't re-read to orient themselves.",
+   "'The alias worked because it asked nothing dramatic of anyone. No elaborate cover, no manufactured backstory that required constant maintenance. A name, a place, a low profile. The distance between the man Ohio was looking for...' — this entire paragraph restates what was already established in the Melbourne section two paragraphs earlier; the alias-as-simplicity idea is explained at least three times across the script.",
+   "'What the record does offer, briefly, is two names attached to his fugitive years. A son in West Virginia. A friend in Florida...' — this passage introduces characters who go nowhere, admits they go nowhere, and then ends. For audio, it reads as a dead end that kills momentum at the exact midpoint where retention is most fragile."
+  ],
+  "strengths": [
+   "Specificity is exceptional throughout — exact dates (September 30, 1959; May 4, 2015; February 25, 2016), named officials (Tod Goodyear, JoEllen Smith), precise locations (Brevard County, Melbourne, Mansfield), and the Shawshank detail all ground the story in verifiable reality rather than generic true-crime atmosphere.",
+   "The structural framing of institutional failure — suspended sentence, honor camp, West Virginia governor's refusal — builds a genuine argument that the system enabled the escape, giving the script intellectual weight beyond a simple fugitive chase."
+  ],
+  "codeIssues": 4,
+  "code": {
+   "words": 1830,
+   "overusedOpeners": [],
+   "repeatedFigures": [],
+   "repeatedShapes": [],
+   "leaningFragments": [],
+   "fakeQuotes": [],
+   "superlativeDrift": [],
+   "guessedAges": [],
+   "stutters": [],
+   "dividers": 0,
+   "danglingRefs": [],
+   "quoteCountErrors": [],
+   "repeatedPhrases": [
+    "an honor camp near sandusky",
+    "the u s marshals service"
+   ],
+   "bannedHits": [],
+   "timeBackJumps": 4,
+   "emDashes": 21
+  }
+ },
+ {
+  "id": "wright",
+  "words": 1860,
+  "seconds": 275,
+  "accuracyIssues": 8,
+  "accuracyPer1k": 4.3,
+  "accuracyByType": {
+   "invented": 3,
+   "contradicted": 3,
+   "mind": 1,
+   "speculation": 1
+  },
+  "craftOverall": 6,
+  "craft": {
+   "hook": 8,
+   "retention": 5,
+   "specificity": 8,
+   "clarity": 6,
+   "ending": 3,
+   "voice": 6,
+   "repetition": 4
+  },
+  "weaknesses": [
+   "The ending is a structural catastrophe: the script flashes back to 1970 and 1972 AFTER already narrating the 2011 arrest and extradition refusal, then stops mid-air with 'And a man who started this story at a gas station in New Jersey is now, somehow, on another continent entirely — with nowhere left to run except forward.' This pays off nothing. The opening loop ('finding him was the easy part') is never closed with emotional or thematic weight — the script just ends in the past tense of 1972 after the audience already knows the outcome.",
+   "Severe repetition undermines momentum. The FBI wanted poster is described or quoted at least four separate times ('unlawful flight to avoid confinement,' the physical description, 'three charges,' 'forty years'). The gas station murder is re-narrated twice in full. The line 'living out his life near Lisbon because the law, applied correctly, said he stays' appears almost verbatim in both the opening section and near the end. A listener will notice.",
+   "Chronology is scrambled in a way that will confuse audio-only audiences. The script opens in 2011 (arrest), moves to 1962 (murder), jumps to 1972 (hijacking), returns to 2011 (extradition), then flashes back again to 1970 and 1972 for the final act. There is no signposting to orient the listener. The sentence 'August 1970. Wright walks out of a New Jersey prison' arrives after the extradition ruling with no transition, making it feel like a forgotten draft section pasted at the bottom."
+  ],
+  "strengths": [
+   "Specificity is genuinely strong throughout: Walter Patterson's name, Wall Township, November 23 1962, Delta Flight 841, the September 26 2011 arrest date, the November 17 2011 court ruling, the fingerprint-on-ID-card mechanism. These concrete anchors give the script documentary credibility and would hold a viewer's trust.",
+   "The hollowed-out Bible detail is handled well — the script resists over-symbolizing it ('Not because it is symbolic — though the image is hard to ignore — but because of what it required') and instead uses it to establish premeditation, which is a smart, disciplined editorial choice that elevates the writing above generic true-crime narration."
+  ],
+  "codeIssues": 2,
+  "code": {
+   "words": 1860,
+   "overusedOpeners": [],
+   "repeatedFigures": [],
+   "repeatedShapes": [],
+   "leaningFragments": [],
+   "fakeQuotes": [],
+   "superlativeDrift": [],
+   "guessedAges": [],
+   "stutters": [],
+   "dividers": 0,
+   "danglingRefs": [],
+   "quoteCountErrors": [],
+   "repeatedPhrases": [
+    "a million dollars in ransom",
+    "the fbi s wanted notice",
+    "unlawful flight to avoid confinement"
+   ],
+   "bannedHits": [],
+   "timeBackJumps": 2,
+   "emDashes": 30
+  }
+ },
+ {
+  "id": "streaming-fraud",
+  "words": 2084,
+  "seconds": 342,
+  "accuracyIssues": 24,
+  "accuracyPer1k": 11.5,
+  "accuracyByType": {
+   "invented": 23,
+   "speculation": 1
+  },
+  "craftOverall": 6,
+  "craft": {
+   "hook": 6,
+   "retention": 6,
+   "specificity": 9,
+   "clarity": 6,
+   "ending": 5,
+   "voice": 7,
+   "repetition": 5
+  },
+  "weaknesses": [
+   "'What if the streams were never real? What if the money wasn't earned so much as extracted — pulled from a system that couldn't yet tell the difference? What if the songs themselves were never meant to be heard — only streamed?' — Three consecutive rhetorical questions in the hook kill momentum; the script already answered them in the paragraph before, so the loop feels fake and the viewer has no reason to keep watching.",
+   "'And for roughly seven years, the operation continued, until a federal indictment ended it.' — The ending is a restatement of a fact already given twice, not a payoff. The opening promised to interrogate the assumption that a human pressed play; the close never returns to that framing or delivers an emotional or thematic landing. It just stops.",
+   "'The factory was only as safe as it was invisible... But even a well-distributed fraud leaves a footprint' / 'The bots were outpacing the supply. That's when CC-3 entered the picture.' / 'It needed a unique track ID, a bot account to play it, and enough catalog depth...' — The middle section loops back over the same mechanical explanation of the scheme (spread streams thin, need more content, AI fills the gap) at least three separate times in different sections, burning runtime and stalling escalation rather than advancing it."
+  ],
+  "strengths": [
+   "Specificity is exceptional throughout — the October 20, 2017 self-email, the 52 cloud accounts × 20 bots = 1,040 simultaneous accounts, the $8,091,843.64 forfeiture figure, the song titles 'Zygotenes' and 'Zyme Bedewing,' the artist name 'Camel Edible' — these concrete details do the work that generic narration cannot and would hold a viewer's attention in isolation.",
+   "The quoted emails from Smith ('This is absolutely wrong and crazy!... There is absolutely no fraud going on whatsoever!') are the script's strongest retention tool; they reveal character, create irony, and are far more compelling than the surrounding narration — the script correctly leans on them."
+  ],
+  "codeIssues": 3,
+  "code": {
+   "words": 2084,
+   "overusedOpeners": [],
+   "repeatedFigures": [
+    "10,000 x2",
+    "$8,091,843.64 x2"
+   ],
+   "repeatedShapes": [],
+   "leaningFragments": [
+    "They weren't."
+   ],
+   "fakeQuotes": [],
+   "superlativeDrift": [],
+   "guessedAges": [],
+   "stutters": [],
+   "dividers": 0,
+   "danglingRefs": [],
+   "quoteCountErrors": [],
+   "repeatedPhrases": [
+    "conspiracy to commit wire fraud"
+   ],
+   "bannedHits": [],
+   "timeBackJumps": 0,
+   "emDashes": 27
+  }
+ },
+ {
+  "id": "fast-food-prices",
+  "words": 2107,
+  "seconds": 338,
+  "accuracyIssues": 14,
+  "accuracyPer1k": 6.6,
+  "accuracyByType": {
+   "speculation": 2,
+   "invented": 7,
+   "contradicted": 3,
+   "misattributed": 1,
+   "mind": 1
+  },
+  "craftOverall": 6,
+  "craft": {
+   "hook": 6,
+   "retention": 7,
+   "specificity": 9,
+   "clarity": 6,
+   "ending": 5,
+   "voice": 7,
+   "repetition": 5
+  },
+  "weaknesses": [
+   "'Not as a matter of opinion, but as something economists have actually tried to measure.' — This sentence is a dangling transition that connects nothing above it to nothing below it. It reads like a placeholder that was never filled in, and heard aloud it will confuse listeners who are trying to track the argument.",
+   "'The rest was absorbed elsewhere in the business, or it came from somewhere the cost model was not built to see. The price on the menu board is not the whole price. That gap is where the official story starts to break down.' — These three sentences appear mid-script as a dramatic pivot, but the 'gap' they promise to explain has already been partially explained and will be partially explained again. The script circles the shrinkflation/CPI point at least three separate times (the distributional wrinkle paragraph, the NBC News paragraph, the BLS transparency paragraph), diluting what should be a single clean reveal.",
+   "'A year earlier, the spread was even wider: limited-service meals up 7.2% in the twelve months ending February 2023' — This sentence appears after a paragraph about the Harris Poll and before a paragraph about grocery prices, with no clear time anchor for the listener. The chronology collapses here: the script has been moving forward through 2024–2026 data, then suddenly jumps back to 2023 without signaling the shift. Heard rather than read, this will lose a meaningful share of the audience."
+  ],
+  "strengths": [
+   "The specificity is genuinely strong throughout — the $5.39 to $11.99 Quarter Pounder arc, the Berkeley IRLE paper, the Fed Chicago 0.139% elasticity figure, the 36% vs 26% gap at the end. These are the kind of concrete, sourced numbers that make a faceless documentary feel authoritative rather than generic, and they are woven into the argument rather than dropped as decoration.",
+   "The core analytical move — cost pass-through is real but partial, the gap between ~26% justified and ~36% actual is where the honest question lives — is a genuinely interesting frame that most coverage of this topic does not reach. The script earns its title's promise of going beyond the usual explanation, even if the execution around that payoff is uneven."
+  ],
+  "codeIssues": 1,
+  "code": {
+   "words": 2107,
+   "overusedOpeners": [],
+   "repeatedFigures": [],
+   "repeatedShapes": [],
+   "leaningFragments": [],
+   "fakeQuotes": [],
+   "superlativeDrift": [],
+   "guessedAges": [],
+   "stutters": [],
+   "dividers": 0,
+   "danglingRefs": [],
+   "quoteCountErrors": [],
+   "repeatedPhrases": [
+    "limited service meals and snacks"
+   ],
+   "bannedHits": [],
+   "timeBackJumps": 1,
+   "emDashes": 2
+  }
+ },
+ {
+  "id": "ltcm",
+  "words": 2072,
+  "seconds": 298,
+  "accuracyIssues": 8,
+  "accuracyPer1k": 3.9,
+  "accuracyByType": {
+   "mind": 7,
+   "invented": 1
+  },
+  "craftOverall": 7,
+  "craft": {
+   "hook": 8,
+   "retention": 7,
+   "specificity": 8,
+   "clarity": 7,
+   "ending": 6,
+   "voice": 8,
+   "repetition": 6
+  },
+  "weaknesses": [
+   "'What LTCM did at the end of 1997 tightened the spring even further. Significantly less equity underneath it. The leverage ratio, already extreme, climbed higher.' — This passage is broken and incomplete; it never states what LTCM actually did (returned capital to investors). A listener hears a dangling sentence with no subject and no fact, which kills trust and momentum at a critical structural turn.",
+   "'September 2, 1998. Meriwether sends a letter to investors. And it does not read like anything LTCM had ever sent before.' — The script teases the letter dramatically, then never quotes it or gives a single specific line from it. 'He used the phrase severely impacted' is the only concrete detail, and it arrives buried after vague setup. For a faceless doc, this is a wasted cinematic moment; the letter is a gift and the script fumbles it.",
+   "The ending fractures into three separate conclusions: the moral question about who paid, the Salomon backstory, and the 'reputation was the original leverage' kicker. The Salomon section belongs in the middle as origin story, not after the moral coda. Placed last, it deflates the payoff and leaves the audience with biography instead of resonance. The final line is strong but arrives after the script has already ended twice."
+  ],
+  "strengths": [
+   "The hook earns its score: 'accidentally build a bomb' reframes the premise instantly, the $125B vs $5B equity contrast is concrete and alarming, and 'how does a fund staffed by geniuses become the thing the Federal Reserve has to personally contain' is a clean loop that will hold a viewer through the ad break.",
+   "The repo/haircut explanation ('the bank would demand a margin, a haircut, keeping a cushion') is genuinely clear financial writing for a general audience — specific enough to be credible, plain enough to be heard rather than read, and the irony of Nobel laureates getting zero-haircut terms lands without the script having to underline it."
+  ],
+  "codeIssues": 5,
+  "code": {
+   "words": 2072,
+   "overusedOpeners": [],
+   "repeatedFigures": [
+    "$125 billion x2",
+    "$3.625 billion x2"
+   ],
+   "repeatedShapes": [],
+   "leaningFragments": [
+    "They didn't.",
+    "They did."
+   ],
+   "fakeQuotes": [],
+   "superlativeDrift": [],
+   "guessedAges": [],
+   "stutters": [],
+   "dividers": 0,
+   "danglingRefs": [],
+   "quoteCountErrors": [],
+   "repeatedPhrases": [],
+   "bannedHits": [],
+   "timeBackJumps": 1,
+   "emDashes": 4
+  }
+ },
+ {
+  "id": "psychopathy",
+  "words": 2156,
+  "seconds": 279,
+  "accuracyIssues": 9,
+  "accuracyPer1k": 4.2,
+  "accuracyByType": {
+   "invented": 6,
+   "speculation": 2,
+   "mind": 1
+  },
+  "craftOverall": 7,
+  "craft": {
+   "hook": 6,
+   "retention": 7,
+   "specificity": 8,
+   "clarity": 7,
+   "ending": 8,
+   "voice": 6,
+   "repetition": 6
+  },
+  "weaknesses": [
+   "'Evading detection is not the same as intellectual superiority. It turns out there may be a different explanation for why some of these cases went unsolved for so long, and it may have far less to do with IQ than the mythology suggests.' — This transition sentence dangles a loop that isn't paid off until the final paragraph, 1,500+ words later. As audio, listeners will forget the promise entirely; the loop collapses.",
+   "'The cold is real. The genius is not.' appears as a punchy closer to the neuroscience section, but the script then continues for three more substantial sections, making it feel like the essay ended and restarted. The structural rhythm is broken — there are at least two false endings before the actual one.",
+   "'That is actually a neuroscience question. And the neuroscience has a pretty specific answer.' followed immediately by 'The brain differences are real. What they mean, exactly, is still being worked out.' — the script promises a specific answer and then walks it back within the same section. Heard aloud this reads as the narrator contradicting themselves, damaging credibility and momentum."
+  ],
+  "strengths": [
+   "Specificity is genuinely strong throughout — the Radford mean of 95.1, the PCL-R effect sizes (r = 0.68, 0.74, 0.80), the 2020 clearance rate of 46%, the r = -0.55 in female offenders — these are real numbers doing real argumentative work, not decorative statistics, and they give the script credibility a generic treatment would lack.",
+   "The ending earns its place: connecting the myth directly to the 46% unsolved homicide rate is a concrete, consequential payoff that reframes everything before it as practically important rather than academically interesting, and it lands with genuine force."
+  ],
+  "codeIssues": 0,
+  "code": {
+   "words": 2156,
+   "overusedOpeners": [],
+   "repeatedFigures": [],
+   "repeatedShapes": [],
+   "leaningFragments": [],
+   "fakeQuotes": [],
+   "superlativeDrift": [],
+   "guessedAges": [],
+   "stutters": [],
+   "dividers": 0,
+   "danglingRefs": [],
+   "quoteCountErrors": [],
+   "repeatedPhrases": [],
+   "bannedHits": [],
+   "timeBackJumps": 0,
+   "emDashes": 6
+  }
+ },
+ {
+  "id": "chapo-chicago",
+  "words": 1615,
+  "seconds": 271,
+  "accuracyIssues": 1,
+  "accuracyPer1k": 0.6,
+  "accuracyByType": {
+   "speculation": 1
+  },
+  "craftOverall": 7,
+  "craft": {
+   "hook": 8,
+   "retention": 6,
+   "specificity": 9,
+   "clarity": 7,
+   "ending": 7,
+   "voice": 6,
+   "repetition": 6
+  },
+  "weaknesses": [
+   "'You think the pipeline is the story.' — This is the only direct-address moment in the script and it lands like a gear-shift with no setup or payoff. It promises a reveal that never arrives; the next paragraph just describes a 2009 indictment. Either build the rhetorical turn into a genuine escalation or cut it entirely.",
+   "'Systematically. The bribes weren't just a cost of doing business. They were a load-bearing part of the operation — the part that kept the tunnels open, the shipments moving, and the arrests from happening.' — This paragraph is orphaned. 'Systematically' has no grammatical anchor to the sentence before it (which ends on bodyguards and communications), and the bribery detail is introduced and then never returned to with a specific example, name, or dollar figure. For a script this data-rich everywhere else, a naked assertion about bribery with zero specificity is a noticeable hole.",
+   "The middle section (roughly from 'The 2009 Chicago indictment' through the cooperating witnesses list) loses momentum because it is structured as a list of legal procedural steps rather than escalating drama. 'Each superseding indictment replaces the one before it, adding defendants, extending the timeline, incorporating new evidence. By the eighth version, prosecutors weren't building a case anymore. They were maintaining one.' — This is a clever line, but it arrives after four consecutive paragraphs of dates and names with no sensory or narrative texture. Heard aloud, listeners will drift. The cooperating witnesses (Rey Zambada, Vicente Zambada, etc.) are named but given no single concrete detail that makes any one of them memorable or distinguishable."
+  ],
+  "strengths": [
+   "Specificity is exceptional throughout. The script consistently trades in exact figures — 1,600 kilograms of cocaine bound for Chicago, $15 million in cash seized, 265 kilograms of methamphetamine, a juice company and a fish flour company as laundering vehicles — and these details do real work. They make the scale visceral rather than abstract, which is exactly what a faceless documentary format requires to hold attention without visuals.",
+   "The opening 30 seconds are genuinely strong. The Al Capone callback earns its place, the physical absence of Guzmán from the room is used as a dramatic irony rather than a throwaway fact, and 'the city that made that title famous had decided he was the most dangerous criminal within its reach' opens a clear loop without overpromising. The hook does not waste a second."
+  ],
+  "codeIssues": 4,
+  "code": {
+   "words": 1615,
+   "overusedOpeners": [],
+   "repeatedFigures": [],
+   "repeatedShapes": [
+    "\"It wasn't X. It was Y.\" kicker x4"
+   ],
+   "leaningFragments": [],
+   "fakeQuotes": [],
+   "superlativeDrift": [],
+   "guessedAges": [],
+   "stutters": [],
+   "dividers": 0,
+   "danglingRefs": [],
+   "quoteCountErrors": [],
+   "repeatedPhrases": [],
+   "bannedHits": [],
+   "timeBackJumps": 3,
+   "emDashes": 23
+  }
+ }
+]

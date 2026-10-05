@@ -13,6 +13,8 @@
 // user's recent-script entities) and slot-derived climax/act-three (needs the
 // structural-slots card change). Those are follow-ups, flagged in the UI copy.
 
+import { tagFactSources, familyInFacts, minorsInFacts, OWN_TAG, FAMILY_TAG } from "@/lib/script-compliance";
+
 export interface DirectorNote {
   // Short provenance label shown to the user, e.g. "From your facts", "Case type: MC".
   source: string;
@@ -71,8 +73,20 @@ export function deriveDirectorNotes(input: { sourceMaterial?: string; angle?: st
       notes.push({ source: "From your facts", on: true, note: "Some facts are attributed (\"X said…\"). Keep the attribution — don't promote them into settled fact." });
     }
     // Contested / disputed material. State both sides, resolve neither.
-    if (/\b(disput|conflicting|contradict|unresolved|never (?:fully )?resolved|denied that|both accounts)\b/.test(t)) {
-      notes.push({ source: "From your facts", on: true, note: "A key point is disputed. State both accounts and resolve neither; the unresolved version is stronger." });
+    {
+      // A REAL dispute, named, in full (seen live: it picked "some restitution details were still
+      // unresolved at sentencing", a procedural loose end, and cut it off mid-word). Procedural lines are
+      // skipped; a line setting someone's own account against what investigators believed or suspected ranks
+      // first, because that's the kind that shapes the story.
+      const DISPUTE = /\b(disput\w*|conflicting|contradict\w*|unresolved|never (?:fully )?resolved|denied that|both accounts|suspected|believed|could not (?:confirm|verify)|unverified|claims? (?:that|he|she)|according to (?:him|her|his|her own))\b/i;
+      const PROCEDURAL = /\b(restitution|to be determined|later hearing|civil|administrative|pending|appeal|sentencing hearing|paperwork)\b/i;
+      const lines = String(input.sourceMaterial || "").split(/\n|(?<=[.!?])\s+(?=[A-Z])/).map((l) => l.replace(/^\s*-\s*/, "").replace(/\s*\(source:[^)]*\)\s*/g, " ").replace(/\[(?:his|her) own account\]|\[family account\]/gi, "").trim()).filter((l) => DISPUTE.test(l) && !PROCEDURAL.test(l));
+      const score = (l: string) => (/\b(suspected|believed|could not|unverified|denied)\b/i.test(l) ? 2 : 0) + (/\b(his own|her own|memoir|he said|he wrote|according to him|claimed)\b/i.test(l) ? 2 : 0) + (/\b(disput|conflicting|contradict)/i.test(l) ? 1 : 0);
+      const best = lines.sort((a, b) => score(b) - score(a))[0];
+      if (best) {
+        const point = best.length <= 240 ? best : (best.slice(0, 240).match(/^.*[.!?]/)?.[0] || best.slice(0, 240).replace(/\s+\S*$/, "") + ".");
+        notes.push({ source: "From your facts", on: true, note: `Disputed: "${point}" State both accounts and resolve neither.` });
+      }
     }
     // Contested CAUSE — a destructive INCIDENT whose cause was investigated but never
     // proven. Deliberately narrow: it must name a physical incident (arson, fire,
@@ -105,14 +119,30 @@ export function deriveDirectorNotes(input: { sourceMaterial?: string; angle?: st
   // fabricated auditor, it is smoothing a model into a fact and dropping the units.
   const scienceSlot = ["premise", "mechanism", "scale", "consequence", "open-question"].includes((input.slot || "").toLowerCase());
   const looksScientific = /\b(model(?:s|led|ing)?|simulation|hypothes\w+|theory|estimated|approximately|per (?:second|year)|degrees|kilometers|kelvin|joules|orders of magnitude|researchers|study|studies)\b/.test(t);
-  if (hasFacts && (scienceSlot || looksScientific)) {
-    notes.push({ source: "Science accuracy", on: true, note: "Keep every number with its unit and say what was measured. Never round a figure into a bigger, rounder one for effect." });
+  // A true-crime/event case is not science even when its facts say "estimated" or "approximately"
+  // (seen live: "Science accuracy" lines on a fraud case). Numbers matter everywhere; models don't.
+  if (hasFacts) notes.push({ source: "Number accuracy", on: true, note: "Keep every number exactly as the source gives it, with what it measured. Never round a figure into a bigger, rounder one for effect." });
+  if (hasFacts && input.topicKind !== "event" && (scienceSlot || looksScientific)) {
     notes.push({ source: "Science accuracy", on: true, note: "Distinguish measured from modelled. If the record says simulations or estimates, say so — never state a projection as an observed fact or imply consensus where the literature is split." });
   }
   // Correlational findings are the commonest way a science script overclaims: a study
   // finds a link, the script says it causes. Fires on the language of association.
   if (hasFacts && /\b(associat\w+|correlat\w+|linked to|more likely to|risk factor|observational|self-report\w*|survey|cohort)\b/.test(t)) {
     notes.push({ source: "From your facts", on: true, note: "These findings are correlational. Say people who do X report more Y — never that X causes, drives, or rewires anything. Do not upgrade a link into a cause." });
+  }
+
+  // CASE RULES: facts about the case, so they hold for EVERY angle (seen live: switching cards dropped
+  // the attribution and minor-protection notes because they came from the angle's AI call).
+  if (hasFacts) {
+    const raw = String(input.sourceMaterial || "");
+    const tagged = tagFactSources(raw, input.caseName || "");
+    if (tagged.includes(OWN_TAG) || tagged.includes(FAMILY_TAG)) notes.push({ source: "Case rule", on: true, note: `Attribute what only he or his family could know (his memoir, his interviews, his family's words): "he later wrote", "by his own account", "his son recalled". Never state it as established fact.` });
+    // Policy: only people who were minors at the time stay unnamed; adults on the record may be named.
+    const family = minorsInFacts(raw);
+    if (family.length) {
+      const minors = family;
+      notes.push({ source: "Case rule", on: true, note: `Keep his family out of the opening and never name anyone who was a minor at the time: say ${[...new Set(family.map((f) => `"${f.relation}"`))].slice(0, 4).join(", ")}.${minors.length ? ` ${minors.map((m) => `${m.relation[0].toUpperCase() + m.relation.slice(1)} was a minor at the time.`).join(" ")}` : ""}` });
+    }
   }
 
   // Case-type vocabulary lock.
@@ -178,7 +208,7 @@ export function deriveDirectorNotes(input: { sourceMaterial?: string; angle?: st
 
   // Standing channel defaults — set once, true for every script, so the user never
   // has to type them. (When Voice Match stores per-channel defaults, read them here.)
-  notes.push({ source: "Channel default", on: true, note: "No glamour, no invented dialogue, open on the problem, and keep the aftermath honest about cost." });
+  notes.push({ source: "Channel default", on: true, note: "No glamour, no invented dialogue, and keep the aftermath honest about cost." }); // "open on the problem" removed: it fought cold-open cards (seen live)
 
   return notes;
 }

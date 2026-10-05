@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import { findResearch, resolveSubjects, deepenCaseFacts } from "@/lib/research";
+import { groundCandidates, findResearch, resolveSubjects, deepenCaseFacts, sanitizeCaseLabel, detectMixedSubjects } from "@/lib/research";
 import { fetchCaseSaturation } from "@/lib/case-saturation";
 import { getLibrary, addToLibrary, setDismissed, activeFacts } from "@/lib/fact-library";
 
@@ -25,7 +25,10 @@ export async function POST(req: Request) {
     // present, biases the questions toward reproducing what made a source video work.
     if (action === "deepen") {
       const result = await deepenCaseFacts({ caseName, summary: caseSummary, niche, sourcePayoff: typeof sourcePayoff === "string" ? sourcePayoff : undefined, sourceSubject: typeof sourceSubject === "string" ? sourceSubject : undefined, userId, kind, topicAnchor: typeof topicAnchor === "string" ? topicAnchor : undefined, targetFacts: typeof targetFacts === "number" ? targetFacts : undefined, targetMinutes: typeof targetMinutes === "number" ? targetMinutes : undefined });
-      return NextResponse.json({ facts: result.facts, conflicts: result.conflicts, status: result.status, caseName: result.caseName, when: result.when, factCount: result.factCount, contextCount: result.contextCount, honestMinutes: result.honestMinutes, requestedMinutes: result.requestedMinutes, budget: result.budget });
+      // Check the from-memory case label against the sourced facts before the page shows or reuses it.
+      const label = sanitizeCaseLabel(String(result.caseName || caseName || ""), String(caseSummary || ""), (result.facts || []).map((f: any) => String(f?.fact || "")));
+      if (label.removed.length) console.log(`[research] case label corrected: removed unsupported ${JSON.stringify(label.removed)} from "${caseName}"`);
+      return NextResponse.json({ cleanCaseName: label.name, cleanCaseSummary: label.summary, facts: result.facts, conflicts: result.conflicts, verify: result.verify, status: result.status, caseName: result.caseName ? label.name : result.caseName, when: result.when, factCount: result.factCount, contextCount: result.contextCount, honestMinutes: result.honestMinutes, requestedMinutes: result.requestedMinutes, budget: result.budget });
     }
 
     // The user's accumulating fact library for a topic. "library" reads it, "library-add"
@@ -54,6 +57,12 @@ export async function POST(req: Request) {
       return NextResponse.json({ library: activeFacts(lib), dismissed: lib.dismissed, total: lib.facts.length });
     }
 
+    // "subjects": do these facts describe one subject, or unrelated things sharing a name?
+    if (action === "subjects") {
+      const facts = Array.isArray(body.facts) ? body.facts.map((f: any) => String(typeof f === "string" ? f : f?.fact || "")).filter(Boolean) : [];
+      return NextResponse.json(await detectMixedSubjects(String(topic || caseName || ""), facts));
+    }
+
     // "saturation": how heavily YouTube already covers this case. Shown on the confirm
     // card so the creator learns a case is saturated (or is really a famous film) while
     // the choice is still cheap, instead of after a script is written.
@@ -68,7 +77,7 @@ export async function POST(req: Request) {
     if (action === "resolve") {
       const result = await resolveSubjects({ topic, niche });
       if (!result.ok) return NextResponse.json({ error: result.error }, { status: 422 });
-      return NextResponse.json({ kind: result.kind, candidates: result.candidates });
+      return NextResponse.json({ kind: result.kind, candidates: groundCandidates(result.candidates, topic, [], "") });
     }
 
     const result = await findResearch({ topic, angle, niche });

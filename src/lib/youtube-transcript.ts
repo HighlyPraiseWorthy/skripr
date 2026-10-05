@@ -147,6 +147,12 @@ export async function getTranscript(videoId: string): Promise<string> {
 // Supadata-first transcript fetch: direct YouTube scraping is IP-blocked from
 // Vercel, so prefer the Supadata API (same approach the viral-remixer route
 // uses) and fall back to the direct methods for local/dev environments.
+// Module-level flag: set when Supadata returns 429 (plan usage / rate limit exceeded). Callers that
+// fetch MANY transcripts in a loop (e.g. the Outlier breakout hook-capture) can check this and stop
+// hammering a rate-limited API — every further call just wastes budget and returns empty anyway. This
+// distinguishes "the plan is maxed" from "this video genuinely has no captions", which look identical
+// otherwise (both yield an empty string) and caused a rate-limit to be mislogged as "no-transcript".
+export let transcriptRateLimited = false;
 export async function getTranscriptRobust(videoId: string): Promise<string> {
   const supaKey = process.env.SUPADATA_API_KEY;
   if (supaKey) {
@@ -158,6 +164,7 @@ export async function getTranscriptRobust(videoId: string): Promise<string> {
           `https://api.supadata.ai/v1/youtube/transcript?videoId=${videoId}&text=true${langParam}`,
           { headers: { "x-api-key": supaKey }, signal: AbortSignal.timeout(15000) }
         );
+        if (r.status === 429) { transcriptRateLimited = true; console.error(`[transcript] supadata 429 rate/usage limit exceeded (videoId=${videoId}) — NOT a missing-captions failure`); break; }
         if (r.ok) {
           const d = await r.json();
           const t = typeof d === "string" ? d : (d.content ?? d.transcript ?? d.text ?? "");

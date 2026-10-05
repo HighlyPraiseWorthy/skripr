@@ -179,7 +179,7 @@ export default function MetadataPage() {
                   )}
                   {metadata.bestTitleScores && (
                     <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 10 }}>
-                      {([["Packaging", metadata.bestTitleScores.overall], ["Curiosity", metadata.bestTitleScores.curiosity], ["Clarity", metadata.bestTitleScores.clarity], ["Browse", metadata.bestTitleScores.browse], ["Search", metadata.bestTitleScores.search]] as [string, number | undefined][])
+                      {([["Packaging", metadata.bestTitleScores.overall], ["Curiosity", metadata.bestTitleScores.curiosity], ["Clarity", metadata.bestTitleScores.clarity], ["Specificity", metadata.bestTitleScores.specificity], ["Accuracy", metadata.bestTitleScores.accuracy], ["Browse", metadata.bestTitleScores.browse], ["Search", metadata.bestTitleScores.search]] as [string, number | undefined][])
                         .filter(([, v]) => typeof v === "number")
                         .map(([label, v]) => (
                           <span key={label} style={{ fontSize: 12, color: C.textDim }}>
@@ -188,6 +188,9 @@ export default function MetadataPage() {
                           </span>
                         ))}
                     </div>
+                  )}
+                  {typeof metadata.bestTitleScores?.search === "number" && typeof metadata.bestTitleScores?.browse === "number" && metadata.bestTitleScores.search + 2 <= metadata.bestTitleScores.browse && (
+                    <p style={{ fontSize: 11.5, color: C.textDim, opacity: 0.8, marginTop: 6, marginBottom: 0, lineHeight: 1.4 }}>A lower Search score is by design here, this title is built for Browse and Suggested, not search intent.</p>
                   )}
                   {metadata.bestTitleWhy && <p style={{ fontSize: 13, color: C.textDim, lineHeight: 1.5, marginTop: 8, marginBottom: 0 }}>{metadata.bestTitleWhy}</p>}
                   {metadata.searchWinner && (

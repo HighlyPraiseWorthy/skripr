@@ -1,19 +1,23 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import { generateScript, buildSectionPlan, buildTopicBlueprint, generateHookFirst, writeSection, assembleFinalizeScript, reconcileTitle, type SectionSpec } from "@/lib/ai/claude";
+import { generateScript, buildSectionPlan, buildTopicBlueprint, generateHookFirst, writeSection, assembleFinalizeScript, reconcileTitle, dropOpeningEchoes, sceneFactsOwnedElsewhere, type SectionSpec } from "@/lib/ai/claude";
 import { checkScriptLimit, incrementGenerationCount, refundGenerationCount } from "@/lib/usage";
 import { getMagnetSuggestions } from "@/lib/magnet-word";
 import { supabaseAdmin } from "@/lib/db/supabase";
 import { joinHookBody } from "@/lib/script-text";
-import { getNicheFrameworksBlock, getBendFrameworksBlock, getNicheHookExamplesBlock, getNicheTitleFormulasBlock, normalizeNiche } from "@/lib/viral-frameworks";
+import { getNicheFrameworksBlock, getBendFrameworksBlock, getNicheHookExamplesBlock, getNicheTitleFormulasBlock, getNicheOutlierPatterns, normalizeNiche } from "@/lib/viral-frameworks";
 import { detectNiche } from "@/lib/niche-detect";
 import { getKeptHooksBlock } from "@/lib/hook-picks";
 import { saveAnglePick } from "@/lib/angle-picks";
 import { autoSelectMode, resolveTechniques } from "@/lib/storytelling";
 import { factCheckAgainstSource } from "@/lib/fact-check";
 import { reviewAndCorrectScript } from "@/lib/ai/self-review";
+import { finalCheck } from "@/lib/ai/final-check";
 import { getActiveVoiceMeta, getVoiceMetaById, SKRIPR_HOUSE_VOICE } from "@/lib/voice-profile";
 import { captureFrameworkInBackground } from "@/lib/framework-capture";
+import { researchCentralScene, quotedPhrases } from "@/lib/research";
+import { vetAngles } from "@/lib/ai/angle-vet";
+import { splitSentences, tagFactSources, replaceFamilyNames, minorsInFacts } from "@/lib/script-compliance";
 // semantic-grounding is now on-demand only (see below) — not run on the generation path.
 
 export const maxDuration = 300;
@@ -29,9 +33,47 @@ function truncateTranscript(text: string, maxWords = 400): string {
 // tail so each section continues the last. NO tail passes run here — every silent-fix + safety
 // pass runs once, later, in mode:"finalize" on the assembled whole. A failed write retries once,
 // then fails with a clear message; it never silently drops to an ungrounded fallback.
+// Scene facts travel inside the blueprint; every step that writes or CHECKS the script must see them
+// as part of the research, or the fact check would remove true scene details as "unsupported".
+function withSceneFacts(material: string | undefined, plan: any[] | undefined): string | undefined {
+  const scene = Array.isArray(plan) ? [...new Set(plan.flatMap((p: any) => (Array.isArray(p?.sceneFacts) ? p.sceneFacts : [])))] : [];
+  if (!scene.length) return material;
+  return [material || "", ...scene].filter(Boolean).join("\n");
+}
+
+async function handlePolishMode(userId: string, raw: any) {
+  try {
+    const { hook, body, title, sourceMaterial, blueprint, savedId, topic } = raw || {};
+    if (typeof body !== "string" || !body.trim()) return NextResponse.json({ error: "Nothing to check." }, { status: 400 });
+    const facts = withSceneFacts(typeof sourceMaterial === "string" && sourceMaterial.trim() ? sourceMaterial.trim() : undefined, Array.isArray(blueprint) ? blueprint : undefined) || "";
+    // The page's body already OPENS with the hook paragraph. Check the rest as the body and the hook as
+    // the hook, then put them back together; otherwise the check saw the hook twice and cut the body's
+    // copy as a re-staged opening (seen live: a script that began "That's the surface.").
+    const hookText = typeof hook === "string" ? hook.trim() : "";
+    const norm = (t: string) => t.toLowerCase().replace(/[^a-z0-9 ]/g, " ").replace(/\s+/g, " ").trim();
+    const paras = body.split(/\n\n+/);
+    const opensWithHook = !!hookText && paras.length > 1 && norm(paras[0]).startsWith(norm(hookText).split(" ").slice(0, 8).join(" "));
+    const rest = opensWithHook ? paras.slice(1).join("\n\n") : body;
+    const checked = await finalCheck({ hook: hookText, body: rest, title: typeof title === "string" ? title : undefined, facts, subject: typeof topic === "string" ? topic : "" });
+    const res = { ...checked, body: opensWithHook ? `${checked.hook}\n\n${checked.body}` : checked.body };
+    // Keep the saved copy in step with what the creator sees.
+    if (res.status === "ok" && res.changes.length && supabaseAdmin && typeof savedId === "string" && savedId) {
+      const content = opensWithHook ? res.body : joinHookBody(res.hook, res.body);
+      const { error } = await supabaseAdmin.from("scripts")
+        .update({ content, word_count: content.split(/\s+/).filter(Boolean).length })
+        .eq("id", savedId).eq("user_id", userId);
+      if (error) console.error("[final-check] save failed:", error.message);
+    }
+    return NextResponse.json({ hook: res.hook, body: res.body, changes: res.changes, status: res.status });
+  } catch (e: any) {
+    console.error("[final-check] route error:", e?.message || e);
+    return NextResponse.json({ error: "Final check failed." }, { status: 500 });
+  }
+}
+
 async function handleSectionMode(userId: string, raw: any) {
   try {
-    const { topic, selectedTitle, sourceMaterial, remixFramework, contentStructure, retentionTriggers, targetMinutes, voiceProfileId, sectionIndex, priorTail, blueprint } = raw;
+    const { topic, selectedTitle, sourceMaterial, remixFramework, contentStructure, retentionTriggers, targetMinutes, voiceProfileId, sectionIndex, priorTail, priorText, blueprint, directorNote, presetHook } = raw;
     const index = Number(sectionIndex);
     if (!Number.isInteger(index) || index < 0) {
       return NextResponse.json({ error: "Invalid section index." }, { status: 400 });
@@ -65,7 +107,7 @@ async function handleSectionMode(userId: string, raw: any) {
     // default-voice script still has a recognizable Skripr identity.
     if (!voiceProfile) voiceProfile = SKRIPR_HOUSE_VOICE;
 
-    const facts = typeof sourceMaterial === "string" && sourceMaterial.trim() ? sourceMaterial.trim() : undefined;
+    const facts = withSceneFacts(typeof sourceMaterial === "string" && sourceMaterial.trim() ? sourceMaterial.trim() : undefined, Array.isArray(blueprint) ? blueprint : undefined);
     const context = {
       topic: topic || "",
       // Reconcile the placeholder title against the researched facts BEFORE the section-writer sees
@@ -75,8 +117,18 @@ async function handleSectionMode(userId: string, raw: any) {
       recipe: remixFramework || undefined,
       voice: voiceProfile || undefined,
       previousTail: typeof priorTail === "string" ? priorTail : "",
+      // Everything the earlier sections already narrated, so this one can't re-tell it, and the facts
+      // the plan assigned to LATER sections, so a twist or the climax can't leak early.
+      // The hook plays first, so it is already told (seen live: section 1 re-staged the DMV scene the
+      // hook had just opened on).
+      alreadyTold: [typeof presetHook === "string" ? presetHook : "", typeof priorText === "string" ? priorText : ""].filter((x) => x.trim()).join("\n\n"),
+      openingHook: typeof presetHook === "string" && presetHook.trim() ? presetHook.trim() : undefined,
+      reservedFacts: plan.slice(index + 1).flatMap((p) => p.assignedFacts || []),
+      otherPoints: plan.filter((_, k) => k !== index).map((p) => p.point || "").filter(Boolean),
+      directorNote: typeof directorNote === "string" && directorNote.trim() ? directorNote.trim() : undefined,
     };
 
+    if (index === 0) console.log(`[generate] section mode directorNote=${context.directorNote ? `yes chars=${context.directorNote.length} :: "${context.directorNote.slice(0, 160).replace(/\s+/g, " ")}"` : "none"}`);
     let text = "";
     for (let attempt = 0; attempt < 2 && !text; attempt++) {
       try {
@@ -103,14 +155,20 @@ export async function POST(req: Request) {
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const raw: any = await req.json().catch(() => ({}));
+  // Tag facts that come only from the subject's or his family's own account, once, where they enter, so
+  // every writer and checker downstream sees it.
+  if (typeof raw?.sourceMaterial === "string" && raw.sourceMaterial.trim()) raw.sourceMaterial = tagFactSources(raw.sourceMaterial, String(raw.topic || ""));
   // CHUNKED GENERATION (the 20-min timeout fix): the one long request is split into a short
   // plan call, one short call per section, and a finalize call. Mode discriminates them.
-  const mode: "full" | "plan" | "section" | "finalize" =
-    raw?.mode === "plan" || raw?.mode === "section" || raw?.mode === "finalize" ? raw.mode : "full";
+  const mode: "full" | "plan" | "section" | "finalize" | "polish" =
+    raw?.mode === "plan" || raw?.mode === "section" || raw?.mode === "finalize" || raw?.mode === "polish" ? raw.mode : "full";
 
   // A section write is cheap and stateless and must NOT count against usage — the plan call at
   // the head of the chunked build already counted the script. Handle it before any limit logic.
   if (mode === "section") return handleSectionMode(userId, raw);
+  // The final check runs on a FINISHED script (already counted at finalize), as its own request so it
+  // gets its own time budget instead of squeezing into finalize's.
+  if (mode === "polish") return handlePolishMode(userId, raw);
 
   // Hard block — check limit before burning API credits
   const { allowed, plan, used, limit } = await checkScriptLimit(userId);
@@ -136,7 +194,7 @@ export async function POST(req: Request) {
   const startTime = Date.now();
 
   try {
-    const { transcript, niche, topic, sourceVideoId, videoLength = "long", targetMinutes, viralMagnetWord, angle, remixFramework, hookType, titleFormula, hookScript, hookWhyItWorks, contentStructure, retentionTriggers, voiceProfileId, sourceNiche, bridgeNiche, companionCta, storytellingMode, storytellingTechniques, sourceMaterial, selectedTitle, softCta, sourceVerdict, topicKind, directorNote, sourceEntities } = raw;
+    const { transcript, niche, topic, sourceVideoId, videoLength = "long", targetMinutes, viralMagnetWord, angle, remixFramework, hookType, titleFormula, hookScript, hookWhyItWorks, contentStructure, retentionTriggers, voiceProfileId, sourceNiche, bridgeNiche, companionCta, storytellingMode, storytellingTechniques, sourceMaterial, selectedTitle, softCta, noCta, sourceVerdict, topicKind, directorNote, sourceEntities } = raw;
 
     // Free plan: scripts capped at 10 minutes — longer scripts are a paid feature
     if (plan === "free" && targetMinutes && targetMinutes > 10) {
@@ -222,6 +280,7 @@ export async function POST(req: Request) {
     const cap = targetMinutes ? Math.round(targetMinutes * 130 / 10) : (maxWords[videoLength] ?? 400);
     const truncated = truncateTranscript(transcript || "", cap);
     console.log(`[generate] length=${videoLength} minutes=${targetMinutes ?? "-"} plan=${plan}`);
+    console.log(`[generate] mode=${mode} directorNote=${typeof directorNote === "string" && directorNote.trim() ? `yes chars=${directorNote.trim().length} :: "${directorNote.trim().slice(0, 160).replace(/\s+/g, " ")}"` : "none"}`);
 
     // Niche resolution: if the user left niche blank or typed something that
     // doesn't map to a canonical niche, auto-detect it from the transcript /
@@ -238,9 +297,13 @@ export async function POST(req: Request) {
 
     // Collective learning layer: real viral frameworks from this niche, captured
     // by Viral Remixer usage. For a bend, pull from BOTH source + bridge niches.
-    const nicheFrameworks = bridgeNiche
+    const frameworksBase = bridgeNiche
       ? await getBendFrameworksBlock(sourceNiche || resolvedNiche, bridgeNiche).catch(() => null)
       : await getNicheFrameworksBlock(resolvedNiche).catch(() => null);
+    // Deeper Outlier learning: the story engines that recurred among real over-performers
+    // in this niche, so the script's arc can lean on proven STRUCTURE (never their wording).
+    const outlierPatterns = await getNicheOutlierPatterns(bridgeNiche || resolvedNiche).catch(() => null);
+    const nicheFrameworks = [frameworksBase, outlierPatterns].filter(Boolean).join("\n\n") || null;
 
     // Hook learning for the script's opening line: proven hooks for this niche
     // (view-ranked) + hooks creators kept (feedback loop). Both time-boxed and
@@ -329,7 +392,58 @@ export async function POST(req: Request) {
         // finalize with no measured structure reaches here without a blueprint, and that's fine
         // (assembleFinalizeScript works off the client-provided sections; no plan needed to stitch).
         const bpMaterial = typeof sourceMaterial === "string" && sourceMaterial.trim() ? sourceMaterial.trim() : undefined;
-        const bp = await buildTopicBlueprint(bpMaterial, Math.round(targetMinutes * 165), targetMinutes, enhancedAngle, { hookType: hookType || undefined, storytelling: resolvedStoryMode });
+        const bp = await buildTopicBlueprint(bpMaterial, Math.round(targetMinutes * 165), targetMinutes, enhancedAngle, { hookType: hookType || undefined, storytelling: resolvedStoryMode, directorNote: typeof directorNote === "string" && directorNote.trim() ? directorNote.trim() : undefined });
+        if (bp.length >= 2 && bp[0]?.concept) {
+          // CENTRAL-SCENE RESEARCH: the documented specifics of the concept's central moment, so the
+          // writer renders the real scene instead of inventing one. Opening + final beats get them.
+          const existing = (bpMaterial || "").split("\n").filter(Boolean);
+          // The scene facts go to the OPENING beat, so research exactly that beat's moment, dated by the
+          // year its own assigned facts are about.
+          const yrs = [bp[0].name, bp[0].point, ...(bp[0].assignedFacts || [])].flatMap((t) => (String(t || "").match(/\b(1[89]\d{2}|20\d{2})\b/g) || []).map(Number));
+          const tally = new Map<number, number>(); yrs.forEach((y) => tally.set(y, (tally.get(y) || 0) + 1));
+          const momentYear = [...tally.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
+          const momentText = [bp[0].point, bp[0].name].filter(Boolean).join(": ") || bp[0].concept;
+          // BEAT-POINT VETTING, in parallel with scene research. The planner writes each beat's point
+          // itself, and concept mode assigns only facts that SERVE the point, so a false point silently
+          // drops the fact that refutes it (seen live, LeFevre: "the entire family was living inside a
+          // lie they had no knowledge of" while the research says she told her husband months before the
+          // arrest; the script then stated the false version). Same evidence-gated check as the cards.
+          const planned = bp.map((b) => ({ point: b.point, name: b.name, assignedFacts: [...(b.assignedFacts || [])] }));
+          const vetP = vetAngles([String(bp[0].concept || ""), ...bp.map((b) => String(b.point || ""))], bpMaterial || "").catch(() => [] as string[][]);
+          const found = await researchCentralScene(topic || "", momentText, existing, momentYear).catch(() => []);
+          const vet = await vetP;
+          const fixNote = (ws: string[]) => ` CORRECTION FROM THE RESEARCH (the script states the research version, never the conflicting wording): ${ws.join(" | ")}`;
+          const refuting = (ws: string[]) => ws.flatMap((w) => { const m = w.match(/conflicts with your research: "([^"]+?)(?:…)?"$/); if (!m) return []; const key = m[1].slice(0, 80); return existing.filter((f) => f.includes(key)).slice(0, 1); });
+          const conceptW = vet[0] || [];
+          if (conceptW.length) bp.forEach((b) => { b.concept = `${b.concept}${fixNote(conceptW)}`; });
+          bp.forEach((b, i) => {
+            const ws = vet[i + 1] || [];
+            if (!ws.length) return;
+            b.point = `${b.point || ""}${fixNote(ws)}`;
+            for (const f of [...refuting(ws), ...refuting(conceptW)]) if (!(b.assignedFacts || []).includes(f)) b.assignedFacts = [...(b.assignedFacts || []), f];
+          });
+          const flagged = vet.reduce((n, w) => n + (w?.length || 0), 0);
+          if (flagged) console.log(`[blueprint] point-vet corrected ${flagged} claim(s) :: ${vet.flat().map((w) => w.slice(0, 160)).join(" || ")}`);
+          const own = sceneFactsOwnedElsewhere(found.map((f) => f.fact), planned);
+          if (own.moved.length) console.log(`[scene-research] left ${own.moved.length} fact(s) to the later beat that owns them :: ${own.moved.map((f) => f.slice(0, 100)).join(" || ")}`);
+          const scene = found.filter((f) => own.keep.includes(f.fact));
+          if (scene.length) {
+            const lines = scene.map((f) => (f.source ? `${f.fact} (source: ${f.source})` : f.fact));
+            // Opening beat ONLY. Giving the same scene to the final beat too made the script tell the
+            // arrest twice (and put the scene on the opening's own "reserved for later" list). The final
+            // beat returns to the moment as a callback; it doesn't re-explain how it happened.
+            bp[0].sceneFacts = lines;
+            bp[0].assignedFacts = [...(bp[0].assignedFacts || []), ...lines];
+            // Spoken lines at the central moment (scene facts first, then any assigned fact quoting it).
+            const quotes = [...new Set(scene.flatMap((f) => quotedPhrases(f.fact)))].filter((q) => q.split(/\s+/).length <= 20).slice(0, 4);
+            if (quotes.length) bp.forEach((b) => { b.centralQuotes = quotes; });
+          }
+        }
+        if (bp.length >= 2 && bp[0]?.concept) {
+          const gone: string[] = [];
+          const echoes = dropOpeningEchoes(bp, gone);
+          if (echoes) console.log(`[blueprint] dropped ${echoes} later-beat facts that restate the cold open :: ${gone.map((f) => f.slice(0, 120)).join(" || ")}`);
+        }
         if (bp.length >= 2) {
           resolvedSectionPlan = bp;
           const assigned = bp.reduce((n, b) => n + (b.assignedFacts?.length || 0), 0);
@@ -366,6 +480,7 @@ export async function POST(req: Request) {
       voiceFingerprint,
       companionCta: !!companionCta,
       softCta: !!softCta,
+      noCta: !!noCta,
       topicKind: topicKind === "explainer" || topicKind === "hypothetical" || topicKind === "claim" ? topicKind : "event",
       sourceVerdict: sourceVerdict === "documented" || sourceVerdict === "partial" || sourceVerdict === "unverified" ? sourceVerdict : undefined,
       // Storytelling engine: honor the user's picks; auto-select the mode when
@@ -373,7 +488,7 @@ export async function POST(req: Request) {
       // resolves coherence + core techniques downstream.
       storytellingMode: resolvedStoryMode,
       storytellingTechniques: Array.isArray(storytellingTechniques) ? storytellingTechniques : undefined,
-      sourceMaterial: typeof sourceMaterial === "string" && sourceMaterial.trim() ? sourceMaterial.trim() : undefined,
+      sourceMaterial: withSceneFacts(typeof sourceMaterial === "string" && sourceMaterial.trim() ? sourceMaterial.trim() : undefined, resolvedSectionPlan),
       selectedTitle: typeof selectedTitle === "string" && selectedTitle.trim() ? selectedTitle.trim() : undefined,
       directorNote: typeof directorNote === "string" && directorNote.trim() ? directorNote.trim() : undefined,
       sourceEntities: Array.isArray(sourceEntities) ? sourceEntities.filter((e: any) => typeof e === "string") : undefined,
@@ -392,7 +507,7 @@ export async function POST(req: Request) {
       }
       // Reconcile the placeholder title against the researched facts NOW, so the preset hook is
       // written from the corrected duration/pronoun and the client displays the corrected title.
-      const planFacts = typeof sourceMaterial === "string" && sourceMaterial.trim() ? sourceMaterial.trim() : undefined;
+      const planFacts = withSceneFacts(typeof sourceMaterial === "string" && sourceMaterial.trim() ? sourceMaterial.trim() : undefined, scriptInput.sectionPlan);
       const reconciledTitle = reconcileTitle(scriptInput.selectedTitle || topic || "", planFacts);
       const presetHook = await generateHookFirst({
         title: reconciledTitle,
@@ -408,6 +523,7 @@ export async function POST(req: Request) {
         nicheHookExamples: nicheHookExamples || undefined,
         sourceMaterial: planFacts,
         voiceProfile: voiceProfile || undefined,
+        directorNote: typeof directorNote === "string" && directorNote.trim() ? directorNote.trim() : undefined,
       });
       // Return the blueprint ONLY when it is a synthesized topic plan (carries assignedFacts). The
       // remix measured plan re-derives deterministically per section call, so it need not travel.
@@ -451,14 +567,17 @@ export async function POST(req: Request) {
       if (typeof s !== "string") return s;
       return s.split(/\n\n+/).map((p: string) => {
         if (p.length < 900) return p;
-        const sents = p.match(/[^.!?]+[.!?]+["')\]]*\s*/g) || [p];
+        // Abbreviation-aware split ("U.S.", "Gov.", "Mr."), and never break while a quote is open (seen
+        // live: "Deputy U." / "S. Marshal" and a governor's quote split across two paragraphs).
+        const sents = splitSentences(p);
         const chunks: string[] = [];
         let cur = "";
         let n = 0;
         for (const sent of sents) {
-          cur += sent;
+          cur += (cur ? " " : "") + sent;
           n++;
-          if (n >= 5 || cur.length > 600) { chunks.push(cur.trim()); cur = ""; n = 0; }
+          const quoteOpen = ((cur.match(/"/g) || []).length % 2 === 1) || ((cur.match(/“/g) || []).length > (cur.match(/”/g) || []).length);
+          if (!quoteOpen && (n >= 5 || cur.length > 600)) { chunks.push(cur.trim()); cur = ""; n = 0; }
         }
         if (cur.trim()) chunks.push(cur.trim());
         return chunks.join("\n\n");
@@ -497,6 +616,13 @@ export async function POST(req: Request) {
         title: (script as any).title || undefined,
         sourceMaterial: typeof sourceMaterial === "string" ? sourceMaterial : undefined,
       });
+      // The family rule wins over the accuracy reviewer (seen live: it "restored Hannah's name, which was
+      // replaced with 'his daughter'"). Re-apply it, and never show a note about restoring a name.
+      const famFacts = typeof sourceMaterial === "string" ? sourceMaterial : "";
+      const famNames = minorsInFacts(famFacts).flatMap((f) => [f.first, f.name]);
+      reviewed.hook = replaceFamilyNames(reviewed.hook, famFacts, topic || "").text;
+      reviewed.body = replaceFamilyNames(reviewed.body, famFacts, topic || "").text;
+      reviewed.changes = reviewed.changes.filter((c: string) => !famNames.some((n) => n && c.includes(n)) && !/\brestor\w* .{0,20}name/i.test(c));
       reviewChanges = reviewed.changes;
       if (reviewed.changes.length) {
         (script as any).hook = reviewed.hook;

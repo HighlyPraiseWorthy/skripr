@@ -1,0 +1,62 @@
+[
+ {
+  "id": "freshwaters",
+  "topic": "Frank Freshwaters",
+  "kind": "event"
+ },
+ {
+  "id": "wright",
+  "topic": "George Edward Wright",
+  "kind": "event"
+ },
+ {
+  "id": "chapo-chicago",
+  "topic": "El Chapo, Chicago's Public Enemy No. 1",
+  "kind": "event"
+ },
+ {
+  "id": "price",
+  "topic": "Aubrey Lee Price",
+  "kind": "event"
+ },
+ {
+  "id": "jones",
+  "topic": "Arthur Gerald Jones",
+  "kind": "event"
+ },
+ {
+  "id": "streaming-fraud",
+  "topic": "Michael Smith AI music streaming fraud",
+  "kind": "event"
+ },
+ {
+  "id": "ltcm",
+  "topic": "Long-Term Capital Management collapse",
+  "kind": "event"
+ },
+ {
+  "id": "fast-food-prices",
+  "topic": "Why fast food got so expensive",
+  "kind": "explainer"
+ },
+ {
+  "id": "psychopathy",
+  "topic": "Are psychopathic killers actually smarter?",
+  "kind": "claim"
+ },
+ {
+  "id": "kerkow",
+  "topic": "Cathy Kerkow",
+  "kind": "event"
+ },
+ {
+  "id": "wendys",
+  "topic": "How Wendy’s Lost Its Way — And Now It’s Paying the Price",
+  "kind": "explainer"
+ },
+ {
+  "id": "darby",
+  "topic": "The Housewife of Pulaski (The Story of Linda Darby)",
+  "kind": "event"
+ }
+]
