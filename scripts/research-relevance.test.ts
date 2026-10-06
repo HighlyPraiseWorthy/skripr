@@ -1,7 +1,10 @@
 // Regression guard: mined primary docs must mention the case's distinctive token (surname / core
 // entity name), never a first name, so an unrelated doc (Carlson v. Carlson, judge "Frank") is dropped.
-import { caseAnchorToken as a, docMentionsAnchor as m, offTopicSourceFacts, sanitizeCaseLabel, groundCandidates, quotedPhrases, cleanQuoteFormatting } from "../src/lib/research";
+import { keepUserCaseName, caseAnchorToken as a, docMentionsAnchor as m, offTopicSourceFacts, sanitizeCaseLabel, groundCandidates, quotedPhrases, cleanQuoteFormatting } from "../src/lib/research";
 const checks: [string, boolean][] = [
+  ["user-typed name can't be corrected away (Jones -> D.B. Cooper refused)", keepUserCaseName("D.B. Cooper hijacking", "Arthur Gerald Jones", "Arthur Gerald Jones") === "Arthur Gerald Jones"],
+  ["spelling correction of a user name passes", keepUserCaseName("Frank Freshwaters", "Frank Freshwater", "Frank Freshwater") === "Frank Freshwaters"],
+  ["model-supplied wrong name can be corrected (John Burge -> Jones)", keepUserCaseName("Arthur Gerald Jones", "John Burge — Chicago commodities broker disappearance", "A Chicago commodities broker disappears in 1979.") === "Arthur Gerald Jones"],
   ["Freshwaters anchor", a("Frank Freshwaters — fugitive manhunt") === "Freshwaters"],
   ["surname not first name (Wright)", a("George Edward Wright") === "Wright"],
   ["surname not first name (Jimenez)", a("Arnoldo Jimenez") === "Jimenez"],

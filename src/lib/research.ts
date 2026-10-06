@@ -1579,6 +1579,22 @@ export function groundCandidates<T extends { name: string; summary: string }>(ca
   });
 }
 
+// A "corrected" case name must not swap out a name the USER typed (seen live: topic "Arthur Gerald Jones"
+// was "corrected" to "D.B. Cooper hijacking"; the run then used "Cooper" as the case anchor, so the
+// off-topic filter hid every Jones fact, and repeated runs eroded the topic from 91 facts to 3). If the
+// creator's own topic contains the case's distinctive name, the correction must keep it (spelling fixes
+// like "Freshwater" -> "Freshwaters" still pass). A name the model supplied itself (seen: an angle with no
+// names resolved to "John Burge") may still be corrected.
+export function keepUserCaseName(corrected: string, original: string, topicAnchor?: string): string {
+  const anchor = caseAnchorToken(original);
+  if (!anchor || !corrected) return corrected || original;
+  const userTyped = String(topicAnchor || original).toLowerCase().includes(anchor.toLowerCase());
+  if (!userTyped) return corrected;
+  const keeps = corrected.toLowerCase().includes(anchor.toLowerCase().slice(0, Math.max(4, anchor.length - 2)));
+  if (!keeps) console.warn(`[deepen] refused case-name correction "${corrected}": it drops "${anchor}" from the creator's topic`);
+  return keeps ? corrected : original;
+}
+
 export function caseAnchorToken(caseName: string): string | null {
   const entity = String(caseName || "").split(/\s+[—–-]\s+|:\s/)[0];
   const words = (entity.match(/[A-Z][A-Za-z'’.]{3,}/g) || [])
@@ -1845,7 +1861,7 @@ Each question seeks a single concrete, citable fact. Output ONLY this JSON, no p
     const parsed = JSON.parse(m ? m[0] : text);
     if (Array.isArray(parsed?.questions)) questions = parsed.questions.filter((q: any) => typeof q === "string" && q.trim()).slice(0, 10);
     if (Array.isArray(parsed?.canonical)) canonical = parsed.canonical.filter((c: any) => typeof c === "string" && c.trim()).slice(0, 12);
-    if (typeof parsed?.caseName === "string" && parsed.caseName.trim()) correctedName = parsed.caseName.trim().slice(0, 200);
+    if (typeof parsed?.caseName === "string" && parsed.caseName.trim()) correctedName = keepUserCaseName(parsed.caseName.trim().slice(0, 200), caseName, input.topicAnchor);
     if (typeof parsed?.when === "string" && parsed.when.trim()) correctedWhen = parsed.when.trim().slice(0, 40);
   } catch { /* no questions — nothing to deepen */ }
   // The corrected name is what the script must use. Prefer it for the Perplexity
