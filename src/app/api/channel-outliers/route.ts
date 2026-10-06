@@ -251,13 +251,13 @@ export async function POST(req: Request) {
           const WANT = 3;
           let bankedCount = 0, noTranscript = 0, rateLimited = false;
           for (const v of breakouts) {
-            if (bankedCount >= WANT || Date.now() + 20_000 > hookBudgetMs) break; // a capture takes up to ~20s
+            if (bankedCount >= WANT || Date.now() + 40_000 > hookBudgetMs) break; // a full-transcript capture takes up to ~40s
             const transcript = await getTranscriptRobust(v.videoId).catch(() => "");
             // Stop the moment the transcript API reports a plan/rate limit — every further call just
             // burns the little quota that's left and returns empty anyway. This is NOT missing captions.
             if (transcriptRateLimited) { rateLimited = true; break; }
             if (transcript.trim().length < 200) { noTranscript++; continue; }
-            try { await captureFrameworkInBackground({ videoId: v.videoId, transcript, title: v.title, views: v.views, niche }); bankedCount++; }
+            try { await captureFrameworkInBackground({ videoId: v.videoId, transcript, title: v.title, views: v.views, niche, outlierX: v.outlierX, channelTitle: scan.channel.title, durationMin: Math.round(v.durationSec / 60) }); bankedCount++; }
             catch { /* best effort */ }
           }
           console.log(`[channel-outliers] hook capture: banked ${bankedCount} breakout hooks (${noTranscript} no-transcript${rateLimited ? ", STOPPED: transcript API rate/usage limit exceeded" : ""}) niche=${niche}`);
