@@ -518,6 +518,7 @@ export async function POST(req: Request) {
         // The SPECIFIC angle the creator picked on the angle page — so the hook delivers THAT angle
         // (curiosity gap vs reframe vs myth-bust) instead of every type grabbing the same top fact.
         anglePremise: typeof raw.anglePremise === "string" ? raw.anglePremise : undefined,
+        anglePayoff: typeof raw.anglePayoff === "string" ? raw.anglePayoff : undefined,
         // Learned, view-ranked, creator-kept hooks for this niche — so the hook writer improves from
         // analyzed viral videos, the same signal the angle + body writers already use.
         nicheHookExamples: nicheHookExamples || undefined,

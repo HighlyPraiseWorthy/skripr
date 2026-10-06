@@ -86,7 +86,7 @@ RULES:
 - Do NOT improve style, do NOT rephrase for flow, do NOT add new specifics or new sourced claims.
 - Preserve the opening hook and the closing lines unless they contain an actual error.
 - Keep the voice: no em dashes, no exclamation points, no emojis.
-- "his wife", "his son", "his daughter" in place of a family member's name is DELIBERATE (privacy). Never replace it with a name, even one in the facts.
+- "his son", "his daughter" in place of the name of someone who was a MINOR at the time is DELIBERATE (privacy). Never replace it with a name. Adults on the record (a spouse, a grown child) may be named.
 - If the script is already accurate and consistent, return it unchanged with an empty changes list.
 
 ${factsBlock}

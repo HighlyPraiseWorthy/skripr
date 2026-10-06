@@ -356,6 +356,8 @@ export default function ScriptBriefPage() {
       // The specific premise of the angle the user picked — so the hook generator delivers THIS
       // angle instead of every hook type opening on the same top fact.
       anglePremise: angle.hookPremise ? angle.hookPremise + corrections : undefined,
+      // Where the picked card's payoff lands: the hook opens on the card's TENSION and never on this.
+      anglePayoff: angle.whyItWorks || undefined,
       angle: `Hook type: ${angle.hookType}. Opening hook to adapt: "${angle.hookPremise}". Suggested title: ${angle.titleSuggestion}${angle.viewerQuestion ? `. The question the hook opens, held unanswered until the payoff: ${angle.viewerQuestion}` : ""}${corrections}`,
       storytellingMode, storytellingTechniques,
       // Carry the Outlier-DNA seed (if this brief came from "Research this idea") into the

@@ -127,6 +127,7 @@ NO INVENTED MINDS, NO FALSE RECENCY, NO LOOSE PARAPHRASE: never claim what a rea
 HOOK CRAFT (this is what separates a 5/10 card from an 8/10 one):
 - QUESTION FIRST: before writing, decide the one question this hook makes the viewer NEED answered ("viewerQuestion"). The hook opens that question; the video answers it. If you can't name a specific question, the hook is a summary, not a hook.
 - ASSEMBLE, DON'T INVENT: when the spine lists HOOK FACTS, build the hook from those facts and its premise, in that spine's mechanism. You may name the subject and set the time and place from them; add no other event, claim, or judgment. Write the TITLE last: it names the premise or the event, never the PAYOFF REVEAL.
+- OPEN ON THE TENSION, NEVER THE PAYOFF: the hook's first sentence is the central tension, contradiction, question, or problem; it never opens on the card's own payoff moment (true crime: the capture; business: the collapse explained; science: the answer; explainers: the mechanism).
 - NEVER ANSWER IT IN THE TITLE OR HOOK. Name the event and the stakes, never how it ends, how they were caught, or the explanation. "Caught at a New Year's Eve Traffic Stop" gives the ending away; "He Faked His Death in 1979. In 2011 He Was Still Alive." withholds it. "The Hijacker Who Won His Case in Court" hands over the twist. For OVERLOOKED MECHANISM and MYTH-BUST: show the result or the contradiction and tease that there is a method; never explain the method in the hook.
 - CARRY THE HOOK FACT: put the single most surprising concrete detail ("hookFact", the spine's hook fact when one is given) in the hook in plain words: the hard number, the contrast, the object. "The account fell from $36.9 million to $480,000" beats "secretly destroying their savings".
 - TENSION: the strongest hooks put two true things side by side that shouldn't both be true (gave away his salary / drained his clients' savings).
@@ -184,7 +185,7 @@ Output ONLY the JSON array of cards.`,
     // repairs, and show only clean cards (a flagged card is a trap for a creator who doesn't know the case).
     const sourceText = groundingToSourceText(grounding);
     const topicKind = String((grounding as any)?.kind || "event");
-    // Family members by relationship, never by name (deterministic; seen live: son and daughter named
+    // Minors at the time by relationship, never by name (policy 2026-10-06; seen live: son and daughter named
     // in every batch).
     // The payoff line is ASSEMBLED from documented moments, never free text.
     const composePayoff = (c: any) => {
