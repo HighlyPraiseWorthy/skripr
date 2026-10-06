@@ -2722,3 +2722,4 @@ export function hookCraftIssues(c: { hookPremise?: string; titleSuggestion?: str
   if (factNums.length && !factNums.some((n) => hook.replace(/,/g, "").includes(n))) out.push(`the hook leaves out its strongest fact (${String(c.hookFact).slice(0, 90)}): put that figure in the hook in plain words`);
   return out;
 }
+

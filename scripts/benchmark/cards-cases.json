@@ -63,5 +63,10 @@
   "id": "taylor",
   "topic": "William Claybourne Taylor",
   "kind": "event"
+ },
+ {
+  "id": "levine",
+  "topic": "Randy Craig Levine",
+  "kind": "event"
  }
 ]

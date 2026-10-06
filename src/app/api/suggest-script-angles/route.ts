@@ -305,8 +305,13 @@ Output ONLY the JSON array of cards.`,
       }
       // A second repair round when too few cards came out clean (seen live: 3 of 8 after one round once the
       // payoff text was checked too), so the creator still gets a full set.
+      // A THIRD round only when fewer than 3 cards are clean (the creator always gets a full, clean set; seen
+      // live: Levine's 3 shown cards all carried warnings). Each round fits the 300s budget or is skipped.
+      for (const round of [2, 3]) {
       const stillIdx = warnings.map((w, i) => (w.length ? i : -1)).filter((i) => i >= 0);
-      if (sized.length - stillIdx.length < 4 && stillIdx.length && elapsed() <= 205_000) {
+      const cleanNow = sized.length - stillIdx.length;
+      if (!stillIdx.length || (round === 2 ? !(cleanNow < 4 && elapsed() <= 205_000) : !(cleanNow < 3 && elapsed() <= 215_000))) break;
+      {
         const fixed2 = await repairAngles(sized, warnings, sourceText);
         const changed2 = stillIdx.filter((i) => fixed2[i].hookPremise !== sized[i].hookPremise || fixed2[i].titleSuggestion !== sized[i].titleSuggestion || (fixed2[i].whyItWorks || "") !== (sized[i].whyItWorks || "") || JSON.stringify([fixed2[i].payoffMoment, fixed2[i].middleBeats, fixed2[i].viewerQuestion ?? sized[i].viewerQuestion]) !== JSON.stringify([sized[i].payoffMoment, sized[i].middleBeats, sized[i].viewerQuestion]));
         if (changed2.length) {
@@ -323,6 +328,7 @@ Output ONLY the JSON array of cards.`,
             fixLog[i] = prev;
           });
         }
+      }
       }
       console.log(`[angles] candidates=${sized.length} flagged=${flagged.length} repaired=${changed.length} stillFlagged=${warnings.filter((w) => w.length).length}`);
     }
@@ -343,6 +349,27 @@ Output ONLY the JSON array of cards.`,
       // payoff-mentions-the-wife nudge flagged 2 of 3 error-free cards.
       const STYLE = /^(?:the payoff should land on this angle's answer|"[^"]*" is a vague stand-in|the hook opens with a stock phrase|the hook leaves out its strongest fact|the payoff talks about the |the title gives away|the hook gives away|title reuses |title is \d+ characters|title is two sentences|starts a sentence with "Separately,"|the hook opens on a private family member)/;
       warnings[i] = (warnings[i] || []).filter((w) => !STYLE.test(w));
+      // LAST RESORT, after every repair round: cut the hook sentence (or the middle beat) that still carries a
+      // flagged phrase, so the creator sees a clean card and the script never inherits the error. The warning
+      // is only removed when the cut really removed the phrase; anything left still steers the script.
+      const sentences = (t: string) => String(t || "").split(/(?<=[.!?]["”’]?)\s+/).filter(Boolean);
+      warnings[i] = (warnings[i] || []).filter((w) => {
+        const m = w.match(/^"([^"]+?)(?:…)?"/) || w.match(/^Unverified figure: (.+)$/);
+        if (!m) return true;
+        const ph = sq(m[1]);
+        const hs = sentences(c.hookPremise);
+        const hit = hs.findIndex((x) => sq(x).includes(ph));
+        // Never the FIRST sentence: it carries the setup, and the rest reads as a fragment without it (seen:
+        // hooks starting "But by 2025..." and "What the numbers showed:...").
+        if (hit >= 1 && hs.length >= 2) {
+          const rest = hs.filter((_, k) => k !== hit).join(" ");
+          if (rest.split(/\s+/).length >= 12) { c.hookPremise = rest; return false; }
+        }
+        const beats: string[] = Array.isArray(c.middleBeats) ? c.middleBeats : [];
+        const bi = beats.findIndex((b) => sq(b).includes(ph));
+        if (bi >= 0 && beats.length >= 2) { c.middleBeats = beats.filter((_, k) => k !== bi); composePayoff(c); return false; }
+        return true;
+      });
     });
     // HOUSE RULE: strip em dashes from every user-facing string on each angle (premise, title, the
     // "why it works" explanation, and each vetting warning) before it reaches the cards.

@@ -844,7 +844,7 @@ export default function ScriptBriefPage() {
                     {typeof a.factCount === "number" && a.factCount > 0 && (
                       <span title={a.spineName ? `Story: ${a.spineName}` : undefined} style={{ fontSize: 10, fontWeight: 600, padding: "2px 7px", borderRadius: 4, background: "rgba(77,184,255,0.08)", color: C.accentDim, border: "1px solid rgba(77,184,255,0.2)" }}>built on {a.factCount} facts</span>
                     )}
-                    {a.checked && !(a.warnings && a.warnings.length) && (
+                    {a.checked && (
                       <span role={a.fixes && a.fixes.diffs.length ? "button" : undefined}
                         onClick={(e) => { if (a.fixes && a.fixes.diffs.length) { e.stopPropagation(); setOpenFix(openFix === i ? null : i); } }}
                         title={a.fixes && a.fixes.diffs.length ? "See what was fixed" : "Every claim on this card was checked against your research"}
@@ -881,13 +881,8 @@ export default function ScriptBriefPage() {
                     ))}
                   </div>
                 )}
-                {Array.isArray(a.warnings) && a.warnings.length > 0 && (
-                  <div style={{ marginTop: 9, paddingTop: 9, borderTop: "1px solid rgba(251,191,36,0.2)" }}>
-                    {a.warnings.map((w, j) => (
-                      <div key={j} style={{ fontSize: 11, color: "#fbbf24", lineHeight: 1.5 }}>&#9888; {w}</div>
-                    ))}
-                  </div>
-                )}
+                {/* Warnings are never shown (creator decision, 2026-10-06): after three repair rounds and the last-resort
+                    sentence cut, anything left still reaches the script as RESEARCH CORRECTIONS (see anglePremise). */}
               </div>
             );
           })}
