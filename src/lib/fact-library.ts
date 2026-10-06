@@ -20,6 +20,11 @@ export interface LibraryFact extends ResearchFact {
   addedAt?: string;
   // User-pasted facts are theirs and are never outranked by retrieval.
   manual?: boolean;
+  // Hidden by the AUTOMATIC clean-up (conflict losers, unverifiable quotes, off-topic), NOT by the user.
+  // Re-decided fresh every research run (reset first, then set), and capped at a third of the topic, so
+  // repeated runs can't erode the research. Seen live: Jones went from 91 facts to 3 visible, because
+  // automatic hides went into the user's permanent dismissed list and piled up run after run.
+  autoHidden?: boolean;
 }
 
 // Content signature: two retrievals phrase the same fact slightly differently, and we
@@ -127,7 +132,7 @@ export async function setDismissed(userId: string, topic: string, dismissed: str
 export function activeFacts(lib: FactLibrary): LibraryFact[] {
   const hidden = new Set(lib.dismissed);
   return lib.facts
-    .filter((f) => !hidden.has(f.id))
+    .filter((f) => !hidden.has(f.id) && !f.autoHidden)
     .sort((a, b) => Number(!!b.manual) - Number(!!a.manual));
 }
 
@@ -155,4 +160,39 @@ export async function replaceInLibrary(userId: string, topic: string, swaps: { f
       user_id: userId, topic_key: topicKey(topic), facts, dismissed: [...dismissed].slice(0, 400), fact_count: facts.length, updated_at: new Date().toISOString(),
     }, { onConflict: "user_id,topic_key" });
   } catch { /* best effort */ }
+}
+
+// AUTOMATIC HIDING (see LibraryFact.autoHidden). resetAutoHidden runs at the start of every research run;
+// autoHideInLibrary adds this run's losers, never past a third of the topic's facts in total. The user's
+// own hides (dismissed) are untouched by both.
+async function writeFacts(userId: string, topic: string, facts: LibraryFact[], dismissed: string[]): Promise<void> {
+  if (!supabaseAdmin) return;
+  await supabaseAdmin.from("topic_fact_library").upsert({
+    user_id: userId, topic_key: topicKey(topic), facts, dismissed, fact_count: facts.length, updated_at: new Date().toISOString(),
+  }, { onConflict: "user_id,topic_key" });
+}
+export async function resetAutoHidden(userId: string, topic: string): Promise<void> {
+  if (!supabaseAdmin || !userId || !topic) return;
+  try {
+    const current = await getLibrary(userId, topic);
+    if (!current.facts.some((f) => f.autoHidden)) return;
+    await writeFacts(userId, topic, current.facts.map((f) => { const { autoHidden, ...rest } = f; void autoHidden; return rest as LibraryFact; }), current.dismissed);
+  } catch { /* best effort */ }
+}
+export async function autoHideInLibrary(userId: string, topic: string, ids: string[]): Promise<number> {
+  if (!supabaseAdmin || !userId || !topic || !ids.length) return 0;
+  try {
+    const current = await getLibrary(userId, topic);
+    const cap = Math.floor(current.facts.length / 3);
+    let hidden = current.facts.filter((f) => f.autoHidden).length;
+    const want = new Set(ids);
+    let changed = 0;
+    const facts = current.facts.map((f) => {
+      if (f.autoHidden || f.manual || !want.has(f.id) || hidden >= cap) return f;
+      hidden++; changed++;
+      return { ...f, autoHidden: true };
+    });
+    if (changed) await writeFacts(userId, topic, facts, current.dismissed);
+    return changed;
+  } catch { return 0; }
 }

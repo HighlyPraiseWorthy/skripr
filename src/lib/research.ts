@@ -1,7 +1,7 @@
 import { Anthropic } from "@anthropic-ai/sdk";
 import { caseKey, getCachedFactSet, getBestAcrossVersions, putCachedFactSet, unionFacts, CACHE_GOOD_ENOUGH } from "@/lib/case-cache";
 import { getContaminationWatchlist, recordCaseEntities } from "@/lib/contamination";
-import { addToLibrary, activeFacts, getLibrary, setDismissed, factId, replaceInLibrary } from "@/lib/fact-library";
+import { addToLibrary, activeFacts, getLibrary, factId, replaceInLibrary, autoHideInLibrary, resetAutoHidden } from "@/lib/fact-library";
 
 let _anthropic: Anthropic | null = null;
 function anthropic(): Anthropic {
@@ -1380,11 +1380,11 @@ export async function verifyFactQuotes<T extends { fact: string; source?: string
 async function dismissResolvedLosers(userId: string | undefined, topic: string, losers: ResearchFact[]): Promise<void> {
   if (!userId || !topic || !losers.length) return;
   try {
-    const lib = await getLibrary(userId, topic);
+    // AUTOMATIC hides are re-decided every run and capped (see fact-library autoHidden); they never go
+    // into the user's own permanent dismissed list again.
     const add = losers.map((f) => factId(f.fact)).filter(Boolean);
     if (!add.length) return;
-    const next = Array.from(new Set([...lib.dismissed, ...add]));
-    if (next.length !== lib.dismissed.length) await setDismissed(userId, topic, next);
+    await autoHideInLibrary(userId, topic, add);
   } catch { /* best effort */ }
 }
 
@@ -1856,6 +1856,8 @@ Each question seeks a single concrete, citable fact. Output ONLY this JSON, no p
   // each run, so canonicalCaseName drifts and the library never accumulates — key on the
   // user's chosen remix TITLE instead, which is constant for the same video.
   const libraryAnchor = (input.topicAnchor && input.topicAnchor.trim()) ? input.topicAnchor.trim() : canonicalCaseName;
+  // A fresh run re-decides the automatic hides from scratch (they never accumulate across runs).
+  if (input.userId) await resetAutoHidden(input.userId, libraryAnchor);
   if (correctedName && !canonical.some((c) => c.toLowerCase() === correctedName.toLowerCase())) canonical.unshift(correctedName);
   const correction = { caseName: correctedName || undefined, when: correctedWhen || undefined };
 
