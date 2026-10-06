@@ -92,7 +92,7 @@ export default function ScriptBriefPage() {
   // the one-shot path (no per-section steps to report).
   const [genProgress, setGenProgress] = useState<{ done: number; total: number } | null>(null);
   const [finalChecking, setFinalChecking] = useState(false);
-  const storyChoiceRef = useRef<{ mode: string; techniques: string[]; note?: string }>({ mode: "", techniques: [] });
+  const storyChoiceRef = useRef<{ mode: string; techniques: string[]; note?: string; structure?: { structure?: any; structureFamilyId?: string } }>({ mode: "", techniques: [] });
   // ONE-MOVE (auto-pilot): set from the brief. When true, script-brief drives every phase itself —
   // auto-approve the (already auto-resolved) facts, auto-pick the best-scoring angle, use Skripr's
   // recommended storytelling, and generate — so the creator goes setup -> finished script in one move.
@@ -358,6 +358,9 @@ export default function ScriptBriefPage() {
       anglePremise: angle.hookPremise ? angle.hookPremise + corrections : undefined,
       // Where the picked card's payoff lands: the hook opens on the card's TENSION and never on this.
       anglePayoff: angle.whyItWorks || undefined,
+      // The winning structure the creator kept in the storytelling step (or "none" for Skripr's own planner).
+      structure: storyChoiceRef.current.structure?.structure || undefined,
+      structureFamilyId: storyChoiceRef.current.structure?.structureFamilyId || undefined,
       angle: `Hook type: ${angle.hookType}. Opening hook to adapt: "${angle.hookPremise}". Suggested title: ${angle.titleSuggestion}${angle.viewerQuestion ? `. The question the hook opens, held unanswered until the payoff: ${angle.viewerQuestion}` : ""}${corrections}`,
       storytellingMode, storytellingTechniques,
       // Carry the Outlier-DNA seed (if this brief came from "Research this idea") into the
@@ -528,7 +531,7 @@ export default function ScriptBriefPage() {
       topicKind={(topicKind as any) || undefined}
       // Storytelling technique is its own decision; capture it and advance to the FINISH step
       // (voice / viral magnet / CTAs) rather than generating straight away.
-      onGenerate={(mode, techniques, note) => { storyChoiceRef.current = { mode, techniques, note }; setPhase("finish"); }}
+      onGenerate={(mode, techniques, note, structure) => { storyChoiceRef.current = { mode, techniques, note, structure }; setPhase("finish"); }}
       onBack={() => setPhase("angles")}
     />
   );

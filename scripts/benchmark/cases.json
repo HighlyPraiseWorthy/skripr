@@ -8,7 +8,8 @@
     "hookType": "STORY",
     "kind": "event",
     "voice": "Brew",
-    "minutes": 12
+    "minutes": 12,
+    "niche": "true-crime"
   },
   {
     "id": "wright",
@@ -19,7 +20,8 @@
     "hookType": "CURIOSITY GAP",
     "kind": "event",
     "voice": "Kurzgesagt",
-    "minutes": 12
+    "minutes": 12,
+    "niche": "true-crime"
   },
   {
     "id": "streaming-fraud",
@@ -30,7 +32,8 @@
     "hookType": "OVERLOOKED MECHANISM",
     "kind": "event",
     "voice": "Brew",
-    "minutes": 12
+    "minutes": 12,
+    "niche": "true-crime"
   },
   {
     "id": "fast-food-prices",
@@ -41,7 +44,8 @@
     "hookType": "MYTH-BUST",
     "kind": "explainer",
     "voice": null,
-    "minutes": 12
+    "minutes": 12,
+    "niche": "personal-finance"
   },
   {
     "id": "ltcm",
@@ -52,7 +56,8 @@
     "hookType": "REFRAME",
     "kind": "event",
     "voice": "Clayspiracy",
-    "minutes": 12
+    "minutes": 12,
+    "niche": "business"
   },
   {
     "id": "psychopathy",
@@ -63,7 +68,8 @@
     "hookType": "MYTH-BUST",
     "kind": "claim",
     "voice": "Kurzgesagt",
-    "minutes": 12
+    "minutes": 12,
+    "niche": "science"
   },
   {
     "id": "chapo-chicago",
@@ -74,6 +80,19 @@
     "hookType": "STORY",
     "kind": "event",
     "voice": "fern",
-    "minutes": 12
+    "minutes": 12,
+    "niche": "true-crime"
+  },
+  {
+    "id": "jones",
+    "library": "arthur gerald jones",
+    "topic": "Arthur Gerald Jones",
+    "title": "Dead on Paper, Caught Alive at a Vegas DMV",
+    "angle": "May 1979: a Chicago commodities broker rushes out the door promising to be back after a business meeting. A court later declares him legally dead and his family collects survivor benefits. He was alive, living under a stolen name in Las Vegas.",
+    "hookType": "STORY",
+    "kind": "event",
+    "voice": null,
+    "minutes": 12,
+    "niche": "true-crime"
   }
 ]

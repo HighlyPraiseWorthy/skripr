@@ -15,6 +15,7 @@ import { reviewAndCorrectScript } from "@/lib/ai/self-review";
 import { finalCheck } from "@/lib/ai/final-check";
 import { getActiveVoiceMeta, getVoiceMetaById, SKRIPR_HOUSE_VOICE } from "@/lib/voice-profile";
 import { captureFrameworkInBackground } from "@/lib/framework-capture";
+import { chooseStructure, type ChosenStructure } from "@/lib/structure-families";
 import { researchCentralScene, quotedPhrases } from "@/lib/research";
 import { vetAngles } from "@/lib/ai/angle-vet";
 import { splitSentences, tagFactSources, replaceFamilyNames, minorsInFacts } from "@/lib/script-compliance";
@@ -379,6 +380,7 @@ export async function POST(req: Request) {
     // so there is no per-section-call non-determinism. Falls back to undefined (one-shot writer) if
     // the blueprint can't be built. The chunked "section" mode keeps its deterministic buildSectionPlan.
     let resolvedSectionPlan: SectionSpec[] | undefined;
+    let chosenStructure: ChosenStructure | null = null;
     if (Array.isArray(raw.blueprint) && raw.blueprint.length >= 2) {
       // The client echoed back the blueprint from the plan call (finalize mode) — reuse it verbatim,
       // never rebuild (an LLM plan is not deterministic, and finalize just needs the same section set).
@@ -392,7 +394,18 @@ export async function POST(req: Request) {
         // finalize with no measured structure reaches here without a blueprint, and that's fine
         // (assembleFinalizeScript works off the client-provided sections; no plan needed to stitch).
         const bpMaterial = typeof sourceMaterial === "string" && sourceMaterial.trim() ? sourceMaterial.trim() : undefined;
-        const bp = await buildTopicBlueprint(bpMaterial, Math.round(targetMinutes * 165), targetMinutes, enhancedAngle, { hookType: hookType || undefined, storytelling: resolvedStoryMode, directorNote: typeof directorNote === "string" && directorNote.trim() ? directorNote.trim() : undefined });
+        // WINNING STRUCTURE (data-driven): the story shape from this niche's (or, without enough data, all
+        // niches') outlier winners that THIS research can fill. The creator's pick from the storytelling step
+        // wins ("structureFamilyId", or "none" for Skripr's own planner); otherwise Skripr chooses.
+        // The creator already saw and kept a structure in the storytelling step: use exactly that one.
+        if (raw.structure && typeof raw.structure === "object" && Array.isArray(raw.structure.stages) && raw.structure.stages.length >= 4) {
+          chosenStructure = raw.structure as ChosenStructure;
+          console.log(`[generate] structure (creator's pick): "${chosenStructure.name}"`);
+        } else if (raw.structureFamilyId !== "none" && bpMaterial) {
+          chosenStructure = await chooseStructure({ niche: resolvedNiche, facts: bpMaterial.split("\n").map((l: string) => l.replace(/^-\s*/, "").trim()).filter(Boolean), angle: enhancedAngle, topic: topic || "", familyId: typeof raw.structureFamilyId === "string" ? raw.structureFamilyId : null }).catch(() => null);
+          if (chosenStructure) console.log(`[generate] structure: ${chosenStructure.source} "${chosenStructure.name}" (${chosenStructure.scope}, fit ${chosenStructure.fit})`);
+        }
+        const bp = await buildTopicBlueprint(bpMaterial, Math.round(targetMinutes * 165), targetMinutes, enhancedAngle, { hookType: hookType || undefined, storytelling: resolvedStoryMode, directorNote: typeof directorNote === "string" && directorNote.trim() ? directorNote.trim() : undefined, structure: chosenStructure ? { name: chosenStructure.name, stages: chosenStructure.stages } : undefined });
         if (bp.length >= 2 && bp[0]?.concept) {
           // CENTRAL-SCENE RESEARCH: the documented specifics of the concept's central moment, so the
           // writer renders the real scene instead of inventing one. Opening + final beats get them.
@@ -529,7 +542,8 @@ export async function POST(req: Request) {
       // Return the blueprint ONLY when it is a synthesized topic plan (carries assignedFacts). The
       // remix measured plan re-derives deterministically per section call, so it need not travel.
       const isBlueprint = planned.some((s) => Array.isArray(s.assignedFacts));
-      return NextResponse.json({ mode: "plan", total: planned.length, presetHook, title: reconciledTitle, blueprint: isBlueprint ? planned : undefined });
+      return NextResponse.json({ mode: "plan", total: planned.length, presetHook, title: reconciledTitle, blueprint: isBlueprint ? planned : undefined,
+        structure: chosenStructure ? { name: chosenStructure.name, source: chosenStructure.source, scope: chosenStructure.scope, fit: chosenStructure.fit, evidence: chosenStructure.evidence } : undefined });
     }
 
     let script: any;

@@ -43,7 +43,8 @@ export default function StorytellingPicker(props: {
   // Content kind, so a "mechanism" slot on an explainer gets the patient-explanation note
   // rather than the crime-story "scene where it nearly came apart" note.
   topicKind?: "event" | "explainer" | "hypothetical" | "claim";
-  onGenerate: (mode: string, techniqueIds: string[], directorNote?: string) => void;
+  // The 4th argument carries the WINNING STRUCTURE the creator kept (or "none" for Skripr's own planner).
+  onGenerate: (mode: string, techniqueIds: string[], directorNote?: string, structure?: { structure?: any; structureFamilyId?: string }) => void;
   onBack?: () => void;
 }) {
   const [data, setData] = useState<RecResponse | null>(null);
@@ -52,6 +53,18 @@ export default function StorytellingPicker(props: {
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [choice, setChoice] = useState<"recommended" | "original" | "custom">("recommended");
   const [directorNote, setDirectorNote] = useState("");
+  // WINNING STRUCTURE: the story shape from this niche's outlier winners that the research can fill.
+  const [structure, setStructure] = useState<any | null>(null);
+  const [structLoading, setStructLoading] = useState(false);
+  const [structOff, setStructOff] = useState(false);
+  const loadStructure = (familyId?: string) => {
+    if (!props.sourceMaterial) return;
+    setStructLoading(true);
+    fetch("/api/structure/choose", { method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ niche: props.niche, topic: props.topic, angle: props.angle, sourceMaterial: props.sourceMaterial, familyId }) })
+      .then((r) => r.json()).then((d) => { if (d?.structure) setStructure(d.structure); }).catch(() => {}).finally(() => setStructLoading(false));
+  };
+  useEffect(() => { loadStructure(); }, [props.sourceMaterial]); // eslint-disable-line react-hooks/exhaustive-deps
   // Auto-derived notes from the grounded research + angle. Recomputed only when the
   // inputs change; the user checks/unchecks each and the checked set is prepended to
   // whatever they type, so they never have to hand-write the derivable guidance.
@@ -264,6 +277,51 @@ export default function StorytellingPicker(props: {
               })}
             </div>
 
+            {/* WINNING STRUCTURE from the niche's outlier data, with its evidence; the creator can switch or turn it off. */}
+            {props.sourceMaterial && (structLoading || structure) && (
+              <div style={{ marginTop: 18, border: `1px solid ${C.border}`, borderRadius: 12, padding: 14 }}>
+                <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: C.dim, marginBottom: 6 }}>Structure from winning videos</div>
+                {structLoading && !structure && <div style={{ fontSize: 12.5, color: C.dim }}>Matching your research to the story shapes that won in this niche…</div>}
+                {structure && (
+                  <>
+                    <div style={{ fontSize: 14, fontWeight: 700, color: structOff ? C.dim : C.text }}>
+                      {structOff ? "Off: Skripr will plan its own structure" : structure.source === "family" ? structure.name : "This niche's winning skeleton"}
+                    </div>
+                    {!structOff && (
+                      <div style={{ fontSize: 12, color: C.dim, lineHeight: 1.5, marginTop: 3 }}>
+                        {structure.source === "family" && structure.evidence
+                          ? `From ${structure.evidence.videos} winning videos across ${structure.evidence.channels} channels (median ${structure.evidence.medianOutlierX}x their channel's usual views)${structure.scope === "cross-niche" ? ", across niches" : ""}. Fits your research ${structure.fit}/10.`
+                          : "No winning shape fits this research closely, so Skripr uses the parts nearly all winning videos in this niche share."}
+                      </div>
+                    )}
+                    {!structOff && (
+                      <div style={{ fontSize: 12, color: C.text, lineHeight: 1.6, marginTop: 8 }}>
+                        {structure.stages.map((s: any, i: number) => <span key={i}>{i ? " → " : ""}{s.name} <span style={{ color: C.dim }}>{s.sharePct}%</span></span>)}
+                      </div>
+                    )}
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 10 }}>
+                      {(structure.alternatives || []).filter((a: any) => a.familyId !== structure.familyId).slice(0, 4).map((a: any) => (
+                        <button key={a.familyId} onClick={() => { setStructOff(false); loadStructure(a.familyId); }} disabled={structLoading}
+                          style={{ fontSize: 11.5, padding: "5px 9px", borderRadius: 7, border: `1px solid ${C.border}`, background: "transparent", color: C.dim, cursor: "pointer" }}>
+                          {a.name} · fits {a.fit}/10
+                        </button>
+                      ))}
+                      <button onClick={() => setStructOff((v) => !v)}
+                        style={{ fontSize: 11.5, padding: "5px 9px", borderRadius: 7, border: `1px solid ${C.border}`, background: "transparent", color: C.dim, cursor: "pointer" }}>
+                        {structOff ? "Use the winning structure" : "Let Skripr plan its own"}
+                      </button>
+                    </div>
+                    {(structure.tableStakes?.length > 0 || structure.differentiators?.length > 0) && (
+                      <div style={{ fontSize: 11.5, color: C.dim, lineHeight: 1.5, marginTop: 10 }}>
+                        {structure.tableStakes?.length > 0 && <div>Every winning video in this niche uses: {structure.tableStakes.join(", ")}.</div>}
+                        {structure.differentiators?.length > 0 && <div>What sets winners apart here: {structure.differentiators.map((d: any) => `${d.name} (${d.winnersPct}% of winners vs ${d.basePct}% of below-average videos)`).join(", ")}.</div>}
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+            )}
+
             {/* Auto-derived Director's notes. Each line is computed from the research,
                 the case type, or the angle, with its reason shown, so the guidance a
                 careful editor would give is on by default and teachable, not magic. */}
@@ -308,7 +366,7 @@ export default function StorytellingPicker(props: {
                 </button>
               )}
               <button
-                onClick={() => props.onGenerate(data.mode.id, [...new Set([...selected, ...requiredTechniques])], finalDirectorNote())}
+                onClick={() => props.onGenerate(data.mode.id, [...new Set([...selected, ...requiredTechniques])], finalDirectorNote(), structOff ? { structureFamilyId: "none" } : structure ? { structure } : undefined)}
                 disabled={props.busy}
                 style={{
                   flex: 1, padding: "12px 18px", borderRadius: 12, border: "none",

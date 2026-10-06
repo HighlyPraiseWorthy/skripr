@@ -26,6 +26,7 @@ import { getLibrary, activeFacts } from "../../src/lib/fact-library";
 import { listVoiceProfiles, getVoiceMetaById, SKRIPR_HOUSE_VOICE } from "../../src/lib/voice-profile";
 import { buildTopicBlueprint, generateHookFirst, writeSection, assembleFinalizeScript, reconcileTitle, unsupportedAgeSentences, overusedOpeners, repeatedFigures, repeatedShapes } from "../../src/lib/ai/claude";
 import { reviewAndCorrectScript } from "../../src/lib/ai/self-review";
+import { chooseStructure } from "../../src/lib/structure-families";
 import { splitSentences, unsourcedQuotes, superlativeMismatches, stripStutters, stripDividers, fixDanglingBackrefs, fixQuoteWordCounts, stripLeaningFragments } from "../../src/lib/script-compliance";
 
 const DIR = join(process.cwd(), "scripts/benchmark");
@@ -35,7 +36,7 @@ const val = (n: string) => { const i = args.indexOf(n); return i >= 0 ? args[i +
 const anthropic = new Anthropic();
 const sb = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
 
-type Case = { id: string; library: string; topic: string; title: string; angle: string; hookType: string; kind: string; voice: string | null; minutes: number };
+type Case = { id: string; library: string; topic: string; title: string; angle: string; hookType: string; kind: string; voice: string | null; minutes: number; niche?: string };
 type Fact = { fact: string; source: string | null };
 const cases: Case[] = JSON.parse(readFileSync(join(DIR, "cases.json"), "utf8"));
 const config: { voiceUserId?: string } = existsSync(join(DIR, "config.json")) ? JSON.parse(readFileSync(join(DIR, "config.json"), "utf8")) : {};
@@ -74,7 +75,10 @@ async function generate(c: Case, uid: string): Promise<{ title: string; hook: st
     if (meta?.styleGuide) voiceProfile = meta.styleGuide;
   }
   const minutes = c.minutes;
-  const plan = await buildTopicBlueprint(sourceMaterial, Math.round(minutes * 165), minutes, c.angle, { hookType: c.hookType, storytelling: "story" });
+  // --structure: plan on the winning structure chosen from the niche's outlier data (same as the app).
+  const chosen = flag("--structure") ? await chooseStructure({ niche: c.niche, facts: loadFacts(c).map((f) => f.fact), angle: c.angle, topic: c.topic }) : null;
+  if (chosen) console.log(`[${c.id}] structure: ${chosen.source} "${chosen.name}" (${chosen.scope}, fit ${chosen.fit})`);
+  const plan = await buildTopicBlueprint(sourceMaterial, Math.round(minutes * 165), minutes, c.angle, { hookType: c.hookType, storytelling: "story", structure: chosen ? { name: chosen.name, stages: chosen.stages } : undefined });
   if (plan.length < 2) throw new Error("blueprint failed");
   const title = reconcileTitle(c.title, sourceMaterial);
   const presetHook = await generateHookFirst({ title, topic: c.topic, hookType: c.hookType, anglePremise: c.angle, sourceMaterial, voiceProfile } as any);

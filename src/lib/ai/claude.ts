@@ -721,7 +721,7 @@ export async function buildTopicBlueprint(
   targetWords: number,
   targetMinutes: number,
   angle: string | undefined,
-  opts?: { hookType?: string; storytelling?: string; directorNote?: string },
+  opts?: { hookType?: string; storytelling?: string; directorNote?: string; structure?: { name: string; stages: { name: string; role?: string; sharePct: number; does: string; factIdx?: number[] }[] } },
 ): Promise<SectionSpec[]> {
   const facts = parseFactLines(sourceMaterial);
   // Below ~6 facts there is nothing to distribute — the one-shot writer handles a thin brief fine.
@@ -731,7 +731,9 @@ export async function buildTopicBlueprint(
   // wants ~12 beats; a 29-fact pool caps that near ceil(29/2)=15, so 12 stands; a thin pool shrinks it.
   const byTime = Math.round((targetMinutes * 60) / 100);
   const byFacts = Math.ceil(facts.length / 2);
-  const beatCount = Math.max(4, Math.min(byTime, byFacts, 14));
+  // A WINNING STRUCTURE (data-driven, from the niche's outlier videos) fixes the beats: one per stage, in order.
+  const structure = opts?.structure && opts.structure.stages.length >= 4 ? opts.structure : null;
+  const beatCount = structure ? structure.stages.length : Math.max(4, Math.min(byTime, byFacts, 14));
 
   const numbered = facts.map((f, i) => `[${i}] ${f}`).join("\n");
   // CONCEPT MODE (benchmark-driven): every whole-history plan kept re-making the same points to fill
@@ -739,7 +741,10 @@ export async function buildTopicBlueprint(
   // moment/claim, beats that each contribute a distinct point toward it, only the facts that serve it.
   const conceptMode = !!(angle && angle.trim());
   const conceptRules = conceptMode ? ` CONCEPT MODE (this overrides "assign every useful fact"): the ANGLE below is the SCRIPT CONCEPT. The video exists to deliver THAT concept, not to cover the subject's whole history. (a) Name the concept's single CENTRAL MOMENT or CLAIM in "concept" (one sentence, using ONLY details the facts state: no ages, numbers, or descriptions the facts don't give). (b) Beat 1 opens ON that moment or its tension. (c) Every later beat must earn its place by building toward or proving the concept; give each beat a "point": the ONE new thing it contributes that NO other beat says. Two beats may not share a point. (d) Assign ONLY facts that serve the concept; leave the rest unassigned even if true and interesting — breadth is what makes a video repeat itself. (e) Depth over breadth: fewer facts per beat, rendered as scenes. (f) The FINAL beat pays the concept off and calls back to the opening moment. (g) If beat 1 flashes forward, the later beat that reaches that moment in time order covers ONLY what the opening did not show (how they got there, what came after); it never re-stages the opening scene or re-uses its quotes. Output JSON: {"concept":"...","beats":[{"name":"...","purpose":"...","point":"...","when":1976,"factIndices":[...],"weight":2}, ...]}.` : "";
-  const sys = `You are a documentary story architect. You design the BEAT STRUCTURE of a ${targetMinutes}-minute YouTube video from a set of sourced facts, then assign each fact to the one beat it best serves. Rules: (1) The video is an ARGUMENT, not a list — state a single controlling thesis and order the beats so each RAISES THE STAKES over the last (setup → mechanism → who/how much → escalation → payoff). (2) Assign EVERY useful fact to EXACTLY ONE beat (its factIndices); it is fine to leave a weak/duplicative fact unassigned. Do not put the same fact in two beats. (3) Give each beat a distinct narrative FUNCTION in one line. (4) Weight each beat 1-3 for how much runtime it deserves (the climax/mechanism beats earn more). (5) TRUE STORIES RUN IN TIME ORDER: when the facts describe real events over time (a case, a person, a chase), beat 1 may flash forward to the most gripping moment as a cold open, but EVERY beat after it follows the order events happened. Escalate WITHIN that order. Never place a later stretch of time before an earlier event (life in Florida in the 2000s cannot come before a 1975 arrest). Give each beat a "when": the year its EVENTS happened, not the year they were reported or described in an interview (her 1976 escape, told in a 2008 interview, is 1976); use null for a beat that is not about events in time. Output ONLY JSON: {"thesis":"...","beats":[{"name":"...","purpose":"...","when":1976,"factIndices":[0,3,7],"weight":2}, ...]}. Exactly ${beatCount} beats.${conceptRules}`;
+  const sys = `You are a documentary story architect. You design the BEAT STRUCTURE of a ${targetMinutes}-minute YouTube video from a set of sourced facts, then assign each fact to the one beat it best serves. Rules: (1) The video is an ARGUMENT, not a list — state a single controlling thesis and order the beats so each RAISES THE STAKES over the last (setup → mechanism → who/how much → escalation → payoff). (2) Assign EVERY useful fact to EXACTLY ONE beat (its factIndices); it is fine to leave a weak/duplicative fact unassigned. Do not put the same fact in two beats. (3) Give each beat a distinct narrative FUNCTION in one line. (4) Weight each beat 1-3 for how much runtime it deserves (the climax/mechanism beats earn more). (5) TRUE STORIES RUN IN TIME ORDER: when the facts describe real events over time (a case, a person, a chase), beat 1 may flash forward to the most gripping moment as a cold open, but EVERY beat after it follows the order events happened. Escalate WITHIN that order. Never place a later stretch of time before an earlier event (life in Florida in the 2000s cannot come before a 1975 arrest). Give each beat a "when": the year its EVENTS happened, not the year they were reported or described in an interview (her 1976 escape, told in a 2008 interview, is 1976); use null for a beat that is not about events in time. Output ONLY JSON: {"thesis":"...","beats":[{"name":"...","purpose":"...","when":1976,"factIndices":[0,3,7],"weight":2}, ...]}. Exactly ${beatCount} beats.${conceptRules}${structure ? `
+
+FOLLOW THIS WINNING STRUCTURE ("${structure.name}", the story shape that beat its channels' usual views in this niche). It overrides rule 5's ordering where they differ: the beats are EXACTLY these stages, in this order, one beat per stage, each beat named after its stage and doing that stage's job with THIS story's facts. Never open on the payoff: the cold open is the story's tension, the payoff stays in its own later stage.
+${structure.stages.map((s, i) => `${i + 1}. ${s.name}${s.role ? ` [${s.role}]` : ""} (~${s.sharePct}% of runtime): ${s.does}${s.factIdx && s.factIdx.length ? ` Suggested facts: ${s.factIdx.join(", ")}` : ""}`).join("\n")}` : ""}`;
   const ask = `ANGLE / FRAMING: ${angle || "(none given — infer the strongest thesis from the facts)"}${opts?.hookType ? `\nHOOK TYPE: ${opts.hookType}` : ""}${opts?.storytelling ? `\nSTORYTELLING MODE: ${opts.storytelling}` : ""}${opts?.directorNote ? `\nDIRECTOR'S NOTES (obey when planning beats — within the facts, they win over your defaults): "${opts.directorNote.slice(0, 600)}". If a note says to HOLD an outcome/reversal, the payoff beat goes LAST and no earlier beat reveals it. If a note names beats that must appear (only when the facts support them) or says a topic deserves as much time as another, weight the beats accordingly.` : ""}\n\nFACTS (assign by index):\n${numbered}\n\nDesign exactly ${beatCount} escalating beats and assign the facts. Output ONLY the JSON.`;
 
   try {
@@ -762,7 +767,9 @@ export async function buildTopicBlueprint(
     // The model's own "when" (event year) wins over fact years: facts are often dated by when they were
     // REPORTED (seen live, LeFevre: her 1976 escape and 1980s life, told in 2008 interviews, sorted as
     // 2008-2009 and landed after her 2009 release, scrambling a correct order).
-    {
+    // (Skipped under a winning structure: its stage order is the data-backed choice, and a mystery shape steps
+    // back in time on purpose.)
+    if (!structure) {
       const yearOf = (i: number) => { const m = String(facts[i] || "").match(/\b(1[89]\d{2}|20\d{2})\b/); return m ? Number(m[1]) : null; };
       const whenOf = (b: any) => { const w = Number(b?.when); return Number.isInteger(w) && w >= 1800 && w <= 2099 ? w : null; };
       const factYear = (b: any) => { const ys = (Array.isArray(b?.factIndices) ? b.factIndices : []).map(yearOf).filter((y: number | null): y is number => y !== null).sort((a: number, c: number) => a - c); return ys.length ? ys[Math.floor(ys.length / 2)] : null; };
@@ -789,11 +796,14 @@ export async function buildTopicBlueprint(
       : t;
 
     // Proportional word budgets from the weights, summing to the length target. Peak = heaviest beat.
-    const weights = beats.map((b) => Math.max(1, Math.min(3, Number(b?.weight) || 1)));
+    // Under a winning structure, runtime follows the stage shares the winners used.
+    const weights = structure && beats.length === structure.stages.length
+      ? structure.stages.map((st) => Math.max(1, st.sharePct))
+      : beats.map((b) => Math.max(1, Math.min(3, Number(b?.weight) || 1)));
     // CONCEPT MODE: the central moment is the spine, not a one-paragraph teaser (seen live: the photo
     // moment opened the video and was never mentioned again; the ending landed somewhere else). The
     // opening beat gets real weight and the FINAL beat is the peak, returning to the central moment.
-    if (conceptMode && beats.length >= 3) { weights[0] = Math.max(weights[0], 2); weights[weights.length - 1] = 3; }
+    if (conceptMode && !structure && beats.length >= 3) { weights[0] = Math.max(weights[0], 2); weights[weights.length - 1] = 3; }
     const totalW = weights.reduce((a, b) => a + b, 0) || beats.length;
     const peakIdx = conceptMode && beats.length >= 3 ? beats.length - 1 : weights.indexOf(Math.max(...weights));
     if (conceptMode) console.log(`[blueprint] CONCEPT: ${String(parsed?.concept || "").slice(0, 240)} :: ${beats.map((b, i) => `${i + 1}. ${String(b?.point || b?.name || "").slice(0, 110)}`).join(" | ")}`);
