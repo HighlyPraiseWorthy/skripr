@@ -116,6 +116,8 @@ ${hookTypeFilter
 
 ${seedAngle ? `\nPROVEN STRUCTURE TO FOLLOW (this idea came from a real outlier): bias the STORY STRUCTURE and packaging toward this proven shape, imitating the STRUCTURE only, never its subject or wording. But you MUST still make the 5 angles genuinely DIFFERENT hook types as listed above (controversy, story, reframe, myth-bust, stakes, pattern interrupt, overlooked mechanism, curiosity gap) — do NOT collapse them all into the outlier's own hook style. The structure is borrowed; the best hook TYPE for this specific story is open, so give real variety and let the strongest one win: ${String(seedAngle).slice(0, 400)}\n` : ""}
 ${lockedTitle ? `\nTITLE LOCK: the creator has chosen their title and it is FIXED. Set "titleSuggestion" to EXACTLY this string for every angle, unchanged, do not invent alternatives: "${String(lockedTitle).slice(0,150)}". Vary only the "hookPremise" across the 5 angles. The hooks must all work UNDER this one title.\n` : ""}
+PRIVATE PEOPLE AND CRIME (strict): never suggest that a named private person (a neighbor, a seller, a spouse, a coworker) helped, knew, or took part, unless a fact says so. "How many people helped him?" right after naming the man who sold him a house points at that man.
+
 PRESENT TENSE (strict): never state a status as true today ("is a registered nonprofit", "still operates", "remains open") unless a fact says it is current; use the past tense with the year the facts give.
 
 NUMBERS IN ANGLES (strict): do not put a specific number, salary, wage, dollar amount, date, or count in a "hookPremise" or "titleSuggestion" unless that exact figure is in the facts above. If the facts give none, make the point without one.
@@ -137,10 +139,10 @@ For each angle return EXACTLY:
 - "hookPremise": opening hook sentence (1-2 sentences, punchy, specific)
 - "titleSuggestion": full YouTube title (one idea, at most 55 characters)
 - "payoffMoment": the documented moment the ending lands on (at most 15 words, from the research). When the card's spine gives a PAYOFF REVEAL, restate THAT fact: it is the answer the video holds back (for an explainer, the explanation, never just the latest number)
-- "middleBeats": an array of 2 or 3 documented moments that carry the middle (each at most 15 words, from the research)
+- "middleBeats": an array of 2 or 3 documented moments that carry the middle (each at most 15 words, from the research): moments of the case itself (the crime, the escape, the hiding, the hunt, the turn), never side details about a private person's money, debts, or personal life
 - "audienceEmotion": primary emotion (curiosity / fear / anger / excitement / surprise)
 - "spine": the number of the STORY SPINE this card tells (or null if no spines were given)
-- "viewerQuestion": the one question the hook makes the viewer need answered (at most 20 words), which the title and hook do NOT answer
+- "viewerQuestion": the one question the hook makes the viewer need answered (at most 20 words), which the title and hook do NOT answer. Aim it at the case's real mystery (how he hid, who helped, how he was found, why it happened), never "will he face justice" or the verdict or sentence unless that outcome is the genuine surprise
 - "hookFact": the concrete detail from the research the hook is built on (at most 25 words)
 
 ${EXPERT_ATTRIBUTION_RULE}
@@ -234,7 +236,8 @@ Output ONLY the JSON array of cards.`,
       if (/\b(the research(?:['’]s)?|sourcing|kept distinct|the two figures)\b/i.test(`${c.hookPremise} ${c.whyItWorks || ""}`)) out.push("talks about the research or the edit instead of the story: rewrite it as narration");
       if (/(?:^|[.!?]\s+)Separately,/.test(String(c.hookPremise || ""))) out.push(`starts a sentence with "Separately,": say what each figure measured in natural words`);
       const FAM = /\b(daughter|son|wife|husband|children|kids|mother|father)\b/i;
-      const pm = String(c.whyItWorks || "").match(FAM);
+      // Only where the payoff LANDS (seen: the wife named in a middle beat, where she belonged, flagged 2 good cards).
+      const pm = String(c.payoffMoment || "").match(FAM);
       if (pm && !new RegExp(`\\b${pm[1]}`, "i").test(String(c.hookPremise || ""))) out.push(`the payoff talks about the ${pm[1].toLowerCase()}, but the hook doesn't: make the payoff describe this hook`);
       out.push(...hookCraftIssues(c, topic, { lockedTitle: !!lockedTitle }));
       // Explainers: the payoff lands on the spine's reveal (the explanation), in the writer's OWN words; the
@@ -335,7 +338,11 @@ Output ONLY the JSON array of cards.`,
       if ((warnings[i] || []).some((w) => isVQ(w) || onlyInQ(w))) { warnings[i] = warnings[i].filter((w) => !isVQ(w) && !onlyInQ(w)); c.viewerQuestion = undefined; }
       // Same for the explainer payoff steer: it's craft, not accuracy, so it gets one repair and never flags
       // an accurate card (seen: Wendy's 0 of 3 clean when repair couldn't match the reveal's wording).
-      warnings[i] = (warnings[i] || []).filter((w) => !/^the payoff should land on this angle's answer/.test(w));
+      // STYLE NUDGES never flag a card: they get the repair rounds above, then drop if still unmet. Accuracy
+      // warnings (the vet's, unsupported figures, research-talk leaks) are untouched. Seen: "For years," and a
+      // payoff-mentions-the-wife nudge flagged 2 of 3 error-free cards.
+      const STYLE = /^(?:the payoff should land on this angle's answer|"[^"]*" is a vague stand-in|the hook opens with a stock phrase|the hook leaves out its strongest fact|the payoff talks about the |the title gives away|the hook gives away|title reuses |title is \d+ characters|title is two sentences|starts a sentence with "Separately,"|the hook opens on a private family member)/;
+      warnings[i] = (warnings[i] || []).filter((w) => !STYLE.test(w));
     });
     // HOUSE RULE: strip em dashes from every user-facing string on each angle (premise, title, the
     // "why it works" explanation, and each vetting warning) before it reaches the cards.

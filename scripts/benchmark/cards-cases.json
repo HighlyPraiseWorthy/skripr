@@ -58,5 +58,10 @@
   "id": "darby",
   "topic": "The Housewife of Pulaski (The Story of Linda Darby)",
   "kind": "event"
+ },
+ {
+  "id": "taylor",
+  "topic": "William Claybourne Taylor",
+  "kind": "event"
  }
 ]
