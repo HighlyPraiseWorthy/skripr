@@ -358,6 +358,7 @@ export default function ScriptBriefPage() {
       anglePremise: angle.hookPremise ? angle.hookPremise + corrections : undefined,
       // Where the picked card's payoff lands: the hook opens on the card's TENSION and never on this.
       anglePayoff: angle.whyItWorks || undefined,
+      angleQuestion: angle.viewerQuestion || undefined,
       // The winning structure the creator kept in the storytelling step (or "none" for Skripr's own planner).
       structure: storyChoiceRef.current.structure?.structure || undefined,
       structureFamilyId: storyChoiceRef.current.structure?.structureFamilyId || undefined,

@@ -520,6 +520,8 @@ export async function generateHookFirst(input: {
   // Where the picked card's payoff lands ("The payoff lands on ..."). The hook opens on the card's tension
   // and NEVER on this (creator rule, 2026-10-06, all niches).
   anglePayoff?: string;
+  // The card's "Viewer asks" question: the hook opens it and must not answer it.
+  angleQuestion?: string;
   // Learned proven hooks for the niche (view-ranked + creator-kept from analyzed viral videos), so
   // the hook writer improves from real winners, the same signal the angle + body writers use.
   nicheHookExamples?: string;
@@ -527,18 +529,10 @@ export async function generateHookFirst(input: {
   voiceProfile?: string;
   directorNote?: string;
 }): Promise<string | null> {
-  // Payoff words: the payoff's first clause, 5-letter stems plus years ("renewed"/"renew", "2008").
-  const payoffWords = (t: string) => new Set([
-    ...(String(t).replace(/^the payoff lands on /i, "").split(/;\s*the middle is carried by/i)[0].split(/;/)[0].toLowerCase().match(/[a-z]{4,}/g) || []).filter((w) => !/^(?:about|after|their|there|which|while|would|where|before|other|these|those|that|this|from|with|then|than|were|been|have|into|jones)$/.test(w)).map((w) => w.slice(0, 5)),
-    ...(String(t).match(/\b(?:1[89]|20)\d{2}\b/g) || []),
-  ]);
-  const overlap = (a: Set<string>, b: Set<string>) => [...a].filter((w) => b.has(w)).length;
-  const cardOpensOnPayoff = !!(input.anglePremise && input.anglePayoff) && (() => { const pay = payoffWords(input.anglePayoff!); return pay.size >= 2 && overlap(pay, payoffWords(String(input.anglePremise).split(/(?<=[.!?])\s+/)[0] || "")) >= Math.min(3, pay.size); })();
-  // When the card opens on its payoff, give the writer a concrete earlier moment to open on (the card's first
-  // middle beat) and show it the card WITHOUT that payoff sentence: a "don't" alone was ignored (seen: two
-  // retries of a Jones hook still opened on the 2008 DMV visit, the story's payoff).
-  const earliestBeat = cardOpensOnPayoff ? (String(input.anglePayoff).split(/the middle is carried by/i)[1] || "").split(/,\s+(?=[A-Z])|\s+and\s+(?=[A-Z])/)[0].replace(/[.;]+$/, "").trim() : "";
-  const premiseShown = cardOpensOnPayoff ? String(input.anglePremise).split(/(?<=[.!?])\s+/).slice(1).join(" ") : String(input.anglePremise || "");
+  // OPENING RULE (creator decision 2026-10-06, replaces "never open on the payoff"): open on the strongest
+  // unresolved question. An outcome may open the hook when it creates a stronger how/why question; the hook
+  // must never ANSWER the question it opens. The card's own opening is kept (fidelity check below).
+  const premiseShown = String(input.anglePremise || "");
   const wantsStat = /stat|data|number|controvers|figure/i.test(input.hookType || "");
   const wantsQuote = /quote|line|said/i.test(input.hookType || "");
 
@@ -553,7 +547,7 @@ export async function generateHookFirst(input: {
         content: `VIDEO TITLE: "${input.title}"
 TOPIC: ${input.topic}
 ${input.hookType ? `\nHOOK ARCHETYPE (required): ${input.hookType}. ${wantsStat ? `A stat/controversy hook is not just "has a number". Its engine is: a SUPERLATIVE CLAIM about the subject, then a STACKED COMPARISON that proves it — the figure set against two or three familiar things people already fear or understand, combined ("more than terrorism, wars and car accidents combined"). Keep it to two sentences, roughly 25-30 words. If the facts contain a stacked comparison, build the hook on it. If they do not, make the strongest single superlative claim the facts support and prove it with the biggest documented figure — do NOT invent a comparison.` : wantsQuote ? "Real quoted speech must open it." : ""}` : ""}
-${input.anglePremise ? `\nOPEN ON THE PICKED CARD'S TENSION, NEVER ITS PAYOFF (critical, every niche): open on the card's central tension, contradiction, question, or problem, and hold its resolution or explanation for later. True crime: never open on the capture if the capture is the payoff. Business: never open by explaining the collapse. Science: never reveal the answer to the question. Explainers: never state the mechanism the hook should make the viewer want to understand. When the card's own first sentence opens on the payoff, open instead on the earliest moment that sets up the same tension (the disappearance, the promise, the contradiction) and keep the card's angle.${input.anglePayoff ? `\nTHE CARD'S PAYOFF (never in the hook): ${String(input.anglePayoff).slice(0, 400)}` : ""}${cardOpensOnPayoff ? `\nOPEN ON THIS MOMENT (the card opened on its payoff, which is held for the end): ${earliestBeat || "the earliest documented moment of the story"}. Build the same tension from it, and do not mention the payoff scene, place, or date in the hook.` : ""}\nTHE ANGLE THE CREATOR CHOSE (deliver THIS specific angle — its opening move is the point, not the single biggest number): "${String(premiseShown).slice(0, 300)}"\nBuild the hook to open the way THIS angle opens. A curiosity-gap angle opens on the gap it teases; a reframe opens by flipping the assumption; a myth-bust opens by naming the belief it breaks; a fear/stakes angle opens on what's at risk. Do NOT default to leading with the top statistic unless THIS angle leads there. Adapt the wording to the voice and length; keep the angle's specific move.` : ""}
+${input.anglePremise ? `\nOPEN ON THE STRONGEST UNRESOLVED QUESTION (critical, every niche): the hook's first sentence opens on the same moment the card below opens on. It may reveal an outcome (an arrest, a collapse, a result) ONLY when that outcome creates a stronger question about how, why, or what led to it; never reveal an outcome just because it is dramatic. The hook must NEVER answer the question it opens: keep the mechanism, the cause, and the explanation for the video. Test: after the hook, the viewer has one specific question it doesn't answer.${input.angleQuestion ? `\nTHE CARD'S CENTRAL QUESTION (the hook opens it and must not answer it): ${String(input.angleQuestion).slice(0, 240)}` : ""}${input.anglePayoff ? `\nWHERE THE VIDEO PAYS OFF (never explained in the hook): ${String(input.anglePayoff).slice(0, 400)}` : ""}\nTHE ANGLE THE CREATOR CHOSE (deliver THIS specific angle — its opening move is the point, not the single biggest number): "${String(premiseShown).slice(0, 300)}"\nBuild the hook to open the way THIS angle opens. A curiosity-gap angle opens on the gap it teases; a reframe opens by flipping the assumption; a myth-bust opens by naming the belief it breaks; a fear/stakes angle opens on what's at risk. Do NOT default to leading with the top statistic unless THIS angle leads there. Adapt the wording to the voice and length; keep the angle's specific move.` : ""}
 ${input.hookWhyItWorks ? `\nWHY THE SOURCE'S HOOK WORKED (reproduce this mechanism, not its wording): ${String(input.hookWhyItWorks).slice(0, 400)}` : ""}
 ${input.hookScript ? `\nThe source's own opening, for shape only — never reuse its wording: "${String(input.hookScript).slice(0, 200)}"` : ""}
 ${input.nicheHookExamples ? `\nPROVEN HOOKS IN THIS NICHE (view-ranked, from real videos — model the MECHANIC and energy, never copy wording):\n${String(input.nicheHookExamples).slice(0, 900)}` : ""}
@@ -590,18 +584,22 @@ Write the hook now.`,
     // The hook opens on the PICKED card's moment (seen live: the creator picked a $5.3M Bitcoin card and the
     // script cold-opened on the Austria bank arrest, the story's ending). Content words of the card's first
     // sentence must show up in the hook's first two sentences; otherwise retry once.
-    // The payoff never opens the hook (creator rule, 2026-10-06). Payoff words in the hook's first two
-    // sentences that the card's own setup doesn't use mean the hook spent the ending; retry once.
-    if (hook && input.anglePayoff) {
-      const pay = payoffWords(input.anglePayoff);
-      const hits = overlap(pay, payoffWords(hook.split(/(?<=[.!?])\s+/).slice(0, 2).join(" ")));
-      if (pay.size >= 2 && hits >= (cardOpensOnPayoff ? 2 : Math.min(3, pay.size))) {
-        const retry = await ask(`Your hook opens on the story's PAYOFF ("${String(input.anglePayoff).replace(/^the payoff lands on /i, "").split(/;/)[0].slice(0, 200)}"). Open on ${earliestBeat ? `this earlier moment instead: ${earliestBeat}` : "the tension that leads to it instead"}, and keep the payoff for the end.`);
-        if (retry) hook = retry;
-      }
+    // QUESTION PRESERVED: the hook must not resolve the question it creates (an outcome is allowed, an answer
+    // isn't). One cheap check; one retry.
+    if (hook && (input.angleQuestion || input.anglePayoff)) {
+      try {
+        const chk = await getAnthropic().messages.create({ model: "claude-haiku-4-5-20251001", max_tokens: 200, temperature: 0,
+          messages: [{ role: "user", content: `HOOK: "${hook}"\nCENTRAL QUESTION: ${input.angleQuestion || "(none given)"}\nPAYOFF THE VIDEO BUILDS TO: ${String(input.anglePayoff || "").slice(0, 300)}\n\nDoes the hook ANSWER the central question or explain how the payoff happened (the mechanism, cause, or explanation)? Revealing an outcome alone is NOT answering. Output ONLY JSON: {"answers":true|false,"why":"one line"}` }] }, { timeout: 20_000, maxRetries: 0 });
+        const t = chk.content[0]?.type === "text" ? chk.content[0].text : "";
+        const j2 = JSON.parse(t.slice(t.indexOf("{"), t.lastIndexOf("}") + 1));
+        if (j2?.answers === true) {
+          const retry = await ask(`Your hook answers the question it should leave open (${String(j2.why || "").slice(0, 160)}). Keep the opening moment, but withhold the how/why/explanation for the video.`);
+          if (retry) hook = retry;
+        }
+      } catch { /* the check is best effort */ }
     }
-    // Fidelity to the card applies only when the card does NOT itself open on the payoff.
-    if (hook && input.anglePremise && !cardOpensOnPayoff) {
+    // Fidelity: the hook opens on the card's own opening moment.
+    if (hook && input.anglePremise) {
       const words = (t: string) => new Set((String(t).toLowerCase().match(/[a-z0-9$.,]{4,}/g) || []).map((w) => w.replace(/[.,]+$/, "").slice(0, 6)).filter((w) => !/^(?:about|after|their|there|which|while|would|where|before|other|these|those|this|that|with|from|have|were|been|into|then|than|they|them|what|when)$/.test(w)));
       const cardFirst = words(String(input.anglePremise).split(/(?<=[.!?])\s+/)[0] || "");
       const hookHead = words(hook.split(/(?<=[.!?])\s+/).slice(0, 2).join(" "));

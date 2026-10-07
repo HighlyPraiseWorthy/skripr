@@ -532,6 +532,7 @@ export async function POST(req: Request) {
         // (curiosity gap vs reframe vs myth-bust) instead of every type grabbing the same top fact.
         anglePremise: typeof raw.anglePremise === "string" ? raw.anglePremise : undefined,
         anglePayoff: typeof raw.anglePayoff === "string" ? raw.anglePayoff : undefined,
+        angleQuestion: typeof raw.angleQuestion === "string" ? raw.angleQuestion : undefined,
         // Learned, view-ranked, creator-kept hooks for this niche — so the hook writer improves from
         // analyzed viral videos, the same signal the angle + body writers already use.
         nicheHookExamples: nicheHookExamples || undefined,
