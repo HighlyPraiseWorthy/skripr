@@ -109,3 +109,120 @@ Output ONLY JSON: {"opening":{"type":"...","entry":"...","firstQuestionLine":3,"
     events,
   };
 }
+
+// OBSERVABLE EVENTS (v2, reviewer recommendation 2026-10-07). The v1 labels (re-hook, main reveal, opening type)
+// proved too subjective: two models disagreed badly. v2 labels only what is visible in the words themselves;
+// higher-level ideas (re-hook rhythm, reveal timing) are derived from these later, never labeled directly.
+// A "promise" is defined operationally: a new unresolved information promise that changes what the viewer wants
+// to know ("But the money wasn't missing. It had gone somewhere else."), not "the investigation continued."
+export const OBSERVABLE_KINDS = ["specific_number", "named_entity", "explicit_question", "promise", "new_fact", "evidence", "contradiction", "question_answered", "mechanism_explained", "outcome_revealed", "identity_revealed", "repetition", "sponsor"] as const;
+export interface ObservableEvent { t: number; line: number; kind: string }
+export async function analyzeObservable(input: { title: string; lines: TimedLine[]; model?: string; temperature?: number }): Promise<ObservableEvent[] | null> {
+  const lines = input.lines.slice(0, 900);
+  if (lines.length < 20) return null;
+  const numbered = lines.map((l) => `[L${l.i}] ${l.text}`).join("\n");
+  const msg = await new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY || "", timeout: 180_000, maxRetries: 1 }).messages.create({
+    model: input.model || "claude-haiku-4-5-20251001", max_tokens: 16000, ...(input.temperature !== undefined ? { temperature: input.temperature } : {}),
+    messages: [{ role: "user", content: `Label OBSERVABLE events in this YouTube transcript ("${String(input.title).slice(0, 150)}"). Each line is [L<number>]. Label only what the words themselves show; do not interpret story importance. A line can have several labels.
+
+- specific_number: a specific figure, amount, date, count, or measurement ("$36.9 million", "in 1979", "32 years").
+- named_entity: a named person, organization, or place is mentioned for the FIRST time.
+- explicit_question: the narration literally asks a question (a sentence ending in "?" or "the question is...").
+- promise: a NEW unresolved information promise that changes what the viewer wants to know ("But the money wasn't missing. It had gone somewhere else.", "That turned out to be the least strange part."). Not ordinary narration like "the investigation continued".
+- new_fact: a fact not stated before in the video.
+- evidence: a document, record, recording, quote from a source, study, or data cited as proof.
+- contradiction: something that conflicts with what was said or assumed before ("but", "except", "in fact" introducing a conflicting fact).
+- question_answered: a question or promise raised earlier is now answered.
+- mechanism_explained: HOW or WHY something happened is explained.
+- outcome_revealed: how a situation ended (an arrest, a death, a collapse, a result) is stated.
+- identity_revealed: who someone really is, or who did it, is stated.
+- repetition: restates something already said with nothing new.
+- sponsor: part of an ad read.
+
+TRANSCRIPT:
+${numbered}
+
+Output ONLY JSON: {"events":[{"line":0,"kind":"specific_number"}]}` }],
+  });
+  const text = msg.content.filter((c: any) => c.type === "text").map((c: any) => c.text).join("\n");
+  let j: any = null;
+  try { j = JSON.parse(text.slice(text.indexOf("{"), text.lastIndexOf("}") + 1)); }
+  catch { const body = text.slice(text.indexOf("{")); const cut = body.lastIndexOf("},"); try { j = cut > 0 ? JSON.parse(body.slice(0, cut + 1) + "]}") : null; } catch { j = null; } }
+  if (!j) return null;
+  return (Array.isArray(j.events) ? j.events : [])
+    .filter((e: any) => OBSERVABLE_KINDS.includes(e?.kind) && Number.isInteger(Number(e.line)) && lines[Number(e.line)])
+    .map((e: any) => ({ t: lines[Number(e.line)].t, line: Number(e.line), kind: e.kind }))
+    .sort((a: ObservableEvent, b: ObservableEvent) => a.t - b.t);
+}
+
+// ============================================================================================================
+// transcript_event_schema_v1: FROZEN 2026-10-07 before the reliability re-run (reviewer: never change
+// definitions after seeing results; that moves the goalposts). Changing anything below means a new version.
+//  - Event types: the 8 that self-agreed in the first test (number 96%, question 96%, new fact 91%, evidence
+//    88%, explanation 82%, outcome 74%, entity 73%, promise 68%) plus sponsor (to exclude ads). Contradiction,
+//    question-answered, identity and repetition are NOT labels; they get derived later.
+//  - Definitions: worded exactly as in the first test.
+//  - Timestamps: the start second of the caption line the event is on (code-mapped, never model-estimated).
+//  - Chunking: 80 lines (~10 min) per call, 8-line (~1 min) overlap; each chunk gets the entities already
+//    introduced and the questions/promises still open; events in an overlap are kept from the earlier chunk.
+//  - Model: claude-sonnet-4-6 (the cheap model agreed with it 0-53%, so it is not used).
+// ============================================================================================================
+export const EVENT_SCHEMA_VERSION = "transcript_event_schema_v1";
+export const V1_KINDS = ["specific_number", "named_entity", "explicit_question", "promise", "new_fact", "evidence", "mechanism_explained", "outcome_revealed", "sponsor"] as const;
+const V1_DEFINITIONS = `- specific_number: a specific figure, amount, date, count, or measurement ("$36.9 million", "in 1979", "32 years").
+- named_entity: a named person, organization, or place is mentioned for the FIRST time.
+- explicit_question: the narration literally asks a question (a sentence ending in "?" or "the question is...").
+- promise: a NEW unresolved information promise that changes what the viewer wants to know ("But the money wasn't missing. It had gone somewhere else.", "That turned out to be the least strange part."). Not ordinary narration like "the investigation continued".
+- new_fact: a fact not stated before in the video.
+- evidence: a document, record, recording, quote from a source, study, or data cited as proof.
+- mechanism_explained: HOW or WHY something happened is explained.
+- outcome_revealed: how a situation ended (an arrest, a death, a collapse, a result) is stated.
+- sponsor: part of an ad read.`;
+const CHUNK = 80, OVERLAP = 8;
+
+export async function analyzeEventsV1(input: { title: string; lines: TimedLine[]; model?: string; temperature?: number }): Promise<{ schema: string; events: ObservableEvent[]; chunks: number; failedChunks: number } | null> {
+  const lines = input.lines.slice(0, 1200);
+  if (lines.length < 20) return null;
+  const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY || "", timeout: 180_000, maxRetries: 1 });
+  const events: ObservableEvent[] = [];
+  const entities = new Set<string>(); const openQuestions: string[] = [];
+  let chunks = 0, failedChunks = 0;
+  for (let start = 0; start < lines.length; start += CHUNK - OVERLAP) {
+    const part = lines.slice(start, start + CHUNK);
+    if (!part.length) break;
+    chunks++;
+    const keepFrom = start === 0 ? 0 : start + OVERLAP; // overlap lines belong to the earlier chunk
+    let got: any[] | null = null;
+    for (let attempt = 0; attempt < 2 && !got; attempt++) {
+      try {
+        const msg = await client.messages.create({
+          model: input.model || "claude-sonnet-4-6", max_tokens: 8000, ...(input.temperature !== undefined ? { temperature: input.temperature } : {}),
+          messages: [{ role: "user", content: `Label OBSERVABLE events in this part of a YouTube transcript ("${String(input.title).slice(0, 150)}"). Each line is [L<number>]. Label only what the words themselves show; do not interpret story importance. A line can have several labels.
+
+${V1_DEFINITIONS}
+${entities.size ? `\nALREADY INTRODUCED EARLIER IN THE VIDEO (not a first mention): ${[...entities].slice(-80).join(", ")}` : ""}${openQuestions.length ? `\nQUESTIONS / PROMISES ALREADY OPEN FROM EARLIER: ${openQuestions.slice(-12).join(" | ")}` : ""}
+
+TRANSCRIPT PART:
+${part.map((l) => `[L${l.i}] ${l.text}`).join("\n")}
+
+Output ONLY JSON: {"events":[{"line":0,"kind":"specific_number","note":"for named_entity the name; for explicit_question/promise a 3-10 word summary"}]}` }],
+        });
+        const text = msg.content.filter((c: any) => c.type === "text").map((c: any) => c.text).join("\n");
+        let j: any = null;
+        try { j = JSON.parse(text.slice(text.indexOf("{"), text.lastIndexOf("}") + 1)); }
+        catch { const body = text.slice(text.indexOf("{")); const cut = body.lastIndexOf("},"); try { j = cut > 0 ? JSON.parse(body.slice(0, cut + 1) + "]}") : null; } catch { j = null; } }
+        if (j && Array.isArray(j.events)) got = j.events;
+      } catch { /* retry once */ }
+    }
+    if (!got) { failedChunks++; continue; }
+    for (const e of got) {
+      const n = Number(e?.line);
+      if (!V1_KINDS.includes(e?.kind) || !Number.isInteger(n) || !lines[n] || n < keepFrom || n < start || n >= start + part.length) continue;
+      if (e.kind === "named_entity" && e.note) { const key = String(e.note).toLowerCase().trim(); if (entities.has(key)) continue; entities.add(key); }
+      if ((e.kind === "explicit_question" || e.kind === "promise") && e.note) openQuestions.push(String(e.note).slice(0, 80));
+      events.push({ t: lines[n].t, line: n, kind: e.kind });
+    }
+  }
+  events.sort((a, b) => a.t - b.t || a.line - b.line);
+  return { schema: EVENT_SCHEMA_VERSION, events, chunks, failedChunks };
+}
