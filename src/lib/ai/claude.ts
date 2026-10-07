@@ -1751,6 +1751,10 @@ export async function finalizeScript(
   opts: { startedAt: number; presetHook: string | null },
 ): Promise<GeneratedScript> {
   const { startedAt, presetHook } = opts;
+  // EVIDENCE-INTEGRITY TRACE (benchmark only): when the caller passes input.__trace, snapshot the body between
+  // passes so each unsupported claim can be traced to the step that created it. A no-op in the app.
+  const __trace = (stage: string) => { try { const fn = (input as any).__trace; if (typeof fn !== "function") return; const k = ["fullScript", "script", "body", "content"].find((x) => typeof (script as any)[x] === "string" && (script as any)[x].trim()); fn(stage, k ? (script as any)[k] : ""); } catch { /* tracing never affects the script */ } };
+  __trace("finalize_in");
 
   // PIPELINE STATUS + GLOBAL DEADLINE CIRCUIT-BREAKER. The route budget is 300s; we hold a hard
   // internal deadline 30s under it and, before every expensive LLM stage, check whether the stage's
@@ -1945,6 +1949,7 @@ export async function finalizeScript(
   // pass, on the assembled body, judges by meaning: collapse a repeated point to its 1-2 best
   // instances, and cut/hedge any role/motive/cooperation the FACTS don't establish. Reduction-only
   // (never adds), guarded, graceful fallback — the deterministic cuts below still backstop it.
+  __trace("before_refine");
   const refineKey = ["fullScript", "script", "body", "content"].find((k) => typeof (script as any)[k] === "string" && (script as any)[k].trim());
   if (refineKey && input.sourceMaterial && input.sourceMaterial.trim() && !budgetBlown("refine", 45_000)) {
     const before = (script as any)[refineKey] as string;
@@ -1957,6 +1962,7 @@ export async function finalizeScript(
     }
   }
 
+  __trace("after_refine");
   // GOVERNING PRINCIPLE — SILENT SAFETY CUT (runs last). Person-guilt insinuation is a defamation
   // risk, so it is CUT silently before the script is returned — no panel, no flag. A cut is the
   // safe default (removing a sentence can't add a new problem). What was cut is kept ONLY in an
@@ -2111,6 +2117,7 @@ export async function finalizeScript(
   // couldn't help. Target is ~165 wpm (the finished-video rate; the old 130 undershot a 20:40 ask by
   // ~800 words). Only the supplied facts feed in (never invents), and a deterministic safety re-sweep
   // guards any newly-added beat so the re-fill can't re-introduce an insinuation.
+  __trace("before_refill");
   const refillKey = ["fullScript", "script", "body", "content"].find(
     (k) => typeof (script as any)[k] === "string" && (script as any)[k].trim().length > 0,
   );
@@ -2157,6 +2164,7 @@ export async function finalizeScript(
     console.log(`[refill] skipped reason=${why}`);
   }
 
+  __trace("after_refill");
   // CERTAINTY DISCIPLINE runs LAST, on the FINAL assembled body (including the woven refill beats,
   // which is where overstatement lands): flag scope/certainty/causation risks, judge each against
   // the facts, rewrite only the unsupported ones AROUND their true core — keeping the punch.
@@ -2291,6 +2299,7 @@ export async function finalizeScript(
     console.log(`[finalize] status=SUCCESS elapsed=${elapsed}s`);
   }
 
+  __trace("finalize_out");
   return script;
 }
 

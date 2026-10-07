@@ -164,7 +164,7 @@ async function accuracyJudge(body: string, material: string) {
   const WIN = 50; const wins: number[][] = [];
   for (let a = 0; a < sents.length; a += WIN) wins.push(Array.from({ length: Math.min(WIN, sents.length - a) }, (_, k) => a + k));
   const sys = `You are a strict documentary fact-checker auditing a finished YouTube script against the research it was written from. List EVERY sentence that states something the research does not support. Count as a problem: (a) INVENTED: any specific detail, action, scene, place, time of day, number, behavior, relationship, or background/history claim absent from the research; (b) MIND/KNOWLEDGE: what a real person or agency thought, felt, knew, intended, or failed to do, unless sourced; (c) SPECULATION/INSINUATION: hints, "might have", "not ruled out", implied wrongdoing; (d) CONTRADICTED: conflicts with the research; (e) MISATTRIBUTED: a claim or quote credited to the wrong source/speaker. NOT problems: interpretation, framing, emotion, rhetorical lines, correct arithmetic from research dates. Be strict but fair. Output ONLY JSON: {"issues":[{"i":<sentence index>,"type":"invented|mind|speculation|contradicted|misattributed","quote":"<the problem words>","why":"<short>"}]}`;
-  const res = await Promise.all(wins.map((idxs) => judgeJSON(sys, `RESEARCH:\n"""\n${material.slice(0, 20000)}\n"""\n\nSCRIPT SENTENCES:\n${idxs.map((i) => `${i}. ${sents[i]}`).join("\n")}`)));
+  const res = await Promise.all(wins.map((idxs) => judgeJSON(sys, `RESEARCH:\n"""\n${material.slice(0, 200000)}\n"""\n\nSCRIPT SENTENCES:\n${idxs.map((i) => `${i}. ${sents[i]}`).join("\n")}`)));
   const issues = res.flatMap((r) => (Array.isArray(r?.issues) ? r.issues : []));
   return { issues, sentences: sents.length };
 }
