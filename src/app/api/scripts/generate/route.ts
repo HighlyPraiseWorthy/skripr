@@ -15,7 +15,7 @@ import { reviewAndCorrectScript } from "@/lib/ai/self-review";
 import { finalCheck } from "@/lib/ai/final-check";
 import { getActiveVoiceMeta, getVoiceMetaById, SKRIPR_HOUSE_VOICE } from "@/lib/voice-profile";
 import { captureFrameworkInBackground } from "@/lib/framework-capture";
-import { chooseStructure, type ChosenStructure } from "@/lib/structure-families";
+import { chooseStructure, STRUCTURE_FAMILIES_ENABLED, type ChosenStructure } from "@/lib/structure-families";
 import { researchCentralScene, quotedPhrases } from "@/lib/research";
 import { vetAngles } from "@/lib/ai/angle-vet";
 import { splitSentences, tagFactSources, replaceFamilyNames, minorsInFacts } from "@/lib/script-compliance";
@@ -398,7 +398,8 @@ export async function POST(req: Request) {
         // niches') outlier winners that THIS research can fill. The creator's pick from the storytelling step
         // wins ("structureFamilyId", or "none" for Skripr's own planner); otherwise Skripr chooses.
         // The creator already saw and kept a structure in the storytelling step: use exactly that one.
-        if (raw.structure && typeof raw.structure === "object" && Array.isArray(raw.structure.stages) && raw.structure.stages.length >= 4) {
+        if (!STRUCTURE_FAMILIES_ENABLED) { /* shelved: Skripr's own planner */ }
+        else if (raw.structure && typeof raw.structure === "object" && Array.isArray(raw.structure.stages) && raw.structure.stages.length >= 4) {
           chosenStructure = raw.structure as ChosenStructure;
           console.log(`[generate] structure (creator's pick): "${chosenStructure.name}"`);
         } else if (raw.structureFamilyId !== "none" && bpMaterial) {

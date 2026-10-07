@@ -33,7 +33,10 @@ export interface NicheStructure {
   // role): the fallback when no family fits a story.
   skeleton: { role: string; sharePct: number; usedByPct: number }[];
 }
-export const ALL_NICHES = "_all"; // cross-niche structure for niches without enough winners yet
+export const ALL_NICHES = "_all";
+// SHELVED 2026-10-06: the benchmark showed forced story shapes made scripts worse (accuracy 3.2 -> 4.4 issues
+// per 1k words). Kept for reference; generation and the storytelling panel only use it when this is true.
+export const STRUCTURE_FAMILIES_ENABLED = false; // cross-niche structure for niches without enough winners yet
 
 const WIN_X = 2, BASE_X = 1.2, PER_CHANNEL = 3;
 const techName = (id: string) => TECHNIQUES.find((t) => t.id === id)?.name || id;

@@ -64,7 +64,9 @@ export default function StorytellingPicker(props: {
       body: JSON.stringify({ niche: props.niche, topic: props.topic, angle: props.angle, sourceMaterial: props.sourceMaterial, familyId }) })
       .then((r) => r.json()).then((d) => { if (d?.structure) setStructure(d.structure); }).catch(() => {}).finally(() => setStructLoading(false));
   };
-  useEffect(() => { loadStructure(); }, [props.sourceMaterial]); // eslint-disable-line react-hooks/exhaustive-deps
+  // Story-shape families are shelved (they made scripts worse in the benchmark), so the panel stays hidden.
+  const SHOW_STRUCTURE = false;
+  useEffect(() => { if (SHOW_STRUCTURE) loadStructure(); }, [props.sourceMaterial]); // eslint-disable-line react-hooks/exhaustive-deps
   // Auto-derived notes from the grounded research + angle. Recomputed only when the
   // inputs change; the user checks/unchecks each and the checked set is prepended to
   // whatever they type, so they never have to hand-write the derivable guidance.
@@ -278,7 +280,7 @@ export default function StorytellingPicker(props: {
             </div>
 
             {/* WINNING STRUCTURE from the niche's outlier data, with its evidence; the creator can switch or turn it off. */}
-            {props.sourceMaterial && (structLoading || structure) && (
+            {SHOW_STRUCTURE && props.sourceMaterial && (structLoading || structure) && (
               <div style={{ marginTop: 18, border: `1px solid ${C.border}`, borderRadius: 12, padding: 14 }}>
                 <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: C.dim, marginBottom: 6 }}>Structure from winning videos</div>
                 {structLoading && !structure && <div style={{ fontSize: 12.5, color: C.dim }}>Matching your research to the story shapes that won in this niche…</div>}

@@ -21,11 +21,5 @@
     "src/app/api/structure/choose/route.ts": {
       "maxDuration": 120
     }
-  },
-  "crons": [
-    {
-      "path": "/api/cron/structure-families",
-      "schedule": "0 7 * * *"
-    }
-  ]
+  }
 }
