@@ -3125,7 +3125,7 @@ async function rewriteRepeatedOpener(paragraph: string, startedAt: number): Prom
       max_tokens: 400,
       temperature: 0.4,
       system: "You lightly edit one paragraph of a documentary script. Output ONLY the edited paragraph as plain prose — no label, no quotes.",
-      messages: [{ role: "user", content: `This paragraph opens by RESTATING a figure/line the script already opened an earlier section with (a repetitive drumbeat). Rewrite ONLY its opening sentence so it does NOT lead with that same number or the same "that number comes from the indictment" restatement — open it a different way and move straight into the section's substance. Keep every fact and the rest of the paragraph. Invent nothing.
+      messages: [{ role: "user", content: `This paragraph opens by RESTATING a figure/line the script already opened an earlier section with (a repetitive drumbeat). Rewrite ONLY its opening sentence so it does NOT lead with that same number or the same "that number comes from the indictment" restatement — open it a different way and move straight into the section's substance. Keep every fact and the rest of the paragraph. Invent nothing. If the paragraph does NOT actually open by restating an earlier figure or line, output it UNCHANGED. Never comment on the paragraph or the request.
 
 Paragraph:
 ${paragraph}` }],
@@ -3142,6 +3142,10 @@ export function isUsableRewrite(s: string | null | undefined, maxWords = 70): bo
   const w = t.split(/\s+/).length;
   if (w < 3 || w > maxWords) return false;
   if (/^(i (?:can'?t|cannot|won'?t)|as an ai|sorry|here('?s| is)\b)/i.test(t)) return false;
+  // Model commentary about the request instead of prose (seen live 2026-10-07: "Wait — the paragraph you've shared
+  // contains no restated figure..." landed in a Jones script). Reject it so the original paragraph is kept.
+  // Also seen in testing: "I need to see the actual paragraph you want me to edit. You've only shared a scene heading".
+  if (/^(wait|note:|hmm|i need (?:to see )?(?:the|a|an|more))\b|\b(you(?:'?ve| have)? (?:only )?(?:shared|provided|given|sent)|the paragraph (?:you|provided|above)|(?:paragraph|text) (?:you want|to edit)|this paragraph (?:does|doesn'?t|already)|no (?:change|edit)s? (?:is |are )?needed|as requested)\b/i.test(t)) return false;
   return true;
 }
 // GUARD (pure): the hook/ending to actually use — the rewrite only when usable, else the original.
