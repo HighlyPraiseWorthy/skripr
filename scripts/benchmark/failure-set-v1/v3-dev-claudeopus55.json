@@ -1,0 +1,4630 @@
+[
+ {
+  "id": "C001",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 0,
+   "sentence": "Serial cases are harder to identify and clear than single-incident homicides because they are dispersed — across time, across jurisdictions, across agencies that may not initially recognize they are looking at connected events.",
+   "claims": [
+    {
+     "claim": "Serial cases are harder to identify and clear than single-incident homicides",
+     "status": "supported",
+     "fact": "F13",
+     "quote": "serial homicide is often harder to identify and clear than single-incident homicide",
+     "verified": true,
+     "material": false,
+     "why": "Directly stated in F13."
+    },
+    {
+     "claim": "because they are dispersed — across time, across jurisdictions",
+     "status": "supported",
+     "fact": "F13",
+     "quote": "because cases are dispersed across time and jurisdictions",
+     "verified": true,
+     "material": false,
+     "why": "F13 gives this cause."
+    },
+    {
+     "claim": "across agencies that may not initially recognize they are looking at connected events",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research does not mention agencies failing to link cases; this is a hedged general elaboration."
+    }
+   ],
+   "error": true,
+   "material": false
+  }
+ },
+ {
+  "id": "C003",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 1,
+   "sentence": "And that finding, modest as it sounds in raw terms, carries real weight against a cultural story that has been insisting for decades that the danger is primarily cerebral.",
+   "claims": [
+    {
+     "claim": "that finding ... carries real weight against a cultural story",
+     "status": "supported",
+     "fact": "F15",
+     "quote": "The best-known database evidence does not support the stereotype of an exceptionally intelligent serial killer",
+     "verified": true,
+     "material": false,
+     "why": "The research says the database evidence undercuts the intelligent-serial-killer stereotype."
+    },
+    {
+     "claim": "a cultural story that has been insisting for decades",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "No research says how long the stereotype has existed; this is the narrator's cultural characterization."
+    },
+    {
+     "claim": "modest as it sounds in raw terms",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "This is the narrator's own judgment of the finding's size, not a sourced fact."
+    }
+   ],
+   "error": true,
+   "material": false
+  }
+ },
+ {
+  "id": "C004",
+  "truth": {
+   "any": true,
+   "material": true
+  },
+  "pred": {
+   "i": 2,
+   "sentence": "But the median — the score that splits the sample cleanly in half — lands at 89.0, which places the midpoint of the distribution a full standard deviation fragment below the norm, not hovering just beneath it.",
+   "claims": [
+    {
+     "claim": "the median ... lands at 89.0",
+     "status": "supported",
+     "fact": "F10",
+     "quote": "median 89.0, mean 95.1",
+     "verified": true,
+     "material": false,
+     "why": "Research gives the median IQ as 89.0."
+    },
+    {
+     "claim": "places the midpoint of the distribution a full standard deviation fragment below the norm",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research gives no standard deviation, so the claimed distance below the norm is not established."
+    },
+    {
+     "claim": "not hovering just beneath it",
+     "status": "contradicted",
+     "fact": "F15",
+     "quote": "mean IQ of 95.1 and median of 89.0, which is around average to slightly below average",
+     "verified": true,
+     "material": true,
+     "why": "Research describes these figures as around average to slightly below average, the opposite of the claim."
+    }
+   ],
+   "error": true,
+   "material": true
+  }
+ },
+ {
+  "id": "C005",
+  "truth": {
+   "any": true,
+   "material": true
+  },
+  "pred": {
+   "i": 0,
+   "sentence": "The gun has done its work without firing a shot, and the man who walked out of a New Jersey prison two years earlier has now walked off an American commercial aircraft onto foreign soil — with a country that does not share an extradition arrangement waiting to receive him.",
+   "claims": [
+    {
+     "claim": "The gun has done its work without firing a shot",
+     "status": "unsupported",
+     "fact": "F11",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research does not say whether any shot was fired, only that the hijackers threatened to shoot a hostage."
+    },
+    {
+     "claim": "the man who walked out of a New Jersey prison two years earlier",
+     "status": "derived",
+     "fact": "F21",
+     "quote": "escaped from a New Jersey prison in August 1970, joined the Black Liberation Army, hijacked Delta Air Lines Flight 841 on July 31, 1972",
+     "verified": true,
+     "material": false,
+     "why": "From the August 1970 escape to the July 1972 hijacking is about two years."
+    },
+    {
+     "claim": "has now walked off an American commercial aircraft onto foreign soil",
+     "status": "supported",
+     "fact": "F11",
+     "quote": "the plane ultimately landed in Algeria",
+     "verified": true,
+     "material": false,
+     "why": "The Delta flight landed in Algeria."
+    },
+    {
+     "claim": "with a country that does not share an extradition arrangement waiting to receive him",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research says nothing about Algeria's extradition arrangements with the U.S. or about Algeria waiting to receive him."
+    }
+   ],
+   "error": true,
+   "material": true
+  }
+ },
+ {
+  "id": "C006",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 0,
+   "sentence": "By 2024, that same meal was running $11.99 at locations across the country — a jump of more than $6.50, which works out to more than 100% in a single decade.",
+   "claims": [
+    {
+     "claim": "By 2024, that same meal was running $11.99",
+     "status": "supported",
+     "fact": "F3",
+     "quote": "McDonald’s Quarter Pounder with cheese meal rose from $5.39 in 2014 to $11.99 in 2024",
+     "verified": true,
+     "material": false,
+     "why": "The research states the $11.99 price in 2024."
+    },
+    {
+     "claim": "at locations across the country",
+     "status": "unsupported",
+     "fact": "F3",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research gives one reported price, not a nationwide price at locations across the country."
+    },
+    {
+     "claim": "a jump of more than $6.50",
+     "status": "derived",
+     "fact": "F3",
+     "quote": "rose from $5.39 in 2014 to $11.99 in 2024",
+     "verified": true,
+     "material": false,
+     "why": "$11.99 minus $5.39 is $6.60, which is more than $6.50."
+    },
+    {
+     "claim": "which works out to more than 100%",
+     "status": "derived",
+     "fact": "F3",
+     "quote": "rose from $5.39 in 2014 to $11.99 in 2024",
+     "verified": true,
+     "material": false,
+     "why": "$6.60 divided by $5.39 is about 122%."
+    },
+    {
+     "claim": "in a single decade",
+     "status": "derived",
+     "fact": "F3",
+     "quote": "from $5.39 in 2014 to $11.99 in 2024",
+     "verified": true,
+     "material": false,
+     "why": "2014 to 2024 is ten years."
+    }
+   ],
+   "error": true,
+   "material": true
+  }
+ },
+ {
+  "id": "C007",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 3,
+   "sentence": "And psychopathy, measured by the same instrument used in that homicide research, correlates negatively with intelligence — modestly across the broader literature, substantially in the female offender sample.",
+   "claims": [
+    {
+     "claim": "psychopathy, measured by the same instrument used in that homicide research",
+     "status": "supported",
+     "fact": "F1",
+     "quote": "the Pearson correlation between total PCL-R score and IQ was r = -0.55",
+     "verified": true,
+     "material": false,
+     "why": "F1 uses the PCL-R, the same instrument as the homicide meta-analysis in F18. F11's meta-analysis does not name its instrument."
+    },
+    {
+     "claim": "correlates negatively with intelligence",
+     "status": "supported",
+     "fact": "F11",
+     "quote": "a small, statistically significant negative relationship between intelligence and psychopathy",
+     "verified": true,
+     "material": false,
+     "why": "The research states a negative correlation."
+    },
+    {
+     "claim": "modestly across the broader literature",
+     "status": "supported",
+     "fact": "F11",
+     "quote": "total psychopathy correlated with FSIQ at r = -.07",
+     "verified": true,
+     "material": false,
+     "why": "The meta-analysis found a small correlation, so 'modestly' is a fair paraphrase."
+    },
+    {
+     "claim": "substantially in the female offender sample",
+     "status": "supported",
+     "fact": "F1",
+     "quote": "A study of insane female offenders found the Pearson correlation between total PCL-R score and IQ was r = -0.55",
+     "verified": true,
+     "material": false,
+     "why": "r = -0.55 is a substantial correlation in the female offender sample."
+    }
+   ],
+   "error": false,
+   "material": false
+  }
+ },
+ {
+  "id": "C008",
+  "truth": {
+   "any": true,
+   "material": true
+  },
+  "pred": {
+   "i": 0,
+   "sentence": "February 1959, Freshwaters arrived at the Ohio State Reformatory — the same institution, in Mansfield, that would later stand in for Shawshank Prison in the film.",
+   "claims": [
+    {
+     "claim": "February 1959, Freshwaters arrived at the Ohio State Reformatory",
+     "status": "supported",
+     "fact": "F2",
+     "quote": "Freshwaters was imprisoned in February 1959 at the Ohio State Reformatory",
+     "verified": true,
+     "material": false,
+     "why": "Research states he was imprisoned there in February 1959."
+    },
+    {
+     "claim": "in Mansfield",
+     "status": "supported",
+     "fact": "F8",
+     "quote": "he disappeared from the Ohio State Reformatory in Mansfield",
+     "verified": true,
+     "material": false,
+     "why": "Research places the reformatory in Mansfield."
+    },
+    {
+     "claim": "that would later stand in for Shawshank Prison in the film",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research never mentions the film or the reformatory's use as a filming location."
+    }
+   ],
+   "error": true,
+   "material": true
+  }
+ },
+ {
+  "id": "C009",
+  "truth": {
+   "any": true,
+   "material": false
+  },
+  "pred": {
+   "i": 4,
+   "sentence": "The trait that makes serial killing more likely is not one that travels with elevated cognition.",
+   "claims": [
+    {
+     "claim": "The trait that makes serial killing more likely",
+     "status": "overstated",
+     "fact": "F20",
+     "quote": "it was stronger in serial homicide (r = 0.74) than in homicide overall",
+     "verified": true,
+     "material": true,
+     "why": "Research reports an association between psychopathy and serial homicide, and F16 says causation is debated, so 'makes more likely' states the correlation as a cause."
+    },
+    {
+     "claim": "is not one that travels with elevated cognition",
+     "status": "supported",
+     "fact": "F11",
+     "quote": "a small, statistically significant negative relationship between intelligence and psychopathy",
+     "verified": true,
+     "material": false,
+     "why": "Research finds psychopathy is negatively, not positively, associated with intelligence."
+    }
+   ],
+   "error": true,
+   "material": true
+  }
+ },
+ {
+  "id": "C011",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 5,
+   "sentence": "Nearly half of all homicide cases in a single year produced no arrest, no prosecution, nothing closed.",
+   "claims": [
+    {
+     "claim": "Nearly half of all homicide cases in a single year",
+     "status": "derived",
+     "fact": "F6",
+     "quote": "only 54% of homicides were cleared in 2020, meaning 46% remained unsolved",
+     "verified": true,
+     "material": false,
+     "why": "46% in 2020 rounds to nearly half in a single year."
+    },
+    {
+     "claim": "produced no arrest, no prosecution",
+     "status": "unsupported",
+     "fact": "F6",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Research says only 'not cleared/unsolved', not arrest or prosecution outcomes; this is the narrator's gloss on 'unsolved'."
+    },
+    {
+     "claim": "nothing closed",
+     "status": "supported",
+     "fact": "F6",
+     "quote": "46% remained unsolved",
+     "verified": true,
+     "material": false,
+     "why": "Uncleared or unsolved cases match 'nothing closed'."
+    }
+   ],
+   "error": true,
+   "material": false
+  }
+ },
+ {
+  "id": "C012",
+  "truth": {
+   "any": true,
+   "material": false
+  },
+  "pred": {
+   "i": 6,
+   "sentence": "Radford is built from secondary sources — news accounts, court records, self-reports — and IQ figures in that kind of archive can be incomplete, inflated by subjects with obvious incentives to exaggerate, or degraded by the general noise of third-party reporting.",
+   "claims": [
+    {
+     "claim": "Radford is built from secondary sources",
+     "status": "supported",
+     "fact": "F9",
+     "quote": "it is a secondary-source database",
+     "verified": true,
+     "material": false,
+     "why": "Research states it is a secondary-source database."
+    },
+    {
+     "claim": "news accounts, court records",
+     "status": "unsupported",
+     "fact": "F9",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "Research names self-reports and third-party reports, not news accounts or court records specifically."
+    },
+    {
+     "claim": "self-reports",
+     "status": "supported",
+     "fact": "F9",
+     "quote": "relying on self-reports and third-party reports",
+     "verified": true,
+     "material": false,
+     "why": "Self-reports are named in the research."
+    },
+    {
+     "claim": "IQ figures in that kind of archive can be incomplete",
+     "status": "supported",
+     "fact": "F9",
+     "quote": "cognitive assessments and other offender data may be incomplete",
+     "verified": true,
+     "material": false,
+     "why": "Matches the research's caveat."
+    },
+    {
+     "claim": "inflated by subjects with obvious incentives to exaggerate",
+     "status": "unsupported",
+     "fact": "F9",
+     "quote": "affected by memory errors, exaggeration, and misinformation",
+     "verified": true,
+     "material": false,
+     "why": "Exaggeration is supported; the 'obvious incentives' motive is narrator interpretation."
+    },
+    {
+     "claim": "degraded by the general noise of third-party reporting",
+     "status": "supported",
+     "fact": "F9",
+     "quote": "third-party reports, so cognitive assessments and other offender data may be incomplete or affected by memory errors, exaggeration, and misinformation",
+     "verified": true,
+     "material": false,
+     "why": "Paraphrase of third-party reporting errors."
+    }
+   ],
+   "error": true,
+   "material": true
+  }
+ },
+ {
+  "id": "C013",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 0,
+   "sentence": "Same day, same message thread: he asked CC-3 for another 10,000 AI songs so he could \"spread this out more\" — not a creative request, a dispersal strategy, the same logic from the October 2018 playbook applied at a larger scale.",
+   "claims": [
+    {
+     "claim": "Same day",
+     "status": "supported",
+     "fact": "F86",
+     "quote": "On June 5, 2019, SMITH asked CC-3 to provide another 10,000 AI songs",
+     "verified": true,
+     "material": false,
+     "why": "F86 and F83 both date to June 5, 2019."
+    },
+    {
+     "claim": "same message thread",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research does not say the request was made in the same thread as the 88 million streams report."
+    },
+    {
+     "claim": "he asked CC-3 for another 10,000 AI songs so he could \"spread this out more\"",
+     "status": "supported",
+     "fact": "F86",
+     "quote": "SMITH asked CC-3 to provide another 10,000 AI songs so he could 'spread this out more' to evade detection",
+     "verified": true,
+     "material": false,
+     "why": "Matches the research directly."
+    },
+    {
+     "claim": "not a creative request, a dispersal strategy",
+     "status": "supported",
+     "fact": "F86",
+     "quote": "so he could 'spread this out more' to evade detection",
+     "verified": true,
+     "material": false,
+     "why": "The research ties the request to spreading streams out to evade detection."
+    },
+    {
+     "claim": "the same logic from the October 2018 playbook",
+     "status": "unsupported",
+     "fact": "F73",
+     "quote": "in order to not raise any issues with the powers that be we need a TON of content with small amounts of Streams.",
+     "verified": true,
+     "material": false,
+     "why": "The research records the October 2018 email, but calling it the same 'playbook' is the narrator's interpretation."
+    },
+    {
+     "claim": "applied at a larger scale",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Narrator's characterization, not stated in the research."
+    }
+   ],
+   "error": true,
+   "material": true
+  }
+ },
+ {
+  "id": "C014",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 7,
+   "sentence": "If the IQ scores cluster below average rather than above it, something other than raw cognitive firepower is doing the explanatory work — and that something is already visible in the research, waiting in a different part of the profile entirely.",
+   "claims": [
+    {
+     "claim": "the IQ scores cluster below average rather than above it",
+     "status": "overstated",
+     "fact": "F15",
+     "quote": "the Radford Serial Killer IQ sample had a mean IQ of 95.1 and median of 89.0, which is around average to slightly below average",
+     "verified": true,
+     "material": false,
+     "why": "Research describes scores as around average to slightly below, clustering around normal, not clustering below average. The claim is framed conditionally."
+    },
+    {
+     "claim": "something other than raw cognitive firepower is doing the explanatory work — and that something is already visible in the research",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "This is the narrator's interpretive setup about what explains serial offending, not a stated research finding."
+    }
+   ],
+   "error": true,
+   "material": false
+  }
+ },
+ {
+  "id": "C015",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 8,
+   "sentence": "So if the IQ data already point below average, the next question is whether the trait most reliably associated with serial homicide — psychopathy itself — carries any cognitive advantage at all.",
+   "claims": [
+    {
+     "claim": "the IQ data already point below average",
+     "status": "supported",
+     "fact": "F4",
+     "quote": "Radford’s sample mean is 95.1, below the population mean of 100",
+     "verified": true,
+     "material": false,
+     "why": "Research states the Radford mean IQ is below the population mean."
+    },
+    {
+     "claim": "the trait most reliably associated with serial homicide — psychopathy itself",
+     "status": "overstated",
+     "fact": "F20",
+     "quote": "it was stronger in serial homicide (r = 0.74) than in homicide overall",
+     "verified": true,
+     "material": true,
+     "why": "Research shows a strong psychopathy–serial homicide association but never compares it with other traits, so 'most reliably associated' is unestablished."
+    }
+   ],
+   "error": true,
+   "material": true
+  }
+ },
+ {
+  "id": "C016",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 9,
+   "sentence": "The research suggests it's closer to an absence: of the fear signal, of the aversive conditioning, of the internal event that would make most people stop.",
+   "claims": [
+    {
+     "claim": "The research suggests it's closer to an absence: of the fear signal",
+     "status": "overstated",
+     "fact": "F2",
+     "quote": "links reduced fear conditioning and emotional processing to impaired aversive learning",
+     "verified": true,
+     "material": false,
+     "why": "Research describes reduced fear processing, not absence; the hedged 'closer to' framing is interpretive."
+    },
+    {
+     "claim": "of the aversive conditioning",
+     "status": "overstated",
+     "fact": "F2",
+     "quote": "impaired aversive learning",
+     "verified": true,
+     "material": false,
+     "why": "Research says aversive learning is impaired, not absent; the hedged framing is interpretive."
+    },
+    {
+     "claim": "of the internal event that would make most people stop",
+     "status": "overstated",
+     "fact": "F2",
+     "quote": "which weakens the emotional inhibition that would otherwise deter repeated offending",
+     "verified": true,
+     "material": false,
+     "why": "Research says the inhibition is weakened, not absent; the hedged framing is interpretive."
+    }
+   ],
+   "error": true,
+   "material": false
+  }
+ },
+ {
+  "id": "C017",
+  "truth": {
+   "any": true,
+   "material": false
+  },
+  "pred": {
+   "i": 10,
+   "sentence": "In typical fear conditioning, the amygdala encodes the emotional weight of aversive experiences — it is what makes a burned hand a lesson rather than just an event.",
+   "claims": [
+    {
+     "claim": "In typical fear conditioning, the amygdala encodes the emotional weight of aversive experiences",
+     "status": "unsupported",
+     "fact": "F2",
+     "quote": "links reduced fear conditioning and emotional processing to impaired aversive learning",
+     "verified": true,
+     "material": false,
+     "why": "The research links amygdala dysfunction to impaired fear conditioning and aversive learning, but never says the amygdala 'encodes emotional weight'; this is a general statement of mechanism."
+    },
+    {
+     "claim": "it is what makes a burned hand a lesson rather than just an event",
+     "status": "unsupported",
+     "fact": "F2",
+     "quote": "impaired aversive learning, which weakens the emotional inhibition that would otherwise deter repeated offending",
+     "verified": true,
+     "material": false,
+     "why": "This is the narrator's illustrative metaphor for aversive learning; the research gives no such example."
+    }
+   ],
+   "error": true,
+   "material": false
+  }
+ },
+ {
+  "id": "C018",
+  "truth": {
+   "any": true,
+   "material": false
+  },
+  "pred": {
+   "i": 11,
+   "sentence": "John Doe in *Se7en* has already counted every step of the detective's route home.",
+   "claims": [
+    {
+     "claim": "John Doe in *Se7en*",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research never mentions the film Se7en or a character named John Doe."
+    },
+    {
+     "claim": "has already counted every step of the detective's route home",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "This specific plot detail about the film is not recorded anywhere in the research."
+    }
+   ],
+   "error": true,
+   "material": true
+  }
+ },
+ {
+  "id": "C019",
+  "truth": {
+   "any": true,
+   "material": false
+  },
+  "pred": {
+   "i": 0,
+   "sentence": "That ratio — about twenty-five dollars borrowed for every dollar the fund actually owned — was the product of two instruments used together: securities repurchase agreements, where LTCM pledged bonds as collateral to borrow cash overnight and rolled those loans forward continuously, and derivatives, which let the fund take on enormous notional exposure without putting up the full value of the position.",
+   "claims": [
+    {
+     "claim": "about twenty-five dollars borrowed for every dollar the fund actually owned",
+     "status": "derived",
+     "fact": "F4",
+     "quote": "more than $125 billion borrowed against about $5 billion in equity",
+     "verified": true,
+     "material": false,
+     "why": "$125B / $5B = 25 to 1."
+    },
+    {
+     "claim": "was the product of two instruments used together: securities repurchase agreements",
+     "status": "supported",
+     "fact": "F4",
+     "quote": "LTCM built leverage through securities repurchase agreements and derivatives",
+     "verified": true,
+     "material": false,
+     "why": "The research names repos and derivatives as the sources of leverage."
+    },
+    {
+     "claim": "and derivatives",
+     "status": "supported",
+     "fact": "F13",
+     "quote": "LTCM obtained extraordinary leverage by using securities repurchase agreements and derivatives",
+     "verified": true,
+     "material": false,
+     "why": "Derivatives are named as a source of leverage."
+    },
+    {
+     "claim": "where LTCM pledged bonds as collateral to borrow cash",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "This general description of how repos work is not in the research."
+    },
+    {
+     "claim": "overnight and rolled those loans forward continuously",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research does not record that LTCM's repo financing was overnight or continuously rolled."
+    },
+    {
+     "claim": "derivatives, which let the fund take on enormous notional exposure without putting up the full value of the position",
+     "status": "unsupported",
+     "fact": "F13",
+     "quote": "in some cases, little or no initial margin",
+     "verified": true,
+     "material": false,
+     "why": "The research mentions only little or no initial margin on bank financing; the notional-exposure mechanism is the narrator's explanation."
+    }
+   ],
+   "error": true,
+   "material": true
+  }
+ },
+ {
+  "id": "C020",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 12,
+   "sentence": "A meta-analytic review pooling studies that used standardized psychopathy measures alongside full-scale IQ testing found a statistically significant negative correlation between total psychopathy and FSIQ: r = -.",
+   "claims": [
+    {
+     "claim": "A meta-analytic review",
+     "status": "supported",
+     "fact": "F11",
+     "quote": "A meta-analytic review found a small, statistically significant negative relationship between intelligence and psychopathy",
+     "verified": true,
+     "material": false,
+     "why": "The research describes the source as a meta-analytic review."
+    },
+    {
+     "claim": "pooling studies that used standardized psychopathy measures alongside full-scale IQ testing",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research does not describe how the review's studies were measured; this is generic methodological color."
+    },
+    {
+     "claim": "found a statistically significant negative correlation between total psychopathy and FSIQ: r = -.",
+     "status": "supported",
+     "fact": "F11",
+     "quote": "small, statistically significant negative relationship between intelligence and psychopathy, with total psychopathy correlated with FSIQ at r = -.07",
+     "verified": true,
+     "material": false,
+     "why": "Matches F11, though the sentence omits the 'small' qualifier and its value is cut off."
+    }
+   ],
+   "error": true,
+   "material": false
+  }
+ },
+ {
+  "id": "C022",
+  "truth": {
+   "any": true,
+   "material": false
+  },
+  "pred": {
+   "i": 13,
+   "sentence": "That image is real in one narrow sense: the emotional flatness is documented, the reduced fear response is documented, the capacity to stay regulated in situations that would destabilize most people has empirical support.",
+   "claims": [
+    {
+     "claim": "the emotional flatness is documented",
+     "status": "supported",
+     "fact": "F14",
+     "quote": "reduced emotional responsiveness and impaired threat/fear processing are associated with psychopathic traits",
+     "verified": true,
+     "material": false,
+     "why": "Research documents reduced emotional responsiveness linked to psychopathic traits."
+    },
+    {
+     "claim": "the reduced fear response is documented",
+     "status": "supported",
+     "fact": "F2",
+     "quote": "links reduced fear conditioning and emotional processing to impaired aversive learning",
+     "verified": true,
+     "material": false,
+     "why": "Reduced fear conditioning and fear processing are documented."
+    },
+    {
+     "claim": "the capacity to stay regulated in situations that would destabilize most people has empirical support",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "Research shows normal performance on some cognitive tasks, not composure under destabilizing situations; misstates what the evidence found."
+    }
+   ],
+   "error": true,
+   "material": true
+  }
+ },
+ {
+  "id": "C025",
+  "truth": {
+   "any": true,
+   "material": false
+  },
+  "pred": {
+   "i": 14,
+   "sentence": "Zodiac mails ciphers to newspapers.",
+   "claims": [
+    {
+     "claim": "Zodiac mails ciphers to newspapers.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research never mentions the Zodiac killer, ciphers, or mailings to newspapers."
+    }
+   ],
+   "error": true,
+   "material": true
+  }
+ },
+ {
+  "id": "C026",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 15,
+   "sentence": "The culture took the idea of a distinctive psychopathic brain and read it as confirmation of superiority — a mind built differently and therefore built better for predation.",
+   "claims": [
+    {
+     "claim": "the idea of a distinctive psychopathic brain",
+     "status": "supported",
+     "fact": "F7",
+     "quote": "a consistent association between psychopathy and reduced prefrontal gray matter, especially in vmPFC/OFC and anterior cingulate cortex",
+     "verified": true,
+     "material": false,
+     "why": "The research records brain differences associated with psychopathy."
+    },
+    {
+     "claim": "The culture took the idea of a distinctive psychopathic brain and read it as confirmation of superiority — a mind built differently and therefore built better for predation.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research notes a stereotype of high intelligence (F15, F17) but never links it to brain findings; this is the narrator's interpretation of cultural perception."
+    }
+   ],
+   "error": true,
+   "material": false
+  }
+ },
+ {
+  "id": "C027",
+  "truth": {
+   "any": true,
+   "material": true
+  },
+  "pred": {
+   "i": 0,
+   "sentence": "By the time Judge Cogan signed the order, the $12.6 billion was the largest forfeiture ever ordered against a cartel leader.",
+   "claims": [
+    {
+     "claim": "Judge Cogan signed the order, the $12.6 billion",
+     "status": "supported",
+     "fact": "F3",
+     "quote": "Judge Brian M. Cogan sentenced Joaquín Archivaldo Guzmán Loera on July 17, 2019, to life imprisonment plus 30 years and ordered $12.6 billion in forfeiture",
+     "verified": true,
+     "material": false,
+     "why": "The research states that Judge Cogan ordered the $12.6 billion forfeiture."
+    },
+    {
+     "claim": "the largest forfeiture ever ordered against a cartel leader",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "No research fact compares this forfeiture to others or calls it a record."
+    }
+   ],
+   "error": true,
+   "material": true
+  }
+ },
+ {
+  "id": "C032",
+  "truth": {
+   "any": true,
+   "material": false
+  },
+  "pred": {
+   "i": 1,
+   "sentence": "The royalty pool is shared.",
+   "claims": [
+    {
+     "claim": "The royalty pool is shared.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research never describes a shared royalty pool; this is a general statement about how streaming royalties typically work."
+    }
+   ],
+   "error": true,
+   "material": false
+  }
+ },
+ {
+  "id": "C034",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 16,
+   "sentence": "The first comes from a sample of forensic psychiatric patients — women adjudicated insane following offenses.",
+   "claims": [
+    {
+     "claim": "a sample of forensic psychiatric patients",
+     "status": "unsupported",
+     "fact": "F1",
+     "quote": "A study of insane female offenders",
+     "verified": true,
+     "material": false,
+     "why": "Research says 'insane female offenders,' not that they were forensic psychiatric patients; this is a close characterization rather than a new fact."
+    },
+    {
+     "claim": "women adjudicated insane following offenses",
+     "status": "supported",
+     "fact": "F1",
+     "quote": "A study of insane female offenders",
+     "verified": true,
+     "material": false,
+     "why": "This paraphrases a sample of insane female offenders."
+    }
+   ],
+   "error": true,
+   "material": false
+  }
+ },
+ {
+  "id": "C035",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 1,
+   "sentence": "The document that gave him away was the same document that saved him.",
+   "claims": [
+    {
+     "claim": "The document that gave him away",
+     "status": "supported",
+     "fact": "F23",
+     "quote": "A fingerprint found on Wright’s Portuguese ID card matched records in a national Portuguese database, which led U.S. authorities and Portuguese police to locate and arrest him in September 2011.",
+     "verified": true,
+     "material": false,
+     "why": "A fingerprint on his Portuguese ID card led to his location and arrest."
+    },
+    {
+     "claim": "was the same document that saved him",
+     "status": "unsupported",
+     "fact": "F15",
+     "quote": "ruled that Wright would not be extradited to the United States because he had Portuguese citizenship",
+     "verified": true,
+     "material": false,
+     "why": "The research credits his Portuguese citizenship, not the ID card itself, with blocking extradition. Equating the two is the narrator's rhetorical framing."
+    }
+   ],
+   "error": true,
+   "material": false
+  }
+ },
+ {
+  "id": "C036",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 1,
+   "sentence": "That is not how the American financial system is supposed to work.",
+   "claims": [],
+   "error": false,
+   "material": false
+  }
+ },
+ {
+  "id": "C037",
+  "truth": {
+   "any": true,
+   "material": false
+  },
+  "pred": {
+   "i": 1,
+   "sentence": "The Chicago Crime Commission gathered at a news conference and did something it had not done in decades — it handed out a title.",
+   "claims": [
+    {
+     "claim": "The Chicago Crime Commission gathered at a news conference",
+     "status": "supported",
+     "fact": "F1",
+     "quote": "the Chicago Crime Commission announced at a Chicago news conference",
+     "verified": true,
+     "material": false,
+     "why": "Research records the Commission's news conference announcement."
+    },
+    {
+     "claim": "did something it had not done in decades",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research says nothing about how long it had been since the Commission last named a Public Enemy."
+    },
+    {
+     "claim": "it handed out a title",
+     "status": "supported",
+     "fact": "F1",
+     "quote": "announced that Joaquín Guzmán Loera was its “Public Enemy Number One,”",
+     "verified": true,
+     "material": false,
+     "why": "The Commission conferred the Public Enemy Number One label."
+    }
+   ],
+   "error": true,
+   "material": true
+  }
+ },
+ {
+  "id": "C038",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 2,
+   "sentence": "They were cartel members who had operated at levels close enough to Guzmán that they could describe his decisions, his methods, and his violence from direct observation.",
+   "claims": [
+    {
+     "claim": "They were cartel members",
+     "status": "supported",
+     "fact": "F51",
+     "quote": "Cooperating witnesses included Sinaloa Cartel members Rey Zambada and Vicente Zambada.",
+     "verified": true,
+     "material": false,
+     "why": "Research identifies cooperating witnesses as Sinaloa Cartel members, though it names only the Zambadas as such."
+    },
+    {
+     "claim": "who had operated at levels close enough to Guzmán",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research does not establish the witnesses' rank or how close they were to Guzmán."
+    },
+    {
+     "claim": "that they could describe his decisions, his methods",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research does not say the witnesses described his decisions or methods from direct observation."
+    },
+    {
+     "claim": "and his violence from direct observation",
+     "status": "overstated",
+     "fact": "F71",
+     "quote": "Numerous co-conspirators testified that Guzman Loera at times carried out acts of violence himself.",
+     "verified": true,
+     "material": true,
+     "why": "The research says co-conspirators testified about his violence, not that they witnessed it firsthand."
+    }
+   ],
+   "error": true,
+   "material": true
+  }
+ },
+ {
+  "id": "C041",
+  "truth": {
+   "any": true,
+   "material": false
+  },
+  "pred": {
+   "i": 1,
+   "sentence": "Visual Capitalist tracked the average price movement across ten major fast-food chains over that same stretch and found a 63% increase industry-wide, with McDonald's leading the field at that doubling.",
+   "claims": [
+    {
+     "claim": "Visual Capitalist tracked the average price movement across ten major fast-food chains over that same stretch",
+     "status": "supported",
+     "fact": "F166",
+     "quote": "Visual Capitalist reported that the average price increase across 10 major fast-food restaurants from 2014 to 2024",
+     "verified": true,
+     "material": false,
+     "why": "The research names the source, the ten chains and the 2014–2024 period."
+    },
+    {
+     "claim": "found a 63% increase",
+     "status": "supported",
+     "fact": "F166",
+     "quote": "was 63%",
+     "verified": true,
+     "material": false,
+     "why": "The research states the 63% average directly."
+    },
+    {
+     "claim": "industry-wide",
+     "status": "overstated",
+     "fact": "F166",
+     "quote": "the average price increase across 10 major fast-food restaurants",
+     "verified": true,
+     "material": true,
+     "why": "The 63% is an average for 10 chains, not the whole industry."
+    },
+    {
+     "claim": "with McDonald's ... at that doubling",
+     "status": "supported",
+     "fact": "F166",
+     "quote": "with McDonald’s up 100%",
+     "verified": true,
+     "material": false,
+     "why": "A 100% rise is a doubling."
+    },
+    {
+     "claim": "McDonald's leading the field",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research does not say McDonald's had the largest increase of the ten."
+    }
+   ],
+   "error": true,
+   "material": true
+  }
+ },
+ {
+  "id": "C043",
+  "truth": {
+   "any": true,
+   "material": false
+  },
+  "pred": {
+   "i": 1,
+   "sentence": "JoEllen Smith, the Ohio Parole Board's spokeswoman, confirmed both the board's decision and the prosecutors' objection in the same breath.",
+   "claims": [
+    {
+     "claim": "JoEllen Smith, the Ohio Parole Board's spokeswoman",
+     "status": "supported",
+     "fact": "F13",
+     "quote": "Ohio Parole Board spokeswoman JoEllen Smith",
+     "verified": true,
+     "material": false,
+     "why": "Research names Smith as the Ohio Parole Board spokeswoman."
+    },
+    {
+     "claim": "confirmed both the board's decision",
+     "status": "supported",
+     "fact": "F13",
+     "quote": "said in 2016 that Freshwaters was set for release on parole after the board's decision",
+     "verified": true,
+     "material": false,
+     "why": "Smith stated the board's parole decision."
+    },
+    {
+     "claim": "and the prosecutors' objection in the same breath",
+     "status": "unsupported",
+     "fact": "F13",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "Research records the Summit County prosecutors' recommendation against parole but does not say Smith stated or confirmed it, so this puts words in her mouth."
+    }
+   ],
+   "error": true,
+   "material": true
+  }
+ },
+ {
+  "id": "C045",
+  "truth": {
+   "any": true,
+   "material": false
+  },
+  "pred": {
+   "i": 2,
+   "sentence": "Corporate debit cards defeated payment verification.",
+   "claims": [
+    {
+     "claim": "Corporate debit cards",
+     "status": "supported",
+     "fact": "F58",
+     "quote": "provided large numbers of debit cards, typically corporate debit cards for employees of a company",
+     "verified": true,
+     "material": false,
+     "why": "Research says Smith used a service providing corporate debit cards, funded for the Bot Accounts (F62)."
+    },
+    {
+     "claim": "defeated payment verification",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research never says the cards were used to get past payment verification; this is the narrator's reading of why the cards worked."
+    }
+   ],
+   "error": true,
+   "material": false
+  }
+ },
+ {
+  "id": "C046",
+  "truth": {
+   "any": true,
+   "material": false
+  },
+  "pred": {
+   "i": 17,
+   "sentence": "When an offender's IQ appears in that database, it may have come from a prison intake form filled out decades ago, a newspaper profile, or the offender's own recollection of a test he may have taken as a teenager.",
+   "claims": [
+    {
+     "claim": "it may have come from a prison intake form filled out decades ago",
+     "status": "unsupported",
+     "fact": "F9",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Research says only 'third-party reports'; prison intake forms are not named, and the claim is hedged as a possibility."
+    },
+    {
+     "claim": "a newspaper profile",
+     "status": "unsupported",
+     "fact": "F9",
+     "quote": "relying on self-reports and third-party reports",
+     "verified": true,
+     "material": false,
+     "why": "Newspapers are a plausible third-party source, but the research does not name them; this is a hedged illustration."
+    },
+    {
+     "claim": "the offender's own recollection",
+     "status": "supported",
+     "fact": "F9",
+     "quote": "relying on self-reports and third-party reports, so cognitive assessments and other offender data may be incomplete or affected by memory errors",
+     "verified": true,
+     "material": false,
+     "why": "Self-reports affected by memory errors match this."
+    },
+    {
+     "claim": "of a test he may have taken as a teenager",
+     "status": "unsupported",
+     "fact": "F9",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The teenage test is hedged added detail not in the research."
+    }
+   ],
+   "error": true,
+   "material": false
+  }
+ },
+ {
+  "id": "C047",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 2,
+   "sentence": "Two and three-quarter billion dollars returned to outside investors, reducing the equity base the fund was running against its positions.",
+   "claims": [
+    {
+     "claim": "Two and three-quarter billion dollars returned to",
+     "status": "supported",
+     "fact": "F7",
+     "quote": "LTCM returned $2-3/4 billion of capital to investors",
+     "verified": true,
+     "material": false,
+     "why": "The amount returned matches the research."
+    },
+    {
+     "claim": "outside investors",
+     "status": "unsupported",
+     "fact": "F7",
+     "quote": "returned $2-3/4 billion of capital to investors",
+     "verified": true,
+     "material": true,
+     "why": "The research says only 'investors'; 'outside' adds an unestablished detail about who received the money."
+    },
+    {
+     "claim": "reducing the equity base the fund was running against its positions",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research never links the return of capital to a smaller equity base; this is the narrator's analysis of the mechanism."
+    }
+   ],
+   "error": true,
+   "material": true
+  }
+ },
+ {
+  "id": "C048",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 3,
+   "sentence": "Valentine's Day, 2013.",
+   "claims": [
+    {
+     "claim": "Valentine's Day, 2013.",
+     "status": "supported",
+     "fact": "F1",
+     "quote": "On February 14, 2013, the Chicago Crime Commission announced at a Chicago news conference",
+     "verified": true,
+     "material": false,
+     "why": "Valentine's Day is February 14, matching the date of the announcement in the research."
+    }
+   ],
+   "error": false,
+   "material": false
+  }
+ },
+ {
+  "id": "C049",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 2,
+   "sentence": "What the gap between costs and prices actually produced was a change in how Americans categorized the meal itself.",
+   "claims": [
+    {
+     "claim": "a change in how Americans categorized the meal itself",
+     "status": "supported",
+     "fact": "F33",
+     "quote": "78% said fast food had become a luxury",
+     "verified": true,
+     "material": false,
+     "why": "The survey reports that most respondents now see fast food as a luxury, which is a recategorization."
+    },
+    {
+     "claim": "What the gap between costs and prices actually produced",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research ties the luxury view to rising prices, not to a gap between costs and prices; this causal link is narrator interpretation."
+    }
+   ],
+   "error": true,
+   "material": false
+  }
+ },
+ {
+  "id": "C050",
+  "truth": {
+   "any": true,
+   "material": false
+  },
+  "pred": {
+   "i": 18,
+   "sentence": "The largest systematic look at this question comes from the Radford Serial Killer Database, which contains IQ records for 202 offenders.",
+   "claims": [
+    {
+     "claim": "The largest systematic look at this question comes from the Radford Serial Killer Database",
+     "status": "overstated",
+     "fact": "F15",
+     "quote": "The best-known database evidence does not support the stereotype of an exceptionally intelligent serial killer",
+     "verified": true,
+     "material": true,
+     "why": "Research calls it the best-known database evidence, not the largest or a systematic study, and F9 notes it relies on secondary sources."
+    },
+    {
+     "claim": "which contains IQ records for 202 offenders",
+     "status": "supported",
+     "fact": "F10",
+     "quote": "The Radford Serial Killer Database reports IQ information for 202 serial killers",
+     "verified": true,
+     "material": false,
+     "why": "Directly stated."
+    }
+   ],
+   "error": true,
+   "material": true
+  }
+ },
+ {
+  "id": "C051",
+  "truth": {
+   "any": true,
+   "material": false
+  },
+  "pred": {
+   "i": 4,
+   "sentence": "Each of those numbers traces back to a chain of evidence that started with two brothers deciding, in late 2008, that cooperation was the better option.",
+   "claims": [
+    {
+     "claim": "Each of those numbers traces back to a chain of evidence that started with two brothers",
+     "status": "overstated",
+     "fact": "F13",
+     "quote": "In late 2008, the Flores brothers' cooperation also facilitated seizures of more than $15 million in cash in the Chicago area.",
+     "verified": true,
+     "material": true,
+     "why": "The research ties the brothers' cooperation only to specific seizures, not to every figure or to the start of the evidence chain."
+    },
+    {
+     "claim": "two brothers deciding, in late 2008, that cooperation",
+     "status": "supported",
+     "fact": "F14",
+     "quote": "In late 2008, the Flores brothers' cooperation facilitated the seizure of more than 1,600 kilograms of cocaine",
+     "verified": true,
+     "material": false,
+     "why": "The research records the Flores brothers' cooperation in late 2008."
+    },
+    {
+     "claim": "cooperation was the better option",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The brothers' reasoning or motive is narrator interpretation not found in the research."
+    }
+   ],
+   "error": true,
+   "material": true
+  }
+ },
+ {
+  "id": "C053",
+  "truth": {
+   "any": true,
+   "material": false
+  },
+  "pred": {
+   "i": 3,
+   "sentence": "The models had been built on historical correlations — on how assets had related to each other in ordinary stress.",
+   "claims": [
+    {
+     "claim": "The models had been built on historical correlations",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research says LTCM used quantitative models but never says they were built on historical correlations."
+    },
+    {
+     "claim": "on how assets had related to each other in ordinary stress",
+     "status": "overstated",
+     "fact": "F15",
+     "quote": "the fund's collapse exposed sharp disagreement over whether the models adequately captured rare market stress",
+     "verified": true,
+     "material": true,
+     "why": "The research presents the models' handling of rare stress as disputed; the sentence states as settled fact that they reflected only ordinary stress."
+    }
+   ],
+   "error": true,
+   "material": true
+  }
+ },
+ {
+  "id": "C054",
+  "truth": {
+   "any": true,
+   "material": false
+  },
+  "pred": {
+   "i": 2,
+   "sentence": "Frank Freshwaters, wanted on a manslaughter sentence from an Akron courtroom, existed on paper as William Harold Cox, and William Harold Cox existed without incident.",
+   "claims": [
+    {
+     "claim": "Frank Freshwaters, wanted on a manslaughter sentence",
+     "status": "supported",
+     "fact": "F20",
+     "quote": "Freshwaters escaped from an Ohio prison farm in 1959 while serving time for manslaughter.",
+     "verified": true,
+     "material": false,
+     "why": "Research says he escaped while serving a manslaughter sentence."
+    },
+    {
+     "claim": "from an Akron courtroom",
+     "status": "unsupported",
+     "fact": "F7",
+     "quote": "after a July 1957 Akron car accident that killed Eugene Flynt",
+     "verified": true,
+     "material": true,
+     "why": "Research places the accident in Akron but never says where the court sat, so the setting is added."
+    },
+    {
+     "claim": "existed on paper as William Harold Cox",
+     "status": "supported",
+     "fact": "F19",
+     "quote": "The alias used by Frank Freshwaters during his time on the run was William Harold Cox.",
+     "verified": true,
+     "material": false,
+     "why": "The alias is stated in the research; 'on paper' is framing."
+    },
+    {
+     "claim": "William Harold Cox existed without incident",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Research does not describe his conduct under the alias; this is the narrator's characterization."
+    }
+   ],
+   "error": true,
+   "material": true
+  }
+ },
+ {
+  "id": "C055",
+  "truth": {
+   "any": true,
+   "material": false
+  },
+  "pred": {
+   "i": 2,
+   "sentence": "The fingerprint he submitted to become a legal Portuguese resident was the same fingerprint the database returned when investigators went looking.",
+   "claims": [
+    {
+     "claim": "The fingerprint he submitted to become a legal Portuguese resident",
+     "status": "unsupported",
+     "fact": "F23",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research ties the fingerprint to his Portuguese ID card. It never says he submitted it in a residency application, and it describes him as holding citizenship, not residency."
+    },
+    {
+     "claim": "was the same fingerprint the database returned when investigators went looking",
+     "status": "supported",
+     "fact": "F23",
+     "quote": "A fingerprint found on Wright’s Portuguese ID card matched records in a national Portuguese database, which led U.S. authorities and Portuguese police to locate and arrest him",
+     "verified": true,
+     "material": false,
+     "why": "The research confirms the fingerprint matched the national database records that led investigators to him."
+    }
+   ],
+   "error": true,
+   "material": true
+  }
+ },
+ {
+  "id": "C056",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 3,
+   "sentence": "No tunnel.",
+   "claims": [
+    {
+     "claim": "No tunnel.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research records only that he went missing from an honor camp or prison farm. It never describes how he escaped, so this is rhetorical framing rather than a recorded fact."
+    }
+   ],
+   "error": true,
+   "material": false
+  }
+ },
+ {
+  "id": "C057",
+  "truth": {
+   "any": true,
+   "material": false
+  },
+  "pred": {
+   "i": 4,
+   "sentence": "McDonough, then president of the New York Fed, convened 14 major banks and securities firms and pressed them — directly, in the room — to form a private rescue consortium for a single hedge fund called Long-Term Capital Management.",
+   "claims": [
+    {
+     "claim": "McDonough, then president of the New York Fed",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research never gives McDonough's title or position at the New York Fed."
+    },
+    {
+     "claim": "convened 14 major banks and securities firms",
+     "status": "supported",
+     "fact": "F14",
+     "quote": "McDonough convened 14 major Wall Street firms",
+     "verified": true,
+     "material": false,
+     "why": "F14 gives 14 firms convened; F5 describes them as banks and securities firms."
+    },
+    {
+     "claim": "pressed them — directly, in the room — to form a private rescue consortium",
+     "status": "supported",
+     "fact": "F14",
+     "quote": "At the September 1998 New York Fed rescue meeting, McDonough convened 14 major Wall Street firms and pressed them to form a private rescue consortium",
+     "verified": true,
+     "material": false,
+     "why": "The pressing took place at the rescue meeting itself."
+    },
+    {
+     "claim": "for a single hedge fund",
+     "status": "supported",
+     "fact": "F24",
+     "quote": "John Meriwether later founded another hedge fund, JWM Partners",
+     "verified": true,
+     "material": false,
+     "why": "'Another hedge fund' implies LTCM was a hedge fund."
+    },
+    {
+     "claim": "called Long-Term Capital Management",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research only uses the acronym LTCM; the expansion just names the same entity, so it adds no new fact."
+    }
+   ],
+   "error": true,
+   "material": true
+  }
+ },
+ {
+  "id": "C058",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 3,
+   "sentence": "From approximately 2020 through 2023, Smith transferred $1.3 million in royalties into a bank account he controlled under the name SMH Entertainment, then routed those funds back out to fund the debit cards that registered the bot accounts.",
+   "claims": [
+    {
+     "claim": "From approximately 2020 through 2023, Smith transferred $1.3 million in royalties into a bank account he controlled under the name SMH Entertainment",
+     "status": "supported",
+     "fact": "F61",
+     "quote": "In multiple transactions from approximately 2020 through 2023, SMITH transferred $1.3 million in fraudulently obtained royalties to a bank account he controlled at a U.S.-based financial institution in the name of SMH Entertainment.",
+     "verified": true,
+     "material": false,
+     "why": "Matches the research on dates, amount, and account name."
+    },
+    {
+     "claim": "then routed those funds back out to fund the debit cards",
+     "status": "supported",
+     "fact": "F62",
+     "quote": "SMITH then transferred the proceeds from the SMH Entertainment account to Financial Service-1 to fund debit cards for the Bot Accounts.",
+     "verified": true,
+     "material": false,
+     "why": "Paraphrases the transfer to fund the debit cards."
+    },
+    {
+     "claim": "the debit cards that registered the bot accounts",
+     "status": "unsupported",
+     "fact": "F53",
+     "quote": "SMITH used the Fake Email Accounts to create and register Bot Accounts on the Streaming Platforms",
+     "verified": true,
+     "material": true,
+     "why": "The research says the cards were 'for' the bot accounts, but registration was done with the fake email accounts, not the cards."
+    }
+   ],
+   "error": true,
+   "material": true
+  }
+ },
+ {
+  "id": "C059",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 4,
+   "sentence": "What the machine needed was an endless supply of raw material to stream — and Smith couldn't generate that himself fast enough.",
+   "claims": [
+    {
+     "claim": "What the machine needed was an endless supply of raw material to stream",
+     "status": "supported",
+     "fact": "F74",
+     "quote": "I can't run the bots without content. And I need enough content so I don't overrun each song.",
+     "verified": true,
+     "material": false,
+     "why": "Smith's own emails say the bots required large amounts of content; 'endless' is rhetorical color."
+    },
+    {
+     "claim": "Smith couldn't generate that himself fast enough",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research says he bought songs from a coconspirator but never says he was unable to produce them himself; this is the narrator's inference about his motive."
+    }
+   ],
+   "error": true,
+   "material": false
+  }
+ },
+ {
+  "id": "C060",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 4,
+   "sentence": "Standing in the aftermath of his arrest, Freshwaters told reporters he had not done anything wrong — that what happened in 1957 had been a mistake.",
+   "claims": [
+    {
+     "claim": "Standing in the aftermath of his arrest, Freshwaters told reporters",
+     "status": "unsupported",
+     "fact": "F12",
+     "quote": "a statement reported by ABC affiliate WFTV after his 2015 arrest",
+     "verified": true,
+     "material": false,
+     "why": "The research says only that WFTV reported the statement after the arrest; it does not describe him speaking to reporters or the scene."
+    },
+    {
+     "claim": "he had not done anything wrong",
+     "status": "supported",
+     "fact": "F12",
+     "quote": "Freshwaters said he had not done anything wrong",
+     "verified": true,
+     "material": false,
+     "why": "Directly stated."
+    },
+    {
+     "claim": "what happened in 1957 had been a mistake",
+     "status": "unsupported",
+     "fact": "F12",
+     "quote": "had made a mistake",
+     "verified": true,
+     "material": true,
+     "why": "The research does not say which act he called a mistake; tying it to the 1957 killing changes what he said."
+    }
+   ],
+   "error": true,
+   "material": true
+  }
+ },
+ {
+  "id": "C062",
+  "truth": {
+   "any": true,
+   "material": false
+  },
+  "pred": {
+   "i": 5,
+   "sentence": "The mechanism was straightforward and, in the right hands, unremarkable — securities repurchase agreements, in which LTCM pledged assets as collateral for overnight and short-term loans, then rolled those loans continuously to fund positions; and derivatives, which let the fund take on enormous notional exposure without posting the full value upfront.",
+   "claims": [
+    {
+     "claim": "The mechanism was straightforward and, in the right hands, unremarkable",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Narrator's own characterization; the research does not assess this."
+    },
+    {
+     "claim": "securities repurchase agreements",
+     "status": "supported",
+     "fact": "F13",
+     "quote": "LTCM obtained extraordinary leverage by using securities repurchase agreements and derivatives",
+     "verified": true,
+     "material": false,
+     "why": "The research names repos as a leverage tool."
+    },
+    {
+     "claim": "in which LTCM pledged assets as collateral for overnight and short-term loans",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "A general description of how repos work; the research gives no LTCM-specific loan terms."
+    },
+    {
+     "claim": "then rolled those loans continuously to fund positions",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Generic repo mechanics; the research does not describe LTCM rolling loans."
+    },
+    {
+     "claim": "and derivatives",
+     "status": "supported",
+     "fact": "F4",
+     "quote": "LTCM built leverage through securities repurchase agreements and derivatives",
+     "verified": true,
+     "material": false,
+     "why": "The research names derivatives as a leverage tool."
+    },
+    {
+     "claim": "which let the fund take on enormous notional exposure without posting the full value upfront",
+     "status": "supported",
+     "fact": "F13",
+     "quote": "extraordinary leverage by using securities repurchase agreements and derivatives, with major banks extending financing on very favorable terms and, in some cases, little or no initial margin",
+     "verified": true,
+     "material": false,
+     "why": "A paraphrase of extraordinary leverage with little or no initial margin."
+    }
+   ],
+   "error": true,
+   "material": false
+  }
+ },
+ {
+  "id": "C063",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 5,
+   "sentence": "Part of what made that possible was the alliance Guzmán had formed after his 2001 prison escape — a partnership with fugitive co-defendant Ismael Zambada García that prosecutors said made the two of them the preeminent leaders of the Sinaloa Cartel.",
+   "claims": [
+    {
+     "claim": "Part of what made that possible was the alliance",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research does not establish this causal link; it is the narrator's interpretation."
+    },
+    {
+     "claim": "the alliance Guzmán had formed after his 2001 escape",
+     "status": "supported",
+     "fact": "F57",
+     "quote": "After his 2001 escape, Guzman Loera formed an alliance with fugitive co-defendant Ismael Zambada Garcia.",
+     "verified": true,
+     "material": false,
+     "why": "Directly stated."
+    },
+    {
+     "claim": "2001 prison escape",
+     "status": "unsupported",
+     "fact": "F57",
+     "quote": "After his 2001 escape",
+     "verified": true,
+     "material": true,
+     "why": "The research says only '2001 escape' and never says he escaped from a prison."
+    },
+    {
+     "claim": "a partnership with fugitive co-defendant Ismael Zambada García",
+     "status": "supported",
+     "fact": "F57",
+     "quote": "formed an alliance with fugitive co-defendant Ismael Zambada Garcia",
+     "verified": true,
+     "material": false,
+     "why": "Directly stated."
+    },
+    {
+     "claim": "prosecutors said",
+     "status": "unsupported",
+     "fact": "F58",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research states the leadership fact without saying who said it; the attribution to prosecutors is a hedge that adds no new fact."
+    },
+    {
+     "claim": "made the two of them the preeminent leaders of the Sinaloa Cartel",
+     "status": "supported",
+     "fact": "F58",
+     "quote": "Together, Guzman Loera and Ismael Zambada Garcia became the preeminent leaders of the Sinaloa Cartel.",
+     "verified": true,
+     "material": false,
+     "why": "Directly stated."
+    }
+   ],
+   "error": true,
+   "material": true
+  }
+ },
+ {
+  "id": "C064",
+  "truth": {
+   "any": true,
+   "material": false
+  },
+  "pred": {
+   "i": 19,
+   "sentence": "But notice which direction the cultural assumption runs: when people invoke the database's limits, they almost always mean to suggest the true IQ is higher — that genius is being undercounted.",
+   "claims": [
+    {
+     "claim": "the database's limits",
+     "status": "supported",
+     "fact": "F9",
+     "quote": "it is a secondary-source database relying on self-reports and third-party reports, so cognitive assessments and other offender data may be incomplete or affected by memory errors, exaggeration, and misinformation",
+     "verified": true,
+     "material": false,
+     "why": "Research documents the Radford database's limitations."
+    },
+    {
+     "claim": "when people invoke the database's limits, they almost always mean to suggest the true IQ is higher — that genius is being undercounted",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research does not say which direction people argue; this is the narrator's general characterization of a cultural tendency."
+    }
+   ],
+   "error": true,
+   "material": false
+  }
+ },
+ {
+  "id": "C065",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 0,
+   "sentence": "He was frazzled enough that he left without his bracelet, the one he cherished and almost never removed.",
+   "claims": [
+    {
+     "claim": "He was frazzled enough that he left without his bracelet",
+     "status": "supported",
+     "fact": "F56",
+     "quote": "Arthur Jones was frazzled enough when he left that he forgot to put on his cherished bracelet.",
+     "verified": true,
+     "material": false,
+     "why": "Research states he was frazzled and forgot the bracelet."
+    },
+    {
+     "claim": "the one he cherished",
+     "status": "supported",
+     "fact": "F56",
+     "quote": "his cherished bracelet",
+     "verified": true,
+     "material": false,
+     "why": "Research calls it his cherished bracelet."
+    },
+    {
+     "claim": "and almost never removed",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "Research never says how often he wore or removed the bracelet; this adds a factual habit."
+    }
+   ],
+   "error": true,
+   "material": true
+  }
+ },
+ {
+  "id": "C066",
+  "truth": {
+   "any": true,
+   "material": false
+  },
+  "pred": {
+   "i": 6,
+   "sentence": "Trains with secret compartments rolled through ports of entry carrying concealed cargo alongside legitimate freight.",
+   "claims": [
+    {
+     "claim": "Trains with secret compartments",
+     "status": "supported",
+     "fact": "F64",
+     "quote": "Methods used to transport narcotics included trains with secret compartments.",
+     "verified": true,
+     "material": false,
+     "why": "Research lists trains with secret compartments as a transport method."
+    },
+    {
+     "claim": "rolled through ports of entry",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research does not say the trains passed through ports of entry; this adds a place and scene detail."
+    },
+    {
+     "claim": "carrying concealed cargo alongside legitimate freight",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research does not mention legitimate freight being carried alongside the narcotics; this adds a physical detail."
+    }
+   ],
+   "error": true,
+   "material": true
+  }
+ },
+ {
+  "id": "C067",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 5,
+   "sentence": "And so we come back to where this started — a weathered trailer in Brevard County, a photograph placed in front of an old man, and a face he said he hadn't seen in a long time.",
+   "claims": [
+    {
+     "claim": "a weathered trailer in Brevard County",
+     "status": "supported",
+     "fact": "F10",
+     "quote": "was found in a weathered trailer in rural Brevard County, Florida",
+     "verified": true,
+     "material": false,
+     "why": "Research places him in a weathered trailer in rural Brevard County."
+    },
+    {
+     "claim": "a photograph placed in front of an old man",
+     "status": "supported",
+     "fact": "F28",
+     "quote": "Freshwaters was shown an old photograph of himself",
+     "verified": true,
+     "material": false,
+     "why": "Research says he was shown an old photograph of himself."
+    },
+    {
+     "claim": "a face he said he hadn't seen in a long time",
+     "status": "overstated",
+     "fact": "F28",
+     "quote": "according to Major Tod Goodyear, \"he hadn't seen that guy in a long time,\"",
+     "verified": true,
+     "material": false,
+     "why": "Research gives this as Goodyear's account, not as Freshwaters' own words; the paraphrase is close."
+    }
+   ],
+   "error": true,
+   "material": false
+  }
+ },
+ {
+  "id": "C068",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 1,
+   "sentence": "His disappearance, once certified by a court, generated $47,000 for his family while he remained alive to benefit from being officially gone.",
+   "claims": [
+    {
+     "claim": "His disappearance, once certified by a court",
+     "status": "supported",
+     "fact": "F60",
+     "quote": "A court declared Arthur Jones legally dead in 1986.",
+     "verified": true,
+     "material": false,
+     "why": "The research records a court declaring him legally dead."
+    },
+    {
+     "claim": "generated $47,000 for his family",
+     "status": "supported",
+     "fact": "F61",
+     "quote": "Social Security paid Jones's family $47,000 in survivor benefits after he was declared legally dead.",
+     "verified": true,
+     "material": false,
+     "why": "The research states the $47,000 in benefits paid to his family after the death declaration."
+    },
+    {
+     "claim": "while he remained alive",
+     "status": "supported",
+     "fact": "F18",
+     "quote": "disappeared for 32 years after leaving home in 1979 and later resurfaced in Las Vegas",
+     "verified": true,
+     "material": false,
+     "why": "He later resurfaced alive in Las Vegas."
+    },
+    {
+     "claim": "to benefit from being officially gone",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "This is the narrator's interpretation; the research does not say he personally benefited."
+    }
+   ],
+   "error": true,
+   "material": false
+  }
+ },
+ {
+  "id": "C069",
+  "truth": {
+   "any": true,
+   "material": false
+  },
+  "pred": {
+   "i": 7,
+   "sentence": "When the Crime Commission stood before reporters on February 14, 2013, and named Joaquín Guzmán Loera Public Enemy Number One — not Mexico's problem, Chicago's — the declaration looked, to some, like a provocation larger than the evidence behind it.",
+   "claims": [
+    {
+     "claim": "the Crime Commission stood before reporters on February 14, 2013",
+     "status": "supported",
+     "fact": "F1",
+     "quote": "On February 14, 2013, the Chicago Crime Commission announced at a Chicago news conference",
+     "verified": true,
+     "material": false,
+     "why": "The research records a news conference on that date."
+    },
+    {
+     "claim": "named Joaquín Guzmán Loera Public Enemy Number One",
+     "status": "supported",
+     "fact": "F1",
+     "quote": "Joaquín Guzmán Loera was its “Public Enemy Number One,”",
+     "verified": true,
+     "material": false,
+     "why": "The research states this designation directly."
+    },
+    {
+     "claim": "not Mexico's problem, Chicago's",
+     "status": "supported",
+     "fact": "F1",
+     "quote": "using the exact label “Chicago’s Public Enemy Number One.”",
+     "verified": true,
+     "material": false,
+     "why": "The label was Chicago's Public Enemy Number One; the 'not Mexico's' contrast is framing."
+    },
+    {
+     "claim": "the declaration looked, to some, like a provocation larger than the evidence behind it",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research records no reaction or critique; this is the narrator's interpretive framing."
+    }
+   ],
+   "error": true,
+   "material": false
+  }
+ },
+ {
+  "id": "C070",
+  "truth": {
+   "any": true,
+   "material": false
+  },
+  "pred": {
+   "i": 8,
+   "sentence": "By applying it to a man operating from the mountains of Sinaloa, the Commission was making a precise claim: that Guzmán's organization had embedded itself in Chicago deeply enough to earn the title on its own terms.",
+   "claims": [
+    {
+     "claim": "applying it to a man",
+     "status": "supported",
+     "fact": "F1",
+     "quote": "the Chicago Crime Commission announced at a Chicago news conference that Joaquín Guzmán Loera was its “Public Enemy Number One,”",
+     "verified": true,
+     "material": false,
+     "why": "The Commission gave Guzmán the Public Enemy Number One label."
+    },
+    {
+     "claim": "operating from the mountains of Sinaloa",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research places his arrest in Mazatlán, Sinaloa, but never says he operated from the mountains."
+    },
+    {
+     "claim": "the Commission was making a precise claim: that Guzmán's organization had embedded itself in Chicago deeply enough to earn the title on its own terms",
+     "status": "unsupported",
+     "fact": "F2",
+     "quote": "using Chicago “as a distribution hub”",
+     "verified": true,
+     "material": false,
+     "why": "This is the narrator's reading of the Commission's intent, not a stated Commission claim."
+    }
+   ],
+   "error": true,
+   "material": true
+  }
+ },
+ {
+  "id": "C071",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 3,
+   "sentence": "A luxury — the category Americans reserve for things they consider financially optional.",
+   "claims": [
+    {
+     "claim": "the category Americans reserve for things they consider financially optional",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research reports that 78% called fast food a luxury but never defines what Americans mean by 'luxury'; this is the narrator's general gloss."
+    }
+   ],
+   "error": true,
+   "material": false
+  }
+ },
+ {
+  "id": "C072",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 3,
+   "sentence": "The man who had seized a commercial aircraft over Florida in 1972 was now, by the legal measure Portugal applied, one of its own.",
+   "claims": [
+    {
+     "claim": "The man who had seized a commercial aircraft ... in 1972",
+     "status": "supported",
+     "fact": "F21",
+     "quote": "hijacked Delta Air Lines Flight 841 on July 31, 1972",
+     "verified": true,
+     "material": false,
+     "why": "Research says Wright hijacked a Delta airliner on July 31, 1972."
+    },
+    {
+     "claim": "over Florida",
+     "status": "supported",
+     "fact": "F2",
+     "quote": "commandeered around 12:45 p.m. over Orlando",
+     "verified": true,
+     "material": false,
+     "why": "Research places the takeover over Orlando; the sentence restates this as Florida."
+    },
+    {
+     "claim": "was now, by the legal measure Portugal applied, one of its own",
+     "status": "supported",
+     "fact": "F15",
+     "quote": "Wright would not be extradited to the United States because he had Portuguese citizenship",
+     "verified": true,
+     "material": false,
+     "why": "The court treated him as a Portuguese citizen."
+    }
+   ],
+   "error": false,
+   "material": false
+  }
+ },
+ {
+  "id": "C073",
+  "truth": {
+   "any": true,
+   "material": false
+  },
+  "pred": {
+   "i": 9,
+   "sentence": "When they stood at that news conference in February 2013 and called him Public Enemy Number One — invoking a designation the city had last used for Al Capone — the question hanging over it was whether the legal machinery would ever catch up to the argument.",
+   "claims": [
+    {
+     "claim": "they stood at that news conference in February 2013 and called him Public Enemy Number One",
+     "status": "supported",
+     "fact": "F1",
+     "quote": "On February 14, 2013, the Chicago Crime Commission announced at a Chicago news conference that Joaquín Guzmán Loera was its “Public Enemy Number One,”",
+     "verified": true,
+     "material": false,
+     "why": "The research records the February 2013 news conference and the label."
+    },
+    {
+     "claim": "invoking a designation the city had last used for Al Capone",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research never mentions Al Capone or any earlier use of the label. It also attributes the 2013 designation to the Chicago Crime Commission, not the city."
+    },
+    {
+     "claim": "the question hanging over it was whether the legal machinery would ever catch up to the argument",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "This is the narrator's interpretive framing, not a checkable fact."
+    }
+   ],
+   "error": true,
+   "material": true
+  }
+ },
+ {
+  "id": "C074",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 6,
+   "sentence": "The fourteen firms that came to the table weren't there because the government ordered them in.",
+   "claims": [
+    {
+     "claim": "The fourteen firms that came to the table",
+     "status": "supported",
+     "fact": "F14",
+     "quote": "McDonough convened 14 major Wall Street firms and pressed them to form a private rescue consortium",
+     "verified": true,
+     "material": false,
+     "why": "Research records 14 firms convened at the New York Fed rescue meeting."
+    },
+    {
+     "claim": "weren't there because the government ordered them in",
+     "status": "unsupported",
+     "fact": "F14",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Research says McDonough convened and pressed the firms but does not say whether they were ordered; this is the narrator's reading of their motives."
+    }
+   ],
+   "error": true,
+   "material": false
+  }
+ },
+ {
+  "id": "C075",
+  "truth": {
+   "any": true,
+   "material": false
+  },
+  "pred": {
+   "i": 7,
+   "sentence": "The Federal Reserve Bank of New York doesn't typically call meetings like this.",
+   "claims": [
+    {
+     "claim": "The Federal Reserve Bank of New York doesn't typically call meetings like this.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research says McDonough convened the meeting but never says such meetings are unusual; this is the narrator's framing of how unusual it was."
+    }
+   ],
+   "error": true,
+   "material": false
+  }
+ },
+ {
+  "id": "C076",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 10,
+   "sentence": "The Commission didn't just name him — it announced that it had officially joined forces with the DEA Chicago Field Division to put the spotlight on him, using those exact words: Chicago's Public Enemy Number One.",
+   "claims": [
+    {
+     "claim": "it announced that it had officially joined forces with the DEA Chicago Field Division to put the spotlight on him",
+     "status": "supported",
+     "fact": "F0",
+     "quote": "officially joined forces with the DEA Chicago Field Division in 2013 when we put the spotlight on Joaquín Guzmán Loera",
+     "verified": true,
+     "material": false,
+     "why": "The Commission's own page states it joined forces with the DEA Chicago Field Division to spotlight him."
+    },
+    {
+     "claim": "using those exact words: Chicago's Public Enemy Number One",
+     "status": "supported",
+     "fact": "F1",
+     "quote": "using the exact label “Chicago’s Public Enemy Number One.”",
+     "verified": true,
+     "material": false,
+     "why": "F1 confirms the exact label used."
+    }
+   ],
+   "error": false,
+   "material": false
+  }
+ },
+ {
+  "id": "C078",
+  "truth": {
+   "any": true,
+   "material": false
+  },
+  "pred": {
+   "i": 11,
+   "sentence": "Each method addressed a specific vulnerability in the others.",
+   "claims": [
+    {
+     "claim": "Each method addressed a specific vulnerability in the others.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research lists the methods but never says they compensated for each other; this is the narrator's analysis."
+    }
+   ],
+   "error": true,
+   "material": false
+  }
+ },
+ {
+  "id": "C079",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 12,
+   "sentence": "Each category addressed a different layer of the operation: the recordings captured communications the cartel believed were private; the ledgers showed the money moving; the photographs and videos placed people and product in the same frame.",
+   "claims": [
+    {
+     "claim": "the recordings captured communications",
+     "status": "supported",
+     "fact": "F56",
+     "quote": "intercepted recordings",
+     "verified": true,
+     "material": false,
+     "why": "Research lists intercepted recordings among the evidence."
+    },
+    {
+     "claim": "communications the cartel believed were private",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research does not state what the cartel believed; this is the narrator's interpretation."
+    },
+    {
+     "claim": "the ledgers showed the money moving",
+     "status": "unsupported",
+     "fact": "F56",
+     "quote": "Evidence also included ledgers",
+     "verified": true,
+     "material": true,
+     "why": "Research lists ledgers as evidence but does not say what they showed."
+    },
+    {
+     "claim": "the photographs and videos placed people and product in the same frame",
+     "status": "unsupported",
+     "fact": "F56",
+     "quote": "videos, photographs",
+     "verified": true,
+     "material": true,
+     "why": "Research does not describe the content of the photographs or videos."
+    },
+    {
+     "claim": "Each category addressed a different layer of the operation",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "This is the narrator's framing of the evidence, not a research fact."
+    }
+   ],
+   "error": true,
+   "material": true
+  }
+ },
+ {
+  "id": "C080",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 13,
+   "sentence": "Together they narrowed the gaps a defense could otherwise use — gaps between what witnesses said they saw and what the documentary record independently confirmed.",
+   "claims": [
+    {
+     "claim": "Together they narrowed the gaps a defense could otherwise use — gaps between what witnesses said they saw and what the documentary record independently confirmed.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research lists witnesses and evidence types but never says the records corroborated testimony or limited defense arguments. This is the narrator's analysis of how the evidence worked."
+    }
+   ],
+   "error": true,
+   "material": false
+  }
+ },
+ {
+  "id": "C081",
+  "truth": {
+   "any": true,
+   "material": false
+  },
+  "pred": {
+   "i": 14,
+   "sentence": "It is the court stating, with arithmetic, that even the theoretical possibility of a future legal argument does not leave a door open.",
+   "claims": [
+    {
+     "claim": "It is the court stating, with arithmetic, that even the theoretical possibility of a future legal argument does not leave a door open.",
+     "status": "unsupported",
+     "fact": "F40",
+     "quote": "Guzman Loera received a life term of imprisonment plus 30 years, with the 30 years running consecutive to the life sentence.",
+     "verified": true,
+     "material": false,
+     "why": "The research records the consecutive life-plus-30 sentence but not this purpose; reading the court's intent into it is the narrator's interpretation."
+    }
+   ],
+   "error": true,
+   "material": false
+  }
+ },
+ {
+  "id": "C082",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 4,
+   "sentence": "According to the National Restaurant Association, food costs for the average restaurant rose 35% over the five years following February 2020.",
+   "claims": [
+    {
+     "claim": "According to the National Restaurant Association, food costs for the average restaurant rose 35%",
+     "status": "supported",
+     "fact": "F62",
+     "quote": "in the last 5 years, food and labor costs for the average restaurant each rose 35%",
+     "verified": true,
+     "material": false,
+     "why": "The NRA reported a 35% rise in food costs for the average restaurant."
+    },
+    {
+     "claim": "over the five years following February 2020",
+     "status": "misattached",
+     "fact": "F62",
+     "quote": "average menu prices increased 31% between February 2020 and April 2025",
+     "verified": true,
+     "material": true,
+     "why": "The February 2020 starting point belongs to the menu-price figure; the food-cost rise is only dated as 'the last 5 years'."
+    }
+   ],
+   "error": true,
+   "material": true
+  }
+ },
+ {
+  "id": "C083",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 5,
+   "sentence": "Labor costs rose 35% over that same span.",
+   "claims": [
+    {
+     "claim": "Labor costs rose 35% over that same span.",
+     "status": "supported",
+     "fact": "F62",
+     "quote": "in the last 5 years, food and labor costs for the average restaurant each rose 35%",
+     "verified": true,
+     "material": false,
+     "why": "Research states labor costs rose 35% over the five-year span, consistent with the menu-price comparison period."
+    }
+   ],
+   "error": false,
+   "material": false
+  }
+ },
+ {
+  "id": "C085",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 6,
+   "sentence": "When both of those lines move 35% in the same direction at the same time, the arithmetic compresses fast.",
+   "claims": [
+    {
+     "claim": "both of those lines move 35% in the same direction at the same time",
+     "status": "supported",
+     "fact": "F62",
+     "quote": "in the last 5 years, food and labor costs for the average restaurant each rose 35%",
+     "verified": true,
+     "material": false,
+     "why": "Food and labor costs each rose 35% over the same five-year period."
+    },
+    {
+     "claim": "the arithmetic compresses fast",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The narrator's interpretation of the margin squeeze; no research fact states it."
+    }
+   ],
+   "error": true,
+   "material": false
+  }
+ },
+ {
+  "id": "C086",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 7,
+   "sentence": "Menu prices were at their highest in over forty years, with limited-service and full-service restaurants raising prices by at least 7% over the past year.",
+   "claims": [
+    {
+     "claim": "Menu prices were at their highest in over forty years",
+     "status": "supported",
+     "fact": "F25",
+     "quote": "restaurant menu prices were at their highest in over 40 years",
+     "verified": true,
+     "material": false,
+     "why": "Matches the article's statement in the research."
+    },
+    {
+     "claim": "with limited-service and full-service restaurants raising prices by at least 7% over the past year",
+     "status": "supported",
+     "fact": "F25",
+     "quote": "limited-service and full-service restaurants raising prices by at least 7% over the past year",
+     "verified": true,
+     "material": false,
+     "why": "Research states the same figure for both segments."
+    }
+   ],
+   "error": false,
+   "material": false
+  }
+ },
+ {
+  "id": "C090",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 8,
+   "sentence": "The Goldman Sachs data make the asymmetry legible: non-manager wages were up 35.9% since January 2017, and fast-food meal prices were up more than 41% over that same period.",
+   "claims": [
+    {
+     "claim": "The Goldman Sachs data",
+     "status": "supported",
+     "fact": "F160",
+     "quote": "Marcus by Goldman Sachs reported",
+     "verified": true,
+     "material": false,
+     "why": "Research attributes the figures to Marcus by Goldman Sachs."
+    },
+    {
+     "claim": "non-manager wages were up 35.9% since January 2017",
+     "status": "supported",
+     "fact": "F160",
+     "quote": "non-manager wages were up 35.9% since January 2017",
+     "verified": true,
+     "material": false,
+     "why": "Matches the research figure and start date."
+    },
+    {
+     "claim": "fast-food meal prices were up more than 41% over that same period",
+     "status": "supported",
+     "fact": "F160",
+     "quote": "fast food meal prices were up more than 41% over the same period",
+     "verified": true,
+     "material": false,
+     "why": "Matches the research figure and period."
+    }
+   ],
+   "error": false,
+   "material": false
+  }
+ },
+ {
+  "id": "C092",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 6,
+   "sentence": "A man in a battered trailer in a county most people couldn't place on a map generates no paperwork, no curiosity, no second look.",
+   "claims": [
+    {
+     "claim": "A man in a battered trailer",
+     "status": "supported",
+     "fact": "F10",
+     "quote": "was found in a weathered trailer in rural Brevard County, Florida",
+     "verified": true,
+     "material": false,
+     "why": "The research records Freshwaters being found in a weathered trailer."
+    },
+    {
+     "claim": "in a county most people couldn't place on a map",
+     "status": "unsupported",
+     "fact": "F10",
+     "quote": "rural Brevard County, Florida",
+     "verified": true,
+     "material": false,
+     "why": "The research only says the county is rural; its obscurity is the narrator's color."
+    },
+    {
+     "claim": "generates no paperwork, no curiosity, no second look",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "This is the narrator's general interpretation of why he went unnoticed, not a recorded fact."
+    }
+   ],
+   "error": true,
+   "material": false
+  }
+ },
+ {
+  "id": "C093",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 7,
+   "sentence": "Sixteen years after he walked away from that honor camp, someone found him.",
+   "claims": [
+    {
+     "claim": "he walked away from that honor camp",
+     "status": "supported",
+     "fact": "F2",
+     "quote": "moved to an honor camp near Sandusky, and was reported missing on Sept. 30, 1959",
+     "verified": true,
+     "material": false,
+     "why": "Research records him going missing from the honor camp in 1959."
+    },
+    {
+     "claim": "Sixteen years after",
+     "status": "derived",
+     "fact": "F2",
+     "quote": "was reported missing on Sept. 30, 1959; he was later arrested in West Virginia in 1975",
+     "verified": true,
+     "material": false,
+     "why": "1959 to 1975 is 16 years."
+    },
+    {
+     "claim": "someone found him",
+     "status": "supported",
+     "fact": "F2",
+     "quote": "he was later arrested in West Virginia in 1975",
+     "verified": true,
+     "material": false,
+     "why": "The 1975 West Virginia arrest is recorded."
+    }
+   ],
+   "error": false,
+   "material": false
+  }
+ },
+ {
+  "id": "C095",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 2,
+   "sentence": "The disappearance Jones staged to escape his debts had, within seven years, converted into a government check.",
+   "claims": [
+    {
+     "claim": "The disappearance Jones staged",
+     "status": "unsupported",
+     "fact": "F59",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research records that he left and that his car was found abandoned. It never says he staged the disappearance; that word is the narrator's characterization."
+    },
+    {
+     "claim": "to escape his debts",
+     "status": "supported",
+     "fact": "F37",
+     "quote": "In 1979, Jones fled Chicago and his gambling debts",
+     "verified": true,
+     "material": false,
+     "why": "The research states he fled his gambling debts."
+    },
+    {
+     "claim": "within seven years",
+     "status": "derived",
+     "fact": "F60",
+     "quote": "A court declared Arthur Jones legally dead in 1986.",
+     "verified": true,
+     "material": false,
+     "why": "He disappeared in 1979 and was declared dead in 1986, which is seven years."
+    },
+    {
+     "claim": "converted into a government check",
+     "status": "supported",
+     "fact": "F61",
+     "quote": "Social Security paid Jones's family $47,000 in survivor benefits after he was declared legally dead.",
+     "verified": true,
+     "material": false,
+     "why": "Social Security paid survivor benefits after he was declared dead."
+    }
+   ],
+   "error": true,
+   "material": false
+  }
+ },
+ {
+  "id": "C097",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 3,
+   "sentence": "Arthur Gerald Jones, who had been legally dead on an Illinois court's docket for decades, was standing in Nevada, alive, and he admitted it.",
+   "claims": [
+    {
+     "claim": "Arthur Gerald Jones, who had been legally dead on an Illinois court's docket",
+     "status": "supported",
+     "fact": "F42",
+     "quote": "after he was declared dead in Illinois",
+     "verified": true,
+     "material": false,
+     "why": "Research records that an Illinois court declared him dead."
+    },
+    {
+     "claim": "for decades",
+     "status": "derived",
+     "fact": "F38",
+     "quote": "Illinois courts declared Jones dead 25 years ago.",
+     "verified": true,
+     "material": false,
+     "why": "Twenty-five years counts as decades."
+    },
+    {
+     "claim": "was standing in Nevada, alive",
+     "status": "supported",
+     "fact": "F29",
+     "quote": "In 2011, Jones was arrested in Las Vegas after trying to renew a Nevada driver's license",
+     "verified": true,
+     "material": false,
+     "why": "He was found alive in Las Vegas, Nevada."
+    },
+    {
+     "claim": "and he admitted it",
+     "status": "supported",
+     "fact": "F90",
+     "quote": "When authorities asked if he was the Chicago trader who had vanished 32 years ago, Jones said yes.",
+     "verified": true,
+     "material": false,
+     "why": "He confirmed his identity when asked."
+    }
+   ],
+   "error": false,
+   "material": false
+  }
+ },
+ {
+  "id": "C100",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 8,
+   "sentence": "In 1995, 42.8 percent.",
+   "claims": [
+    {
+     "claim": "In 1995, 42.8 percent.",
+     "status": "supported",
+     "fact": "F10",
+     "quote": "42.8% in 1995",
+     "verified": true,
+     "material": false,
+     "why": "F10 gives LTCM's documented net return for 1995 as 42.8%."
+    }
+   ],
+   "error": false,
+   "material": false
+  }
+ },
+ {
+  "id": "C101",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 9,
+   "sentence": "In 1996, 40.8 percent.",
+   "claims": [
+    {
+     "claim": "In 1996, 40.8 percent.",
+     "status": "supported",
+     "fact": "F10",
+     "quote": "40.8% in 1996",
+     "verified": true,
+     "material": false,
+     "why": "F10 states LTCM's documented net return was 40.8% in 1996."
+    }
+   ],
+   "error": false,
+   "material": false
+  }
+ },
+ {
+  "id": "C102",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 10,
+   "sentence": "By early 1998, Goldman Sachs, Merrill Lynch, J. P. Morgan, UBS, and the rest of Wall Street's major dealers had extended LTCM more than $125 billion in borrowed money against roughly $5 billion in equity.",
+   "claims": [
+    {
+     "claim": "By early 1998, LTCM had more than $125 billion in borrowed money against roughly $5 billion in equity",
+     "status": "supported",
+     "fact": "F4",
+     "quote": "by early 1998 had more than $125 billion borrowed against about $5 billion in equity",
+     "verified": true,
+     "material": false,
+     "why": "The research states the borrowing, the equity and the timing."
+    },
+    {
+     "claim": "Goldman Sachs, Merrill Lynch, J. P. Morgan, UBS had extended LTCM borrowed money",
+     "status": "supported",
+     "fact": "F4",
+     "quote": "major Wall Street dealers and counterparties such as Goldman Sachs, Merrill Lynch, J.P. Morgan, and UBS extending financing and trading credit",
+     "verified": true,
+     "material": false,
+     "why": "The research names these four firms as extending financing."
+    },
+    {
+     "claim": "and the rest of Wall Street's major dealers had extended LTCM",
+     "status": "supported",
+     "fact": "F4",
+     "quote": "major Wall Street dealers and counterparties such as",
+     "verified": true,
+     "material": false,
+     "why": "The research describes major Wall Street dealers generally as lenders."
+    }
+   ],
+   "error": false,
+   "material": false
+  }
+ },
+ {
+  "id": "C103",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 11,
+   "sentence": "Fourteen banks sitting across from William McDonough, each of them calculating whether the cost of contributing was less than the cost of not contributing.",
+   "claims": [
+    {
+     "claim": "Fourteen banks sitting across from William McDonough",
+     "status": "supported",
+     "fact": "F14",
+     "quote": "At the September 1998 New York Fed rescue meeting, McDonough convened 14 major Wall Street firms",
+     "verified": true,
+     "material": false,
+     "why": "Research records McDonough convening 14 firms at the rescue meeting."
+    },
+    {
+     "claim": "each of them calculating whether the cost of contributing was less than the cost of not contributing",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Narrator's interpretation of what the banks were weighing; the research does not record their calculations."
+    }
+   ],
+   "error": true,
+   "material": false
+  }
+ },
+ {
+  "id": "C106",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 5,
+   "sentence": "Around 2018, Smith began working with two new figures: the CEO of an AI music company, identified in the indictment as CC-3, and a music promoter identified as CC-4.",
+   "claims": [
+    {
+     "claim": "Around 2018, Smith began working with the CEO of an AI music company",
+     "status": "supported",
+     "fact": "F77",
+     "quote": "In or about 2018, SMITH began working with the Chief Executive Officer of an AI music company designated as CC-3",
+     "verified": true,
+     "material": false,
+     "why": "Research states this directly."
+    },
+    {
+     "claim": "identified in the indictment as CC-3",
+     "status": "supported",
+     "fact": "F77",
+     "quote": "Chief Executive Officer of an AI music company designated as CC-3",
+     "verified": true,
+     "material": false,
+     "why": "The research designates the CEO as CC-3."
+    },
+    {
+     "claim": "and a music promoter identified as CC-4",
+     "status": "supported",
+     "fact": "F77",
+     "quote": "a music promoter designated as CC-4",
+     "verified": true,
+     "material": false,
+     "why": "The research designates the promoter as CC-4."
+    },
+    {
+     "claim": "two new figures",
+     "status": "supported",
+     "fact": "F75",
+     "quote": "Early in the scheme, SMITH used the catalog of a music publicist designated as CC-2",
+     "verified": true,
+     "material": false,
+     "why": "Smith worked with CC-2 earlier, so CC-3 and CC-4 began later and are new to the scheme."
+    }
+   ],
+   "error": false,
+   "material": false
+  }
+ },
+ {
+  "id": "C108",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 4,
+   "sentence": "That single act — the escape itself — is what the FBI would later encode near the top of his wanted notice: unlawful flight to avoid confinement, escape, murder.",
+   "claims": [
+    {
+     "claim": "the FBI would later encode near the top of his wanted notice: unlawful flight to avoid confinement, escape",
+     "status": "supported",
+     "fact": "F7",
+     "quote": "wanted for \"Unlawful Flight to Avoid Confinement - Escape (Murder)",
+     "verified": true,
+     "material": false,
+     "why": "The FBI poster lists unlawful flight to avoid confinement and escape as its first offense."
+    },
+    {
+     "claim": "murder",
+     "status": "overstated",
+     "fact": "F7",
+     "quote": "Unlawful Flight to Avoid Confinement - Escape (Murder)",
+     "verified": true,
+     "material": true,
+     "why": "On the notice, murder qualifies the escape (flight from a murder sentence); it is not a separate offense encoded for the escape act."
+    },
+    {
+     "claim": "That single act — the escape itself — is what the FBI would later encode",
+     "status": "supported",
+     "fact": "F19",
+     "quote": "reflecting the federal response to his 1970 escape and 1972 hijacking",
+     "verified": true,
+     "material": false,
+     "why": "The research ties the unlawful-flight charge to his escape."
+    }
+   ],
+   "error": true,
+   "material": true
+  }
+ },
+ {
+  "id": "C110",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 5,
+   "sentence": "And then the courts ruled, twice, and he remained in Portugal.",
+   "claims": [
+    {
+     "claim": "the courts ruled, twice",
+     "status": "supported",
+     "fact": "F10",
+     "quote": "A Lisbon appeals court ruled on November 17, 2011 that Wright would not be extradited, and Portugal’s Supreme Court later rejected the U.S. appeal",
+     "verified": true,
+     "material": false,
+     "why": "Two rulings: the appeals court and then the Supreme Court."
+    },
+    {
+     "claim": "he remained in Portugal",
+     "status": "supported",
+     "fact": "F10",
+     "quote": "leaving him in Portugal",
+     "verified": true,
+     "material": false,
+     "why": "The research states the rulings left him in Portugal."
+    }
+   ],
+   "error": false,
+   "material": false
+  }
+ },
+ {
+  "id": "C113",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 6,
+   "sentence": "His Portuguese citizenship was the reason the courts ruled he could not be extradited.",
+   "claims": [
+    {
+     "claim": "the courts ruled he could not be extradited",
+     "status": "supported",
+     "fact": "F10",
+     "quote": "A Lisbon appeals court ruled on November 17, 2011 that Wright would not be extradited, and Portugal’s Supreme Court later rejected the U.S. appeal",
+     "verified": true,
+     "material": false,
+     "why": "The appeals court ruling and the Supreme Court's rejection of the U.S. appeal are both in the research."
+    },
+    {
+     "claim": "His Portuguese citizenship was the reason",
+     "status": "supported",
+     "fact": "F15",
+     "quote": "ruled that Wright would not be extradited to the United States because he had Portuguese citizenship",
+     "verified": true,
+     "material": false,
+     "why": "The research names citizenship as the basis of the extradition ruling."
+    }
+   ],
+   "error": false,
+   "material": false
+  }
+ },
+ {
+  "id": "C114",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 9,
+   "sentence": "The Farmdoc Daily survey sharpens the picture further.",
+   "claims": [
+    {
+     "claim": "The Farmdoc Daily survey",
+     "status": "supported",
+     "fact": "F206",
+     "quote": "Farmdoc Daily reported that 53.1% of consumers said fast-food restaurant prices were unfair",
+     "verified": true,
+     "material": false,
+     "why": "Farmdoc Daily reported consumer responses, so calling it a survey is a fair paraphrase; 'sharpens the picture further' is narration."
+    }
+   ],
+   "error": false,
+   "material": false
+  }
+ },
+ {
+  "id": "C115",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 4,
+   "sentence": "Jones, by his own account to authorities, admitted buying Goodenough's number specifically, not a randomly generated fake, but a real number attached to a real man.",
+   "claims": [
+    {
+     "claim": "by his own account to authorities, admitted buying Goodenough's number",
+     "status": "supported",
+     "fact": "F47",
+     "quote": "Jones had admitted buying Goodenough's Social Security number for $800 before he left Chicago.",
+     "verified": true,
+     "material": false,
+     "why": "Research records Jones's admission of buying Goodenough's number."
+    },
+    {
+     "claim": "by his own account to authorities",
+     "status": "supported",
+     "fact": "F67",
+     "quote": "Jones told authorities that he had paid an associate $800 for a fake Illinois driver's license, birth certificate, and Social Security number",
+     "verified": true,
+     "material": false,
+     "why": "His account was given to authorities."
+    },
+    {
+     "claim": "not a randomly generated fake, but a real number attached to a real man",
+     "status": "supported",
+     "fact": "F7",
+     "quote": "a Social Security number belonging to another man",
+     "verified": true,
+     "material": false,
+     "why": "The number belonged to an actual person."
+    },
+    {
+     "claim": "specifically",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Research doesn't say he deliberately chose Goodenough's number; this is the narrator's emphasis."
+    }
+   ],
+   "error": true,
+   "material": false
+  }
+ },
+ {
+  "id": "C116",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 6,
+   "sentence": "He entered a plea to one count and agreed to forfeit $8,091,843.64 as proceeds traceable to the offense.",
+   "claims": [
+    {
+     "claim": "He entered a plea to one count",
+     "status": "supported",
+     "fact": "F14",
+     "quote": "later pleaded guilty to one count of conspiracy to commit wire fraud",
+     "verified": true,
+     "material": false,
+     "why": "Research states guilty plea to one count."
+    },
+    {
+     "claim": "agreed to forfeit $8,091,843.64",
+     "status": "supported",
+     "fact": "F2",
+     "quote": "Smith agreed to forfeit $8,091,843.64",
+     "verified": true,
+     "material": false,
+     "why": "Exact forfeiture amount stated."
+    },
+    {
+     "claim": "as proceeds traceable to the offense",
+     "status": "supported",
+     "fact": "F25",
+     "quote": "the plea agreement required him to forfeit $8,091,843.64 as proceeds traceable to the offense",
+     "verified": true,
+     "material": false,
+     "why": "Research describes forfeiture as proceeds traceable to the offense."
+    }
+   ],
+   "error": false,
+   "material": false
+  }
+ },
+ {
+  "id": "C117",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 5,
+   "sentence": "By the 1980s, Jones had settled into the city and found work that matched the one skill his old life had genuinely sharpened: reading odds.",
+   "claims": [
+    {
+     "claim": "By the 1980s, Jones had settled into the city",
+     "status": "supported",
+     "fact": "F69",
+     "quote": "In the 1980s, Jones vanished into Las Vegas.",
+     "verified": true,
+     "material": false,
+     "why": "Research places his arrival in Las Vegas in the 1980s."
+    },
+    {
+     "claim": "found work",
+     "status": "supported",
+     "fact": "F84",
+     "quote": "In Las Vegas, Jones worked at the Desert Inn and then for a local casino's sports book, according to his attorney.",
+     "verified": true,
+     "material": false,
+     "why": "Research records that he worked in Las Vegas."
+    },
+    {
+     "claim": "that matched the one skill his old life had genuinely sharpened: reading odds",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Narrator's interpretation linking his sports book job to a skill from his past; the research does not establish it."
+    }
+   ],
+   "error": true,
+   "material": false
+  }
+ },
+ {
+  "id": "C118",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 10,
+   "sentence": "Limited-service meal prices climbed 26% from 2019 to 2024.",
+   "claims": [
+    {
+     "claim": "Limited-service meal prices climbed 26% from 2019 to 2024",
+     "status": "supported",
+     "fact": "F35",
+     "quote": "Limited service meals and snacks CPI rose 26.0% from 2019 to 2024",
+     "verified": true,
+     "material": false,
+     "why": "F35 states the 26.0% rise for 2019–2024; F209 gives 19.8%, but a claim matching any source counts as supported."
+    }
+   ],
+   "error": false,
+   "material": false
+  }
+ },
+ {
+  "id": "C119",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 6,
+   "sentence": "Jones had been using Goodenough's Social Security number in Nevada for years, and the record of that use had been accumulating under the Sandelli name.",
+   "claims": [
+    {
+     "claim": "Jones had been using Goodenough's Social Security number in Nevada for years",
+     "status": "supported",
+     "fact": "F20",
+     "quote": "Jones used the name Joseph Richard Sandelli and a Social Security number belonging to Clifton Goodenough to obtain and renew identification in Nevada",
+     "verified": true,
+     "material": false,
+     "why": "F20 records the Nevada use, and F88/F89 (license issued 1988, renewed 2008) show it spanned years."
+    },
+    {
+     "claim": "the record of that use had been accumulating under the Sandelli name",
+     "status": "supported",
+     "fact": "F88",
+     "quote": "which had issued Jones a driver's license in 1988 with his Sandelli alias and fake Social Security number",
+     "verified": true,
+     "material": false,
+     "why": "The DMV record tied the Sandelli alias to the fake SSN from 1988 and was renewed in 2008."
+    }
+   ],
+   "error": false,
+   "material": false
+  }
+ },
+ {
+  "id": "C120",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 12,
+   "sentence": "The Federal Reserve Bank of New York organized a private rescue meeting to keep the fund from disorderly liquidation.",
+   "claims": [
+    {
+     "claim": "The Federal Reserve Bank of New York organized a private rescue meeting",
+     "status": "supported",
+     "fact": "F14",
+     "quote": "At the September 1998 New York Fed rescue meeting, McDonough convened 14 major Wall Street firms and pressed them to form a private rescue consortium",
+     "verified": true,
+     "material": false,
+     "why": "Research records a New York Fed rescue meeting convened to form a private rescue."
+    },
+    {
+     "claim": "to keep the fund from disorderly liquidation",
+     "status": "supported",
+     "fact": "F5",
+     "quote": "the Federal Reserve Bank of New York organized a $3.625 billion private rescue by 14 banks and securities firms to keep the fund from disorderly liquidation",
+     "verified": true,
+     "material": false,
+     "why": "The stated purpose matches the research."
+    }
+   ],
+   "error": false,
+   "material": false
+  }
+ },
+ {
+  "id": "C121",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 7,
+   "sentence": "In an August 17, 2020 email, CC-3 told Smith the song quality was \"10x-20x better now,\" with \"vocal generation capabilities.\"",
+   "claims": [
+    {
+     "claim": "In an August 17, 2020 email, CC-3 told Smith",
+     "status": "supported",
+     "fact": "F94",
+     "quote": "In an August 17, 2020 email, CC-3 wrote to SMITH",
+     "verified": true,
+     "material": false,
+     "why": "Date, sender and recipient match."
+    },
+    {
+     "claim": "the song quality was \"10x-20x better now,\"",
+     "status": "supported",
+     "fact": "F94",
+     "quote": "Song quality is 10x-20x better now",
+     "verified": true,
+     "material": false,
+     "why": "Quote matches."
+    },
+    {
+     "claim": "with \"vocal generation capabilities.\"",
+     "status": "supported",
+     "fact": "F94",
+     "quote": "we also have vocal generation capabilities",
+     "verified": true,
+     "material": false,
+     "why": "Quote matches."
+    }
+   ],
+   "error": false,
+   "material": false
+  }
+ },
+ {
+  "id": "C122",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 8,
+   "sentence": "After his 2015 arrest, he had told an ABC affiliate that he hadn't done anything wrong, that he had made a mistake.",
+   "claims": [
+    {
+     "claim": "After his 2015 arrest, he had told an ABC affiliate",
+     "status": "supported",
+     "fact": "F12",
+     "quote": "a statement reported by ABC affiliate WFTV after his 2015 arrest",
+     "verified": true,
+     "material": false,
+     "why": "Research says the ABC affiliate WFTV reported his statement after the 2015 arrest."
+    },
+    {
+     "claim": "that he hadn't done anything wrong",
+     "status": "supported",
+     "fact": "F12",
+     "quote": "Freshwaters said he had not done anything wrong",
+     "verified": true,
+     "material": false,
+     "why": "Matches the research directly."
+    },
+    {
+     "claim": "that he had made a mistake",
+     "status": "supported",
+     "fact": "F12",
+     "quote": "had made a mistake",
+     "verified": true,
+     "material": false,
+     "why": "Matches the research directly."
+    }
+   ],
+   "error": false,
+   "material": false
+  }
+ },
+ {
+  "id": "C123",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 7,
+   "sentence": "Court papers would later describe Jones as having left shortly after that shooting to get a fresh start.",
+   "claims": [
+    {
+     "claim": "Court papers would later describe Jones as having left shortly after that shooting to get a fresh start.",
+     "status": "supported",
+     "fact": "F83",
+     "quote": "Court papers said Jones took off shortly after the April 1979 shooting 'to get a fresh start.'",
+     "verified": true,
+     "material": false,
+     "why": "Research states court papers said he left shortly after the shooting to get a fresh start."
+    }
+   ],
+   "error": false,
+   "material": false
+  }
+ },
+ {
+  "id": "C124",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 8,
+   "sentence": "He would supply the metadata — song titles, artist names — and pay CC-3's company either $2,000 per month or 15 percent of the streaming revenue generated from those tracks, whichever was greater.",
+   "claims": [
+    {
+     "claim": "He would supply the metadata — song titles, artist names",
+     "status": "supported",
+     "fact": "F90",
+     "quote": "SMITH agreed to provide metadata including song and artist names",
+     "verified": true,
+     "material": false,
+     "why": "Matches the Master Services Agreement terms."
+    },
+    {
+     "claim": "pay CC-3's company either $2,000 per month or 15 percent of the streaming revenue generated from those tracks, whichever was greater",
+     "status": "supported",
+     "fact": "F90",
+     "quote": "to pay CC-3's company each month the greater of $2,000 or 15% of the streaming revenue generated from the AI songs",
+     "verified": true,
+     "material": false,
+     "why": "Exact paraphrase of the payment terms."
+    }
+   ],
+   "error": false,
+   "material": false
+  }
+ },
+ {
+  "id": "C125",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 15,
+   "sentence": "On February 14, 2013, the Chicago Crime Commission gave Joaquín Guzmán a title.",
+   "claims": [
+    {
+     "claim": "On February 14, 2013, the Chicago Crime Commission gave Joaquín Guzmán a title",
+     "status": "supported",
+     "fact": "F1",
+     "quote": "On February 14, 2013, the Chicago Crime Commission announced at a Chicago news conference that Joaquín Guzmán Loera was its “Public Enemy Number One,”",
+     "verified": true,
+     "material": false,
+     "why": "Research states the Commission named him Public Enemy Number One on that date."
+    }
+   ],
+   "error": false,
+   "material": false
+  }
+ },
+ {
+  "id": "C126",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 13,
+   "sentence": "What it does not resolve is what the Fed's willingness to convene that room, to press those firms, to put its institutional weight behind a consortium rescue — what that signals about where private risk ends and collective exposure begins.",
+   "claims": [
+    {
+     "claim": "the Fed's willingness to convene that room",
+     "status": "supported",
+     "fact": "F14",
+     "quote": "At the September 1998 New York Fed rescue meeting, McDonough convened 14 major Wall Street firms",
+     "verified": true,
+     "material": false,
+     "why": "Callback to the established rescue meeting convened at the New York Fed."
+    },
+    {
+     "claim": "to press those firms",
+     "status": "supported",
+     "fact": "F14",
+     "quote": "pressed them to form a private rescue consortium",
+     "verified": true,
+     "material": false,
+     "why": "The research states McDonough pressed the firms."
+    },
+    {
+     "claim": "to put its institutional weight behind a consortium rescue",
+     "status": "supported",
+     "fact": "F5",
+     "quote": "the Federal Reserve Bank of New York organized a $3.625 billion private rescue by 14 banks and securities firms",
+     "verified": true,
+     "material": false,
+     "why": "The New York Fed organized the consortium rescue."
+    }
+   ],
+   "error": false,
+   "material": false
+  }
+ },
+ {
+  "id": "C127",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 7,
+   "sentence": "The ruling followed from that, and nothing the United States presented dislodged the premise.",
+   "claims": [
+    {
+     "claim": "The ruling followed from that",
+     "status": "supported",
+     "fact": "F15",
+     "quote": "a Lisbon appeals court ruled that Wright would not be extradited to the United States because he had Portuguese citizenship",
+     "verified": true,
+     "material": false,
+     "why": "The research states the ruling was based on his Portuguese citizenship."
+    },
+    {
+     "claim": "nothing the United States presented dislodged the premise",
+     "status": "unsupported",
+     "fact": "F15",
+     "quote": "Portugal's Supreme Court later denied a U.S. appeal",
+     "verified": true,
+     "material": false,
+     "why": "The U.S. appeal was denied, but the research does not say what the U.S. argued or that the citizenship premise was challenged and upheld; this is narrator interpretation."
+    }
+   ],
+   "error": true,
+   "material": false
+  }
+ },
+ {
+  "id": "C128",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 9,
+   "sentence": "What those three words couldn't close was the distance between Frank Freshwaters and the family of the man who never got to run anywhere at all.",
+   "claims": [
+    {
+     "claim": "the man who never got to run anywhere at all",
+     "status": "supported",
+     "fact": "F14",
+     "quote": "a 1957 automobile accident that fatally struck Eugene Flynt",
+     "verified": true,
+     "material": false,
+     "why": "Refers to the pedestrian killed in 1957; the research records his death."
+    },
+    {
+     "claim": "the distance between Frank Freshwaters and the family of the man",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research never mentions Flynt's family or any relationship with them; this is narrator framing, not a stated event."
+    }
+   ],
+   "error": true,
+   "material": false
+  }
+ },
+ {
+  "id": "C129",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 9,
+   "sentence": "When Streaming Platform-1 made its own determination of fraud in March 2019 and informed Distribution Company-3, Smith escalated to direct confrontation.",
+   "claims": [
+    {
+     "claim": "Streaming Platform-1 made its own determination of fraud in March 2019",
+     "status": "supported",
+     "fact": "F100",
+     "quote": "In or about March 2019, Streaming Platform-1 informed Distribution Company-3 that it believed SMITH had engaged in streaming fraud.",
+     "verified": true,
+     "material": false,
+     "why": "The research records Platform-1's March 2019 belief that Smith committed fraud."
+    },
+    {
+     "claim": "and informed Distribution Company-3",
+     "status": "supported",
+     "fact": "F100",
+     "quote": "Streaming Platform-1 informed Distribution Company-3 that it believed SMITH had engaged in streaming fraud",
+     "verified": true,
+     "material": false,
+     "why": "The research states Platform-1 informed Distribution Company-3."
+    },
+    {
+     "claim": "Smith escalated to direct confrontation",
+     "status": "supported",
+     "fact": "F103",
+     "quote": "SMITH communicated directly with Streaming Platform-1 to deny streaming fraud and demand reinstatement of his music",
+     "verified": true,
+     "material": false,
+     "why": "Direct contact with Platform-1 to deny the fraud and make demands is recorded."
+    },
+    {
+     "claim": "escalated",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Framing his contact as an escalation, implying a sequence after F102, is the narrator's interpretation."
+    }
+   ],
+   "error": true,
+   "material": false
+  }
+ },
+ {
+  "id": "C130",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 10,
+   "sentence": "In multiple transactions between approximately 2020 and 2023, Smith moved $1.3 million in royalties into an account he controlled at a U.S.-based financial institution in the name of SMH Entertainment.",
+   "claims": [
+    {
+     "claim": "In multiple transactions between approximately 2020 and 2023",
+     "status": "supported",
+     "fact": "F61",
+     "quote": "In multiple transactions from approximately 2020 through 2023",
+     "verified": true,
+     "material": false,
+     "why": "Timeframe and multiple transactions match the research."
+    },
+    {
+     "claim": "Smith moved $1.3 million in royalties",
+     "status": "supported",
+     "fact": "F61",
+     "quote": "SMITH transferred $1.3 million in fraudulently obtained royalties",
+     "verified": true,
+     "material": false,
+     "why": "Amount matches the research."
+    },
+    {
+     "claim": "into an account he controlled at a U.S.-based financial institution",
+     "status": "supported",
+     "fact": "F61",
+     "quote": "to a bank account he controlled at a U.S.-based financial institution",
+     "verified": true,
+     "material": false,
+     "why": "Account and institution description match the research."
+    },
+    {
+     "claim": "in the name of SMH Entertainment",
+     "status": "supported",
+     "fact": "F61",
+     "quote": "in the name of SMH Entertainment",
+     "verified": true,
+     "material": false,
+     "why": "Account name matches the research."
+    }
+   ],
+   "error": false,
+   "material": false
+  }
+ },
+ {
+  "id": "C131",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 8,
+   "sentence": "Seven years after Jones walked out that door, an Illinois court did what the law does when a person stays gone long enough: it declared Arthur Gerald Jones legally dead.",
+   "claims": [
+    {
+     "claim": "Seven years after Jones walked out that door",
+     "status": "derived",
+     "fact": "F60",
+     "quote": "A court declared Arthur Jones legally dead in 1986.",
+     "verified": true,
+     "material": false,
+     "why": "He left on May 10, 1979 (F53) and was declared dead in 1986, which is 7 years later."
+    },
+    {
+     "claim": "an Illinois court ... declared Arthur Gerald Jones legally dead",
+     "status": "supported",
+     "fact": "F38",
+     "quote": "Illinois courts declared Jones dead",
+     "verified": true,
+     "material": false,
+     "why": "The research states that Illinois courts declared him dead."
+    },
+    {
+     "claim": "did what the law does when a person stays gone long enough",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "This is a general statement about how the law works and is not in the research; it is narrator framing."
+    }
+   ],
+   "error": true,
+   "material": false
+  }
+ },
+ {
+  "id": "C132",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 9,
+   "sentence": "The Nevada state attorney general's office charged him with an array of fraud, identity theft, and related counts.",
+   "claims": [
+    {
+     "claim": "The Nevada state attorney general's office charged him",
+     "status": "supported",
+     "fact": "F64",
+     "quote": "The Nevada state attorney general's office charged Jones",
+     "verified": true,
+     "material": false,
+     "why": "Research names the Nevada AG's office as the charging body."
+    },
+    {
+     "claim": "with an array of fraud, identity theft, and related counts",
+     "status": "supported",
+     "fact": "F64",
+     "quote": "an array of fraud, identity theft, and burglary counts",
+     "verified": true,
+     "material": false,
+     "why": "Matches the research; 'related counts' is a vaguer stand-in for the burglary counts."
+    }
+   ],
+   "error": false,
+   "material": false
+  }
+ },
+ {
+  "id": "C133",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 16,
+   "sentence": "That is the turn the 2009 indictments forced.",
+   "claims": [
+    {
+     "claim": "the 2009 indictments",
+     "status": "supported",
+     "fact": "F29",
+     "quote": "DEA said the 2009 Brooklyn and Chicago indictments together charged Guzmán Loera, Ismael Zambada-García, Arturo Beltrán-Leyva, and others",
+     "verified": true,
+     "material": false,
+     "why": "The research records indictments in 2009."
+    },
+    {
+     "claim": "That is the turn the 2009 indictments forced.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research does not say the indictments forced any turn; this is the narrator's interpretation of their significance."
+    }
+   ],
+   "error": true,
+   "material": false
+  }
+ },
+ {
+  "id": "C134",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 11,
+   "sentence": "In October 2018, the same distributor went further: it had received \"multiple reports of streaming abuse from different stores\" and planned to pull his releases entirely.",
+   "claims": [
+    {
+     "claim": "In October 2018, the same distributor",
+     "status": "supported",
+     "fact": "F98",
+     "quote": "In or about October 2018, Distribution Company-1 advised SMITH",
+     "verified": true,
+     "material": false,
+     "why": "Same distributor (Distribution Company-1) as the March 2018 warning; date matches."
+    },
+    {
+     "claim": "it had received \"multiple reports of streaming abuse from different stores\"",
+     "status": "supported",
+     "fact": "F98",
+     "quote": "it had received 'multiple reports of streaming abuse from different stores'",
+     "verified": true,
+     "material": false,
+     "why": "Exact quote from the research."
+    },
+    {
+     "claim": "planned to pull his releases entirely",
+     "status": "supported",
+     "fact": "F98",
+     "quote": "planned to remove SMITH's releases from all stores",
+     "verified": true,
+     "material": false,
+     "why": "Accurate paraphrase of removing his releases from all stores."
+    }
+   ],
+   "error": false,
+   "material": false
+  }
+ },
+ {
+  "id": "C135",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 10,
+   "sentence": "Somewhere between the 1975 refusal in West Virginia and his arrest in rural Brevard County, Florida, Frank Freshwaters became William Harold Cox.",
+   "claims": [
+    {
+     "claim": "the 1975 refusal in West Virginia",
+     "status": "supported",
+     "fact": "F0",
+     "quote": "A 1975 West Virginia arrest was reported, but the governor refused extradition",
+     "verified": true,
+     "material": false,
+     "why": "Research records the 1975 West Virginia extradition refusal."
+    },
+    {
+     "claim": "his arrest in rural Brevard County, Florida",
+     "status": "supported",
+     "fact": "F27",
+     "quote": "when US marshals arrested Freshwaters in rural Brevard county, Florida",
+     "verified": true,
+     "material": false,
+     "why": "The Guardian reported the arrest in rural Brevard County."
+    },
+    {
+     "claim": "Frank Freshwaters became William Harold Cox",
+     "status": "supported",
+     "fact": "F19",
+     "quote": "The alias used by Frank Freshwaters during his time on the run was William Harold Cox.",
+     "verified": true,
+     "material": false,
+     "why": "Research confirms the alias."
+    },
+    {
+     "claim": "Somewhere between the 1975 refusal in West Virginia and his arrest",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "Research says he lived under the alias for about two decades or much of his time on the run, but never says when he adopted it, so placing it after 1975 is an unestablished sequence."
+    }
+   ],
+   "error": true,
+   "material": true
+  }
+ },
+ {
+  "id": "C136",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 8,
+   "sentence": "Fifteen to thirty years in a New Jersey prison was the legal reality Wright was handed — and the one he refused to serve out.",
+   "claims": [
+    {
+     "claim": "Fifteen to thirty years ... was the legal reality Wright was handed",
+     "status": "supported",
+     "fact": "F18",
+     "quote": "received a 15-to-30-year prison sentence",
+     "verified": true,
+     "material": false,
+     "why": "Research states the 15-to-30-year sentence."
+    },
+    {
+     "claim": "in a New Jersey prison",
+     "status": "supported",
+     "fact": "F21",
+     "quote": "George Edward Wright escaped from a New Jersey prison in August 1970",
+     "verified": true,
+     "material": false,
+     "why": "Research places his imprisonment in a New Jersey prison."
+    },
+    {
+     "claim": "the one he refused to serve out",
+     "status": "supported",
+     "fact": "F21",
+     "quote": "escaped from a New Jersey prison in August 1970",
+     "verified": true,
+     "material": false,
+     "why": "His escape means he did not serve out the sentence."
+    }
+   ],
+   "error": false,
+   "material": false
+  }
+ },
+ {
+  "id": "C137",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 17,
+   "sentence": "On January 27, 2015, federal law enforcement in Chicago unsealed an eighth superseding indictment.",
+   "claims": [
+    {
+     "claim": "On January 27, 2015",
+     "status": "supported",
+     "fact": "F26",
+     "quote": "unsealed an eighth superseding indictment on January 27, 2015",
+     "verified": true,
+     "material": false,
+     "why": "Date matches research."
+    },
+    {
+     "claim": "federal law enforcement in Chicago unsealed an eighth superseding indictment",
+     "status": "supported",
+     "fact": "F26",
+     "quote": "In Chicago, federal law enforcement unsealed an eighth superseding indictment",
+     "verified": true,
+     "material": false,
+     "why": "Directly stated."
+    }
+   ],
+   "error": false,
+   "material": false
+  }
+ },
+ {
+  "id": "C138",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 11,
+   "sentence": "By 2022, a restaurant cost inflation survey found operators were reporting costs up 11.7% year over year, with raw materials and labor leading the increases.",
+   "claims": [
+    {
+     "claim": "By 2022, a restaurant cost inflation survey found",
+     "status": "supported",
+     "fact": "F191",
+     "quote": "A 2022 restaurant cost inflation survey",
+     "verified": true,
+     "material": false,
+     "why": "The research identifies a 2022 restaurant cost inflation survey."
+    },
+    {
+     "claim": "operators were reporting costs up 11.7% year over year",
+     "status": "supported",
+     "fact": "F191",
+     "quote": "restaurants’ costs had risen 11.7% year over year",
+     "verified": true,
+     "material": false,
+     "why": "The research states this figure and period."
+    },
+    {
+     "claim": "with raw materials and labor leading the increases",
+     "status": "supported",
+     "fact": "F191",
+     "quote": "with the largest increases coming from raw materials and labor",
+     "verified": true,
+     "material": false,
+     "why": "A paraphrase of the research's largest increases."
+    }
+   ],
+   "error": false,
+   "material": false
+  }
+ },
+ {
+  "id": "C139",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 9,
+   "sentence": "Which brings it back to September 26, 2011 — a fingerprint, a database, a match.",
+   "claims": [
+    {
+     "claim": "Which brings it back to September 26, 2011",
+     "status": "supported",
+     "fact": "F21",
+     "quote": "was arrested in Portugal on September 26, 2011",
+     "verified": true,
+     "material": false,
+     "why": "The research gives September 26, 2011 as Wright's arrest date."
+    },
+    {
+     "claim": "a fingerprint, a database, a match",
+     "status": "supported",
+     "fact": "F23",
+     "quote": "A fingerprint found on Wright’s Portuguese ID card matched records in a national Portuguese database",
+     "verified": true,
+     "material": false,
+     "why": "The research states a fingerprint matched a national database record, which led to the arrest."
+    }
+   ],
+   "error": false,
+   "material": false
+  }
+ },
+ {
+  "id": "C140",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 18,
+   "sentence": "Then, in the Chicago area, the cooperation facilitated seizures of more than $15 million in cash.",
+   "claims": [
+    {
+     "claim": "in the Chicago area, the cooperation facilitated seizures of more than $15 million in cash",
+     "status": "supported",
+     "fact": "F13",
+     "quote": "the Flores brothers' cooperation also facilitated seizures of more than $15 million in cash in the Chicago area",
+     "verified": true,
+     "material": false,
+     "why": "Matches F13 on the amount, the location and the cooperation."
+    }
+   ],
+   "error": false,
+   "material": false
+  }
+ },
+ {
+  "id": "C141",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 19,
+   "sentence": "The 30 years stacked on top of that, not concurrent, not absorbed.",
+   "claims": [
+    {
+     "claim": "The 30 years stacked on top of that, not concurrent",
+     "status": "supported",
+     "fact": "F40",
+     "quote": "with the 30 years running consecutive to the life sentence",
+     "verified": true,
+     "material": false,
+     "why": "Research states the 30 years run consecutive to the life sentence, which is not concurrent."
+    }
+   ],
+   "error": false,
+   "material": false
+  }
+ },
+ {
+  "id": "C142",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 11,
+   "sentence": "Not to West Virginia this time, not to any of the places the record shows him in the decades after 1975.",
+   "claims": [
+    {
+     "claim": "Not to West Virginia this time",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research does not say where Freshwaters went at this point; it only links a son in West Virginia to possible release plans."
+    },
+    {
+     "claim": "not to any of the places the record shows him in the decades after 1975",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research does not establish that he avoided Florida or any other recorded location."
+    }
+   ],
+   "error": true,
+   "material": true
+  }
+ },
+ {
+  "id": "C143",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 12,
+   "sentence": "One Berkeley IRLE paper estimated that consumers bore about 50% of higher labor costs through prices in a study of a $20 minimum wage.",
+   "claims": [
+    {
+     "claim": "One Berkeley IRLE paper estimated that consumers bore about 50% of higher labor costs through prices",
+     "status": "supported",
+     "fact": "F2",
+     "quote": "A 2026 Berkeley IRLE paper estimated consumers bore about 50% of higher labor costs through prices",
+     "verified": true,
+     "material": false,
+     "why": "Matches F2's estimate and source."
+    },
+    {
+     "claim": "in a study of a $20 minimum wage",
+     "status": "supported",
+     "fact": "F2",
+     "quote": "in a $20 minimum wage case",
+     "verified": true,
+     "material": false,
+     "why": "F2 places the estimate in a $20 minimum wage case."
+    }
+   ],
+   "error": false,
+   "material": false
+  }
+ },
+ {
+  "id": "C144",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 13,
+   "sentence": "But a fast-food combo meal rose more than 100% between 2014 and 2024, outpacing gasoline, movie tickets, and median hourly wages over that same period.",
+   "claims": [
+    {
+     "claim": "a fast-food combo meal rose more than 100% between 2014 and 2024",
+     "status": "supported",
+     "fact": "F1",
+     "quote": "a fast-food combo meal price increase of about $6.50, or more than 100%, between 2014 and 2024",
+     "verified": true,
+     "material": false,
+     "why": "Directly stated in the research."
+    },
+    {
+     "claim": "outpacing gasoline, movie tickets, and median hourly wages over that same period",
+     "status": "supported",
+     "fact": "F1",
+     "quote": "larger than the rise in gasoline, movie tickets, and median hourly wages over the same period",
+     "verified": true,
+     "material": false,
+     "why": "The comparison is stated in the same research fact."
+    }
+   ],
+   "error": false,
+   "material": false
+  }
+ },
+ {
+  "id": "C145",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 14,
+   "sentence": "Scholes and Merton's quantitative framework was built to exploit pricing anomalies that the models identified across similar securities.",
+   "claims": [
+    {
+     "claim": "Scholes and Merton's quantitative framework",
+     "status": "supported",
+     "fact": "F15",
+     "quote": "John Meriwether relied heavily on Myron Scholes and Robert C. Merton’s quantitative models for LTCM’s relative-value trades",
+     "verified": true,
+     "material": false,
+     "why": "Research attributes LTCM's quantitative models to Scholes and Merton."
+    },
+    {
+     "claim": "was built to exploit pricing anomalies that the models identified across similar securities",
+     "status": "supported",
+     "fact": "F17",
+     "quote": "LTCM used convergence trading in similar securities, relied on sophisticated mathematical models to exploit small pricing anomalies",
+     "verified": true,
+     "material": false,
+     "why": "Research says the models were used to exploit pricing anomalies in similar securities."
+    }
+   ],
+   "error": false,
+   "material": false
+  }
+ },
+ {
+  "id": "C146",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 10,
+   "sentence": "Those are different problems, measured in different jurisdictions, and the distance between them is exactly what Wright needed.",
+   "claims": [
+    {
+     "claim": "Those are different problems, measured in different jurisdictions",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Narrator's framing of earlier facts as separate jurisdictional problems; it is interpretation, not a stated research fact."
+    },
+    {
+     "claim": "the distance between them is exactly what Wright needed",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Narrator's interpretation of why Wright evaded capture; the research does not state this analysis."
+    }
+   ],
+   "error": true,
+   "material": false
+  }
+ },
+ {
+  "id": "C147",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 10,
+   "sentence": "He asked Jones directly how he intended to pay back the money.",
+   "claims": [
+    {
+     "claim": "He asked Jones how he intended to pay back the money",
+     "status": "supported",
+     "fact": "F49",
+     "quote": "Bixler asked Jones how he would pay back the money, court records show.",
+     "verified": true,
+     "material": false,
+     "why": "The research records Bixler asking Jones exactly this."
+    },
+    {
+     "claim": "directly",
+     "status": "unsupported",
+     "fact": "F49",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research does not record the manner of the question; 'directly' is harmless color."
+    }
+   ],
+   "error": true,
+   "material": false
+  }
+ },
+ {
+  "id": "C148",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 11,
+   "sentence": "The exit on May 10 was the last step in a process that had been running for years.",
+   "claims": [
+    {
+     "claim": "The exit on May 10",
+     "status": "supported",
+     "fact": "F53",
+     "quote": "Arthur Jones rushed out the door around noon on May 10, 1979, promising his wife he would return after a business meeting.",
+     "verified": true,
+     "material": false,
+     "why": "Research records his departure on May 10, 1979."
+    },
+    {
+     "claim": "was the last step in a process that had been running for years",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Narrator's interpretation; research does not establish a years-long process."
+    }
+   ],
+   "error": true,
+   "material": false
+  }
+ },
+ {
+  "id": "C149",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 12,
+   "sentence": "Investigators determined he had been William Harold Cox in Melbourne, Florida for roughly two decades before his 2015 arrest.",
+   "claims": [
+    {
+     "claim": "Investigators determined he had been William Harold Cox",
+     "status": "supported",
+     "fact": "F4",
+     "quote": "Investigators determined that Freshwaters had been living in Melbourne, Florida under the alias William Harold Cox",
+     "verified": true,
+     "material": false,
+     "why": "Alias stated directly."
+    },
+    {
+     "claim": "in Melbourne, Florida",
+     "status": "supported",
+     "fact": "F4",
+     "quote": "living in Melbourne, Florida",
+     "verified": true,
+     "material": false,
+     "why": "Location stated directly."
+    },
+    {
+     "claim": "for roughly two decades",
+     "status": "supported",
+     "fact": "F4",
+     "quote": "for about two decades",
+     "verified": true,
+     "material": false,
+     "why": "Paraphrase of about two decades."
+    },
+    {
+     "claim": "before his 2015 arrest",
+     "status": "supported",
+     "fact": "F4",
+     "quote": "before his 2015 arrest",
+     "verified": true,
+     "material": false,
+     "why": "Arrest year stated."
+    }
+   ],
+   "error": false,
+   "material": false
+  }
+ },
+ {
+  "id": "C150",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 14,
+   "sentence": "Visual Capitalist's analysis of ten major fast-food chains found an average price increase of 63% over that decade, with McDonald's up 100%.",
+   "claims": [
+    {
+     "claim": "Visual Capitalist's analysis of ten major fast-food chains found an average price increase of 63%",
+     "status": "supported",
+     "fact": "F166",
+     "quote": "Visual Capitalist reported that the average price increase across 10 major fast-food restaurants from 2014 to 2024 was 63%",
+     "verified": true,
+     "material": false,
+     "why": "The research states this source, the ten chains and the 63% figure."
+    },
+    {
+     "claim": "over that decade",
+     "status": "derived",
+     "fact": "F166",
+     "quote": "from 2014 to 2024",
+     "verified": true,
+     "material": false,
+     "why": "2014 to 2024 is a ten-year span."
+    },
+    {
+     "claim": "with McDonald's up 100%",
+     "status": "supported",
+     "fact": "F166",
+     "quote": "with McDonald's up 100%",
+     "verified": true,
+     "material": false,
+     "why": "The research states this figure directly."
+    }
+   ],
+   "error": false,
+   "material": false
+  }
+ },
+ {
+  "id": "C151",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 12,
+   "sentence": "According to his attorney, he went to work at the Desert Inn first, then moved into sports book operations at a local casino.",
+   "claims": [
+    {
+     "claim": "According to his attorney",
+     "status": "supported",
+     "fact": "F84",
+     "quote": "according to his attorney",
+     "verified": true,
+     "material": false,
+     "why": "The research attributes this employment history to his attorney."
+    },
+    {
+     "claim": "he went to work at the Desert Inn first",
+     "status": "supported",
+     "fact": "F84",
+     "quote": "In Las Vegas, Jones worked at the Desert Inn and then",
+     "verified": true,
+     "material": false,
+     "why": "The research says he worked at the Desert Inn before the sports book job."
+    },
+    {
+     "claim": "then moved into sports book operations at a local casino",
+     "status": "supported",
+     "fact": "F84",
+     "quote": "and then for a local casino's sports book",
+     "verified": true,
+     "material": false,
+     "why": "The research says he then worked for a local casino's sports book."
+    }
+   ],
+   "error": false,
+   "material": false
+  }
+ }
+]

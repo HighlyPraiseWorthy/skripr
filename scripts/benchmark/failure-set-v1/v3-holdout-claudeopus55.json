@@ -1,0 +1,956 @@
+[
+ {
+  "id": "C002",
+  "truth": {
+   "any": true,
+   "material": true
+  },
+  "pred": {
+   "i": 0,
+   "sentence": "The Goldman Sachs data make the asymmetry legible: non-manager wages in fast food were up 35.9% since January 2017, and fast-food meal prices were up more than 41% over that same period.",
+   "claims": [
+    {
+     "claim": "The Goldman Sachs data",
+     "status": "supported",
+     "fact": "F160",
+     "quote": "Marcus by Goldman Sachs reported",
+     "verified": true,
+     "material": false,
+     "why": "The figures come from a Marcus by Goldman Sachs report."
+    },
+    {
+     "claim": "non-manager wages in fast food were up 35.9% since January 2017",
+     "status": "misattached",
+     "fact": "F160",
+     "quote": "non-manager wages were up 35.9% since January 2017",
+     "verified": true,
+     "material": true,
+     "why": "The research gives 35.9% for non-manager wages generally, not specifically for fast-food workers."
+    },
+    {
+     "claim": "fast-food meal prices were up more than 41% over that same period",
+     "status": "supported",
+     "fact": "F160",
+     "quote": "fast food meal prices were up more than 41% over the same period",
+     "verified": true,
+     "material": false,
+     "why": "The research states this directly for the same period."
+    }
+   ],
+   "error": true,
+   "material": true
+  }
+ },
+ {
+  "id": "C010",
+  "truth": {
+   "any": true,
+   "material": false
+  },
+  "pred": {
+   "i": 0,
+   "sentence": "The high-psychopathy subgroup was not the cognitively dominant one.",
+   "claims": [
+    {
+     "claim": "The high-psychopathy subgroup was not the cognitively dominant one.",
+     "status": "overstated",
+     "fact": "F19",
+     "quote": "another with high psychopathy and low psychosis, each showing distinct differences in intelligence, memory, attention, executive functions, and academic abilities",
+     "verified": true,
+     "material": true,
+     "why": "The research says only that the subgroups differed cognitively, not which one scored higher; the sentence states a direction the study is not reported to have found."
+    }
+   ],
+   "error": true,
+   "material": true
+  }
+ },
+ {
+  "id": "C023",
+  "truth": {
+   "any": true,
+   "material": true
+  },
+  "pred": {
+   "i": 1,
+   "sentence": "Neuroimaging and neuropsychological studies consistently link psychopathy to impaired function in these areas.",
+   "claims": [
+    {
+     "claim": "Neuroimaging and neuropsychological studies link psychopathy to impaired function in these areas",
+     "status": "supported",
+     "fact": "F5",
+     "quote": "Neuroimaging and neuropsychological studies link psychopathy to impaired ventromedial/orbitofrontal prefrontal cortex function",
+     "verified": true,
+     "material": false,
+     "why": "F5 states this link directly."
+    },
+    {
+     "claim": "consistently",
+     "status": "overstated",
+     "fact": "F7",
+     "quote": "The peer-reviewed literature reports a consistent association between psychopathy and reduced prefrontal gray matter",
+     "verified": true,
+     "material": true,
+     "why": "The research calls only the structural gray-matter link 'consistent'; the functional findings come with caveats and debate (F16)."
+    }
+   ],
+   "error": true,
+   "material": true
+  }
+ },
+ {
+  "id": "C024",
+  "truth": {
+   "any": true,
+   "material": true
+  },
+  "pred": {
+   "i": 2,
+   "sentence": "The profile that most closely tracks serial offending carried no obvious intellectual advantage over the one that did not.",
+   "claims": [
+    {
+     "claim": "The profile that most closely tracks serial offending",
+     "status": "supported",
+     "fact": "F20",
+     "quote": "it was stronger in serial homicide (r = 0.74) than in homicide overall",
+     "verified": true,
+     "material": false,
+     "why": "Research links psychopathy more strongly to serial homicide than to homicide overall."
+    },
+    {
+     "claim": "carried no obvious intellectual advantage over the one that did not",
+     "status": "overstated",
+     "fact": "F19",
+     "quote": "each showing distinct differences in intelligence, memory, attention, executive functions, and academic abilities",
+     "verified": true,
+     "material": true,
+     "why": "The study reports that the subgroups differed in intelligence without saying which was higher, so it does not establish 'no obvious advantage.'"
+    }
+   ],
+   "error": true,
+   "material": true
+  }
+ },
+ {
+  "id": "C029",
+  "truth": {
+   "any": true,
+   "material": true
+  },
+  "pred": {
+   "i": 0,
+   "sentence": "What he left behind — a wife, three children, a bracelet on the nightstand — eventually became, through the machinery of courts and federal programs, a $78,600 government check.",
+   "claims": [
+    {
+     "claim": "What he left behind — a wife, three children",
+     "status": "supported",
+     "fact": "F37",
+     "quote": "In 1979, Jones fled Chicago and his gambling debts, mob ties and wife and three children.",
+     "verified": true,
+     "material": false,
+     "why": "The research states he left his wife and three children."
+    },
+    {
+     "claim": "a bracelet",
+     "status": "supported",
+     "fact": "F56",
+     "quote": "he forgot to put on his cherished bracelet",
+     "verified": true,
+     "material": false,
+     "why": "Forgetting to put on the bracelet means he left it behind."
+    },
+    {
+     "claim": "on the nightstand",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research does not say where the bracelet was; this is an added physical scene detail."
+    },
+    {
+     "claim": "eventually became, through the machinery of courts and federal programs, a $78,600 government check",
+     "status": "misattached",
+     "fact": "F42",
+     "quote": "Jones was ordered to pay more than $78,600 to the Social Security Administration for their payments to Jones' family",
+     "verified": true,
+     "material": true,
+     "why": "$78,600 is what Jones was ordered to repay to the SSA, not a check the family received; the family's benefits are given as $47,000 (F12, F61)."
+    }
+   ],
+   "error": true,
+   "material": true
+  }
+ },
+ {
+  "id": "C030",
+  "truth": {
+   "any": true,
+   "material": true
+  },
+  "pred": {
+   "i": 0,
+   "sentence": "What remained was Frank Freshwaters — eighty years old, paroled, released, and finally, unambiguously himself again.",
+   "claims": [
+    {
+     "claim": "Frank Freshwaters — eighty years old",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research gives no birth date or age for Freshwaters at release."
+    },
+    {
+     "claim": "paroled",
+     "status": "supported",
+     "fact": "F21",
+     "quote": "The Ohio Adult Parole Authority voted on February 25, 2016 to release Frank Freshwaters on parole.",
+     "verified": true,
+     "material": false,
+     "why": "The research directly states he was paroled."
+    },
+    {
+     "claim": "released",
+     "status": "supported",
+     "fact": "F22",
+     "quote": "Freshwaters was released from an Ohio correctional facility on June 15, 2016.",
+     "verified": true,
+     "material": false,
+     "why": "The research directly states he was released."
+    }
+   ],
+   "error": true,
+   "material": true
+  }
+ },
+ {
+  "id": "C031",
+  "truth": {
+   "any": true,
+   "material": false
+  },
+  "pred": {
+   "i": 3,
+   "sentence": "The traits most tightly linked to serial homicide are not the ones that require or reward high intelligence.",
+   "claims": [
+    {
+     "claim": "The traits most tightly linked to serial homicide",
+     "status": "overstated",
+     "fact": "F20",
+     "quote": "it was stronger in serial homicide (r = 0.74) than in homicide overall",
+     "verified": true,
+     "material": false,
+     "why": "Research shows psychopathy's link is stronger for serial homicide than homicide overall, but never ranks it against other traits as 'most tightly linked'; this is framing."
+    },
+    {
+     "claim": "are not the ones that require or reward high intelligence",
+     "status": "overstated",
+     "fact": "F11",
+     "quote": "a small, statistically significant negative relationship between intelligence and psychopathy, with total psychopathy correlated with FSIQ at r = -.07",
+     "verified": true,
+     "material": false,
+     "why": "Research shows a small negative psychopathy–IQ correlation; 'require or reward' is the narrator's interpretation beyond that finding."
+    }
+   ],
+   "error": true,
+   "material": false
+  }
+ },
+ {
+  "id": "C040",
+  "truth": {
+   "any": true,
+   "material": true
+  },
+  "pred": {
+   "i": 0,
+   "sentence": "What Meriwether brought to Greenwich, Connecticut in 1994 wasn't just a trading strategy — it was a culture, transplanted whole from Salomon Brothers, where he'd run the fixed-income arbitrage desk and risen to vice chairman before a Treasury-bond trading scandal ended his tenure there.",
+   "claims": [
+    {
+     "claim": "What Meriwether brought to Greenwich, Connecticut",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research never names Greenwich, Connecticut or any LTCM location."
+    },
+    {
+     "claim": "in 1994",
+     "status": "unsupported",
+     "fact": "F10",
+     "quote": "its documented net returns were 19.9% in 1994",
+     "verified": true,
+     "material": true,
+     "why": "The research gives returns for 1994 but never states when LTCM was founded or when Meriwether set it up."
+    },
+    {
+     "claim": "it was a culture, transplanted whole from Salomon Brothers",
+     "status": "supported",
+     "fact": "F23",
+     "quote": "John Meriwether’s Salomon Brothers background shaped LTCM’s culture: he imported a tight, elite trading partnership model",
+     "verified": true,
+     "material": false,
+     "why": "F23 says he imported Salomon's culture to LTCM."
+    },
+    {
+     "claim": "where he'd run the fixed-income arbitrage desk",
+     "status": "supported",
+     "fact": "F18",
+     "quote": "head of fixed-income arbitrage",
+     "verified": true,
+     "material": false,
+     "why": "F18 names him head of fixed-income arbitrage."
+    },
+    {
+     "claim": "risen to vice chairman",
+     "status": "supported",
+     "fact": "F18",
+     "quote": "John Meriwether was former Salomon Brothers vice chairman",
+     "verified": true,
+     "material": false,
+     "why": "F18 gives his title as vice chairman."
+    },
+    {
+     "claim": "before a Treasury-bond trading scandal ended his tenure there",
+     "status": "supported",
+     "fact": "F18",
+     "quote": "he left after the Treasury-bond trading scandal at Salomon Brothers",
+     "verified": true,
+     "material": false,
+     "why": "F18 says he left after the scandal, and F11 says the scandal ended his Salomon career."
+    }
+   ],
+   "error": true,
+   "material": true
+  }
+ },
+ {
+  "id": "C042",
+  "truth": {
+   "any": true,
+   "material": true
+  },
+  "pred": {
+   "i": 0,
+   "sentence": "The trial opened in Brooklyn in the fall of 2018, and what prosecutors brought into that courtroom was the accumulated weight of everything that had been built in Chicago and beyond — indictments, seizures, intercepted recordings, ledgers — now handed to a jury through the mouths of the people who had actually run the organization alongside Guzmán.",
+   "claims": [
+    {
+     "claim": "The trial opened in Brooklyn",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research names Brooklyn indictments and Judge Cogan but never says where the trial took place."
+    },
+    {
+     "claim": "in the fall of 2018",
+     "status": "derived",
+     "fact": "F43",
+     "quote": "Guzman Loera was convicted by a federal jury on February 12, 2019.",
+     "verified": true,
+     "material": false,
+     "why": "A three-month trial (F44) ending Feb 12, 2019 puts the start around November 2018."
+    },
+    {
+     "claim": "what prosecutors brought into that courtroom was ... intercepted recordings, ledgers",
+     "status": "supported",
+     "fact": "F56",
+     "quote": "Evidence also included ledgers, text messages, videos, photographs, and intercepted recordings.",
+     "verified": true,
+     "material": false,
+     "why": "Ledgers and intercepted recordings are listed as evidence."
+    },
+    {
+     "claim": "the accumulated weight of everything that had been built in Chicago and beyond — indictments, seizures",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research does not say Chicago-built evidence or seizures were presented at the trial."
+    },
+    {
+     "claim": "handed to a jury through the mouths of the people who had actually run the organization alongside Guzmán",
+     "status": "overstated",
+     "fact": "F51",
+     "quote": "Cooperating witnesses included Sinaloa Cartel members Rey Zambada and Vicente Zambada.",
+     "verified": true,
+     "material": true,
+     "why": "The research calls the witnesses cartel members, not people who ran the organization alongside Guzmán."
+    }
+   ],
+   "error": true,
+   "material": true
+  }
+ },
+ {
+  "id": "C044",
+  "truth": {
+   "any": true,
+   "material": true
+  },
+  "pred": {
+   "i": 1,
+   "sentence": "McDonough put it plainly when he testified before Congress: a disorderly unwinding of those positions would have created a \"severe liquidity problem\" and triggered a \"fire sale\" that could \"cause widespread disruption\" in financial markets.",
+   "claims": [
+    {
+     "claim": "McDonough put it plainly when he testified before Congress",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research gives McDonough's statements but never says they were congressional testimony; this adds a setting."
+    },
+    {
+     "claim": "a disorderly unwinding of those positions would have created a \"severe liquidity problem\"",
+     "status": "supported",
+     "fact": "F2",
+     "quote": "William J. McDonough said LTCM’s failure would have created a \"severe liquidity problem\"",
+     "verified": true,
+     "material": false,
+     "why": "McDonough is quoted saying LTCM's failure would create a severe liquidity problem."
+    },
+    {
+     "claim": "and triggered a \"fire sale\" that could \"cause widespread disruption\" in financial markets",
+     "status": "supported",
+     "fact": "F2",
+     "quote": "the Fed’s goal was to avoid a \"fire sale\" of positions that could \"cause widespread disruption\" in financial markets",
+     "verified": true,
+     "material": false,
+     "why": "The research matches McDonough's fire-sale and widespread-disruption language."
+    }
+   ],
+   "error": true,
+   "material": true
+  }
+ },
+ {
+  "id": "C061",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 1,
+   "sentence": "The walls of the life he had built were coming down in a specific order, and May 10th was the morning he stopped waiting for the next one to fall.",
+   "claims": [
+    {
+     "claim": "May 10th was the morning he stopped waiting",
+     "status": "supported",
+     "fact": "F53",
+     "quote": "Arthur Jones rushed out the door around noon on May 10, 1979",
+     "verified": true,
+     "material": false,
+     "why": "Research gives May 10, 1979 as the day he left."
+    },
+    {
+     "claim": "the morning",
+     "status": "contradicted",
+     "fact": "F53",
+     "quote": "rushed out the door around noon on May 10, 1979",
+     "verified": true,
+     "material": false,
+     "why": "Research says around noon, not morning; the gap is small and could overlap late morning."
+    },
+    {
+     "claim": "The walls of the life he had built were coming down in a specific order",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Narrator's interpretive framing of his mounting troubles; not established as a set sequence."
+    },
+    {
+     "claim": "he stopped waiting for the next one to fall",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Interpretation of his state of mind; the research records no such motive."
+    }
+   ],
+   "error": true,
+   "material": false
+  }
+ },
+ {
+  "id": "C084",
+  "truth": {
+   "any": true,
+   "material": false
+  },
+  "pred": {
+   "i": 1,
+   "sentence": "That means food and labor together account for roughly 60% of what it costs to run the kitchen before rent, insurance, or equipment enters the equation.",
+   "claims": [
+    {
+     "claim": "food and labor together account for roughly 60% of what it costs to run the kitchen",
+     "status": "derived",
+     "fact": "F37",
+     "quote": "quick-service restaurant costs at roughly 30% labor, 30% food/commodity inputs, and 25% occupancy",
+     "verified": true,
+     "material": false,
+     "why": "30% labor plus 30% food equals about 60% of QSR costs."
+    },
+    {
+     "claim": "before rent, insurance, or equipment enters the equation",
+     "status": "unsupported",
+     "fact": "F37",
+     "quote": "25% occupancy",
+     "verified": true,
+     "material": false,
+     "why": "Occupancy is listed as a separate cost, but insurance and equipment are not in the research; this is general framing of the cost structure."
+    }
+   ],
+   "error": true,
+   "material": false
+  }
+ },
+ {
+  "id": "C087",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 2,
+   "sentence": "The limited-service CPI rose 26% from 2019 to 2024, against about 21% cumulative headline CPI inflation over the same span.",
+   "claims": [
+    {
+     "claim": "The limited-service CPI rose 26% from 2019 to 2024",
+     "status": "supported",
+     "fact": "F35",
+     "quote": "Limited service meals and snacks CPI rose 26.0% from 2019 to 2024",
+     "verified": true,
+     "material": false,
+     "why": "F35 states 26.0% for 2019 to 2024; F209's conflicting 19.8% does not override it, since a match to any source counts."
+    },
+    {
+     "claim": "against about 21% cumulative headline CPI inflation over the same span",
+     "status": "derived",
+     "fact": "F35",
+     "quote": "compared with about 21.2% cumulative headline CPI inflation",
+     "verified": true,
+     "material": false,
+     "why": "About 21% is a rounding of the 21.2% in F35."
+    }
+   ],
+   "error": false,
+   "material": false
+  }
+ },
+ {
+  "id": "C088",
+  "truth": {
+   "any": true,
+   "material": true
+  },
+  "pred": {
+   "i": 3,
+   "sentence": "And 78% of those respondents had reclassified the experience entirely, not a quick, cheap meal, but a luxury.",
+   "claims": [
+    {
+     "claim": "78% of those respondents had reclassified the experience entirely, ... but a luxury",
+     "status": "supported",
+     "fact": "F33",
+     "quote": "78% said fast food had become a luxury",
+     "verified": true,
+     "material": false,
+     "why": "The research directly gives 78% saying fast food had become a luxury."
+    },
+    {
+     "claim": "not a quick, cheap meal",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "This is the narrator's framing of what the shift meant; the research does not say respondents previously saw fast food as a quick, cheap meal."
+    }
+   ],
+   "error": true,
+   "material": false
+  }
+ },
+ {
+  "id": "C089",
+  "truth": {
+   "any": true,
+   "material": false
+  },
+  "pred": {
+   "i": 4,
+   "sentence": "If roughly half of cost increases passed through to prices, and costs themselves rose sharply, then the 26% limited-service CPI increase from 2019 to 2024 has only a partial cost-based explanation — the arithmetic does not close on costs alone.",
+   "claims": [
+    {
+     "claim": "roughly half of cost increases passed through to prices",
+     "status": "supported",
+     "fact": "F2",
+     "quote": "another cited study found only about half of restaurant cost increases were passed through",
+     "verified": true,
+     "material": false,
+     "why": "Research states about half pass-through in one cited study."
+    },
+    {
+     "claim": "costs themselves rose sharply",
+     "status": "supported",
+     "fact": "F151",
+     "quote": "restaurants have been trying to maintain about a 5% profit margin while food and labor costs rose sharply",
+     "verified": true,
+     "material": false,
+     "why": "Research states food and labor costs rose sharply."
+    },
+    {
+     "claim": "the 26% limited-service CPI increase from 2019 to 2024",
+     "status": "supported",
+     "fact": "F35",
+     "quote": "Limited service meals and snacks CPI rose 26.0% from 2019 to 2024",
+     "verified": true,
+     "material": false,
+     "why": "Matches F35. F209 gives 19.8%, but a match with any source counts as supported."
+    },
+    {
+     "claim": "has only a partial cost-based explanation — the arithmetic does not close on costs alone",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "This is the narrator's own inference. No research fact draws this conclusion."
+    }
+   ],
+   "error": true,
+   "material": false
+  }
+ },
+ {
+  "id": "C091",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 1,
+   "sentence": "Sixteen years after walking away from that honor camp, Freshwaters was caught.",
+   "claims": [
+    {
+     "claim": "walking away from that honor camp",
+     "status": "supported",
+     "fact": "F2",
+     "quote": "moved to an honor camp near Sandusky, and was reported missing on Sept. 30, 1959",
+     "verified": true,
+     "material": false,
+     "why": "Research records his disappearance from the honor camp in 1959."
+    },
+    {
+     "claim": "Freshwaters was caught",
+     "status": "supported",
+     "fact": "F2",
+     "quote": "he was later arrested in West Virginia in 1975",
+     "verified": true,
+     "material": false,
+     "why": "Research records a 1975 arrest in West Virginia."
+    },
+    {
+     "claim": "Sixteen years after",
+     "status": "derived",
+     "fact": "F2",
+     "quote": "reported missing on Sept. 30, 1959; he was later arrested in West Virginia in 1975",
+     "verified": true,
+     "material": false,
+     "why": "1959 to 1975 is 16 years."
+    }
+   ],
+   "error": false,
+   "material": false
+  }
+ },
+ {
+  "id": "C094",
+  "truth": {
+   "any": true,
+   "material": false
+  },
+  "pred": {
+   "i": 2,
+   "sentence": "Ohio would not get another clear opportunity for forty years.",
+   "claims": [
+    {
+     "claim": "Ohio would not get another clear opportunity for forty years.",
+     "status": "derived",
+     "fact": "F15",
+     "quote": "After a 1975 arrest in West Virginia, Freshwaters was released when the governor refused extradition, and the U.S. Marshals later reopened the case in 2015",
+     "verified": true,
+     "material": false,
+     "why": "The gap from the 1975 refused extradition to the 2015 capture (F18) is 40 years."
+    }
+   ],
+   "error": false,
+   "material": false
+  }
+ },
+ {
+  "id": "C098",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 2,
+   "sentence": "The sentence was three years of probation.",
+   "claims": [
+    {
+     "claim": "The sentence was three years of probation.",
+     "status": "supported",
+     "fact": "F30",
+     "quote": "Arthur Gerald Jones was sentenced to three years of probation on January 31, 2012.",
+     "verified": true,
+     "material": false,
+     "why": "F30 and F23 both state a sentence of three years of probation; F5's five years is a conflicting report, and a claim matching any source counts as supported."
+    }
+   ],
+   "error": false,
+   "material": false
+  }
+ },
+ {
+  "id": "C099",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 2,
+   "sentence": "In 1994, that patience returned 19.9 percent net to investors.",
+   "claims": [
+    {
+     "claim": "In 1994, that patience returned 19.9 percent net to investors",
+     "status": "supported",
+     "fact": "F10",
+     "quote": "its documented net returns were 19.9% in 1994",
+     "verified": true,
+     "material": false,
+     "why": "F10 gives 19.9% net for 1994. F17 and F22 say about 21%, but a claim matching any source counts as supported."
+    }
+   ],
+   "error": false,
+   "material": false
+  }
+ },
+ {
+  "id": "C104",
+  "truth": {
+   "any": true,
+   "material": false
+  },
+  "pred": {
+   "i": 3,
+   "sentence": "In September 1998, William J. McDonough of the New York Fed gathered representatives from fourteen major banks and securities firms on Wall Street and laid out the situation in terms that left little room for interpretation.",
+   "claims": [
+    {
+     "claim": "In September 1998, William J. McDonough ... gathered representatives from fourteen major banks and securities firms",
+     "status": "supported",
+     "fact": "F14",
+     "quote": "At the September 1998 New York Fed rescue meeting, McDonough convened 14 major Wall Street firms",
+     "verified": true,
+     "material": false,
+     "why": "Research states McDonough convened 14 firms in September 1998; F5 describes them as banks and securities firms."
+    },
+    {
+     "claim": "William J. McDonough of the New York Fed",
+     "status": "supported",
+     "fact": "F14",
+     "quote": "At the September 1998 New York Fed rescue meeting, McDonough convened",
+     "verified": true,
+     "material": false,
+     "why": "Research ties McDonough to convening the New York Fed meeting and to its statement (F0)."
+    },
+    {
+     "claim": "on Wall Street",
+     "status": "supported",
+     "fact": "F14",
+     "quote": "14 major Wall Street firms",
+     "verified": true,
+     "material": false,
+     "why": "Research describes the firms as Wall Street firms."
+    },
+    {
+     "claim": "laid out the situation in terms that left little room for interpretation",
+     "status": "unsupported",
+     "fact": "F14",
+     "quote": "warning that disorderly liquidation could destabilize markets",
+     "verified": true,
+     "material": false,
+     "why": "Research records a warning, but how blunt it was is the narrator's characterization."
+    }
+   ],
+   "error": true,
+   "material": false
+  }
+ },
+ {
+  "id": "C105",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 0,
+   "sentence": "Before the bots, before the AI catalog, before the October 2017 email that reduced the whole operation to arithmetic, there was a musician.",
+   "claims": [
+    {
+     "claim": "Before the bots, before the AI catalog ... there was a musician",
+     "status": "supported",
+     "fact": "F11",
+     "quote": "described Smith as a musician with his own catalogue before the scheme began",
+     "verified": true,
+     "material": false,
+     "why": "Research says Smith was a musician with his own catalog before the scheme began."
+    },
+    {
+     "claim": "the October 2017 email that reduced the whole operation to arithmetic",
+     "status": "supported",
+     "fact": "F66",
+     "quote": "On October 20, 2017, SMITH emailed himself a financial breakdown of his streaming operation.",
+     "verified": true,
+     "material": false,
+     "why": "The October 2017 self-email was a financial breakdown of the operation; 'arithmetic' fairly paraphrases it."
+    }
+   ],
+   "error": false,
+   "material": false
+  }
+ },
+ {
+  "id": "C107",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 0,
+   "sentence": "Flight 841 departs Detroit bound for Miami.",
+   "claims": [
+    {
+     "claim": "Flight 841 departs Detroit",
+     "status": "supported",
+     "fact": "F2",
+     "quote": "after departing Detroit for Miami",
+     "verified": true,
+     "material": false,
+     "why": "Research states the flight departed Detroit."
+    },
+    {
+     "claim": "bound for Miami",
+     "status": "supported",
+     "fact": "F2",
+     "quote": "after departing Detroit for Miami",
+     "verified": true,
+     "material": false,
+     "why": "Research states Miami was the destination when the flight departed Detroit."
+    }
+   ],
+   "error": false,
+   "material": false
+  }
+ },
+ {
+  "id": "C109",
+  "truth": {
+   "any": false,
+   "material": false
+  },
+  "pred": {
+   "i": 1,
+   "sentence": "On November 17, 2011 — less than two months after the arrest — a Lisbon appeals court ruled that George Wright would not be extradited to the United States.",
+   "claims": [
+    {
+     "claim": "On November 17, 2011",
+     "status": "supported",
+     "fact": "F10",
+     "quote": "A Lisbon appeals court ruled on November 17, 2011 that Wright would not be extradited",
+     "verified": true,
+     "material": false,
+     "why": "Date of ruling stated in research."
+    },
+    {
+     "claim": "less than two months after the arrest",
+     "status": "derived",
+     "fact": "F21",
+     "quote": "was arrested in Portugal on September 26, 2011",
+     "verified": true,
+     "material": false,
+     "why": "Sept 26 to Nov 17 is under two months."
+    },
+    {
+     "claim": "a Lisbon appeals court ruled that George Wright would not be extradited",
+     "status": "supported",
+     "fact": "F10",
+     "quote": "A Lisbon appeals court ruled on November 17, 2011 that Wright would not be extradited",
+     "verified": true,
+     "material": false,
+     "why": "Directly stated."
+    },
+    {
+     "claim": "to the United States",
+     "status": "supported",
+     "fact": "F15",
+     "quote": "a Lisbon appeals court ruled that Wright would not be extradited to the United States",
+     "verified": true,
+     "material": false,
+     "why": "Destination of extradition stated."
+    }
+   ],
+   "error": false,
+   "material": false
+  }
+ },
+ {
+  "id": "C112",
+  "truth": {
+   "any": true,
+   "material": false
+  },
+  "pred": {
+   "i": 3,
+   "sentence": "Investigators reached Jones in July 2011, and when they asked him directly whether he was the Chicago commodities trader who had walked away 32 years earlier, he said yes.",
+   "claims": [
+    {
+     "claim": "Investigators reached Jones in July 2011",
+     "status": "supported",
+     "fact": "F35",
+     "quote": "Jones was busted in July by state and federal investigators.",
+     "verified": true,
+     "material": false,
+     "why": "F35 gives a July bust by investigators, and F29 places the arrest in 2011."
+    },
+    {
+     "claim": "when they asked him directly whether he was the Chicago commodities trader who had walked away 32 years earlier",
+     "status": "supported",
+     "fact": "F90",
+     "quote": "When authorities asked if he was the Chicago trader who had vanished 32 years ago",
+     "verified": true,
+     "material": false,
+     "why": "F90 records the question; F75 establishes he was a commodities trader."
+    },
+    {
+     "claim": "he said yes",
+     "status": "supported",
+     "fact": "F90",
+     "quote": "Jones said yes.",
+     "verified": true,
+     "material": false,
+     "why": "F90 states his answer directly."
+    }
+   ],
+   "error": false,
+   "material": false
+  }
+ }
+]
