@@ -1,0 +1,158 @@
+[
+ {
+  "id": "C033",
+  "label": {
+   "label": "overinterpretation",
+   "material": false,
+   "evidence": [
+    "F26",
+    "F29"
+   ],
+   "note": "implies earlier indictments did not name him; 2009 indictments did",
+   "ambiguous": true
+  },
+  "judge": {
+   "flag": false,
+   "material": false,
+   "why": []
+  },
+  "sentence": "The eighth put Guzmán's name on it directly."
+ },
+ {
+  "id": "C035",
+  "label": {
+   "label": "legitimate_inference",
+   "material": false,
+   "evidence": [
+    "F23",
+    "F15"
+   ],
+   "note": "ID card fingerprint led to arrest; Portuguese citizenship blocked extradition"
+  },
+  "judge": {
+   "flag": true,
+   "material": false,
+   "why": [
+    "unsupported: The document that gave him away was the same document that saved him :: The research ties his discovery to the ID card fingerprint and his protection to citizenship, not to the same document."
+   ]
+  },
+  "sentence": "The document that gave him away was the same document that saved him."
+ },
+ {
+  "id": "C038",
+  "label": {
+   "label": "legitimate_inference",
+   "material": false,
+   "evidence": [
+    "F51",
+    "F71"
+   ],
+   "note": ""
+  },
+  "judge": {
+   "flag": true,
+   "material": false,
+   "why": [
+    "overinterpretation: close enough to Guzmán that they could describe his decisions, his methods, and his violence from direct observation :: The research says only that co-conspirators testified he sometimes committed violence himself."
+   ]
+  },
+  "sentence": "They were cartel members who had operated at levels close enough to Guzmán that they could describe his decisions, his methods, and his violence from direct observation."
+ },
+ {
+  "id": "C052",
+  "label": {
+   "label": "legitimate_inference",
+   "material": false,
+   "evidence": [
+    "F45"
+   ],
+   "note": "all 10 counts; 'unanimous' follows from a federal jury verdict but is not stated",
+   "ambiguous": true
+  },
+  "judge": {
+   "flag": true,
+   "material": false,
+   "why": [
+    "unsupported: The verdict was unanimous :: Unanimity is not stated in the research."
+   ]
+  },
+  "sentence": "The verdict was unanimous and complete."
+ },
+ {
+  "id": "C079",
+  "label": {
+   "label": "legitimate_inference",
+   "material": false,
+   "evidence": [
+    "F56"
+   ],
+   "note": "evidence types supported; functions are narration"
+  },
+  "judge": {
+   "flag": true,
+   "material": false,
+   "why": [
+    "unsupported: the recordings captured communications the cartel believed were private :: The research lists intercepted recordings only, with no detail on content.",
+    "unsupported: the ledgers showed the money moving :: The ledgers' content is not described.",
+    "unsupported: the photographs and videos placed people and product in the same frame :: The content of the photos and videos is not described."
+   ]
+  },
+  "sentence": "Each category addressed a different layer of the operation: the recordings captured communications the cartel believed were private; the ledgers showed the money moving; the photographs and videos placed people and product in the same frame."
+ },
+ {
+  "id": "C081",
+  "label": {
+   "label": "overinterpretation",
+   "material": false,
+   "evidence": [
+    "F40"
+   ],
+   "note": "reads intent into consecutive sentence"
+  },
+  "judge": {
+   "flag": false,
+   "material": false,
+   "why": []
+  },
+  "sentence": "It is the court stating, with arithmetic, that even the theoretical possibility of a future legal argument does not leave a door open."
+ },
+ {
+  "id": "C103",
+  "label": {
+   "label": "legitimate_inference",
+   "material": false,
+   "evidence": [
+    "F14"
+   ],
+   "note": "judge false positive"
+  },
+  "judge": {
+   "flag": true,
+   "material": false,
+   "why": [
+    "unsupported: each of them calculating whether the cost of contributing was less than the cost of not contributing :: The banks' reasoning is not documented in the research."
+   ]
+  },
+  "sentence": "Fourteen banks sitting across from William McDonough, each of them calculating whether the cost of contributing was less than the cost of not contributing."
+ },
+ {
+  "id": "C111",
+  "label": {
+   "label": "legitimate_inference",
+   "material": false,
+   "evidence": [
+    "F22"
+   ],
+   "note": "four listed offenses; causal chain is narrator framing",
+   "ambiguous": true
+  },
+  "judge": {
+   "flag": true,
+   "material": false,
+   "why": [
+    "overinterpretation: each one the consequence of the one before it :: The research lists the offenses but does not describe a causal chain between them."
+   ]
+  },
+  "sentence": "Four charges, each one the consequence of the one before it."
+ }
+]

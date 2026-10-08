@@ -1,0 +1,268 @@
+{
+ "id": "psychopathy",
+ "run": 1,
+ "words": 2025,
+ "primaryPer1k": 1.98,
+ "overreachPer1k": 1.98,
+ "finalErrors": [
+  {
+   "i": 34,
+   "sentence": "A 2019 meta-analysis pulled together 22 studies covering 2,603 homicide offenders across 29 unique samples, and the number it produced changes the frame entirely.",
+   "script_quote": "pulled together 22 studies covering 2,603 homicide offenders across 29 unique samples",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research states '29 unique homicide offender samples from 22 studies (2,603 offenders)' — the script reverses the relationship, saying '22 studies covering 2,603 homicide offenders across 29 unique samples', which correctly lists the numbers but the phrasing matches the research closely enough; ",
+   "first_seen": "section_4",
+   "seen_in": [
+    "section_4",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 38,
+   "sentence": "The more times the killing repeated, the stronger psychopathy's fingerprint on it.",
+   "script_quote": "The more times the killing repeated, the stronger psychopathy's fingerprint on it",
+   "category": "evidence_inflation",
+   "verdict": "error",
+   "research_quote": "it was stronger in serial homicide (r = 0.74) than in homicide overall",
+   "why": "The research only compares serial homicide to homicide overall; it does not show a gradient where more repetitions correlate with stronger psychopathy association, so the script's causal/gradient claim is not supported.",
+   "first_seen": "section_4",
+   "seen_in": [
+    "section_4",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 42,
+   "sentence": "On the PCL-R, a score of 30 or above marks clinical psychopathy.",
+   "script_quote": "On the PCL-R, a score of 30 or above marks clinical psychopathy.",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research never states that 30 is the clinical threshold for psychopathy on the PCL-R; it only reports scores relative to that number without defining it as a clinical cutoff.",
+   "first_seen": "final_check",
+   "seen_in": [
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 67,
+   "sentence": "What the studies do show, consistently, is that the emotional inhibition most people carry without thinking about it appears structurally weaker in this population.",
+   "script_quote": "the emotional inhibition most people carry without thinking about it appears structurally weaker in this population",
+   "category": "evidence_inflation",
+   "verdict": "error",
+   "research_quote": "the causal interpretation remains contested because studies also propose broader limbic and fronto-limbic connectivity explanations rather than a single prefrontal deficit",
+   "why": "The script states this as a consistent finding about structural weakness, but the research explicitly notes causal interpretation is contested and the findings may reflect developmental, environmental, or sample-specific factors.",
+   "first_seen": "section_5",
+   "seen_in": [
+    "section_5",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 84,
+   "sentence": "And these two measures are pulling in the same direction: as psychopathy increases, cognitive performance either holds flat or declines.",
+   "script_quote": "as psychopathy increases, cognitive performance either holds flat or declines",
+   "category": "evidence_inflation",
+   "verdict": "error",
+   "research_quote": "A meta-analytic review found a small, statistically significant negative relationship between intelligence and psychopathy, with total psychopathy correlated with FSIQ at r = -.07.",
+   "why": "The research shows a small negative correlation (r=-.07) and one study-specific correlation (r=-0.55 in a specific female offender sample); the script generalises this as a clean directional rule ('holds flat or declines') without the research supporting that framing as a general law.",
+   "first_seen": "section_6",
+   "seen_in": [
+    "section_6",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 85,
+   "sentence": "The trait that the research has already shown to carry the strongest association with serial homicide is not bundled with elevated intelligence.",
+   "script_quote": "the trait that the research has already shown to carry the strongest association with serial homicide",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The script implies a prior research finding within this script establishing which trait carries the 'strongest association with serial homicide'; the research does not frame any single trait this way in the provided text.",
+   "first_seen": "section_6",
+   "seen_in": [
+    "section_6",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 93,
+   "sentence": "The interpersonal and affective facets of psychopathy — the dimensions most central to the trait's definition — had very low impact on explaining variance in aggressive antisocial behavior.",
+   "script_quote": "The interpersonal and affective facets of psychopathy — the dimensions most central to the trait's definition — had very low impact on explaining variance in aggressive antisocial behavior",
+   "category": "evidence_inflation",
+   "verdict": "error",
+   "research_quote": "the interpersonal and affective psychopathy facets had very low impact on explained variance in aggressive antisocial behavior",
+   "why": "The script adds the characterisation 'most central to the trait's definition' for the interpersonal and affective facets, which the research does not state.",
+   "first_seen": "section_6",
+   "seen_in": [
+    "section_6",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 108,
+   "sentence": "The literature reports a consistent association between psychopathy and reduced prefrontal gray matter, particularly in the vmPFC, the orbitofrontal cortex, and the anterior cingulate, regions involved in how the brain weights consequences before acting.",
+   "script_quote": "regions involved in how the brain weights consequences before acting",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research describes vmPFC/OFC and anterior cingulate as linked to psychopathy and social-affective decision making, but does not characterise them specifically as regions involved in 'how the brain weights consequences before acting'; this functional description is not in the research.",
+   "first_seen": "section_7",
+   "seen_in": [
+    "section_7",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  }
+ ],
+ "removed": [
+  {
+   "i": 79,
+   "sentence": "So the IQ data establish something concrete: psychopathy doesn't travel with superior intelligence.",
+   "script_quote": "the IQ data establish something concrete: psychopathy doesn't travel with superior intelligence.",
+   "category": "evidence_inflation",
+   "verdict": "error",
+   "research_quote": "The empirical data contradict the assumption that serial homicide offenders systematically have superior IQ; Radford's sample mean is 95.1, below the population mean of 100.",
+   "why": "The IQ data are about serial killers' IQ scores, not about psychopathy specifically; the script conflates the IQ finding with a claim about psychopathy's relationship to intelligence, which is a separate finding from the meta-analysis (r = -.07).",
+   "first_seen": "section_6",
+   "seen_in": [
+    "section_6",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill"
+   ],
+   "in_final": false,
+   "removed_after": "after_refill"
+  }
+ ],
+ "draftErrors": 3,
+ "rejected": 0,
+ "stages": [
+  {
+   "stage": "plan",
+   "words": 538
+  },
+  {
+   "stage": "hook",
+   "words": 69
+  },
+  {
+   "stage": "section_1",
+   "words": 199
+  },
+  {
+   "stage": "section_2",
+   "words": 293
+  },
+  {
+   "stage": "section_3",
+   "words": 239
+  },
+  {
+   "stage": "section_4",
+   "words": 326
+  },
+  {
+   "stage": "section_5",
+   "words": 378
+  },
+  {
+   "stage": "section_6",
+   "words": 462
+  },
+  {
+   "stage": "section_7",
+   "words": 569
+  },
+  {
+   "stage": "finalize_in",
+   "words": 2466
+  },
+  {
+   "stage": "before_refine",
+   "words": 2534
+  },
+  {
+   "stage": "after_refine",
+   "words": 2534
+  },
+  {
+   "stage": "before_refill",
+   "words": 2507
+  },
+  {
+   "stage": "after_refill",
+   "words": 2507
+  },
+  {
+   "stage": "finalize_out",
+   "words": 2275
+  },
+  {
+   "stage": "review",
+   "words": 2344
+  },
+  {
+   "stage": "final_check",
+   "words": 2025
+  }
+ ],
+ "final": "Hollywood has sold us the same idea for decades: the psychopathic killer is always the smartest person in the room, a cold chess master running circles around everyone who tries to catch him. But when researchers actually measured the IQ of serial killers, what they found doesn't match that story at all. The data are messier, stranger, and in some ways more unsettling than the genius myth ever was.\n\nThat image has shaped what most people think they know about serial killers: that the ones who keep going, who evade capture across years, must be operating at some elevated cognitive frequency the rest of us simply can't access. And audiences don't just enjoy it; they absorb it as a template for how the real world works. That assumption has a grip on the culture that the actual research has never managed to loosen. What the data actually show about who these offenders are — cognitively and neurologically — lands very differently than the myth prepared anyone to expect.\n\nThe Radford University Serial Killer Database contains IQ records for 202 offenders, and those records do not cluster at the high end of the scale. The mean sits at 95.1. The median sits lower, at 89.0. The population average is 100, and the serial killers in this sample fall below it. Below it as a central tendency, across a sample large enough to carry statistical weight.\n\nThe range does run wide — from 57 at the floor to 165 at the ceiling — so exceptional scores exist in the data. But a range is not a portrait. A distribution is. And this distribution clusters where ordinary human cognition clusters, pulled slightly downward from the norm rather than elevated above it. The rare high-scoring individual in the dataset is exactly that: rare, and statistically overwhelmed by the mass of scores grouped around and beneath the average.\n\nWhat makes this gap between 95.1 and 100 meaningful is what it displaces. The cultural image built by decades of prestige television and literary fiction rests on the premise that sustained predatory behavior requires elevated planning capacity — that evading detection across multiple victims demands something closer to genius than to ordinary cognition. The Radford data offer no support for that premise. The average offender in the sample carries no cognitive advantage over the general population. The numbers describe someone operating near, or just beneath, the cognitive midpoint of any random group of people you might assemble.\n\nWhich raises the question the IQ data alone cannot answer: if not superior intelligence, what actually drives the pattern?\n\nBefore accepting what the Radford data show, it's fair to ask how solid that foundation actually is. The database draws on secondary sources, self-reports and third-party accounts, which means the IQ figures it contains are vulnerable to memory errors, exaggeration, and misinformation. That's a genuine methodological caveat, and researchers who use the database say so plainly.\n\nBut notice what the caveat does not do. It does not suggest the data are biased toward underestimating intelligence. And even with that caveat, the central tendency lands below the population norm.\n\nThe limitation also doesn't explain away the shape of the distribution. A secondary-source database with incomplete records might produce a noisier spread than a controlled clinical sample would — but it would have to be wrong in a very specific and consistent direction to move that mean from 95.1 up to anything resembling the exceptional range the cultural narrative assumes. The data, even with their imperfections, point somewhere. They point to ordinary. That's what the numbers describe when you let them speak without the myth doing the translating.\n\nA 2019 meta-analysis pulled together 22 studies covering 2,603 homicide offenders across 29 unique samples, and the number it produced changes the frame entirely. The overall correlation between psychopathy and homicide was r = 0.68 — a large association by any standard in behavioral research. Then the analysis broke the data down by type. For serial homicide specifically, the correlation rose to r = 0.74. The more times the killing repeated, the stronger psychopathy's fingerprint on it. That is not a subtle gradient. That is psychopathy tracking serial homicide more tightly than homicide in general, though the same analysis found an even stronger link, r = 0.80, for homicides with multiple offenders.\n\nThe researchers also produced a mean PCL-R score for homicide offenders across that sample: 21.2. On the PCL-R, a score of 30 or above marks clinical psychopathy. A 2023 study of condemned capital murderers pushed that further — the sample mean there was 23.31, and one in three of those individuals scored 30 or above, meeting the clinical threshold outright.\n\nWhat the psychopathy research describes is something structurally different: not a sharper mind, but a mind that processes the emotional consequences of violence differently. The repetition isn't driven by elevated planning capacity. The association with psychopathy suggests it is driven by something the IQ score was never going to capture.\n\nWhat psychopathy appears to do to the brain is not sharpen it. It disrupts a specific set of functions — the ones that make consequences feel real before they arrive.\n\nNeuroimaging and neuropsychological research consistently links psychopathy to impaired function in the ventromedial prefrontal cortex and the orbitofrontal cortex. These regions are involved in social-affective decision making and in reinforcement-based learning — the process by which the brain updates its behavior based on what a previous action cost. When this circuitry is disrupted, the feedback loop that connects a past outcome to a future choice degrades. The person can reason through a problem. Some executive functions stay relatively intact. What changes is the emotional weight the brain assigns to the result of what they did.\n\nThe amygdala adds a second layer to this. Research on callous-unemotional traits links amygdala dysfunction to reduced fear conditioning — the process through which most people learn, viscerally and automatically, to associate certain actions with aversive outcomes. Normally, that conditioning functions as an internal brake. The memory of punishment, guilt, or fear becomes attached to the act, and that attachment suppresses the impulse to repeat it. In individuals with high callous-unemotional traits, this conditioning appears impaired. The brake engages weakly, or not at all.\n\nPut these two disruptions together and you get something the IQ score was never going to reveal. The orbitofrontal and vmPFC impairment means the brain isn't updating its cost-benefit register from experience the way it should. The amygdala dysfunction means the emotional signal that should make violence feel dangerous — to the person committing it — is attenuated. Repetition, then, isn't the product of a mind sophisticated enough to keep escaping consequences. It may be the product of a mind that processes those consequences differently from the start. The research is careful to note that the causal direction here remains debated — whether these brain differences precede violent behavior, develop alongside it, or reflect something else entirely is still an open question. What the studies do show, consistently, is that the emotional inhibition most people carry without thinking about it appears structurally weaker in this population. The research does not support the idea that the killer keeps going because of a superior mind outpacing everyone trying to stop him. The research points somewhere harder and stranger than that.\n\nBut the meta-analytic literature goes further than that. It doesn't just find no positive link — it finds a negative one. Across the studies pooled in that meta-analytic review, total psychopathy correlated with full-scale IQ at r = −.07. Small, but statistically significant, and pointing in the direction the myth least expects. Higher psychopathy, marginally lower measured intelligence. The relationship is not dramatic at that scale, but its direction matters: the data are not neutral. They lean against the premise the cultural story was built on.\n\nThen there is the study of insane female offenders, where the Pearson correlation between total PCL-R score and IQ was r = −0.55. That is not a marginal lean. A moderate-to-strong inverse relationship, in a specific clinical population, where psychopathy scores and cognitive performance moved in opposite directions with enough consistency to produce a correlation of that size. The population is specific and the generalization to all offenders would be a step beyond what the data license — but the number itself is hard to square with any version of the genius-killer narrative.\n\nWhat makes these correlations land differently than a simple IQ average is what they describe structurally. A mean score tells you where a group sits. A correlation tells you which direction two things move relative to each other. And these two measures are pulling in the same direction: as psychopathy increases, cognitive performance either holds flat or declines. The trait that the research has already shown to carry the strongest association with serial homicide is not bundled with elevated intelligence. It runs alongside average cognition, or below it.\n\nThe controlled laboratory research adds one more layer. Studies of high-psychopathy participants have found that they can perform normally on certain attentional and cognitive tasks even while showing the characteristic emotional and behavioral abnormalities the trait produces. Attention can be intact. Some executive processes hold. The disruption lives elsewhere, not in raw cognitive horsepower.\n\nResearch into young violent offenders has made this separation explicit: intelligence was not necessarily pertinent to understanding aggressive antisocial or psychopathic behaviors. The interpersonal and affective facets of psychopathy — the dimensions most central to the trait's definition — had very low impact on explaining variance in aggressive antisocial behavior. What drove the behavior wasn't measured by IQ. The cognitive score and the behavioral pattern were, to a meaningful degree, running on separate tracks. The myth collapsed them into one. The research keeps them apart.\n\nWhat actually keeps an offender undetected across multiple victims is not a superior mind — it is a structural problem that would slow any investigation regardless of who was conducting it. The FBI's own guidance on serial homicide is direct about this: cases are harder to identify and clear than single-incident homicides because they scatter across time and jurisdictions. A victim found in one county, another found two states away, a third case never linked to the first two — these are not puzzles that required a genius to construct. They are the natural consequence of geography and time fragmenting the evidence before anyone knows there is a pattern to look for. The clearance data give that problem a number. In 2020, only 54% of homicides were cleared, leaving 46% unsolved. By 2024 that figure had moved to 61% — an improvement, but still a portrait of how often homicide goes unanswered even before you layer in the additional complexity of cases spread across multiple agencies.\n\nThe myth was never built on that reality.\n\nAnd ordinary is what the research keeps returning to. Not in the sense of unremarkable lives, but in the precise, measurable sense: cognition clustering around the population norm, not above it. The literature reports a consistent association between psychopathy and reduced prefrontal gray matter, particularly in the vmPFC, the orbitofrontal cortex, and the anterior cingulate, regions involved in how the brain weights consequences before acting. But the literature is equally insistent on what that finding does not license. Studies debate whether the findings reflect developmental deficits, environmental effects, or factors specific to criminal history in the samples being studied. The neuroscience points at something real and then stops short of telling us exactly what it means — which is the honest position, and the opposite of the clean story the myth prefers.\n\nThe myth is not harmless. If the public and even investigators start from the premise that an offender evading capture must be exceptionally intelligent, that premise shapes what they look for and where they look. It flatters the killer and obscures the actual problem: cases that should be connected aren't, because the systems for connecting them are imperfect. The genius narrative makes that a story about the offender's superiority. The research makes it a story about the limits of coordination across time and place.\n\nThe data never supported that image. It is also the one the evidence actually builds."
+}

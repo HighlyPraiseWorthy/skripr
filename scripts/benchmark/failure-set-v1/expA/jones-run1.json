@@ -1,0 +1,528 @@
+{
+ "id": "jones",
+ "run": 1,
+ "words": 1834,
+ "primaryPer1k": 1.09,
+ "overreachPer1k": 0.55,
+ "finalErrors": [
+  {
+   "i": 0,
+   "sentence": "In May of 1979, a Chicago commodities broker walked out his front door, told his family he'd be back after a business meeting, and never came back.",
+   "script_quote": "told his family he'd be back after a business meeting",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "Research says Jones told his wife he would return after a business meeting; no mention of telling his family (children) this.",
+   "first_seen": "plan",
+   "seen_in": [
+    "plan",
+    "hook",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 29,
+   "sentence": "By his own account to authorities, Jones paid an associate $800 for three things: a fake Illinois driver's license, a fake birth certificate, and a Social Security number that belonged to a real, living person.",
+   "script_quote": "a Social Security number that belonged to a real, living person",
+   "category": "certainty_inflation",
+   "verdict": "error",
+   "research_quote": "Jones told authorities that he had paid an associate $800 for a fake Illinois driver's license, birth certificate, and Social Security number",
+   "why": "Research says Jones paid for a fake Social Security number; the script adds that it belonged to a real, living person, which conflates the Social Security number with Clifton Goodenough's — the research distinguishes the documents purchased for $800 from the Social Security number belonging to Goode",
+   "first_seen": "section_3",
+   "seen_in": [
+    "section_3",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 106,
+   "sentence": "Until a nurse in Phoenix reported income he had never earned, and the thread sitting in a DMV file since 1988 finally got pulled.",
+   "script_quote": "a nurse in Phoenix reported income he had never earned",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research says 'An Arizona man reported to the Social Security Administration' — it does not identify the reporter specifically as a nurse in this context, and says 'income from Las Vegas casinos where he had never worked,' not simply 'income he had never earned.'",
+   "first_seen": "final_check",
+   "seen_in": [
+    "final_check"
+   ],
+   "in_final": true
+  }
+ ],
+ "removed": [
+  {
+   "i": 105,
+   "sentence": "The most recent renewal was in May 2008, at a Henderson DMV office — a routine transaction that left no impression.",
+   "script_quote": "The most recent renewal was in May 2008, at a Henderson DMV office",
+   "category": "contradiction",
+   "verdict": "error",
+   "research_quote": "Investigators began looking at Jones in May 2008, when he went to a Henderson DMV office to renew his driver's license",
+   "why": "The research says investigators began looking in May 2008 when Jones went to renew, but another source says Jones was arrested in July 2011 after 'trying to renew a Nevada driver's license.' The script states the renewal was in May 2008, which is supported, but calling it 'the most recent renewal' i",
+   "first_seen": "section_6",
+   "seen_in": [
+    "section_6",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review"
+   ],
+   "in_final": false,
+   "removed_after": "review"
+  },
+  {
+   "i": 110,
+   "sentence": "The alias had lasted from a DMV counter in 1988 all the way to a Henderson DMV office in 2008.",
+   "script_quote": "The alias had lasted from a DMV counter in 1988 all the way to a Henderson DMV office in 2008",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research says the Nevada DMV issued Jones a driver's license in 1988, but does not specify this occurred at a particular 'DMV counter' location; the script implies a specific 1988 DMV location that the research does not name.",
+   "first_seen": "section_6",
+   "seen_in": [
+    "section_6",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill"
+   ],
+   "in_final": false,
+   "removed_after": "after_refill"
+  },
+  {
+   "i": 122,
+   "sentence": "The Social Security Administration had paid more than $78,600 to Jones's family after an Illinois court declared him legally dead.",
+   "script_quote": "Social Security Administration had paid more than $78,600 to Jones's family",
+   "category": "contradiction",
+   "verdict": "error",
+   "research_quote": "Social Security paid Jones's family $47,000 in survivor benefits after he was declared legally dead.",
+   "why": "The research states SSA paid the family $47,000, not $78,600; the $78,600 figure is what Jones was ordered to repay the SSA, not what was paid to his family.",
+   "first_seen": "section_7",
+   "seen_in": [
+    "section_7",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review"
+   ],
+   "in_final": false,
+   "removed_after": "review"
+  }
+ ],
+ "draftErrors": 10,
+ "rejected": 0,
+ "gate": {
+  "flags": 22,
+  "actions": {
+   "rewritten": 20,
+   "removed": 1,
+   "clause_cut": 1
+  }
+ },
+ "gateLog": [
+  {
+   "sentence": "Around noon on May 10, 1979, Arthur Gerald Jones kissed his wife goodbye, told her he had a meeting to get to, and walked out the front door of their suburban Chicago home.",
+   "unsupported": [
+    "kissed his wife goodbye"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "Around noon on May 10, 1979, Arthur Gerald Jones told his wife he had a meeting to get to and walked out the front door of their suburban Chicago home."
+  },
+  {
+   "sentence": "No address, no name, no time he'd be back.",
+   "unsupported": [
+    "No address, no name, no time he'd be back."
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "removed"
+  },
+  {
+   "sentence": "What she couldn't have filed away in the moment was the bracelet, the cherished one he wore every day, sitting on the dresser where he'd forgotten it in his rush.",
+   "unsupported": [
+    "the cherished one he wore every day",
+    "sitting on the dresser"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research",
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "What she couldn't have filed away in the moment was the bracelet, left behind when he rushed out the door."
+  },
+  {
+   "sentence": "He was frazzled enough leaving that he didn't go back for it.",
+   "unsupported": [
+    "he didn't go back for it"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"he forgot to put on his cherished bracelet\""
+   ],
+   "action": "rewritten",
+   "result": "He was frazzled enough leaving that he forgot to put it on."
+  },
+  {
+   "sentence": "Investigators eventually found his silver Buick abandoned near O'Hare International Airport, a pair of sunglasses left inside.",
+   "unsupported": [
+    "a pair of sunglasses left inside"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"a pair of sunglasses near O'Hare International Airport\""
+   ],
+   "action": "rewritten",
+   "result": "Investigators eventually found his silver Buick and a pair of sunglasses near O'Hare International Airport."
+  },
+  {
+   "sentence": "They reported a husband running late on May 11th, and only then did the clock start.",
+   "unsupported": [
+    "They reported a husband running late on May 11th"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"his wife reported him missing on May 11\""
+   ],
+   "action": "rewritten",
+   "result": "His wife reported him missing on May 11th, and only then did the clock start."
+  },
+  {
+   "sentence": "But the gambling had been eating through it for years.",
+   "unsupported": [
+    "the gambling had been eating through it for years"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"giant gambling debts\""
+   ],
+   "action": "rewritten",
+   "result": "But the gambling had left him with giant debts."
+  },
+  {
+   "sentence": "The walls of the life he had built were coming down in a specific order, and May 10th was the morning he stopped waiting for the next one to fall.",
+   "unsupported": [
+    "May 10th was the morning he stopped waiting"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"rushed out the door around noon on May 10, 1979\""
+   ],
+   "action": "clause_cut",
+   "result": "The walls of the life he had built were coming down in a specific order."
+  },
+  {
+   "sentence": "A fabricated number fails a routine check.",
+   "unsupported": [
+    "A fabricated number fails a routine check."
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "A stolen number, belonging to a real person, passes the check."
+  },
+  {
+   "sentence": "A legitimate number, belonging to someone who exists, passes one.",
+   "unsupported": [
+    "A legitimate number, belonging to someone who exists, passes one."
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "A number belonging to someone who actually exists passes one."
+  },
+  {
+   "sentence": "Court records indicate he moved through California and Florida first — the route of someone letting distance accumulate before settling.",
+   "unsupported": [
+    "Court records indicate he moved through California and Florida first"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"Jones skipped around the country, stopping in California and Florida\""
+   ],
+   "action": "rewritten",
+   "result": "After disappearing, he skipped around the country, stopping in California and Florida first, the route of someone letting distance accumulate before settling."
+  },
+  {
+   "sentence": "Jones was alive in 1986 — working, eating, breathing — while a court certified his nonexistence and the federal government cut checks to the people he had abandoned.",
+   "unsupported": [
+    "working, eating, breathing"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "Jones was alive in 1986 while a court certified his nonexistence and the federal government cut checks to the people he had abandoned."
+  },
+  {
+   "sentence": "His disappearance, once certified by a court, generated $47,000 for his family while he remained alive to benefit from being officially gone.",
+   "unsupported": [
+    "while he remained alive to benefit from being officially gone"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "His disappearance, once certified by a court, generated $47,000 in Social Security survivor benefits for his family."
+  },
+  {
+   "sentence": "Decades on the floor of the Chicago Board of Trade had made him fluent in exactly the calculations a sports book runs on — point spreads, line movements, the arithmetic of risk.",
+   "unsupported": [
+    "Decades on the floor of the Chicago Board of Trade"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"Jones eventually became a commodities trader at the Chicago Board of Trade.\""
+   ],
+   "action": "rewritten",
+   "result": "His time as a commodities trader at the Chicago Board of Trade had made him fluent in exactly the calculations a sports book runs on: point spreads, line movements, the arithmetic of risk."
+  },
+  {
+   "sentence": "Clifton Goodenough had never set foot inside a Las Vegas casino.",
+   "unsupported": [
+    "Clifton Goodenough had never set foot inside a Las Vegas casino"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"income from Las Vegas casinos where he had never worked\""
+   ],
+   "action": "rewritten",
+   "result": "Clifton Goodenough had never worked at a Las Vegas casino."
+  },
+  {
+   "sentence": "He was a nurse at a Phoenix veterans hospital, and the closest he got to the sports book industry was the tax notices that kept arriving at his house.",
+   "unsupported": [
+    "the tax notices that kept arriving at his house"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"he had been embroiled in a longtime feud with the IRS\""
+   ],
+   "action": "rewritten",
+   "result": "He was a nurse at a Phoenix veterans hospital, and the closest he got to the sports book industry was a longtime feud with the IRS over income he supposedly had earned in Las Vegas."
+  },
+  {
+   "sentence": "The most recent renewal was in May 2008, at a Henderson DMV office — a routine transaction, the kind that takes twenty minutes and leaves no impression.",
+   "unsupported": [
+    "20",
+    "the kind that takes twenty minutes"
+   ],
+   "layer": [
+    "entity",
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "The most recent renewal was in May 2008, at a Henderson DMV office — a routine transaction that left no impression."
+  },
+  {
+   "sentence": "They contacted the office, traced the application, and had their thread.",
+   "unsupported": [
+    "traced the application"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "They contacted the DMV, and had their thread."
+  },
+  {
+   "sentence": "The alias had lasted from a Henderson DMV counter in 1988 all the way to that same counter in 2008.",
+   "unsupported": [
+    "from a Henderson DMV counter in 1988 all the way to that same counter in 2008"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"issued Jones a driver's license in 1988\""
+   ],
+   "action": "rewritten",
+   "result": "The alias had lasted from a DMV counter in 1988 all the way to a Henderson DMV office in 2008."
+  },
+  {
+   "sentence": "His own monthly Social Security checks, the ones he had earned the right to collect as Arthur Gerald Jones, would be garnished to repay what his fictional death had extracted from the government decades earlier.",
+   "unsupported": [
+    "would be garnished to repay",
+    "the ones he had earned the right to collect as Arthur Gerald Jones"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"\"",
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "His own Social Security benefits, his attorney said, would be the source of repayment for what his fictional death had extracted from the government decades earlier."
+  },
+  {
+   "sentence": "Three years of probation, a restitution order exceeding $90,000 in total, and the slow drain of Social Security checks going back to the agency that had paid out on his death.",
+   "unsupported": [
+    "a restitution order exceeding $90,000 in total"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"ordered Jones to pay $90,000 in restitution\""
+   ],
+   "action": "rewritten",
+   "result": "Three years of probation, a restitution order of $90,000, and the slow drain of Social Security checks going back to the agency that had paid out on his death."
+  },
+  {
+   "sentence": "And so the loop closes on the man who walked out a front door in Highland Park one May morning in 1979, dressed wrong for the meeting he claimed to have, bracelet left behind on the dresser, silver Buick pointed toward O'Hare.",
+   "unsupported": [
+    "one May morning in 1979",
+    "bracelet left behind on the dresser"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"rushed out the door around noon on May 10, 1979\"",
+    "research differs: \"he forgot to put on his cherished bracelet\""
+   ],
+   "action": "rewritten",
+   "result": "And so the loop closes on the man who walked out a front door in Highland Park around noon on May 10, 1979, dressed wrong for the meeting he claimed to have, his cherished bracelet forgotten, silver Buick pointed toward O'Hare."
+  }
+ ],
+ "stages": [
+  {
+   "stage": "plan",
+   "words": 674
+  },
+  {
+   "stage": "hook",
+   "words": 80
+  },
+  {
+   "stage": "section_1",
+   "words": 273
+  },
+  {
+   "stage": "section_2",
+   "words": 293
+  },
+  {
+   "stage": "section_3",
+   "words": 343
+  },
+  {
+   "stage": "section_4",
+   "words": 217
+  },
+  {
+   "stage": "section_5",
+   "words": 307
+  },
+  {
+   "stage": "section_6",
+   "words": 318
+  },
+  {
+   "stage": "section_7",
+   "words": 526
+  },
+  {
+   "stage": "finalize_in",
+   "words": 2277
+  },
+  {
+   "stage": "before_refine",
+   "words": 2344
+  },
+  {
+   "stage": "after_refine",
+   "words": 2309
+  },
+  {
+   "stage": "before_refill",
+   "words": 2259
+  },
+  {
+   "stage": "after_refill",
+   "words": 2259
+  },
+  {
+   "stage": "finalize_out",
+   "words": 2003
+  },
+  {
+   "stage": "review",
+   "words": 2053
+  },
+  {
+   "stage": "final_check",
+   "words": 1834
+  }
+ ],
+ "final": "In May of 1979, a Chicago commodities broker walked out his front door, told his family he'd be back after a business meeting, and never came back. Years passed, a court declared him legally dead, and his wife and three children began collecting survivor benefits from the Social Security Administration.\n\nJoanne Jones would later recall the specific thing her husband said before he sped away from their suburban Chicago home: \"The meeting is not in a business office.\" That was the whole explanation.\n\nHe was 40 years old, and he left dressed wrong for a business meeting — tennis shirt and slacks instead of the corporate attire his wife knew. Small detail. The kind of thing a person files away and only retrieves later, when they're trying to reconstruct the last ordinary morning. What she couldn't have filed away in the moment was the bracelet, left behind when he rushed out the door. He was frazzled enough leaving that he forgot to put it on.\n\nBy May 11, Joanne had reported him missing. Investigators eventually found his silver Buick and a pair of sunglasses near O'Hare International Airport. The car near the airport suggested travel.\n\nHe had not always been the kind of man who needed to run. Jones had come up through the unglamorous end of Chicago commerce — delivery boy for his future father-in-law's liquor store, a place called Mr. Joseph's Liquor Cabinet, where he eventually worked his way up to manager. He married the owner's daughter. From that starting point, he had climbed to the floor of the Chicago Board of Trade, trading commodities in one of the most competitive financial arenas in the country. The ranch home in the suburbs came with a volleyball court. By any visible measure, the life was a success.\n\nBut the gambling had left him with giant debts. His wife later told authorities he once lost $30,000 on a single basketball game — not a slow bleed, one bet. When the debts outpaced what trading could cover, he forged Joanne's name on a second mortgage application to keep cash moving. And then, a few months before he walked out that door, he sold his seat on the Board of Trade entirely — his professional identity, his income, his standing — to cover $210,000 in accumulated debt. His wife said he kept going into Chicago to work afterward, though it was unclear for whom, and she suspected it was for the mob.\n\nWhat happened next made the calculus of staying untenable. In April 1979, a fellow commodities trader was shot and killed in his suburban home by masked intruders. Court papers would later say Jones left shortly after that shooting specifically to get a fresh start. The walls of the life he had built were coming down in a specific order.\n\nBefore he could become someone else, he needed paper. That was the whole problem — not distance, not disguise, not a new city. A man without documents is still the man he was. By his own account to authorities, Jones paid an associate $800 for three things: a fake Illinois driver's license, a fake birth certificate, and a Social Security number that belonged to a real, living person. The name attached to all of it was Joseph Richard Sandelli.\n\nWhat $800 bought in 1979 was not a disguise. It was a legal existence. A driver's license says you are who you say you are. A birth certificate says you were born as who you say you are. A Social Security number says the government has been tracking you your whole life as who you say you are. Stack all three and you have something closer to a person than most forgeries ever manage — a coherent paper trail with a beginning, a middle, and a present. Arthur Jones didn't need to erase himself. He needed to overwrite himself, and the three documents together did exactly that.\n\nThe Social Security number came from a man named Clifton Goodenough. Jones, by his own account to authorities, admitted buying Goodenough's number specifically, not a randomly generated fake, but a real number attached to a real man. A stolen number, belonging to a real person, passes the check that a fabricated one does not.\n\nFrom Chicago, Jones didn't go straight to Las Vegas. After disappearing, he skipped around the country, stopping in California and Florida before eventually settling in Las Vegas. Each stop put more geography between Arthur Gerald Jones and the life that had collapsed behind him. The criminal complaint would later describe it plainly: he was \"fleeing the mob\" and \"starting a new life.\" Both things were true at once. Joseph Richard Sandelli was the instrument that made the second one possible.\n\nSeven years after Jones walked out that door, an Illinois court did what the law does when a person stays gone long enough: it declared Arthur Gerald Jones legally dead. The year was 1986. His wife and three children had been living without him, and the court's ruling converted that absence into a formal legal status — not missing, not disappeared, but dead. And death, on paper, triggers a payment.\n\nThat money was real. The death that justified it was not. Jones was alive in 1986 while a court certified his nonexistence and the federal government cut checks to the people he had abandoned.\n\nHe didn't just escape consequences. His disappearance, once certified by a court, generated $47,000 in Social Security survivor benefits for his family. The question the rest of this story has to answer is who, exactly, was left holding the bill.\n\nLas Vegas absorbed Joseph Richard Sandelli the way it absorbs most people who need to stop being someone else — without asking questions. By the 1980s, Jones had settled into the city and found work that matched the one skill his old life had genuinely sharpened: reading odds. According to his attorney, he went to work at the Desert Inn first, then moved into sports book operations at a local casino. At the time investigators caught up with him, he was working the sport and race book at the Rampart. The career he landed in was not entirely foreign to the one he had left behind, both turned on numbers, risk, and the movement of money.\n\nHe and his longtime girlfriend lived on a block of stucco homes, dusty lots, and a few horse corrals. Their neighbors registered almost nothing about them. Leslie Lamoya, who lives down the street, told reporters she had been there ten years and never once seen the man. Another neighbor had only a single image to offer: Jones and his girlfriend bringing in the newspaper, watering plants. That was the whole of it. No friction, no memorable moment, no face that stuck.\n\nHis attorney, Stephen Stein, explained the girlfriend's position plainly: she and her family knew him only as Joseph Richard Sandelli. \"They had no idea about anything,\" Stein said, \"which makes sense. Common sense tells you the guy's not going to go around telling anybody about this kind of thing.\"\n\nHis girlfriend and her family knew him only as Sandelli, and that held for decades. Arthur Gerald Jones, as a daily operational matter, had ceased to exist.\n\nClifton Goodenough had never worked at a Las Vegas casino. He was a nurse at a Phoenix veterans hospital, and the closest he got to the sports book industry was a longtime feud with the IRS over income he supposedly had earned in Las Vegas. The IRS kept coming after him over that \"extra income\" every year since 1995. He pushed back. The IRS pushed harder. Before it was over, the agency had garnished his wages and pulled money directly from his bank account. His family absorbed that disruption year after year, fighting a paper record that insisted he was someone he was not.\n\nWhen he reported to the Social Security Administration that his statements showed income from Las Vegas casinos where he had never worked, the investigation led to the Nevada Department of Motor Vehicles, which had issued a driver's license in 1988 to Joseph Richard Sandelli using Goodenough's Social Security number. The license had been renewed since. In May 2008, he renewed it at a Henderson DMV office. Jones walked in as Sandelli, handed over the number that belonged to a nurse in Phoenix, and walked out with a fresh license.\n\nThat renewal is what investigators found when they pulled the DMV file. They contacted the DMV, and had their thread. In July 2011, state and federal investigators arrested him in Las Vegas, and when they asked whether he was the Chicago trader who had vanished 32 years earlier, he said yes.\n\nOne more renewal, and it might have lasted longer. In the end, an Arizona nurse's tax fight reached the right desk, and Joseph Richard Sandelli stopped existing.\n\nArthur Gerald Jones stood before Clark County District Judge James Bixler on January 31, 2012, as himself — his real name, his real record, his real age. He was 73 years old.\n\nThe plea he had entered the previous September covered one felony count: using a false name to obtain a driver's license or identity card. That single count was the product of a deal with prosecutors that let him avoid trial on several additional felony charges, including identity theft. One count, one guilty plea, and the rest folded away into the agreement. What remained was the sentencing, and Judge Bixler had a specific question before imposing it. He asked Jones directly how he intended to pay back the money.\n\nThe answer came from Jones's attorney, Stephen Stein: the restitution would come out of his Social Security benefits.\n\nThe mechanism the court chose was precise. The court ordered Jones to repay the Social Security Administration for the survivor benefits his family had collected after he was declared legally dead. His own Social Security benefits, his attorney said, would be the source of repayment for what his fictional death had extracted from the government decades earlier.\n\nBeyond what he owed the Social Security Administration, Judge Bixler also ordered Jones to pay about $11,400 to Clifton Goodenough, compensation for the missed work and legal fees Goodenough had accumulated fighting the IRS over income he never earned. That number is not large in the abstract. Against years of wage garnishments, bank withdrawals, and the grinding bureaucratic labor of proving you are not someone you have never been, it is what the court put on the damage.\n\nHe told his wife the meeting was not in a business office. It wasn't. It was the last sentence of one life and the first of another — and for 32 years, that other life held. Until a nurse in Phoenix reported income he had never earned, and the thread sitting in a DMV file since 1988 finally got pulled. He walked out in 1979 and became Joseph Richard Sandelli, and 32 years later, a DMV file connected Sandelli back to Arthur Gerald Jones."
+}

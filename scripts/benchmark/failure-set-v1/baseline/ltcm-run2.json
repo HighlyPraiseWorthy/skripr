@@ -1,0 +1,239 @@
+{
+ "id": "ltcm",
+ "run": 2,
+ "words": 2240,
+ "primaryPer1k": 0.45,
+ "overreachPer1k": 0.45,
+ "finalErrors": [
+  {
+   "i": 101,
+   "sentence": "Fourteen institutions committed a combined $3.625 billion, and the fund that had spent four years presenting itself as the final word on quantifiable risk passed out of its founders' control and into the hands of the creditors who had made its scale possible.",
+   "script_quote": "the fund that had spent four years presenting itself as the final word on quantifiable risk",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research does not state that LTCM presented itself as 'the final word on quantifiable risk'; this characterization is not supported by any research passage.",
+   "first_seen": "section_7",
+   "seen_in": [
+    "section_7",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 116,
+   "sentence": "The creditors who had extended the financing, rolled the repos, and in some cases structured special arrangements specifically to gain access to LTCM's returns now held the equity.",
+   "script_quote": "rolled the repos, and in some cases structured special arrangements specifically to gain access to LTCM's returns",
+   "category": "certainty_inflation",
+   "verdict": "error",
+   "research_quote": "UBS later wrote off $680 million after a special 1997 deal with LTCM to gain exposure",
+   "why": "The research mentions only UBS as having a special arrangement to gain exposure; the script generalizes this to creditors plural as established fact without research support for the broader claim.",
+   "first_seen": "section_7",
+   "seen_in": [
+    "section_7",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  }
+ ],
+ "removed": [
+  {
+   "i": 36,
+   "sentence": "In 1994, LTCM's first full year, that produced a net return of 19.9%.",
+   "script_quote": "In 1994, LTCM's first full year, that produced a net return of 19.9%",
+   "category": "contradiction",
+   "verdict": "error",
+   "research_quote": "LTCM used convergence trading in similar securities, relied on sophisticated mathematical models to exploit small pricing anomalies, and posted annualized returns of about 21% in 1994, 43% in 1995, 41% in 1996, and 17% in 1997",
+   "why": "The research from federalreservehistory.org gives 1994 return as approximately 21%, while the Perold source gives 19.9%; the script selects 19.9% but presents it as the definitive figure when sources conflict, and the federalreservehistory source rounds to ~21%.",
+   "first_seen": "section_3",
+   "seen_in": [
+    "section_3",
+    "finalize_in",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review"
+   ],
+   "in_final": false,
+   "removed_after": "review"
+  },
+  {
+   "i": 19,
+   "sentence": "When the 1991 Treasury auction scandal forced Meriwether out of Salomon, he left carrying that culture intact, along with a sharpened instinct for what had gone wrong and a determination to build something cleaner, tighter, and more defensible.",
+   "script_quote": "a sharpened instinct for what had gone wrong and a determination to build something cleaner, tighter, and more defensible",
+   "category": "unsupported_attribution",
+   "verdict": "error",
+   "why": "The research does not state Meriwether's determination, intent, or motive to build something 'cleaner, tighter, and more defensible' after leaving Salomon.",
+   "first_seen": "section_2",
+   "seen_in": [
+    "section_2",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review"
+   ],
+   "in_final": false,
+   "removed_after": "review"
+  },
+  {
+   "i": 10,
+   "sentence": "The credential was the point — it was precisely what had convinced those same fourteen firms to extend financing on terms they would never have offered to anyone else, in some cases with little or no initial margin required.",
+   "script_quote": "it was precisely what had convinced those same fourteen firms to extend financing on terms they would never have offered to anyone else",
+   "category": "causal_inflation",
+   "verdict": "error",
+   "research_quote": "LTCM obtained extraordinary leverage by using securities repurchase agreements and derivatives, with major banks extending financing on very favorable terms and, in some cases, little or no initial margin.",
+   "why": "The research states banks extended favorable financing but does not say the Nobel/credential authority caused or convinced them to do so on those terms.",
+   "first_seen": "section_1",
+   "seen_in": [
+    "section_1",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill"
+   ],
+   "in_final": false,
+   "removed_after": "after_refill"
+  },
+  {
+   "i": 43,
+   "sentence": "By 1997 the returns had moderated to 17.1%, still a number that would define most careers.",
+   "script_quote": "By 1997 the returns had moderated to 17.1%",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research gives 17.1% as the net return for 1997 in one source, but another source rounds it to 17%, and a third source gives documented net returns of 17.1% — this is technically supported by one source. However, the research also states annualized returns of 'about 21% in 1994, 43% in 1995, 41%",
+   "first_seen": "section_3",
+   "seen_in": [
+    "section_3",
+    "finalize_in"
+   ],
+   "in_final": false,
+   "removed_after": "finalize_in"
+  },
+  {
+   "i": 68,
+   "sentence": "That is a major institution having decided, in pursuit of access to LTCM's returns, to build a position so concentrated that its unwind cost nearly three quarters of a billion dollars.",
+   "script_quote": "nearly three quarters of a billion dollars",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research states UBS wrote off $680 million. $680 million is not 'nearly three quarters of a billion dollars' ($750 million); $680 million is closer to two-thirds of a billion. The script's characterization contradicts the research figure.",
+   "first_seen": "section_4",
+   "seen_in": [
+    "section_4",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill"
+   ],
+   "in_final": false,
+   "removed_after": "after_refill"
+  },
+  {
+   "i": 110,
+   "sentence": "McDonough stood before Congress a week later and described what had happened as a private-sector solution to a private-sector problem.",
+   "script_quote": "McDonough stood before Congress a week later",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research does not state McDonough appeared before Congress a week after September 23, 1998; no timing of his congressional appearance relative to the agreement date is given in the research.",
+   "first_seen": "section_7",
+   "seen_in": [
+    "section_7",
+    "finalize_in",
+    "before_refine"
+   ],
+   "in_final": false,
+   "removed_after": "before_refine"
+  }
+ ],
+ "draftErrors": 11,
+ "rejected": 1,
+ "stages": [
+  {
+   "stage": "plan",
+   "words": 743
+  },
+  {
+   "stage": "hook",
+   "words": 80
+  },
+  {
+   "stage": "section_1",
+   "words": 227
+  },
+  {
+   "stage": "section_2",
+   "words": 349
+  },
+  {
+   "stage": "section_3",
+   "words": 361
+  },
+  {
+   "stage": "section_4",
+   "words": 409
+  },
+  {
+   "stage": "section_5",
+   "words": 267
+  },
+  {
+   "stage": "section_6",
+   "words": 326
+  },
+  {
+   "stage": "section_7",
+   "words": 520
+  },
+  {
+   "stage": "finalize_in",
+   "words": 2459
+  },
+  {
+   "stage": "before_refine",
+   "words": 2518
+  },
+  {
+   "stage": "after_refine",
+   "words": 2517
+  },
+  {
+   "stage": "before_refill",
+   "words": 2483
+  },
+  {
+   "stage": "after_refill",
+   "words": 2483
+  },
+  {
+   "stage": "finalize_out",
+   "words": 2430
+  },
+  {
+   "stage": "review",
+   "words": 2501
+  },
+  {
+   "stage": "final_check",
+   "words": 2240
+  }
+ ],
+ "final": "Most people assume that the smartest people in the room are the safest people to trust with your money. But in 1998, a fund staffed by prize-winning economists and the sharpest minds on Wall Street came within days of triggering a collapse so severe that the Federal Reserve had to step in and organize a private rescue just to keep global markets from unraveling. The question isn't whether they were brilliant.\n\nThe question is how brilliance itself became the danger.\n\nSeptember 1998. The Federal Reserve Bank of New York called the most powerful firms on Wall Street into the same room — not to celebrate a deal, but to prevent a catastrophe. William McDonough had convened fourteen major Wall Street firms, institutions that had spent years competing ferociously for business. Now McDonough was pressing them to act together, warning that a disorderly liquidation of a single hedge fund could destabilize markets far beyond its own walls.\n\nThat fund had two of the most celebrated quantitative economists in the world on its staff. Its principals had been celebrated as the people who finally understood risk well enough to tame it. Major banks extended it financing on terms that, in some cases, required little or no initial margin at all. The intellectual authority that made the fund seem invulnerable was the same authority that had woven those banks into its survival.\n\nSo when the models broke, the banks didn't just watch a client fail. They were already inside the wreckage. That is why McDonough could get fourteen competitors into a room and make them listen. The smartest money in the world had built something too big to be allowed to simply fall.\n\nJohn Meriwether didn't start from scratch. He built LTCM on a template from Salomon Brothers, where he had been vice chairman and head of fixed-income arbitrage. That desk was already its own culture: quantitatively driven, insular, built around people who believed markets contained exploitable mispricings that careful mathematics could reliably find. When the 1991 Treasury auction scandal ended Meriwether's Salomon career, he left carrying that culture intact, with a sharpened focus on trading relationships and risk controls.\n\nWhat he built at LTCM was that same partnership model, except now the academic credentials were inside the firm rather than consulting from the outside. Myron Scholes and Robert C. Merton weren't advisors — they were principals, and their quantitative models weren't window dressing. The relative-value trades Meriwether's team ran depended on those models to identify when similar securities had drifted apart in price and to calculate how confidently the gap would close. Scholes and Merton had, between them, helped reshape how the entire financial industry thought about pricing risk. When they joined LTCM, they brought that authority with them.\n\nThat combination, the street-hardened trading instincts of Salomon's most elite desk fused with the mathematical credibility of Scholes and Merton, was genuinely without precedent. No one had seen it before because no one had managed to assemble it. And the people who might have asked hard questions about the models — the banks, the counterparties, the investors — found the intellectual weight of the partnership difficult to push back against. The partners' academic standing and Meriwether's Salomon pedigree were, together, a kind of institutional answer to doubt before doubt could fully form.\n\nThat is what made the fund's authority self-reinforcing from the start: the people who could have probed its assumptions were the same people who had decided, partly on the basis of those assumptions, to get in.\n\nThe strategy itself was almost boring to describe. Buy the cheaper one, short the more expensive one, collect the difference when the market corrects. Do this across enough positions, across enough markets, and the individual bets become almost incidental. The model doesn't need any single trade to be right. It needs the aggregate to behave the way mathematics says it must.\n\nIn 1994, the net return was 19.9%, not a lucky year in equities, not a concentrated bet that paid off, but a systematic harvest from pricing inefficiencies the models had located and the trades had closed. Then 1995: 42.8%. Then 1996: 40.8%. Three consecutive years of returns that most funds would frame and hang on the wall, generated by a strategy the partnership described as market-neutral, meaning the directional movement of markets wasn't supposed to matter much either way. The longs and the shorts offset each other. What remained was the convergence itself — pure and, apparently, reliable.\n\nSomething else happened at the end of 1997 that reveals more than any percentage does: LTCM returned $2.75 billion of capital to its investors. The fund wasn't struggling. It was turning money away — or more precisely, deciding that the capital it held had grown larger than the opportunities the models could efficiently deploy. A different kind of confidence than posting a good quarter. It is the confidence of a firm that believes it understands the boundaries of its own edge well enough to hand back money rather than dilute it.\n\nFour years of returns. A deliberate contraction. The models had not just worked — they had worked consistently enough that the partnership trusted them to define what the fund should and shouldn't hold. That consistency was among the most persuasive arguments LTCM ever made, and it never had to be spoken aloud.\n\nThe returns had made the case. Now the banks made it possible.\n\nBy early 1998, LTCM had borrowed more than $125 billion against roughly $5 billion in equity. That ratio — twenty-five dollars of borrowed money for every dollar the fund actually owned — was not the product of a single reckless decision, but the accumulated result of terms extended, margin waived, and credit offered across a network of major institutions. Goldman Sachs, Merrill Lynch, J.P. Morgan, and UBS were among the dealers extending that financing and trading credit.\n\nThe instrument was the repurchase agreement — a repo. LTCM would sell securities to a bank overnight and agree to buy them back the next day at a slightly higher price. The bank held the collateral; LTCM held the cash. Do this at scale, roll it continuously, and you can fund an enormous position from a small base. Layer derivatives on top, and the notional exposure grows further still without any of it appearing as a conventional loan. What the banks extended, in many cases, was financing with little or no initial margin required — meaning LTCM could take on the position without putting up the kind of cushion a lender would normally demand before handing over that much credit.\n\nThe UBS arrangement from 1997 shows what that looked like in practice. UBS structured a special deal specifically to gain exposure to LTCM, and when the fund collapsed, UBS wrote off $680 million from that single relationship. Not a rounding error. A major institution had decided, in pursuit of access to LTCM's returns, to build a position so concentrated that its unwind cost $680 million.\n\nThe sharper question is why the world's most sophisticated lenders helped it borrow at a scale that made their own stability contingent on the fund's survival. The banks weren't passive observers to LTCM's leverage. They were its source — and when the trades moved the wrong way, that made them something else entirely: creditors whose own exposure meant the fund's survival had become, in part, their problem too.\n\nThe letter arrived on September 2, 1998. Meriwether sent it to investors himself, in his own name, and the language he chose was not the careful hedging of a firm managing a difficult quarter. He wrote that LTCM had suffered \"a one-month loss of 44 percent.\" Not a drawdown. Not underperformance relative to benchmark. Forty-four percent of the fund's capital, gone in a single month — the kind of figure that, in the context of four years of grinding, systematic, model-driven returns, reads less like a loss than like a repudiation.\n\nThe underlying cause was structural. LTCM's convergence trades were designed to be offsetting: long the cheaper security, short the more expensive one, with the two positions moving in opposite directions until the gap closed. The model's assumption was that these pairs would behave like pairs — that stress in one market would not simultaneously infect every spread the fund held. In 1998, amid market turmoil, that assumption collapsed. Investors fled complexity and reached for safety in the same direction at the same moment, across market after market LTCM had entered. The longs fell. The shorts, instead of rising to offset them, often fell too, or became impossible to unwind. Positions the models had treated as nearly independent turned out to share a single vulnerability: they all depended on markets continuing to function as markets.\n\nThe letter also disclosed that the fund was seeking a capital infusion — an admission that the equity cushion underpinning $125 billion in borrowed positions was eroding fast enough that outside money had become a condition of survival, not an option.\n\nBy late September 1998, LTCM had burned through roughly ninety percent of its capital; by the end of the year, its losses would reach about $4.6 billion of a $4.7 billion base. The number is almost too clean to absorb, so consider what it meant structurally: the equity cushion that had been underwriting more than $125 billion in borrowed positions had essentially ceased to exist. The fund still held the positions. It still owed the money. The floor between those two facts had collapsed to almost nothing.\n\nMcDonough named the specific danger when he went before Congress. A disorderly liquidation, he warned, would create a \"severe liquidity problem\" — and the mechanism he was describing was not abstract. If LTCM's counterparties moved to seize and sell its collateral simultaneously, its positions would hit markets that were already in turmoil. Every institution trying to exit at the same moment would push prices further against every other institution trying to do the same. A \"fire sale,\" McDonough called it, one capable of causing \"widespread disruption\" across financial markets. The fund's failure would not stay inside the fund.\n\nWhat the Fed organized to prevent that was a $3.625 billion recapitalization by fourteen banks and securities firms — many of them the same counterparties whose financing had built the leverage in the first place. The terms were not charitable. The creditors took control of the fund — existing shareholders were substantially diluted in exchange for the capital that kept the positions from being dumped onto open markets all at once.\n\nThat exchange — control for capital — is what the rescue actually was. Not a bailout in the sense of public money flowing in, but a forced restructuring in which the institutions most exposed to LTCM's collapse became, formally, its new owners. The price of preventing the fire sale was handing the fund to the people who had financed it.\n\nSeptember 23, 1998. The private-sector parties reached an agreement. Fourteen institutions committed a combined $3.625 billion, and the fund that had spent four years presenting itself as the final word on quantifiable risk passed out of its founders' control and into the hands of the creditors who had made its scale possible.\n\nMcDonough stood before Congress and described what had happened as a private-sector solution to a private-sector problem. The capital came from the banks themselves. No public money changed hands. The rescue was, by his framing, the market correcting itself through its participants.\n\nThat framing holds as far as it goes — and it stops short of something. The fourteen firms did not walk into that room because the situation compelled them as private actors pursuing private interests in an orderly negotiation. They walked in because the Federal Reserve Bank of New York convened them and McDonough pressed them to act together. The capital was private. The force that organized it was not.\n\nAnd so the rescue sits in a category that has no clean name. Not a bailout. Not a purely voluntary transaction. Something in between: a privately funded restructuring made possible by a public institution's authority to make the call that this particular failure could not be permitted to proceed on its own terms.\n\nThe existing shareholders bore the cost of that decision. The creditors who had extended the financing, rolled the repos, and in some cases structured special arrangements specifically to gain access to LTCM's returns now held the equity. The ladder they had built became the building they owned.\n\nWhat the September 23 agreement settled, then, was not only the immediate crisis. It settled a question about what kind of risk LTCM had actually been carrying. The fund's intellectual architecture, the quantitative credentials, the convergence models, the systematic extraction of small mispricings across global markets, had been presented, and accepted, as a private enterprise operating within boundaries its own mathematics had defined. When those boundaries failed, the entity capable of preventing the consequences was not a market mechanism. It was a government institution with a telephone and the credibility to insist that everyone answer.\n\nThe models had been built by people who understood uncertainty better than almost anyone alive. What they had not built was a position that could fail privately. The smartest people in the room had built a fund that could not be allowed to fail on its own. In September 1998, it took a different room, convened by the New York Fed, to keep that failure from spilling into the markets."
+}

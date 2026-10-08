@@ -1,0 +1,895 @@
+{
+ "id": "ltcm",
+ "run": 2,
+ "words": 1857,
+ "primaryPer1k": 2.15,
+ "overreachPer1k": 2.15,
+ "finalErrors": [
+  {
+   "i": 33,
+   "sentence": "That decision, made at the peak of the fund's confidence in its own models, compressed the equity base precisely when the leverage ratios were already high — meaning that when 1998 arrived, the cushion between the fund's assets and its obligations was thinner than it might otherwise have been.",
+   "script_quote": "compressed the equity base precisely when the leverage ratios were already high",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research states LTCM returned $2-3/4 billion of capital at end of 1997 but does not state that leverage ratios were already high at that time or make any connection between the capital return and leverage ratios.",
+   "first_seen": "after_refill",
+   "seen_in": [
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 33,
+   "sentence": "That decision, made at the peak of the fund's confidence in its own models, compressed the equity base precisely when the leverage ratios were already high — meaning that when 1998 arrived, the cushion between the fund's assets and its obligations was thinner than it might otherwise have been.",
+   "script_quote": "when 1998 arrived, the cushion between the fund's assets and its obligations was thinner than it might otherwise have been",
+   "category": "causal_inflation",
+   "verdict": "error",
+   "research_quote": "At the end of 1997, LTCM returned $2-3/4 billion of capital to investors.",
+   "why": "The research records the capital return but does not state it caused or contributed to a thinner cushion going into 1998.",
+   "first_seen": "after_refill",
+   "seen_in": [
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 7,
+   "sentence": "In September 1998, William J. McDonough of the New York Fed gathered representatives from fourteen major banks and securities firms on Wall Street and laid out the situation in terms that left little room for interpretation.",
+   "script_quote": "gathered representatives from fourteen major banks and securities firms on Wall Street",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research says McDonough convened '14 major Wall Street firms' but does not specify the meeting location as 'on Wall Street'; the New York Fed meeting location is not described that precisely in the research.",
+   "first_seen": "section_1",
+   "seen_in": [
+    "section_1",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 59,
+   "sentence": "The letter also warned, in language that has been widely quoted, that the firm had been hit by a 'severe liquidity crisis.' The bluntness of that language, coming from Meriwether, was itself a signal of how little room remained.",
+   "script_quote": "the letter also warned, in language that has been widely quoted, that the firm had been hit by a 'severe liquidity crisis'",
+   "category": "contradiction",
+   "verdict": "error",
+   "research_quote": "Meriwether's September 1998 investor letter warned that LTCM had suffered enormous losses and said the fund was seeking a capital infusion, using unusually blunt language that has been widely quoted as admitting the firm had been hit by a 'severe liquidity crisis.'",
+   "why": "The research attributes the 'severe liquidity crisis' language to the Richmond Fed source's characterization of the letter, but the earlier research entry on the same letter quotes it as saying the fund had been 'severely impacted' — not 'severe liquidity crisis'; the script presents both as direct ",
+   "first_seen": "after_refill",
+   "seen_in": [
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 51,
+   "sentence": "When UBS wanted exposure to LTCM's returns, it arranged a special transaction specifically designed to get closer to the fund.",
+   "script_quote": "When UBS wanted exposure to LTCM's returns, it arranged a special transaction specifically designed to get closer to the fund",
+   "category": "unsupported_attribution",
+   "verdict": "error",
+   "why": "The research says UBS made 'a special 1997 deal with LTCM to gain exposure' but does not state UBS's motive or intent as 'wanting exposure to LTCM's returns' or that it was 'specifically designed to get closer to the fund.'",
+   "first_seen": "before_refine",
+   "seen_in": [
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 82,
+   "sentence": "On September 23, 1998, the private-sector parties reached an agreement providing a capital infusion of approximately three-and-a-half billion dollars, the figure McDonough cited publicly, with the precise recapitalization amount recorded as $3.625 billion.",
+   "script_quote": "the figure McDonough cited publicly, with the precise recapitalization amount recorded as $3.625 billion",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research gives both $3.625 billion and $3-1/2 billion as figures McDonough cited; the script implies $3.625 billion is the 'precise' figure McDonough cited publicly, but the research attributes the $3-1/2 billion figure to McDonough's public testimony and the $3.625 billion to other sources, not",
+   "first_seen": "finalize_out",
+   "seen_in": [
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 85,
+   "sentence": "It reflects how widely the financing had been distributed, how many institutions had extended credit on favorable terms, and how many balance sheets were now entangled in the same set of positions.",
+   "script_quote": "how many institutions had extended credit on favorable terms",
+   "category": "causal_inflation",
+   "verdict": "error",
+   "research_quote": "major banks extending financing on very favorable terms and, in some cases, little or no initial margin",
+   "why": "The research says major banks extended financing on favorable terms, but the script implies this explains why 14 institutions joined the rescue, a causal link the research does not make.",
+   "first_seen": "after_refill",
+   "seen_in": [
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 105,
+   "sentence": "It began with a 44 percent loss in a single month, at a fund run by some of the most decorated minds in modern finance.",
+   "script_quote": "It began with a 44 percent loss in a single month",
+   "category": "certainty_inflation",
+   "verdict": "error",
+   "research_quote": "Meriwether's September 2, 1998 investor letter said the fund had suffered \"a one-month loss of 44 percent\"",
+   "why": "The research attributes the 44 percent figure to Meriwether's investor letter; the script states it as plain fact rather than as disclosed in the letter.",
+   "first_seen": "final_check",
+   "seen_in": [
+    "final_check"
+   ],
+   "in_final": true
+  }
+ ],
+ "removed": [
+  {
+   "i": 21,
+   "sentence": "Myron Scholes and Robert C. Scholes and Merton joined as key figures whose quantitative models underpinned LTCM's relative-value trades, while the fund was still running money.",
+   "script_quote": "Robert C. Scholes and Merton joined as key figures",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The script names 'Robert C. Scholes' — this appears to conflate Robert C. Merton and Myron Scholes into a single garbled name; the research consistently distinguishes them as two separate people (Myron Scholes and Robert C. Merton).",
+   "first_seen": "section_2",
+   "seen_in": [
+    "section_2",
+    "finalize_in",
+    "before_refine"
+   ],
+   "in_final": false,
+   "removed_after": "before_refine"
+  },
+  {
+   "i": 35,
+   "sentence": "By the end of 1997, LTCM's partners had posted positive returns four years running and did something rare: they handed money back.",
+   "script_quote": "LTCM's partners had posted positive returns four years running and did something rare: they handed money back",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research states 'At the end of 1997, LTCM returned $2-3/4 billion of capital to investors' — it does not describe this as something 'rare,' and the script attributes the action to 'LTCM's partners' rather than LTCM itself, but more importantly the characterization of rarity is not supported by t",
+   "first_seen": "section_3",
+   "seen_in": [
+    "section_3",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review"
+   ],
+   "in_final": false,
+   "removed_after": "review"
+  },
+  {
+   "i": 71,
+   "sentence": "Under genuine stress, the fund's collapse exposed sharp disagreement over whether the models had adequately captured rare market stress.",
+   "script_quote": "Under genuine stress, the fund's collapse exposed sharp disagreement over whether the models had adequately captured rare market stress.",
+   "category": "evidence_inflation",
+   "verdict": "error",
+   "research_quote": "the fund's collapse exposed sharp disagreement over whether the models adequately captured rare market stress",
+   "why": "The research says the collapse 'exposed sharp disagreement' but sentence 71 adds the framing 'Under genuine stress' as a causal trigger, and then sentence 72 immediately repeats the same point correctly — sentence 71 misstates the research by implying the stress itself exposed the disagreement rathe",
+   "first_seen": "section_5",
+   "seen_in": [
+    "section_5",
+    "finalize_in",
+    "before_refine"
+   ],
+   "in_final": false,
+   "removed_after": "before_refine"
+  },
+  {
+   "i": 77,
+   "sentence": "By late September 1998, LTCM had burned through roughly $4.6 billion of its $4.7 billion capital base, about 90% of its capital, erased.",
+   "script_quote": "By late September 1998, LTCM had burned through roughly $4.6 billion of its $4.7 billion capital base, about 90% of its capital, erased.",
+   "category": "contradiction",
+   "verdict": "error",
+   "research_quote": "In 1998, LTCM had lost about $4.6 billion of its $4.7 billion capital base",
+   "why": "The research attributes the $4.6 billion loss to all of 1998, not specifically to 'by late September 1998'; separately, the research says 'by late September 1998' LTCM had lost 'about 90% of its capital' — combining both figures at the same date contradicts the research, which keeps them distinct.",
+   "first_seen": "section_6",
+   "seen_in": [
+    "section_6",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review"
+   ],
+   "in_final": false,
+   "removed_after": "review"
+  },
+  {
+   "i": 125,
+   "sentence": "The models identified genuine mispricings and, for four consecutive years, the market confirmed them.",
+   "script_quote": "for four consecutive years, the market confirmed them",
+   "category": "evidence_inflation",
+   "verdict": "error",
+   "research_quote": "its documented net returns were 19.9% in 1994, 42.8% in 1995, 40.8% in 1996, and 17.1% in 1997",
+   "why": "The research shows positive returns over four years but does not state that the market 'confirmed' the mispricings the models identified; that interpretive conclusion is not supported.",
+   "first_seen": "section_7",
+   "seen_in": [
+    "section_7",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill"
+   ],
+   "in_final": false,
+   "removed_after": "after_refill"
+  }
+ ],
+ "draftErrors": 5,
+ "rejected": 0,
+ "gate": {
+  "flags": 39,
+  "actions": {
+   "rewritten": 23,
+   "clause_cut": 5,
+   "removed": 11
+  }
+ },
+ "gateLog": [
+  {
+   "sentence": "The Federal Reserve Bank of New York doesn't typically call meetings like this.",
+   "unsupported": [
+    "The Federal Reserve Bank of New York doesn't typically call meetings like this"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "The Federal Reserve Bank of New York organized a private rescue meeting to keep the fund from disorderly liquidation."
+  },
+  {
+   "sentence": "William McDonough, the New York Fed's president, gathered representatives from fourteen of the largest banks and securities firms on Wall Street — Goldman Sachs, Merrill Lynch, J.",
+   "unsupported": [
+    "William McDonough, the New York Fed's president",
+    "Goldman Sachs, Merrill Lynch, J."
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research",
+    "research differs: \"counterparties such as Goldman Sachs, Merrill Lynch, J.P. Morgan, and UBS extending financing and trading credit\""
+   ],
+   "action": "clause_cut",
+   "result": "Gathered representatives from fourteen of the largest banks and securities firms on Wall Street — Goldman Sachs."
+  },
+  {
+   "sentence": "Its positions were so large, so deeply woven into the balance sheets of every major institution in that room, that an uncontrolled liquidation wouldn't just end the fund.",
+   "unsupported": [
+    "so deeply woven into the balance sheets of every major institution in that room"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"major Wall Street dealers and counterparties such as Goldman Sachs, Merrill Lynch, J.P. Morgan, and UBS extending financing and trading credit\""
+   ],
+   "action": "rewritten",
+   "result": "Its positions were so large, so deeply tied to major Wall Street dealers and counterparties, that an uncontrolled liquidation wouldn't just end the fund."
+  },
+  {
+   "sentence": "McDonough's warning was specific: a disorderly unwinding would trigger a fire sale across global markets, creating the kind of severe liquidity crisis that spreads faster than any single firm can contain.",
+   "unsupported": [
+    "creating the kind of severe liquidity crisis"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"LTCM’s failure would have created a \"severe liquidity problem\"\""
+   ],
+   "action": "clause_cut",
+   "result": "McDonough's warning was specific: a disorderly unwinding would trigger a fire sale across global markets."
+  },
+  {
+   "sentence": "What Meriwether brought to Greenwich, Connecticut in 1994 wasn't just a trading strategy — it was a culture, transplanted whole from Salomon Brothers, where he'd run the fixed-income arbitrage desk and risen to vice chairman before a Treasury-bond trading scandal ended his tenure there.",
+   "unsupported": [
+    "Greenwich",
+    "Connecticut",
+    "What Meriwether brought to Greenwich, Connecticut in 1994"
+   ],
+   "layer": [
+    "entity",
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "What Meriwether brought to LTCM wasn't just a trading strategy — it was a culture, transplanted whole from Salomon Brothers, where he'd run the fixed-income arbitrage desk and risen to vice chairman before a Treasury-bond trading scandal ended his tenure there."
+  },
+  {
+   "sentence": "Merton joined as principals — two men who would share the Nobel Prize in Economics in 1997, while LTCM was still running money.",
+   "unsupported": [
+    "Nobel Prize",
+    "Economics",
+    "Merton joined as principals",
+    "would share the Nobel Prize in Economics in 1997"
+   ],
+   "layer": [
+    "entity",
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"relied heavily on Myron Scholes and Robert C. Merton’s quantitative models\"",
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "Scholes and Merton joined as key figures whose quantitative models underpinned LTCM's relative-value trades, while the fund was still running money."
+  },
+  {
+   "sentence": "Net of fees, LTCM returned 19.9% in 1994, its first year.",
+   "unsupported": [
+    "its first year"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "Net of fees, LTCM returned 19.9% in 1994."
+  },
+  {
+   "sentence": "By the end of 1997, LTCM's partners were so confident in what the math was telling them that they did something almost no successful fund at that scale does voluntarily: they handed money back.",
+   "unsupported": [
+    "partners were so confident in what the math was telling them",
+    "almost no successful fund at that scale does voluntarily"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research",
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "By the end of 1997, LTCM's partners had posted positive returns four years running and did something rare: they handed money back."
+  },
+  {
+   "sentence": "Two and three-quarter billion dollars returned to outside investors, reducing the equity base the fund was running against its positions.",
+   "unsupported": [
+    "Two and three-quarter billion dollars returned to outside investors",
+    "reducing the equity base the fund was running against its positions"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"LTCM returned $2-3/4 billion of capital to investors\"",
+    "not in research"
+   ],
+   "action": "removed"
+  },
+  {
+   "sentence": "The positions themselves stayed.",
+   "unsupported": [
+    "The positions themselves stayed."
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "removed"
+  },
+  {
+   "sentence": "LTCM didn't shrink the book to match the smaller cushion — it kept the trades at their existing size while the capital supporting them contracted.",
+   "unsupported": [
+    "it kept the trades at their existing size"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "clause_cut",
+   "result": "The capital supporting them contracted."
+  },
+  {
+   "sentence": "Every dollar of equity now had to absorb more of the downside if the models were wrong, and the fund's partners, by every available signal, did not believe the models were wrong.",
+   "unsupported": [
+    "the fund's partners, by every available signal, did not believe the models were wrong"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "Every dollar of equity now had to absorb more of the downside if the models were wrong."
+  },
+  {
+   "sentence": "Scholes and Merton's quantitative framework was built to price risk under conditions the market had already produced.",
+   "unsupported": [
+    "built to price risk under conditions the market had already produced"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "Scholes and Merton's quantitative framework was built to exploit pricing anomalies that the models identified across similar securities."
+  },
+  {
+   "sentence": "The models had been right four consecutive times.",
+   "unsupported": [
+    "The models had been right four consecutive times."
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"its documented net returns were 19.9% in 1994, 42.8% in 1995, 40.8% in 1996, and 17.1% in 1997\""
+   ],
+   "action": "rewritten",
+   "result": "The fund had posted positive returns four consecutive years: 1994, 1995, 1996, and 1997."
+  },
+  {
+   "sentence": "That ratio — about twenty-five dollars borrowed for every dollar the fund actually owned — was the product of two instruments used together: securities repurchase agreements, where LTCM pledged bonds as collateral to borrow cash overnight and rolled those loans forward continuously, and derivatives, which let the fund take on enormous notional exposure without putting up the full value of the position.",
+   "unsupported": [
+    "pledged bonds as collateral to borrow cash overnight and rolled those loans forward continuously",
+    "take on enormous notional exposure without putting up the full value"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research",
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "That ratio — about twenty-five dollars borrowed for every dollar the fund actually owned — was the product of two instruments used together: securities repurchase agreements and derivatives, which together let the fund build extraordinary leverage, with major banks extending financing on very favorable terms and, in some cases, little or no initial margin."
+  },
+  {
+   "sentence": "A single deal, structured to get closer to the fund, that eventually cost one institution more than some mid-sized banks hold in reserve.",
+   "unsupported": [
+    "more than some mid-sized banks hold in reserve"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "A single deal, structured to get closer to the fund, that eventually cost one institution $680 million."
+  },
+  {
+   "sentence": "August alone.",
+   "unsupported": [
+    "August alone."
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "removed"
+  },
+  {
+   "sentence": "Russia's default in August 1998, and the panic that followed, did the opposite.",
+   "unsupported": [
+    "Russia's default in August 1998, and the panic that followed"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "The market turmoil did the opposite."
+  },
+  {
+   "sentence": "Investors didn't rotate between assets rationally — they fled indiscriminately, dumping anything that wasn't a U.S. Treasury.",
+   "unsupported": [
+    "they fled indiscriminately, dumping anything that wasn't a U.S. Treasury"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "removed"
+  },
+  {
+   "sentence": "The gap between a Treasury and a closely related instrument didn't narrow.",
+   "unsupported": [
+    "The gap between a Treasury and a closely related instrument didn't narrow"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "clause_cut",
+   "result": "A closely related instrument didn't narrow."
+  },
+  {
+   "sentence": "It blew open.",
+   "unsupported": [
+    "It blew open."
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "removed"
+  },
+  {
+   "sentence": "And because LTCM held that same basic structure across dozens of markets simultaneously — bonds, swaps, equities, volatility — every position moved against the fund at once.",
+   "unsupported": [
+    "held that same basic structure across dozens of markets simultaneously",
+    "bonds, swaps, equities, volatility",
+    "every position moved against the fund at once"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research",
+    "not in research",
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "And because LTCM had borrowed heavily across its positions, the market turmoil severely impacted the fund."
+  },
+  {
+   "sentence": "The hedge that was supposed to make each trade safe assumed the two legs would move together.",
+   "unsupported": [
+    "The hedge that was supposed to make each trade safe assumed the two legs would move together"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "removed"
+  },
+  {
+   "sentence": "Under genuine stress, they moved apart in unison, across every book the fund ran.",
+   "unsupported": [
+    "they moved apart in unison, across every book the fund ran"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "Under genuine stress, the fund's collapse exposed sharp disagreement over whether the models had adequately captured rare market stress."
+  },
+  {
+   "sentence": "That simultaneity was what the models hadn't priced.",
+   "unsupported": [
+    "That simultaneity was what the models hadn't priced"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"sharp disagreement over whether the models adequately captured rare market stress\""
+   ],
+   "action": "rewritten",
+   "result": "Whether the models had adequately captured rare market stress became a sharp point of disagreement after the collapse."
+  },
+  {
+   "sentence": "Every trade turning wrong in the same month, across every market, is a different kind of problem entirely — and Meriwether's letter was the first public signal of how deep it had already gone.",
+   "unsupported": [
+    "Every trade turning wrong in the same month, across every market",
+    "Meriwether's letter was the first public signal"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research",
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "A one-month loss of 44 percent, disclosed in Meriwether's September letter, signaled how deep it had already gone."
+  },
+  {
+   "sentence": "By late September 1998, LTCM had burned through roughly $4.6 billion of its $4.7 billion capital base — ninety cents of every dollar its investors had ever put in, erased.",
+   "unsupported": [
+    "ninety cents of every dollar its investors had ever put in, erased"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"LTCM had lost about 90% of its capital\""
+   ],
+   "action": "rewritten",
+   "result": "By late September 1998, LTCM had burned through roughly $4.6 billion of its $4.7 billion capital base, about 90% of its capital, erased."
+  },
+  {
+   "sentence": "What remained was a fund that was, in any practical sense, empty, still sitting on top of more than a hundred billion dollars in open positions it could no longer support.",
+   "unsupported": [
+    "100 billion",
+    "more than a hundred billion dollars in open positions"
+   ],
+   "layer": [
+    "entity",
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"by early 1998 had more than $125 billion borrowed against about $5 billion in equity\""
+   ],
+   "action": "rewritten",
+   "result": "What remained was a fund that was, in any practical sense, empty, still sitting on top of massive open positions it could no longer support."
+  },
+  {
+   "sentence": "McDonough put it plainly when he testified before Congress: a disorderly unwinding of those positions would have created a \"severe liquidity problem\" and triggered a \"fire sale\" that could \"cause widespread disruption\" in financial markets.",
+   "unsupported": [
+    "Congress",
+    "McDonough put it plainly when he testified before Congress"
+   ],
+   "layer": [
+    "entity",
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "McDonough put it plainly: a disorderly unwinding of those positions would have created a \"severe liquidity problem\" and triggered a \"fire sale\" that could \"cause widespread disruption\" in financial markets."
+  },
+  {
+   "sentence": "Every counterparty that had extended financing — the Goldman Sachses, the Merrill Lynches, the UBSes — was now staring at the same ledger.",
+   "unsupported": [
+    "Goldman Sachses",
+    "Merrill Lynches",
+    "UBSes"
+   ],
+   "layer": [
+    "entity"
+   ],
+   "why": [],
+   "action": "rewritten",
+   "result": "Every counterparty that had extended financing, Goldman Sachs, Merrill Lynch, J.P. Morgan, UBS, was now staring at the same ledger."
+  },
+  {
+   "sentence": "The fourteen firms that came to the table weren't there because the government ordered them in.",
+   "unsupported": [
+    "weren't there because the government ordered them in"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "The fourteen firms that came to the table came because McDonough pressed them to, warning that disorderly liquidation could destabilize markets."
+  },
+  {
+   "sentence": "The fact that it came with a change of ownership tells you what the rescue meant: the people who had been most certain about the models walked away holding almost nothing, and the institutions that had believed them enough to extend credit on little or no initial margin now held the keys.",
+   "unsupported": [
+    "walked away holding almost nothing",
+    "extend credit on little or no initial margin"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research",
+    "research differs: \"in some cases, little or no initial margin\""
+   ],
+   "action": "removed"
+  },
+  {
+   "sentence": "What the record does say clearly is that the rescue held.",
+   "unsupported": [
+    "the rescue held"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "What the record does say clearly is that the rescue was organized."
+  },
+  {
+   "sentence": "The positions came off the books.",
+   "unsupported": [
+    "The positions came off the books."
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "removed"
+  },
+  {
+   "sentence": "The systemic rupture McDonough had described as imminent did not happen.",
+   "unsupported": [
+    "The systemic rupture McDonough had described as imminent did not happen"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "removed"
+  },
+  {
+   "sentence": "Its models were proprietary.",
+   "unsupported": [
+    "Its models were proprietary."
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "Its models were quantitative."
+  },
+  {
+   "sentence": "The Nobel laureates were not frauds.",
+   "unsupported": [
+    "Nobel",
+    "The Nobel laureates were not frauds."
+   ],
+   "layer": [
+    "entity",
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "removed"
+  },
+  {
+   "sentence": "Which brings it back to the room where this video began — McDonough at the head of the table, the largest banks on Wall Street arranged around him, the Federal Reserve Bank of New York doing something it had not expected to do: pressing the private sector to rescue itself from a private fund whose models had said, with mathematical confidence, that nothing like this could happen.",
+   "unsupported": [
+    "doing something it had not expected to do",
+    "models had said, with mathematical confidence, that nothing like this could happen"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research",
+    "not in research"
+   ],
+   "action": "clause_cut",
+   "result": "Brings it back to the room where this video began — McDonough at the head of the table, the largest banks on Wall Street arranged around him, that nothing like this could happen."
+  },
+  {
+   "sentence": "The Nobel Prize didn't cause the collapse.",
+   "unsupported": [
+    "Nobel Prize",
+    "The Nobel Prize didn't cause the collapse."
+   ],
+   "layer": [
+    "entity",
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "removed"
+  }
+ ],
+ "stages": [
+  {
+   "stage": "plan",
+   "words": 655
+  },
+  {
+   "stage": "hook",
+   "words": 111
+  },
+  {
+   "stage": "section_1",
+   "words": 206
+  },
+  {
+   "stage": "section_2",
+   "words": 323
+  },
+  {
+   "stage": "section_3",
+   "words": 181
+  },
+  {
+   "stage": "section_4",
+   "words": 313
+  },
+  {
+   "stage": "section_5",
+   "words": 177
+  },
+  {
+   "stage": "section_6",
+   "words": 371
+  },
+  {
+   "stage": "section_7",
+   "words": 517
+  },
+  {
+   "stage": "finalize_in",
+   "words": 2088
+  },
+  {
+   "stage": "before_refine",
+   "words": 2130
+  },
+  {
+   "stage": "after_refine",
+   "words": 1837
+  },
+  {
+   "stage": "before_refill",
+   "words": 1824
+  },
+  {
+   "stage": "after_refill",
+   "words": 2324
+  },
+  {
+   "stage": "finalize_out",
+   "words": 1898
+  },
+  {
+   "stage": "review",
+   "words": 1964
+  },
+  {
+   "stage": "final_check",
+   "words": 1857
+  }
+ ],
+ "final": "In one month, Long-Term Capital Management lost 44 percent of everything it had. Not over a bad year. Not through a slow unraveling. One month. And the firm that lost it was run by some of the most decorated minds in modern finance. The Federal Reserve Bank of New York organized a private rescue meeting to keep the fund from disorderly liquidation. It called one anyway.\n\nIn September 1998, William J. McDonough of the New York Fed gathered representatives from fourteen major banks and securities firms on Wall Street and laid out the situation in terms that left little room for interpretation. Its positions were so large, so deeply tied to major Wall Street dealers and counterparties, that an uncontrolled liquidation wouldn't just end the fund. McDonough's warning was specific: a disorderly unwinding could force a \"fire sale\" that could \"cause widespread disruption\" in financial markets.\n\nSo he pressed them. Not with a government check, not with a federal takeover — with the argument that the people most exposed to the damage were sitting in that room, and a private consortium was preferable to the alternative. On September 23rd, they agreed. Fourteen firms put in $3.625 billion in exchange for a stake that substantially diluted the fund's existing shareholders. The smartest fund in the world had just needed Wall Street to save it from itself.\n\nWhat Meriwether brought to LTCM wasn't just a trading strategy — it was a culture, transplanted whole from Salomon Brothers, where he'd run the fixed-income arbitrage desk and risen to vice chairman before a Treasury-bond trading scandal ended his tenure there. The scandal cost him Salomon. What it didn't cost him was the model he'd spent years building: a tight partnership of quantitative traders who believed markets could be read like equations, that price was occasionally wrong, and that wrong prices had to eventually correct.\n\nHe rebuilt that partnership at LTCM and staffed it with people who could prove it mathematically. Myron Scholes and Robert C. Merton joined as key figures whose quantitative models underpinned LTCM's relative-value trades, while the fund was still running money.\n\nThe strategy they ran together was called convergence trading, and its internal logic was clean. Find two securities that should, by any rational measure, price close to each other — a U.S. Treasury bond and a closely related instrument, say — and when the market temporarily misprices one against the other, buy the cheap one and short the expensive one simultaneously. Hold both positions until the gap closes, which the models said it would, and collect the spread. The long position and the short offset each other, leaving the fund exposed not to the direction of the market but only to the size of the gap between two things that were supposed to track each other.\n\nIn practice, the gap kept closing, and the returns were striking. Net of fees, LTCM returned 19.9% in 1994. Then 42.8% in 1995. Then 40.8% in 1996. Then 17.1% in 1997. Four consecutive years of gains, in a fund designed to be indifferent to whether stocks rose or fell. The models weren't predicting markets — they were finding mispricings the market itself had already created, and waiting for gravity to do the rest.\n\nThe strategy was called market-neutral, and for four years the results made that label look like an understatement.\n\nBy the end of 1997, LTCM did something rare: it handed money back, returning roughly two and three-quarter billion dollars of capital to investors.\n\nThat decision, made at the peak of the fund's confidence in its own models, compressed the equity base precisely when the leverage ratios were already high — meaning that when 1998 arrived, the cushion between the fund's assets and its obligations was thinner than it might otherwise have been. The return of capital was not a warning sign at the time. In retrospect, it was the moment the structure became most fragile.\n\nThe capital supporting LTCM's leveraged positions contracted. Every dollar of equity now had to absorb more of the downside if the models were wrong.\n\nWhat the 1997 decision quietly revealed was a fault line that would only become visible under stress. Scholes and Merton's quantitative framework was built to exploit pricing anomalies that the models identified across similar securities. What it did not fully account for — what the collapse would later expose as a point of sharp disagreement — was whether those models could hold during the kind of market stress that had no recent precedent to learn from. In 1997, that question felt academic.\n\nSo the capital went out the door, the trades stayed open, and the cushion got thinner.\n\nBy early 1998, LTCM had accumulated more than $125 billion in borrowed money set against roughly $5 billion in equity. That ratio — about twenty-five dollars borrowed for every dollar the fund actually owned — was the product of two instruments used together: securities repurchase agreements and derivatives, which together let the fund build extraordinary leverage, with major banks extending financing on very favorable terms and, in some cases, little or no initial margin. Goldman Sachs, Merrill Lynch, J.P. Morgan, UBS: major Wall Street dealers were all on the other side of these arrangements.\n\nWhy so little resistance? Because the models said the trades were safe. The net exposure, on paper, was small. When a counterparty looked at LTCM's books, the risks seemed to cancel out. What they were not measuring — what the structure made difficult to see — was the scale of what would need to be sold if the canceling stopped.\n\nWhen UBS wanted exposure to LTCM's returns, it arranged a special transaction specifically designed to get closer to the fund. It would later write off $680 million from that position alone.\n\nThat is the turn the models obscured. The leverage wasn't the product of recklessness — it was the logical conclusion of certainty. And the banks kept lending because they believed it too.\n\nOn September 2, 1998, John Meriwether sent his investors a letter. Not a quarterly update, not a reassurance — a confession. The fund had suffered, in his own words, \"a one-month loss of 44 percent.\" The firm had been, he wrote, \"severely impacted\" by the market turmoil, and it was now seeking a capital infusion to survive.\n\nThe letter also warned, in language that has been widely quoted, that the firm had been hit by a 'severe liquidity crisis.' The bluntness of that language, coming from Meriwether, was itself a signal of how little room remained.\n\nTo understand what produced that number, you have to go back to what the models assumed. Convergence trades were built on a single premise: that gaps between similar securities close. The market turmoil did the opposite. Gaps didn't narrow — they widened. And because LTCM had borrowed heavily across its positions, the damage compounded fast.\n\nForty-four percent gone in a single month. Then the rest followed. By late September 1998, LTCM had lost about 90% of its capital, and its losses for the year reached about $4.6 billion of its $4.7 billion capital base. What remained was a fund that was, in any practical sense, empty, still sitting on top of massive open positions it could no longer support.\n\nThat asymmetry is what made the situation everyone's problem. The losses were LTCM's. The positions were the world's.\n\nMcDonough repeated that warning in public testimony. That was not a forecast. By late September, it was an imminent operational question. If the fund collapsed and those positions hit the market at once, the act of selling would crater the prices of the very assets the creditors held. The rescue wasn't charity. It was the creditors protecting themselves from a flood they had helped build.\n\nMcDonough's public framing was deliberate: this was a private-sector solution to a private-sector problem. A $3.625 billion recapitalization, spread across fourteen institutions, bought the fund time to unwind its positions in an orderly way rather than all at once. In exchange, the creditors took control of the fund. The partners who had built it, run it, and staked their reputations on it were substantially diluted out of it.\n\nOn September 23, 1998, the private-sector parties reached an agreement providing a capital infusion of approximately three-and-a-half billion dollars, the figure McDonough cited publicly, with the precise recapitalization amount recorded as $3.625 billion. The September 23rd agreement came after weeks in which the fund's capital had been nearly entirely consumed, and it arrived not as a preventive measure but as a last available alternative to immediate collapse.\n\nFourteen institutions joined that rescue, and that number is not incidental. It reflects how widely the financing had been distributed, how many institutions had extended credit on favorable terms, and how many balance sheets were now entangled in the same set of positions.\n\nThe models had said the positions were safe because they offset each other. What they could not price was the cost of being forced to sell everything simultaneously into a market with no buyers. That was never a model failure in the abstract. In September 1998, it became a balance sheet.\n\nThe exact terms of how that wind-down proceeded — the private negotiations, the internal records, the full accounting of each counterparty's exposure — were settled away from any public regulatory record and remain, in part, disputed or undisclosed. Clearly is that the rescue was organized.\n\nBut the question the rescue raised was one the rescue itself could not answer. What it does not resolve is what the Fed's willingness to convene that room, to press those firms, to put its institutional weight behind a consortium rescue — what that signals about where private risk ends and collective exposure begins. LTCM was a private fund. Its models were quantitative. Its leverage was assembled through contracts between consenting institutions. And yet the moment it failed, none of that privacy held. The consequences were everyone's problem.\n\nMcDonough's role was to press the assembled banks toward a collective answer, because no individual firm had an incentive to act alone — acting alone meant absorbing costs while others waited. The Fed's institutional weight was what made a room full of competitors behave, for that moment, like a consortium.\n\nThe returns were real. The certainty those returns produced was not irrational — it was the logical conclusion of the evidence available. And that certainty justified the leverage. And the leverage made the fund, without anyone announcing it, a risk that extended far beyond the people who had chosen to take it.\n\nIt began with a 44 percent loss in a single month, at a fund run by some of the most decorated minds in modern finance. It ended in a room at the Federal Reserve Bank of New York, where fourteen banks and securities firms put up $3.625 billion to save it from itself. The models didn't cause it. The certainty did — the certainty that made the leverage feel like precision rather than exposure, until the moment the market stopped cooperating and the only thing left to do was fill a room with creditors and explain, plainly, what they had all built together."
+}

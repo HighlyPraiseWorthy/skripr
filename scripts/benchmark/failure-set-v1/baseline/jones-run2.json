@@ -1,0 +1,230 @@
+{
+ "id": "jones",
+ "run": 2,
+ "words": 1987,
+ "primaryPer1k": 0,
+ "overreachPer1k": 0,
+ "finalErrors": [],
+ "removed": [
+  {
+   "i": 3,
+   "sentence": "Around noon on May 10, 1979, Arthur Gerald Jones kissed his wife goodbye and walked out the front door of their suburban Chicago home.",
+   "script_quote": "kissed his wife goodbye and walked out the front door",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research says he 'rushed out the door around noon on May 10, 1979, promising his wife he would return after a business meeting' — no kiss is mentioned in any research source.",
+   "first_seen": "section_1",
+   "seen_in": [
+    "section_1",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review"
+   ],
+   "in_final": false,
+   "removed_after": "review"
+  },
+  {
+   "i": 18,
+   "sentence": "Not that night — the morning after, which means some part of her waited, expected him to walk back through the door, expected an explanation.",
+   "script_quote": "which means some part of her waited, expected him to walk back through the door, expected an explanation",
+   "category": "unsupported_attribution",
+   "verdict": "error",
+   "why": "The research states only that she reported him missing on May 11; her internal feelings or expectations are not stated anywhere in the research.",
+   "first_seen": "section_1",
+   "seen_in": [
+    "section_1",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review"
+   ],
+   "in_final": false,
+   "removed_after": "review"
+  },
+  {
+   "i": 20,
+   "sentence": "What she had instead was the image of a man moving too quickly, dressed wrong, rattled enough to forget something he never forgot, saying something deliberately vague before vanishing into a Tuesday afternoon.",
+   "script_quote": "rattled enough to forget something he never forgot",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research says he was 'frazzled enough when he left that he forgot to put on his cherished bracelet' but does not say he 'never forgot' it — that he habitually always wore it is not stated.",
+   "first_seen": "section_1",
+   "seen_in": [
+    "section_1",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review"
+   ],
+   "in_final": false,
+   "removed_after": "review"
+  },
+  {
+   "i": 20,
+   "sentence": "What she had instead was the image of a man moving too quickly, dressed wrong, rattled enough to forget something he never forgot, saying something deliberately vague before vanishing into a Tuesday afternoon.",
+   "script_quote": "vanishing into a Tuesday afternoon",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "May 10, 1979 was a Thursday, not a Tuesday. The research gives the date as May 10, 1979, which does not correspond to a Tuesday.",
+   "first_seen": "section_1",
+   "seen_in": [
+    "section_1",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review"
+   ],
+   "in_final": false,
+   "removed_after": "review"
+  },
+  {
+   "i": 27,
+   "sentence": "That figure tells you something about the scale at which Jones operated when his judgment failed him, and it helps explain why, a few months before he walked out the door in that tennis shirt, he sold his seat on the Board of Trade to cover $210,000 in debt.",
+   "script_quote": "he sold his seat on the Board of Trade to cover $210,000 in debt",
+   "category": "contradiction",
+   "verdict": "error",
+   "research_quote": "A few months before he ran off, Jones sold his slot on the Board of Trade to pay off $210,000 in debts.",
+   "why": "The research says he sold his 'slot' to 'pay off' $210,000 in debts; the script says he sold it to 'cover' the debt, which is consistent, but the script also earlier (sentence 27) attributes the $30,000 basketball bet as explaining why he sold the seat — the research does not causally link the baske",
+   "first_seen": "section_2",
+   "seen_in": [
+    "section_2",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill"
+   ],
+   "in_final": false,
+   "removed_after": "after_refill"
+  },
+  {
+   "i": 37,
+   "sentence": "And now a man in his same world, in his same suburb, was dead.",
+   "script_quote": "a man in his same world, in his same suburb, was dead",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "research_quote": "In April 1979, a fellow local commodities trader was shot and killed in his suburban home by masked intruders.",
+   "why": "The research says the trader was killed 'in his suburban home' but does not specify it was the same suburb as Jones; the script asserts 'his same suburb' as fact.",
+   "first_seen": "section_2",
+   "seen_in": [
+    "section_2",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review"
+   ],
+   "in_final": false,
+   "removed_after": "review"
+  },
+  {
+   "i": 145,
+   "sentence": "Forty years earlier, he had kissed his wife goodbye, said the meeting was not in a business office, and driven away in the wrong clothes.",
+   "script_quote": "Forty years earlier, he had kissed his wife goodbye",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research does not mention Jones kissing his wife goodbye; it only states he promised to return after a business meeting and sped away. 'Kissed goodbye' is an invented detail.",
+   "first_seen": "section_7",
+   "seen_in": [
+    "section_7",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review"
+   ],
+   "in_final": false,
+   "removed_after": "review"
+  }
+ ],
+ "draftErrors": 8,
+ "rejected": 1,
+ "stages": [
+  {
+   "stage": "plan",
+   "words": 634
+  },
+  {
+   "stage": "hook",
+   "words": 67
+  },
+  {
+   "stage": "section_1",
+   "words": 280
+  },
+  {
+   "stage": "section_2",
+   "words": 326
+  },
+  {
+   "stage": "section_3",
+   "words": 340
+  },
+  {
+   "stage": "section_4",
+   "words": 208
+  },
+  {
+   "stage": "section_5",
+   "words": 315
+  },
+  {
+   "stage": "section_6",
+   "words": 287
+  },
+  {
+   "stage": "section_7",
+   "words": 617
+  },
+  {
+   "stage": "finalize_in",
+   "words": 2373
+  },
+  {
+   "stage": "before_refine",
+   "words": 2439
+  },
+  {
+   "stage": "after_refine",
+   "words": 2439
+  },
+  {
+   "stage": "before_refill",
+   "words": 2347
+  },
+  {
+   "stage": "after_refill",
+   "words": 2347
+  },
+  {
+   "stage": "finalize_out",
+   "words": 2165
+  },
+  {
+   "stage": "review",
+   "words": 2214
+  },
+  {
+   "stage": "final_check",
+   "words": 1987
+  }
+ ],
+ "final": "In May of 1979, a Chicago commodities broker walked out of his house, told his wife he'd be back after a business meeting, and was never seen by her again. A court eventually declared him legally dead, and the people he left behind started collecting survivor benefits.\n\nAround noon on May 10, 1979, Arthur Gerald Jones rushed out the door of his suburban Chicago home. He told Joanne he had a business meeting. He told her he'd be back.\n\nHe was 40 years old, and he was wearing a tennis shirt and slacks.\n\nNot a suit. Not the clothes of a man heading to a professional meeting. And in that rush, he left something behind, his bracelet, a piece of jewelry he cherished enough that its absence was worth noting.\n\nJoanne remembered one more thing he said before he sped away. \"The meeting is not in a business office.\"\n\nIt closes a door without opening another one. And then he was gone, the car pulling out, and that was the last time Joanne Jones saw her husband.\n\nShe reported him missing the following morning, May 11.\n\nThe life Jones was running from looked, from the outside, like success. A commodities trader at the Chicago Board of Trade, a sprawling ranch home in the suburbs with a volleyball court out back. The kind of address that signals arrival. But the machinery underneath that picture had been grinding apart for years, and by early 1979 it was nearly done.\n\nJoanne Jones told investigators that her husband had once put $30,000 on a single basketball game. A few months before he disappeared, he sold his seat on the Board of Trade to pay off $210,000 in debts. A trading seat is not just a financial asset; it is the credential, the access, the reason a commodities broker exists professionally. Selling it to pay off what you owe means the losses have already consumed everything else.\n\nAfter the seat was gone, Joanne suspected he had gone to work for the mob. Whether that was true or not, Jones had forged her signature on a second mortgage application while scrambling for cash — a detail that shows how far past the edge he already was. He was not managing a difficult situation. He was falsifying documents to stay ahead of it, one step at a time.\n\nThen, in April 1979, a fellow local commodities trader was shot and killed in his suburban home by masked intruders, and Jones took off shortly after, court papers would later say, \"to get a fresh start.\" The forged mortgage was already out there. And now a man in his same world was dead. The exit that had been forming in the background suddenly had a deadline.\n\nBefore he left Chicago, Jones made one transaction. By his own account to authorities, he paid an associate $800 for three documents: a fake Illinois driver's license, a fake birth certificate, and a Social Security card. Together, those three pieces of paper would do what no amount of running alone could accomplish. They would give him a name to answer to.\n\nThe Social Security number, though, was not invented. It belonged to a real person, a man named Clifton Goodenough, who was living his own life, working his own jobs, filing his own taxes, with no connection to Jones. Jones had purchased the right to attach Goodenough's federal identity to a fabricated paper person and walk out of Illinois as someone who, on paper, had always existed.\n\nWhat $800 bought in 1979 was not just cover. It was infrastructure. A driver's license is the document that produces other documents — it opens bank accounts, satisfies employers, clears background checks. A birth certificate is the anchor underneath all of it, the proof that the name on the license was ever born. And a Social Security number is the thread the federal government pulls to find you, tax you, and pay you. Jones had all three, cross-referencing each other, each one making the others more credible.\n\nThe specific number he carried was the dangerous part for Goodenough. Every year Jones earned casino income in Las Vegas under that number, the IRS recorded it as Goodenough's income. Goodenough, a nurse at a Phoenix veterans hospital, began fighting the agency over Las Vegas earnings from casinos where he had never worked. The IRS garnished his wages. It pulled money from his bank account. That years-long dispute surfaced the discrepancy — and pointed investigators toward the name Joseph Richard Sandelli and the man using it.\n\nEight hundred dollars, spent once, before he ever left the city.\n\nWhat investigators found near O'Hare was a silver Buick and a pair of sunglasses. No note. No body. No sign of violence. Just a car left where someone would eventually find it, and the implication that followed naturally from its presence there — that a man had boarded a plane and gone somewhere he didn't come back from, or hadn't come back at all.\n\nThat implication was enough. Without a body, without a confirmed sighting, and with years of silence accumulating, an Illinois court declared Arthur Gerald Jones legally dead in 1986. The government moved accordingly. Social Security paid his wife and three children $47,000 in survivor benefits — money flowing to a family that had, by every available measure, lost its husband and father.\n\nThe abandoned car had shaped the disappearance in a way that pointed away from escape and toward tragedy. A man running for his life does not leave evidence of departure; he leaves evidence of absence. And absence, given enough time, becomes death on paper.\n\nWhich means Jones's family wasn't just left behind. They were left behind in a way that the government formalized, and compensated, while Jones was still alive.\n\nHe didn't stay still after leaving Chicago. For a time he moved — through California, through Florida — before the movement itself became the problem. Drifting draws its own kind of attention. Staying somewhere, building something that looks like a life, is what actually makes a person disappear.\n\nHis attorney, Stephen Stein, said Jones worked at the Desert Inn first, then for a local casino's sports book. He understood odds, action, the rhythm of money moving through a line. Under a different name, in a different city, the same knowledge that had helped destroy him in Chicago was now paying his rent.\n\nHe and his girlfriend lived on a block described in reporting as stucco homes, dusty lots, and a few horse corrals. They were registered to vote. Whatever administrative thread you might pull to find a man — voter rolls, employment records, a driver's license — Sandelli was on it. Jones had not hidden himself below the surface of civic life. He had planted himself inside it.\n\nAnd his girlfriend's family knew him only as Joseph Richard Sandelli, according to Stein. Not a man in hiding. A man with a name, a neighborhood, a partner, a job. The name was the whole story as far as anyone around him could tell — because it was the only story they had ever been given.\n\nA neighbor named Leslie Lamoya, who had lived down the street for ten years, told reporters she had never seen the man. Not once.\n\nThat is not the profile of someone cowering. It is the profile of someone utterly unremarkable — which, for a man legally dead in Illinois, was exactly the point.\n\nThe agency's records showed \"extra income\" flowing to his Social Security number out of Las Vegas — casino earnings, accumulating annually, attached to a man who spent his working life caring for veterans in Arizona. Goodenough pushed back, and the IRS pushed harder. His wages were garnished. Money came out of his bank account. The dispute didn't resolve in a year or two; it dragged on, year after year, his family absorbing the cost and the bureaucratic grind of proving a negative — that he had not earned money in a city he hadn't worked in.\n\nAt some point, Goodenough reported the discrepancy to the Social Security Administration. That complaint is what opened the thread.\n\nThe investigation it triggered led to the Nevada DMV. Records there showed that in 1988, the state had issued a driver's license to a man named Joseph Richard Sandelli — using Clifton Goodenough's Social Security number. And then, in May 2008, that same man had walked into a Henderson DMV office to renew it.\n\nThat renewal was the mistake. Investigators contacted the DMV and found a live record: a name, a face, a current address — the thread had somewhere to go. A man who had just handed officials a reason to look directly at him.\n\nJones had carried Goodenough's number for decades without consequence.\n\nWhen investigators sat down with the man who had been living as Joseph Richard Sandelli, they asked him directly whether he was Arthur Gerald Jones, the Chicago commodities trader who had walked away from his family and his debts decades earlier. He said yes.\n\nThat admission carried its own particular weight. No lawyer speaking for him, no document surfacing to answer the question — Jones himself confirmed that the name on every piece of paper he had carried since 1979 was not his. He had spent more than thirty years making that name real, and then, in a single exchange with investigators, he made it disappear.\n\nThe charges that followed were four felony counts related to identity theft and fraud. But the case that went to a Clark County courtroom was narrower than that. In September, Jones pleaded guilty to a single felony: using a false name to obtain a driver's license or identity card. The deal with prosecutors allowed him to avoid trial on the remaining felony counts, including identity theft. One charge, one plea, and the rest of the criminal exposure was resolved without a jury ever seeing the full shape of what he had done.\n\nClark County District Judge James Bixler sentenced him on January 31, 2012. Jones was 73 years old. The sentence was three years of probation. No prison time — three years of reporting requirements for a man who had spent thirty-two years building a life the system had no record of.\n\nBut the financial accounting was not gentle. Bixler ordered Jones to repay more than $78,600 to the Social Security Administration for its payments to his family after an Illinois court declared him dead. That figure represented the government's loss — the cost of the program paying benefits to a family that had, by every available record, lost its husband and father.\n\nOn top of that, Jones was ordered to pay about $11,400 to Clifton Goodenough — restitution for the missed work and legal fees Goodenough had absorbed across years of fighting the IRS over casino income he had never earned. His attorney, Stephen Stein, said the money would come out of Jones's Social Security benefits.\n\nThe loop closed in the most bureaucratic way imaginable. The same federal program that had paid his family while he was gone would now pay his debts to that program, check by check, out of what he had accumulated living as someone else.\n\nWhich brings it back to a Henderson DMV office, a routine errand, a man handing over a name that was not his to a clerk who had no reason to doubt it. He had done that same transaction dozens of times in the decades before. This time, investigators were already pulling the thread.\n\nMore than thirty years earlier, he had rushed out the door, told his wife the meeting was not in a business office, and driven away in the wrong clothes. Whatever he imagined that morning — the life he was escaping toward, the distance he thought he could put between himself and everything he owed — it ended with his own voice, answering a question with his real name."
+}

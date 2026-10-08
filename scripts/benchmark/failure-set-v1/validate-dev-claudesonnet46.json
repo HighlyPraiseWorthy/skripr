@@ -1,0 +1,307 @@
+[
+ {
+  "id": "C030",
+  "label": {
+   "label": "unsupported",
+   "material": true,
+   "evidence": [
+    "F9"
+   ],
+   "note": "paroled/released supported; age 80 not derivable (no birth year in research)"
+  },
+  "judge": {
+   "flag": false,
+   "material": false,
+   "why": []
+  },
+  "sentence": "What remained was Frank Freshwaters — eighty years old, paroled, released, and finally, unambiguously himself again."
+ },
+ {
+  "id": "C033",
+  "label": {
+   "label": "overinterpretation",
+   "material": false,
+   "evidence": [
+    "F26",
+    "F29"
+   ],
+   "note": "implies earlier indictments did not name him; 2009 indictments did",
+   "ambiguous": true
+  },
+  "judge": {
+   "flag": false,
+   "material": false,
+   "why": []
+  },
+  "sentence": "The eighth put Guzmán's name on it directly."
+ },
+ {
+  "id": "C043",
+  "label": {
+   "label": "overinterpretation",
+   "material": false,
+   "evidence": [
+    "F13"
+   ],
+   "note": "F13 has Smith on release and prosecutors' objection in one fact but does not say Smith confirmed the objection"
+  },
+  "judge": {
+   "flag": false,
+   "material": false,
+   "why": []
+  },
+  "sentence": "JoEllen Smith, the Ohio Parole Board's spokeswoman, confirmed both the board's decision and the prosecutors' objection in the same breath."
+ },
+ {
+  "id": "C047",
+  "label": {
+   "label": "legitimate_inference",
+   "material": false,
+   "evidence": [
+    "F7"
+   ],
+   "note": "gate overblock"
+  },
+  "judge": {
+   "flag": true,
+   "material": false,
+   "why": [
+    "unsupported: reducing the equity base the fund was running against its positions :: F7 states capital was returned but does not describe the effect on the equity base relative to positions."
+   ]
+  },
+  "sentence": "Two and three-quarter billion dollars returned to outside investors, reducing the equity base the fund was running against its positions."
+ },
+ {
+  "id": "C051",
+  "label": {
+   "label": "overinterpretation",
+   "material": false,
+   "evidence": [
+    "F13"
+   ],
+   "note": "Flores brothers late 2008 supported; that every number traces back to them is not"
+  },
+  "judge": {
+   "flag": false,
+   "material": false,
+   "why": []
+  },
+  "sentence": "Each of those numbers traces back to a chain of evidence that started with two brothers deciding, in late 2008, that cooperation was the better option."
+ },
+ {
+  "id": "C054",
+  "label": {
+   "label": "misattached",
+   "material": false,
+   "evidence": [
+    "F7",
+    "F13"
+   ],
+   "note": "Akron is the accident site, not the courtroom; rest is narration"
+  },
+  "judge": {
+   "flag": false,
+   "material": false,
+   "why": []
+  },
+  "sentence": "Frank Freshwaters, wanted on a manslaughter sentence from an Akron courtroom, existed on paper as William Harold Cox, and William Harold Cox existed without incident."
+ },
+ {
+  "id": "C069",
+  "label": {
+   "label": "overinterpretation",
+   "material": false,
+   "evidence": [
+    "F1"
+   ],
+   "note": "event supported; 'looked to some like a provocation' attributes an unstated reaction"
+  },
+  "judge": {
+   "flag": false,
+   "material": false,
+   "why": []
+  },
+  "sentence": "When the Crime Commission stood before reporters on February 14, 2013, and named Joaquín Guzmán Loera Public Enemy Number One — not Mexico's problem, Chicago's — the declaration looked, to some, like a provocation larger than the evidence behind it."
+ },
+ {
+  "id": "C070",
+  "label": {
+   "label": "unsupported",
+   "material": false,
+   "evidence": [],
+   "note": "'operating from the mountains of Sinaloa' outside research"
+  },
+  "judge": {
+   "flag": false,
+   "material": false,
+   "why": []
+  },
+  "sentence": "By applying it to a man operating from the mountains of Sinaloa, the Commission was making a precise claim: that Guzmán's organization had embedded itself in Chicago deeply enough to earn the title on its own terms."
+ },
+ {
+  "id": "C074",
+  "label": {
+   "label": "legitimate_inference",
+   "material": false,
+   "evidence": [
+    "F14",
+    "F21"
+   ],
+   "note": "pressed, private-sector solution"
+  },
+  "judge": {
+   "flag": true,
+   "material": false,
+   "why": [
+    "unsupported: the fourteen firms were not ordered in by the government :: Research confirms McDonough pressed firms but does not explicitly characterize whether it was voluntary or ordered."
+   ]
+  },
+  "sentence": "The fourteen firms that came to the table weren't there because the government ordered them in."
+ },
+ {
+  "id": "C075",
+  "label": {
+   "label": "unsupported",
+   "material": false,
+   "evidence": [],
+   "note": "generalisation about Fed practice not in research"
+  },
+  "judge": {
+   "flag": false,
+   "material": false,
+   "why": []
+  },
+  "sentence": "The Federal Reserve Bank of New York doesn't typically call meetings like this."
+ },
+ {
+  "id": "C077",
+  "label": {
+   "label": "unsupported",
+   "material": true,
+   "evidence": [],
+   "note": "invented scene detail about a seizure site"
+  },
+  "judge": {
+   "flag": false,
+   "material": false,
+   "why": []
+  },
+  "sentence": "It was far enough downstream in the operation that finished product and counted cash were both sitting there simultaneously."
+ },
+ {
+  "id": "C078",
+  "label": {
+   "label": "overinterpretation",
+   "material": false,
+   "evidence": [
+    "F61",
+    "F65"
+   ],
+   "note": "interpretive claim about smuggling methods"
+  },
+  "judge": {
+   "flag": false,
+   "material": false,
+   "why": []
+  },
+  "sentence": "Each method addressed a specific vulnerability in the others."
+ },
+ {
+  "id": "C079",
+  "label": {
+   "label": "legitimate_inference",
+   "material": false,
+   "evidence": [
+    "F56"
+   ],
+   "note": "evidence types supported; functions are narration"
+  },
+  "judge": {
+   "flag": true,
+   "material": false,
+   "why": [
+    "unsupported: The recordings captured communications the cartel believed were private :: F56 confirms intercepted recordings existed but does not state the cartel believed them to be private."
+   ]
+  },
+  "sentence": "Each category addressed a different layer of the operation: the recordings captured communications the cartel believed were private; the ledgers showed the money moving; the photographs and videos placed people and product in the same frame."
+ },
+ {
+  "id": "C081",
+  "label": {
+   "label": "overinterpretation",
+   "material": false,
+   "evidence": [
+    "F40"
+   ],
+   "note": "reads intent into consecutive sentence"
+  },
+  "judge": {
+   "flag": false,
+   "material": false,
+   "why": []
+  },
+  "sentence": "It is the court stating, with arithmetic, that even the theoretical possibility of a future legal argument does not leave a door open."
+ },
+ {
+  "id": "C094",
+  "label": {
+   "label": "legitimate_inference",
+   "material": false,
+   "evidence": [
+    "F0",
+    "F15",
+    "F18"
+   ],
+   "note": "1975 to 2015 = 40 years; judge false positive"
+  },
+  "judge": {
+   "flag": true,
+   "material": true,
+   "why": [
+    "unsupported*: Ohio would not get another clear opportunity for forty years :: No research fact characterizes the gap after 1975 as 'forty years' or describes it as Ohio's next opportunity; 1975 to 2015 is 40 years but the framing of 'clear opportunity' is not in the research."
+   ]
+  },
+  "sentence": "Ohio would not get another clear opportunity for forty years."
+ },
+ {
+  "id": "C104",
+  "label": {
+   "label": "supported",
+   "material": false,
+   "evidence": [
+    "F5",
+    "F14"
+   ],
+   "note": "judge false positive"
+  },
+  "judge": {
+   "flag": true,
+   "material": false,
+   "why": [
+    "unsupported: gathered them on Wall Street :: No research fact specifies the meeting location as Wall Street."
+   ]
+  },
+  "sentence": "In September 1998, William J. McDonough of the New York Fed gathered representatives from fourteen major banks and securities firms on Wall Street and laid out the situation in terms that left little room for interpretation."
+ },
+ {
+  "id": "C135",
+  "label": {
+   "label": "legitimate_inference",
+   "material": false,
+   "evidence": [
+    "F0",
+    "F4",
+    "F10"
+   ],
+   "note": ""
+  },
+  "judge": {
+   "flag": true,
+   "material": false,
+   "why": [
+    "unsupported: Freshwaters became William Harold Cox between 1975 and his 2015 arrest :: Research confirms the alias but does not specify when he adopted it relative to 1975."
+   ]
+  },
+  "sentence": "Somewhere between the 1975 refusal in West Virginia and his arrest in rural Brevard County, Florida, Frank Freshwaters became William Harold Cox."
+ }
+]

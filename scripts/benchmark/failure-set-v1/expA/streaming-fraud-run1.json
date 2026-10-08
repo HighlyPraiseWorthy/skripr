@@ -1,0 +1,344 @@
+{
+ "id": "streaming-fraud",
+ "run": 1,
+ "words": 1971,
+ "primaryPer1k": 0,
+ "overreachPer1k": 0,
+ "finalErrors": [],
+ "removed": [
+  {
+   "i": 69,
+   "sentence": "What CC-3 was delivering wasn't music in any conventional sense, and he knew it.",
+   "script_quote": "he knew it",
+   "category": "unsupported_attribution",
+   "verdict": "error",
+   "why": "The research quotes CC-3's email but does not state that CC-3 knew the music was not legitimate; attributing knowledge is unsupported.",
+   "first_seen": "section_4",
+   "seen_in": [
+    "section_4",
+    "finalize_in"
+   ],
+   "in_final": false,
+   "removed_after": "finalize_in"
+  }
+ ],
+ "draftErrors": 5,
+ "rejected": 1,
+ "gate": {
+  "flags": 17,
+  "actions": {
+   "removed": 4,
+   "clause_cut": 2,
+   "rewritten": 11
+  }
+ },
+ "gateLog": [
+  {
+   "sentence": "Multiply that out and the operation was generating roughly 661,440 streams every single day.",
+   "unsupported": [
+    "the operation was generating roughly 661,440 streams every single day"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"for a total of approximately 661,440 streams per day\""
+   ],
+   "action": "removed"
+  },
+  {
+   "sentence": "The operation had reached a point where Smith's account of it peaked at as many as 10,000 active bot accounts on the streaming platforms simultaneously — each one running on a virtual computer, cycling through browser tabs, each tab logged into a separate account, each account streaming.",
+   "unsupported": [
+    "as many as 10,000 active bot accounts on the streaming platforms simultaneously"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"At certain points, SMITH had as many as 10,000 active Bot Accounts on the Streaming Platforms.\""
+   ],
+   "action": "clause_cut",
+   "result": "The operation had reached a point cycling through browser tabs, each tab logged into a separate account, each account streaming."
+  },
+  {
+   "sentence": "A single song needs to be heard hundreds of thousands of times before it generates money a person could live on.",
+   "unsupported": [
+    "A single song needs to be heard hundreds of thousands of times"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "Smith spread his automated streams across thousands of songs to avoid triggering suspicion about any single one."
+  },
+  {
+   "sentence": "Smith had read the terms.",
+   "unsupported": [
+    "Smith had read the terms."
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "Smith claimed he had not violated the terms of his agreement."
+  },
+  {
+   "sentence": "The operation had three moving parts, and Smith built each one from scratch.",
+   "unsupported": [
+    "Smith built each one from scratch"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "The operation had three moving parts, and Smith assembled each one."
+  },
+  {
+   "sentence": "Those addresses became the registration credentials for his bot accounts, each one signed up under a fake name that matched its fake email.",
+   "unsupported": [
+    "each one signed up under a fake name that matched its fake email"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"typically in fake names corresponding to the Fake Email Accounts\""
+   ],
+   "action": "rewritten",
+   "result": "Those addresses became the registration credentials for his bot accounts, typically signed up under fake names corresponding to the fake email accounts."
+  },
+  {
+   "sentence": "The cards came back in those names, and the accounts got funded.",
+   "unsupported": [
+    "The cards came back in those names"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "Those fake names got accepted, and the accounts got funded."
+  },
+  {
+   "sentence": "What the machine needed was an endless supply of raw material to stream — and Smith couldn't generate that himself fast enough.",
+   "unsupported": [
+    "Smith couldn't generate that himself fast enough"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "What the machine needed was an endless supply of raw material to stream — and Smith wrote to a coconspirator that he couldn't run the bots without enough content."
+  },
+  {
+   "sentence": "The platforms, he knew, were watching for anomalies — a track with no promotional history and no organic discovery suddenly accumulating streams at a rate no real audience could produce.",
+   "unsupported": [
+    "a track with no promotional history and no organic discovery"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "The platforms, he knew, were watching for anomalies — streams accumulating at a rate no real audience could produce."
+  },
+  {
+   "sentence": "The bots and macros, he directed, needed to be \"Unde[te]ctable\" — his spelling, his brackets, his word — with \"every safety measure\" in place to avoid detection.",
+   "unsupported": [
+    "his spelling, his brackets, his word"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "The bots and macros, he directed, needed to be \"Unde[te]ctable\" — with \"every safety measure\" in place to avoid detection."
+  },
+  {
+   "sentence": "Streaming platforms don't pay artists from a fixed pot — they pay from a pool, divided proportionally among every rights holder whose music was played in a given period.",
+   "unsupported": [
+    "they pay from a pool, divided proportionally among every rights holder"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "removed"
+  },
+  {
+   "sentence": "Every stream Smith's bots generated claimed a share of that pool.",
+   "unsupported": [
+    "Every stream Smith's bots generated claimed a share of that pool."
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "removed"
+  },
+  {
+   "sentence": "The money didn't appear from nowhere; it came out of what legitimate artists would otherwise have received.",
+   "unsupported": [
+    "it came out of what legitimate artists would otherwise have received"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"a scheme to defraud music streaming platforms and musicians of royalty payments\""
+   ],
+   "action": "rewritten",
+   "result": "The money didn't appear from nowhere; prosecutors say the scheme defrauded both streaming platforms and musicians of royalty payments."
+  },
+  {
+   "sentence": "His catalog of randomized Latin taxonomy and machine-generated audio was drawing from the same reservoir as every working musician on those platforms.",
+   "unsupported": [
+    "Latin",
+    "His catalog of randomized Latin taxonomy"
+   ],
+   "layer": [
+    "entity",
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"CC-3's songs were typically given file names that were a randomized list of letters and numbers\""
+   ],
+   "action": "clause_cut",
+   "result": "Machine-generated audio was drawing from the same reservoir as every working musician on those platforms."
+  },
+  {
+   "sentence": "Smith had known that.",
+   "unsupported": [
+    "Smith had known that."
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "Smith had worked to avoid detection."
+  },
+  {
+   "sentence": "The royalty pool is shared.",
+   "unsupported": [
+    "The royalty pool is shared."
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "removed"
+  },
+  {
+   "sentence": "Every fraudulent stream drew from the same reservoir that paid every legitimate artist on those platforms.",
+   "unsupported": [
+    "drew from the same reservoir that paid every legitimate artist"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "Every fraudulent stream drew from the royalty payments that streaming platforms paid out to artists on those platforms."
+  }
+ ],
+ "stages": [
+  {
+   "stage": "plan",
+   "words": 630
+  },
+  {
+   "stage": "hook",
+   "words": 76
+  },
+  {
+   "stage": "section_1",
+   "words": 205
+  },
+  {
+   "stage": "section_2",
+   "words": 246
+  },
+  {
+   "stage": "section_3",
+   "words": 350
+  },
+  {
+   "stage": "section_4",
+   "words": 385
+  },
+  {
+   "stage": "section_5",
+   "words": 456
+  },
+  {
+   "stage": "section_6",
+   "words": 209
+  },
+  {
+   "stage": "section_7",
+   "words": 406
+  },
+  {
+   "stage": "finalize_in",
+   "words": 2257
+  },
+  {
+   "stage": "before_refine",
+   "words": 2320
+  },
+  {
+   "stage": "after_refine",
+   "words": 2266
+  },
+  {
+   "stage": "before_refill",
+   "words": 2127
+  },
+  {
+   "stage": "after_refill",
+   "words": 2127
+  },
+  {
+   "stage": "finalize_out",
+   "words": 2112
+  },
+  {
+   "stage": "review",
+   "words": 2162
+  },
+  {
+   "stage": "final_check",
+   "words": 1971
+  }
+ ],
+ "final": "Somewhere inside the royalty systems of Spotify, Apple Music, and Amazon Music, billions of streams were being logged for songs that no human being ever chose to play. The music existed, the play counts were real, and the money kept flowing out to a musician in North Carolina for years.\n\nOn October 20, 2017, Michael Smith emailed himself a financial breakdown. Not a pitch to an investor, not a memo to a partner — a private accounting, written to himself, of a machine he had already built and was already running. He laid it out in arithmetic: 52 cloud services accounts, each carrying 20 bot accounts, totaling 1,040 bots active at once. Each bot could stream approximately 636 songs per day. At an estimated half a cent per stream, that was $3,307.20 flowing in daily — $99,216 a month, on pace for more than $1.2 million a year. And that was 2017.\n\nBy June 2019, the scale had grown well past those early projections. Smith messaged his co-conspirators with a figure he put in capital letters: \"We are at 88 million TOTAL STREAMS so far!!!\" The exclamation points were his. The royalties attached to that number were running approximately $110,000 per month.\n\nNo fan queued any of it. No algorithm surfaced it to a curious listener. The stream didn't need a human to choose it. It only needed a system capable of generating the play.\n\nSmith was a musician with a catalog of his own. Royalties per stream run at fractions of a cent, often less than one cent per play. Smith spread his automated streams across thousands of songs to avoid triggering suspicion about any single one.\n\nIf one stream is worth almost nothing, then the only variable that matters is volume.\n\nBy May 2017, he was already moving. On May 11, 2017, he emailed a coconspirator asking for bot accounts on one platform: \"Make up names and addresses[.] [J]ust make sure they all are the same for family member and also make sure everyone is over 18.\" The platforms had rules against exactly this; one of them explicitly prohibited \"artificially increasing play counts\" by \"using any bot, script, or other automated process.\"\n\nThe self-accounting he wrote five months later was the arithmetic of someone who had already tested the model and was now projecting what it could become.\n\nThe operation had three moving parts, and Smith assembled each one. First, accounts. Then, automation. Then, collection.\n\nGetting a fake listener onto a streaming platform required a real-seeming identity behind it — an email address, a name, a payment method. Smith solved the identity problem by buying in bulk. He purchased thousands of email accounts from vendors who sold them exactly that way, wholesale, typically attached to fictitious names. Those addresses became the registration credentials for his bot accounts, typically signed up under fake names corresponding to the fake email accounts. The data entry work of actually creating those accounts — filling out forms, confirming registrations — he paid others to do, including individuals outside the United States and co-conspirators inside it.\n\nPayment was its own layer. Streaming subscriptions require a card on file, and a card on file leaves a trail. Smith went to a Manhattan-based service that issued large batches of corporate debit cards, the kind a company provides to its employees. He told that service the fake names from his bot accounts were his employees. Dozens of them. Those fake names got accepted, and the accounts got funded.\n\nTo stretch those payments further, he signed up for family plans rather than individual subscriptions — lower cost per user, more accounts running per dollar spent.\n\nThen came the concealment problem. Over a thousand accounts logging in from one location would look like exactly what it was. Smith routed each bot through a different virtual private network, so the platforms saw a distributed audience rather than a single source. The virtual computers he ran through cloud services multiplied how many accounts he could operate simultaneously. And the actual streaming — the continuous, looping playback — ran on macros, small pieces of code he purchased and then modified to keep the music playing without interruption.\n\nEach layer addressed a specific detection risk. The fake emails answered identity verification. The debit cards answered payment tracing. The family plans answered subscription cost. The VPNs answered location clustering. The macros answered the question of who, exactly, was sitting there pressing play. Nobody was.\n\nAround 2018, Smith's operation had a content problem. The bots were ready. The accounts were funded and routed and running. What the machine needed was an endless supply of raw material to stream.\n\nThe arrangement started informally, but by February 1, 2019, Smith and CC-3 had signed a formal contract: a Master Services Agreement that put the supply chain on paper. CC-3's company would provide 1,000 to 10,000 songs a month, with Smith holding full ownership; in exchange, Smith would supply the metadata, the song titles, the artist names, and pay CC-3's company each month the greater of $2,000 or 15% of whatever streaming revenue those AI songs generated. CC-3 wasn't just a vendor. He was financially tied to the output.\n\nOn March 11, 2019, CC-3 wrote Smith an email: \"Keep in mind what we're doing musically here... this is not music, it's instant music;).\" Instant music. Generated, packaged, and shipped in bulk, the way a factory ships components.\n\nThe raw audio files arrived with names like \"n_7a2b2d74-1621-4385-895d-b1e4af78d860. mp3\" — randomized strings of letters and numbers that meant nothing to a listener and everything to a system that just needed a file to play. Smith's job was to dress them. He supplied the metadata that would give each file a name and an artist credit on the platforms. The names he chose read like pages from a taxonomy index: \"Zygophyceae,\" \"Zygopteris,\" \"Zymotechnical,\" \"Zymotechny,\" \"Zyzomys.\" The artist names ran the same way — \"Calm Baseball,\" \"Calm Knuckles,\" \"Calorie Screams,\" \"Camel Edible\" — machine-adjacent combinations that filled out a catalog without resembling anything a human act would call itself.\n\nBy October 18, 2018, before the formal contract was even signed, the proof-of-concept phase was already over. Smith reported to his co-conspirators that the AI music had already accumulated hundreds of thousands of streams. CC-4's response: \"we've proved the model works.\"\n\nThe model worked. And now it had a contract guaranteeing its fuel.\n\nOn October 4, 2018, he emailed two co-conspirators with the logic spelled out plainly: \"in order to not raise any issues with the powers that be we need a TON of content with small amounts of Streams.\" That was the evasion strategy in a single sentence. Not fewer bots. Not a smaller operation. More songs — so the streams could be spread thin enough that no individual track drew scrutiny. Concentration was the enemy. Dilution was the cover.\n\nBy May 9, 2019, he was writing it again, this time more urgently: \"I can't run the bots without content. And I need enough content so I don't overrun each song. That's the problem. If we get too many streams on one song it comes down.\" The platforms, he knew, were watching for anomalies — streams accumulating at a rate no real audience could produce. The answer was to make sure no single song ever looked that strange. Spread the volume across thousands of titles, and each one stays below the threshold where a flag gets raised. On June 5, 2019, he went back to CC-3 and asked for another 10,000 AI songs, specifically so he could \"spread this out more.\"\n\nHe had also given his co-conspirators a standing instruction that went beyond just content volume. The bots and macros, he directed, needed to be \"Unde[te]ctable\" — with \"every safety measure\" in place to avoid detection.\n\nThe platforms began to notice.\n\nOn March 6, 2018, a distributor told Smith that one of his songs \"fit the criteria that is usually linked to store end streaming abuse.\" Smith's reply arrived the same day: \"I acknowledge what you wrote and I ask that you still release it. We have no intentions of committing streaming fraud.\" That acknowledgment and that denial, in the same breath, on the same day he received the warning.\n\nIn October 2018, the same distributor went further: it had received \"multiple reports of streaming abuse from different stores\" and planned to pull his releases entirely. Smith's response was not a concession. It was fury on paper. \"This is absolutely wrong and crazy!... There is absolutely no fraud going on whatsoever! How can I appeal this?\"\n\nWhen Streaming Platform-1 reached its own determination and communicated it through a third distributor, Smith wrote directly to the platform demanding documentation, insisting he had \"worked with promotion companies who claim to be legitimate,\" and declaring he had \"never done anything to artificially inflate\" his streams. The denial was complete and it was in writing. Outside, the bots kept running.\n\nThe denials were still on record when Smith sat down in February 2024 and wrote what amounted to a progress report. His existing music, he boasted in an email, had generated \"over 4 billion streams and $12 million in royalties since 2019.\" Not a projection. A backward-looking tally, offered with the confidence of someone who had watched the number climb for years.\n\nThat $12 million came from somewhere specific. The money didn't appear from nowhere; prosecutors say the scheme defrauded both streaming platforms and musicians of royalty payments. Machine-generated audio was drawing from the same royalty pool as every working musician on those platforms.\n\nThe money moved carefully once it arrived. In multiple transactions between approximately 2020 and 2023, Smith moved $1.3 million in royalties into an account he controlled at a U.S.-based financial institution in the name of SMH Entertainment. From SMH Entertainment, those funds went back to the card-issuing service — recycled directly into funding the debit cards that kept the bot accounts active. The scheme was financing itself.\n\nThe supply chain had its own payroll: as of June 2019, CC-3 and CC-4 were each receiving 10% of the fraud proceeds.\n\nOn March 19, 2026, Michael Smith pleaded guilty to one count of conspiracy to commit wire fraud. The three-count indictment the Southern District of New York and the FBI had unsealed on September 4, 2024 — wire fraud conspiracy, wire fraud, and money laundering conspiracy — had been waiting for him. He entered a plea to one count and agreed to forfeit $8,091,843.64 as proceeds traceable to the offense.\n\nThat forfeiture figure is precise in a way that matters. The indictment alleged he fraudulently obtained more than $10 million in royalties, less than the $12 million of his own boast. The amount Smith agreed to surrender was $8,091,843.64, not a round number, but the proceeds prosecutors traced to the offense.\n\nThere is also a legal floor the scheme had been violating the entire time. Federal regulations at 37 C. F. R. §§ 385.2 and 385.21 are specific: manipulated streams are not eligible for royalties. Smith had worked to avoid detection. On March 3, 2023 — years into the operation, years after the written warnings from distributors, years after the denials he put in writing — he falsely represented to a second distribution company that he would not engage in fraudulent streaming. The scheme kept running.\n\nThe plea was described as the first major criminal conviction for AI-assisted music streaming fraud in the United States.\n\nHe faced a maximum sentence of five years in prison. No other defendant was charged in the criminal case.\n\nAnd so it ends where it began, with an email Smith wrote to himself in October 2017, a private record of something already running. The machine he described in that email ran for years before a federal indictment had a name on it. When it finally did, the name was his."
+}

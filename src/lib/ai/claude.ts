@@ -5,6 +5,8 @@ import { stripInsinuations, stripUnnamedPartyNaming, stripSpeculation, stripImpl
 import { buildVarietyBlock } from "@/lib/ai/phrase-variety";
 import { validateTitle } from "@/lib/title-validate";
 import { getNicheOutlierPatterns } from "@/lib/viral-frameworks";
+import { gateSection, type GateFlag } from "@/lib/evidence-gate";
+import { guardRewrite, type InvariantViolation } from "@/lib/no-new-specifics";
 
 let _anthropic: Anthropic | null = null;
 function getAnthropic(): Anthropic {
@@ -921,7 +923,7 @@ export async function writeSection(
   spec: SectionSpec,
   index: number,
   total: number,
-  context: { topic: string; title: string; sourceMaterial?: string; previousTail: string; recipe?: string; voice?: string; directorNote?: string; alreadyTold?: string; reservedFacts?: string[]; otherPoints?: string[]; openingHook?: string },
+  context: { topic: string; title: string; sourceMaterial?: string; previousTail: string; recipe?: string; voice?: string; directorNote?: string; alreadyTold?: string; reservedFacts?: string[]; otherPoints?: string[]; openingHook?: string; evidenceGate?: { log?: GateFlag[] } },
 ): Promise<string> {
   const conceptBlock = spec.concept
     ? `\nTHE VIDEO'S CONCEPT (every sentence of this section serves it; this is not a history of the subject): ${spec.concept}\nTHIS SECTION'S ONE POINT: ${spec.point || spec.purpose}\n${spec.centralQuotes && spec.centralQuotes.length && (index === 0 || index === total - 1) ? `THE WORDS SPOKEN AT THE CENTRAL MOMENT (verbatim from the facts; never paraphrase, never drop): ${spec.centralQuotes.map((q) => `"${q}"`).join(" / ")}. ${index === 0 ? "This OPENING section must quote ALL of them, word for word, in the order they were said, with who reported them. If the hook teases them (\"he said three words\"), deliver them here." : "This FINAL section must echo the key line verbatim as the callback."}\n` : ""}${index === total - 1 ? "THIS IS THE FINAL SECTION: after making its point, RETURN to the central moment named in the concept (the scene the video opened on) and land the video THERE, so the ending pays off the opening. The last lines belong to that moment, not to a new topic. It is a CALLBACK: the viewer already saw that scene in the opening, so evoke it in a line or two and land its meaning; do NOT re-explain how it happened. " : ""}Make THIS point, deeply, as scenes from the facts. ${context.otherPoints && context.otherPoints.length ? `Do NOT make these points, other sections own them:\n${context.otherPoints.filter(Boolean).map((p) => `- ${p}`).join("\n").slice(0, 1500)}` : ""}\n`
@@ -993,7 +995,11 @@ Write only this section's prose now.`,
     }],
   });
   const c = msg.content[0];
-  return c.type === "text" ? c.text.trim() : "";
+  const draft = c.type === "text" ? c.text.trim() : "";
+  // EVIDENCE GATE (Experiment A, off unless the caller opts in): the research is the closed factual universe;
+  // unsupported specifics and misattached claims are repaired from the research or cut, here where 90% are born.
+  if (context.evidenceGate && context.sourceMaterial) return gateSection(draft, context.sourceMaterial, { log: context.evidenceGate.log });
+  return draft;
 }
 
 // Generate the whole body section by section, in order, each against its own brief.
@@ -1755,6 +1761,24 @@ export async function finalizeScript(
   // passes so each unsupported claim can be traced to the step that created it. A no-op in the app.
   const __trace = (stage: string) => { try { const fn = (input as any).__trace; if (typeof fn !== "function") return; const k = ["fullScript", "script", "body", "content"].find((x) => typeof (script as any)[x] === "string" && (script as any)[x].trim()); fn(stage, k ? (script as any)[k] : ""); } catch { /* tracing never affects the script */ } };
   __trace("finalize_in");
+  // NO-NEW-CHECKABLE-PROPOSITION INVARIANT (Evidence Integrity step 3; OFF unless input.noNewSpecifics or
+  // SKRIPR_NO_NEW_SPECIFICS=1). At each snapshot point, every sentence the passes since the last point changed is
+  // diffed against its earlier version; one that added a name, number, date, quote, cause, comparison or
+  // attribution the research doesn't support goes back to its earlier version. Deterministic: no model repair.
+  const invariantOn = !!(input as any).noNewSpecifics || process.env.SKRIPR_NO_NEW_SPECIFICS === "1";
+  const bodyKeyOf = () => ["fullScript", "script", "body", "content"].find((k) => typeof (script as any)[k] === "string" && (script as any)[k].trim());
+  let invSnap = (() => { const k = bodyKeyOf(); return k ? String((script as any)[k]) : ""; })(); let invStage = "finalize_in";
+  const __invariant = (stage: string) => {
+    if (!invariantOn) return;
+    try {
+      const k = bodyKeyOf(); if (!k) return;
+      const cur = String((script as any)[k]);
+      const log: InvariantViolation[] = Array.isArray((input as any).__invariantLog) ? (input as any).__invariantLog : [];
+      const guarded = guardRewrite(invSnap, cur, { pass: `${invStage}->${stage}`, evidence: input.sourceMaterial || "", log });
+      if (guarded !== cur) for (const x of ["fullScript", "script", "body", "content"]) if (typeof (script as any)[x] === "string") (script as any)[x] = guarded;
+      invSnap = guarded; invStage = stage;
+    } catch (e: any) { console.warn(`[no-new-specifics] skipped at ${stage}: ${e?.message || e}`); }
+  };
 
   // PIPELINE STATUS + GLOBAL DEADLINE CIRCUIT-BREAKER. The route budget is 300s; we hold a hard
   // internal deadline 30s under it and, before every expensive LLM stage, check whether the stage's
@@ -1949,6 +1973,7 @@ export async function finalizeScript(
   // pass, on the assembled body, judges by meaning: collapse a repeated point to its 1-2 best
   // instances, and cut/hedge any role/motive/cooperation the FACTS don't establish. Reduction-only
   // (never adds), guarded, graceful fallback — the deterministic cuts below still backstop it.
+  __invariant("before_refine");
   __trace("before_refine");
   const refineKey = ["fullScript", "script", "body", "content"].find((k) => typeof (script as any)[k] === "string" && (script as any)[k].trim());
   if (refineKey && input.sourceMaterial && input.sourceMaterial.trim() && !budgetBlown("refine", 45_000)) {
@@ -1962,6 +1987,7 @@ export async function finalizeScript(
     }
   }
 
+  __invariant("after_refine");
   __trace("after_refine");
   // GOVERNING PRINCIPLE — SILENT SAFETY CUT (runs last). Person-guilt insinuation is a defamation
   // risk, so it is CUT silently before the script is returned — no panel, no flag. A cut is the
@@ -2117,6 +2143,7 @@ export async function finalizeScript(
   // couldn't help. Target is ~165 wpm (the finished-video rate; the old 130 undershot a 20:40 ask by
   // ~800 words). Only the supplied facts feed in (never invents), and a deterministic safety re-sweep
   // guards any newly-added beat so the re-fill can't re-introduce an insinuation.
+  __invariant("before_refill");
   __trace("before_refill");
   const refillKey = ["fullScript", "script", "body", "content"].find(
     (k) => typeof (script as any)[k] === "string" && (script as any)[k].trim().length > 0,
@@ -2164,6 +2191,7 @@ export async function finalizeScript(
     console.log(`[refill] skipped reason=${why}`);
   }
 
+  __invariant("after_refill");
   __trace("after_refill");
   // CERTAINTY DISCIPLINE runs LAST, on the FINAL assembled body (including the woven refill beats,
   // which is where overstatement lands): flag scope/certainty/causation risks, judge each against
@@ -2275,6 +2303,7 @@ export async function finalizeScript(
     if (fixed && fixed !== cur) for (const k of ["fullScript", "script", "body", "content"]) if (typeof (script as any)[k] === "string") (script as any)[k] = fixed;
   }
 
+  __invariant("pre_hook_sync"); // last body edit is above; check it before the hook is re-derived from the body
   // FINAL HOOK SYNC — the displayed hook MUST equal what actually opens the script. The hook is
   // stamped early, but the body-editing passes (de-rep, soften, refill) run afterward and can reshape
   // the opening, so the stored hook can drift from the real first line (the "the shown hook isn't the

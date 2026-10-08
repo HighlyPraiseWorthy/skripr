@@ -1,0 +1,207 @@
+{
+ "id": "freshwaters",
+ "run": 1,
+ "words": 1335,
+ "primaryPer1k": 2.25,
+ "overreachPer1k": 0.75,
+ "finalErrors": [
+  {
+   "i": 5,
+   "sentence": "Then he said three words: \"You got me.\"",
+   "script_quote": "he said three words: \"You got me.\"",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research says he admitted 'You got me' but does not characterize it as 'three words'; counting words is a script addition not supported by the research.",
+   "first_seen": "section_1",
+   "seen_in": [
+    "section_1",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 6,
+   "sentence": "With those three syllables, the U.S. Marshals Service closed what it called the longest successful manhunt in its history.",
+   "script_quote": "the U.S. Marshals Service closed what it called the longest successful manhunt in its history",
+   "category": "unsupported_attribution",
+   "verdict": "error",
+   "why": "The research attributes the 'longest successful manhunt' characterization to The Guardian's reporting, not to the U.S. Marshals Service itself calling it that.",
+   "first_seen": "section_1",
+   "seen_in": [
+    "section_1",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 43,
+   "sentence": "The manhunt that had opened in 1959 would not close for another four decades.",
+   "script_quote": "The manhunt that had opened in 1959 would not close for another four decades",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research states the manhunt closed in 2015, which is 56 years after 1959, not four decades. The research does not support 'four decades' as the duration.",
+   "first_seen": "section_4",
+   "seen_in": [
+    "section_4",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 64,
+   "sentence": "From there the operation moved in a single clean direction — Brevard County, Melbourne, the trailer where William Harold Cox had been answering his door for roughly two decades.",
+   "script_quote": "Melbourne, the trailer where William Harold Cox had been answering his door for roughly two decades",
+   "category": "contradiction",
+   "verdict": "error",
+   "research_quote": "Investigators said Freshwaters lived for years under the alias William Harold Cox and was found in a weathered trailer in rural Brevard County, Florida.",
+   "why": "The research places the trailer in rural Brevard County, not Melbourne; Melbourne is where he was captured but the trailer is described as rural Brevard County.",
+   "first_seen": "section_6",
+   "seen_in": [
+    "section_6",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  }
+ ],
+ "removed": [
+  {
+   "i": 10,
+   "sentence": "The alias had held for roughly two decades.",
+   "script_quote": "The alias had held for roughly two decades",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research states Freshwaters had been living under the alias in Melbourne, Florida for about two decades, but the script attributes the 'roughly two decades' to the alias overall, not just Melbourne; however the research does say 'about two decades' for Melbourne specifically, so this is a reason",
+   "first_seen": "section_1",
+   "seen_in": [
+    "section_1",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill"
+   ],
+   "in_final": false,
+   "removed_after": "after_refill"
+  },
+  {
+   "i": 83,
+   "sentence": "The name William Harold Cox had absorbed twenty years of daily life without cracking.",
+   "script_quote": "The name William Harold Cox had absorbed twenty years of daily life without cracking.",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research states Freshwaters lived in Melbourne, Florida under the alias for 'about two decades,' but 'twenty years' as a precise figure for the alias's total duration is not supported; the research only specifies the Florida period as approximately two decades, not the full span of alias use.",
+   "first_seen": "section_6",
+   "seen_in": [
+    "section_6",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill"
+   ],
+   "in_final": false,
+   "removed_after": "after_refill"
+  }
+ ],
+ "draftErrors": 5,
+ "rejected": 0,
+ "stages": [
+  {
+   "stage": "plan",
+   "words": 697
+  },
+  {
+   "stage": "hook",
+   "words": 65
+  },
+  {
+   "stage": "section_1",
+   "words": 199
+  },
+  {
+   "stage": "section_2",
+   "words": 207
+  },
+  {
+   "stage": "section_3",
+   "words": 218
+  },
+  {
+   "stage": "section_4",
+   "words": 236
+  },
+  {
+   "stage": "section_5",
+   "words": 299
+  },
+  {
+   "stage": "section_6",
+   "words": 276
+  },
+  {
+   "stage": "section_7",
+   "words": 360
+  },
+  {
+   "stage": "finalize_in",
+   "words": 1795
+  },
+  {
+   "stage": "before_refine",
+   "words": 1860
+  },
+  {
+   "stage": "after_refine",
+   "words": 1780
+  },
+  {
+   "stage": "before_refill",
+   "words": 1741
+  },
+  {
+   "stage": "after_refill",
+   "words": 1741
+  },
+  {
+   "stage": "finalize_out",
+   "words": 1492
+  },
+  {
+   "stage": "review",
+   "words": 1557
+  },
+  {
+   "stage": "final_check",
+   "words": 1335
+  }
+ ],
+ "final": "In 1959, Frank Freshwaters walked away from an honor camp near Sandusky, Ohio, and simply never came back. Fifty-six years later, U.S. Marshals found him living under a fake name in a weathered trailer in rural Brevard County, Florida — an old man who had slipped through the cracks for longer than most people have been alive. What nobody could quite figure out was how.\n\nAt the arrest, Freshwaters was shown an old photograph of himself. According to Major Tod Goodyear, he hadn't seen that guy in a long time. Then he said three words: \"You got me.\"\n\nWith those three syllables, the U.S. Marshals Service closed what it called the longest successful manhunt in its history. The man arrested at his home on May 4, 2015 had been a fugitive since 1959, living under a borrowed name. The marshals had traced him through a cold case unit set up in northern Ohio earlier that year, and local deputies made the arrest on a fugitive warrant.\n\nJuly 1957, Akron, Ohio. A car struck Eugene Flynt, and Flynt died. The man behind the wheel was Frank Freshwaters, and when he stood before the court, he pleaded guilty to voluntary manslaughter. The sentence the judge had available ran from one to twenty years. The sentence the judge chose was neither. Instead, the court suspended the prison term entirely and handed Freshwaters five years of probation — a decision that put a man who had just killed someone back on the street with a warning rather than a cell.\n\nThat suspended sentence carried a condition Freshwaters apparently could not honor: he was not to drive. Within two years he had violated probation, and the mercy the court had extended collapsed. The one-to-twenty-year term that had been sitting in suspension was finally imposed. Now, at last, the state was prepared to hold him to account.\n\nExcept it wasn't — not really, not yet. Because the story of what happened next is not about punishment catching up to Frank Freshwaters. It is about how far a man can travel after a court gives him a second chance.\n\nHis violation had been driving, and getting a driver's license. In February 1959, he was committed to the Ohio State Reformatory. From there, the system moved him to an honor camp near Sandusky, a lower-security arrangement that placed some trust in the men held there.\n\nThat trust had an expiration date. On September 30, 1959, Frank Freshwaters was reported missing from the camp.\n\nWhat the system had created, without quite meaning to, was a fugitive with a warrant that would stay open for decades. The honor camp had handed Freshwaters the opportunity.\n\nSixteen years after he walked off that prison farm, somebody finally caught up with Frank Freshwaters. It was 1975, and West Virginia had him. The warrant was still open. Ohio was right there. And then the governor of West Virginia looked at this man's conduct since 1959 and reached a conclusion that would let Freshwaters walk out the door again — not through a fence, not across a field, but through a formal legal decision.\n\nThe governor refused extradition on the grounds that Freshwaters had maintained a flawless sixteen-year residency in the state.\n\nFlawless. That was the word attached to the record of a man wanted for escaping lawful custody in Ohio. He had kept his head down long enough that the state holding him chose to characterize his time there not as sixteen years of successful flight, but as sixteen years of good standing. The fugitive warrant did not disappear. Ohio's claim on him did not expire. But the mechanism that should have returned him to face it deferred instead to the quiet life he had apparently managed to live in the interim.\n\nThe system that had given him probation, then an honor camp, had now given him something more durable: a governor's signature that treated the years he spent running as, on balance, a point in his favor. He walked. The manhunt that had opened in 1959 would not close for another four decades.\n\nSo after 1975, the warrant stayed open and the man stayed gone. What changed was the geography. At some point in the years that followed, Frank Freshwaters landed in Melbourne, Florida, Brevard County, a stretch of the state wide enough and ordinary enough to absorb a man who needed to be unremarkable. And he arrived there with a name ready: William Harold Cox.\n\nThree names, none of them his. William Harold Cox is the kind of name that clears a room of suspicion by being too plain to generate any. It carries no weight, no echo, nothing that catches. Investigators determined he had been living under it for roughly two decades before marshals ever came to the door — twenty years of William Harold Cox, not Frank Freshwaters. The alias held because it asked nothing of anyone. It did not need a story behind it. It just needed to be repeated often enough that it stopped sounding borrowed.\n\nWilliam Harold Cox. Melbourne, Florida. A trailer that did not announce itself. The Ohio Adult Parole Authority was still out there, still carrying the open case, but the man they were looking for had been answering to different syllables for so long that the gap between Frank Freshwaters and William Harold Cox had grown into something that felt, if not permanent, then at least durable.\n\nThat is the thing about a name held for twenty years. It stops being a disguise and starts being a fact.\n\nWhat ended it was not a tip, not a lucky stop, not a warrant that happened to surface in the wrong jurisdiction. What ended it was the Marshals' cold case unit in northern Ohio, and a file that had been open since 1959.\n\nThe unit traced Freshwaters to Florida. From there the operation moved in a single clean direction — Brevard County, Melbourne, the trailer where William Harold Cox had been answering his door for roughly two decades. That handoff — Marshals developing the lead, county deputies closing it — is how a fugitive warrant issued in Ohio ends with a knock on a door in Florida.\n\nHe was held on the fugitive warrant while extradition to Ohio was arranged.\n\nOn February 25, 2016, the Ohio Adult Parole Authority voted to release Frank Freshwaters on parole, with five years of supervision attached. The decision was not unanimous in spirit, even if it was official in outcome. Prosecutors in Summit County had argued against it — their position, relayed by parole board spokeswoman JoEllen Smith, was that Freshwaters had avoided accountability and had not paid restitution. Those two points sat at the center of their objection. The parole board granted it anyway.\n\nFour months later, on June 15, 2016, Frank Freshwaters walked out of an Ohio correctional facility. Not as a fugitive. As a man who had served what the state now considered his time, placed under supervision, and released into the world. The prosecutors' argument did not prevail. The restitution that had gone unpaid while he was gone was still unpaid when he left.\n\nThat is the quiet, unsatisfying arithmetic of how it closed. Not a dramatic reckoning. Not a cell door swinging shut on a man finally brought to heel. The manhunt that had run longer than any in Marshals Service history ended not with punishment proportional to the flight but with an old man walking free under conditions.\n\nAnd yet the arrest is still the place the story returns to. A knock. A face he said he hadn't seen in a long time — his own, young, from a world before the alias and the decades of quiet. Three words that closed a file opened in 1959. Whatever came after — the parole hearing, the vote, the June morning he walked out — started in that doorway, with a man who had outrun everything except, finally, a cold case unit reopened after decades and a warrant that never expired."
+}

@@ -1,0 +1,298 @@
+{
+ "summary": {
+  "pairs": 16,
+  "tally": {
+   "specificity": {
+    "exp": 0,
+    "base": 4,
+    "tie": 12
+   },
+   "naturalness": {
+    "exp": 2,
+    "base": 7,
+    "tie": 7
+   },
+   "flow": {
+    "exp": 0,
+    "base": 3,
+    "tie": 13
+   },
+   "hook": {
+    "exp": 0,
+    "base": 3,
+    "tie": 13
+   },
+   "useful_detail": {
+    "exp": 0,
+    "base": 1,
+    "tie": 15
+   }
+  },
+  "words": {
+   "base": 1884.1,
+   "exp": 1701.9
+  },
+  "specificsPer1k": {
+   "base": 56.4,
+   "exp": 60.4
+  }
+ },
+ "rows": [
+  {
+   "key": "wright-run2",
+   "wordsBase": 1581,
+   "wordsExp": 1457,
+   "specPer1kBase": 67,
+   "specPer1kExp": 73.4,
+   "notes": [
+    "A has sharper analytical texture and more precise legal/historical detail; B reads more smoothly aloud with less repetition and cleaner sentence rhythm.",
+    "B reads more smoothly aloud and connects ideas with cleaner transitions; A occasionally patches sentences together and repeats itself near the end"
+   ],
+   "specificity": "tie",
+   "naturalness": "tie",
+   "flow": "tie",
+   "hook": "tie",
+   "useful_detail": "tie"
+  },
+  {
+   "key": "jones-run2",
+   "wordsBase": 1987,
+   "wordsExp": 1587,
+   "specPer1kBase": 52.3,
+   "specPer1kExp": 77.5,
+   "notes": [
+    "A has richer concrete detail and sharper analytical asides; B reads more smoothly aloud with cleaner sentence rhythm and a stronger opening hook.",
+    "A packs sharper concrete detail and tighter analytical framing; B reads more smoothly aloud with better sentence rhythm and transitions."
+   ],
+   "specificity": "tie",
+   "naturalness": "tie",
+   "flow": "tie",
+   "hook": "tie",
+   "useful_detail": "tie"
+  },
+  {
+   "key": "fast-food-prices-run1",
+   "wordsBase": 1875,
+   "wordsExp": 1819,
+   "specPer1kBase": 57.1,
+   "specPer1kExp": 57.7,
+   "notes": [
+    "Script A is more precise and analytically layered throughout; Script B's opening hook is sharper but it loses coherence and momentum in the middle sections.",
+    "Script B has a more coherent argumentative spine, smoother sentence rhythm for narration, and a stronger hook that immediately sets up the central tension; both scripts deploy similar data points with comparable depth."
+   ],
+   "specificity": "tie",
+   "naturalness": "base",
+   "flow": "base",
+   "hook": "tie",
+   "useful_detail": "tie"
+  },
+  {
+   "key": "streaming-fraud-run2",
+   "wordsBase": 2031,
+   "wordsExp": 1929,
+   "specPer1kBase": 77.8,
+   "specPer1kExp": 78.8,
+   "notes": [
+    "A's hook lands harder with the 88M message drop; B flows more naturally and reads better aloud with smoother transitions throughout.",
+    "A has sharper chronological anchoring and more vivid structural detail; B reads more smoothly aloud with better sentence rhythm and transitions."
+   ],
+   "specificity": "tie",
+   "naturalness": "tie",
+   "flow": "tie",
+   "hook": "tie",
+   "useful_detail": "tie"
+  },
+  {
+   "key": "freshwaters-run1",
+   "wordsBase": 1335,
+   "wordsExp": 1418,
+   "specPer1kBase": 62.2,
+   "specPer1kExp": 59.2,
+   "notes": [
+    "Script A anchors every beat in precise dates, names, and quoted words while reading with a controlled, deliberate voice; Script B repeats its opening paragraph verbatim and meanders more.",
+    "Script B earns its edges through tighter chronology, crisper sentence rhythm, and a more purposeful opening that withholds the resolution just long enough to create genuine tension."
+   ],
+   "specificity": "base",
+   "naturalness": "base",
+   "flow": "tie",
+   "hook": "base",
+   "useful_detail": "tie"
+  },
+  {
+   "key": "chapo-chicago-run2",
+   "wordsBase": 1593,
+   "wordsExp": 1475,
+   "specPer1kBase": 81,
+   "specPer1kExp": 91.5,
+   "notes": [
+    "A packs more granular detail and named figures; B flows more smoothly with better sentence rhythm and transitions that don't feel assembled from research notes.",
+    "Script B includes the juice/fish flour shell companies, the bribery infrastructure, and Guzmán personally committing violence—details absent from A—while also flowing more naturally between sections and opening with a stronger narrative hook."
+   ],
+   "specificity": "base",
+   "naturalness": "tie",
+   "flow": "tie",
+   "hook": "tie",
+   "useful_detail": "tie"
+  },
+  {
+   "key": "fast-food-prices-run2",
+   "wordsBase": 2186,
+   "wordsExp": 1860,
+   "specPer1kBase": 47.1,
+   "specPer1kExp": 63.4,
+   "notes": [
+    "Script A has sharper concrete anchors and more vivid human framing; Script B opens with a stronger question-first hook but is otherwise comparable.",
+    "Script A packs more granular data and named sources but reads like a research memo; Script B moves more naturally, builds argument progressively, and lands its human stakes more cleanly."
+   ],
+   "specificity": "tie",
+   "naturalness": "base",
+   "flow": "tie",
+   "hook": "tie",
+   "useful_detail": "tie"
+  },
+  {
+   "key": "psychopathy-run2",
+   "wordsBase": 1961,
+   "wordsExp": 1930,
+   "specPer1kBase": 9.2,
+   "specPer1kExp": 13.5,
+   "notes": [
+    "Script A builds its argument with sharper structural logic and more precise prose rhythm; Script B is competent but looser and more repetitive in its framing.",
+    "Script A earns its edges through sharper sentence-level precision and a more compelling opening that names the myth before dismantling it; B's hook buries the lede in a fictional scene that delays the argument."
+   ],
+   "specificity": "tie",
+   "naturalness": "tie",
+   "flow": "tie",
+   "hook": "tie",
+   "useful_detail": "tie"
+  },
+  {
+   "key": "psychopathy-run1",
+   "wordsBase": 2025,
+   "wordsExp": 1587,
+   "specPer1kBase": 15.8,
+   "specPer1kExp": 18.9,
+   "notes": [
+    "A supplies more precise figures and structural argument; B reads more fluidly aloud but sacrifices some data depth",
+    "A has sharper analytical precision and better-named statistics; B reads more smoothly aloud with cleaner transitions and less repetitive sentence structure."
+   ],
+   "specificity": "tie",
+   "naturalness": "tie",
+   "flow": "tie",
+   "hook": "tie",
+   "useful_detail": "tie"
+  },
+  {
+   "key": "jones-run1",
+   "wordsBase": 1742,
+   "wordsExp": 1834,
+   "specPer1kBase": 66.6,
+   "specPer1kExp": 64.3,
+   "notes": [
+    "A has richer concrete detail (Mr. Joseph's Liquor Cabinet cut from A, bracelet emphasis, Goodenough's garnishment timeline) while B reads more smoothly aloud with less overwrought prose.",
+    "A has richer concrete detail and sharper analysis of the documents/mechanics; B reads more smoothly aloud with better transitions and a stronger opening hook."
+   ],
+   "specificity": "tie",
+   "naturalness": "tie",
+   "flow": "tie",
+   "hook": "tie",
+   "useful_detail": "tie"
+  },
+  {
+   "key": "streaming-fraud-run1",
+   "wordsBase": 1929,
+   "wordsExp": 1971,
+   "specPer1kBase": 73.6,
+   "specPer1kExp": 67,
+   "notes": [
+    "Script A uses sharper prose rhythm and more vivid framing (the self-email as 'private ledger,' the machine metaphor sustained throughout), while B is competent but flatter and occasionally mechanical in its transitions.",
+    "B reads more smoothly aloud and its ideas connect with better cause-and-effect logic; A's hook is marginally sharper with the 'no human being ever chose to play' framing landing harder in fewer words."
+   ],
+   "specificity": "tie",
+   "naturalness": "base",
+   "flow": "tie",
+   "hook": "tie",
+   "useful_detail": "tie"
+  },
+  {
+   "key": "wright-run1",
+   "wordsBase": 1616,
+   "wordsExp": 1421,
+   "specPer1kBase": 74.3,
+   "specPer1kExp": 79.5,
+   "notes": [
+    "Script A has sharper imagery (hollowed Bible as 'the plan working exactly as designed'), more vivid phrasing, and a stronger opening hook; Script B repeats itself and feels assembled from fragments.",
+    "Script B's prose moves more fluidly and its hook frames the central irony more sharply; Script A repeats passages verbatim and has patchwork transitions."
+   ],
+   "specificity": "tie",
+   "naturalness": "base",
+   "flow": "tie",
+   "hook": "base",
+   "useful_detail": "tie"
+  },
+  {
+   "key": "chapo-chicago-run1",
+   "wordsBase": 1913,
+   "wordsExp": 1369,
+   "specPer1kBase": 85.7,
+   "specPer1kExp": 84,
+   "notes": [
+    "A wins on concrete figures and documented detail; B reads more cleanly aloud with less repetition and smoother transitions.",
+    "Script A is sharper and more precise throughout, with cleaner prose and stronger concrete detail; Script B has a better opening hook but loses discipline mid-script with redundant framing and an editing artifact ('Ed in 2009')."
+   ],
+   "specificity": "tie",
+   "naturalness": "exp",
+   "flow": "tie",
+   "hook": "tie",
+   "useful_detail": "tie"
+  },
+  {
+   "key": "ltcm-run1",
+   "wordsBase": 2453,
+   "wordsExp": 2014,
+   "specPer1kBase": 40,
+   "specPer1kExp": 38.7,
+   "notes": [
+    "A wins on granular detail and named figures; B reads more fluidly aloud with cleaner sentence rhythm and a stronger closing hook.",
+    "B names UBS's $680M loss, explains the credential-as-collateral dynamic, and unpacks the Fed's role more precisely; A reads more smoothly aloud but stays at a higher level of abstraction throughout."
+   ],
+   "specificity": "base",
+   "naturalness": "exp",
+   "flow": "tie",
+   "hook": "tie",
+   "useful_detail": "base"
+  },
+  {
+   "key": "ltcm-run2",
+   "wordsBase": 2240,
+   "wordsExp": 1857,
+   "specPer1kBase": 29.9,
+   "specPer1kExp": 37.2,
+   "notes": [
+    "Script A is more precise and vivid throughout—UBS $680M, the repo mechanism, McDonough's congressional testimony, the $2.75B capital return framed as confidence—while B's hook lands harder with the one-month loss opening but B grows vaguer and more repetitive as it progresses.",
+    "A has sharper concrete anchors (exact dates, UBS detail, Meriwether's letter language) but B reads more fluidly aloud and builds its argument with cleaner connective tissue."
+   ],
+   "specificity": "tie",
+   "naturalness": "base",
+   "flow": "base",
+   "hook": "tie",
+   "useful_detail": "tie"
+  },
+  {
+   "key": "freshwaters-run2",
+   "wordsBase": 1678,
+   "wordsExp": 1703,
+   "specPer1kBase": 62.6,
+   "specPer1kExp": 61.1,
+   "notes": [
+    "Script A is tighter, more controlled, and builds its scenes with sharper concrete detail; Script B has structural artifacts (truncated opening, repetitive loops) and looser prose that dilutes its stronger moments.",
+    "Script B is cleaner throughout—better hook structure, smoother sentences, and the Mansfield/Shawshank detail and 'flawless residency' pivot add texture; Script A has a duplicated opening paragraph and choppier transitions."
+   ],
+   "specificity": "base",
+   "naturalness": "base",
+   "flow": "base",
+   "hook": "base",
+   "useful_detail": "tie"
+  }
+ ]
+}

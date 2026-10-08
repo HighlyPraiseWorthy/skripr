@@ -1,0 +1,431 @@
+{
+ "id": "wright",
+ "run": 1,
+ "words": 1421,
+ "primaryPer1k": 3.52,
+ "overreachPer1k": 0.7,
+ "finalErrors": [
+  {
+   "i": 37,
+   "sentence": "Flight 841 departs Detroit bound for Miami.",
+   "script_quote": "Flight 841 departs Detroit bound for Miami",
+   "category": "contradiction",
+   "verdict": "error",
+   "research_quote": "a flight from Detroit to Algeria that was diverted under gunpoint",
+   "why": "Multiple research sources describe the flight as going from Detroit to Miami (per the 1972 NYT report), but one source says 'Detroit to Algeria' as the overall journey description. However, the 1972 NYT source does support Detroit to Miami as the departure routing, so this is actually supported. Re-",
+   "first_seen": "section_4",
+   "seen_in": [
+    "section_4",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 23,
+   "sentence": "That single act — the escape itself — is what the FBI would later encode near the top of his wanted notice: unlawful flight to avoid confinement, escape, murder.",
+   "script_quote": "unlawful flight to avoid confinement, escape, murder",
+   "category": "contradiction",
+   "verdict": "error",
+   "research_quote": "Unlawful Flight to Avoid Confinement - Escape (Murder); Air Piracy (Seizing by Force an Aircraft in Air Commerce); Aiding and Abetting.",
+   "why": "The script lists 'murder' as a standalone charge in the wanted notice, but the research shows 'murder' appears only parenthetically within the 'Unlawful Flight to Avoid Confinement - Escape (Murder)' charge, not as a separate listed offense.",
+   "first_seen": "section_3",
+   "seen_in": [
+    "section_3",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 53,
+   "sentence": "The passengers are released, and Algeria later returned the plane and the money to the United States.",
+   "script_quote": "Algeria later returned the plane and the money to the United States",
+   "category": "certainty_inflation",
+   "verdict": "error",
+   "research_quote": "the FBI later said the money and plane were returned to the United States by Algeria, with no recovery of the money from the hijackers themselves documented in the source set here",
+   "why": "The research attributes the claim about Algeria returning the money and plane to the FBI, not as established fact; the script states it as plain fact.",
+   "first_seen": "final_check",
+   "seen_in": [
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 55,
+   "sentence": "The man who escaped from a New Jersey prison two years earlier is now in Algeria.",
+   "script_quote": "the man who escaped from a New Jersey prison two years earlier",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research states Wright escaped in August 1970 and the hijacking was July 31, 1972 — nearly two years, but the script's 'two years earlier' is an approximation not explicitly stated in the research.",
+   "first_seen": "finalize_out",
+   "seen_in": [
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 77,
+   "sentence": "On November 17, 2011 — less than two months after the arrest — a Lisbon appeals court ruled that George Wright would not be extradited to the United States.",
+   "script_quote": "less than two months after the arrest",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research states Wright was arrested September 26, 2011 and the court ruled November 17, 2011 — that is approximately seven weeks or less than two months, but the research does not use this characterization; however this is arithmetic the research supports (Sept 26 to Nov 17 is under two months),",
+   "first_seen": "section_6",
+   "seen_in": [
+    "section_6",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 103,
+   "sentence": "He disappeared after 1972 by becoming a Portuguese citizen.",
+   "script_quote": "He disappeared after 1972 by becoming a Portuguese citizen.",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research states Wright went to Guinea-Bissau after the hijacking and later resurfaced in Portugal with Portuguese citizenship; the research does not say he became a Portuguese citizen immediately after 1972 or that citizenship was how he initially disappeared.",
+   "first_seen": "final_check",
+   "seen_in": [
+    "final_check"
+   ],
+   "in_final": true
+  }
+ ],
+ "removed": [
+  {
+   "i": 70,
+   "sentence": "Algeria was never meant to be the destination.",
+   "script_quote": "Algeria was never meant to be the destination",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research states Algeria was the demanded destination ('we want to go to Algeria'); nothing in the research supports the claim it was not meant to be the destination.",
+   "first_seen": "section_5",
+   "seen_in": [
+    "section_5",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill"
+   ],
+   "in_final": false,
+   "removed_after": "after_refill"
+  }
+ ],
+ "draftErrors": 6,
+ "rejected": 0,
+ "gate": {
+  "flags": 15,
+  "actions": {
+   "rewritten": 11,
+   "removed": 2,
+   "clause_cut": 2
+  }
+ },
+ "gateLog": [
+  {
+   "sentence": "That print runs through a national database and comes back with a match to a name American authorities had been carrying on a wanted notice for decades: George Edward Wright, sought for air piracy, unlawful flight, and aiding and abetting.",
+   "unsupported": [
+    "American"
+   ],
+   "layer": [
+    "entity"
+   ],
+   "why": [],
+   "action": "rewritten",
+   "result": "That print runs through a database and comes back with a match to a name authorities had been carrying on a wanted notice for decades: George Edward Wright, sought for air piracy, unlawful flight, and aiding and abetting."
+  },
+  {
+   "sentence": "After the escape, Wright joined the Black Liberation Army, an organization that understood armed action as a political instrument.",
+   "unsupported": [
+    "an organization that understood armed action as a political instrument"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "After the escape, Wright joined the Black Liberation Army, then hijacked Delta Air Lines Flight 841 in 1972."
+  },
+  {
+   "sentence": "The escape didn't end his story inside the American criminal system — it set the trajectory that would carry him out of American airspace altogether.",
+   "unsupported": [
+    "American"
+   ],
+   "layer": [
+    "entity"
+   ],
+   "why": [],
+   "action": "rewritten",
+   "result": "The escape didn't end his story inside the criminal system — it set the trajectory that would carry him out of the country altogether."
+  },
+  {
+   "sentence": "The weapon that makes it possible is already on board — not smuggled past security in a hidden compartment or a false-bottomed bag, but carried openly, tucked inside a hollowed-out Bible.",
+   "unsupported": [
+    "not smuggled past security in a hidden compartment",
+    "but carried openly"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"concealed a firearm in a hollowed-out Bible\"",
+    "research differs: \"concealed a firearm in a hollowed-out Bible\""
+   ],
+   "action": "rewritten",
+   "result": "The weapon that makes it possible is already on board, concealed inside a hollowed-out Bible."
+  },
+  {
+   "sentence": "The book passes whatever inspection exists.",
+   "unsupported": [
+    "The book passes whatever inspection exists"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "removed"
+  },
+  {
+   "sentence": "When Wright and his accomplices move, they move with it drawn.",
+   "unsupported": [
+    "they move with it drawn"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "When Wright and his accomplices move, they move with it."
+  },
+  {
+   "sentence": "When negotiations stalled, the hijackers made the pressure concrete: they threatened to shoot a passenger.",
+   "unsupported": [
+    "they threatened to shoot a passenger"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"threatened to shoot a hostage when negotiations stalled\""
+   ],
+   "action": "rewritten",
+   "result": "When negotiations stalled, the hijackers made the pressure concrete: they threatened to shoot a hostage."
+  },
+  {
+   "sentence": "Delta and federal authorities are now calculating not just money against principle but a human life against a deadline.",
+   "unsupported": [
+    "Delta and federal authorities are now calculating"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "clause_cut",
+   "result": "Federal authorities are now calculating not just money against principle but a human life against a deadline."
+  },
+  {
+   "sentence": "Wright and his accomplices are not in American custody.",
+   "unsupported": [
+    "American"
+   ],
+   "layer": [
+    "entity"
+   ],
+   "why": [],
+   "action": "removed"
+  },
+  {
+   "sentence": "The gun has done its work without firing a shot, and the man who walked out of a New Jersey prison two years earlier has now walked off an American commercial aircraft onto foreign soil — with a country that does not share an extradition arrangement waiting to receive him.",
+   "unsupported": [
+    "American",
+    "without firing a shot",
+    "a country that does not share an extradition arrangement"
+   ],
+   "layer": [
+    "entity",
+    "attribute"
+   ],
+   "why": [
+    "not in research",
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "The gun has done its work, and the man who walked out of a New Jersey prison two years earlier has now walked off a commercial aircraft onto foreign soil."
+  },
+  {
+   "sentence": "From Algiers, the record places Wright next in Guinea-Bissau, the small West African nation that had just emerged from its own independence struggle.",
+   "unsupported": [
+    "Algiers",
+    "West African",
+    "had just emerged from its own independence struggle"
+   ],
+   "layer": [
+    "entity",
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "The record places Wright next in Guinea-Bissau, before he disappeared from public view for decades."
+  },
+  {
+   "sentence": "Portugal's constitution bars the extradition of its own nationals.",
+   "unsupported": [
+    "Portugal's constitution bars the extradition of its own nationals."
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "Portugal's courts ruled that Wright, as a Portuguese citizen, would not be extradited."
+  },
+  {
+   "sentence": "The court did not dispute what Wright had done, or what the United States was asking for.",
+   "unsupported": [
+    "The court did not dispute what Wright had done"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "clause_cut",
+   "result": "Or what the United States was asking for."
+  },
+  {
+   "sentence": "The fugitive status that the 1970 escape and the 1972 hijacking had built across two jurisdictions ran directly into a third jurisdiction's foundational law, and stopped there.",
+   "unsupported": [
+    "ran directly into a third jurisdiction's foundational law"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "The fugitive status that the 1970 escape and the 1972 hijacking had built across two jurisdictions ran into Portugal's courts, and stopped there."
+  },
+  {
+   "sentence": "Wright gave his own account of the hijacking to journalists years later.",
+   "unsupported": [
+    "Wright gave his own account of the hijacking to journalists years later"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"Wright's published account of the hijacking is quoted\""
+   ],
+   "action": "rewritten",
+   "result": "Wright's published account of the hijacking describes how he and the others wanted 'a million dollars' and 'to go to Algeria,' presenting the action as part of Black Liberation struggle rather than ordinary criminal gain."
+  }
+ ],
+ "stages": [
+  {
+   "stage": "plan",
+   "words": 647
+  },
+  {
+   "stage": "hook",
+   "words": 51
+  },
+  {
+   "stage": "section_1",
+   "words": 210
+  },
+  {
+   "stage": "section_2",
+   "words": 192
+  },
+  {
+   "stage": "section_3",
+   "words": 240
+  },
+  {
+   "stage": "section_4",
+   "words": 354
+  },
+  {
+   "stage": "section_5",
+   "words": 224
+  },
+  {
+   "stage": "section_6",
+   "words": 225
+  },
+  {
+   "stage": "section_7",
+   "words": 282
+  },
+  {
+   "stage": "finalize_in",
+   "words": 1727
+  },
+  {
+   "stage": "before_refine",
+   "words": 1792
+  },
+  {
+   "stage": "after_refine",
+   "words": 1643
+  },
+  {
+   "stage": "before_refill",
+   "words": 1564
+  },
+  {
+   "stage": "after_refill",
+   "words": 1996
+  },
+  {
+   "stage": "finalize_out",
+   "words": 1489
+  },
+  {
+   "stage": "review",
+   "words": 1527
+  },
+  {
+   "stage": "final_check",
+   "words": 1421
+  }
+ ],
+ "final": "A convicted murderer hijacked a Delta jet at gunpoint, walked away with a million dollars in ransom, and then simply disappeared for four decades. When authorities finally tracked him down, they had him.\n\nSeptember 26, 2011. Portuguese police and FBI agents close in on a town outside Lisbon, and what breaks the case open is not a tip, not a surveillance operation, not a confession — it is a fingerprint lifted from a Portuguese ID card. That print runs through a database and comes back with a match to a name authorities had been carrying on a wanted notice for decades: George Edward Wright, sought for air piracy, unlawful flight, and aiding and abetting. The man holding that Portuguese ID had been living not in hiding exactly, but in plain sight, under a legal identity that the state of Portugal had issued him. He had a name, documents, citizenship. To anyone checking, he was Portuguese. The fingerprint said otherwise.\n\nWhat the arrest revealed was the shape of a disappearance that had lasted more than four decades. Wright had not simply run — he had constructed a life with legal standing in another country, and that standing would matter enormously in the months ahead. But on September 26, the courts were still in the future.\n\nBefore the hijacking, before the escape, before any of it — there was a gas station in Wall, New Jersey, and a man named Walter Patterson.\n\nOn November 23, 1962, Wright and an accomplice robbed that station and shot Patterson dead. Three weeks later, on December 13, a grand jury returned a murder indictment against Wright. He eventually entered a plea of nolo contendere and received a sentence of 15 to 30 years.\n\nThat sentence is the hinge on which everything else turns. Fifteen to thirty years in a New Jersey prison was the legal reality Wright was handed — and the one he refused to serve out. The robbery itself was unremarkable in its brutality, a transaction that ended with a man dead and a young killer in custody. What made it consequential was not the crime but the punishment, because the punishment created the circumstance Wright would later run from. Walter Patterson's death put Wright inside a cell. That cell is where the rest of this story begins.\n\nIn August 1970, Wright walked out of a New Jersey prison before his sentence was anywhere near finished. That single act — the escape itself — is what the FBI would later encode near the top of his wanted notice: unlawful flight to avoid confinement, escape, murder. The escape didn't erase the murder. It compounded it, attaching a new federal offense to the original one and making Wright something the justice system treats differently than a convict: a fugitive.\n\nThe FBI wanted notice attached to Wright's name carries three specific charges: \"Unlawful Flight to Avoid Confinement - Escape (Murder); Air Piracy (Seizing by Force an Aircraft in Air Commerce); Aiding and Abetting.\" Each line on that poster corresponds to a distinct legal category — the 1970 prison break, the 1972 hijacking, and the criminal liability that attaches to those who act in concert with others committing federal offenses. All three remain active. The poster does not describe history. It describes open cases.\n\nWhat he moved toward matters as much as what he ran from. After the escape, Wright joined the Black Liberation Army, then hijacked Delta Air Lines Flight 841 in 1972. That affiliation reframed everything that came next. The man who had robbed a gas station for money was now operating inside a structure that gave violence an ideological vocabulary. The crime in Wall Township had been transactional.\n\nThe escape bought him two years of that new life before the next collision.\n\nJuly 31, 1972. Flight 841 departs Detroit bound for Miami. Over Orlando, at around 12:45 in the afternoon, the hijacking begins.\n\nThe weapon that makes it possible is already on board, concealed inside a hollowed-out Bible. When Wright and his accomplices move, they move with it.\n\nThe demand is direct. We want a million dollars. We want to go to Algeria. No ambiguity, no escalating list of conditions. One number, one destination. The ransom is not a negotiating position — it is the terms. The ideological framing he would offer in later accounts, presenting the hijacking as part of Black Liberation struggle rather than ordinary criminal gain, does not soften what those words meant to the people on that plane. They were not a political audience. They were hostages.\n\nWhen negotiations stalled, the hijackers made the pressure concrete: they threatened to shoot a hostage.\n\nThe cash does not follow a traceable line.\n\nFlight 841 lands in Algeria. The passengers are released, and Algeria later returned the plane and the money to the United States. The Bible is empty. The man who escaped from a New Jersey prison two years earlier is now in Algeria.\n\nCrossing an international border transformed Wright's legal jeopardy in a precise and useful way. The escape had made him a domestic fugitive. Those are different problems, measured in different jurisdictions, and the distance between them is exactly what Wright needed.\n\nAlgeria was not the end of the journey. From there he went to Guinea-Bissau in West Africa, and later resurfaced in Portugal.\n\nThere, he held Portuguese citizenship.\n\nThat is the move that separates Wright's disappearance from an ordinary fugitive's. Running buys time. Citizenship buys standing. A man who simply hides can be found and returned. A man who holds a legally issued national identity has a document the state itself has authenticated, a name embedded in civil records, and rights that travel with him inside the legal system of the country that issued them. Wright did not just find a place to hide. He found a jurisdiction.\n\nHe had not set foot in the United States since 1972. The life he had built there was not a shadow existence — it was a documented one. Portugal had issued him the papers. The fingerprint on that ID card is what unraveled it.\n\nAfter the hijacking ended in Algeria, Wright moved to Guinea-Bissau in West Africa before eventually resurfacing in Portugal, where he built a documented life under Portuguese citizenship that held for decades until his arrest in 2011.\n\nA fingerprint on that Portuguese ID card matched records in a national database, the document that made him a citizen rather than a fugitive was the same one that carried the evidence that undid his cover. The fingerprint didn't belong to the assumed life. It belonged to the man underneath it.\n\nOn November 17, 2011 — less than two months after the arrest — a Lisbon appeals court ruled that George Wright would not be extradited to the United States. The reason was not procedural delay, not diplomatic negotiation, not a gap in the evidence. The reason was the citizenship itself.\n\nPortugal's courts ruled that Wright, as a Portuguese citizen, would not be extradited. He held Portuguese citizenship, and the court would not send him back. The identity he had built to disappear into had become, in a Lisbon courtroom, a legal fact with constitutional weight behind it.\n\nThe United States appealed. Portugal's Supreme Court rejected that appeal, and Wright remained in Portugal.\n\nWhat the fingerprint had done, then, was not deliver him. It had located him. Those are different outcomes. The print cracked open his cover, established who he was, and handed the United States the confirmation it had been missing for decades. What it could not do was override the document Portugal had already issued him. The ID card that exposed him was the same category of document — Portuguese state-issued, legally binding — that made returning him impossible.\n\nThe charges on that FBI wanted notice have never been resolved. Unlawful flight to avoid confinement.\n\nThe man they describe remained in Portugal as a Portuguese citizen.\n\nWhich brings it back to September 26, 2011 — a fingerprint, a database, a match. The identification was real. The confirmation was real. The arrest happened. And then the courts applied the law Portugal had already written into his documents, and the door closed. The fingerprint that found him after four decades did exactly what a fingerprint can do. It could not do what only an extradition treaty, honored by both sides, can do. He was found. He was not returned. He disappeared after 1972 by becoming a Portuguese citizen. In 2011, a fingerprint finally found him, and that same citizenship kept him in Portugal."
+}

@@ -1,0 +1,289 @@
+{
+ "id": "fast-food-prices",
+ "run": 1,
+ "words": 1875,
+ "primaryPer1k": 2.13,
+ "overreachPer1k": 1.07,
+ "finalErrors": [
+  {
+   "i": 42,
+   "sentence": "Limited-service meals and snacks rose 26% between 2019 and 2024, while headline inflation over the same span ran about 21.2%.",
+   "script_quote": "Limited-service meals and snacks rose 26% between 2019 and 2024",
+   "category": "contradiction",
+   "verdict": "error",
+   "research_quote": "The BLS Consumer Price Index for limited-service meals and snacks rose 19.8% from 2019 to 2024",
+   "why": "The research gives 19.8% for limited-service meals 2019-2024; the script states 26%, which matches the 2019-2023 figure from CNBC, not the 2019-2024 figure.",
+   "first_seen": "section_3",
+   "seen_in": [
+    "section_3",
+    "section_5",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 59,
+   "sentence": "The Bureau of Labor Statistics includes mandatory service charges in its food-away-from-home indexes — including the limited-service meals and snacks category that tracked fast food's 26% rise.",
+   "script_quote": "the limited-service meals and snacks category that tracked fast food's 26% rise",
+   "category": "contradiction",
+   "verdict": "error",
+   "research_quote": "The BLS Consumer Price Index for limited-service meals and snacks rose 19.8% from 2019 to 2024",
+   "why": "Repeats the unsupported 26% figure for the 2019-2024 period; research gives 19.8% for that span.",
+   "first_seen": "section_4",
+   "seen_in": [
+    "section_4",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 78,
+   "sentence": "The Atlanta Fed research adds one more layer: market power can make price responses larger than simple cost-based models predict.",
+   "script_quote": "The Atlanta Fed research adds one more layer: market power can make price responses larger than simple cost-based models predict",
+   "category": "evidence_inflation",
+   "verdict": "error",
+   "research_quote": "The literature contains both cost-pass-through estimates near 50% for fast-food wage shocks and arguments that labor's share and market power can make price responses larger than simple cost-based models predict.",
+   "why": "The research attributes the market-power argument to 'the literature' generally, not specifically to the Atlanta Fed research.",
+   "first_seen": "section_5",
+   "seen_in": [
+    "section_5",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 104,
+   "sentence": "The Quarter Pounder meal that ran $5.39 in 2014 wasn't repriced because beef suddenly cost twice as much or because a wage law made the math impossible at the old price.",
+   "script_quote": "Quarter Pounder meal that ran $5.39 in 2014",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research gives $5.39 as the 2014 price for the Quarter Pounder with cheese meal specifically from a FinanceBuzz-based report via TheStreet, but the script presents this as a general fact without attribution; more importantly, the script then says it 'wasn't repriced because beef suddenly cost tw",
+   "first_seen": "hook",
+   "seen_in": [
+    "hook",
+    "section_7",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 104,
+   "sentence": "The Quarter Pounder meal that ran $5.39 in 2014 wasn't repriced because beef suddenly cost twice as much or because a wage law made the math impossible at the old price.",
+   "script_quote": "wasn't repriced because beef suddenly cost twice as much or because a wage law made the math impossible at the old price",
+   "category": "certainty_inflation",
+   "verdict": "error",
+   "research_quote": "A 2021–2023 producer-price run-up lifted key restaurant inputs sharply, with beef, chicken, and cooking-oil costs each peaking at double-digit percentage increases from their 2020 baselines",
+   "why": "The research documents sharp beef cost increases and wage-law cost pressures as real factors; the script states with certainty that these were not the cause of repricing, which the research does not support — it is an unhedged causal denial the research does not make.",
+   "first_seen": "section_7",
+   "seen_in": [
+    "section_7",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 95,
+   "sentence": "Those weren't emergency responses to a new cost shock — input costs had been peaking and beginning to ease through that period.",
+   "script_quote": "input costs had been peaking and beginning to ease through that period",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research does not specifically state that input costs were peaking and beginning to ease during the 2023 period when 82% of operators raised prices; this specific timing claim about the cost trajectory is not supported by the research.",
+   "first_seen": "section_7",
+   "seen_in": [
+    "section_7",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  }
+ ],
+ "removed": [
+  {
+   "i": 73,
+   "sentence": "The Berkeley IRLE studies of California's $20 minimum wage found that restaurants passed through roughly 50% to 62% of higher wage costs to consumers as higher prices.",
+   "script_quote": "The Berkeley IRLE studies of California's $20 minimum wage found that restaurants passed through roughly 50% to 62% of higher wage costs",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research attributes 50% pass-through to the 2026 Berkeley IRLE paper on the $20 minimum wage, and 62% to a different Berkeley study on sectoral wage-setting. The script conflates these as both being Berkeley IRLE studies of California's $20 minimum wage, but the 62% figure is from a different Be",
+   "first_seen": "section_5",
+   "seen_in": [
+    "section_5",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review"
+   ],
+   "in_final": false,
+   "removed_after": "review"
+  },
+  {
+   "i": 74,
+   "sentence": "A separate Berkeley analysis put the pass-through rate closer to 60% to 70% — meaning a 10% rise in labor costs moved menu prices by somewhere between six and seven percent.",
+   "script_quote": "A separate Berkeley analysis put the pass-through rate closer to 60% to 70% — meaning a 10% rise in labor costs moved menu prices by somewhere between six and seven percent",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research states 'A Berkeley study estimated restaurant price pass-through from higher wages at about 60% to 70%' from the sosinskiy_reich_2025.pdf source, but the script's arithmetic implication (10% labor cost rise → 6-7% menu price rise) is not stated in the research; the research only gives t",
+   "first_seen": "section_5",
+   "seen_in": [
+    "section_5",
+    "finalize_in",
+    "before_refine"
+   ],
+   "in_final": false,
+   "removed_after": "before_refine"
+  },
+  {
+   "i": 82,
+   "sentence": "And the CPI data for limited-service meals and snacks shows prices rose 26% between 2019 and 2024.",
+   "script_quote": "the CPI data for limited-service meals and snacks shows prices rose 26% between 2019 and 2024",
+   "category": "contradiction",
+   "verdict": "error",
+   "research_quote": "Limited service meals and snacks CPI rose 26.0% from 2019 to 2024",
+   "why": "The research states 26.0% from 2019 to 2024, so the figure itself is supported; however, another research entry states 'The BLS Consumer Price Index for limited-service meals and snacks rose 19.8% from 2019 to 2024,' directly contradicting the 26% figure used in the script. Two research sources conf",
+   "first_seen": "section_5",
+   "seen_in": [
+    "section_5",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill"
+   ],
+   "in_final": false,
+   "removed_after": "after_refill"
+  },
+  {
+   "i": 113,
+   "sentence": "Run the pass-through math the Berkeley research established — roughly half to two-thirds of cost increases flowing to prices — and the menu-price increase those cost inputs could arithmetically justify sits below 31%, not above it.",
+   "script_quote": "Run the pass-through math the Berkeley research established — roughly half to two-thirds of cost increases flowing to prices",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research supports 'about 50%' pass-through from one Berkeley IRLE paper and 'about 62%' from a Berkeley difference-in-differences study, but no single Berkeley source establishes a unified 'half to two-thirds' range as a single finding.",
+   "first_seen": "section_7",
+   "seen_in": [
+    "section_7",
+    "finalize_in",
+    "before_refine"
+   ],
+   "in_final": false,
+   "removed_after": "before_refine"
+  }
+ ],
+ "draftErrors": 9,
+ "rejected": 0,
+ "stages": [
+  {
+   "stage": "plan",
+   "words": 751
+  },
+  {
+   "stage": "hook",
+   "words": 77
+  },
+  {
+   "stage": "section_1",
+   "words": 276
+  },
+  {
+   "stage": "section_2",
+   "words": 250
+  },
+  {
+   "stage": "section_3",
+   "words": 378
+  },
+  {
+   "stage": "section_4",
+   "words": 311
+  },
+  {
+   "stage": "section_5",
+   "words": 388
+  },
+  {
+   "stage": "section_6",
+   "words": 266
+  },
+  {
+   "stage": "section_7",
+   "words": 469
+  },
+  {
+   "stage": "finalize_in",
+   "words": 2338
+  },
+  {
+   "stage": "before_refine",
+   "words": 2421
+  },
+  {
+   "stage": "after_refine",
+   "words": 2148
+  },
+  {
+   "stage": "before_refill",
+   "words": 2117
+  },
+  {
+   "stage": "after_refill",
+   "words": 2117
+  },
+  {
+   "stage": "finalize_out",
+   "words": 2040
+  },
+  {
+   "stage": "review",
+   "words": 2101
+  },
+  {
+   "stage": "final_check",
+   "words": 1875
+  }
+ ],
+ "final": "Wages went up — and the story that followed was that fast food prices had to. But a McDonald's Quarter Pounder meal more than doubled in price between 2014 and 2024 — outpacing gasoline, movie tickets, and the paychecks of the workers flipping the burgers. Labor costs only explain part of that jump.\n\nYou pull up to the drive-through, order what you've always ordered — a burger, fries, a drink — and the number on the screen stops you. Not because you misread it.\n\nIn 2014, a McDonald's Quarter Pounder with cheese meal cost $5.39. By 2024, it ran $11.99. That's not a price increase. That's a different category of purchase. And McDonald's wasn't an outlier: Visual Capitalist tracked ten major fast-food chains from 2014 to 2024 and found average prices up 63%, with McDonald's up 100%. A published consumer-price comparison put the combo meal increase at roughly $6.50 over those ten years. The thing that was supposed to be affordable outran the paycheck funding it.\n\nBy the time those numbers landed in public consciousness, the public had already been paying them. A 2024 Harris Poll found that 81% of adults who eat at quick-service restaurants at least once a year said prices were higher than the year before. Only 32% still agreed that fast food offered an affordable meal. In the same FinanceBuzz-based report, the item set at major chains had averaged a 77.4% increase since late 2019 alone, a surge compressed into roughly five years.\n\nThe standard explanation is ready: costs went up, so prices went up. But the scale of what happened is too large to close with that. The gap between the story everyone tells and the numbers on the board is exactly where this gets complicated.\n\nThe explanation the industry reaches for first is labor — and it is not wrong. Costs went up. Prices followed. That's not spin — the underlying numbers are real.\n\nThe National Restaurant Association put it plainly: over the five years leading into 2025, food costs for the average restaurant rose roughly 35%, and labor costs rose by roughly 35% as well. Those aren't rounding errors. Beef, chicken, and cooking oil each saw double-digit percentage increases from their 2020 baselines during the 2021-to-2023 producer-price run-up. A kitchen that was budgeted for one world was suddenly operating in another.\n\nWhat makes those pressures genuinely serious is the margin structure underneath them. The restaurant industry typically runs on 3% to 5% profit margins. When you operate that close to the edge, a 35% jump in food costs doesn't stay in the supply chain; it moves toward the menu board, because there's almost nowhere else for it to go. A survey of restaurant operators found costs rising 11.7% year over year, with raw materials and labor leading the climb. For an operator running on a margin that thin, absorbing that kind of shock isn't a strategic choice; it's an arithmetic impossibility.\n\nAnd yet the National Restaurant Association's own benchmarking places average menu-price growth at 31% between February 2020 and April 2025 — while the cost inputs driving that story each rose 35%. Which means the standard explanation is real, documented, and still incomplete.\n\nSo take the most common explanation — minimum wage increases — and run the actual arithmetic.\n\nIn one restaurant sample, labor was 36% of total costs, and mandated minimum wage costs were estimated at between 4% and 10% of total costs. That is the base the minimum wage operates on. A Federal Reserve Bank of Chicago study — titled \"Restaurant Prices and the Minimum Wage\" — measured what happens when you pull that lever: for every 1% increase in the minimum wage, fast-food prices rise about 0.139%. Scale that to a 10% wage hike, and you get roughly a 1.4% increase in menu prices. Other estimates in the same literature put the figure closer to 0.11% per 1% wage increase, or about 1.1% per 10% wage increase. The range sits between those two points, and neither end of it is large.\n\nNow place that against what the CPI actually recorded. Limited-service meals and snacks rose 26% between 2019 and 2024, while headline inflation over the same span ran about 21.2%. That gap — fast food outpacing general inflation by roughly five percentage points — already implies something beyond standard cost pressure. But the more direct comparison is wages themselves: real wage growth over that period was roughly flat, meaning the price of the meal climbed while the paycheck funding it did not.\n\nTo bridge a 26% price surge through minimum wage pass-through alone, you would need wage increases so large, and a transmission rate so complete, that neither the data nor the research supports. Even accepting the higher end of the pass-through range — roughly 50% of labor-cost increases flowing to prices, as a 2026 Berkeley IRLE paper estimated — and even granting that labor costs rose meaningfully, the math does not close. Labor is one input among many, it carries a partial pass-through rate, and mandated wage costs are a fraction of total labor costs to begin with. Stack those fractions together and the ceiling of what minimum wage hikes can arithmetically explain sits well below the total increase on the board.\n\nSo the gap is real — costs explain part of the climb, but not all of it. What the standard story misses is that chains had other levers available, and they used them.\n\nThe first one is the easiest to miss. When commodity prices spiked, some restaurants didn't just raise the number on the board — they shrank what arrived at the table. Smaller portions, same price, or sometimes both simultaneously: a smaller portion at a higher price. The NBC News reporting on this named it directly — shrinkflation running alongside nominal price increases, not instead of them. A Harris Poll survey found that 35% of quick-service restaurant customers said they noticed it happening over the prior year. What they were noticing was a two-front move: the sticker price climbed, and the quantity behind that sticker quietly contracted. The effective price per ounce, per bite, per calorie rose faster than the menu board alone suggested.\n\nThe second lever sits inside the CPI data itself. The Bureau of Labor Statistics includes mandatory service charges in its food-away-from-home indexes — including the limited-service meals and snacks category that tracked fast food's 26% rise. Tips are excluded, but mandatory fees are not. That distinction matters because a chain that adds a required service charge to every order can push the measured price of a meal upward without changing a single printed price.\n\nThen there's the timing. Industry analysis found that menu prices typically follow commodity cost increases by roughly two to four months. The Berkeley IRLE research on California's wage policy found prices still rising about 2.1% two quarters after the wage shock itself. Costs peak, then ease — but the pricing response lags on the way up and doesn't automatically reverse on the way down. Operators raise prices into a cost spike and those prices stay, long after the spike that justified them has passed.\n\nThe pass-through research keeps returning to a specific range, and the range itself is the story.\n\nA separate Berkeley analysis found that a wage increase of about 18% produced a 3.7% restaurant price increase, implying roughly $0.21 of menu-price increase per $1.00 of minimum-wage increase in that setting. Those numbers differ at the margins, but they converge on one structural fact: when costs go up, prices go up by less. Not by the full amount. Not by close to the full amount. By about half, give or take.\n\nThat is the industry's own reported math.\n\nOn its face, that looks like the costs-explain-prices story. Except the pass-through research sits underneath it and changes what that number means.\n\nIf operators are passing through roughly half of their cost increases — not all of them — then the menu-price increase required to maintain margin would need to be smaller than the cost increase, not equal to or larger than it. A roughly 50% pass-through rate on labor costs means the remaining portion was absorbed elsewhere in the business: in margin, in efficiency, in mix, in what didn't get raised.\n\nThe Atlanta Fed research adds one more layer: market power can make price responses larger than simple cost-based models predict. When a chain has enough scale and brand presence that consumers have few obvious substitutes at a comparable price point, the relationship between costs and prices stops being purely mechanical. Another lever was available — not just cost recovery, but pricing room — and the gap between what costs required and what the menu boards actually charged is where those two things can diverge.\n\nThe pricing room was there. The question is who absorbed the cost when chains decided to use it.\n\nA panel-data study put a precise number on how consumers respond to fast-food price increases: a 10% rise in price was associated with a 5.7% drop in how often people visited. That's a price elasticity of -0.57 — meaning demand fell, but not by as much as the price rose. Consumers were sensitive, but not sensitive enough to force prices back down.\n\nBy 2024, the surveys showed the pullback. A LendingTree-related poll found that 62% of respondents said they were eating less fast food because it cost more, and 78% called fast food a luxury — not a convenience, a luxury. In a Farmdoc Daily survey, 51.6% of respondents said rising prices had them going to fast-food restaurants less often.\n\nSo a significant share of the customer base had pulled back. And still, prices kept rising. Seventy-five percent of respondents told USA Today that cooking at home had become more economical.\n\nNumerator put a specific number on the full span: quick-service restaurant prices rose 53.9% between January 2018 and the point of their 2026 measurement, against a 33.2% rise in the overall consumer basket over the same stretch.\n\nIn 2023, 82% of restaurant operators increased menu prices. Sixty-one percent planned to do it again in 2024. Those weren't emergency responses to a new cost shock — input costs had been peaking and beginning to ease through that period. Prices stayed well above where the cost trajectory alone would put them.\n\nThe National Restaurant Association's July 2026 data noted that menu price inflation had slowed to 3.4% annually, the softest pace since January 2025. The debate, as they framed it, had moved from whether prices were still climbing to how quickly they were cooling. That reframe is telling. Prices didn't reverse. They decelerated. The floor that was built between 2019 and 2024 held.\n\nWhich brings it back to where this started — that drive-through screen, that number, that pause. The Quarter Pounder meal that ran $5.39 in 2014 wasn't repriced because beef suddenly cost twice as much or because a wage law made the math impossible at the old price. It was repriced incrementally, across years, through a combination of genuine cost pressure and available pricing room, in an environment where enough consumers kept buying that the pressure to stop never became urgent. The costs were the reason the first increases were defensible. They were not the reason the prices stayed."
+}

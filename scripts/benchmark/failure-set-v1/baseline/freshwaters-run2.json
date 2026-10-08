@@ -1,0 +1,240 @@
+{
+ "id": "freshwaters",
+ "run": 2,
+ "words": 1678,
+ "primaryPer1k": 1.19,
+ "overreachPer1k": 2.38,
+ "finalErrors": [
+  {
+   "i": 11,
+   "sentence": "That was May 4, 2015, in rural Brevard County, Florida, and with those words, the longest successful manhunt in the history of the U.S. Marshals Service came to a close.",
+   "script_quote": "the longest successful manhunt in the history of the U.S. Marshals Service came to a close",
+   "category": "certainty_inflation",
+   "verdict": "error",
+   "research_quote": "\"he became the object of the longest successful manhunt in the history of the marshal's service.\"",
+   "why": "The research attributes this claim to The Guardian's reporting (a quote), not as established fact; the script states it as plain fact.",
+   "first_seen": "section_1",
+   "seen_in": [
+    "section_1",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 54,
+   "sentence": "The governor's conclusion about Freshwaters's residency outweighed Ohio's outstanding warrant, and on the strength of that executive discretion, the case was closed.",
+   "script_quote": "the case was closed",
+   "category": "certainty_inflation",
+   "verdict": "error",
+   "research_quote": "disappeared again after the governor refused extradition",
+   "why": "The research says Freshwaters disappeared again after extradition was refused; the script says the case was closed, which contradicts the record showing the case remained open.",
+   "first_seen": "finalize_out",
+   "seen_in": [
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 58,
+   "sentence": "The case that should have closed in West Virginia would stay open for another forty years — until a different institution, with different tools, decided to look again.",
+   "script_quote": "stay open for another forty years",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research does not state the case stayed open for forty years after 1975; it simply notes he vanished again and was later caught in 2015.",
+   "first_seen": "section_4",
+   "seen_in": [
+    "section_4",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 72,
+   "sentence": "Not a tip.",
+   "script_quote": "Not a tip",
+   "category": "certainty_inflation",
+   "verdict": "error",
+   "research_quote": "The record shown in the retrieved reporting leaves unresolved details about how Freshwaters financed his years abroad and the full extent of any outside assistance",
+   "why": "The research leaves unresolved how he was found; the script flatly states it was not a tip, which goes beyond what the research supports.",
+   "first_seen": "section_6",
+   "seen_in": [
+    "section_6",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 88,
+   "sentence": "He had not done anything wrong, he told reporters through ABC affiliate WFTV.",
+   "script_quote": "he told reporters through ABC affiliate WFTV",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research says the statement was 'reported by ABC affiliate WFTV after his 2015 arrest' but does not say Freshwaters told reporters through WFTV — it does not specify he spoke directly to reporters or that WFTV was the conduit he used.",
+   "first_seen": "section_7",
+   "seen_in": [
+    "section_7",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 99,
+   "sentence": "The prosecutors looked at a man who had been given probation instead of prison, then given his freedom again by a West Virginia governor, and saw someone who had treated every act of institutional mercy as an exit.",
+   "script_quote": "given his freedom again by a West Virginia governor",
+   "category": "certainty_inflation",
+   "verdict": "error",
+   "research_quote": "the governor refused extradition after concluding Freshwaters had a \"flawless 16-year residency\" there",
+   "why": "The research says the governor refused extradition, not that he gave Freshwaters his freedom; Freshwaters had already been released by West Virginia authorities before the extradition question arose, and the script conflates the two.",
+   "first_seen": "section_7",
+   "seen_in": [
+    "section_7",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  }
+ ],
+ "removed": [
+  {
+   "i": 14,
+   "sentence": "He knew it was over.",
+   "script_quote": "He knew it was over.",
+   "category": "unsupported_attribution",
+   "verdict": "error",
+   "why": "The research does not state Freshwaters knew or felt it was over; this is an attributed mental state not supported by the research.",
+   "first_seen": "section_1",
+   "seen_in": [
+    "section_1",
+    "finalize_in",
+    "before_refine"
+   ],
+   "in_final": false,
+   "removed_after": "before_refine"
+  },
+  {
+   "i": 15,
+   "sentence": "And whatever calculation had kept him moving and hidden for so long collapsed in the space it took to say two words.",
+   "script_quote": "whatever calculation had kept him moving and hidden for so long collapsed",
+   "category": "unsupported_attribution",
+   "verdict": "error",
+   "why": "The research does not describe any internal calculation or reasoning by Freshwaters; this is an unsupported attribution of motive/thought.",
+   "first_seen": "section_1",
+   "seen_in": [
+    "section_1",
+    "finalize_in",
+    "before_refine"
+   ],
+   "in_final": false,
+   "removed_after": "before_refine"
+  }
+ ],
+ "draftErrors": 7,
+ "rejected": 1,
+ "stages": [
+  {
+   "stage": "plan",
+   "words": 733
+  },
+  {
+   "stage": "hook",
+   "words": 69
+  },
+  {
+   "stage": "section_1",
+   "words": 217
+  },
+  {
+   "stage": "section_2",
+   "words": 226
+  },
+  {
+   "stage": "section_3",
+   "words": 248
+  },
+  {
+   "stage": "section_4",
+   "words": 237
+  },
+  {
+   "stage": "section_5",
+   "words": 315
+  },
+  {
+   "stage": "section_6",
+   "words": 278
+  },
+  {
+   "stage": "section_7",
+   "words": 435
+  },
+  {
+   "stage": "finalize_in",
+   "words": 1956
+  },
+  {
+   "stage": "before_refine",
+   "words": 2113
+  },
+  {
+   "stage": "after_refine",
+   "words": 1840
+  },
+  {
+   "stage": "before_refill",
+   "words": 1787
+  },
+  {
+   "stage": "after_refill",
+   "words": 1967
+  },
+  {
+   "stage": "finalize_out",
+   "words": 1607
+  },
+  {
+   "stage": "review",
+   "words": 1678
+  },
+  {
+   "stage": "final_check",
+   "words": 1678
+  }
+ ],
+ "final": "In 1959, Frank Freshwaters walked away from an honor camp near Sandusky, Ohio, and simply never came back. Fifty-six years later, U.S. Marshals tracked him down to a weathered trailer in rural Brevard County, Florida, where he had been living under a fake name for roughly two decades. What the record leaves unresolved is how a man wanted for manslaughter managed to stay out of reach for that long.\n\nIn 1959, Frank Freshwaters walked away from an honor camp near Sandusky, Ohio, and simply never came back. Fifty-six years later, U.S. Marshals tracked him down to a weathered trailer in rural Brevard County, Florida, where he had been living under a fake name for roughly two decades. What the record leaves unresolved is how a man wanted for manslaughter managed to stay out of reach for that long.\n\nThe marshals laid a photograph on the table in front of Frank Freshwaters. The man looking back from it was young — a face from another decade, another name, another life entirely. Freshwaters studied it for a moment. Then, according to Major Tod Goodyear, he said he hadn't seen that guy in a long time. And then, three words: \"You got me.\"\n\nThat was May 4, 2015, in rural Brevard County, Florida, and with those words, the longest successful manhunt in the history of the U.S. Marshals Service came to a close. Not with a chase. Not with a standoff. With an old photograph and a quiet admission from an old man sitting in a weathered trailer.\n\nThe question the photograph raises — how a man disappears long enough to become unrecognizable to himself — is exactly what this story is about.\n\nIt began on a July night in 1957 in Akron, Ohio, with a car and a man named Eugene Flynt dead on the road. Frank Freshwaters pleaded guilty to voluntary manslaughter. The judge had discretion, and he used it generously — a one-to-twenty-year sentence, suspended, replaced with five years of probation. No cell. No walls. A second chance extended before the first one had fully closed.\n\nWhat the court gave Freshwaters was something rarer than leniency: it gave him the open road and the obligation to stay off it. That turned out to be the condition he could not meet. He drove anyway. He got a driver's license. And when Ohio discovered those violations, the suspended sentence collapsed back into reality — the prison term that had been waiting in the wings finally landed.\n\nThe court had offered the most forgiving outcome the law allowed. What happened next was not the system's doing.\n\nThe sentence landed, finally, in February 1959, and Freshwaters went into the Ohio State Reformatory — the same Mansfield facility that would later stand in for Shawshank in a very different story — and the walls that had been suspended over him for two years came down for real. But the system that put him there also offered him a way out of it, because Freshwaters was not classified as a violent or high-risk prisoner. He was transferred to an honor camp near Sandusky, the kind of minimum-security arrangement built on the premise that some men, given a measure of trust, will earn it.\n\nFreshwaters did not earn it. On September 30, 1959, he was reported missing. No tunnel. No fence cut in the dark. An honor camp functions on the assumption that the men there will stay, and Freshwaters simply declined to. He walked away from a farm.\n\nWhat followed that walk was not an immediate dragnet closing in. The trail went cold, and years passed before the next documented moment in the record. The next documented moment in the record comes sixteen years later — a 1975 arrest in West Virginia, a state where, by then, he had apparently settled long enough that the governor concluded he had built a \"flawless 16-year residency\" there and refused to extradite him back to Ohio. Refused. A man who had walked off a prison farm in 1959 was handed back his freedom by an official decision in 1975, and then he was gone again.\n\nThat 1975 arrest should have been the end of it. The paperwork existed. The outstanding sentence existed. All Ohio needed was the governor's signature on an extradition order.\n\nThe governor looked at Frank Freshwaters and saw something different. That flawless sixteen-year residency — the governor's own words — was enough. Not a fugitive. A resident. And on the strength of that conclusion, he refused to send Freshwaters back.\n\nThat word — flawless — is the pivot the whole story turns on. West Virginia's executive looked at the same man and saw someone who had spent sixteen years without incident in his state. The governor's conclusion about Freshwaters's residency outweighed Ohio's outstanding warrant, and on the strength of that executive discretion, the case was closed. Freshwaters walked out of custody in 1975 the same way he had walked off the farm in 1959: because an institution with the power to hold him chose not to use it.\n\nWhen the deputies brought the photograph out, Major Tod Goodyear recorded what happened next: Freshwaters looked at it, said he hadn't seen that guy in a long time, and then said, \"You got me.\" Those two statements, in sequence, are the whole arc compressed into a single exchange — the distance between the young man in the image and the old man in the trailer, acknowledged and then surrendered in the same breath. The alias had worked for decades, and the record does not describe what, if anything, finally changed that.\n\nThe case that should have closed in West Virginia would stay open for another forty years — until a different institution, with different tools, decided to look again.\n\nBetween 1975 and 2015, Frank Freshwaters became William Harold Cox.\n\nNot through any elaborate construction the record describes. Just a name, and the discipline to answer to it. For roughly two decades before investigators arrived at his door in 2015, that was the man living in a weathered trailer in Brevard County, Florida.\n\nThe name itself is the whole strategy laid bare. William Harold Cox sounds like someone's neighbor, someone's uncle, the kind of name that generates no second glance, the kind that belongs in a county where nobody is looking for an Ohio fugitive from 1959.\n\nWhat the alias bought was not invisibility so much as irrelevance. A man in a rural Florida trailer, living quietly under an ordinary name, does not register as a problem. He had become someone the system had no reason to look for, in a place the system had not thought to look.\n\nThe unit that finally ended it did not exist until early 2015. The U.S. Marshals Service stood up a cold case unit in northern Ohio, and the Freshwaters file — decades old, twice failed — went back into active hands. That institutional decision, the deliberate choice to treat an old warrant as a live case rather than a bureaucratic relic, is what changed the outcome. Not new evidence. Not a tip. A new unit with a mandate to look.\n\nWhat they found, once they looked, was that William Harold Cox had been living quietly in Melbourne, Florida for roughly two decades. The marshals worked alongside the Ohio Adult Parole Authority to develop the lead, and once they had it, the arrest itself was not a federal operation closing in on a dangerous fugitive. Local Brevard County deputies went to the address. They had a fugitive warrant. They knocked.\n\nOn May 4, 2015, Frank Freshwaters was taken into custody at his home and held pending extradition to Ohio. The warrant that had been waiting since 1959 was still valid. It had never needed to be reissued. It had only needed someone to act on it.\n\nThat gap — between a warrant that existed and an institution willing to pursue it — is the whole distance between 1959 and 2015. The cold case unit closed it not with superior technology or a dramatic break in the case, but with the basic decision to assign the file to people whose job was to finish it. Freshwaters had outlasted the indifference. He did not outlast the attention.\n\nAfter the deputies left with him, Frank Freshwaters had something to say. He had not done anything wrong, he told reporters through ABC affiliate WFTV. He had made a mistake.\n\nThat framing — a mistake, not a flight, not a choice made again and again across five and a half decades — is the last piece of the man the photograph had to contend with. The deputies knocked. He went quietly. And then he offered the same logic the system had extended to him in 1957: this was an error, not a character. The court had accepted that reasoning once. The parole board would have to decide whether to accept it again.\n\nSummit County prosecutors recommended against parole. Their position, stated through Ohio Parole Board spokeswoman JoEllen Smith in 2016, was straightforward: Freshwaters had avoided accountability, and he had not paid restitution. The years under William Harold Cox were not a gap in the record — they were the record. The prosecutors looked at a man who had been given probation instead of prison, then given his freedom again by a West Virginia governor, and saw someone who had treated every act of institutional mercy as an exit.\n\nThe parole board voted anyway, on February 25, 2016, to release him. The Ohio Adult Parole Authority set the terms: parole, five years of supervision. He walked out of an Ohio correctional facility on June 15, 2016 — less than thirteen months after Brevard County deputies had come to his door.\n\nWhat the record leaves you with is not a chase, not a standoff, not a confession extracted under pressure. It is a photograph on a table, an old man who recognized himself in it, and two words that closed a gap of 56 years.\n\nThe trailer is still there in Brevard County. The warrant is not."
+}

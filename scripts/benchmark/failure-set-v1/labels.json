@@ -1,0 +1,1239 @@
+{
+ "_schema": "label: supported | legitimate_inference | unsupported | misattached | overinterpretation | not_a_claim. Positive (should be blocked) = unsupported|misattached|overinterpretation. material: false = trivial (harmless if kept). evidence: fixture fact indexes F<n>. Labeled against the case research only (closed universe), 2026-10-07.",
+ "C008": {
+  "label": "unsupported",
+  "material": true,
+  "evidence": [
+   "F2",
+   "F8"
+  ],
+  "note": "Feb 1959 + Reformatory in Mansfield supported; Shawshank film stand-in is outside knowledge"
+ },
+ "C030": {
+  "label": "unsupported",
+  "material": true,
+  "evidence": [
+   "F9"
+  ],
+  "note": "paroled/released supported; age 80 not derivable (no birth year in research)"
+ },
+ "C039": {
+  "label": "legitimate_inference",
+  "material": false,
+  "evidence": [
+   "F28"
+  ],
+  "note": "rhetorical; he admitted 'You got me' at capture",
+  "ambiguous": true
+ },
+ "C043": {
+  "label": "overinterpretation",
+  "material": false,
+  "evidence": [
+   "F13"
+  ],
+  "note": "F13 has Smith on release and prosecutors' objection in one fact but does not say Smith confirmed the objection"
+ },
+ "C054": {
+  "label": "misattached",
+  "material": false,
+  "evidence": [
+   "F7",
+   "F13"
+  ],
+  "note": "Akron is the accident site, not the courtroom; rest is narration"
+ },
+ "C056": {
+  "label": "not_a_claim",
+  "material": false,
+  "evidence": [],
+  "note": "rhetorical fragment"
+ },
+ "C060": {
+  "label": "legitimate_inference",
+  "material": false,
+  "evidence": [
+   "F12"
+  ],
+  "note": "statement reported by WFTV after arrest; framing is paraphrase"
+ },
+ "C067": {
+  "label": "supported",
+  "material": false,
+  "evidence": [
+   "F10",
+   "F28"
+  ],
+  "note": "callback to supported scene"
+ },
+ "C091": {
+  "label": "legitimate_inference",
+  "material": false,
+  "evidence": [
+   "F0",
+   "F2"
+  ],
+  "note": "1959 escape to 1975 WV arrest = 16 years; judge false positive"
+ },
+ "C092": {
+  "label": "legitimate_inference",
+  "material": false,
+  "evidence": [
+   "F10"
+  ],
+  "note": "weathered trailer, rural Brevard; rest is narration; judge false positive"
+ },
+ "C093": {
+  "label": "legitimate_inference",
+  "material": false,
+  "evidence": [
+   "F0",
+   "F2"
+  ],
+  "note": "16 years by arithmetic; judge false positive"
+ },
+ "C094": {
+  "label": "legitimate_inference",
+  "material": false,
+  "evidence": [
+   "F0",
+   "F15",
+   "F18"
+  ],
+  "note": "1975 to 2015 = 40 years; judge false positive"
+ },
+ "C122": {
+  "label": "supported",
+  "material": false,
+  "evidence": [
+   "F12"
+  ],
+  "note": ""
+ },
+ "C128": {
+  "label": "supported",
+  "material": false,
+  "evidence": [
+   "F28",
+   "F7"
+  ],
+  "note": "'You got me' is three words; rest narration"
+ },
+ "C135": {
+  "label": "legitimate_inference",
+  "material": false,
+  "evidence": [
+   "F0",
+   "F4",
+   "F10"
+  ],
+  "note": ""
+ },
+ "C142": {
+  "label": "not_a_claim",
+  "material": false,
+  "evidence": [],
+  "note": "fragment referencing the record"
+ },
+ "C149": {
+  "label": "supported",
+  "material": false,
+  "evidence": [
+   "F4"
+  ],
+  "note": ""
+ },
+ "C005": {
+  "label": "unsupported",
+  "material": true,
+  "evidence": [
+   "F11",
+   "F21"
+  ],
+  "note": "1970 escape two years earlier supported; 'without firing a shot' and Algeria having no extradition arrangement are outside the research"
+ },
+ "C035": {
+  "label": "legitimate_inference",
+  "material": false,
+  "evidence": [
+   "F23",
+   "F15"
+  ],
+  "note": "ID card fingerprint led to arrest; Portuguese citizenship blocked extradition"
+ },
+ "C055": {
+  "label": "overinterpretation",
+  "material": false,
+  "evidence": [
+   "F23"
+  ],
+  "note": "research: fingerprint on his Portuguese ID card matched a database; 'submitted to become a legal resident' adds a mechanism"
+ },
+ "C072": {
+  "label": "supported",
+  "material": false,
+  "evidence": [
+   "F2",
+   "F15"
+  ],
+  "note": "over Orlando; citizenship"
+ },
+ "C107": {
+  "label": "supported",
+  "material": false,
+  "evidence": [
+   "F2"
+  ],
+  "note": "F2: departing Detroit for Miami; judge false positive (other facts say Detroit to Algeria, the diverted destination)"
+ },
+ "C108": {
+  "label": "supported",
+  "material": false,
+  "evidence": [
+   "F7",
+   "F22"
+  ],
+  "note": "judge false positive"
+ },
+ "C109": {
+  "label": "legitimate_inference",
+  "material": false,
+  "evidence": [
+   "F10",
+   "F21"
+  ],
+  "note": "Sept 26 to Nov 17 = 52 days; judge false positive"
+ },
+ "C110": {
+  "label": "legitimate_inference",
+  "material": false,
+  "evidence": [
+   "F10",
+   "F15"
+  ],
+  "note": "appeals court + Supreme Court = twice; judge false positive"
+ },
+ "C111": {
+  "label": "legitimate_inference",
+  "material": false,
+  "evidence": [
+   "F22"
+  ],
+  "note": "four listed offenses; causal chain is narrator framing",
+  "ambiguous": true
+ },
+ "C113": {
+  "label": "supported",
+  "material": false,
+  "evidence": [
+   "F15"
+  ],
+  "note": ""
+ },
+ "C127": {
+  "label": "not_a_claim",
+  "material": false,
+  "evidence": [],
+  "note": "narration"
+ },
+ "C136": {
+  "label": "legitimate_inference",
+  "material": false,
+  "evidence": [
+   "F8",
+   "F21"
+  ],
+  "note": "sentence supported; escape 1970"
+ },
+ "C139": {
+  "label": "supported",
+  "material": false,
+  "evidence": [
+   "F21",
+   "F23"
+  ],
+  "note": ""
+ },
+ "C146": {
+  "label": "not_a_claim",
+  "material": false,
+  "evidence": [],
+  "note": "narration"
+ },
+ "C013": {
+  "label": "supported",
+  "material": false,
+  "evidence": [
+   "F86",
+   "F73"
+  ],
+  "note": "June 5 2019 request; Oct 2018 'TON of content' email"
+ },
+ "C021": {
+  "label": "overinterpretation",
+  "material": false,
+  "evidence": [],
+  "note": "mind-state claim with no stated knowledge in research",
+  "ambiguous": true
+ },
+ "C032": {
+  "label": "unsupported",
+  "material": false,
+  "evidence": [],
+  "note": "outside background (true in the world, absent from research)"
+ },
+ "C045": {
+  "label": "overinterpretation",
+  "material": false,
+  "evidence": [
+   "F58",
+   "F59"
+  ],
+  "note": "corporate debit cards supported; 'defeated payment verification' adds a mechanism"
+ },
+ "C058": {
+  "label": "supported",
+  "material": false,
+  "evidence": [
+   "F61",
+   "F62"
+  ],
+  "note": "gate overblock"
+ },
+ "C059": {
+  "label": "legitimate_inference",
+  "material": false,
+  "evidence": [
+   "F74",
+   "F81"
+  ],
+  "note": ""
+ },
+ "C105": {
+  "label": "supported",
+  "material": false,
+  "evidence": [
+   "F66"
+  ],
+  "note": "Oct 20 2017 self-email financial breakdown; judge false positive"
+ },
+ "C106": {
+  "label": "supported",
+  "material": false,
+  "evidence": [
+   "F77"
+  ],
+  "note": "judge false positive"
+ },
+ "C116": {
+  "label": "supported",
+  "material": false,
+  "evidence": [
+   "F3",
+   "F25"
+  ],
+  "note": ""
+ },
+ "C121": {
+  "label": "supported",
+  "material": false,
+  "evidence": [
+   "F94"
+  ],
+  "note": ""
+ },
+ "C124": {
+  "label": "supported",
+  "material": false,
+  "evidence": [
+   "F90"
+  ],
+  "note": ""
+ },
+ "C129": {
+  "label": "supported",
+  "material": false,
+  "evidence": [
+   "F100",
+   "F103"
+  ],
+  "note": ""
+ },
+ "C130": {
+  "label": "supported",
+  "material": false,
+  "evidence": [
+   "F61"
+  ],
+  "note": ""
+ },
+ "C134": {
+  "label": "supported",
+  "material": false,
+  "evidence": [
+   "F98"
+  ],
+  "note": ""
+ },
+ "C019": {
+  "label": "unsupported",
+  "material": false,
+  "evidence": [
+   "F4",
+   "F13"
+  ],
+  "note": "25:1 derives from $125B/$5B; how repo works (bonds pledged overnight, rolled) is outside textbook detail"
+ },
+ "C036": {
+  "label": "not_a_claim",
+  "material": false,
+  "evidence": [],
+  "note": "narration"
+ },
+ "C040": {
+  "label": "unsupported",
+  "material": true,
+  "evidence": [
+   "F18",
+   "F23"
+  ],
+  "note": "Salomon vice chairman/arb desk/scandal supported; Greenwich, Connecticut not in research (gate right, judge missed)"
+ },
+ "C044": {
+  "label": "misattached",
+  "material": true,
+  "evidence": [
+   "F2"
+  ],
+  "note": "quotes supported, but research never says he testified before Congress (gate right, judge missed)"
+ },
+ "C047": {
+  "label": "legitimate_inference",
+  "material": false,
+  "evidence": [
+   "F7"
+  ],
+  "note": "gate overblock"
+ },
+ "C053": {
+  "label": "overinterpretation",
+  "material": false,
+  "evidence": [
+   "F15"
+  ],
+  "note": "research: disagreement over whether models captured rare stress; 'historical correlations' adds a mechanism"
+ },
+ "C057": {
+  "label": "unsupported",
+  "material": false,
+  "evidence": [
+   "F14"
+  ],
+  "note": "meeting supported; 'then president of the New York Fed' not stated"
+ },
+ "C062": {
+  "label": "unsupported",
+  "material": false,
+  "evidence": [
+   "F4",
+   "F13"
+  ],
+  "note": "repo mechanism detail outside research (same as C019)"
+ },
+ "C074": {
+  "label": "legitimate_inference",
+  "material": false,
+  "evidence": [
+   "F14",
+   "F21"
+  ],
+  "note": "pressed, private-sector solution"
+ },
+ "C075": {
+  "label": "unsupported",
+  "material": false,
+  "evidence": [],
+  "note": "generalisation about Fed practice not in research"
+ },
+ "C099": {
+  "label": "supported",
+  "material": false,
+  "evidence": [
+   "F10"
+  ],
+  "note": "judge false positive (rounded figures in F17)"
+ },
+ "C100": {
+  "label": "supported",
+  "material": false,
+  "evidence": [
+   "F10"
+  ],
+  "note": "judge false positive"
+ },
+ "C101": {
+  "label": "supported",
+  "material": false,
+  "evidence": [
+   "F10"
+  ],
+  "note": "judge false positive"
+ },
+ "C102": {
+  "label": "legitimate_inference",
+  "material": false,
+  "evidence": [
+   "F4"
+  ],
+  "note": "named dealers extended financing; $125B/$5B supported"
+ },
+ "C103": {
+  "label": "legitimate_inference",
+  "material": false,
+  "evidence": [
+   "F14"
+  ],
+  "note": "judge false positive"
+ },
+ "C104": {
+  "label": "supported",
+  "material": false,
+  "evidence": [
+   "F5",
+   "F14"
+  ],
+  "note": "judge false positive"
+ },
+ "C120": {
+  "label": "supported",
+  "material": false,
+  "evidence": [
+   "F5"
+  ],
+  "note": ""
+ },
+ "C126": {
+  "label": "not_a_claim",
+  "material": false,
+  "evidence": [],
+  "note": "narration"
+ },
+ "C145": {
+  "label": "legitimate_inference",
+  "material": false,
+  "evidence": [
+   "F15",
+   "F17"
+  ],
+  "note": ""
+ },
+ "C028": {
+  "label": "legitimate_inference",
+  "material": false,
+  "evidence": [
+   "F23",
+   "F42",
+   "F43",
+   "F48"
+  ],
+  "note": "more than $78,600 + about $11,400 = roughly $90,000+",
+  "ambiguous": true
+ },
+ "C029": {
+  "label": "misattached",
+  "material": true,
+  "evidence": [
+   "F56",
+   "F61",
+   "F42"
+  ],
+  "note": "$78,600 is what Jones was ordered to REPAY; the family received $47,000; 'bracelet on the nightstand' invented location"
+ },
+ "C061": {
+  "label": "misattached",
+  "material": false,
+  "evidence": [
+   "F53"
+  ],
+  "note": "research: he left around noon, not morning (gate right, judge missed)"
+ },
+ "C065": {
+  "label": "supported",
+  "material": false,
+  "evidence": [
+   "F56"
+  ],
+  "note": "gate overblock"
+ },
+ "C068": {
+  "label": "legitimate_inference",
+  "material": false,
+  "evidence": [
+   "F61"
+  ],
+  "note": "gate overblock"
+ },
+ "C095": {
+  "label": "legitimate_inference",
+  "material": false,
+  "evidence": [
+   "F60",
+   "F61"
+  ],
+  "note": "1979 to 1986 declared dead, then benefits; judge false positive"
+ },
+ "C096": {
+  "label": "legitimate_inference",
+  "material": false,
+  "evidence": [
+   "F45",
+   "F87"
+  ],
+  "note": "Goodenough's statements showed Las Vegas income since 1995; judge false positive",
+  "ambiguous": true
+ },
+ "C097": {
+  "label": "supported",
+  "material": false,
+  "evidence": [
+   "F38",
+   "F90"
+  ],
+  "note": "declared dead 25 years earlier; judge false positive"
+ },
+ "C098": {
+  "label": "supported",
+  "material": false,
+  "evidence": [
+   "F23",
+   "F30"
+  ],
+  "note": "F5 says five years (conflicting later report); primary sentencing facts say three; judge false positive"
+ },
+ "C112": {
+  "label": "supported",
+  "material": false,
+  "evidence": [
+   "F35",
+   "F63",
+   "F90"
+  ],
+  "note": ""
+ },
+ "C115": {
+  "label": "legitimate_inference",
+  "material": false,
+  "evidence": [
+   "F47",
+   "F40"
+  ],
+  "note": ""
+ },
+ "C117": {
+  "label": "legitimate_inference",
+  "material": false,
+  "evidence": [
+   "F69",
+   "F84"
+  ],
+  "note": ""
+ },
+ "C119": {
+  "label": "supported",
+  "material": false,
+  "evidence": [
+   "F20",
+   "F88"
+  ],
+  "note": ""
+ },
+ "C123": {
+  "label": "supported",
+  "material": false,
+  "evidence": [
+   "F83"
+  ],
+  "note": ""
+ },
+ "C131": {
+  "label": "supported",
+  "material": false,
+  "evidence": [
+   "F38",
+   "F60"
+  ],
+  "note": ""
+ },
+ "C132": {
+  "label": "supported",
+  "material": false,
+  "evidence": [
+   "F64"
+  ],
+  "note": ""
+ },
+ "C147": {
+  "label": "supported",
+  "material": false,
+  "evidence": [
+   "F49"
+  ],
+  "note": ""
+ },
+ "C148": {
+  "label": "not_a_claim",
+  "material": false,
+  "evidence": [],
+  "note": "narration"
+ },
+ "C151": {
+  "label": "supported",
+  "material": false,
+  "evidence": [
+   "F84"
+  ],
+  "note": ""
+ },
+ "C001": {
+  "label": "legitimate_inference",
+  "material": false,
+  "evidence": [
+   "F13"
+  ],
+  "note": "'agencies that may not recognize' is a mild extension of 'dispersed across jurisdictions'"
+ },
+ "C003": {
+  "label": "not_a_claim",
+  "material": false,
+  "evidence": [],
+  "note": "narration about cultural assumption"
+ },
+ "C004": {
+  "label": "overinterpretation",
+  "material": true,
+  "evidence": [
+   "F10"
+  ],
+  "note": "median 89.0 supported; 'a full standard deviation below the norm' is a statistical misstatement not in research"
+ },
+ "C007": {
+  "label": "supported",
+  "material": false,
+  "evidence": [
+   "F1",
+   "F11",
+   "F18"
+  ],
+  "note": "r=-.07 broad, r=-.55 female sample, PCL-R in both"
+ },
+ "C009": {
+  "label": "overinterpretation",
+  "material": false,
+  "evidence": [
+   "F20",
+   "F11"
+  ],
+  "note": "'makes serial killing more likely' is causal; research gives correlation"
+ },
+ "C010": {
+  "label": "overinterpretation",
+  "material": true,
+  "evidence": [
+   "F19"
+  ],
+  "note": "research says subgroups differed in intelligence, not which was higher"
+ },
+ "C011": {
+  "label": "legitimate_inference",
+  "material": false,
+  "evidence": [
+   "F6"
+  ],
+  "note": "46% unsolved in 2020"
+ },
+ "C012": {
+  "label": "unsupported",
+  "material": false,
+  "evidence": [
+   "F9"
+  ],
+  "note": "self/third-party reports supported; 'news accounts, court records' added"
+ },
+ "C014": {
+  "label": "not_a_claim",
+  "material": false,
+  "evidence": [],
+  "note": "narration"
+ },
+ "C015": {
+  "label": "legitimate_inference",
+  "material": false,
+  "evidence": [
+   "F20",
+   "F24"
+  ],
+  "note": ""
+ },
+ "C016": {
+  "label": "legitimate_inference",
+  "material": false,
+  "evidence": [
+   "F2",
+   "F14"
+  ],
+  "note": ""
+ },
+ "C017": {
+  "label": "unsupported",
+  "material": false,
+  "evidence": [
+   "F2"
+  ],
+  "note": "textbook amygdala explanation outside research"
+ },
+ "C018": {
+  "label": "unsupported",
+  "material": false,
+  "evidence": [],
+  "note": "pop-culture reference (Se7en) outside research"
+ },
+ "C020": {
+  "label": "supported",
+  "material": false,
+  "evidence": [
+   "F11"
+  ],
+  "note": ""
+ },
+ "C022": {
+  "label": "overinterpretation",
+  "material": false,
+  "evidence": [
+   "F2",
+   "F8"
+  ],
+  "note": "'stays regulated where others destabilize' goes beyond 'perform normally on some tasks'"
+ },
+ "C023": {
+  "label": "supported",
+  "material": false,
+  "evidence": [
+   "F5",
+   "F7"
+  ],
+  "note": ""
+ },
+ "C024": {
+  "label": "misattached",
+  "material": true,
+  "evidence": [
+   "F19"
+  ],
+  "note": "F19 subgroups are homicide offenders, not serial offenders, and direction of IQ difference is not given"
+ },
+ "C025": {
+  "label": "unsupported",
+  "material": false,
+  "evidence": [],
+  "note": "pop-culture reference (Zodiac) outside research"
+ },
+ "C026": {
+  "label": "not_a_claim",
+  "material": false,
+  "evidence": [],
+  "note": "narration about culture"
+ },
+ "C031": {
+  "label": "legitimate_inference",
+  "material": false,
+  "evidence": [
+   "F20",
+   "F11"
+  ],
+  "note": ""
+ },
+ "C034": {
+  "label": "legitimate_inference",
+  "material": false,
+  "evidence": [
+   "F1"
+  ],
+  "note": "'insane female offenders'"
+ },
+ "C046": {
+  "label": "overinterpretation",
+  "material": false,
+  "evidence": [
+   "F9"
+  ],
+  "note": "hedged hypothetical sources beyond research"
+ },
+ "C050": {
+  "label": "unsupported",
+  "material": false,
+  "evidence": [
+   "F10"
+  ],
+  "note": "202 supported; 'largest systematic look' is an unsupported superlative"
+ },
+ "C064": {
+  "label": "overinterpretation",
+  "material": false,
+  "evidence": [],
+  "note": "claim about what people usually mean, not in research"
+ },
+ "C027": {
+  "label": "unsupported",
+  "material": true,
+  "evidence": [
+   "F3",
+   "F9"
+  ],
+  "note": "$12.6B supported; 'largest forfeiture ever against a cartel leader' is an unsupported superlative"
+ },
+ "C033": {
+  "label": "overinterpretation",
+  "material": false,
+  "evidence": [
+   "F26",
+   "F29"
+  ],
+  "note": "implies earlier indictments did not name him; 2009 indictments did",
+  "ambiguous": true
+ },
+ "C037": {
+  "label": "unsupported",
+  "material": false,
+  "evidence": [
+   "F1"
+  ],
+  "note": "'had not done in decades' is outside the research"
+ },
+ "C038": {
+  "label": "legitimate_inference",
+  "material": false,
+  "evidence": [
+   "F51",
+   "F71"
+  ],
+  "note": ""
+ },
+ "C042": {
+  "label": "misattached",
+  "material": true,
+  "evidence": [
+   "F29",
+   "F44",
+   "F43"
+  ],
+  "note": "Brooklyn appears only as an indictment district; research never places the trial there (fall 2018 is derivable). Gate right, judge missed"
+ },
+ "C048": {
+  "label": "legitimate_inference",
+  "material": false,
+  "evidence": [
+   "F1"
+  ],
+  "note": "Feb 14 = Valentine's Day; gate overblock"
+ },
+ "C051": {
+  "label": "overinterpretation",
+  "material": false,
+  "evidence": [
+   "F13"
+  ],
+  "note": "Flores brothers late 2008 supported; that every number traces back to them is not"
+ },
+ "C052": {
+  "label": "legitimate_inference",
+  "material": false,
+  "evidence": [
+   "F45"
+  ],
+  "note": "all 10 counts; 'unanimous' follows from a federal jury verdict but is not stated",
+  "ambiguous": true
+ },
+ "C063": {
+  "label": "supported",
+  "material": false,
+  "evidence": [
+   "F57",
+   "F58"
+  ],
+  "note": "gate overblock"
+ },
+ "C066": {
+  "label": "overinterpretation",
+  "material": false,
+  "evidence": [
+   "F64"
+  ],
+  "note": "trains with secret compartments supported; ports of entry/legitimate freight added"
+ },
+ "C069": {
+  "label": "overinterpretation",
+  "material": false,
+  "evidence": [
+   "F1"
+  ],
+  "note": "event supported; 'looked to some like a provocation' attributes an unstated reaction"
+ },
+ "C070": {
+  "label": "unsupported",
+  "material": false,
+  "evidence": [],
+  "note": "'operating from the mountains of Sinaloa' outside research"
+ },
+ "C073": {
+  "label": "unsupported",
+  "material": false,
+  "evidence": [
+   "F1"
+  ],
+  "note": "Al Capone precedent is outside research"
+ },
+ "C076": {
+  "label": "supported",
+  "material": false,
+  "evidence": [
+   "F0",
+   "F1"
+  ],
+  "note": "judge false positive"
+ },
+ "C077": {
+  "label": "unsupported",
+  "material": true,
+  "evidence": [],
+  "note": "invented scene detail about a seizure site"
+ },
+ "C078": {
+  "label": "overinterpretation",
+  "material": false,
+  "evidence": [
+   "F61",
+   "F65"
+  ],
+  "note": "interpretive claim about smuggling methods"
+ },
+ "C079": {
+  "label": "legitimate_inference",
+  "material": false,
+  "evidence": [
+   "F56"
+  ],
+  "note": "evidence types supported; functions are narration"
+ },
+ "C080": {
+  "label": "not_a_claim",
+  "material": false,
+  "evidence": [],
+  "note": "narration"
+ },
+ "C081": {
+  "label": "overinterpretation",
+  "material": false,
+  "evidence": [
+   "F40"
+  ],
+  "note": "reads intent into consecutive sentence"
+ },
+ "C125": {
+  "label": "supported",
+  "material": false,
+  "evidence": [
+   "F1"
+  ],
+  "note": ""
+ },
+ "C133": {
+  "label": "not_a_claim",
+  "material": false,
+  "evidence": [],
+  "note": "narration"
+ },
+ "C137": {
+  "label": "supported",
+  "material": false,
+  "evidence": [
+   "F26"
+  ],
+  "note": ""
+ },
+ "C140": {
+  "label": "supported",
+  "material": false,
+  "evidence": [
+   "F13"
+  ],
+  "note": ""
+ },
+ "C141": {
+  "label": "supported",
+  "material": false,
+  "evidence": [
+   "F40"
+  ],
+  "note": ""
+ },
+ "C002": {
+  "label": "misattached",
+  "material": true,
+  "evidence": [
+   "F160"
+  ],
+  "note": "Goldman's 35.9% is non-manager wages generally; 'in fast food' attaches it to the wrong population"
+ },
+ "C006": {
+  "label": "legitimate_inference",
+  "material": false,
+  "evidence": [
+   "F1",
+   "F3"
+  ],
+  "note": "$5.39 to $11.99 = +$6.60, >100%; 'at locations across the country' is a mild stretch"
+ },
+ "C041": {
+  "label": "overinterpretation",
+  "material": false,
+  "evidence": [
+   "F166"
+  ],
+  "note": "63% across 10 chains supported; 'industry-wide' and McDonald's 'leading the field' are not"
+ },
+ "C049": {
+  "label": "not_a_claim",
+  "material": false,
+  "evidence": [],
+  "note": "narration"
+ },
+ "C071": {
+  "label": "not_a_claim",
+  "material": false,
+  "evidence": [],
+  "note": "narration"
+ },
+ "C082": {
+  "label": "legitimate_inference",
+  "material": false,
+  "evidence": [
+   "F61",
+   "F62"
+  ],
+  "note": "NRA five-year 35% food cost, Feb 2020 to Apr 2025 window; judge false positive"
+ },
+ "C083": {
+  "label": "supported",
+  "material": false,
+  "evidence": [
+   "F62",
+   "F165"
+  ],
+  "note": "another source says 39% over six years; primary NRA figure is 35%; judge false positive"
+ },
+ "C084": {
+  "label": "legitimate_inference",
+  "material": false,
+  "evidence": [
+   "F37"
+  ],
+  "note": "30% + 30%, occupancy separate; judge false positive (flagged as gate-introduced, but correct)"
+ },
+ "C085": {
+  "label": "supported",
+  "material": false,
+  "evidence": [
+   "F62"
+  ],
+  "note": "judge false positive"
+ },
+ "C086": {
+  "label": "supported",
+  "material": false,
+  "evidence": [
+   "F25"
+  ],
+  "note": "judge false positive"
+ },
+ "C087": {
+  "label": "supported",
+  "material": false,
+  "evidence": [
+   "F35"
+  ],
+  "note": "F209 gives a conflicting 19.8%; script follows F35 exactly; judge false positive"
+ },
+ "C088": {
+  "label": "misattached",
+  "material": true,
+  "evidence": [
+   "F33",
+   "F58"
+  ],
+  "note": "78% is the LendingTree/USA Today figure; context ties 'those respondents' to the Farmdoc survey",
+  "ambiguous": true
+ },
+ "C089": {
+  "label": "legitimate_inference",
+  "material": false,
+  "evidence": [
+   "F35",
+   "F2"
+  ],
+  "note": "judge false positive"
+ },
+ "C090": {
+  "label": "supported",
+  "material": false,
+  "evidence": [
+   "F160"
+  ],
+  "note": "judge false positive"
+ },
+ "C114": {
+  "label": "supported",
+  "material": false,
+  "evidence": [],
+  "note": "Farmdoc Daily survey is in the research (53.1% unfair)"
+ },
+ "C118": {
+  "label": "supported",
+  "material": false,
+  "evidence": [
+   "F35"
+  ],
+  "note": ""
+ },
+ "C138": {
+  "label": "supported",
+  "material": false,
+  "evidence": [
+   "F191"
+  ],
+  "note": ""
+ },
+ "C143": {
+  "label": "supported",
+  "material": false,
+  "evidence": [
+   "F2"
+  ],
+  "note": ""
+ },
+ "C144": {
+  "label": "supported",
+  "material": false,
+  "evidence": [
+   "F1"
+  ],
+  "note": ""
+ },
+ "C150": {
+  "label": "supported",
+  "material": false,
+  "evidence": [
+   "F166"
+  ],
+  "note": ""
+ }
+}

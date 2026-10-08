@@ -1,0 +1,283 @@
+{
+ "id": "chapo-chicago",
+ "run": 2,
+ "words": 1593,
+ "primaryPer1k": 2.51,
+ "overreachPer1k": 0,
+ "finalErrors": [
+  {
+   "i": 16,
+   "sentence": "What broke the case open was not a wiretap or a raid.",
+   "script_quote": "What broke the case open was not a wiretap or a raid",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research does not state what 'broke the case open'; this causal claim about the Flores brothers being the decisive turning point over wiretaps or raids is not supported by the research.",
+   "first_seen": "section_2",
+   "seen_in": [
+    "section_2",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 31,
+   "sentence": "Superseding indictments followed, each one adding defendants, extending the alleged conspiracy's reach, and climbing closer to the organization's leadership.",
+   "script_quote": "each one adding defendants, extending the alleged conspiracy's reach, and climbing closer to the organization's leadership",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research does not describe the content or progression of superseding indictments in this way; this characterization of each superseding indictment's purpose and trajectory is not supported by the research.",
+   "first_seen": "section_2",
+   "seen_in": [
+    "section_2",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 63,
+   "sentence": "Reloadable debit cards carried value across borders in increments too small to trigger automatic scrutiny.",
+   "script_quote": "Reloadable debit cards carried value across borders in increments too small to trigger automatic scrutiny",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research states only that Guzman Loera laundered drug proceeds through reloadable debit cards; the specific mechanism of 'increments too small to trigger automatic scrutiny' is not found in the research.",
+   "first_seen": "section_5",
+   "seen_in": [
+    "section_5",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 72,
+   "sentence": "Alex Cifuentes described what he witnessed firsthand.",
+   "script_quote": "Alex Cifuentes described what he witnessed firsthand",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research lists Alex Cifuentes only as a cooperating witness; it does not characterize his testimony as describing what he 'witnessed firsthand.'",
+   "first_seen": "section_6",
+   "seen_in": [
+    "section_6",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  }
+ ],
+ "removed": [
+  {
+   "i": 0,
+   "sentence": "On February 14, 2013, the Chicago Crime Commission stood before a city press conference and handed a Mexican cartel boss a title that had last carried weight in the era of Al Capone.",
+   "script_quote": "February 14, 2013, the Chicago Crime Commission stood before a city press conference",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research says the announcement was made 'at a Chicago news conference' on February 14, 2013, but does not describe it as a 'city press conference' — minor but the research also does not say it was a city-organized event. However, this is close enough to be style. More importantly, the research s",
+   "first_seen": "hook",
+   "seen_in": [
+    "hook"
+   ],
+   "in_final": false,
+   "removed_after": "hook"
+  },
+  {
+   "i": 29,
+   "sentence": "Each layer of that total traced back to the foundation the Flores brothers laid when they first sat down with federal investigators.",
+   "script_quote": "Each layer of that total traced back to the foundation the Flores brothers laid when they first sat down with federal investigators.",
+   "category": "evidence_inflation",
+   "verdict": "error",
+   "research_quote": "The Chicago-based investigation of the Sinaloa Cartel has resulted in total seizures of approximately $30.8 million since 2008.",
+   "why": "The research attributes the total seizures to the Chicago-based investigation since 2008 but does not state that each layer traced back to the Flores brothers' cooperation specifically.",
+   "first_seen": "section_2",
+   "seen_in": [
+    "section_2",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill"
+   ],
+   "in_final": false,
+   "removed_after": "after_refill"
+  },
+  {
+   "i": 47,
+   "sentence": "The 2009 indictments out of Chicago and Brooklyn named Guzmán Loera, Ismael Zambada-García, and Arturo Beltrán-Leyva together, charging them with importing narcotics into a network that fed wholesale distributors in New York, Miami, Atlanta, Chicago, Arizona, and Los Angeles.",
+   "script_quote": "charging them with importing narcotics into a network that fed wholesale distributors in New York, Miami, Atlanta, Chicago, Arizona, and Los Angeles",
+   "category": "evidence_inflation",
+   "verdict": "error",
+   "research_quote": "DEA said the 2009 Brooklyn and Chicago indictments together charged Guzmán Loera, Ismael Zambada-García, Arturo Beltrán-Leyva, and others with importing nearly 200 metric tons of cocaine into the United States",
+   "why": "The research says the indictments charged importing cocaine into the US; the script adds the specific distribution cities (New York, Miami, Atlanta, etc.) as part of what those indictments charged, whereas the research attributes those cities to the sentencing-era DEA release, not the 2009 Brooklyn/",
+   "first_seen": "section_3",
+   "seen_in": [
+    "section_3",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review"
+   ],
+   "in_final": false,
+   "removed_after": "review"
+  },
+  {
+   "i": 103,
+   "sentence": "Among the weapons attributed to him: a gold-plated AK-47, three diamond-encrusted .38 caliber handguns, and one of those handguns engraved with his initials — JGL — pressed into the metal.",
+   "script_quote": "one of those handguns engraved with his initials — JGL — pressed into the metal",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research says the handgun was 'emblazoned with his initials JGL' but does not say 'engraved' or describe it as 'pressed into the metal'; however this is close paraphrase and the core fact is supported. The script also says 'engraved' vs 'emblazoned' which is a minor word substitution a careful r",
+   "first_seen": "section_6",
+   "seen_in": [
+    "section_6",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill"
+   ],
+   "in_final": false,
+   "removed_after": "after_refill"
+  },
+  {
+   "i": 110,
+   "sentence": "Judge Brian M. Cogan took the bench in Brooklyn's Eastern District on July 17, 2019, and the sentence he handed down resolved every legal thread that had been building since the Flores brothers walked into a federal office more than a decade earlier.",
+   "script_quote": "had been building since the Flores brothers walked into a federal office more than a decade earlier",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research does not state that the Flores brothers 'walked into a federal office'; it only says their cooperation facilitated seizures in late 2008. The specific act described is not supported by the research.",
+   "first_seen": "section_7",
+   "seen_in": [
+    "section_7",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill"
+   ],
+   "in_final": false,
+   "removed_after": "after_refill"
+  },
+  {
+   "i": 84,
+   "sentence": "The trial ran three months in Brooklyn's Eastern District, and what prosecutors laid before the jury was not a theory assembled from surveillance footage and inference.",
+   "script_quote": "The trial ran three months in Brooklyn's Eastern District",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research confirms the trial lasted three months but does not specify it took place in 'Brooklyn's Eastern District'; the research only names Judge Brian M. Cogan and the Eastern District of New York is implied but not explicitly stated in the provided research text.",
+   "first_seen": "section_6",
+   "seen_in": [
+    "section_6",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review"
+   ],
+   "in_final": false,
+   "removed_after": "review"
+  }
+ ],
+ "draftErrors": 9,
+ "rejected": 0,
+ "stages": [
+  {
+   "stage": "plan",
+   "words": 763
+  },
+  {
+   "stage": "hook",
+   "words": 112
+  },
+  {
+   "stage": "section_1",
+   "words": 222
+  },
+  {
+   "stage": "section_2",
+   "words": 279
+  },
+  {
+   "stage": "section_3",
+   "words": 266
+  },
+  {
+   "stage": "section_4",
+   "words": 268
+  },
+  {
+   "stage": "section_5",
+   "words": 268
+  },
+  {
+   "stage": "section_6",
+   "words": 384
+  },
+  {
+   "stage": "section_7",
+   "words": 430
+  },
+  {
+   "stage": "finalize_in",
+   "words": 2117
+  },
+  {
+   "stage": "before_refine",
+   "words": 2157
+  },
+  {
+   "stage": "after_refine",
+   "words": 1999
+  },
+  {
+   "stage": "before_refill",
+   "words": 1949
+  },
+  {
+   "stage": "after_refill",
+   "words": 1949
+  },
+  {
+   "stage": "finalize_out",
+   "words": 1809
+  },
+  {
+   "stage": "review",
+   "words": 1854
+  },
+  {
+   "stage": "final_check",
+   "words": 1593
+  }
+ ],
+ "final": "A cartel boss operating from the mountains of Mexico had just been named Chicago's Public Enemy Number One, the same title the Chicago Crime Commission had once reserved for the city's most dangerous criminal figures. Not a Chicago gangster. Not even someone who had set foot in Illinois.\n\nA man in Sinaloa. February 14, 2013. The Chicago Crime Commission stood before cameras at a Chicago news conference and handed a living man the title of Public Enemy Number One. The name they attached to it was Joaquín Guzmán Loera. El Chapo.\n\nBestowing it was a deliberate act. By formally joining forces with the DEA Chicago Field Division and bestowing that specific label — Chicago's Public Enemy Number One — on a cartel boss still operating from Mexico, the Commission was doing more than drawing a historical parallel. It was announcing that the city's most serious organized crime threat was no longer a local product. It had a supply chain that crossed an international border, and Chicago sat at the receiving end.\n\nGuzmán was not in the room. He was not in the country. He would not be arrested until February 22, 2014, in Mazatlán, Sinaloa — more than a year after the Commission put his name on that title. The gap between the declaration and the arrest is the whole shape of this story: a legal campaign building pressure across jurisdictions, using the weight of Chicago's own criminal mythology to frame what federal prosecutors were constructing around him.\n\nWhat broke the case open was not a wiretap or a raid. It was two brothers from Chicago deciding to talk.\n\nThe Flores brothers were Chicago twins tied to the Sinaloa Cartel. When they flipped in late 2008, they did not just hand investigators names. They handed them the operational map of a supply line mid-shipment.\n\nThe results were immediate and concrete. Their cooperation facilitated the seizure of more than 1,600 kilograms of cocaine in the Los Angeles area — cocaine that was already bound for Chicago when it was intercepted. Around the same time, more than $15 million in cash was seized in the Chicago area. That is not background intelligence producing results years later. That is cooperation producing seizures within the same window it was given.\n\nThose early grabs were the seed of something larger. The Chicago-based investigation, running from 2008 forward, eventually accumulated approximately 11 tons of cocaine, 265 kilograms of methamphetamine, 78 kilograms of heroin, and approximately $30.8 million in total seizures.\n\nTheir cooperation also gave prosecutors the evidentiary spine to build indictments that could reach upward toward the cartel's leadership. The Chicago case unsealed in 2009 charged 16 individuals in a distribution cell. That indictment was not the end — it became a template. Superseding indictments followed, each one adding defendants, extending the alleged conspiracy's reach, and climbing closer to the organization's leadership. The brothers had not just given up a shipment. They had handed federal prosecutors a ladder.\n\nFederal prosecutors stated the conclusion plainly in the indictment language itself: Chicago was not incidentally involved. It was the distribution hub. That phrase appears in the charging documents — the organization used Chicago \"as a distribution hub\" — and it was the prosecutorial theory that gave the Northern District of Illinois its jurisdictional anchor for the charges that followed.\n\nWhat flowed from that designation was a forfeiture demand that made the theory concrete. The Chicago indictment sought more than $1.8 billion in cash proceeds traceable to the conspiracy. That figure was not an abstraction about global cartel revenues — it was the amount prosecutors argued was traceable to the conspiracy charged in the Chicago case. The city was not a waypoint. It was the accounting address.\n\nA separate federal complaint alleged that more than $100 million in narcotics proceeds had been laundered through Chicago-area defendants and entities.\n\nThe Chicago case also did not exist in isolation. The 2009 indictments out of Chicago and Brooklyn named Guzmán Loera, Ismael Zambada-García, and Arturo Beltrán-Leyva together, along with others. Chicago was one destination among several — but it was the jurisdiction that drove the prosecution forward, the city whose courts held the indictments that kept climbing.\n\nThey read like logistics for a small war.\n\nBetween 1990 and December 2008, the Chicago and Brooklyn indictments alleged that Guzmán Loera and his co-conspirators imported nearly 200 metric tons of cocaine into the United States. That is not a figure that moves through airports in luggage. Moving volume at that scale took engineering, and prosecutors later described what it looked like.\n\nFishing boats carried multi-ton shipments, alongside submarines, carbon fiber airplanes, trains with secret compartments, and transnational underground tunnels.\n\nWhat came back through those same corridors was money. More than $5.8 billion in cash proceeds, the Chicago and Brooklyn indictments together alleged, smuggled south to Mexico, a figure drawn from the combined reach of both cases, distinct from the $1.8 billion the Chicago indictment alone sought in forfeiture. The cocaine moved north through an industrial supply chain. The currency moved south through one just as deliberate.\n\nThe indictments did not stop at the 2009 filing.\n\nOn January 27, 2015, federal law enforcement in Chicago unsealed an eighth superseding indictment, adding defendants and pushing the forfeiture demand to $2 billion. Nine defendants were charged, Guzmán Loera among them. The conspiracy it alleged ran from May 2005 through December 2014 — nearly a decade of narcotics importation, distribution, and money laundering, all anchored to the Northern District of Illinois. And the forfeiture demand attached to that single filing: $2 billion.\n\nThat number required a financial infrastructure to justify it. Prosecutors described how the money moved. Drug proceeds were laundered through U.S.-based insurance companies and reloadable debit cards. Reloadable debit cards carried value across borders in increments too small to trigger automatic scrutiny. Shell companies absorbed and redistributed the rest — among them, prosecutors alleged, a juice company and a fish flour company, legitimate-seeming businesses whose books could absorb narcotics revenue and release it as ordinary commercial income. The Chicago money-laundering complaint named specific defendants in that circuit: Pineda-Sanchez, Parra-Pedroza, Jose Abel Mendoza-Parra, Maria Loera-Alvarado, and Ernesto Ruiz-Ramirez — local nodes doing the conversion work that kept the larger financial pipeline moving.\n\nUnderneath all of it ran a bribery operation. The cartel paid corrupt government officials and employees millions of dollars in bribes, embedding protection into the supply chain itself.\n\nThe trial ran three months, and what prosecutors laid before the jury was not a theory assembled from surveillance footage and inference.\n\nRey Zambada took the stand. So did Vicente Zambada. Damaso Lopez testified. Alex Cifuentes described what he witnessed firsthand. Miguel Martinez and Tirso Martinez added their accounts. These were not peripheral witnesses placing Guzmán at the edge of a conspiracy — they were people embedded in the structure itself, and their testimony carried the weight of proximity.\n\nWhat the cooperators described, the documentary record confirmed. Ledgers. Text messages. Videos. Photographs. Intercepted recordings. The paper and audio trail that investigators had accumulated across years of work in multiple countries formed the corroborating layer beneath the cooperating accounts.\n\nWhat emerged from that combined testimony was a portrait of violence that went beyond the logistics of narcotics distribution. Multiple co-conspirators testified that Guzmán Loera directed his subordinates to kidnap, interrogate, torture, and kill members of rival organizations. They also testified that he did not always delegate — that at times he carried out acts of violence himself.\n\nHis personal arsenal gave the firearm count on the indictment its texture. Among the weapons attributed to him: a gold-plated AK-47, three diamond-encrusted.38 caliber handguns, and one of those handguns emblazoned with his initials, JGL.\n\nOn February 12, 2019, the jury returned its verdict. Guilty on all 10 counts: narcotics trafficking, using a firearm in furtherance of drug crimes, participating in a money laundering conspiracy. Every count. The investigation — run through the DEA, ICE HSI, and the FBI, coordinated with law enforcement in Mexico, Ecuador, the Netherlands, the Dominican Republic, and Colombia — had produced a unanimous result.\n\nJudge Brian M. Cogan took the bench on July 17, 2019, to hand down the sentence. Life imprisonment. Consecutive to that, thirty more years. And then the forfeiture order: $12.6 billion.\n\nThe structure of the sentence itself tells you how the court classified him. The life term was imposed specifically for his role as a principal leader of a continuing criminal enterprise — a charge built around 26 separate drug-related violations and one murder conspiracy. That is not a charge prosecutors bring against a participant. It is a charge designed for the person at the top of a criminal organization. A consecutive 30 years on top of a life term has no practical effect on when someone leaves prison. What it has is legal meaning: it says that life alone was not sufficient to account for everything the court was resolving.\n\nThe $12.6 billion forfeiture order was not a fine or a penalty — prosecutors said it represented drug proceeds traceable to the conspiracy. The investigation that began with seizures measured in kilograms and millions ended with a court-ordered accounting measured in billions.\n\nBy the time of sentencing, the connected enforcement actions had resulted in seizures of over 130,000 kilograms of cocaine and heroin — physical volume that had required submarines, tunnels, carbon fiber aircraft, and compartmented freight trains to move, and cartel insiders willing to take the stand to document.\n\nLife plus thirty years and $12.6 billion in forfeiture: that is what the legal campaign, first announced at a Chicago press conference, ultimately produced."
+}

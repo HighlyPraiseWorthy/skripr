@@ -1,0 +1,1486 @@
+[
+ {
+  "stratum": "A_gate_confirmed",
+  "case": "psychopathy",
+  "file": "psychopathy-run2.json",
+  "sentence": "Serial cases are harder to identify and clear than single-incident homicides because they are dispersed — across time, across jurisdictions, across agencies that may not initially recognize they are looking at connected events.",
+  "span": "Serial cases are harder to identify and clear than single-incident homicides because they are dispersed — across time, across jurisdictions, across agencies that may not initially recognize they are looking at connected events.",
+  "gateResult": "Serial cases are harder to identify and clear than single-incident homicides because they are dispersed across time and jurisdictions.",
+  "judgeWhy": [
+   "unsupported_specificity: The script truncates the correlation value; the research states r = -.07, but the sentence as written omits the digits, making it an incomplete and unsupported specific claim."
+  ],
+  "id": "C001"
+ },
+ {
+  "stratum": "A_gate_confirmed",
+  "case": "fast-food-prices",
+  "file": "fast-food-prices-run2.json",
+  "sentence": "The Goldman Sachs data make the asymmetry legible: non-manager wages in fast food were up 35.9% since January 2017, and fast-food meal prices were up more than 41% over that same period.",
+  "span": "The Goldman Sachs data make the asymmetry legible: non-manager wages in fast food were up 35.9% since January 2017, and fast-food meal prices were up more than 41% over that same period.",
+  "gateResult": "The Goldman Sachs data make the asymmetry legible: non-manager wages were up 35.9% since January 2017, and fast-food meal prices were up more than 41% over that same period.",
+  "judgeWhy": [
+   "unsupported_specificity: The research attributes these figures to Marcus by Goldman Sachs for June 2024, but the script attributes them to 'Goldman Sachs data' without qualification, and more importantly the research says 'fast food meal prices were up more than 41%' — the script reproduces this correctly, but the research "
+  ],
+  "id": "C002"
+ },
+ {
+  "stratum": "A_gate_confirmed",
+  "case": "psychopathy",
+  "file": "psychopathy-run2.json",
+  "sentence": "And that finding, modest as it sounds in raw terms, carries real weight against a cultural story that has been insisting for decades that the danger is primarily cerebral.",
+  "span": "And that finding, modest as it sounds in raw terms, carries real weight against a cultural story that has been insisting for decades that the danger is primarily cerebral.",
+  "gateResult": "And that finding, modest as it sounds in raw terms, carries real weight against the assumption that the danger is primarily cerebral.",
+  "judgeWhy": [
+   "unsupported_specificity: The script truncates the correlation value; the research states r = -.07, but the sentence as written omits the digits, making it an incomplete and unsupported specific claim."
+  ],
+  "id": "C003"
+ },
+ {
+  "stratum": "A_gate_confirmed",
+  "case": "psychopathy",
+  "file": "psychopathy-run1.json",
+  "sentence": "But the median — the score that splits the sample cleanly in half — lands at 89.0, which places the midpoint of the distribution a full standard deviation fragment below the norm, not hovering just beneath it.",
+  "span": "But the median — the score that splits the sample cleanly in half — lands at 89.0, which places the midpoint of the distribution a full standard deviation fragment below the norm, not hovering just beneath it.",
+  "gateResult": "The median — the score that splits the sample cleanly in half — lands at 89.0, not hovering just beneath it.",
+  "judgeWhy": [
+   "unsupported_specificity: The research gives the median as 89.0 but makes no claim about how many standard deviation fragments below the norm this represents; the characterization 'a full standard deviation fragment' is not supported."
+  ],
+  "id": "C004"
+ },
+ {
+  "stratum": "A_gate_confirmed",
+  "case": "wright",
+  "file": "wright-run1.json",
+  "sentence": "The gun has done its work without firing a shot, and the man who walked out of a New Jersey prison two years earlier has now walked off an American commercial aircraft onto foreign soil — with a country that does not share an extradition arrangement waiting to receive him.",
+  "span": "The gun has done its work without firing a shot, and the man who walked out of a New Jersey prison two years earlier has now walked off an American commercial aircraft onto foreign soil — with a country that does not share an extradition arrangement waiting to receive him.",
+  "gateResult": "The gun has done its work, and the man who walked out of a New Jersey prison two years earlier has now walked off a commercial aircraft onto foreign soil.",
+  "judgeWhy": [
+   "unsupported_specificity: The research states Wright escaped in August 1970 and the hijacking was July 31, 1972 — roughly two years, but the research does not characterize it as 'two years earlier'; more importantly the research says he 'escaped' not 'walked out,' though the timing is approximately supported. The phrase 'wal"
+  ],
+  "id": "C005"
+ },
+ {
+  "stratum": "A_gate_confirmed",
+  "case": "fast-food-prices",
+  "file": "fast-food-prices-run2.json",
+  "sentence": "By 2024, that same meal was running $11.99 at locations across the country — a jump of more than $6.50, which works out to more than 100% in a single decade.",
+  "span": "By 2024, that same meal was running $11.99 at locations across the country — a jump of more than $6.50, which works out to more than 100% in a single decade.",
+  "gateResult": "By 2024, that same meal was running $11.99, a jump of more than $6.50, which works out to more than 100% in a single decade.",
+  "judgeWhy": [
+   "unsupported_specificity: The research states the Quarter Pounder meal rose from $5.39 to $11.99 (a ~$6.60 jump, ~122%), but the $6.50+ figure comes from a separate WSJ source about a 'fast-food combo meal' generically, not the same item. The script conflates the two sources into one claim."
+  ],
+  "id": "C006"
+ },
+ {
+  "stratum": "A_gate_confirmed",
+  "case": "psychopathy",
+  "file": "psychopathy-run2.json",
+  "sentence": "And psychopathy, measured by the same instrument used in that homicide research, correlates negatively with intelligence — modestly across the broader literature, substantially in the female offender sample.",
+  "span": "And psychopathy, measured by the same instrument used in that homicide research, correlates negatively with intelligence — modestly across the broader literature, substantially in the female offender sample.",
+  "gateResult": "And psychopathy correlates negatively with intelligence, modestly across the broader literature and substantially in the female offender sample.",
+  "judgeWhy": [
+   "unsupported_specificity: The script truncates the correlation value; the research states r = -.07, but the sentence as written omits the digits, making it an incomplete and unsupported specific claim."
+  ],
+  "id": "C007"
+ },
+ {
+  "stratum": "A_gate_confirmed",
+  "case": "freshwaters",
+  "file": "freshwaters-run2.json",
+  "sentence": "February 1959, Freshwaters arrived at the Ohio State Reformatory — the same institution, in Mansfield, that would later stand in for Shawshank Prison in the film.",
+  "span": "February 1959, Freshwaters arrived at the Ohio State Reformatory — the same institution, in Mansfield, that would later stand in for Shawshank Prison in the film.",
+  "gateResult": "February 1959, Freshwaters arrived at the Ohio State Reformatory in Mansfield.",
+  "judgeWhy": [
+   "unsupported_specificity: The research confirms the Ohio State Reformatory in Mansfield but never mentions its connection to the Shawshank film."
+  ],
+  "id": "C008"
+ },
+ {
+  "stratum": "A_gate_confirmed",
+  "case": "psychopathy",
+  "file": "psychopathy-run2.json",
+  "sentence": "The trait that makes serial killing more likely is not one that travels with elevated cognition.",
+  "span": "The trait that makes serial killing more likely is not one that travels with elevated cognition.",
+  "gateResult": null,
+  "judgeWhy": [
+   "unsupported_specificity: The script truncates the correlation value; the research states r = -.07, but the sentence as written omits the digits, making it an incomplete and unsupported specific claim."
+  ],
+  "id": "C009"
+ },
+ {
+  "stratum": "A_gate_confirmed",
+  "case": "psychopathy",
+  "file": "psychopathy-run2.json",
+  "sentence": "The high-psychopathy subgroup was not the cognitively dominant one.",
+  "span": "The high-psychopathy subgroup was not the cognitively dominant one.",
+  "gateResult": "The two subgroups showed distinct differences in intelligence, memory, attention, executive functions, and academic abilities.",
+  "judgeWhy": [
+   "unsupported_specificity: The script truncates the correlation value; the research states r = -.07, but the sentence as written omits the digits, making it an incomplete and unsupported specific claim.",
+   "unsupported_specificity: The research only states the two subgroups showed 'distinct differences in intelligence, memory, attention, executive functions, and academic abilities'; it does not specify which subgroup was cognitively dominant or superior."
+  ],
+  "id": "C010"
+ },
+ {
+  "stratum": "A_gate_confirmed",
+  "case": "psychopathy",
+  "file": "psychopathy-run2.json",
+  "sentence": "Nearly half of all homicide cases in a single year produced no arrest, no prosecution, nothing closed.",
+  "span": "Nearly half of all homicide cases in a single year produced no arrest, no prosecution, nothing closed.",
+  "gateResult": "Nearly half of all homicide cases in a single year remained unsolved.",
+  "judgeWhy": [
+   "unsupported_specificity: The script truncates the correlation value; the research states r = -.07, but the sentence as written omits the digits, making it an incomplete and unsupported specific claim.",
+   "certainty_inflation: The research reports clearance data (cases cleared), not specifically 'no arrest, no prosecution'; 'cleared' has a specific law-enforcement meaning the script conflates with a broader claim about no arrest or prosecution."
+  ],
+  "id": "C011"
+ },
+ {
+  "stratum": "A_gate_confirmed",
+  "case": "psychopathy",
+  "file": "psychopathy-run2.json",
+  "sentence": "Radford is built from secondary sources — news accounts, court records, self-reports — and IQ figures in that kind of archive can be incomplete, inflated by subjects with obvious incentives to exaggerate, or degraded by the general noise of third-party reporting.",
+  "span": "Radford is built from secondary sources — news accounts, court records, self-reports — and IQ figures in that kind of archive can be incomplete, inflated by subjects with obvious incentives to exaggerate, or degraded by the general noise of third-party reporting.",
+  "gateResult": "Radford is built from secondary sources — news accounts, self-reports — and IQ figures in that kind of archive can be incomplete, inflated by subjects with obvious incentives to exaggerate, or degraded by the general noise of third-party reporting.",
+  "judgeWhy": [
+   "unsupported_specificity: The script truncates the correlation value; the research states r = -.07, but the sentence as written omits the digits, making it an incomplete and unsupported specific claim."
+  ],
+  "id": "C012"
+ },
+ {
+  "stratum": "A_gate_confirmed",
+  "case": "streaming-fraud",
+  "file": "streaming-fraud-run2.json",
+  "sentence": "Same day, same message thread: he asked CC-3 for another 10,000 AI songs so he could \"spread this out more\" — not a creative request, a dispersal strategy, the same logic from the October 2018 playbook applied at a larger scale.",
+  "span": "Same day, same message thread: he asked CC-3 for another 10,000 AI songs so he could \"spread this out more\" — not a creative request, a dispersal strategy, the same logic from the October 2018 playbook applied at a larger scale.",
+  "gateResult": "Same day, he asked CC-3 for another 10,000 AI songs so he could 'spread this out more' — not a creative request, a dispersal strategy, the same logic from the October 2018 playbook applied at a larger scale.",
+  "judgeWhy": [
+   "contradiction: The research places this request on June 5, 2019, not the same day as the October 4, 2018 email the script has just been discussing."
+  ],
+  "id": "C013"
+ },
+ {
+  "stratum": "A_gate_confirmed",
+  "case": "psychopathy",
+  "file": "psychopathy-run1.json",
+  "sentence": "If the IQ scores cluster below average rather than above it, something other than raw cognitive firepower is doing the explanatory work — and that something is already visible in the research, waiting in a different part of the profile entirely.",
+  "span": "If the IQ scores cluster below average rather than above it, something other than raw cognitive firepower is doing the explanatory work — and that something is already visible in the research, waiting in a different part of the profile entirely.",
+  "gateResult": "If the IQ scores cluster around average rather than above it, something other than raw cognitive firepower is doing the explanatory work — and that something is already visible in the research, waiting in a different part of the profile entirely.",
+  "judgeWhy": [
+   "contradiction: The research says scores cluster around normal/average, not below average; the script frames the distribution as clustering below average."
+  ],
+  "id": "C014"
+ },
+ {
+  "stratum": "A_gate_confirmed",
+  "case": "psychopathy",
+  "file": "psychopathy-run2.json",
+  "sentence": "So if the IQ data already point below average, the next question is whether the trait most reliably associated with serial homicide — psychopathy itself — carries any cognitive advantage at all.",
+  "span": "So if the IQ data already point below average, the next question is whether the trait most reliably associated with serial homicide — psychopathy itself — carries any cognitive advantage at all.",
+  "gateResult": "So if the IQ data already point below average, the next question is whether psychopathy, which shows a strong association with serial homicide, carries any cognitive advantage at all.",
+  "judgeWhy": [
+   "unsupported_specificity: The script truncates the correlation value; the research states r = -.07, but the sentence as written omits the digits, making it an incomplete and unsupported specific claim."
+  ],
+  "id": "C015"
+ },
+ {
+  "stratum": "A_gate_confirmed",
+  "case": "psychopathy",
+  "file": "psychopathy-run2.json",
+  "sentence": "The research suggests it's closer to an absence: of the fear signal, of the aversive conditioning, of the internal event that would make most people stop.",
+  "span": "The research suggests it's closer to an absence: of the fear signal, of the aversive conditioning, of the internal event that would make most people stop.",
+  "gateResult": "The research suggests it's closer to a reduction: of the fear signal, of the aversive conditioning, of the internal event that would make most people stop.",
+  "judgeWhy": [
+   "unsupported_specificity: The script truncates the correlation value; the research states r = -.07, but the sentence as written omits the digits, making it an incomplete and unsupported specific claim."
+  ],
+  "id": "C016"
+ },
+ {
+  "stratum": "A_gate_confirmed",
+  "case": "psychopathy",
+  "file": "psychopathy-run2.json",
+  "sentence": "In typical fear conditioning, the amygdala encodes the emotional weight of aversive experiences — it is what makes a burned hand a lesson rather than just an event.",
+  "span": "In typical fear conditioning, the amygdala encodes the emotional weight of aversive experiences — it is what makes a burned hand a lesson rather than just an event.",
+  "gateResult": null,
+  "judgeWhy": [
+   "unsupported_specificity: The script truncates the correlation value; the research states r = -.07, but the sentence as written omits the digits, making it an incomplete and unsupported specific claim."
+  ],
+  "id": "C017"
+ },
+ {
+  "stratum": "A_gate_confirmed",
+  "case": "psychopathy",
+  "file": "psychopathy-run2.json",
+  "sentence": "John Doe in *Se7en* has already counted every step of the detective's route home.",
+  "span": "John Doe in *Se7en* has already counted every step of the detective's route home.",
+  "gateResult": null,
+  "judgeWhy": [
+   "unsupported_specificity: The script truncates the correlation value; the research states r = -.07, but the sentence as written omits the digits, making it an incomplete and unsupported specific claim."
+  ],
+  "id": "C018"
+ },
+ {
+  "stratum": "A_gate_confirmed",
+  "case": "ltcm",
+  "file": "ltcm-run2.json",
+  "sentence": "That ratio — about twenty-five dollars borrowed for every dollar the fund actually owned — was the product of two instruments used together: securities repurchase agreements, where LTCM pledged bonds as collateral to borrow cash overnight and rolled those loans forward continuously, and derivatives, which let the fund take on enormous notional exposure without putting up the full value of the position.",
+  "span": "That ratio — about twenty-five dollars borrowed for every dollar the fund actually owned — was the product of two instruments used together: securities repurchase agreements, where LTCM pledged bonds as collateral to borrow cash overnight and rolled those loans forward continuously, and derivatives, which let the fund take on enormous notional exposure without putting up the full value of the position.",
+  "gateResult": "That ratio — about twenty-five dollars borrowed for every dollar the fund actually owned — was the product of two instruments used together: securities repurchase agreements and derivatives, which together let the fund build extraordinary leverage, with major banks extending financing on very favorable terms and, in some cases, little or no initial margin.",
+  "judgeWhy": [
+   "unsupported_specificity: The research states LTCM had more than $125 billion borrowed against about $5 billion in equity (a ratio of about 25:1), but the script presents this as a specific stated ratio ('about twenty-five dollars') without the research explicitly stating that ratio."
+  ],
+  "id": "C019"
+ },
+ {
+  "stratum": "A_gate_confirmed",
+  "case": "psychopathy",
+  "file": "psychopathy-run2.json",
+  "sentence": "A meta-analytic review pooling studies that used standardized psychopathy measures alongside full-scale IQ testing found a statistically significant negative correlation between total psychopathy and FSIQ: r = -.",
+  "span": "A meta-analytic review pooling studies that used standardized psychopathy measures alongside full-scale IQ testing found a statistically significant negative correlation between total psychopathy and FSIQ: r = -.",
+  "gateResult": "A meta-analytic review found a statistically significant negative correlation between total psychopathy and FSIQ: r = -.07.",
+  "judgeWhy": [
+   "unsupported_specificity: The script truncates the correlation value; the research states r = -.07, but the sentence as written omits the digits, making it an incomplete and unsupported specific claim."
+  ],
+  "id": "C020"
+ },
+ {
+  "stratum": "A_gate_confirmed",
+  "case": "streaming-fraud",
+  "file": "streaming-fraud-run1.json",
+  "sentence": "Smith had known that.",
+  "span": "Smith had known that.",
+  "gateResult": "Smith had worked to avoid detection.",
+  "judgeWhy": [
+   "unsupported_attribution: The research does not state that Smith knew royalties came at the expense of legitimate artists; this attributes a specific mental state not supported by the research."
+  ],
+  "id": "C021"
+ },
+ {
+  "stratum": "A_gate_confirmed",
+  "case": "psychopathy",
+  "file": "psychopathy-run2.json",
+  "sentence": "That image is real in one narrow sense: the emotional flatness is documented, the reduced fear response is documented, the capacity to stay regulated in situations that would destabilize most people has empirical support.",
+  "span": "That image is real in one narrow sense: the emotional flatness is documented, the reduced fear response is documented, the capacity to stay regulated in situations that would destabilize most people has empirical support.",
+  "gateResult": "That image is real in one narrow sense: the emotional flatness is documented, the reduced fear response is documented, and the capacity to perform normally on some attentional and cognitive tasks despite emotional and behavioral abnormalities has empirical support.",
+  "judgeWhy": [
+   "unsupported_specificity: The script truncates the correlation value; the research states r = -.07, but the sentence as written omits the digits, making it an incomplete and unsupported specific claim.",
+   "unsupported_specificity: The research states high-psychopathy participants 'can perform normally on some attentional and cognitive tasks' but does not describe a capacity to 'stay regulated in situations that would destabilize most people'; this specific characterization is not supported."
+  ],
+  "id": "C022"
+ },
+ {
+  "stratum": "A_gate_confirmed",
+  "case": "psychopathy",
+  "file": "psychopathy-run2.json",
+  "sentence": "Neuroimaging and neuropsychological studies consistently link psychopathy to impaired function in these areas.",
+  "span": "Neuroimaging and neuropsychological studies consistently link psychopathy to impaired function in these areas.",
+  "gateResult": "Neuroimaging and neuropsychological studies link psychopathy to impaired ventromedial/orbitofrontal prefrontal cortex function in these areas.",
+  "judgeWhy": [
+   "unsupported_specificity: The script truncates the correlation value; the research states r = -.07, but the sentence as written omits the digits, making it an incomplete and unsupported specific claim."
+  ],
+  "id": "C023"
+ },
+ {
+  "stratum": "A_gate_confirmed",
+  "case": "psychopathy",
+  "file": "psychopathy-run2.json",
+  "sentence": "The profile that most closely tracks serial offending carried no obvious intellectual advantage over the one that did not.",
+  "span": "The profile that most closely tracks serial offending carried no obvious intellectual advantage over the one that did not.",
+  "gateResult": "The profile that most closely tracks serial offending carried no obvious intellectual advantage, with data showing serial killers average around the general population norm.",
+  "judgeWhy": [
+   "unsupported_specificity: The script truncates the correlation value; the research states r = -.07, but the sentence as written omits the digits, making it an incomplete and unsupported specific claim."
+  ],
+  "id": "C024"
+ },
+ {
+  "stratum": "A_gate_confirmed",
+  "case": "psychopathy",
+  "file": "psychopathy-run2.json",
+  "sentence": "Zodiac mails ciphers to newspapers.",
+  "span": "Zodiac mails ciphers to newspapers.",
+  "gateResult": null,
+  "judgeWhy": [
+   "unsupported_specificity: The script truncates the correlation value; the research states r = -.07, but the sentence as written omits the digits, making it an incomplete and unsupported specific claim."
+  ],
+  "id": "C025"
+ },
+ {
+  "stratum": "A_gate_confirmed",
+  "case": "psychopathy",
+  "file": "psychopathy-run2.json",
+  "sentence": "The culture took the idea of a distinctive psychopathic brain and read it as confirmation of superiority — a mind built differently and therefore built better for predation.",
+  "span": "The culture took the idea of a distinctive psychopathic brain and read it as confirmation of superiority — a mind built differently and therefore built better for predation.",
+  "gateResult": "The culture took the idea of a distinctive psychopathic brain and read it as a mind built differently and therefore built better for predation.",
+  "judgeWhy": [
+   "unsupported_specificity: The script truncates the correlation value; the research states r = -.07, but the sentence as written omits the digits, making it an incomplete and unsupported specific claim."
+  ],
+  "id": "C026"
+ },
+ {
+  "stratum": "A_gate_confirmed",
+  "case": "chapo-chicago",
+  "file": "chapo-chicago-run2.json",
+  "sentence": "By the time Judge Cogan signed the order, the $12.6 billion was the largest forfeiture ever ordered against a cartel leader.",
+  "span": "By the time Judge Cogan signed the order, the $12.6 billion was the largest forfeiture ever ordered against a cartel leader.",
+  "gateResult": "By the time Judge Cogan signed the order, the forfeiture figure stood at $12.6 billion, the amount prosecutors said represented drug proceeds traceable to the conspiracy.",
+  "judgeWhy": [
+   "unsupported_specificity: The research does not state that $12.6 billion was the largest forfeiture ever ordered against a cartel leader; this superlative claim has no basis in the provided research."
+  ],
+  "id": "C027"
+ },
+ {
+  "stratum": "A_gate_confirmed",
+  "case": "jones",
+  "file": "jones-run1.json",
+  "sentence": "Three years of probation, a restitution order exceeding $90,000 in total, and the slow drain of Social Security checks going back to the agency that had paid out on his death.",
+  "span": "Three years of probation, a restitution order exceeding $90,000 in total, and the slow drain of Social Security checks going back to the agency that had paid out on his death.",
+  "gateResult": "Three years of probation, a restitution order of $90,000, and the slow drain of Social Security checks going back to the agency that had paid out on his death.",
+  "judgeWhy": [
+   "contradiction: Research states exactly $90,000, not exceeding $90,000."
+  ],
+  "id": "C028"
+ },
+ {
+  "stratum": "A_gate_confirmed",
+  "case": "jones",
+  "file": "jones-run2.json",
+  "sentence": "What he left behind — a wife, three children, a bracelet on the nightstand — eventually became, through the machinery of courts and federal programs, a $78,600 government check.",
+  "span": "What he left behind — a wife, three children, a bracelet on the nightstand — eventually became, through the machinery of courts and federal programs, a $78,600 government check.",
+  "gateResult": "What he left behind — a wife, three children, through the machinery of courts and federal programs, a $78,600 government check.",
+  "judgeWhy": [
+   "contradiction: The $78,600 was restitution Jones was ordered to pay back to the SSA, not a government check paid to his family. The family received $47,000 in survivor benefits. The script mischaracterizes the $78,600 as a payment made to the family."
+  ],
+  "id": "C029"
+ },
+ {
+  "stratum": "A_gate_confirmed",
+  "case": "freshwaters",
+  "file": "freshwaters-run2.json",
+  "sentence": "What remained was Frank Freshwaters — eighty years old, paroled, released, and finally, unambiguously himself again.",
+  "span": "What remained was Frank Freshwaters — eighty years old, paroled, released, and finally, unambiguously himself again.",
+  "gateResult": "What remained was Frank Freshwaters — paroled, released, and finally, unambiguously himself again.",
+  "judgeWhy": [
+   "unsupported_specificity: The research does not state Freshwaters's age at the time of his 2016 release."
+  ],
+  "id": "C030"
+ },
+ {
+  "stratum": "B_gate_overblock",
+  "case": "psychopathy",
+  "file": "psychopathy-run1.json",
+  "sentence": "The traits most tightly linked to serial homicide are not the ones that require or reward high intelligence.",
+  "span": "The traits most tightly linked to serial homicide are not the ones that require or reward high intelligence.",
+  "gateResult": null,
+  "id": "C031"
+ },
+ {
+  "stratum": "B_gate_overblock",
+  "case": "streaming-fraud",
+  "file": "streaming-fraud-run1.json",
+  "sentence": "The royalty pool is shared.",
+  "span": "The royalty pool is shared.",
+  "gateResult": null,
+  "id": "C032"
+ },
+ {
+  "stratum": "B_gate_overblock",
+  "case": "chapo-chicago",
+  "file": "chapo-chicago-run1.json",
+  "sentence": "The eighth put Guzmán's name on it directly.",
+  "span": "The eighth put Guzmán's name on it directly.",
+  "gateResult": "The eighth superseding indictment charged Guzmán directly, alongside eight other defendants.",
+  "id": "C033"
+ },
+ {
+  "stratum": "B_gate_overblock",
+  "case": "psychopathy",
+  "file": "psychopathy-run1.json",
+  "sentence": "The first comes from a sample of forensic psychiatric patients — women adjudicated insane following offenses.",
+  "span": "The first comes from a sample of forensic psychiatric patients — women adjudicated insane following offenses.",
+  "gateResult": "The first comes from a study of female offenders adjudicated insane following offenses.",
+  "id": "C034"
+ },
+ {
+  "stratum": "B_gate_overblock",
+  "case": "wright",
+  "file": "wright-run2.json",
+  "sentence": "The document that gave him away was the same document that saved him.",
+  "span": "The document that gave him away was the same document that saved him.",
+  "gateResult": null,
+  "id": "C035"
+ },
+ {
+  "stratum": "B_gate_overblock",
+  "case": "ltcm",
+  "file": "ltcm-run1.json",
+  "sentence": "That is not how the American financial system is supposed to work.",
+  "span": "That is not how the American financial system is supposed to work.",
+  "gateResult": "That is not how the financial system is supposed to work.",
+  "id": "C036"
+ },
+ {
+  "stratum": "B_gate_overblock",
+  "case": "chapo-chicago",
+  "file": "chapo-chicago-run1.json",
+  "sentence": "The Chicago Crime Commission gathered at a news conference and did something it had not done in decades — it handed out a title.",
+  "span": "The Chicago Crime Commission gathered at a news conference and did something it had not done in decades — it handed out a title.",
+  "gateResult": "The Chicago Crime Commission gathered at a news conference and handed out a title.",
+  "id": "C037"
+ },
+ {
+  "stratum": "B_gate_overblock",
+  "case": "chapo-chicago",
+  "file": "chapo-chicago-run1.json",
+  "sentence": "They were cartel members who had operated at levels close enough to Guzmán that they could describe his decisions, his methods, and his violence from direct observation.",
+  "span": "They were cartel members who had operated at levels close enough to Guzmán that they could describe his decisions, his methods, and his violence from direct observation.",
+  "gateResult": "They were Sinaloa Cartel members who could describe his decisions, his methods, and his violence, and co-conspirators testified that Guzmán at times carried out acts of violence himself.",
+  "id": "C038"
+ },
+ {
+  "stratum": "B_gate_overblock",
+  "case": "freshwaters",
+  "file": "freshwaters-run2.json",
+  "sentence": "He didn't run.",
+  "span": "He didn't run.",
+  "gateResult": null,
+  "id": "C039"
+ },
+ {
+  "stratum": "B_gate_overblock",
+  "case": "ltcm",
+  "file": "ltcm-run2.json",
+  "sentence": "What Meriwether brought to Greenwich, Connecticut in 1994 wasn't just a trading strategy — it was a culture, transplanted whole from Salomon Brothers, where he'd run the fixed-income arbitrage desk and risen to vice chairman before a Treasury-bond trading scandal ended his tenure there.",
+  "span": "What Meriwether brought to Greenwich, Connecticut in 1994 wasn't just a trading strategy — it was a culture, transplanted whole from Salomon Brothers, where he'd run the fixed-income arbitrage desk and risen to vice chairman before a Treasury-bond trading scandal ended his tenure there.",
+  "gateResult": "What Meriwether brought to LTCM wasn't just a trading strategy — it was a culture, transplanted whole from Salomon Brothers, where he'd run the fixed-income arbitrage desk and risen to vice chairman before a Treasury-bond trading scandal ended his tenure there.",
+  "id": "C040"
+ },
+ {
+  "stratum": "B_gate_overblock",
+  "case": "fast-food-prices",
+  "file": "fast-food-prices-run2.json",
+  "sentence": "Visual Capitalist tracked the average price movement across ten major fast-food chains over that same stretch and found a 63% increase industry-wide, with McDonald's leading the field at that doubling.",
+  "span": "Visual Capitalist tracked the average price movement across ten major fast-food chains over that same stretch and found a 63% increase industry-wide, with McDonald's leading the field at that doubling.",
+  "gateResult": "Visual Capitalist tracked the average price movement across ten major fast-food restaurants from 2014 to 2024 and found a 63% average increase, with McDonald's up 100%.",
+  "id": "C041"
+ },
+ {
+  "stratum": "B_gate_overblock",
+  "case": "chapo-chicago",
+  "file": "chapo-chicago-run1.json",
+  "sentence": "The trial opened in Brooklyn in the fall of 2018, and what prosecutors brought into that courtroom was the accumulated weight of everything that had been built in Chicago and beyond — indictments, seizures, intercepted recordings, ledgers — now handed to a jury through the mouths of the people who had actually run the organization alongside Guzmán.",
+  "span": "The trial opened in Brooklyn in the fall of 2018, and what prosecutors brought into that courtroom was the accumulated weight of everything that had been built in Chicago and beyond — indictments, seizures, intercepted recordings, ledgers — now handed to a jury through the mouths of the people who had actually run the organization alongside Guzmán.",
+  "gateResult": "What prosecutors brought into that courtroom was the accumulated weight of everything that had been built in Chicago and beyond — indictments, seizures, intercepted recordings.",
+  "id": "C042"
+ },
+ {
+  "stratum": "B_gate_overblock",
+  "case": "freshwaters",
+  "file": "freshwaters-run1.json",
+  "sentence": "JoEllen Smith, the Ohio Parole Board's spokeswoman, confirmed both the board's decision and the prosecutors' objection in the same breath.",
+  "span": "JoEllen Smith, the Ohio Parole Board's spokeswoman, confirmed both the board's decision and the prosecutors' objection in the same breath.",
+  "gateResult": "JoEllen Smith, the Ohio Parole Board's spokeswoman, and the prosecutors' objection in the same breath.",
+  "id": "C043"
+ },
+ {
+  "stratum": "B_gate_overblock",
+  "case": "ltcm",
+  "file": "ltcm-run2.json",
+  "sentence": "McDonough put it plainly when he testified before Congress: a disorderly unwinding of those positions would have created a \"severe liquidity problem\" and triggered a \"fire sale\" that could \"cause widespread disruption\" in financial markets.",
+  "span": "McDonough put it plainly when he testified before Congress: a disorderly unwinding of those positions would have created a \"severe liquidity problem\" and triggered a \"fire sale\" that could \"cause widespread disruption\" in financial markets.",
+  "gateResult": "McDonough put it plainly: a disorderly unwinding of those positions would have created a \"severe liquidity problem\" and triggered a \"fire sale\" that could \"cause widespread disruption\" in financial markets.",
+  "id": "C044"
+ },
+ {
+  "stratum": "B_gate_overblock",
+  "case": "streaming-fraud",
+  "file": "streaming-fraud-run2.json",
+  "sentence": "Corporate debit cards defeated payment verification.",
+  "span": "Corporate debit cards defeated payment verification.",
+  "gateResult": "Smith used a Manhattan-based service that provided large numbers of debit cards, typically corporate debit cards for employees of a company.",
+  "id": "C045"
+ },
+ {
+  "stratum": "B_gate_overblock",
+  "case": "psychopathy",
+  "file": "psychopathy-run1.json",
+  "sentence": "When an offender's IQ appears in that database, it may have come from a prison intake form filled out decades ago, a newspaper profile, or the offender's own recollection of a test he may have taken as a teenager.",
+  "span": "When an offender's IQ appears in that database, it may have come from a prison intake form filled out decades ago, a newspaper profile, or the offender's own recollection of a test he may have taken as a teenager.",
+  "gateResult": "When an offender's IQ appears in that database, or the offender's own recollection of a test he may have taken as a teenager.",
+  "id": "C046"
+ },
+ {
+  "stratum": "B_gate_overblock",
+  "case": "ltcm",
+  "file": "ltcm-run2.json",
+  "sentence": "Two and three-quarter billion dollars returned to outside investors, reducing the equity base the fund was running against its positions.",
+  "span": "Two and three-quarter billion dollars returned to outside investors, reducing the equity base the fund was running against its positions.",
+  "gateResult": null,
+  "id": "C047"
+ },
+ {
+  "stratum": "B_gate_overblock",
+  "case": "chapo-chicago",
+  "file": "chapo-chicago-run1.json",
+  "sentence": "Valentine's Day, 2013.",
+  "span": "Valentine's Day, 2013.",
+  "gateResult": null,
+  "id": "C048"
+ },
+ {
+  "stratum": "B_gate_overblock",
+  "case": "fast-food-prices",
+  "file": "fast-food-prices-run2.json",
+  "sentence": "What the gap between costs and prices actually produced was a change in how Americans categorized the meal itself.",
+  "span": "What the gap between costs and prices actually produced was a change in how Americans categorized the meal itself.",
+  "gateResult": "What the gap between costs and prices actually produced was a change in how consumers categorized the meal itself.",
+  "id": "C049"
+ },
+ {
+  "stratum": "B_gate_overblock",
+  "case": "psychopathy",
+  "file": "psychopathy-run1.json",
+  "sentence": "The largest systematic look at this question comes from the Radford Serial Killer Database, which contains IQ records for 202 offenders.",
+  "span": "The largest systematic look at this question comes from the Radford Serial Killer Database, which contains IQ records for 202 offenders.",
+  "gateResult": "The best-known database evidence on this question comes from the Radford Serial Killer Database, which contains IQ records for 202 offenders.",
+  "id": "C050"
+ },
+ {
+  "stratum": "B_gate_overblock",
+  "case": "chapo-chicago",
+  "file": "chapo-chicago-run1.json",
+  "sentence": "Each of those numbers traces back to a chain of evidence that started with two brothers deciding, in late 2008, that cooperation was the better option.",
+  "span": "Each of those numbers traces back to a chain of evidence that started with two brothers deciding, in late 2008, that cooperation was the better option.",
+  "gateResult": "In late 2008, that cooperation was the better option.",
+  "id": "C051"
+ },
+ {
+  "stratum": "B_gate_overblock",
+  "case": "chapo-chicago",
+  "file": "chapo-chicago-run1.json",
+  "sentence": "The verdict was unanimous and complete.",
+  "span": "The verdict was unanimous and complete.",
+  "gateResult": "Guzmán Loera was convicted on all 10 counts of the superseding indictment.",
+  "id": "C052"
+ },
+ {
+  "stratum": "B_gate_overblock",
+  "case": "ltcm",
+  "file": "ltcm-run1.json",
+  "sentence": "The models had been built on historical correlations — on how assets had related to each other in ordinary stress.",
+  "span": "The models had been built on historical correlations — on how assets had related to each other in ordinary stress.",
+  "gateResult": "The collapse exposed sharp disagreement over whether the models had adequately captured rare market stress.",
+  "id": "C053"
+ },
+ {
+  "stratum": "B_gate_overblock",
+  "case": "freshwaters",
+  "file": "freshwaters-run2.json",
+  "sentence": "Frank Freshwaters, wanted on a manslaughter sentence from an Akron courtroom, existed on paper as William Harold Cox, and William Harold Cox existed without incident.",
+  "span": "Frank Freshwaters, wanted on a manslaughter sentence from an Akron courtroom, existed on paper as William Harold Cox, and William Harold Cox existed without incident.",
+  "gateResult": "Frank Freshwaters, wanted on a manslaughter conviction, existed on paper as William Harold Cox.",
+  "id": "C054"
+ },
+ {
+  "stratum": "B_gate_overblock",
+  "case": "wright",
+  "file": "wright-run2.json",
+  "sentence": "The fingerprint he submitted to become a legal Portuguese resident was the same fingerprint the database returned when investigators went looking.",
+  "span": "The fingerprint he submitted to become a legal Portuguese resident was the same fingerprint the database returned when investigators went looking.",
+  "gateResult": "The fingerprint on his Portuguese ID card was the same fingerprint the database returned when investigators went looking.",
+  "id": "C055"
+ },
+ {
+  "stratum": "B_gate_overblock",
+  "case": "freshwaters",
+  "file": "freshwaters-run2.json",
+  "sentence": "No tunnel.",
+  "span": "No tunnel.",
+  "gateResult": null,
+  "id": "C056"
+ },
+ {
+  "stratum": "B_gate_overblock",
+  "case": "ltcm",
+  "file": "ltcm-run1.json",
+  "sentence": "McDonough, then president of the New York Fed, convened 14 major banks and securities firms and pressed them — directly, in the room — to form a private rescue consortium for a single hedge fund called Long-Term Capital Management.",
+  "span": "McDonough, then president of the New York Fed, convened 14 major banks and securities firms and pressed them — directly, in the room — to form a private rescue consortium for a single hedge fund called Long-Term Capital Management.",
+  "gateResult": "McDonough convened 14 major banks and securities firms and pressed them directly to form a private rescue consortium for a single hedge fund called Long-Term Capital Management.",
+  "id": "C057"
+ },
+ {
+  "stratum": "B_gate_overblock",
+  "case": "streaming-fraud",
+  "file": "streaming-fraud-run2.json",
+  "sentence": "From approximately 2020 through 2023, Smith transferred $1.3 million in royalties into a bank account he controlled under the name SMH Entertainment, then routed those funds back out to fund the debit cards that registered the bot accounts.",
+  "span": "From approximately 2020 through 2023, Smith transferred $1.3 million in royalties into a bank account he controlled under the name SMH Entertainment, then routed those funds back out to fund the debit cards that registered the bot accounts.",
+  "gateResult": "From approximately 2020 through 2023, Smith transferred $1.3 million in royalties into a bank account he controlled under the name SMH Entertainment, then routed those funds back out to fund debit cards for the Bot Accounts.",
+  "id": "C058"
+ },
+ {
+  "stratum": "B_gate_overblock",
+  "case": "streaming-fraud",
+  "file": "streaming-fraud-run1.json",
+  "sentence": "What the machine needed was an endless supply of raw material to stream — and Smith couldn't generate that himself fast enough.",
+  "span": "What the machine needed was an endless supply of raw material to stream — and Smith couldn't generate that himself fast enough.",
+  "gateResult": "What the machine needed was an endless supply of raw material to stream — and Smith wrote to a coconspirator that he couldn't run the bots without enough content.",
+  "id": "C059"
+ },
+ {
+  "stratum": "B_gate_overblock",
+  "case": "freshwaters",
+  "file": "freshwaters-run2.json",
+  "sentence": "Standing in the aftermath of his arrest, Freshwaters told reporters he had not done anything wrong — that what happened in 1957 had been a mistake.",
+  "span": "Standing in the aftermath of his arrest, Freshwaters told reporters he had not done anything wrong — that what happened in 1957 had been a mistake.",
+  "gateResult": "Standing in the aftermath of his arrest, Freshwaters told reporters he had not done anything wrong and had made a mistake.",
+  "id": "C060"
+ },
+ {
+  "stratum": "B_gate_overblock",
+  "case": "jones",
+  "file": "jones-run1.json",
+  "sentence": "The walls of the life he had built were coming down in a specific order, and May 10th was the morning he stopped waiting for the next one to fall.",
+  "span": "The walls of the life he had built were coming down in a specific order, and May 10th was the morning he stopped waiting for the next one to fall.",
+  "gateResult": "The walls of the life he had built were coming down in a specific order.",
+  "id": "C061"
+ },
+ {
+  "stratum": "B_gate_overblock",
+  "case": "ltcm",
+  "file": "ltcm-run1.json",
+  "sentence": "The mechanism was straightforward and, in the right hands, unremarkable — securities repurchase agreements, in which LTCM pledged assets as collateral for overnight and short-term loans, then rolled those loans continuously to fund positions; and derivatives, which let the fund take on enormous notional exposure without posting the full value upfront.",
+  "span": "The mechanism was straightforward and, in the right hands, unremarkable — securities repurchase agreements, in which LTCM pledged assets as collateral for overnight and short-term loans, then rolled those loans continuously to fund positions; and derivatives, which let the fund take on enormous notional exposure without posting the full value upfront.",
+  "gateResult": "The mechanism was straightforward and, in the right hands, unremarkable: securities repurchase agreements and derivatives, with major banks extending financing on very favorable terms and, in some cases, little or no initial margin.",
+  "id": "C062"
+ },
+ {
+  "stratum": "B_gate_overblock",
+  "case": "chapo-chicago",
+  "file": "chapo-chicago-run1.json",
+  "sentence": "Part of what made that possible was the alliance Guzmán had formed after his 2001 prison escape — a partnership with fugitive co-defendant Ismael Zambada García that prosecutors said made the two of them the preeminent leaders of the Sinaloa Cartel.",
+  "span": "Part of what made that possible was the alliance Guzmán had formed after his 2001 prison escape — a partnership with fugitive co-defendant Ismael Zambada García that prosecutors said made the two of them the preeminent leaders of the Sinaloa Cartel.",
+  "gateResult": "Part of what made that possible was the alliance Guzmán had formed after his 2001 escape, a partnership with fugitive co-defendant Ismael Zambada García that prosecutors said made the two of them the preeminent leaders of the Sinaloa Cartel.",
+  "id": "C063"
+ },
+ {
+  "stratum": "B_gate_overblock",
+  "case": "psychopathy",
+  "file": "psychopathy-run1.json",
+  "sentence": "But notice which direction the cultural assumption runs: when people invoke the database's limits, they almost always mean to suggest the true IQ is higher — that genius is being undercounted.",
+  "span": "But notice which direction the cultural assumption runs: when people invoke the database's limits, they almost always mean to suggest the true IQ is higher — that genius is being undercounted.",
+  "gateResult": "Notice which direction the cultural assumption runs: when people invoke the database's limits.",
+  "id": "C064"
+ },
+ {
+  "stratum": "B_gate_overblock",
+  "case": "jones",
+  "file": "jones-run2.json",
+  "sentence": "He was frazzled enough that he left without his bracelet, the one he cherished and almost never removed.",
+  "span": "He was frazzled enough that he left without his bracelet, the one he cherished and almost never removed.",
+  "gateResult": "He was frazzled enough that he left without his bracelet, the one he cherished.",
+  "id": "C065"
+ },
+ {
+  "stratum": "B_gate_overblock",
+  "case": "chapo-chicago",
+  "file": "chapo-chicago-run1.json",
+  "sentence": "Trains with secret compartments rolled through ports of entry carrying concealed cargo alongside legitimate freight.",
+  "span": "Trains with secret compartments rolled through ports of entry carrying concealed cargo alongside legitimate freight.",
+  "gateResult": "Trains with secret compartments carried narcotics.",
+  "id": "C066"
+ },
+ {
+  "stratum": "B_gate_overblock",
+  "case": "freshwaters",
+  "file": "freshwaters-run1.json",
+  "sentence": "And so we come back to where this started — a weathered trailer in Brevard County, a photograph placed in front of an old man, and a face he said he hadn't seen in a long time.",
+  "span": "And so we come back to where this started — a weathered trailer in Brevard County, a photograph placed in front of an old man, and a face he said he hadn't seen in a long time.",
+  "gateResult": "And so we come back to where this started, a weathered trailer in Brevard County, a photograph placed in front of an old man, and a face he said, according to Major Tod Goodyear, he hadn't seen in a long time.",
+  "id": "C067"
+ },
+ {
+  "stratum": "B_gate_overblock",
+  "case": "jones",
+  "file": "jones-run1.json",
+  "sentence": "His disappearance, once certified by a court, generated $47,000 for his family while he remained alive to benefit from being officially gone.",
+  "span": "His disappearance, once certified by a court, generated $47,000 for his family while he remained alive to benefit from being officially gone.",
+  "gateResult": "His disappearance, once certified by a court, generated $47,000 in Social Security survivor benefits for his family.",
+  "id": "C068"
+ },
+ {
+  "stratum": "B_gate_overblock",
+  "case": "chapo-chicago",
+  "file": "chapo-chicago-run2.json",
+  "sentence": "When the Crime Commission stood before reporters on February 14, 2013, and named Joaquín Guzmán Loera Public Enemy Number One — not Mexico's problem, Chicago's — the declaration looked, to some, like a provocation larger than the evidence behind it.",
+  "span": "When the Crime Commission stood before reporters on February 14, 2013, and named Joaquín Guzmán Loera Public Enemy Number One — not Mexico's problem, Chicago's — the declaration looked, to some, like a provocation larger than the evidence behind it.",
+  "gateResult": "When the Crime Commission stood before reporters on February 14, 2013, Chicago's — the declaration looked, to some, like a provocation larger than the evidence behind it.",
+  "id": "C069"
+ },
+ {
+  "stratum": "B_gate_overblock",
+  "case": "chapo-chicago",
+  "file": "chapo-chicago-run2.json",
+  "sentence": "By applying it to a man operating from the mountains of Sinaloa, the Commission was making a precise claim: that Guzmán's organization had embedded itself in Chicago deeply enough to earn the title on its own terms.",
+  "span": "By applying it to a man operating from the mountains of Sinaloa, the Commission was making a precise claim: that Guzmán's organization had embedded itself in Chicago deeply enough to earn the title on its own terms.",
+  "gateResult": "By applying it to a man operating from outside the city, the Commission was making a precise claim: that Guzmán's organization had embedded itself in Chicago deeply enough to earn the title on its own terms.",
+  "id": "C070"
+ },
+ {
+  "stratum": "B_gate_overblock",
+  "case": "fast-food-prices",
+  "file": "fast-food-prices-run2.json",
+  "sentence": "A luxury — the category Americans reserve for things they consider financially optional.",
+  "span": "A luxury — the category Americans reserve for things they consider financially optional.",
+  "gateResult": "A luxury — the category that 78% of survey respondents said fast food now belongs to.",
+  "id": "C071"
+ },
+ {
+  "stratum": "B_gate_overblock",
+  "case": "wright",
+  "file": "wright-run2.json",
+  "sentence": "The man who had seized a commercial aircraft over Florida in 1972 was now, by the legal measure Portugal applied, one of its own.",
+  "span": "The man who had seized a commercial aircraft over Florida in 1972 was now, by the legal measure Portugal applied, one of its own.",
+  "gateResult": "The man who had seized a commercial aircraft in 1972 was now, by the legal measure Portugal applied, one of its own.",
+  "id": "C072"
+ },
+ {
+  "stratum": "B_gate_overblock",
+  "case": "chapo-chicago",
+  "file": "chapo-chicago-run1.json",
+  "sentence": "When they stood at that news conference in February 2013 and called him Public Enemy Number One — invoking a designation the city had last used for Al Capone — the question hanging over it was whether the legal machinery would ever catch up to the argument.",
+  "span": "When they stood at that news conference in February 2013 and called him Public Enemy Number One — invoking a designation the city had last used for Al Capone — the question hanging over it was whether the legal machinery would ever catch up to the argument.",
+  "gateResult": "When they stood at that news conference in February 2013 and called him Public Enemy Number One, the question hanging over it was whether the legal machinery would ever catch up to the argument.",
+  "id": "C073"
+ },
+ {
+  "stratum": "B_gate_overblock",
+  "case": "ltcm",
+  "file": "ltcm-run2.json",
+  "sentence": "The fourteen firms that came to the table weren't there because the government ordered them in.",
+  "span": "The fourteen firms that came to the table weren't there because the government ordered them in.",
+  "gateResult": "The fourteen firms that came to the table came because McDonough pressed them to, warning that disorderly liquidation could destabilize markets.",
+  "id": "C074"
+ },
+ {
+  "stratum": "B_gate_overblock",
+  "case": "ltcm",
+  "file": "ltcm-run2.json",
+  "sentence": "The Federal Reserve Bank of New York doesn't typically call meetings like this.",
+  "span": "The Federal Reserve Bank of New York doesn't typically call meetings like this.",
+  "gateResult": "The Federal Reserve Bank of New York organized a private rescue meeting to keep the fund from disorderly liquidation.",
+  "id": "C075"
+ },
+ {
+  "stratum": "C_gate_missed",
+  "case": "chapo-chicago",
+  "file": "chapo-chicago-run1.json",
+  "sentence": "The Commission didn't just name him — it announced that it had officially joined forces with the DEA Chicago Field Division to put the spotlight on him, using those exact words: Chicago's Public Enemy Number One.",
+  "span": "it announced that it had officially joined forces with the DEA Chicago Field Division to put the spotlight on him",
+  "judgeWhy": [
+   "contradiction: The research says the Commission joined forces with the DEA in 2013 (the year of the designation), but the script attributes this announcement to the February 14, 2013 news conference; the research places the joining-forces language in the Commission's retrospective 2013 page, not necessarily the Fe"
+  ],
+  "id": "C076"
+ },
+ {
+  "stratum": "C_gate_missed",
+  "case": "chapo-chicago",
+  "file": "chapo-chicago-run1.json",
+  "sentence": "It was far enough downstream in the operation that finished product and counted cash were both sitting there simultaneously.",
+  "span": "finished product and counted cash were both sitting there simultaneously",
+  "judgeWhy": [
+   "unsupported_specificity: The research does not state that the cocaine and cash were present simultaneously or that both were 'sitting there' at the same time; this specific simultaneity claim is not supported."
+  ],
+  "id": "C077"
+ },
+ {
+  "stratum": "C_gate_missed",
+  "case": "chapo-chicago",
+  "file": "chapo-chicago-run1.json",
+  "sentence": "Each method addressed a specific vulnerability in the others.",
+  "span": "Each method addressed a specific vulnerability in the others.",
+  "judgeWhy": [
+   "unsupported_specificity: The research lists transport methods but makes no claim that each method addressed a specific vulnerability in the others; this is an analytical assertion not found in the research."
+  ],
+  "id": "C078"
+ },
+ {
+  "stratum": "C_gate_missed",
+  "case": "chapo-chicago",
+  "file": "chapo-chicago-run1.json",
+  "sentence": "Each category addressed a different layer of the operation: the recordings captured communications the cartel believed were private; the ledgers showed the money moving; the photographs and videos placed people and product in the same frame.",
+  "span": "the recordings captured communications the cartel believed were private; the ledgers showed the money moving; the photographs and videos placed people and product in the same frame.",
+  "judgeWhy": [
+   "unsupported_specificity: The research lists these evidence categories but does not describe what each category specifically captured or showed; these characterizations are not supported by the research."
+  ],
+  "id": "C079"
+ },
+ {
+  "stratum": "C_gate_missed",
+  "case": "chapo-chicago",
+  "file": "chapo-chicago-run1.json",
+  "sentence": "Together they narrowed the gaps a defense could otherwise use — gaps between what witnesses said they saw and what the documentary record independently confirmed.",
+  "span": "Together they narrowed the gaps a defense could otherwise use — gaps between what witnesses said they saw and what the documentary record independently confirmed.",
+  "judgeWhy": [
+   "unsupported_specificity: The research does not describe the evidentiary interplay between witness testimony and documentary evidence in this way; this is an analytical assertion unsupported by the research."
+  ],
+  "id": "C080"
+ },
+ {
+  "stratum": "C_gate_missed",
+  "case": "chapo-chicago",
+  "file": "chapo-chicago-run1.json",
+  "sentence": "It is the court stating, with arithmetic, that even the theoretical possibility of a future legal argument does not leave a door open.",
+  "span": "It is the court stating, with arithmetic, that even the theoretical possibility of a future legal argument does not leave a door open.",
+  "judgeWhy": [
+   "unsupported_specificity: The research states the sentence structure but does not attribute any such intent or meaning to the court; this characterization of the court's reasoning is not found in the research."
+  ],
+  "id": "C081"
+ },
+ {
+  "stratum": "C_gate_missed",
+  "case": "fast-food-prices",
+  "file": "fast-food-prices-run1.json",
+  "sentence": "According to the National Restaurant Association, food costs for the average restaurant rose 35% over the five years following February 2020.",
+  "span": "food costs for the average restaurant rose 35% over the five years following February 2020",
+  "judgeWhy": [
+   "contradiction: The research attributes the 35% food cost figure to the National Restaurant Association's five-year figure ending April 2025; the script says 'five years following February 2020' which is consistent, but another research entry says 'food costs have risen 34% and labor costs 39% over the past six yea"
+  ],
+  "id": "C082"
+ },
+ {
+  "stratum": "C_gate_missed",
+  "case": "fast-food-prices",
+  "file": "fast-food-prices-run1.json",
+  "sentence": "Labor costs rose 35% over that same span.",
+  "span": "Labor costs rose 35% over that same span",
+  "judgeWhy": [
+   "contradiction: One research source gives labor costs up 39% over six years; another gives 35% over five years ending April 2025. The script states 35% as the single fact for labor costs, but the research contains a conflicting figure of 39%, making this a contradiction within the research that the script resolves "
+  ],
+  "id": "C083"
+ },
+ {
+  "stratum": "C_gate_missed",
+  "case": "fast-food-prices",
+  "file": "fast-food-prices-run1.json",
+  "sentence": "That means food and labor together account for roughly 60% of what it costs to run the kitchen before rent, insurance, or equipment enters the equation.",
+  "span": "food and labor together account for roughly 60% of what it costs to run the kitchen before rent, insurance, or equipment enters the equation",
+  "judgeWhy": [
+   "unsupported_specificity: The research states occupancy is ~25% of costs alongside 30% labor and 30% food, meaning 60% food+labor leaves only 25% for occupancy plus all other costs; the script's framing that rent/insurance/equipment are excluded from the 60% figure contradicts the cost structure the research provides, where "
+  ],
+  "id": "C084"
+ },
+ {
+  "stratum": "C_gate_missed",
+  "case": "fast-food-prices",
+  "file": "fast-food-prices-run1.json",
+  "sentence": "When both of those lines move 35% in the same direction at the same time, the arithmetic compresses fast.",
+  "span": "both of those lines move 35% in the same direction at the same time",
+  "judgeWhy": [
+   "unsupported_specificity: The research states food and labor costs each rose 35% over the last five years (or 34% food / 39% labor in one source), but the script says both moved 35% simultaneously; the research does not confirm both were exactly 35% at the same time."
+  ],
+  "id": "C085"
+ },
+ {
+  "stratum": "C_gate_missed",
+  "case": "fast-food-prices",
+  "file": "fast-food-prices-run1.json",
+  "sentence": "Menu prices were at their highest in over forty years, with limited-service and full-service restaurants raising prices by at least 7% over the past year.",
+  "span": "Menu prices were at their highest in over forty years, with limited-service and full-service restaurants raising prices by at least 7% over the past year",
+  "judgeWhy": [
+   "unsupported_specificity: The research attributes this claim to a 'separate article' without specifying a time period; the script presents it as a standalone fact without the hedging context, but more critically the research does not specify which year's 'past year' this refers to, making the script's unanchored present-tens"
+  ],
+  "id": "C086"
+ },
+ {
+  "stratum": "C_gate_missed",
+  "case": "fast-food-prices",
+  "file": "fast-food-prices-run1.json",
+  "sentence": "The limited-service CPI rose 26% from 2019 to 2024, against about 21% cumulative headline CPI inflation over the same span.",
+  "span": "The limited-service CPI rose 26% from 2019 to 2024, against about 21% cumulative headline CPI inflation over the same span",
+  "judgeWhy": [
+   "contradiction: The research states 21.2% cumulative headline CPI; the script rounds this to 'about 21%', which is acceptable rounding, but also the research separately states the BLS Consumer Price Index for limited-service meals and snacks rose 19.8% from 2019 to 2024 in another source, creating a contradiction w"
+  ],
+  "id": "C087"
+ },
+ {
+  "stratum": "C_gate_missed",
+  "case": "fast-food-prices",
+  "file": "fast-food-prices-run1.json",
+  "sentence": "And 78% of those respondents had reclassified the experience entirely, not a quick, cheap meal, but a luxury.",
+  "span": "78% of those respondents had reclassified the experience entirely",
+  "judgeWhy": [
+   "unsupported_specificity: The 78% figure in the research (USA Today/LendingTree) refers to respondents saying fast food 'had become a luxury,' not specifically 'those respondents' from the Farmdoc Daily survey referenced in sentence 84–85 context; however the 78% figure itself is supported. The issue is the script attributes"
+  ],
+  "id": "C088"
+ },
+ {
+  "stratum": "C_gate_missed",
+  "case": "fast-food-prices",
+  "file": "fast-food-prices-run1.json",
+  "sentence": "If roughly half of cost increases passed through to prices, and costs themselves rose sharply, then the 26% limited-service CPI increase from 2019 to 2024 has only a partial cost-based explanation — the arithmetic does not close on costs alone.",
+  "span": "the 26% limited-service CPI increase from 2019 to 2024",
+  "judgeWhy": [
+   "unsupported_specificity: The research states limited service meals and snacks CPI rose 26.0% from 2019 to 2024 (BLS), so 26% is supported. However, the research also states the BLS Consumer Price Index showed limited service meals and snacks up 19.8% from 2019 to 2024 in another BLS source, creating a contradiction in the r"
+  ],
+  "id": "C089"
+ },
+ {
+  "stratum": "C_gate_missed",
+  "case": "fast-food-prices",
+  "file": "fast-food-prices-run2.json",
+  "sentence": "The Goldman Sachs data make the asymmetry legible: non-manager wages were up 35.9% since January 2017, and fast-food meal prices were up more than 41% over that same period.",
+  "span": "non-manager wages were up 35.9% since January 2017, and fast-food meal prices were up more than 41% over that same period",
+  "judgeWhy": [
+   "unsupported_specificity: The research attributes these figures to 'Marcus by Goldman Sachs' not 'Goldman Sachs data'; the script labels it 'Goldman Sachs data' which is a different and more authoritative-sounding entity than the consumer banking platform Marcus by Goldman Sachs cited in the research."
+  ],
+  "id": "C090"
+ },
+ {
+  "stratum": "C_gate_missed",
+  "case": "freshwaters",
+  "file": "freshwaters-run1.json",
+  "sentence": "Sixteen years after walking away from that honor camp, Freshwaters was caught.",
+  "span": "Sixteen years after walking away from that honor camp, Freshwaters was caught.",
+  "judgeWhy": [
+   "unsupported_specificity: The research says he was reported missing Sept. 30, 1959 and arrested in West Virginia in 1975, which is approximately 16 years, but the script frames this as a precise '16 years after walking away' — the research does not state this calculation explicitly, and the '16-year residency' figure comes f"
+  ],
+  "id": "C091"
+ },
+ {
+  "stratum": "C_gate_missed",
+  "case": "freshwaters",
+  "file": "freshwaters-run1.json",
+  "sentence": "A man in a battered trailer in a county most people couldn't place on a map generates no paperwork, no curiosity, no second look.",
+  "span": "A man in a battered trailer in a county most people couldn't place on a map",
+  "judgeWhy": [
+   "unsupported_specificity: The research describes the trailer as 'weathered,' not 'battered'; while similar, the script introduces its own characterization as a stated fact about the trailer's condition."
+  ],
+  "id": "C092"
+ },
+ {
+  "stratum": "C_gate_missed",
+  "case": "freshwaters",
+  "file": "freshwaters-run2.json",
+  "sentence": "Sixteen years after he walked away from that honor camp, someone found him.",
+  "span": "Sixteen years after he walked away from that honor camp",
+  "judgeWhy": [
+   "unsupported_specificity: The research says he was reported missing in 1959 and arrested in West Virginia in 1975, which is 16 years, but the research does not state he 'walked away' from the honor camp — it says he was 'reported missing' from it. More critically, the script's framing of '16 years after he walked away' as th"
+  ],
+  "id": "C093"
+ },
+ {
+  "stratum": "C_gate_missed",
+  "case": "freshwaters",
+  "file": "freshwaters-run2.json",
+  "sentence": "Ohio would not get another clear opportunity for forty years.",
+  "span": "Ohio would not get another clear opportunity for forty years",
+  "judgeWhy": [
+   "unsupported_specificity: The research does not state that Ohio had no other opportunities between 1975 and 2015, nor does it characterize the gap as 'forty years' without another opportunity. The research only says he disappeared again after extradition was refused and was next captured in 2015."
+  ],
+  "id": "C094"
+ },
+ {
+  "stratum": "C_gate_missed",
+  "case": "jones",
+  "file": "jones-run2.json",
+  "sentence": "The disappearance Jones staged to escape his debts had, within seven years, converted into a government check.",
+  "span": "within seven years, converted into a government check",
+  "judgeWhy": [
+   "unsupported_specificity: The research states a court declared Jones legally dead in 1986 (seven years after 1979), but does not state that the $47,000 payment was issued within seven years of his disappearance; the timing of the payment relative to the declaration is not given."
+  ],
+  "id": "C095"
+ },
+ {
+  "stratum": "C_gate_missed",
+  "case": "jones",
+  "file": "jones-run2.json",
+  "sentence": "But starting in 1995, his statements told a different story — year after year, they showed casino income earned in Las Vegas, income tied to a Social Security number that was his in name only.",
+  "span": "starting in 1995, his statements told a different story",
+  "judgeWhy": [
+   "unsupported_specificity: The research attributes the 1995 start date to Goodenough's own account to the Review-Journal, not to his statements/tax records directly; however the research does support 1995 as the start year, so this is adequately supported. Retracting flag — style."
+  ],
+  "id": "C096"
+ },
+ {
+  "stratum": "C_gate_missed",
+  "case": "jones",
+  "file": "jones-run2.json",
+  "sentence": "Arthur Gerald Jones, who had been legally dead on an Illinois court's docket for decades, was standing in Nevada, alive, and he admitted it.",
+  "span": "legally dead on an Illinois court's docket for decades",
+  "judgeWhy": [
+   "unsupported_specificity: The research says Jones was declared dead in 1986 and arrested in 2011 — about 25 years, not 'decades' (plural). The research also says 'Illinois courts declared Jones dead 25 years ago,' consistent with one decade and a half, making 'decades' a contradiction."
+  ],
+  "id": "C097"
+ },
+ {
+  "stratum": "C_gate_missed",
+  "case": "jones",
+  "file": "jones-run2.json",
+  "sentence": "The sentence was three years of probation.",
+  "span": "The sentence was three years of probation.",
+  "judgeWhy": [
+   "contradiction: One source says three years of probation, but the sentencing source (reviewjournal) says Jones was sentenced to three years of probation — however, another research source says 'five years' probation.' The primary sentencing source (abcnews) says three years, but a later report (abc7news) says five "
+  ],
+  "id": "C098"
+ },
+ {
+  "stratum": "C_gate_missed",
+  "case": "ltcm",
+  "file": "ltcm-run1.json",
+  "sentence": "In 1994, that patience returned 19.9 percent net to investors.",
+  "span": "In 1994, that patience returned 19.9 percent net to investors.",
+  "judgeWhy": [
+   "contradiction: One research source gives 1994 net return as ~21%; only one source gives 19.9%, but another gives ~21%, creating a conflict; the script picks one figure without acknowledging the discrepancy, and the federalreservehistory/wikipedia sources contradict the 19.9% figure with ~21%."
+  ],
+  "id": "C099"
+ },
+ {
+  "stratum": "C_gate_missed",
+  "case": "ltcm",
+  "file": "ltcm-run1.json",
+  "sentence": "In 1995, 42.8 percent.",
+  "span": "In 1995, 42.8 percent.",
+  "judgeWhy": [
+   "contradiction: Multiple research sources round 1995 returns to ~43%; only one source gives the precise 42.8% figure, while others give ~43%, but the script presents 42.8% as the definitive figure when other sources contradict this precision."
+  ],
+  "id": "C100"
+ },
+ {
+  "stratum": "C_gate_missed",
+  "case": "ltcm",
+  "file": "ltcm-run1.json",
+  "sentence": "In 1996, 40.8 percent.",
+  "span": "In 1996, 40.8 percent.",
+  "judgeWhy": [
+   "contradiction: Multiple research sources give 1996 returns as ~41%; only one source gives the precise 40.8% figure, conflicting with the rounded figures in other sources cited in the research."
+  ],
+  "id": "C101"
+ },
+ {
+  "stratum": "C_gate_missed",
+  "case": "ltcm",
+  "file": "ltcm-run1.json",
+  "sentence": "By early 1998, Goldman Sachs, Merrill Lynch, J. P. Morgan, UBS, and the rest of Wall Street's major dealers had extended LTCM more than $125 billion in borrowed money against roughly $5 billion in equity.",
+  "span": "Goldman Sachs, Merrill Lynch, J. P. Morgan, UBS, and the rest of Wall Street's major dealers had extended LTCM more than $125 billion in borrowed money against roughly $5 billion in equity",
+  "judgeWhy": [
+   "unsupported_specificity: The research lists Goldman Sachs, Merrill Lynch, J.P. Morgan, and UBS as counterparties but does not say these specific firms 'extended' the $125 billion; the research attributes the $125 billion figure to borrowing broadly against equity, not specifically to those named firms extending it."
+  ],
+  "id": "C102"
+ },
+ {
+  "stratum": "C_gate_missed",
+  "case": "ltcm",
+  "file": "ltcm-run1.json",
+  "sentence": "Fourteen banks sitting across from William McDonough, each of them calculating whether the cost of contributing was less than the cost of not contributing.",
+  "span": "Fourteen banks sitting across from William McDonough",
+  "judgeWhy": [
+   "unsupported_specificity: The research says McDonough convened 14 major Wall Street firms and banks, but does not describe them as 'sitting across from' McDonough in a way that implies a single face-to-face meeting on September 23rd specifically with all 14 present."
+  ],
+  "id": "C103"
+ },
+ {
+  "stratum": "C_gate_missed",
+  "case": "ltcm",
+  "file": "ltcm-run2.json",
+  "sentence": "In September 1998, William J. McDonough of the New York Fed gathered representatives from fourteen major banks and securities firms on Wall Street and laid out the situation in terms that left little room for interpretation.",
+  "span": "gathered representatives from fourteen major banks and securities firms on Wall Street",
+  "judgeWhy": [
+   "unsupported_specificity: The research says McDonough convened '14 major Wall Street firms' but does not specify the meeting location as 'on Wall Street'; the New York Fed meeting location is not described that precisely in the research."
+  ],
+  "id": "C104"
+ },
+ {
+  "stratum": "C_gate_missed",
+  "case": "streaming-fraud",
+  "file": "streaming-fraud-run2.json",
+  "sentence": "Before the bots, before the AI catalog, before the October 2017 email that reduced the whole operation to arithmetic, there was a musician.",
+  "span": "Before the bots, before the AI catalog, before the October 2017 email",
+  "judgeWhy": [
+   "contradiction: The research shows bots were already being set up in May 2017, before the October 2017 email, so the script's framing that the October 2017 email preceded the bots contradicts the research."
+  ],
+  "id": "C105"
+ },
+ {
+  "stratum": "C_gate_missed",
+  "case": "streaming-fraud",
+  "file": "streaming-fraud-run2.json",
+  "sentence": "Around 2018, Smith began working with two new figures: the CEO of an AI music company, identified in the indictment as CC-3, and a music promoter identified as CC-4.",
+  "span": "Around 2018, Smith began working with two new figures",
+  "judgeWhy": [
+   "contradiction: The research also identifies CC-2 (a music publicist) as an earlier co-conspirator, and the indictment says Smith acted with 'others known and unknown,' so calling CC-3 and CC-4 'two new figures' is accurate in context; however, the script omits that CC-2 was already involved. This is borderline sty"
+  ],
+  "id": "C106"
+ },
+ {
+  "stratum": "C_gate_missed",
+  "case": "wright",
+  "file": "wright-run1.json",
+  "sentence": "Flight 841 departs Detroit bound for Miami.",
+  "span": "Flight 841 departs Detroit bound for Miami",
+  "judgeWhy": [
+   "contradiction: Multiple research sources describe the flight as going from Detroit to Miami (per the 1972 NYT report), but one source says 'Detroit to Algeria' as the overall journey description. However, the 1972 NYT source does support Detroit to Miami as the departure routing, so this is actually supported. Re-"
+  ],
+  "id": "C107"
+ },
+ {
+  "stratum": "C_gate_missed",
+  "case": "wright",
+  "file": "wright-run1.json",
+  "sentence": "That single act — the escape itself — is what the FBI would later encode near the top of his wanted notice: unlawful flight to avoid confinement, escape, murder.",
+  "span": "unlawful flight to avoid confinement, escape, murder",
+  "judgeWhy": [
+   "contradiction: The script lists 'murder' as a standalone charge in the wanted notice, but the research shows 'murder' appears only parenthetically within the 'Unlawful Flight to Avoid Confinement - Escape (Murder)' charge, not as a separate listed offense."
+  ],
+  "id": "C108"
+ },
+ {
+  "stratum": "C_gate_missed",
+  "case": "wright",
+  "file": "wright-run1.json",
+  "sentence": "On November 17, 2011 — less than two months after the arrest — a Lisbon appeals court ruled that George Wright would not be extradited to the United States.",
+  "span": "less than two months after the arrest",
+  "judgeWhy": [
+   "unsupported_specificity: The research states Wright was arrested September 26, 2011 and the court ruled November 17, 2011 — that is approximately seven weeks or less than two months, but the research does not use this characterization; however this is arithmetic the research supports (Sept 26 to Nov 17 is under two months),"
+  ],
+  "id": "C109"
+ },
+ {
+  "stratum": "C_gate_missed",
+  "case": "wright",
+  "file": "wright-run2.json",
+  "sentence": "And then the courts ruled, twice, and he remained in Portugal.",
+  "span": "the courts ruled, twice, and he remained in Portugal",
+  "judgeWhy": [
+   "unsupported_specificity: The research confirms a Lisbon appeals court ruling and Portugal's Supreme Court denial, which is two rulings, but the script's 'twice' as a precise count should be checked — actually the research does support two rulings, so this is fine. Re-examining: supported."
+  ],
+  "id": "C110"
+ },
+ {
+  "stratum": "C_gate_missed",
+  "case": "wright",
+  "file": "wright-run2.json",
+  "sentence": "Four charges, each one the consequence of the one before it.",
+  "span": "Four charges, each one the consequence of the one before it",
+  "judgeWhy": [
+   "unsupported_specificity: The research lists three enumerated charges on the FBI poster ('Unlawful Flight to Avoid Confinement - Escape (Murder); Air Piracy (Seizing by Force an Aircraft in Air Commerce); Aiding and Abetting'), not four."
+  ],
+  "id": "C111"
+ },
+ {
+  "stratum": "D_unflagged",
+  "case": "jones",
+  "file": "jones-run2.json",
+  "sentence": "Investigators reached Jones in July 2011, and when they asked him directly whether he was the Chicago commodities trader who had walked away 32 years earlier, he said yes.",
+  "span": "Investigators reached Jones in July 2011, and when they asked him directly whether he was the Chicago commodities trader who had walked away 32 years earlier, he said yes.",
+  "id": "C112"
+ },
+ {
+  "stratum": "D_unflagged",
+  "case": "wright",
+  "file": "wright-run2.json",
+  "sentence": "His Portuguese citizenship was the reason the courts ruled he could not be extradited.",
+  "span": "His Portuguese citizenship was the reason the courts ruled he could not be extradited.",
+  "id": "C113"
+ },
+ {
+  "stratum": "D_unflagged",
+  "case": "fast-food-prices",
+  "file": "fast-food-prices-run1.json",
+  "sentence": "The Farmdoc Daily survey sharpens the picture further.",
+  "span": "The Farmdoc Daily survey sharpens the picture further.",
+  "id": "C114"
+ },
+ {
+  "stratum": "D_unflagged",
+  "case": "jones",
+  "file": "jones-run1.json",
+  "sentence": "Jones, by his own account to authorities, admitted buying Goodenough's number specifically, not a randomly generated fake, but a real number attached to a real man.",
+  "span": "Jones, by his own account to authorities, admitted buying Goodenough's number specifically, not a randomly generated fake, but a real number attached to a real man.",
+  "id": "C115"
+ },
+ {
+  "stratum": "D_unflagged",
+  "case": "streaming-fraud",
+  "file": "streaming-fraud-run1.json",
+  "sentence": "He entered a plea to one count and agreed to forfeit $8,091,843.64 as proceeds traceable to the offense.",
+  "span": "He entered a plea to one count and agreed to forfeit $8,091,843.64 as proceeds traceable to the offense.",
+  "id": "C116"
+ },
+ {
+  "stratum": "D_unflagged",
+  "case": "jones",
+  "file": "jones-run1.json",
+  "sentence": "By the 1980s, Jones had settled into the city and found work that matched the one skill his old life had genuinely sharpened: reading odds.",
+  "span": "By the 1980s, Jones had settled into the city and found work that matched the one skill his old life had genuinely sharpened: reading odds.",
+  "id": "C117"
+ },
+ {
+  "stratum": "D_unflagged",
+  "case": "fast-food-prices",
+  "file": "fast-food-prices-run2.json",
+  "sentence": "Limited-service meal prices climbed 26% from 2019 to 2024.",
+  "span": "Limited-service meal prices climbed 26% from 2019 to 2024.",
+  "id": "C118"
+ },
+ {
+  "stratum": "D_unflagged",
+  "case": "jones",
+  "file": "jones-run2.json",
+  "sentence": "Jones had been using Goodenough's Social Security number in Nevada for years, and the record of that use had been accumulating under the Sandelli name.",
+  "span": "Jones had been using Goodenough's Social Security number in Nevada for years, and the record of that use had been accumulating under the Sandelli name.",
+  "id": "C119"
+ },
+ {
+  "stratum": "D_unflagged",
+  "case": "ltcm",
+  "file": "ltcm-run2.json",
+  "sentence": "The Federal Reserve Bank of New York organized a private rescue meeting to keep the fund from disorderly liquidation.",
+  "span": "The Federal Reserve Bank of New York organized a private rescue meeting to keep the fund from disorderly liquidation.",
+  "id": "C120"
+ },
+ {
+  "stratum": "D_unflagged",
+  "case": "streaming-fraud",
+  "file": "streaming-fraud-run2.json",
+  "sentence": "In an August 17, 2020 email, CC-3 told Smith the song quality was \"10x-20x better now,\" with \"vocal generation capabilities.\"",
+  "span": "In an August 17, 2020 email, CC-3 told Smith the song quality was \"10x-20x better now,\" with \"vocal generation capabilities.\"",
+  "id": "C121"
+ },
+ {
+  "stratum": "D_unflagged",
+  "case": "freshwaters",
+  "file": "freshwaters-run1.json",
+  "sentence": "After his 2015 arrest, he had told an ABC affiliate that he hadn't done anything wrong, that he had made a mistake.",
+  "span": "After his 2015 arrest, he had told an ABC affiliate that he hadn't done anything wrong, that he had made a mistake.",
+  "id": "C122"
+ },
+ {
+  "stratum": "D_unflagged",
+  "case": "jones",
+  "file": "jones-run2.json",
+  "sentence": "Court papers would later describe Jones as having left shortly after that shooting to get a fresh start.",
+  "span": "Court papers would later describe Jones as having left shortly after that shooting to get a fresh start.",
+  "id": "C123"
+ },
+ {
+  "stratum": "D_unflagged",
+  "case": "streaming-fraud",
+  "file": "streaming-fraud-run2.json",
+  "sentence": "He would supply the metadata — song titles, artist names — and pay CC-3's company either $2,000 per month or 15 percent of the streaming revenue generated from those tracks, whichever was greater.",
+  "span": "He would supply the metadata — song titles, artist names — and pay CC-3's company either $2,000 per month or 15 percent of the streaming revenue generated from those tracks, whichever was greater.",
+  "id": "C124"
+ },
+ {
+  "stratum": "D_unflagged",
+  "case": "chapo-chicago",
+  "file": "chapo-chicago-run1.json",
+  "sentence": "On February 14, 2013, the Chicago Crime Commission gave Joaquín Guzmán a title.",
+  "span": "On February 14, 2013, the Chicago Crime Commission gave Joaquín Guzmán a title.",
+  "id": "C125"
+ },
+ {
+  "stratum": "D_unflagged",
+  "case": "ltcm",
+  "file": "ltcm-run2.json",
+  "sentence": "What it does not resolve is what the Fed's willingness to convene that room, to press those firms, to put its institutional weight behind a consortium rescue — what that signals about where private risk ends and collective exposure begins.",
+  "span": "What it does not resolve is what the Fed's willingness to convene that room, to press those firms, to put its institutional weight behind a consortium rescue — what that signals about where private risk ends and collective exposure begins.",
+  "id": "C126"
+ },
+ {
+  "stratum": "D_unflagged",
+  "case": "wright",
+  "file": "wright-run2.json",
+  "sentence": "The ruling followed from that, and nothing the United States presented dislodged the premise.",
+  "span": "The ruling followed from that, and nothing the United States presented dislodged the premise.",
+  "id": "C127"
+ },
+ {
+  "stratum": "D_unflagged",
+  "case": "freshwaters",
+  "file": "freshwaters-run1.json",
+  "sentence": "What those three words couldn't close was the distance between Frank Freshwaters and the family of the man who never got to run anywhere at all.",
+  "span": "What those three words couldn't close was the distance between Frank Freshwaters and the family of the man who never got to run anywhere at all.",
+  "id": "C128"
+ },
+ {
+  "stratum": "D_unflagged",
+  "case": "streaming-fraud",
+  "file": "streaming-fraud-run2.json",
+  "sentence": "When Streaming Platform-1 made its own determination of fraud in March 2019 and informed Distribution Company-3, Smith escalated to direct confrontation.",
+  "span": "When Streaming Platform-1 made its own determination of fraud in March 2019 and informed Distribution Company-3, Smith escalated to direct confrontation.",
+  "id": "C129"
+ },
+ {
+  "stratum": "D_unflagged",
+  "case": "streaming-fraud",
+  "file": "streaming-fraud-run1.json",
+  "sentence": "In multiple transactions between approximately 2020 and 2023, Smith moved $1.3 million in royalties into an account he controlled at a U.S.-based financial institution in the name of SMH Entertainment.",
+  "span": "In multiple transactions between approximately 2020 and 2023, Smith moved $1.3 million in royalties into an account he controlled at a U.S.-based financial institution in the name of SMH Entertainment.",
+  "id": "C130"
+ },
+ {
+  "stratum": "D_unflagged",
+  "case": "jones",
+  "file": "jones-run1.json",
+  "sentence": "Seven years after Jones walked out that door, an Illinois court did what the law does when a person stays gone long enough: it declared Arthur Gerald Jones legally dead.",
+  "span": "Seven years after Jones walked out that door, an Illinois court did what the law does when a person stays gone long enough: it declared Arthur Gerald Jones legally dead.",
+  "id": "C131"
+ },
+ {
+  "stratum": "D_unflagged",
+  "case": "jones",
+  "file": "jones-run2.json",
+  "sentence": "The Nevada state attorney general's office charged him with an array of fraud, identity theft, and related counts.",
+  "span": "The Nevada state attorney general's office charged him with an array of fraud, identity theft, and related counts.",
+  "id": "C132"
+ },
+ {
+  "stratum": "D_unflagged",
+  "case": "chapo-chicago",
+  "file": "chapo-chicago-run2.json",
+  "sentence": "That is the turn the 2009 indictments forced.",
+  "span": "That is the turn the 2009 indictments forced.",
+  "id": "C133"
+ },
+ {
+  "stratum": "D_unflagged",
+  "case": "streaming-fraud",
+  "file": "streaming-fraud-run1.json",
+  "sentence": "In October 2018, the same distributor went further: it had received \"multiple reports of streaming abuse from different stores\" and planned to pull his releases entirely.",
+  "span": "In October 2018, the same distributor went further: it had received \"multiple reports of streaming abuse from different stores\" and planned to pull his releases entirely.",
+  "id": "C134"
+ },
+ {
+  "stratum": "D_unflagged",
+  "case": "freshwaters",
+  "file": "freshwaters-run1.json",
+  "sentence": "Somewhere between the 1975 refusal in West Virginia and his arrest in rural Brevard County, Florida, Frank Freshwaters became William Harold Cox.",
+  "span": "Somewhere between the 1975 refusal in West Virginia and his arrest in rural Brevard County, Florida, Frank Freshwaters became William Harold Cox.",
+  "id": "C135"
+ },
+ {
+  "stratum": "D_unflagged",
+  "case": "wright",
+  "file": "wright-run1.json",
+  "sentence": "Fifteen to thirty years in a New Jersey prison was the legal reality Wright was handed — and the one he refused to serve out.",
+  "span": "Fifteen to thirty years in a New Jersey prison was the legal reality Wright was handed — and the one he refused to serve out.",
+  "id": "C136"
+ },
+ {
+  "stratum": "D_unflagged",
+  "case": "chapo-chicago",
+  "file": "chapo-chicago-run1.json",
+  "sentence": "On January 27, 2015, federal law enforcement in Chicago unsealed an eighth superseding indictment.",
+  "span": "On January 27, 2015, federal law enforcement in Chicago unsealed an eighth superseding indictment.",
+  "id": "C137"
+ },
+ {
+  "stratum": "D_unflagged",
+  "case": "fast-food-prices",
+  "file": "fast-food-prices-run1.json",
+  "sentence": "By 2022, a restaurant cost inflation survey found operators were reporting costs up 11.7% year over year, with raw materials and labor leading the increases.",
+  "span": "By 2022, a restaurant cost inflation survey found operators were reporting costs up 11.7% year over year, with raw materials and labor leading the increases.",
+  "id": "C138"
+ },
+ {
+  "stratum": "D_unflagged",
+  "case": "wright",
+  "file": "wright-run1.json",
+  "sentence": "Which brings it back to September 26, 2011 — a fingerprint, a database, a match.",
+  "span": "Which brings it back to September 26, 2011 — a fingerprint, a database, a match.",
+  "id": "C139"
+ },
+ {
+  "stratum": "D_unflagged",
+  "case": "chapo-chicago",
+  "file": "chapo-chicago-run2.json",
+  "sentence": "Then, in the Chicago area, the cooperation facilitated seizures of more than $15 million in cash.",
+  "span": "Then, in the Chicago area, the cooperation facilitated seizures of more than $15 million in cash.",
+  "id": "C140"
+ },
+ {
+  "stratum": "D_unflagged",
+  "case": "chapo-chicago",
+  "file": "chapo-chicago-run2.json",
+  "sentence": "The 30 years stacked on top of that, not concurrent, not absorbed.",
+  "span": "The 30 years stacked on top of that, not concurrent, not absorbed.",
+  "id": "C141"
+ },
+ {
+  "stratum": "D_unflagged",
+  "case": "freshwaters",
+  "file": "freshwaters-run2.json",
+  "sentence": "Not to West Virginia this time, not to any of the places the record shows him in the decades after 1975.",
+  "span": "Not to West Virginia this time, not to any of the places the record shows him in the decades after 1975.",
+  "id": "C142"
+ },
+ {
+  "stratum": "D_unflagged",
+  "case": "fast-food-prices",
+  "file": "fast-food-prices-run1.json",
+  "sentence": "One Berkeley IRLE paper estimated that consumers bore about 50% of higher labor costs through prices in a study of a $20 minimum wage.",
+  "span": "One Berkeley IRLE paper estimated that consumers bore about 50% of higher labor costs through prices in a study of a $20 minimum wage.",
+  "id": "C143"
+ },
+ {
+  "stratum": "D_unflagged",
+  "case": "fast-food-prices",
+  "file": "fast-food-prices-run1.json",
+  "sentence": "But a fast-food combo meal rose more than 100% between 2014 and 2024, outpacing gasoline, movie tickets, and median hourly wages over that same period.",
+  "span": "But a fast-food combo meal rose more than 100% between 2014 and 2024, outpacing gasoline, movie tickets, and median hourly wages over that same period.",
+  "id": "C144"
+ },
+ {
+  "stratum": "D_unflagged",
+  "case": "ltcm",
+  "file": "ltcm-run2.json",
+  "sentence": "Scholes and Merton's quantitative framework was built to exploit pricing anomalies that the models identified across similar securities.",
+  "span": "Scholes and Merton's quantitative framework was built to exploit pricing anomalies that the models identified across similar securities.",
+  "id": "C145"
+ },
+ {
+  "stratum": "D_unflagged",
+  "case": "wright",
+  "file": "wright-run1.json",
+  "sentence": "Those are different problems, measured in different jurisdictions, and the distance between them is exactly what Wright needed.",
+  "span": "Those are different problems, measured in different jurisdictions, and the distance between them is exactly what Wright needed.",
+  "id": "C146"
+ },
+ {
+  "stratum": "D_unflagged",
+  "case": "jones",
+  "file": "jones-run1.json",
+  "sentence": "He asked Jones directly how he intended to pay back the money.",
+  "span": "He asked Jones directly how he intended to pay back the money.",
+  "id": "C147"
+ },
+ {
+  "stratum": "D_unflagged",
+  "case": "jones",
+  "file": "jones-run2.json",
+  "sentence": "The exit on May 10 was the last step in a process that had been running for years.",
+  "span": "The exit on May 10 was the last step in a process that had been running for years.",
+  "id": "C148"
+ },
+ {
+  "stratum": "D_unflagged",
+  "case": "freshwaters",
+  "file": "freshwaters-run1.json",
+  "sentence": "Investigators determined he had been William Harold Cox in Melbourne, Florida for roughly two decades before his 2015 arrest.",
+  "span": "Investigators determined he had been William Harold Cox in Melbourne, Florida for roughly two decades before his 2015 arrest.",
+  "id": "C149"
+ },
+ {
+  "stratum": "D_unflagged",
+  "case": "fast-food-prices",
+  "file": "fast-food-prices-run1.json",
+  "sentence": "Visual Capitalist's analysis of ten major fast-food chains found an average price increase of 63% over that decade, with McDonald's up 100%.",
+  "span": "Visual Capitalist's analysis of ten major fast-food chains found an average price increase of 63% over that decade, with McDonald's up 100%.",
+  "id": "C150"
+ },
+ {
+  "stratum": "D_unflagged",
+  "case": "jones",
+  "file": "jones-run1.json",
+  "sentence": "According to his attorney, he went to work at the Desert Inn first, then moved into sports book operations at a local casino.",
+  "span": "According to his attorney, he went to work at the Desert Inn first, then moved into sports book operations at a local casino.",
+  "id": "C151"
+ }
+]

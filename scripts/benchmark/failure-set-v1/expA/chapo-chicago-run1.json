@@ -1,0 +1,904 @@
+{
+ "id": "chapo-chicago",
+ "run": 1,
+ "words": 1369,
+ "primaryPer1k": 5.11,
+ "overreachPer1k": 2.19,
+ "finalErrors": [
+  {
+   "i": 1,
+   "sentence": "His organization hadn't fired a single shot there.",
+   "script_quote": "His organization hadn't fired a single shot there.",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research makes no claim about whether Guzmán's organization fired shots in Chicago; this specific assertion has no basis in the research.",
+   "first_seen": "before_refine",
+   "seen_in": [
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 9,
+   "sentence": "The Commission didn't just name him — it announced that it had officially joined forces with the DEA Chicago Field Division to put the spotlight on him, using those exact words: Chicago's Public Enemy Number One.",
+   "script_quote": "it announced that it had officially joined forces with the DEA Chicago Field Division to put the spotlight on him",
+   "category": "contradiction",
+   "verdict": "error",
+   "research_quote": "officially joined forces with the DEA Chicago Field Division in 2013 when we put the spotlight on Joaquín Guzmán Loera",
+   "why": "The research says the Commission joined forces with the DEA in 2013 (the year of the designation), but the script attributes this announcement to the February 14, 2013 news conference; the research places the joining-forces language in the Commission's retrospective 2013 page, not necessarily the Fe",
+   "first_seen": "section_1",
+   "seen_in": [
+    "section_1",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 16,
+   "sentence": "Together, those two seizures made the abstract argument concrete: Chicago wasn't a peripheral market.",
+   "script_quote": "Together, those two seizures made the abstract argument concrete",
+   "category": "causal_inflation",
+   "verdict": "error",
+   "research_quote": "In late 2008, the Flores brothers' cooperation also facilitated seizures of more than $15 million in cash in the Chicago area.",
+   "why": "The research reports the two seizures as separate facts; the script infers they together 'made the abstract argument concrete,' a causal/interpretive claim the research does not make.",
+   "first_seen": "section_2",
+   "seen_in": [
+    "section_2",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 17,
+   "sentence": "It was far enough downstream in the operation that finished product and counted cash were both sitting there simultaneously.",
+   "script_quote": "finished product and counted cash were both sitting there simultaneously",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research does not state that the cocaine and cash were present simultaneously or that both were 'sitting there' at the same time; this specific simultaneity claim is not supported.",
+   "first_seen": "section_2",
+   "seen_in": [
+    "section_2",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 41,
+   "sentence": "Each method addressed a specific vulnerability in the others.",
+   "script_quote": "Each method addressed a specific vulnerability in the others.",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research lists transport methods but makes no claim that each method addressed a specific vulnerability in the others; this is an analytical assertion not found in the research.",
+   "first_seen": "section_4",
+   "seen_in": [
+    "section_4",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 59,
+   "sentence": "These were not peripheral figures offering secondhand accounts.",
+   "script_quote": "These were not peripheral figures offering secondhand accounts.",
+   "category": "unsupported_attribution",
+   "verdict": "error",
+   "why": "The research identifies these individuals as cooperating witnesses but does not characterize them as non-peripheral or describe the nature of their accounts in this way.",
+   "first_seen": "section_6",
+   "seen_in": [
+    "section_6",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 60,
+   "sentence": "They were Sinaloa Cartel members who could describe his decisions, his methods, and his violence.",
+   "script_quote": "They were Sinaloa Cartel members who could describe his decisions, his methods, and his violence.",
+   "category": "evidence_inflation",
+   "verdict": "error",
+   "research_quote": "Cooperating witnesses included Sinaloa Cartel members Rey Zambada and Vicente Zambada.",
+   "why": "The research identifies them as cooperating witnesses but does not state they testified specifically about Guzmán's decisions, methods, and violence.",
+   "first_seen": "section_6",
+   "seen_in": [
+    "section_6",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 71,
+   "sentence": "Each category addressed a different layer of the operation: the recordings captured communications the cartel believed were private; the ledgers showed the money moving; the photographs and videos placed people and product in the same frame.",
+   "script_quote": "the recordings captured communications the cartel believed were private; the ledgers showed the money moving; the photographs and videos placed people and product in the same frame.",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research lists these evidence categories but does not describe what each category specifically captured or showed; these characterizations are not supported by the research.",
+   "first_seen": "section_6",
+   "seen_in": [
+    "section_6",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 72,
+   "sentence": "Together they narrowed the gaps a defense could otherwise use — gaps between what witnesses said they saw and what the documentary record independently confirmed.",
+   "script_quote": "Together they narrowed the gaps a defense could otherwise use — gaps between what witnesses said they saw and what the documentary record independently confirmed.",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research does not describe the evidentiary interplay between witness testimony and documentary evidence in this way; this is an analytical assertion unsupported by the research.",
+   "first_seen": "section_6",
+   "seen_in": [
+    "section_6",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 79,
+   "sentence": "It is the court stating, with arithmetic, that even the theoretical possibility of a future legal argument does not leave a door open.",
+   "script_quote": "It is the court stating, with arithmetic, that even the theoretical possibility of a future legal argument does not leave a door open.",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research states the sentence structure but does not attribute any such intent or meaning to the court; this characterization of the court's reasoning is not found in the research.",
+   "first_seen": "section_7",
+   "seen_in": [
+    "section_7",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  }
+ ],
+ "removed": [
+  {
+   "i": 1,
+   "sentence": "Federal indictments described Joaquín Guzmán's organization using the city not as a battleground but as a distribution hub, with prosecutors tracing more than a billion dollars in narcotics proceeds back through Chicago-area defendants.",
+   "script_quote": "prosecutors tracing more than a billion dollars in narcotics proceeds back through Chicago-area defendants",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research specifies 'more than $1.8 billion in cash proceeds' for the Chicago indictment forfeiture demand and 'more than $100 million' for the laundering complaint; 'more than a billion dollars' is a different, unsupported figure that conflates these distinct amounts.",
+   "first_seen": "hook",
+   "seen_in": [
+    "hook"
+   ],
+   "in_final": false,
+   "removed_after": "hook"
+  },
+  {
+   "i": 72,
+   "sentence": "So did his fellow cartel member Rey Zambada.",
+   "script_quote": "his fellow cartel member Rey Zambada",
+   "category": "contradiction",
+   "verdict": "error",
+   "research_quote": "Cooperating witnesses included Sinaloa Cartel members Rey Zambada and Vicente Zambada.",
+   "why": "Sentence 71 already placed Rey Zambada on the stand; sentence 72 names him again as if a different witness, when the research lists Vicente Zambada as the second Zambada cooperating witness.",
+   "first_seen": "section_6",
+   "seen_in": [
+    "section_6",
+    "finalize_in",
+    "before_refine"
+   ],
+   "in_final": false,
+   "removed_after": "before_refine"
+  },
+  {
+   "i": 68,
+   "sentence": "Seven superseding indictments had tightened the net around the organization.",
+   "script_quote": "Seven superseding indictments had tightened the net around the organization",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research only references an 'eighth superseding indictment' but never states that exactly seven prior superseding indictments existed.",
+   "first_seen": "section_5",
+   "seen_in": [
+    "section_5",
+    "finalize_in",
+    "before_refine"
+   ],
+   "in_final": false,
+   "removed_after": "before_refine"
+  }
+ ],
+ "draftErrors": 4,
+ "rejected": 0,
+ "gate": {
+  "flags": 38,
+  "actions": {
+   "removed": 6,
+   "rewritten": 26,
+   "clause_cut": 6
+  }
+ },
+ "gateLog": [
+  {
+   "sentence": "Valentine's Day, 2013.",
+   "unsupported": [
+    "Day"
+   ],
+   "layer": [
+    "entity"
+   ],
+   "why": [],
+   "action": "removed"
+  },
+  {
+   "sentence": "The Chicago Crime Commission gathered at a news conference and did something it had not done in decades — it handed out a title.",
+   "unsupported": [
+    "did something it had not done in decades"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "The Chicago Crime Commission gathered at a news conference and handed out a title."
+  },
+  {
+   "sentence": "A man who had never set foot in a Chicago courtroom, whose operations ran out of the mountains of Sinaloa, and who at that moment was still a fugitive.",
+   "unsupported": [
+    "had never set foot in a Chicago courtroom",
+    "whose operations ran out of the mountains of Sinaloa",
+    "at that moment was still a fugitive"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research",
+    "not in research",
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "A man who, at that moment, had not been arrested, and whose cartel was accused of using Chicago as a distribution hub."
+  },
+  {
+   "sentence": "The city invented that designation.",
+   "unsupported": [
+    "The city invented that designation"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "removed"
+  },
+  {
+   "sentence": "It was the taxonomy of Al Capone.",
+   "unsupported": [
+    "Capone",
+    "It was the taxonomy of Al Capone"
+   ],
+   "layer": [
+    "entity",
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "removed"
+  },
+  {
+   "sentence": "Pedro and Margarito Flores were twin brothers from Chicago who had built themselves into mid-level distributors for the Sinaloa Cartel.",
+   "unsupported": [
+    "Margarito Flores",
+    "Pedro and Margarito Flores were twin brothers from Chicago",
+    "built themselves into mid-level distributors for the Sinaloa Cartel"
+   ],
+   "layer": [
+    "entity",
+    "attribute"
+   ],
+   "why": [
+    "not in research",
+    "not in research"
+   ],
+   "action": "removed"
+  },
+  {
+   "sentence": "The brothers' cooperation told investigators where it was going and gave them the window to intercept it.",
+   "unsupported": [
+    "The brothers' cooperation told investigators where it was going"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"the Flores brothers' cooperation facilitated the seizure\""
+   ],
+   "action": "rewritten",
+   "result": "The brothers' cooperation facilitated the seizure of that shipment and gave investigators the window to intercept it."
+  },
+  {
+   "sentence": "The Chicago-based investigation they seeded ran forward from 2008 and produced, by the time federal prosecutors publicly tallied the results in 2015, approximately 11 tons of cocaine seized, along with 265 kilograms of methamphetamine, 78 kilograms of heroin, and roughly $30.8 million in total cash.",
+   "unsupported": [
+    "The Chicago-based investigation they seeded",
+    "by the time federal prosecutors publicly tallied the results in 2015"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research",
+    "not in research"
+   ],
+   "action": "clause_cut",
+   "result": "Produced, approximately 11 tons of cocaine seized, along with 265 kilograms of methamphetamine, 78 kilograms of heroin, and roughly $30.8 million in total cash."
+  },
+  {
+   "sentence": "Each of those numbers traces back to a chain of evidence that started with two brothers deciding, in late 2008, that cooperation was the better option.",
+   "unsupported": [
+    "Each of those numbers traces back to a chain of evidence"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "clause_cut",
+   "result": "In late 2008, that cooperation was the better option."
+  },
+  {
+   "sentence": "Prosecutors alleged that Guzmán's organization had built Chicago into exactly that, and the forfeiture demand attached to the Chicago indictment reflected the scale they were claiming: more than $1.8 billion in cash proceeds traceable to the conspiracy.",
+   "unsupported": [
+    "more than $1.8 billion in cash proceeds traceable to the conspiracy"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"sought forfeiture of “more than $1.8 billion in cash proceeds.”\""
+   ],
+   "action": "rewritten",
+   "result": "Prosecutors alleged that Guzmán's organization had built Chicago into exactly that, and the forfeiture demand attached to the Chicago indictment reflected the scale they were claiming: more than $1.8 billion in cash proceeds."
+  },
+  {
+   "sentence": "Submarines carried loads across Pacific waters.",
+   "unsupported": [
+    "Pacific",
+    "Submarines carried loads across Pacific waters."
+   ],
+   "layer": [
+    "entity",
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"Methods used to transport narcotics included submarines.\""
+   ],
+   "action": "rewritten",
+   "result": "Submarines carried loads across the waters."
+  },
+  {
+   "sentence": "Carbon-fiber planes — light enough to evade certain radar signatures — flew consignments across borders.",
+   "unsupported": [
+    "light enough to evade certain radar signatures"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "Carbon-fiber planes flew consignments across borders."
+  },
+  {
+   "sentence": "Trains with secret compartments rolled through ports of entry carrying concealed cargo alongside legitimate freight.",
+   "unsupported": [
+    "rolled through ports of entry carrying concealed cargo alongside legitimate freight"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "Trains with secret compartments carried narcotics."
+  },
+  {
+   "sentence": "Transnational underground tunnels, some of them reinforced and ventilated, punched beneath the border wall entirely.",
+   "unsupported": [
+    "some of them reinforced and ventilated"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "Transnational underground tunnels punched beneath the border."
+  },
+  {
+   "sentence": "Each method addressed a specific vulnerability in the others: if one route drew attention, the load moved through a different one.",
+   "unsupported": [
+    "if one route drew attention, the load moved through a different one"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "Each method addressed a specific vulnerability in the others."
+  },
+  {
+   "sentence": "Chicago sat at the receiving end of that infrastructure — a wholesale destination built to absorb multi-ton deliveries and push them into a distribution network that reached across the country.",
+   "unsupported": [
+    "built to absorb multi-ton deliveries"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"Methods used to transport multi-ton narcotics shipments into the United States included fishing boats.\""
+   ],
+   "action": "clause_cut",
+   "result": "Push them into a distribution network that reached across the country."
+  },
+  {
+   "sentence": "The indictment charged a conspiracy running from May 2005 through December 2014 — nearly a decade of alleged narcotics importation, distribution, and money laundering, all anchored to the Northern District of Illinois.",
+   "unsupported": [
+    "all anchored to the Northern District of Illinois"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"\""
+   ],
+   "action": "rewritten",
+   "result": "The indictment charged a conspiracy running from May 2005 through December 2014, nearly a decade of alleged narcotics importation, distribution, and money laundering."
+  },
+  {
+   "sentence": "The earlier filings had named the organization, documented the pipeline, and traced the cash.",
+   "unsupported": [
+    "traced the cash"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"do not provide a complete traced end-to-end asset map in the cited filings\""
+   ],
+   "action": "rewritten",
+   "result": "The earlier filings had named the organization, documented the pipeline, and sought forfeiture of billions in alleged drug proceeds."
+  },
+  {
+   "sentence": "The eighth superseding indictment put Guzmán himself at the center of that specific conspiracy, over that specific span of years, with a dollar figure meant to represent what prosecutors said the Chicago operation had generated.",
+   "unsupported": [
+    "a dollar figure meant to represent what prosecutors said the Chicago operation had generated"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "The eighth superseding indictment put Guzmán himself at the center of that specific conspiracy, over that specific span of years, and sought forfeiture of $2 billion."
+  },
+  {
+   "sentence": "Part of what made that possible was the alliance Guzmán had formed after his 2001 prison escape — a partnership with fugitive co-defendant Ismael Zambada García that prosecutors said made the two of them the preeminent leaders of the Sinaloa Cartel.",
+   "unsupported": [
+    "the alliance Guzmán had formed after his 2001 prison escape"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"After his 2001 escape, Guzman Loera formed an alliance\""
+   ],
+   "action": "rewritten",
+   "result": "Part of what made that possible was the alliance Guzmán had formed after his 2001 escape, a partnership with fugitive co-defendant Ismael Zambada García that prosecutors said made the two of them the preeminent leaders of the Sinaloa Cartel."
+  },
+  {
+   "sentence": "And the indictment alleged that Guzmán's organization maintained a vast network of corrupt government officials and employees, with the cartel paying those individuals millions of dollars in bribes to preserve its ability to operate.",
+   "unsupported": [
+    "the indictment alleged that Guzmán's organization maintained a vast network of corrupt government officials",
+    "the cartel paying those individuals millions of dollars in bribes"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"Guzman Loera's organization relied on a vast network of corrupt government officials and employees.\"",
+    "research differs: \"The Cartel paid corrupt individuals millions of dollars in bribes.\""
+   ],
+   "action": "removed"
+  },
+  {
+   "sentence": "The eighth put Guzmán's name on it directly.",
+   "unsupported": [
+    "The eighth put Guzmán's name on it directly."
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"the 2009 Brooklyn and Chicago indictments together charged Guzmán Loera\""
+   ],
+   "action": "rewritten",
+   "result": "The eighth superseding indictment charged Guzmán directly, alongside eight other defendants."
+  },
+  {
+   "sentence": "The trial opened in Brooklyn in the fall of 2018, and what prosecutors brought into that courtroom was the accumulated weight of everything that had been built in Chicago and beyond — indictments, seizures, intercepted recordings, ledgers — now handed to a jury through the mouths of the people who had actually run the organization alongside Guzmán.",
+   "unsupported": [
+    "2018",
+    "The trial opened in Brooklyn in the fall of 2018",
+    "the people who had actually run the organization alongside Guzmán"
+   ],
+   "layer": [
+    "entity",
+    "attribute"
+   ],
+   "why": [
+    "not in research",
+    "research differs: \"Cooperating witnesses included Sinaloa Cartel members Rey Zambada and Vicente Zambada.\""
+   ],
+   "action": "clause_cut",
+   "result": "What prosecutors brought into that courtroom was the accumulated weight of everything that had been built in Chicago and beyond — indictments, seizures, intercepted recordings."
+  },
+  {
+   "sentence": "So did his brother Vicente.",
+   "unsupported": [
+    "So did his brother Vicente"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"Rey Zambada and Vicente Zambada\""
+   ],
+   "action": "rewritten",
+   "result": "So did his fellow cartel member Rey Zambada."
+  },
+  {
+   "sentence": "They were cartel members who had operated at levels close enough to Guzmán that they could describe his decisions, his methods, and his violence from direct observation.",
+   "unsupported": [
+    "They were cartel members who had operated at levels close enough to Guzmán"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"Sinaloa Cartel members Rey Zambada and Vicente Zambada\""
+   ],
+   "action": "rewritten",
+   "result": "They were Sinaloa Cartel members who could describe his decisions, his methods, and his violence, and co-conspirators testified that Guzmán at times carried out acts of violence himself."
+  },
+  {
+   "sentence": "The indictment's language on this was specific: Guzmán directed his hitmen to kidnap, interrogate, torture, and kill members of rival drug organizations.",
+   "unsupported": [
+    "The indictment's language on this was specific"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "Prosecutors established that Guzmán directed his hitmen to kidnap, interrogate, torture, and kill members of rival drug organizations."
+  },
+  {
+   "sentence": "The verdict was unanimous and complete.",
+   "unsupported": [
+    "The verdict was unanimous"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "Guzmán Loera was convicted on all 10 counts of the superseding indictment."
+  },
+  {
+   "sentence": "The Chicago evidence — the hub designation, the pipeline, the cooperating witnesses who had first opened that case — had traveled east to Brooklyn and held.",
+   "unsupported": [
+    "the cooperating witnesses who had first opened that case",
+    "had traveled east to Brooklyn and held"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research",
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "The Chicago evidence — the hub designation, the pipeline, the overlapping indictments — had been part of a broader federal prosecution that reached Brooklyn."
+  },
+  {
+   "sentence": "Cogan walked into a Brooklyn courtroom and imposed a sentence that the law structures in a specific sequence for a reason.",
+   "unsupported": [
+    "Cogan walked into a Brooklyn courtroom and imposed a sentence"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "Judge Brian M. Cogan imposed a sentence that the law structures in a specific sequence for a reason."
+  },
+  {
+   "sentence": "It was the court's own accounting of what the full conspiracy had generated, and it dwarfed every prior figure prosecutors had put on paper.",
+   "unsupported": [
+    "It was the court's own accounting of what the full conspiracy had generated"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"the amount prosecutors said represented drug proceeds traceable to the conspiracy\""
+   ],
+   "action": "clause_cut",
+   "result": "It dwarfed every prior figure prosecutors had put on paper."
+  },
+  {
+   "sentence": "What made the number possible was the breadth of what the DEA, ICE HSI, and the FBI had assembled across years, working alongside law enforcement from Mexico, Ecuador, the Netherlands, the Dominican Republic, and Colombia.",
+   "unsupported": [
+    "Ecuador",
+    "Dominican Republic",
+    "Colombia"
+   ],
+   "layer": [
+    "entity"
+   ],
+   "why": [],
+   "action": "clause_cut",
+   "result": "What made the number possible was the breadth of what the DEA, ICE HSI, and the FBI had assembled across years, working alongside law enforcement from Mexico, Ecuador, the Netherlands."
+  },
+  {
+   "sentence": "The forfeiture figure was not a projection or an estimate of market size — it was the amount prosecutors said they could trace to the conspiracy itself, the proceeds the operation had actually moved.",
+   "unsupported": [
+    "the proceeds the operation had actually moved"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"the amount prosecutors said represented drug proceeds traceable to the conspiracy\""
+   ],
+   "action": "rewritten",
+   "result": "The forfeiture figure was not a projection or an estimate of market size — it was the amount prosecutors said represented drug proceeds traceable to the conspiracy itself."
+  },
+  {
+   "sentence": "The continuing criminal enterprise conviction is the federal statute's most severe drug charge.",
+   "unsupported": [
+    "the federal statute's most severe drug charge"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "The continuing criminal enterprise conviction carried a charge that included 26 drug-related violations and one murder conspiracy."
+  },
+  {
+   "sentence": "It requires proving that a defendant occupied a position of principal leadership, that the enterprise involved five or more people under that leadership, and that the enterprise generated substantial income.",
+   "unsupported": [
+    "It requires proving that a defendant occupied a position of principal leadership",
+    "the enterprise involved five or more people under that leadership",
+    "the enterprise generated substantial income"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research",
+    "not in research",
+    "not in research"
+   ],
+   "action": "removed"
+  },
+  {
+   "sentence": "The 26 underlying drug violations and the murder conspiracy weren't background — they were elements the jury had to find, individually, before the enterprise charge could stand.",
+   "unsupported": [
+    "elements the jury had to find, individually, before the enterprise charge could stand"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "The 26 underlying drug violations and the murder conspiracy weren't background — they were part of the charge the jury had to weigh before convicting on all 10 counts."
+  },
+  {
+   "sentence": "Every one of them stood.",
+   "unsupported": [
+    "Every one of them stood."
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"Guzman Loera was convicted on all 10 counts of the superseding indictment.\""
+   ],
+   "action": "rewritten",
+   "result": "He was convicted on all 10 counts."
+  },
+  {
+   "sentence": "When they stood at that news conference in February 2013 and called him Public Enemy Number One — invoking a designation the city had last used for Al Capone — the question hanging over it was whether the legal machinery would ever catch up to the argument.",
+   "unsupported": [
+    "Capone",
+    "a designation the city had last used for Al Capone"
+   ],
+   "layer": [
+    "entity",
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "When they stood at that news conference in February 2013 and called him Public Enemy Number One, the question hanging over it was whether the legal machinery would ever catch up to the argument."
+  },
+  {
+   "sentence": "A federal judge, a jury's unanimous verdict, and a number: $12.6 billion, life, plus thirty years.",
+   "unsupported": [
+    "a jury's unanimous verdict"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"Guzman Loera was convicted by a federal jury on February 12, 2019.\""
+   ],
+   "action": "rewritten",
+   "result": "A federal judge, a jury's verdict, and a number: $12.6 billion, life, plus thirty years."
+  }
+ ],
+ "stages": [
+  {
+   "stage": "plan",
+   "words": 710
+  },
+  {
+   "stage": "hook",
+   "words": 92
+  },
+  {
+   "stage": "section_1",
+   "words": 178
+  },
+  {
+   "stage": "section_2",
+   "words": 208
+  },
+  {
+   "stage": "section_3",
+   "words": 264
+  },
+  {
+   "stage": "section_4",
+   "words": 217
+  },
+  {
+   "stage": "section_5",
+   "words": 213
+  },
+  {
+   "stage": "section_6",
+   "words": 351
+  },
+  {
+   "stage": "section_7",
+   "words": 382
+  },
+  {
+   "stage": "finalize_in",
+   "words": 1813
+  },
+  {
+   "stage": "before_refine",
+   "words": 1855
+  },
+  {
+   "stage": "after_refine",
+   "words": 1653
+  },
+  {
+   "stage": "before_refill",
+   "words": 1582
+  },
+  {
+   "stage": "after_refill",
+   "words": 1582
+  },
+  {
+   "stage": "finalize_out",
+   "words": 1523
+  },
+  {
+   "stage": "review",
+   "words": 1575
+  },
+  {
+   "stage": "final_check",
+   "words": 1369
+  }
+ ],
+ "final": "A Mexican cartel boss was accused of using Chicago as a distribution hub. His organization hadn't fired a single shot there. On February 14, 2013, the Chicago Crime Commission gave Joaquín Guzmán a title. Not an award. A designation. Chicago's Public Enemy Number One.\n\nThe name belonged to Joaquín Guzmán Loera. El Chapo. A man who, at that moment, had not been arrested. The Commission didn't just name him — it announced that it had officially joined forces with the DEA Chicago Field Division to put the spotlight on him, using those exact words: Chicago's Public Enemy Number One.\n\nGuzmán was arrested in Mazatlán, Sinaloa, on February 22, 2014, roughly a year after the Commission spoke. What came after would take years more to fully prove.\n\nIn late 2008, the Flores brothers began cooperating against the Sinaloa Cartel.\n\nThe first consequence was immediate and physical. More than 1,600 kilograms of cocaine, already en route from Los Angeles, was seized before it reached Chicago. Then, in the Chicago area itself, more than $15 million in cash was seized. Together, those two seizures made the abstract argument concrete: Chicago wasn't a peripheral market. It was far enough downstream in the operation that finished product and counted cash were both sitting there simultaneously.\n\nWhat the Flores brothers unlocked kept producing results well beyond those first months. Since 2008, the Chicago-based investigation has produced seizures of approximately 11 tons of cocaine, 265 kilograms of methamphetamine, 78 kilograms of heroin, and approximately $30.8 million.\n\nThe indictment didn't describe Chicago as a stop along the route. It used a specific phrase: \"distribution hub.\" Prosecutors alleged that Guzmán's organization had built Chicago into exactly that, and the forfeiture demand attached to the Chicago indictment reflected the scale they were claiming: more than $1.8 billion in cash proceeds, a legal demand for alleged drug money, distinct from the physical cash already seized on the street.\n\nTo sustain a hub, you need more than product moving through. You need money moving out. A separate federal complaint, distinct from the indictment's forfeiture demand, alleged that more than $100 million in narcotics proceeds were laundered through Chicago-area defendants and entities: not through a single transaction or a single account, but through a network of people and businesses embedded in the city. The cartel wasn't just selling into Chicago. It was using Chicago to process what it had already sold.\n\nThe 2009 indictment made the network's size concrete. That cell was documented in the 2009 Chicago indictment, which charged 16 individuals as part of a large distribution operation inside the city. That cell was the local infrastructure — the layer between the wholesale deliveries coming in and the cash flows going back out. Chicago sat on a distribution chain that also fed New York, Miami, Atlanta, Los Angeles, and Arizona, among other cities. What separated it from those markets, in the prosecutors' telling, was that it functioned as a node the organization had built around deliberately — not simply a city they sold into, but one they had structured operations around.\n\nThe combined Chicago and Brooklyn indictments described what moved through that pipeline in aggregate: nearly 200 metric tons of cocaine imported between 1990 and December 2008, with more than $5.8 billion in cash proceeds smuggled back to Mexico. Two hundred metric tons is not a number that moves through a system improvised at the border. It requires engineering.\n\nThe DEA's account of how the cartel moved its product reads less like improvised smuggling than a logistics operation that had calculated law enforcement as a cost of doing business. Submarines carried loads across the waters. Carbon-fiber planes flew consignments across borders. Trains with secret compartments carried narcotics. Transnational underground tunnels punched beneath the border. Fishing boats worked the coastlines. Each method addressed a specific vulnerability in the others.\n\nBy the time prosecutors tallied the full scope of what the Sinaloa Cartel had moved across its entire operation, the figure reached more than one million kilograms of cocaine, marijuana, methamphetamine, and heroin distributed inside the United States.\n\nThe pipeline was real. The harder question prosecutors still had to answer was who, exactly, had built it.\n\nOn January 27, 2015, federal law enforcement in Chicago unsealed an eighth superseding indictment. Nine defendants were named. One of them was Joaquín Guzmán Loera.\n\nThe indictment charged a conspiracy running from May 2005 through December 2014, nearly a decade of alleged narcotics importation, distribution, and money laundering.\n\nThe earlier filings had named the organization, documented the pipeline, and sought forfeiture of billions in alleged drug proceeds. The eighth superseding indictment put Guzmán himself at the center of that specific conspiracy, over that specific span of years, and sought forfeiture of $2 billion, a figure tied to this particular indictment, separate from the more than $1.8 billion forfeiture demand alleged in the earlier Chicago indictment.\n\nPart of what made that possible was the alliance Guzmán had formed after his 2001 escape, a partnership with fugitive co-defendant Ismael Zambada García that prosecutors said made the two of them the preeminent leaders of the Sinaloa Cartel. Running an organization at that scale required more than logistics. It required insulation.\n\nWhat prosecutors brought into that courtroom was the accumulated weight of years of work — indictments, seizures, intercepted recordings, and the testimony of people who had operated inside the organization itself.\n\nRey Zambada took the stand. Damaso Lopez followed. Alex Cifuentes followed after that. Miguel Martinez and Tirso Martinez each testified as well. These were not peripheral figures offering secondhand accounts. They were Sinaloa Cartel members who could describe his decisions, his methods, and his violence.\n\nWhat they described went beyond logistics. Multiple co-conspirators testified that Guzmán at times carried out acts of violence himself — not just ordered them, but participated directly. Prosecutors established that Guzmán directed his hitmen to kidnap, interrogate, torture, and kill members of rival drug organizations. The witnesses who corroborated that on the stand gave the jury something a ledger cannot — a face and a voice attached to the decisions.\n\nThe documentary evidence ran alongside the testimony rather than beneath it. Ledgers. Text messages. Photographs. Videos. Intercepted recordings. Each category addressed a different layer of the operation: the recordings captured communications the cartel believed were private; the ledgers showed the money moving; the photographs and videos placed people and product in the same frame. Together they narrowed the gaps a defense could otherwise use — gaps between what witnesses said they saw and what the documentary record independently confirmed.\n\nThree months after it began, the jury returned its verdict. On February 12, 2019, Guzmán Loera was convicted on all 10 counts of the superseding indictment: narcotics trafficking, using a firearm in furtherance of drug crimes, and participating in a money laundering conspiracy.\n\nFive months after the verdict, on July 17, 2019, Judge Brian M. Cogan imposed a sentence that the law structures in a specific sequence for a reason. The life term came first — attached to the charge of being a principal leader of a continuing criminal enterprise, a charge that itself folded in 26 drug-related violations and one murder conspiracy. Then, consecutive to that life sentence, came 30 more years. The structure is not redundant. It is the court stating, with arithmetic, that even the theoretical possibility of a future legal argument does not leave a door open.\n\nThe forfeiture order closed what the sentence left abstract. Judge Cogan ordered $12.6 billion — the amount prosecutors said represented drug proceeds traceable to the conspiracy.\n\nWhat made the number possible was the breadth of what the DEA, ICE HSI, and the FBI had assembled across years, working alongside law enforcement from Mexico, Ecuador, the Netherlands, the Dominican Republic, and Colombia.\n\nAnd that is where the label the Chicago Crime Commission placed on Guzmán six years earlier finds its resolution. When they stood at that news conference in February 2013 and called him Public Enemy Number One, the question hanging over it was whether the legal machinery would ever catch up to the argument. The sentence and the forfeiture order are the answer. Not theater. Not a press conference. A federal judge, a jury's verdict, and a number: $12.6 billion, life, plus thirty years."
+}

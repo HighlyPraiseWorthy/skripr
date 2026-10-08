@@ -1,0 +1,452 @@
+{
+ "id": "jones",
+ "run": 1,
+ "words": 1742,
+ "primaryPer1k": 3.44,
+ "overreachPer1k": 2.3,
+ "finalErrors": [
+  {
+   "i": 2,
+   "sentence": "But thirty-two years later, he turned up very much alive at a Las Vegas DMV, still walking around under a name that wasn't his.",
+   "script_quote": "he turned up very much alive at a Las Vegas DMV",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research says Jones went to a Henderson DMV office (not Las Vegas DMV) to renew his license, and was arrested in July 2011, not at the DMV itself.",
+   "first_seen": "hook",
+   "seen_in": [
+    "hook",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 9,
+   "sentence": "Just a promise — I'll be back — and a car pulling away from a house where a wife and three children were waiting for a return that would not come for thirty-two years.",
+   "script_quote": "a wife and three children were waiting for a return",
+   "category": "unsupported_attribution",
+   "verdict": "error",
+   "why": "The research does not state that the wife and children were waiting for a return; attributing this expectation/feeling to them is unsupported.",
+   "first_seen": "section_1",
+   "seen_in": [
+    "section_1",
+    "section_7",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 26,
+   "sentence": "The shooting was the deadline.",
+   "script_quote": "The shooting was the deadline.",
+   "category": "causal_inflation",
+   "verdict": "error",
+   "research_quote": "Court papers said Jones took off shortly after the April 1979 shooting 'to get a fresh start.'",
+   "why": "The research says Jones left shortly after the shooting to get a fresh start; the script asserts the shooting was the deadline (i.e., caused his departure), which the research does not state as a causal fact.",
+   "first_seen": "section_2",
+   "seen_in": [
+    "section_2",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 34,
+   "sentence": "In 1986, seven years after Jones backed out of the driveway, an Illinois court did what prolonged silence eventually compels: it declared Arthur Gerald Jones legally dead.",
+   "script_quote": "seven years after Jones backed out of the driveway, an Illinois court",
+   "category": "contradiction",
+   "verdict": "error",
+   "research_quote": "A court declared Arthur Jones legally dead in 1986.",
+   "why": "Jones disappeared in 1979 and was declared dead in 1986, which is seven years later — that arithmetic is correct. However, the research says 'Illinois courts declared Jones dead 25 years ago' (from ~2011/2012, placing it ~1986/1987), and another source says 1986 specifically. This checks out. No err",
+   "first_seen": "section_4",
+   "seen_in": [
+    "section_4",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 38,
+   "sentence": "From the government's perspective, a breadwinner had died, a family was grieving, and the program existed precisely for this.",
+   "script_quote": "a breadwinner had died, a family was grieving, and the program existed precisely for this",
+   "category": "unsupported_attribution",
+   "verdict": "error",
+   "why": "The research does not state the government's perspective or that the family was grieving; attributing these thoughts/feelings to the government's viewpoint is unsupported.",
+   "first_seen": "section_4",
+   "seen_in": [
+    "section_4",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 62,
+   "sentence": "Not by going dark, but by showing up — punching in, paying taxes, voting in elections — as someone else.",
+   "script_quote": "voting in elections — as someone else",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "Research says Jones and his girlfriend were registered to vote, but does not state that Jones actually voted in elections.",
+   "first_seen": "section_5",
+   "seen_in": [
+    "section_5",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 84,
+   "sentence": "Bixler gave Jones three years of probation.",
+   "script_quote": "Bixler gave Jones three years of probation",
+   "category": "contradiction",
+   "verdict": "error",
+   "research_quote": "Jones pleaded guilty to one count of felony identity fraud in Clark County court and was sentenced to three years of probation with restitution ordered.",
+   "why": "Multiple research sources state Jones was sentenced to three years of probation, but the Review-Journal source (the sentencing article) states he was sentenced to three years of probation — however, another source states 'five years' probation.' The primary sentencing source (reviewjournal) says thr",
+   "first_seen": "section_7",
+   "seen_in": [
+    "section_7",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 90,
+   "sentence": "The Social Security Administration was owed more than $78,600, the court's figure for its payments to the family after the 1986 declaration of death, higher than the $47,000 in benefits the family was reported to have collected.",
+   "script_quote": "the 1986 declaration of death",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research states 'A court declared Arthur Jones legally dead in 1986' (LA Times), but the Review-Journal source says 'Illinois courts declared Jones dead 25 years ago' (from a 2012 article, implying ~1987). The 1986 date comes from one source, so this is actually supported. Withdrawing.",
+   "first_seen": "section_7",
+   "seen_in": [
+    "section_7",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 91,
+   "sentence": "And Goodenough — the Phoenix veterans hospital nurse whose wages had been garnished, whose bank account had been touched — was owed about $11,400 for the missed work and legal fees Jones's misuse of his number had directly caused.",
+   "script_quote": "the Phoenix veterans hospital nurse whose wages had been garnished",
+   "category": "contradiction",
+   "verdict": "error",
+   "research_quote": "The IRS had garnisheed Goodenough's wages, taken funds from his bank account",
+   "why": "The research says the IRS garnished Goodenough's wages; the script attributes the garnishment to Jones's misuse directly, but more importantly the script says 'wages had been garnished' which the research supports. However, the script calls him a 'Phoenix veterans hospital nurse' while research says",
+   "first_seen": "section_7",
+   "seen_in": [
+    "section_7",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 90,
+   "sentence": "The Social Security Administration was owed more than $78,600, the court's figure for its payments to the family after the 1986 declaration of death, higher than the $47,000 in benefits the family was reported to have collected.",
+   "script_quote": "higher than the $47,000 in benefits the family was reported to have collected",
+   "category": "evidence_inflation",
+   "verdict": "error",
+   "research_quote": "Jones's wife and three children collected Social Security benefits worth $47,000 as a result of his being declared dead.",
+   "why": "The script presents the $78,600 figure as the court's figure for payments to the family, then notes it is higher than the $47,000 the family collected. The research states the $78,600 was ordered to be paid to the Social Security Administration, not necessarily representing only what the family coll",
+   "first_seen": "final_check",
+   "seen_in": [
+    "final_check"
+   ],
+   "in_final": true
+  }
+ ],
+ "removed": [
+  {
+   "i": 29,
+   "sentence": "Court papers would later state that Jones took off shortly after that shooting \"to get a fresh start.\" His wife, who had watched him sell his livelihood and suspected by that point that he had begun working for the mob, understood the murder as the signal it almost certainly was.",
+   "script_quote": "His wife, who had watched him sell his livelihood and suspected by that point that he had begun working for the mob",
+   "category": "causal_inflation",
+   "verdict": "error",
+   "research_quote": "Jones's wife suspected he was working for the mob after selling his Board of Trade slot.",
+   "why": "The script presents the wife's suspicion as a settled fact she held 'by that point' before he left, and links it causally to understanding the murder as a signal, going beyond what the research states.",
+   "first_seen": "section_2",
+   "seen_in": [
+    "section_2",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review"
+   ],
+   "in_final": false,
+   "removed_after": "review"
+  },
+  {
+   "i": 37,
+   "sentence": "The Social Security number, though, didn't belong to Sandelli — it belonged to a real man, a living man, an Arizona nurse named Clifton Goodenough who had no idea his number had just been sold to a stranger in Illinois about to disappear.",
+   "script_quote": "an Arizona nurse named Clifton Goodenough who had no idea his number had just been sold",
+   "category": "unsupported_attribution",
+   "verdict": "error",
+   "why": "The research does not state that Goodenough had no idea his number had been sold; this is an unsupported attribution of his mental state.",
+   "first_seen": "section_3",
+   "seen_in": [
+    "section_3",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review"
+   ],
+   "in_final": false,
+   "removed_after": "review"
+  },
+  {
+   "i": 39,
+   "sentence": "The birth certificate came first in the chain — it was the foundational document, the paper that said a man named Joseph Richard Sandelli had been born and existed.",
+   "script_quote": "The birth certificate came first in the chain — it was the foundational document",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research lists the three documents but does not establish any ordering or hierarchy among them, nor that the birth certificate was 'foundational' or 'came first in the chain.'",
+   "first_seen": "section_3",
+   "seen_in": [
+    "section_3",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill"
+   ],
+   "in_final": false,
+   "removed_after": "after_refill"
+  },
+  {
+   "i": 44,
+   "sentence": "Investigators later found Jones's silver Buick abandoned near O'Hare International Airport, a pair of sunglasses left inside.",
+   "script_quote": "a pair of sunglasses left inside",
+   "category": "contradiction",
+   "verdict": "error",
+   "research_quote": "Investigators found Jones's abandoned silver Buick and a pair of sunglasses near O'Hare International Airport.",
+   "why": "The research says the sunglasses were found near O'Hare alongside the Buick, not specified as being left inside the car.",
+   "first_seen": "section_3",
+   "seen_in": [
+    "section_3",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review"
+   ],
+   "in_final": false,
+   "removed_after": "review"
+  },
+  {
+   "i": 85,
+   "sentence": "What Goodenough could not have known was that his Social Security number had been clocked into a Las Vegas casino payroll since 1988 — the year the Nevada DMV first issued a driver's license to a man named Joseph Richard Sandelli.",
+   "script_quote": "his Social Security number had been clocked into a Las Vegas casino payroll since 1988 — the year the Nevada DMV first issued a driver's license",
+   "category": "causal_inflation",
+   "verdict": "error",
+   "research_quote": "The resulting investigation led to the Nevada Department of Motor Vehicles, which had issued Jones a driver's license in 1988 with his Sandelli alias and fake Social Security number.",
+   "why": "The research says the DMV issued a license in 1988; the script links this to casino payroll starting in 1988, but the research does not state the casino payroll began in 1988 or connect the two events causally.",
+   "first_seen": "section_6",
+   "seen_in": [
+    "section_6",
+    "finalize_in",
+    "before_refine",
+    "after_refine"
+   ],
+   "in_final": false,
+   "removed_after": "after_refine"
+  },
+  {
+   "i": 87,
+   "sentence": "The W-2s that went out each year under Sandelli's name carried Goodenough's number into the federal tax system, where they registered as income earned by the Arizona nurse who had never left Phoenix.",
+   "script_quote": "The W-2s that went out each year under Sandelli's name carried Goodenough's number into the federal tax system, where they registered as income earned by the Arizona nurse who had never left Phoenix",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research says Goodenough reported income from Las Vegas casinos on his statements, but does not mention W-2s specifically, nor does it state Goodenough 'never left Phoenix.'",
+   "first_seen": "section_6",
+   "seen_in": [
+    "section_6",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill"
+   ],
+   "in_final": false,
+   "removed_after": "after_refill"
+  },
+  {
+   "i": 109,
+   "sentence": "The Social Security Administration was owed more than $78,600 — the amount the government had paid out to Joanne and the three children after the 1986 declaration of death, money that had gone to a family that had every reason to believe they were entitled to it, money that now had to come back because the man it mourned was still drawing breath.",
+   "script_quote": "the amount the government had paid out to Joanne and the three children after the 1986 declaration of death",
+   "category": "contradiction",
+   "verdict": "error",
+   "research_quote": "Jones was ordered to pay more than $78,600 to the Social Security Administration for their payments to Jones' family after he was declared dead in Illinois.",
+   "why": "The research says the $78,600 was owed to the SSA for payments to Jones's family; it does not say the 1986 declaration triggered the SSA payout specifically tied to that $78,600 figure. More critically, the research states Illinois courts declared Jones dead '25 years ago' (from ~2012, so ~1987), wh",
+   "first_seen": "section_7",
+   "seen_in": [
+    "section_7",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill"
+   ],
+   "in_final": false,
+   "removed_after": "after_refill"
+  },
+  {
+   "i": 110,
+   "sentence": "And Clifton Goodenough — the Phoenix veterans hospital nurse who had spent years fighting the IRS over Las Vegas casino income he never earned, whose wages had been garnished, whose bank account had been touched — was owed about $11,400 for the missed work and legal fees that Jones's misuse of his Social Security number had directly caused.",
+   "script_quote": "the Phoenix veterans hospital nurse who had spent years fighting the IRS over Las Vegas casino income he never earned, whose wages had been garnished, whose bank account had been touched — was owed about $11,400 for the missed work and legal fees that Jones's misuse of his Social Security number had directly caused",
+   "category": "causal_inflation",
+   "verdict": "error",
+   "research_quote": "Jones was ordered to pay about $11,400 to Goodenough for missed work and legal fees incurred because of the misuse of his Social Security number.",
+   "why": "The script states Jones's misuse 'directly caused' the missed work and legal fees; the research says the $11,400 was for costs 'incurred because of the misuse' but does not use causal language connecting the IRS garnishment specifically to Jones's actions as a direct cause.",
+   "first_seen": "section_7",
+   "seen_in": [
+    "section_7",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill"
+   ],
+   "in_final": false,
+   "removed_after": "after_refill"
+  }
+ ],
+ "draftErrors": 14,
+ "rejected": 0,
+ "stages": [
+  {
+   "stage": "plan",
+   "words": 613
+  },
+  {
+   "stage": "hook",
+   "words": 65
+  },
+  {
+   "stage": "section_1",
+   "words": 275
+  },
+  {
+   "stage": "section_2",
+   "words": 303
+  },
+  {
+   "stage": "section_3",
+   "words": 277
+  },
+  {
+   "stage": "section_4",
+   "words": 219
+  },
+  {
+   "stage": "section_5",
+   "words": 328
+  },
+  {
+   "stage": "section_6",
+   "words": 336
+  },
+  {
+   "stage": "section_7",
+   "words": 581
+  },
+  {
+   "stage": "finalize_in",
+   "words": 2319
+  },
+  {
+   "stage": "before_refine",
+   "words": 2381
+  },
+  {
+   "stage": "after_refine",
+   "words": 2349
+  },
+  {
+   "stage": "before_refill",
+   "words": 2242
+  },
+  {
+   "stage": "after_refill",
+   "words": 2242
+  },
+  {
+   "stage": "finalize_out",
+   "words": 1939
+  },
+  {
+   "stage": "review",
+   "words": 2004
+  },
+  {
+   "stage": "final_check",
+   "words": 1742
+  }
+ ],
+ "final": "In May of 1979, a Chicago commodities broker walked out his front door, told his wife he'd be back after a business meeting, and never came back. A court eventually declared him legally dead, and his family began collecting survivor benefits. But thirty-two years later, he turned up very much alive at a Las Vegas DMV, still walking around under a name that wasn't his.\n\nAround noon on May 10, 1979, Arthur Gerald Jones walked out the front door of his suburban Chicago home in a tennis shirt and slacks — not the corporate attire his wife was used to seeing him leave in — and told Joanne he had a meeting to get to. His wife recalled him saying, \"The meeting is not in a business office.\" Then he sped away.\n\nHe was forty years old and frazzled enough that he left without his cherished bracelet.\n\nShe reported him missing on May 11.\n\nThe exit was so ordinary it barely qualified as a scene. No argument at the door, no dramatic declaration, no sign that a man was erasing himself from the lives of everyone who knew him. Just a promise — I'll be back — and a car pulling away from a house where a wife and three children were waiting for a return that would not come for thirty-two years. The mundane specificity of it, the tennis shirt, the forgotten bracelet, the business meeting that wasn't in a business office, is what makes the moment stick.\n\nThe life Jones walked away from had not been built cheaply, and it had not collapsed quickly. He was a commodities trader at the Chicago Board of Trade — a career that carried real money and real risk in roughly equal measure — and for a while the money won. He and Joanne lived in a sprawling ranch home in suburban Chicago, the kind of house with a volleyball court in the backyard, the kind of house that announces a man is doing well. Then the gambling started eating through it.\n\nHis wife told authorities he once put $30,000 on a single basketball game. Not a season's losses, not a string of bad nights — one game. When that kind of money moves on a single outcome, debts don't accumulate slowly; they arrive all at once and bring company. By early 1979, Jones had run the hole deep enough that he liquidated the one asset that had made him a player: his seat on the Board of Trade. He sold it to cover $210,000 in debt. Along the way he had forged Joanne's name on a second mortgage application, reaching for cash in a way that required her signature without her knowledge.\n\nSelling the seat didn't buy him safety. It bought him a few months.\n\nIn April 1979, weeks before he walked out the door, a fellow commodities trader was shot and killed by masked intruders in his suburban home. Court papers would later state that Jones took off shortly after that shooting \"to get a fresh start.\" His wife suspected that by then he had begun working for the mob. The debt was the pressure. The shooting was the deadline.\n\nBefore he left Chicago, Jones made one purchase. By his own account to authorities, he paid an associate $800 for a fake Illinois driver's license, birth certificate, and Social Security card, in the name Joseph Richard Sandelli. Together they cost less than a decent set of tires. Together they were enough.\n\nThe Social Security number, though, didn't belong to Sandelli. It belonged to a real man, Clifton Goodenough of Arizona.\n\nInvestigators later found Jones's abandoned silver Buick and a pair of sunglasses near O'Hare International Airport.\n\nIn 1986, seven years after Jones backed out of the driveway, an Illinois court did what prolonged silence eventually compels: it declared Arthur Gerald Jones legally dead. That ruling was not simply a bureaucratic closure. It set a second machine in motion. Social Security paid out $47,000 in survivor benefits to Joanne and the three children Jones had left behind. From the government's perspective, a breadwinner had died, a family was grieving, and the program existed precisely for this. The money went to people who had every reason to believe they deserved it.\n\nThe man the court had just buried on paper was very much alive, somewhere outside Illinois, building a wage-earning life under a borrowed name.\n\nThat gap — between the legal fact of his death and the physical fact of his continued existence — is where abandonment became fraud. The family hadn't filed a false claim. They had simply cashed checks the government sent them, checks the government would one day want back. Jones's disappearance had made victims of the people closest to him twice over: once when he left, and again when the bill for his survival arrived in their names.\n\nFrom Chicago, Jones did not go straight to Las Vegas. He moved laterally first, stopping in California and Florida, before the desert finally absorbed him sometime in the 1980s. By the time he settled, he had landed in a city whose entire economy runs on the proposition that a person can start over.\n\nHe landed in a neighborhood of stucco homes, dusty lots, and a few horse corrals — the kind of Las Vegas that exists behind the casinos, where people actually live. He had a girlfriend. They shared the block, shared a life, and both of them were registered to vote. His attorney, Stephen Stein, told reporters that the girlfriend and her family knew him only as Joseph Richard Sandelli. Stein did not frame this as suspicious. \"They had no idea about anything,\" he said, \"which makes sense. Common sense tells you the guy's not going to go around telling anybody about this kind of thing.\" Arthur Jones was simply not a name that existed in that house.\n\nTo fill that name with something credible, Jones went to work — literally. According to his attorney, he took a job at the Desert Inn first, then moved to a local casino's sports book. A man with his background, who had spent years as a commodities trader at the Chicago Board of Trade, was not exactly miscast behind a sports-betting counter. The work was legitimate. The wages were real. The income showed up on the Social Security statements of Clifton Goodenough in Arizona, a stranger who had never worked in a Las Vegas casino.\n\nThat is how completely Jones buried Arthur Jones. Not by going dark, but by showing up — punching in, paying taxes, voting in elections — as someone else.\n\nClifton Goodenough was a nurse at a Phoenix veterans hospital — a man who spent his working hours caring for patients and his off-hours, starting around 1995, fighting a tax dispute he could not explain. Year after year the IRS came at him with the same claim: that he had earned extra income from Las Vegas casinos. Year after year he said the same thing: he had never worked in Las Vegas. The IRS was not persuaded. It garnished his wages. It took money from his bank account. For years, the dispute followed his family like weather that would not move on, returning each tax season with fresh paperwork and fresh damage.\n\nThe thread that unraveled everything was not a detective working the cold case. It was Goodenough reporting the discrepancy to the Social Security Administration — a man simply insisting that income attributed to him was not his. That complaint opened an investigation, and the investigation led to the Nevada DMV, which showed that a driver's license in the name of Joseph Richard Sandelli had first been issued in 1988. Jones renewed that license in 2008, walking into a Henderson DMV office to extend the one document that kept his constructed identity legally current. That renewal was the seam investigators pulled. The man who had stayed invisible by staying present had finally left a timestamp.\n\nWhen state and federal investigators finally moved on Arthur Jones in July 2011, he was working at the Rampart's sport and race book under a name that wasn't his. They asked if he was the Chicago trader who had vanished thirty-two years earlier. He said yes.\n\nOne word. That was all it took to collapse three decades of constructed identity.\n\nHe was seventy-two years old. In September 2011, Jones pleaded guilty to a single felony count: using a false name to obtain a driver's license or identity card. The deal with prosecutors let the remaining counts go, and Clark County District Judge James Bixler handled the sentencing on January 31, 2012.\n\nBixler gave Jones three years of probation. No prison. But the financial reckoning was specific and it was layered, and Judge Bixler asked Jones directly how he planned to pay it. The answer, delivered through his attorney Stephen Stein, was the final irony the case had to offer: out of his Social Security benefits. The man whose disappearance had triggered a survivor-benefit payout would now repay it from the Social Security check issued to him as a living person.\n\nThe math of what he owed broke into two separate obligations. The Social Security Administration was owed more than $78,600, the court's figure for its payments to the family after the 1986 declaration of death, higher than the $47,000 in benefits the family was reported to have collected. And Goodenough — the Phoenix veterans hospital nurse whose wages had been garnished, whose bank account had been touched — was owed about $11,400 for the missed work and legal fees Jones's misuse of his number had directly caused.\n\nGoodenough had done nothing to invite what happened to him. He had simply been a nurse with a Social Security number that someone else decided to borrow. The restitution figures put a dollar amount on that — $78,600 on one side, $11,400 on the other — and the source of the payments closed the loop in a way no sentence of prose could quite improve on.\n\nA morning in May 1979, a tennis shirt, a forgotten bracelet, a car backing out of a driveway in Highland Park. What he actually did was drive toward O'Hare and keep going — into California, into Florida, into the Nevada desert, into thirty-two years of someone else's name. When he finally confirmed who he was again, investigators were asking, and the answer cost him everything the construction had been built to protect."
+}

@@ -1,0 +1,33 @@
+{
+ "judge": "accuracy_judge_v1",
+ "gate": {
+  "rewritten": 262,
+  "removed": 66,
+  "clause_cut": 57,
+  "flags": 385
+ },
+ "scripts": 16,
+ "primaryPer1k": 2.18,
+ "overreachPer1k": 1.06,
+ "primaryErrorsInFinal": 58,
+ "firstSeenByStage": {
+  "section_writer": 36,
+  "after_refill": 4,
+  "finalize_out": 3,
+  "final_check": 10,
+  "after_refine": 1,
+  "before_refine": 2,
+  "plan": 1,
+  "review": 1
+ },
+ "primaryRemovedBeforeFinal": 35,
+ "lastSeenBeforeRemoval": {
+  "after_refill": 12,
+  "review": 9,
+  "finalize_out": 1,
+  "finalize_in": 1,
+  "after_refine": 2,
+  "before_refine": 7,
+  "hook": 3
+ }
+}

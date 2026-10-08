@@ -1,0 +1,261 @@
+{
+ "id": "wright",
+ "run": 2,
+ "words": 1581,
+ "primaryPer1k": 1.27,
+ "overreachPer1k": 0.63,
+ "finalErrors": [
+  {
+   "i": 6,
+   "sentence": "A fingerprint lifted from that document matched records in a national Portuguese database, and the match reached U.S. authorities.",
+   "script_quote": "the match reached U.S. authorities",
+   "category": "contradiction",
+   "verdict": "error",
+   "research_quote": "A fingerprint found on Wright's Portuguese ID card matched records in a national Portuguese database, which led U.S. authorities and Portuguese police to locate and arrest him",
+   "why": "The research says the fingerprint match led U.S. authorities and Portuguese police to locate him; the script reverses the flow, saying the match 'reached U.S. authorities' as if it was passed to them, whereas the research indicates it led both U.S. and Portuguese authorities jointly.",
+   "first_seen": "section_1",
+   "seen_in": [
+    "section_1",
+    "section_6",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 16,
+   "sentence": "The case moved through the courts, and Wright entered a plea of nolo contendere — no contest.",
+   "script_quote": "Wright entered a plea of nolo contendere — no contest",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research describes the plea as 'no defense' or 'no defense/nolo contendere'; the script specifies only 'nolo contendere — no contest,' which is a specific legal characterization not unambiguously confirmed in the research.",
+   "first_seen": "section_2",
+   "seen_in": [
+    "section_2",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 59,
+   "sentence": "Algeria returned the plane, and the ransom money, to the United States.",
+   "script_quote": "Algeria returned the plane, and the ransom money, to the United States.",
+   "category": "certainty_inflation",
+   "verdict": "error",
+   "research_quote": "the FBI later said the money and plane were returned to the United States by Algeria, with no recovery of the money from the hijackers themselves documented in the source set here",
+   "why": "The research attributes the claim to the FBI ('the FBI later said'), but the script states it as plain fact without attribution.",
+   "first_seen": "final_check",
+   "seen_in": [
+    "final_check"
+   ],
+   "in_final": true
+  }
+ ],
+ "removed": [
+  {
+   "i": 1,
+   "sentence": "For four decades, the United States had no idea where he was.",
+   "script_quote": "For four decades, the United States had no idea where he was",
+   "category": "certainty_inflation",
+   "verdict": "error",
+   "research_quote": "Journalists and officials described Wright as a fugitive who had evaded capture for more than four decades, with the FBI and New Jersey officials tracking him to a town outside Lisbon before his arrest.",
+   "why": "The research says Wright evaded capture, not that the U.S. had no idea where he was; the FBI and NJ officials were actively tracking him.",
+   "first_seen": "hook",
+   "seen_in": [
+    "hook",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill"
+   ],
+   "in_final": false,
+   "removed_after": "after_refill"
+  },
+  {
+   "i": 2,
+   "sentence": "Then they found him, living openly in Portugal under his own name, and that's the moment the story gets genuinely strange.",
+   "script_quote": "living openly in Portugal under his own name",
+   "category": "contradiction",
+   "verdict": "error",
+   "research_quote": "George Edward Wright lived under a Portuguese identity after resurfacing in Portugal with Portuguese citizenship",
+   "why": "The research says Wright lived under a Portuguese identity, not under his own name.",
+   "first_seen": "hook",
+   "seen_in": [
+    "hook",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill"
+   ],
+   "in_final": false,
+   "removed_after": "after_refill"
+  },
+  {
+   "i": 31,
+   "sentence": "Without a dead man named Walter Patterson and a murder conviction behind him, George Wright has no reason to run.",
+   "script_quote": "George Wright has no reason to run",
+   "category": "unsupported_attribution",
+   "verdict": "error",
+   "why": "The script attributes a motive (reason to run) to Wright that the research does not state.",
+   "first_seen": "section_2",
+   "seen_in": [
+    "section_2",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review"
+   ],
+   "in_final": false,
+   "removed_after": "review"
+  },
+  {
+   "i": 72,
+   "sentence": "Algeria returned the million dollars.",
+   "script_quote": "Algeria returned the million dollars.",
+   "category": "certainty_inflation",
+   "verdict": "error",
+   "research_quote": "the FBI later said the money and plane were returned to the United States by Algeria, with no recovery of the money from the hijackers themselves documented in the source set here.",
+   "why": "The research attributes the claim about money being returned to what the FBI said, not as established fact; the script states it as plain fact.",
+   "first_seen": "section_5",
+   "seen_in": [
+    "section_5",
+    "finalize_in",
+    "before_refine",
+    "after_refine"
+   ],
+   "in_final": false,
+   "removed_after": "after_refine"
+  },
+  {
+   "i": 75,
+   "sentence": "The Algerian government handed back the aircraft and the ransom, closing the immediate diplomatic ledger.",
+   "script_quote": "The Algerian government handed back the aircraft and the ransom, closing the immediate diplomatic ledger.",
+   "category": "certainty_inflation",
+   "verdict": "error",
+   "research_quote": "the FBI later said the money and plane were returned to the United States by Algeria, with no recovery of the money from the hijackers themselves documented in the source set here.",
+   "why": "The research attributes the return of money and plane to what the FBI said; the script states it as plain established fact without attribution.",
+   "first_seen": "section_5",
+   "seen_in": [
+    "section_5",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill"
+   ],
+   "in_final": false,
+   "removed_after": "after_refill"
+  },
+  {
+   "i": 57,
+   "sentence": "That threat is what moved events forward.",
+   "script_quote": "That threat is what moved events forward.",
+   "category": "causal_inflation",
+   "verdict": "error",
+   "research_quote": "threatened to shoot a hostage when negotiations stalled, and the plane ultimately landed in Algeria.",
+   "why": "The research does not state that the hostage threat caused events to move forward or caused the ransom to be paid; the script asserts a causal link the research does not make.",
+   "first_seen": "section_4",
+   "seen_in": [
+    "section_4",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review"
+   ],
+   "in_final": false,
+   "removed_after": "review"
+  }
+ ],
+ "draftErrors": 9,
+ "rejected": 0,
+ "stages": [
+  {
+   "stage": "plan",
+   "words": 633
+  },
+  {
+   "stage": "hook",
+   "words": 61
+  },
+  {
+   "stage": "section_1",
+   "words": 208
+  },
+  {
+   "stage": "section_2",
+   "words": 223
+  },
+  {
+   "stage": "section_3",
+   "words": 232
+  },
+  {
+   "stage": "section_4",
+   "words": 445
+  },
+  {
+   "stage": "section_5",
+   "words": 318
+  },
+  {
+   "stage": "section_6",
+   "words": 236
+  },
+  {
+   "stage": "section_7",
+   "words": 249
+  },
+  {
+   "stage": "finalize_in",
+   "words": 1911
+  },
+  {
+   "stage": "before_refine",
+   "words": 1972
+  },
+  {
+   "stage": "after_refine",
+   "words": 1902
+  },
+  {
+   "stage": "before_refill",
+   "words": 1796
+  },
+  {
+   "stage": "after_refill",
+   "words": 1796
+  },
+  {
+   "stage": "finalize_out",
+   "words": 1683
+  },
+  {
+   "stage": "review",
+   "words": 1739
+  },
+  {
+   "stage": "final_check",
+   "words": 1581
+  }
+ ],
+ "final": "In 1972, an escaped murderer smuggled a gun onto a Delta jet inside a hollowed-out Bible, collected a million dollars in ransom at gunpoint, and vanished into Algeria. For more than four decades, he evaded capture. Then they found him, living in Portugal under a Portuguese identity, and that's the moment the story gets genuinely strange.\n\nIn September 2011, police tracked a man to a town outside Lisbon. On paper, he was a Portuguese citizen — a man with a name, a nationality, a government-issued identity card. What gave him away was the card itself. A fingerprint lifted from that document matched records in a national Portuguese database, and the match reached U.S. authorities. The FBI and New Jersey officials had been looking for George Edward Wright for more than four decades. They found him not through a tip, not through a sighting, but through the bureaucratic trace left by the very document he had built his new life around.\n\nThe arrest should have been the end of it. Because the identity that exposed him was also the identity that protected him — and Portuguese law does not extradite its own citizens.\n\nNovember 23, 1962. A gas station in Wall, New Jersey. The owner, Walter Patterson, was shot and killed during a robbery. George Edward Wright and an accomplice carried out that robbery, and Patterson did not survive it.\n\nThree weeks later, on December 13, 1962, Wright was indicted for murder. The case moved through the courts, and Wright entered a plea of nolo contendere — no contest. The sentence handed down was 15 to 30 years.\n\nFifteen to thirty years is a range that carries real arithmetic. Serve the minimum, and Wright walks out in his mid-thirties. Serve the maximum, and he is past fifty before he is free. Walter Patterson had no arithmetic left. He was dead at the hands of a man who had come to rob him, and what the state could offer in response was a number of years — a sentence that began the moment it was pronounced and could, in theory, end.\n\nWright did not wait to find out which number it would be. That sentence, that courtroom, that prison — they are the pressure that everything else in this story pushes against. The robbery in Wall Township is not backstory. It is the engine.\n\nHe ran in August 1970. Not at the end of his sentence, not on parole, not through any process the state of New Jersey had sanctioned: he escaped from a New Jersey prison and did not come back. The charge the FBI would later attach to that act was precise: unlawful flight to avoid confinement, escape from a murder sentence. That language matters, because it marks the moment Wright stopped being a convicted man waiting out a term and became something else entirely — a fugitive with federal charges accumulating behind him.\n\nWhat he moved toward was the Black Liberation Army. The escape was not a disappearance into anonymity; it was a crossing from one world into another. A man who had entered the New Jersey correctional system as a convicted murderer emerged, two years before the hijacking, as a member of a revolutionary organization operating in direct opposition to the state that had sentenced him.\n\nThat two-year span between the breakout and the tarmac is the transformation the FBI's wanted poster quietly encodes. The offenses listed are not one crime but a sequence: escape, then air piracy, then aiding and abetting. Each charge required the one before it. Without the 1970 breakout, there is no fugitive radical aboard a Delta jet in 1972 with demands and a destination. The prison door was the first departure. The airport came next.\n\nJuly 31, 1972. Delta Flight 841 departs Detroit, bound for Miami. Somewhere over Orlando, at around 12:45 in the afternoon, the flight stops being a commercial route and becomes something else entirely.\n\nThe weapon that made it possible had been carried aboard in a hollowed-out Bible. And once the plane was airborne over Orlando, the gun came out.\n\nWright and his accomplices took the aircraft. The demand, when it came, was direct. \"We want a million dollars,\" Wright told the crew. \"We want to go to Algeria.\" A number and a destination, stated plainly. When negotiations stalled, the threat sharpened: the hijackers threatened to shoot a hostage. The ransom was handed over. The plane flew on.\n\nThe shape of it: a commercial aircraft seized in flight, a crew operating under threat, a million dollars changing hands, and a landing in Algeria that ended the immediate crisis without recovering the men who caused it.\n\nThe Bible is the detail that resists easy categorization. What it produced was a gun on a plane, passengers in seats, a crew with no good options, and Wright in a position to dictate terms.\n\nThe charges the FBI would eventually formalize — air piracy, aiding and abetting — are the legal translation of what happened in that cabin. Air piracy is not a metaphor. It means seizing by force an aircraft in air commerce, which is exactly what Flight 841 became on July 31, 1972: a piece of commercial infrastructure taken by force and redirected to a political destination. The hijacking made him something the United States government would spend decades trying to retrieve.\n\nAlgeria returned the plane, and the ransom money, to the United States. Algeria did not return George Wright.\n\nThat asymmetry is where this section of the story begins. Wright was another matter. He moved, not back toward the United States, not into hiding in Algeria, but to Guinea-Bissau in West Africa. The record places him there without detailing what he did or how long he stayed. The direction of travel: away from U.S. jurisdiction, deeper into a world where the name George Edward Wright had no legal purchase.\n\nGuinea-Bissau was a waypoint, not a destination. He resurfaced in Portugal — not as a visitor, not under temporary cover, but as a documented national of a sovereign state. A nationality. A government-issued identity card with his fingerprint on it, which is the detail that would matter decades later.\n\nWhat Portuguese citizenship meant in practical terms was a legal transformation more durable than any alias. An alias can be checked against a database; a genuine nationality is the database. Wright had not merely changed his name — he had acquired a new juridical identity, the kind that comes with rights, with standing, with the full weight of a state prepared to claim him as its own. George Edward Wright, wanted for air piracy and escape from a murder sentence, had become, on paper, someone Portugal recognized as belonging to it.\n\nHe never returned to the United States. The construction of that Portuguese life, layer by layer, held.\n\nThe FBI's wanted notice captured him in the most reductive terms the bureau had available: Black male, born March 29, 1943, five feet eleven inches, approximately 170 pounds, black hair, brown eyes, aliases George Edward Wright and George Wright. A physical description and two names — the same name, essentially, held under two framings. For more than four decades, that notice sat against a silence the record could not fill.\n\nWhat broke it was not surveillance, not an informant, not a border crossing that flagged wrong. It was a fingerprint pressed onto a Portuguese identity card during the ordinary bureaucratic process of being a Portuguese citizen. That print entered a national database. At some point, it matched. The match reached U.S. authorities. And the man Portugal's records described as its own citizen was identified as the man the FBI's wanted sheet had been carrying since 1972.\n\nThey were still live when Portuguese police tracked him to a town outside Lisbon in September 2011. The document he had built his legal existence around, the one that gave him standing as a national of a sovereign state, was also the document that carried the print that gave him away. The identity held for decades. The fingerprint held longer.\n\nOn November 17, 2011, a Lisbon appeals court ruled that George Edward Wright would not be extradited to the United States. The reason was not procedural delay, not a diplomatic dispute, not a question of evidence. It was the citizenship itself. Portuguese law bars the extradition of Portuguese nationals, and Wright was one. The court did not need to weigh the charges against some competing interest. The nationality resolved it. The United States appealed to Portugal's Supreme Court. That court denied the appeal. Wright stayed.\n\nThe document that carried his fingerprint into a database, the document that closed four decades of distance between the man Portugal knew and the man the FBI had been looking for — that same document was the legal instrument that made recovery impossible. It exposed him and shielded him in a single stroke. The fingerprint said: this is George Wright. The citizenship said: he is ours, and you cannot have him.\n\nThat is where the U.S. ran out of road. Not at the border, not in flight, not in the years of silence — but in a Lisbon courtroom, against a principle of law that Portugal was not prepared to waive.\n\nWhich returns it, finally, to a commercial aircraft somewhere over Orlando, a gun produced from inside a Bible, a crew with no good options, and a man who issued his demands and meant them. He got his destination. It turned out to be permanent."
+}

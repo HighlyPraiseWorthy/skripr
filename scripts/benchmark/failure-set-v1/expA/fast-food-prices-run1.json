@@ -1,0 +1,701 @@
+{
+ "id": "fast-food-prices",
+ "run": 1,
+ "words": 1819,
+ "primaryPer1k": 5.5,
+ "overreachPer1k": 1.1,
+ "finalErrors": [
+  {
+   "i": 21,
+   "sentence": "Beginning in 2021, the prices restaurants paid for beef, chicken, and cooking oil each climbed into double-digit percentage increases from their 2020 baselines — not a gradual drift but a sharp, compressed run-up that lasted into 2023.",
+   "script_quote": "each climbed into double-digit percentage increases from their 2020 baselines",
+   "category": "certainty_inflation",
+   "verdict": "error",
+   "research_quote": "beef, chicken, and cooking-oil costs each peaking at double-digit percentage increases from their 2020 baselines",
+   "why": "The research says costs 'peaked at' double-digit increases, not that they each 'climbed into' double-digit increases throughout the period; the script removes the hedged 'peaking at' framing.",
+   "first_seen": "section_2",
+   "seen_in": [
+    "section_2",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 29,
+   "sentence": "But National Restaurant Association models attributed only a minority of overall QSR menu-price growth to those commodity shocks.",
+   "script_quote": "National Restaurant Association models attributed only a minority of overall QSR menu-price growth to those commodity shocks",
+   "category": "certainty_inflation",
+   "verdict": "error",
+   "research_quote": "National Restaurant Association models have attributed only a minority of QSR menu-price growth to commodity cost shocks",
+   "why": "The research says 'commodity cost shocks' specifically; the script adds 'overall' and changes the scope slightly, but more importantly the research itself hedges this as a model attribution while the script states it as plain fact — though this is minor. More critically, the script says 'those commo",
+   "first_seen": "section_2",
+   "seen_in": [
+    "section_2",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 34,
+   "sentence": "According to the National Restaurant Association, food costs for the average restaurant rose 35% over the five years following February 2020.",
+   "script_quote": "food costs for the average restaurant rose 35% over the five years following February 2020",
+   "category": "contradiction",
+   "verdict": "error",
+   "research_quote": "food and labor costs for the average restaurant each rose 35%, while average menu prices increased 31% between February 2020 and April 2025",
+   "why": "The research attributes the 35% food cost figure to the National Restaurant Association's five-year figure ending April 2025; the script says 'five years following February 2020' which is consistent, but another research entry says 'food costs have risen 34% and labor costs 39% over the past six yea",
+   "first_seen": "section_3",
+   "seen_in": [
+    "section_3",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 35,
+   "sentence": "Labor costs rose 35% over that same span.",
+   "script_quote": "Labor costs rose 35% over that same span",
+   "category": "contradiction",
+   "verdict": "error",
+   "research_quote": "food costs have risen 34% and labor costs 39% over the past six years",
+   "why": "One research source gives labor costs up 39% over six years; another gives 35% over five years ending April 2025. The script states 35% as the single fact for labor costs, but the research contains a conflicting figure of 39%, making this a contradiction within the research that the script resolves ",
+   "first_seen": "section_3",
+   "seen_in": [
+    "section_3",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 41,
+   "sentence": "That means food and labor together account for roughly 60% of what it costs to run the kitchen before rent, insurance, or equipment enters the equation.",
+   "script_quote": "food and labor together account for roughly 60% of what it costs to run the kitchen before rent, insurance, or equipment enters the equation",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research states occupancy is ~25% of costs alongside 30% labor and 30% food, meaning 60% food+labor leaves only 25% for occupancy plus all other costs; the script's framing that rent/insurance/equipment are excluded from the 60% figure contradicts the cost structure the research provides, where ",
+   "first_seen": "section_3",
+   "seen_in": [
+    "section_3",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 42,
+   "sentence": "When both of those lines move 35% in the same direction at the same time, the arithmetic compresses fast.",
+   "script_quote": "both of those lines move 35% in the same direction at the same time",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research states food and labor costs each rose 35% over the last five years (or 34% food / 39% labor in one source), but the script says both moved 35% simultaneously; the research does not confirm both were exactly 35% at the same time.",
+   "first_seen": "section_3",
+   "seen_in": [
+    "section_3",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 53,
+   "sentence": "That's a pass-through elasticity of about 0.13 — not nothing, but far from enough on its own to account for prices rising more than 60% at some chains over a decade.",
+   "script_quote": "far from enough on its own to account for prices rising more than 60% at some chains over a decade",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research states the average price increase across 10 major fast-food chains from 2014 to 2024 was 63%, with McDonald's up 100%, but does not state that prices rose 'more than 60% at some chains' as a general threshold; the script conflates the average with a floor figure.",
+   "first_seen": "finalize_out",
+   "seen_in": [
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 70,
+   "sentence": "Menu prices were at their highest in over forty years, with limited-service and full-service restaurants raising prices by at least 7% over the past year.",
+   "script_quote": "Menu prices were at their highest in over forty years, with limited-service and full-service restaurants raising prices by at least 7% over the past year",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "research_quote": "restaurant menu prices were at their highest in over 40 years with limited-service and full-service restaurants raising prices by at least 7% over the past year",
+   "why": "The research attributes this claim to a 'separate article' without specifying a time period; the script presents it as a standalone fact without the hedging context, but more critically the research does not specify which year's 'past year' this refers to, making the script's unanchored present-tens",
+   "first_seen": "section_5",
+   "seen_in": [
+    "section_5",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 73,
+   "sentence": "The limited-service CPI rose 26% from 2019 to 2024, against about 21% cumulative headline CPI inflation over the same span.",
+   "script_quote": "The limited-service CPI rose 26% from 2019 to 2024, against about 21% cumulative headline CPI inflation over the same span",
+   "category": "contradiction",
+   "verdict": "error",
+   "research_quote": "Limited service meals and snacks CPI rose 26.0% from 2019 to 2024, compared with about 21.2% cumulative headline CPI inflation",
+   "why": "The research states 21.2% cumulative headline CPI; the script rounds this to 'about 21%', which is acceptable rounding, but also the research separately states the BLS Consumer Price Index for limited-service meals and snacks rose 19.8% from 2019 to 2024 in another source, creating a contradiction w",
+   "first_seen": "section_7",
+   "seen_in": [
+    "section_7",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 80,
+   "sentence": "And 78% of those respondents had reclassified the experience entirely, not a quick, cheap meal, but a luxury.",
+   "script_quote": "78% of those respondents had reclassified the experience entirely",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The 78% figure in the research (USA Today/LendingTree) refers to respondents saying fast food 'had become a luxury,' not specifically 'those respondents' from the Farmdoc Daily survey referenced in sentence 84–85 context; however the 78% figure itself is supported. The issue is the script attributes",
+   "first_seen": "section_6",
+   "seen_in": [
+    "section_6",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 106,
+   "sentence": "If roughly half of cost increases passed through to prices, and costs themselves rose sharply, then the 26% limited-service CPI increase from 2019 to 2024 has only a partial cost-based explanation — the arithmetic does not close on costs alone.",
+   "script_quote": "the 26% limited-service CPI increase from 2019 to 2024",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research states limited service meals and snacks CPI rose 26.0% from 2019 to 2024 (BLS), so 26% is supported. However, the research also states the BLS Consumer Price Index showed limited service meals and snacks up 19.8% from 2019 to 2024 in another BLS source, creating a contradiction in the r",
+   "first_seen": "section_7",
+   "seen_in": [
+    "section_7",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 114,
+   "sentence": "In 2014 that combo cost under six dollars, by 2024 about twelve, and rising costs explain only part of the difference.",
+   "script_quote": "In 2014 that combo cost under six dollars, by 2024 about twelve",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research states the McDonald's Quarter Pounder with cheese meal rose from $5.39 in 2014 to $11.99 in 2024; 'under six dollars' is consistent with $5.39, but 'about twelve' rounds $11.99 up in a way the research does not support as 'about twelve' — the research gives the specific figure $11.99, n",
+   "first_seen": "final_check",
+   "seen_in": [
+    "final_check"
+   ],
+   "in_final": true
+  }
+ ],
+ "removed": [
+  {
+   "i": 24,
+   "sentence": "Restaurants felt it in their costs, shrinking portion sizes on some menu items while also raising prices, with menu prices reaching their highest in over 40 years.",
+   "script_quote": "menu prices reaching their highest in over 40 years",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research states 'restaurant menu prices were at their highest in over 40 years with limited-service and full-service restaurants raising prices by at least 7% over the past year,' but this claim in the research is attributed to 'a separate article' without specifying when this was measured or wh",
+   "first_seen": "section_2",
+   "seen_in": [
+    "section_2",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review"
+   ],
+   "in_final": false,
+   "removed_after": "review"
+  },
+  {
+   "i": 52,
+   "sentence": "In one restaurant sample studied by researchers, labor accounted for 36% of total operating costs, and minimum-wage costs specifically came in somewhere between 4% and 10% of that total.",
+   "script_quote": "minimum-wage costs specifically came in somewhere between 4% and 10% of that total",
+   "category": "contradiction",
+   "verdict": "error",
+   "research_quote": "minimum wage costs were estimated to be 4% to 10% of total costs",
+   "why": "The research says minimum-wage costs were 4% to 10% of total costs, not 4% to 10% of labor's share of total costs. The script says 'of that total' after referencing labor's 36% share, which could be read as 4–10% of the labor portion, contradicting the research.",
+   "first_seen": "section_4",
+   "seen_in": [
+    "section_4",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill"
+   ],
+   "in_final": false,
+   "removed_after": "after_refill"
+  },
+  {
+   "i": 63,
+   "sentence": "What they do disagree on is how large that pass-through is.",
+   "script_quote": "What they do disagree on is how large that pass-through is",
+   "category": "contradiction",
+   "verdict": "error",
+   "research_quote": "illustrating disagreement over whether pass-through is near-full or partial",
+   "why": "Sentence 63 directly contradicts sentence 62. Sentence 62 says 'The researchers themselves disagree on the share,' and sentence 63 immediately says 'What they do disagree on is how large that pass-through is' — which is the same point restated, but the word 'do' implies this is a correction or contr",
+   "first_seen": "section_4",
+   "seen_in": [
+    "section_4",
+    "finalize_in",
+    "before_refine"
+   ],
+   "in_final": false,
+   "removed_after": "before_refine"
+  },
+  {
+   "i": 103,
+   "sentence": "More than half of consumers said fast-food prices were causing them to visit less often, and 53% called those prices outright unfair — not just high, not just surprising, but unfair.",
+   "script_quote": "53% called those prices outright unfair",
+   "category": "contradiction",
+   "verdict": "error",
+   "research_quote": "53.1% of consumers said fast-food restaurant prices were unfair",
+   "why": "Minor rounding is acceptable, but the script says '53%' while the research says '53.1%'; this is within rounding tolerance and is style. However, the script also says 'More than half of consumers said fast-food prices were causing them to visit less often' — the research says 'over half said those p",
+   "first_seen": "section_6",
+   "seen_in": [
+    "section_6",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review"
+   ],
+   "in_final": false,
+   "removed_after": "review"
+  },
+  {
+   "i": 115,
+   "sentence": "Limited-service meals and snacks rose 26% from 2019 to 2024, against roughly 21% cumulative headline CPI over the same span.",
+   "script_quote": "Limited-service meals and snacks rose 26% from 2019 to 2024, against roughly 21% cumulative headline CPI over the same span",
+   "category": "contradiction",
+   "verdict": "error",
+   "research_quote": "Limited service meals and snacks CPI rose 26.0% from 2019 to 2024, compared with about 21.2% cumulative headline CPI inflation",
+   "why": "The script says 'roughly 21%' which rounds 21.2% acceptably, but the research also states the limited-service figure as 26.0%, which the script renders as '26%' — this is consistent. No contradiction on the numbers. However, a separate research entry states 'The BLS Consumer Price Index for limited-",
+   "first_seen": "section_7",
+   "seen_in": [
+    "section_7",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill"
+   ],
+   "in_final": false,
+   "removed_after": "after_refill"
+  },
+  {
+   "i": 116,
+   "sentence": "Real wages, over that same stretch, were roughly flat.",
+   "script_quote": "Real wages, over that same stretch, were roughly flat",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research mentions 'roughly flat/slightly positive real wage growth over the same span' only in passing as part of a comparison sentence, without providing a sourced real-wage figure for 2019–2024. The script states this as a plain fact without the hedge present in the research.",
+   "first_seen": "section_7",
+   "seen_in": [
+    "section_7",
+    "finalize_in",
+    "before_refine"
+   ],
+   "in_final": false,
+   "removed_after": "before_refine"
+  },
+  {
+   "i": 123,
+   "sentence": "Studies in the literature find that roughly half of restaurant cost increases moved through to menu prices — meaning the other half was absorbed somewhere else in the business.",
+   "script_quote": "roughly half of restaurant cost increases moved through to menu prices",
+   "category": "certainty_inflation",
+   "verdict": "error",
+   "research_quote": "the literature contains both cost-pass-through estimates near 50% for fast-food wage shocks and arguments that labor's share and market power can make price responses larger than simple cost-based models predict",
+   "why": "The research presents ~50% pass-through as one estimate among competing estimates, not a settled finding; the script states it as a straightforward finding of 'studies in the literature.'",
+   "first_seen": "section_7",
+   "seen_in": [
+    "section_7",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review"
+   ],
+   "in_final": false,
+   "removed_after": "review"
+  }
+ ],
+ "draftErrors": 16,
+ "rejected": 0,
+ "gate": {
+  "flags": 16,
+  "actions": {
+   "rewritten": 14,
+   "removed": 1,
+   "clause_cut": 1
+  }
+ },
+ "gateLog": [
+  {
+   "sentence": "You used to be able to pull through a drive-through, grab a combo meal, and hand over a five-dollar bill with change coming back.",
+   "unsupported": [
+    "grab a combo meal, and hand over a five-dollar bill with change coming back"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"McDonald’s Quarter Pounder with cheese meal rose from $5.39 in 2014\""
+   ],
+   "action": "rewritten",
+   "result": "You used to be able to pull through a drive-through and grab a combo meal for under six dollars."
+  },
+  {
+   "sentence": "Visual Capitalist's analysis of ten major fast-food chains found an average price increase of 63% over that decade, with McDonald's at 100% leading the group.",
+   "unsupported": [
+    "leading the group"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "Visual Capitalist's analysis of ten major fast-food chains found an average price increase of 63% over that decade, with McDonald's up 100%."
+  },
+  {
+   "sentence": "A 2024 Harris Poll found that 81% of adults who order from fast-food restaurants at least once a year said prices were higher than the year before — and only 32% agreed that quick-service restaurants still offer affordable meal options.",
+   "unsupported": [
+    "A 2024 Harris Poll"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "A Harris Poll found that 81% of adults who order from fast-food restaurants at least once a year said prices were higher than the year before — and only 32% agreed that quick-service restaurants still offer affordable meal options."
+  },
+  {
+   "sentence": "Restaurants felt it immediately in their cost of goods.",
+   "unsupported": [
+    "Restaurants felt it immediately in their cost of goods"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "Restaurants felt it in their costs, shrinking portion sizes on some menu items while also raising prices, with menu prices reaching their highest in over 40 years."
+  },
+  {
+   "sentence": "Industry analysis found that menu prices typically trail commodity shocks by two to four months — operators absorb the hit first, then reprice.",
+   "unsupported": [
+    "operators absorb the hit first, then reprice"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "removed"
+  },
+  {
+   "sentence": "The Association's own inflation analysis estimates that an average price increase of 26.2% would be required just to cover higher input costs and hold a 5% margin — not grow it, not reward shareholders, just stay in place.",
+   "unsupported": [
+    "hold a 5% margin"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"maintain margin\""
+   ],
+   "action": "rewritten",
+   "result": "The Association's own inflation analysis estimates that an average price increase of 26.2% would be required just to cover higher input costs and maintain margin — not grow it, not reward shareholders, just stay in place."
+  },
+  {
+   "sentence": "That means food and labor together account for nearly two thirds of what it costs to run the kitchen before rent, insurance, or equipment enters the equation.",
+   "unsupported": [
+    "food and labor together account for nearly two thirds of what it costs"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"roughly 30% labor, 30% food/commodity inputs\""
+   ],
+   "action": "rewritten",
+   "result": "That means food and labor together account for roughly 60% of what it costs to run the kitchen before rent, insurance, or equipment enters the equation."
+  },
+  {
+   "sentence": "That's a pass-through rate of about 13 cents per dollar of wage increase — not nothing, but nowhere near enough to account for prices doubling over a decade.",
+   "unsupported": [
+    "a pass-through rate of about 13 cents per dollar of wage increase"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"implying a pass-through elasticity of about 0.13\""
+   ],
+   "action": "rewritten",
+   "result": "That's a pass-through elasticity of about 0.13, not nothing, but nowhere near enough to account for prices doubling over a decade."
+  },
+  {
+   "sentence": "What they do not disagree on is that it is partial.",
+   "unsupported": [
+    "What they do not disagree on is that it is partial"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"illustrating disagreement over whether pass-through is near-full or partial\""
+   ],
+   "action": "rewritten",
+   "result": "What they do disagree on is how large that pass-through is."
+  },
+  {
+   "sentence": "If labor is 30% to 36% of costs, and the empirical pass-through on wage increases runs somewhere between half and two-thirds at most, then labor costs — even rising sharply — produce a fraction of what actually appeared on the menu board.",
+   "unsupported": [
+    "pass-through on wage increases runs somewhere between half and two-thirds at most"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"pass-through from higher wages at about 60% to 70%\""
+   ],
+   "action": "clause_cut",
+   "result": "If labor is 30% to 36% of costs, and the empirical pass-through on wage increases runs somewhere between half then labor costs — even rising sharply — produce a fraction of what actually appeared on the menu board."
+  },
+  {
+   "sentence": "By the period when commodity costs were at their sharpest, menu prices were already at their highest in over forty years.",
+   "unsupported": [
+    "By the period when commodity costs were at their sharpest"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "Menu prices were at their highest in over forty years, with limited-service and full-service restaurants raising prices by at least 7% over the past year."
+  },
+  {
+   "sentence": "Cost pressures were easing from their 2021-2023 peaks by then.",
+   "unsupported": [
+    "Cost pressures were easing from their 2021-2023 peaks by then"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "Cost pressures were still present, with the National Restaurant Association reporting in 2026 that menu prices in the food-away-from-home category were still rising even as overall inflation moderated."
+  },
+  {
+   "sentence": "In a system where most locations are franchised, the pricing decisions are being made by hundreds of independent operators, each running their own margin calculus — which means the move toward higher prices was not a single corporate decree but a distributed choice, made repeatedly, across the industry, even as the loudest cost justifications began to fade.",
+   "unsupported": [
+    "In a system where most locations are franchised",
+    "pricing decisions are being made by hundreds of independent operators"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research",
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "In a system where pricing decisions are tied to labor, food, and other operating costs, the move toward higher prices was not a single corporate decree but a distributed choice, made repeatedly, across the industry, even as overall inflation moderated."
+  },
+  {
+   "sentence": "A 2024 analysis cited by the Louisiana Restaurant Association described chains trying to hold a 5% profit margin while food and labor costs climbed sharply around them.",
+   "unsupported": [
+    "chains trying to hold a 5% profit margin while food and labor costs climbed sharply"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"restaurants have been trying to maintain about a 5% profit margin while food and labor costs rose sharply\""
+   ],
+   "action": "rewritten",
+   "result": "A 2024 analysis cited by the Louisiana Restaurant Association described restaurants trying to maintain about a 5% profit margin while food and labor costs rose sharply around them."
+  },
+  {
+   "sentence": "If roughly half of cost increases passed through to prices, and costs themselves rose sharply, then roughly half of the 26% limited-service CPI increase from 2019 to 2024 has a clean cost-based explanation.",
+   "unsupported": [
+    "roughly half of the 26% limited-service CPI increase from 2019 to 2024 has a clean cost-based explanation"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "If roughly half of cost increases passed through to prices, and costs themselves rose sharply, then the 19.8% limited-service CPI increase from 2019 to 2024 has only a partial cost-based explanation."
+  },
+  {
+   "sentence": "The rest points toward something the cost narrative alone does not produce: margin held, or expanded, inside a period of visible economic pressure, while customers were told the prices were a necessary response to that same pressure.",
+   "unsupported": [
+    "margin held, or expanded, inside a period of visible economic pressure",
+    "customers were told the prices were a necessary response to that same pressure"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research",
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "The rest points toward something the cost narrative alone does not produce: prices continued rising even as overall inflation moderated, outpacing grocery prices, while the industry pointed to costs as the driver."
+  }
+ ],
+ "stages": [
+  {
+   "stage": "plan",
+   "words": 699
+  },
+  {
+   "stage": "hook",
+   "words": 59
+  },
+  {
+   "stage": "section_1",
+   "words": 251
+  },
+  {
+   "stage": "section_2",
+   "words": 269
+  },
+  {
+   "stage": "section_3",
+   "words": 291
+  },
+  {
+   "stage": "section_4",
+   "words": 338
+  },
+  {
+   "stage": "section_5",
+   "words": 409
+  },
+  {
+   "stage": "section_6",
+   "words": 273
+  },
+  {
+   "stage": "section_7",
+   "words": 406
+  },
+  {
+   "stage": "finalize_in",
+   "words": 2237
+  },
+  {
+   "stage": "before_refine",
+   "words": 2296
+  },
+  {
+   "stage": "after_refine",
+   "words": 2169
+  },
+  {
+   "stage": "before_refill",
+   "words": 2167
+  },
+  {
+   "stage": "after_refill",
+   "words": 2167
+  },
+  {
+   "stage": "finalize_out",
+   "words": 1972
+  },
+  {
+   "stage": "review",
+   "words": 2028
+  },
+  {
+   "stage": "final_check",
+   "words": 1819
+  }
+ ],
+ "final": "Everyone assumes fast food got expensive for the same reason everything else did — inflation, wages, supply chain chaos. The data suggests the story is more complicated than that. But a fast-food combo meal rose more than 100% between 2014 and 2024, outpacing gasoline, movie tickets, and median hourly wages over that same period.\n\nThat's not an inflation story. So where did the rest of that increase actually come from?\n\nYou used to be able to pull through a drive-through and grab a combo meal for under six dollars. That was 2014. Today, that same order — same restaurant, same basic meal — runs somewhere around twelve dollars. A published price comparison tracking fast-food combos across a decade found the increase lands at roughly $6.50, or more than 100%, between 2014 and 2024. Your pay went up. The burger went up faster.\n\nThe specifics are harder to dismiss than the average. A McDonald's Quarter Pounder with cheese meal sat at $5.39 in 2014. By 2024, the same item had reached $11.99 at McDonald's locations tracked in consumer reporting — more than doubling at a single chain. And McDonald's is not an outlier. Visual Capitalist's analysis of ten major fast-food chains found an average price increase of 63% over that decade, with McDonald's up 100%. These are not premium restaurants that quietly repositioned themselves upmarket. These are the places built around the promise of cheap, fast, and consistent.\n\nConsumers registered the shift clearly. A Harris Poll found that 81% of adults who order from fast-food restaurants at least once a year said prices were higher than the year before — and only 32% agreed that quick-service restaurants still offer affordable meal options.\n\nThe commodity story starts with something real. Beginning in 2021, the prices restaurants paid for beef, chicken, and cooking oil each climbed into double-digit percentage increases from their 2020 baselines — not a gradual drift but a sharp, compressed run-up that lasted into 2023. Restaurants felt it in their costs.\n\nWhat happened next followed a documented pattern. The repricing, when it came, was partial. A restaurant-cost analysis found that a one-percent rise in supply costs translated into roughly a 0.33% increase in cost of goods at constant menu prices, meaning the full shock never landed on the customer at once. It moved through the supply chain in fractions.\n\nBy 2022, a restaurant cost inflation survey found operators were reporting costs up 11.7% year over year, with raw materials and labor leading the increases. That's a genuine squeeze on businesses running tight margins, and it produced genuine price increases at the counter.\n\nBut National Restaurant Association models attributed only a minority of overall QSR menu-price growth to those commodity shocks. The input costs explain a real slice of what happened between 2019 and 2024. They do not explain most of it. Which raises the question the commodity story alone was never going to answer: where did the rest of the increase come from?\n\nThe industry's answer to all of this is straightforward, and it starts with real numbers. According to the National Restaurant Association, food costs for the average restaurant rose 35% over the five years following February 2020. Labor costs rose 35% over that same span. Menu prices, by the Association's own measure, increased 31% across that period — meaning the average operator was absorbing more in costs than they recovered at the counter.\n\nThe restaurant industry typically operates on slim margins of 3% to 5%. On a business running that thin, a simultaneous rise of roughly 35% on two of your three largest cost lines does not leave room to wait and see.\n\nThe cost structure itself explains why the pressure hits so hard. National Restaurant Association benchmarking data places quick-service restaurant costs at roughly 30% labor, 30% food and commodity inputs, and 25% occupancy. That means food and labor together account for roughly 60% of what it costs to run the kitchen before rent, insurance, or equipment enters the equation. When both of those lines move 35% in the same direction at the same time, the arithmetic compresses fast.\n\nSo the industry's explanation is not invented. The cost squeeze was real, the margins were thin, and the math behind a significant price increase is straightforward to follow. What the explanation does not fully answer is why the increases landed where they did — and whether holding margin was all that was happening.\n\nStart with the structure of the cost base itself. In one restaurant sample studied by researchers, labor accounted for 36% of total operating costs, and minimum-wage costs specifically were estimated at between 4% and 10% of total costs. That's the foundation the labor argument is built on. And when you run the wage-increase numbers through it, the math produces something much smaller than the price increases customers actually saw.\n\nA Federal Reserve Bank of Chicago study found that for every 1% increase in the minimum wage, fast-food prices rose about 0.139%. A separate study tracking fast-food chains directly found that a one-dollar minimum wage increase raised average menu prices by roughly seven cents. Seven cents on a twelve-dollar meal. That's a pass-through elasticity of about 0.13 — not nothing, but far from enough on its own to account for prices rising more than 60% at some chains over a decade.\n\nThe Berkeley research complicates the picture further without resolving it cleanly. One Berkeley IRLE paper estimated that consumers bore about 50% of higher labor costs through prices in a study of a $20 minimum wage. A separate NBER study found food-away-from-home prices in California's four in-sample metropolitan areas rose 3.3% to 3.6% relative to 17 control areas through December 2024. These studies use different methods and different comparison groups, so they are not two readings of the same variable. In the Berkeley estimate, the other half of higher labor costs never reached the menu board.\n\nPull all of that together and the arithmetic becomes hard to ignore. If labor is 30% to 36% of costs, and the empirical pass-through on wage increases runs somewhere around half, then labor costs — even rising sharply — produce a fraction of what actually appeared on the menu board. But the gap between what labor and commodity pressures justify and what prices actually did is where the story stops being simple.\n\nThat gap turns out to have a second dimension that the sticker price alone never shows you.\n\nWhile chains were raising what you paid, some were simultaneously reducing what you got. Restaurants shrank portion sizes on certain menu items while raising prices at the same time — a double adjustment that works in the same direction twice. The sticker goes up. The serving comes down. The effective price per unit of food moves more than either change suggests on its own. The Harris Poll found that 35% of quick-service restaurant customers said they had noticed shrinkflation at QSRs over the prior year.\n\nThe timing of all of this matters. Menu prices were at their highest in over forty years, with limited-service and full-service restaurants raising prices by at least 7% over the past year. That is the environment in which portion reductions happened: alongside the cost pressure.\n\nIn 2023, 82% of operators raised menu prices, and 61% were planning to raise them again in 2024.\n\nThe limited-service CPI rose 26% from 2019 to 2024, against about 21% cumulative headline CPI inflation over the same span. Costs moved. Prices moved further. And the plans for further increases were already in place.\n\nWhat the industry may not have fully priced in was that consumers were running the same arithmetic — and reaching a different conclusion.\n\nBy 2024, 62% of respondents in LendingTree-related reporting said they were eating less fast food specifically because of what it cost. That is not a rounding error in consumer sentiment. And 78% of those respondents had reclassified the experience entirely, not a quick, cheap meal, but a luxury. The word matters. Luxuries are things you cut when money gets tight. Fast food built its entire business model on being the thing you kept.\n\nThe Farmdoc Daily survey sharpens the picture further. More than half of consumers, 51.6%, said rising prices were causing them to go to fast-food restaurants less often. Price tolerance erodes much faster once customers decide a price crossed a line they can name.\n\nThe Harris Poll shows where many consumers draw the line. Nearly half of U.S. adults said a fair price for a full quick-service meal runs between five and just under ten dollars. The combos had already pushed past that range. When 75% of consumers told surveyors that cooking at home was now more economical, they weren't describing a preference. They were describing a calculation they had already made and a habit they had already changed.\n\nCosts rose. Prices rose further. And then customers started cutting back.\n\nThe Bureau of Labor Statistics puts a number on what consumers were already feeling in their wallets. Real average hourly earnings decreased 0.2% from July 2025 to July 2026, and over the broader post-2019 stretch real wages were roughly flat. The category that had long served as the fallback option — the meal you kept when everything else got cut — outran both overall inflation and the paychecks of many of the people it depended on.\n\nNumerator's tracking makes the longer arc even starker. Quick-service restaurant prices climbed 53.9% since January 2018, against a 33.2% rise in the overall consumer basket over the same period. That is not a close race. The category repriced itself at a fundamentally different rate than the economy around it, and did so across years, not in a single emergency.\n\nWith only about half of cost increases reaching the menu board, the rest was absorbed elsewhere in the business. That absorption is real, and it is not free. For an operator running on a margin that thin, a cost shock of any size is existential arithmetic.\n\nBut here is where the data stops being a cost story and starts being something harder to categorize. If roughly half of cost increases passed through to prices, and costs themselves rose sharply, then the 26% limited-service CPI increase from 2019 to 2024 has only a partial cost-based explanation — the arithmetic does not close on costs alone. Prices continued rising even as overall inflation moderated, outpacing grocery prices, while the industry pointed to costs as the driver.\n\nThat is the gap the data leaves open. Not invented, not assumed — just there, in the distance between what cost pass-through justifies and what the BLS actually recorded.\n\nYou felt it the moment you pulled up to the window. Same restaurant. The number on the screen no longer matched the category you thought you were buying from. That was not confusion. In 2014 that combo cost under six dollars, by 2024 about twelve, and rising costs explain only part of the difference."
+}

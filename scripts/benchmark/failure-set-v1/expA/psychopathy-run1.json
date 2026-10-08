@@ -1,0 +1,471 @@
+{
+ "id": "psychopathy",
+ "run": 1,
+ "words": 1587,
+ "primaryPer1k": 0,
+ "overreachPer1k": 1.26,
+ "finalErrors": [
+  {
+   "i": 53,
+   "sentence": "When researchers examined which features of psychopathy actually drove variance in aggressive antisocial behavior, intelligence did not register as pertinent.",
+   "script_quote": "intelligence did not register as pertinent",
+   "category": "evidence_inflation",
+   "verdict": "error",
+   "research_quote": "intelligence was not necessarily pertinent to understanding aggressive antisocial or psychopathic behaviors",
+   "why": "The research says intelligence was not necessarily pertinent; the script states it as a flat finding that intelligence did not register as pertinent, removing the hedge 'necessarily'.",
+   "first_seen": "section_5",
+   "seen_in": [
+    "section_5",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 54,
+   "sentence": "More specifically, the interpersonal and affective facets of psychopathy — the charm, the callousness, the shallow emotional range — contributed very little to explaining why these individuals were violent.",
+   "script_quote": "the charm, the callousness, the shallow emotional range — contributed very little to explaining why these individuals were violent",
+   "category": "evidence_inflation",
+   "verdict": "error",
+   "research_quote": "the interpersonal and affective psychopathy facets had very low impact on explained variance in aggressive antisocial behavior",
+   "why": "The research says these facets had low impact on explained variance in aggressive antisocial behavior; the script reframes this as explaining 'why these individuals were violent,' which goes beyond what the research states.",
+   "first_seen": "section_5",
+   "seen_in": [
+    "section_5",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  }
+ ],
+ "removed": [
+  {
+   "i": 82,
+   "sentence": "Put the two findings together and a causal chain emerges.",
+   "script_quote": "Put the two findings together and a causal chain emerges",
+   "category": "causal_inflation",
+   "verdict": "error",
+   "research_quote": "Research on callous-unemotional traits and amygdala dysfunction links reduced fear conditioning and emotional processing to impaired aversive learning, which weakens the emotional inhibition that would otherwise deter repeated offending.",
+   "why": "The script asserts a causal chain between vmPFC/OFC disrupted reinforcement learning and amygdala-based reduced emotional responsiveness, but the research does not explicitly link these two findings into a single causal chain; it treats them as separate associations.",
+   "first_seen": "section_6",
+   "seen_in": [
+    "section_6",
+    "finalize_in",
+    "before_refine"
+   ],
+   "in_final": false,
+   "removed_after": "before_refine"
+  }
+ ],
+ "draftErrors": 7,
+ "rejected": 0,
+ "gate": {
+  "flags": 22,
+  "actions": {
+   "clause_cut": 7,
+   "rewritten": 12,
+   "removed": 3
+  }
+ },
+ "gateLog": [
+  {
+   "sentence": "Somewhere between Hannibal Lecter setting the table and Zodiac taunting detectives with ciphers, a very specific idea got cemented into the culture: the serial killer as a kind of dark intellectual, always calculating, always ahead.",
+   "unsupported": [
+    "Hannibal Lecter",
+    "Zodiac",
+    "Zodiac taunting detectives with ciphers"
+   ],
+   "layer": [
+    "entity",
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "clause_cut",
+   "result": "A very specific idea got cemented into the culture: the serial killer as a kind of dark intellectual, always calculating, always ahead."
+  },
+  {
+   "sentence": "The Radford serial killer IQ dataset, the largest collection of its kind, places the average profile near the general population norm — not above it, not dramatically below it, but unremarkably close to the middle.",
+   "unsupported": [
+    "the largest collection of its kind"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "The Radford serial killer IQ dataset places the average profile near the general population norm — not above it, not dramatically below it, but unremarkably close to the middle."
+  },
+  {
+   "sentence": "The largest systematic look at this question comes from the Radford Serial Killer Database, which contains IQ records for 202 offenders.",
+   "unsupported": [
+    "The largest systematic look at this question comes from the Radford Serial Killer Database"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"The best-known database evidence\""
+   ],
+   "action": "rewritten",
+   "result": "The best-known database evidence on this question comes from the Radford Serial Killer Database, which contains IQ records for 202 offenders."
+  },
+  {
+   "sentence": "But the median — the score that splits the sample cleanly in half — lands at 89.0, which places the midpoint of the distribution a full standard deviation fragment below the norm, not hovering just beneath it.",
+   "unsupported": [
+    "a full standard deviation fragment below the norm"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "clause_cut",
+   "result": "The median — the score that splits the sample cleanly in half — lands at 89.0, not hovering just beneath it."
+  },
+  {
+   "sentence": "The full range runs from 57 to 165, meaning the data do contain high-scoring outliers — the cases that became the Hannibal Lecter template — but outliers at the top of a distribution do not define it.",
+   "unsupported": [
+    "Hannibal Lecter",
+    "the cases that became the Hannibal Lecter template"
+   ],
+   "layer": [
+    "entity",
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "clause_cut",
+   "result": "The full range runs from 57 to 165, but outliers at the top of a distribution do not define it."
+  },
+  {
+   "sentence": "If the IQ scores cluster below average rather than above it, something other than raw cognitive firepower is doing the explanatory work — and that something is already visible in the research, waiting in a different part of the profile entirely.",
+   "unsupported": [
+    "the IQ scores cluster below average rather than above it"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"clustering around normal rather than exceptional intelligence\""
+   ],
+   "action": "rewritten",
+   "result": "If the IQ scores cluster around average rather than above it, something other than raw cognitive firepower is doing the explanatory work — and that something is already visible in the research, waiting in a different part of the profile entirely."
+  },
+  {
+   "sentence": "It is a secondary-source compilation, built from self-reports, journalistic accounts, court documents, and third-party records.",
+   "unsupported": [
+    "journalistic accounts, court documents"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "It is a secondary-source compilation, built from self-reports and third-party reports."
+  },
+  {
+   "sentence": "When an offender's IQ appears in that database, it may have come from a prison intake form filled out decades ago, a newspaper profile, or the offender's own recollection of a test he may have taken as a teenager.",
+   "unsupported": [
+    "it may have come from a prison intake form filled out decades ago",
+    "a newspaper profile"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research",
+    "not in research"
+   ],
+   "action": "clause_cut",
+   "result": "When an offender's IQ appears in that database, or the offender's own recollection of a test he may have taken as a teenager."
+  },
+  {
+   "sentence": "Sources exaggerate in both directions — some killers have every incentive to appear more imposing than they are; others may have been assessed under conditions that underrepresent their actual ability.",
+   "unsupported": [
+    "some killers have every incentive to appear more imposing than they are",
+    "others may have been assessed under conditions that underrepresent their actual ability"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research",
+    "not in research"
+   ],
+   "action": "removed"
+  },
+  {
+   "sentence": "But notice which direction the cultural assumption runs: when people invoke the database's limits, they almost always mean to suggest the true IQ is higher — that genius is being undercounted.",
+   "unsupported": [
+    "they almost always mean to suggest the true IQ is higher"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "clause_cut",
+   "result": "Notice which direction the cultural assumption runs: when people invoke the database's limits."
+  },
+  {
+   "sentence": "The scale captures a cluster of traits: shallow affect, reduced empathy, impulsivity, grandiosity, and a characteristic failure to learn from punishment the way most people do.",
+   "unsupported": [
+    "The scale captures a cluster of traits: shallow affect, reduced empathy, impulsivity, grandiosity",
+    "a characteristic failure to learn from punishment"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research",
+    "not in research"
+   ],
+   "action": "removed"
+  },
+  {
+   "sentence": "Most people who commit a harmful act experience something afterward — anxiety, guilt, fear of consequences — that raises the internal cost of repeating it.",
+   "unsupported": [
+    "Most people who commit a harmful act experience something afterward — anxiety, guilt, fear of consequences"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"weakens the emotional inhibition that would otherwise deter repeated offending\""
+   ],
+   "action": "clause_cut",
+   "result": "Fear of consequences — that raises the internal cost of repeating it."
+  },
+  {
+   "sentence": "The first comes from a sample of forensic psychiatric patients — women adjudicated insane following offenses.",
+   "unsupported": [
+    "a sample of forensic psychiatric patients"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "The first comes from a study of female offenders adjudicated insane following offenses."
+  },
+  {
+   "sentence": "The traits most tightly linked to serial homicide are not the ones that require or reward high intelligence.",
+   "unsupported": [
+    "traits most tightly linked to serial homicide are not the ones that require or reward high intelligence"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"serial homicide showed a larger association (r = 0.74) than homicide overall\""
+   ],
+   "action": "removed"
+  },
+  {
+   "sentence": "Some executive functions associated with other prefrontal regions can remain relatively intact in high-psychopathy individuals.",
+   "unsupported": [
+    "Some executive functions associated with other prefrontal regions"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "Some executive functions can remain relatively intact in high-psychopathy individuals."
+  },
+  {
+   "sentence": "In individuals with callous-unemotional traits, fear conditioning appears substantially reduced.",
+   "unsupported": [
+    "In individuals with callous-unemotional traits, fear conditioning appears substantially reduced"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"callous-unemotional traits and amygdala dysfunction links reduced fear conditioning\""
+   ],
+   "action": "rewritten",
+   "result": "In individuals with callous-unemotional traits, fear conditioning and emotional processing appear reduced."
+  },
+  {
+   "sentence": "Fear conditioning is the process by which the brain learns to associate an action with an aversive outcome — the internal signal that says: this path cost something last time.",
+   "unsupported": [
+    "the brain learns to associate an action with an aversive outcome"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "clause_cut",
+   "result": "Fear conditioning is the process by."
+  },
+  {
+   "sentence": "The vmPFC and OFC, already showing disrupted reinforcement learning, cannot efficiently integrate the emotional feedback the amygdala is supposed to supply — because the amygdala is generating less of it.",
+   "unsupported": [
+    "cannot efficiently integrate the emotional feedback the amygdala is supposed to supply"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "The vmPFC and OFC, already showing disrupted reinforcement learning, are operating alongside an amygdala generating reduced emotional responsiveness and impaired threat and fear processing."
+  },
+  {
+   "sentence": "The research on repeated violent offending maps directly onto that deficit.",
+   "unsupported": [
+    "The research on repeated violent offending maps directly onto that deficit"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"may help explain repeated violent offending\""
+   ],
+   "action": "rewritten",
+   "result": "The research suggests that deficit may help explain repeated violent offending."
+  },
+  {
+   "sentence": "Serial killers do evade detection, sometimes for years, sometimes across multiple states.",
+   "unsupported": [
+    "sometimes across multiple states"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"cases are dispersed across time and jurisdictions\""
+   ],
+   "action": "rewritten",
+   "result": "Serial killers do evade detection, sometimes for years, with cases dispersed across time and jurisdictions."
+  },
+  {
+   "sentence": "The research says that composure is real.",
+   "unsupported": [
+    "The research says that composure is real."
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"can perform normally on some attentional and cognitive tasks despite showing characteristic emotional and behavioral abnormalities\""
+   ],
+   "action": "rewritten",
+   "result": "Research finds that high-psychopathy individuals can perform normally on some attentional and cognitive tasks despite showing characteristic emotional and behavioral abnormalities."
+  },
+  {
+   "sentence": "What looks like cold calculation is, at the neurological level, the absence of something: fear, aversive learning, the accumulated emotional weight of consequence that most people carry without ever thinking about it.",
+   "unsupported": [
+    "at the neurological level, the absence of something: fear, aversive learning"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"reduced fear conditioning and emotional processing to impaired aversive learning\""
+   ],
+   "action": "rewritten",
+   "result": "What looks like cold calculation is, at the neurological level, the reduced presence of something: fear conditioning, aversive learning, the accumulated emotional weight of consequence that most people carry without ever thinking about it."
+  }
+ ],
+ "stages": [
+  {
+   "stage": "plan",
+   "words": 572
+  },
+  {
+   "stage": "hook",
+   "words": 73
+  },
+  {
+   "stage": "section_1",
+   "words": 195
+  },
+  {
+   "stage": "section_2",
+   "words": 275
+  },
+  {
+   "stage": "section_3",
+   "words": 122
+  },
+  {
+   "stage": "section_4",
+   "words": 286
+  },
+  {
+   "stage": "section_5",
+   "words": 272
+  },
+  {
+   "stage": "section_6",
+   "words": 315
+  },
+  {
+   "stage": "section_7",
+   "words": 406
+  },
+  {
+   "stage": "finalize_in",
+   "words": 1871
+  },
+  {
+   "stage": "before_refine",
+   "words": 1940
+  },
+  {
+   "stage": "after_refine",
+   "words": 1915
+  },
+  {
+   "stage": "before_refill",
+   "words": 1856
+  },
+  {
+   "stage": "after_refill",
+   "words": 1856
+  },
+  {
+   "stage": "finalize_out",
+   "words": 1661
+  },
+  {
+   "stage": "review",
+   "words": 1707
+  },
+  {
+   "stage": "final_check",
+   "words": 1587
+  }
+ ],
+ "final": "But when researchers actually measured the IQs of 202 serial killers, the number they found wasn't remarkable in the way the movies promised. What the data show about the relationship between psychopathy and intelligence is far stranger and more unsettling than the genius myth ever was.\n\nA very specific idea got cemented into the culture: the serial killer as a kind of dark intellectual, always calculating, always ahead. Hollywood built the image carefully — the immaculate mind behind the violence, the predator who kills because ordinary people simply cannot keep up with him. Crime writers refined it. Crime podcasts inherited it. And by the time it reached most people, it had the texture of established fact rather than narrative convenience.\n\nThe data tell a different story. The Radford serial killer IQ dataset places the average profile near the general population norm — not above it, not dramatically below it, but unremarkably close to the middle.\n\nWhich raises the obvious question: if raw intelligence is not what drives serial homicide, what is? The answer runs deeper than IQ, and it sits in a part of the brain most people never think about.\n\nThe best-known database evidence on this question comes from the Radford Serial Killer Database, which contains IQ records for 202 offenders. The portrait that emerges is not the one cinema built. The mean IQ across that sample is 95.1. The median is 89.0. The general population norm sits at 100.\n\nThat gap is worth unpacking precisely, because it is easy to glance at 95.1 and say 'close enough to average' — and then miss that the median, the score that splits the sample cleanly in half, lands at 89.0. Half of the 202 offenders scored at or below 89. The full range runs from 57 to 165, but outliers at the top of a distribution do not define it. They decorate it.\n\nIn practical terms, if you lined up 202 people drawn from the general population and 202 people from this database, the serial killer group would, on average, score slightly lower on a standardized cognitive assessment. The exceptional cases exist. They are simply not representative of the group — they are the exceptions that the culture mistook for the rule, and then promoted to the rule, and then forgot were ever exceptions at all.\n\nSo the data close one door firmly. The more unsettling question is what they open. If the IQ scores cluster around average rather than above it, something other than raw cognitive firepower is doing the explanatory work, and that something sits in a different part of the profile entirely.\n\nBefore accepting those numbers at face value, the methodology behind them deserves scrutiny — because the Radford database is not a controlled clinical study. It is a secondary-source compilation, built from self-reports and third-party reports. When an offender's IQ appears in that database, it may rest on the offender's own report, or on a third party's account. Memory distorts. That uncertainty is real, and it is worth naming honestly. The direction of the cultural assumption matters: incomplete records can mask low scores just as readily as high ones. The uncertainty does not secretly vindicate the myth; it simply means the picture is noisier than either side would prefer.\n\nIf intelligence does not explain why certain people kill repeatedly, something else has to, and there is a candidate that fits the pattern far better than IQ ever did.\n\nA 2019 meta-analysis pooled 29 unique homicide offender samples drawn from 22 studies, covering 2,603 offenders total. The mean PCL-R score across those homicide offenders landed at 21.2 — and when the researchers broke the results down by homicide type, a gradient emerged. The overall psychopathy–homicide association was already large, at r = 0.68. But in serial homicide specifically, that figure climbed to r = 0.74. The more severe the pattern of killing, the stronger the relationship with psychopathic traits.\n\nWhat the PCL-R is actually measuring matters here. Fear of consequences raises the internal cost of repeating a harmful act. Psychopathic traits are associated with a reduced version of that response. The brake that keeps most people from crossing a threshold a second time, or a fifth time, operates differently in high-psychopathy individuals. Reduced fear and impaired aversive learning may help explain repeated offending, and that points to a deficit, not to any particular cognitive advantage.\n\nThe midpoint turn the data force is this: the question was never really how smart are these killers? The question the evidence keeps circling back to is what happens when the neural systems governing aversive learning and emotional inhibition are substantially impaired — and whether a culture fixated on IQ has been looking at entirely the wrong variable all along.\n\nThe first comes from a study of female offenders adjudicated insane following offenses. Researchers administered both the PCL-R and standardized IQ assessments to the same individuals, then ran the correlation. The result was r = -0.55: a moderately large negative association, meaning the higher a participant scored on psychopathy, the lower she tended to score on cognitive testing.\n\nThe second comes from a meta-analytic review aggregating findings across many samples. At that scale, individual study noise smooths out, and the relationship between total psychopathy scores and full-scale IQ settled at r = -.07 — small, but statistically significant, and still negative. The direction holds even when the sample size is large enough to dilute every idiosyncratic finding.\n\nA 2019 study of young violent offenders adds another angle. When researchers examined which features of psychopathy actually drove variance in aggressive antisocial behavior, intelligence did not register as pertinent. More specifically, the interpersonal and affective facets of psychopathy — the charm, the callousness, the shallow emotional range — contributed very little to explaining why these individuals were violent. Intelligence was not what explained it.\n\nThat finding reframes the whole question. The psychopathic traits that matter for repeated violent behavior are the ones that operate independently of intelligence — and appear, across multiple lines of evidence, to pull in the opposite direction.\n\nSo the question the evidence has been circling becomes unavoidable: if psychopathy is the real explanatory variable, what is it actually doing inside the brain that makes repeated killing possible?\n\nThe ventromedial prefrontal cortex and the orbitofrontal cortex — abbreviated vmPFC and OFC — appear consistently disrupted in psychopathy research. These areas govern social-affective decision making and reinforcement-based learning: the brain's capacity to register that a choice produced a bad outcome and update behavior accordingly. The disruption is not uniform. Some executive functions can remain relatively intact in high-psychopathy individuals. The damage is targeted, not global — which is part of why the surface presentation can look functional, even sharp, while something essential is operating differently underneath.\n\nThe second region is the amygdala. In individuals with callous-unemotional traits, fear conditioning and emotional processing appear reduced. When that signal is weak or absent, aversive learning degrades. The emotional inhibition that the experience of consequence normally builds, over time, across repeated encounters with threat and punishment, does not accumulate the way it does in most people.\n\nPut the two findings together and a picture emerges. The vmPFC and OFC, already showing disrupted reinforcement learning, are operating alongside an amygdala generating reduced emotional responsiveness and impaired threat and fear processing. The brake that most people develop through lived experience, through fear, through the visceral memory of what going too far felt like, never fully engages. The behavior continues not because the person calculated their way past consequences, but because the neural system designed to register consequences and convert them into restraint is running at a fraction of its ordinary weight.\n\nNot a cognitive advantage. A specific, documented impairment — and the thing the data keep pointing at.\n\nThe myth survives because it explains something real — it just explains it wrong.\n\nSerial killers do evade detection, sometimes for long periods. The FBI's own guidance names the reason plainly: cases dispersed across jurisdictions are harder to identify and clear than single-incident homicides. A victim in one county, another three states away, a third years later — no single detective sees the pattern because no single detective has all the cases. A structural problem, a failure of information sharing and geographic coordination, not evidence of a predator thinking ten moves ahead. The clearance data make the same point from a different angle. In 2020, only 54% of homicides were cleared. By 2024, that figure had risen to 61%. Both numbers describe a system under pressure — not a population of criminal geniuses slipping through it.\n\nThe myth fills that gap. And here is the wrinkle that keeps the myth alive even among people who should know better: high-psychopathy individuals can perform normally on certain attentional and cognitive tasks. The surface presentation does not always betray the deficit underneath. A person can seem sharp, composed, even impressive in structured situations while the affective and reinforcement-learning systems that govern restraint are operating in a fundamentally different register.\n\nThat gap between surface presentation and underlying impairment is exactly what the myth mistakes for genius.\n\nWhich returns us to the image the movies promised: the calm, calculating predator, always ahead. What looks like cold calculation is, at the neurological level, the reduced presence of something: fear conditioning, aversive learning, the accumulated emotional weight of consequence that most people carry without ever thinking about it. The brilliant predator is a story we built to make sense of something that is, in the end, less like mastery and more like damage."
+}

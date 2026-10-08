@@ -1,0 +1,208 @@
+{
+ "id": "streaming-fraud",
+ "run": 1,
+ "words": 1929,
+ "primaryPer1k": 2.07,
+ "overreachPer1k": 0,
+ "finalErrors": [
+  {
+   "i": 32,
+   "sentence": "At certain points he was running as many as 10,000 active bot accounts simultaneously.",
+   "script_quote": "running as many as 10,000 active bot accounts simultaneously",
+   "category": "contradiction",
+   "verdict": "error",
+   "research_quote": "At certain points, SMITH had as many as 10,000 active Bot Accounts on the Streaming Platforms.",
+   "why": "The research says 10,000 active bot accounts total on the platforms, not 'simultaneously'; 'simultaneously' is the language used for the 'over a thousand' figure, not the 10,000 figure.",
+   "first_seen": "section_3",
+   "seen_in": [
+    "section_3",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 37,
+   "sentence": "Smith told Financial Service-1 that his fictitious names were exactly that: employees of his company.",
+   "script_quote": "Smith told Financial Service-1 that his fictitious names were exactly that: employees of his company",
+   "category": "contradiction",
+   "verdict": "error",
+   "research_quote": "SMITH lied to Financial Service-1 and provided it with dozens of fake names corresponding to the Fake Email Accounts and Bot Accounts, claiming those fake names belonged to employees of his company.",
+   "why": "The script says Smith told Financial Service-1 the names 'were exactly that: employees,' but the research says he lied and claimed they were employees — the script's phrasing inverts the deception, making it sound like he admitted they were fictitious.",
+   "first_seen": "section_3",
+   "seen_in": [
+    "section_3",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 38,
+   "sentence": "He loaded more than $1.3 million in royalties he had already extracted from the platforms back onto those cards to fund the next round of subscriptions.",
+   "script_quote": "He loaded more than $1.3 million in royalties he had already extracted from the platforms back onto those cards to fund the next round of subscriptions",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research says Smith used more than $1.3 million to fund the debit cards and transferred $1.3 million to SMH Entertainment then to Financial Service-1, but does not specify the funds were used 'to fund the next round of subscriptions' — the research says they funded debit cards for the Bot Accoun",
+   "first_seen": "section_3",
+   "seen_in": [
+    "section_3",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 62,
+   "sentence": "The Master Services Agreement turned the supply side of the fraud into a managed production line — with a delivery schedule, a royalty split, and a ceiling of ten thousand new tracks every thirty days.",
+   "script_quote": "a ceiling of ten thousand new tracks every thirty days",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The Master Services Agreement specified 'between 1,000 to 10,000 songs each month,' not a flat ceiling of ten thousand; the research gives a range, not a single ceiling figure.",
+   "first_seen": "section_4",
+   "seen_in": [
+    "section_4",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  }
+ ],
+ "removed": [
+  {
+   "i": 61,
+   "sentence": "The CEO of an AI music company, identified in the indictment only as CC-3, began providing Smith with thousands of songs each week.",
+   "script_quote": "began providing Smith with thousands of songs each week",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research says CC-3 provided 'thousands of songs each week' in one place, but the Master Services Agreement specifies 'between 1,000 to 10,000 songs each month,' not each week. The 'each week' frequency is contradicted by the contract terms.",
+   "first_seen": "section_4",
+   "seen_in": [
+    "section_4",
+    "finalize_in",
+    "before_refine",
+    "after_refine"
+   ],
+   "in_final": false,
+   "removed_after": "after_refine"
+  },
+  {
+   "i": 140,
+   "sentence": "Smith had known that, in the sense that anyone who engineers elaborate concealment knows what the rules say.",
+   "script_quote": "Smith had known that, in the sense that anyone who engineers elaborate concealment knows what the rules say",
+   "category": "unsupported_attribution",
+   "verdict": "error",
+   "why": "The research does not state what Smith knew or his mental state regarding the regulations; this attributes knowledge and intent to Smith beyond what the research supports.",
+   "first_seen": "section_7",
+   "seen_in": [
+    "section_7",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review"
+   ],
+   "in_final": false,
+   "removed_after": "review"
+  }
+ ],
+ "draftErrors": 7,
+ "rejected": 0,
+ "stages": [
+  {
+   "stage": "plan",
+   "words": 590
+  },
+  {
+   "stage": "hook",
+   "words": 45
+  },
+  {
+   "stage": "section_1",
+   "words": 244
+  },
+  {
+   "stage": "section_2",
+   "words": 206
+  },
+  {
+   "stage": "section_3",
+   "words": 388
+  },
+  {
+   "stage": "section_4",
+   "words": 383
+  },
+  {
+   "stage": "section_5",
+   "words": 456
+  },
+  {
+   "stage": "section_6",
+   "words": 255
+  },
+  {
+   "stage": "section_7",
+   "words": 476
+  },
+  {
+   "stage": "finalize_in",
+   "words": 2408
+  },
+  {
+   "stage": "before_refine",
+   "words": 2449
+  },
+  {
+   "stage": "after_refine",
+   "words": 2445
+  },
+  {
+   "stage": "before_refill",
+   "words": 2159
+  },
+  {
+   "stage": "after_refill",
+   "words": 2159
+  },
+  {
+   "stage": "finalize_out",
+   "words": 2021
+  },
+  {
+   "stage": "review",
+   "words": 2043
+  },
+  {
+   "stage": "final_check",
+   "words": 1929
+  }
+ ],
+ "final": "Somewhere on Spotify, Amazon Music, and Apple Music, songs were racking up billions of streams that no human ever chose to play.\n\nOn October 20, 2017, Michael Smith sent himself an email. Not a note to a partner, not a message to a co-conspirator — an email to himself, a private ledger of exactly what he had built and what it was worth.\n\nThe arithmetic inside it was methodical. Smith had 52 cloud services accounts. Each one ran 20 bot accounts. That gave him 1,040 bots working simultaneously, each capable of streaming approximately 636 songs per day. Multiply those two figures and the operation was generating roughly 661,440 streams every single day. At his estimated average royalty of half a cent per stream, that translated to $3,307.20 in daily income — not projected, not hoped for, calculated. Thirty days of that was $99,216.\n\nThe precision is what stands out. Smith wasn't estimating in round numbers or sketching a rough possibility — he was accounting for his operation the way a business owner accounts for a production line. The cost per unit, the output per unit, the yield. He knew the royalty rate. He knew the bot capacity. He ran the multiplication and saved the result.\n\nEvery step in that chain required a deliberate prior decision: acquire the cloud accounts, populate each with bots, feed those bots a catalog large enough to sustain the daily stream volume. The email didn't describe ambition. It described a machine already running, and a man who understood every gear inside it.\n\nBefore the bots, before the AI catalog, before the October 2017 email with its rows of calculated yield, Smith was a musician — someone with his own songs, his own catalog, operating near Cornelius, North Carolina.\n\nStreaming platforms pay rights holders a royalty of less than one cent per play. At that rate, a single listener, a single song, a single afternoon means almost nothing.\n\nThe platforms and distributors had rules against faking plays. Distribution Company-1's terms explicitly barred any activity involving the artificial creation, by human or non-human means, of online or offline plays... where such plays do not represent bona fide end-user listening. Streaming Platform-1 prohibited bots outright. The rules named the exact thing he was building. He signed agreements and built it anyway.\n\nSmith built it in layers, each one meant to make the system look, from the outside, like ordinary music listeners.\n\nIt started with identity. Smith purchased thousands of email accounts in bulk from vendors who sold them at scale, each one tied to a fictitious name. Those addresses became the registration credentials for bot accounts on the streaming platforms — fake names, fake profiles, fake listeners. At certain points he was running as many as 10,000 active bot accounts simultaneously. The data-entry work of creating them was enough that Smith paid people, some abroad and some in the United States, to do it for him. Smith typically signed those fabricated households up for family plans, because family plans delivered more active accounts per dollar spent than individual subscriptions.\n\nThe accounts needed payment methods. Smith turned to a Manhattan-based service — identified in the indictment as Financial Service-1 — that issued corporate debit cards in bulk, the kind a company might give its employees. Smith told Financial Service-1 that his fictitious names were exactly that: employees of his company. He loaded more than $1.3 million in royalties he had already extracted from the platforms back onto those cards to fund the next round of subscriptions. The fraud was, in effect, financing its own expansion.\n\nOnce the accounts were funded, the streaming itself was automated. Smith ran many virtual computers at once through cloud services, with multiple bot accounts streaming in separate browser tabs, logging in through different VPNs to conceal that they were all operating from his home. With them, each bot appeared to be sitting in a different home. Smith had also purchased software macros — small pieces of code that automatically triggered continuous playback — and modified them for his catalog. The streams looked like choices. Neither was real.\n\nAround 2018, the supply problem became impossible to ignore. Smith's bots could run continuously, but they needed content — songs to stream, enough of them that no single track accumulated a suspicious play count. His own catalog had a ceiling. So he found someone who could remove it. In or about 2018, he began working with the CEO of an AI music company, identified as CC-3, and a music promoter, identified as CC-4.\n\nThe first batches weren't treated as a full production run — CC-4 described them as a \"proof of concept.\" By October 18, 2018, Smith reported he had generated hundreds of thousands of streams from that initial AI music, and CC-4 replied with a verdict: \"we've proved the model works.\"\n\nWhat had been an ad-hoc arrangement became a formal business relationship. On or about February 1, 2019, Smith and CC-3 signed a Master Services Agreement. Smith would own the intellectual property rights in every track. In exchange, he agreed to supply metadata — song titles, artist names — and to pay CC-3's company each month the greater of $2,000 or 15 percent of the streaming revenue the AI songs generated. The more the bots streamed, the more CC-3 earned.\n\nWhat arrived each week from CC-3's company came with file names like \"n_7a2b2d74-1621-4385-895d-b1e4af78d860.mp3\" — randomized strings of letters and numbers that carried no musical identity at all. Smith gave them one. He assigned song titles, \"Zygophyceae,\" \"Zymotechnical,\" \"Zymoplastic,\" \"Zyzomys\", and artist names that followed the same generated logic: \"Calm Knuckles,\" \"Calorie Screams,\" \"Camel Edible,\" \"Cambists Cagelings.\" CC-3 put it plainly in a March 11, 2019 email: \"Keep in mind what we're doing musically here... this is not music, it's instant music;).\"\n\nThis was no longer a musician gaming a system on the margins. The Master Services Agreement turned the supply side of the fraud into a managed production line — with a delivery schedule, a royalty split, and a ceiling of ten thousand new tracks every thirty days.\n\nThe production line was running. The question Smith had already answered, in his own emails, was how to keep it from drawing attention.\n\nHe had told his coconspirators the bots and macros must be \"Unde[te]ctable: At least put every safety measure in to avoid detection.\" And the primary mechanism for achieving it was dilution. On October 4, 2018, Smith wrote to two of his coconspirators: \"in order to not raise any issues with the powers that be we need a TON of content with small amounts of Streams.\" The logic was simple and deliberate — spread the plays thin enough across enough songs that no single track ever accumulated a count that looked wrong. A song with ten million streams from an unknown artist is a flag. A catalog of hundreds of thousands of songs, each carrying a modest tally, looks like a long tail of modest success.\n\nBy May 9, 2019, Smith was articulating the constraint with even more precision: \"I can't run the bots without content. And I need enough content so I don't overrun each song. That's the problem. If we get too many streams on one song it comes down.\" Content wasn't just supply — it was cover. Every new batch of AI tracks was also a new place to hide.\n\nThe distributors noticed anyway. On March 6, 2018, Distribution Company-1 told Smith that one of his songs \"fit the criteria that is usually linked to store end streaming abuse.\" Smith's reply was immediate and indignant: \"I acknowledge what you wrote and I ask that you still release it. We have no intentions of committing streaming fraud.\" By October 2018, the same distributor had received \"multiple reports of streaming abuse from different stores\" and moved to pull his releases entirely. Smith escalated his denial: \"This is absolutely wrong and crazy!... There is absolutely no fraud going on whatsoever! How can I appeal this?\"\n\nWhen Streaming Platform-1 reached its own determination in March 2019 and passed it to Distribution Company-3, Smith wrote to the platform demanding proof: \"You have slandered me to my distributors claiming I've had fraudulent streams, however you have provided no proof to this claim, you have provided me no chance to defend myself, and you have withheld money that is owed to me.\" On June 5, 2019, Smith asked CC-3 for another ten thousand AI songs — specifically so he could \"spread this out more.\" The warnings weren't stopping the operation. They were shaping it.\n\nThat same day, Smith sent CC-3 and CC-4 a message in a different register entirely. Not a request. A boast. \"We are at 88 million TOTAL STREAMS so far!!!\" Three exclamation points. By then the streams were earning about $110,000 a month, and CC-3 and CC-4 were each receiving 10 percent of the fraud proceeds.\n\nThat was 2019. What came next was the compounding. The AI supply kept arriving. The bot accounts kept running. And the number that had impressed Smith enough to warrant three exclamation points in June of that year kept climbing — past a hundred million, past a billion, past any figure that could still be called an accident or an anomaly.\n\nIn February 2024, Smith put the total in writing again. My existing music, he wrote, \"has generated at this point over 4 billion streams and $12 million in royalties since 2019\" — not a projection, a boast about what had already landed.\n\nFour billion streams. Stated plainly, in his own words, as though the machine had simply done what machines do — and done it well.\n\nOn September 4, 2024, federal prosecutors in Manhattan unsealed a three-count indictment: wire fraud conspiracy. Wire fraud. Money laundering conspiracy.\n\nOn March 19, 2026, Smith pleaded guilty to one count, conspiracy to commit wire fraud, carrying a maximum of five years in prison. The machine had many operators. Only one faced a courtroom.\n\nThe indictment said he fraudulently obtained more than $10 million in royalty payments, below his own $12 million boast; the plea agreement required him to forfeit $8,091,843.64, the amount traceable as proceeds of the offense. The royalties had moved through financial accounts and then into accounts held in the names of shell companies, among them Arranged Alliance LLC. That was how more than $10 million in streaming payments traveled: from platform to distributor to shell, laundered through the vocabulary of legitimate business.\n\nU.S. Attorney Jay Clayton described it as a scheme to defraud both music streaming platforms and musicians of royalty payments. Federal regulation at 37 C.F.R. §§ 385.2 and 385.21 is unambiguous: manipulated streams are not eligible for royalties.\n\nReporting has described this as the first major criminal conviction for AI-assisted music streaming fraud in the United States. It's about what his operation demonstrated was possible: that the royalty pool is a shared resource with no ceiling on how many automated plays can claim a share of it, and that the platforms' detection, when it came, arrived slowly and incompletely enough — despite warnings along the way — that the scheme ran for years before a federal indictment ended it.\n\nUnderneath all of it is that October 2017 email — the one he sent to himself. Just Smith, alone with the arithmetic, running the multiplication one more time. Fifty-two cloud accounts. Twenty bot accounts each. Six hundred and thirty-six songs a day. The number that came out the other end wasn't a dream. It was a daily yield, already in motion, already paying. He saved the email. The government found it."
+}

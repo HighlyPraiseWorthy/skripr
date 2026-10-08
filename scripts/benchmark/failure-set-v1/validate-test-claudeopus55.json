@@ -1,0 +1,406 @@
+[
+ {
+  "id": "C001",
+  "label": {
+   "label": "legitimate_inference",
+   "material": false,
+   "evidence": [
+    "F13"
+   ],
+   "note": "'agencies that may not recognize' is a mild extension of 'dispersed across jurisdictions'"
+  },
+  "judge": {
+   "flag": true,
+   "material": false,
+   "why": [
+    "unsupported: across agencies that may not initially recognize they are looking at connected events :: The research does not mention agencies failing to recognize linked events."
+   ]
+  },
+  "sentence": "Serial cases are harder to identify and clear than single-incident homicides because they are dispersed — across time, across jurisdictions, across agencies that may not initially recognize they are looking at connected events."
+ },
+ {
+  "id": "C006",
+  "label": {
+   "label": "legitimate_inference",
+   "material": false,
+   "evidence": [
+    "F1",
+    "F3"
+   ],
+   "note": "$5.39 to $11.99 = +$6.60, >100%; 'at locations across the country' is a mild stretch"
+  },
+  "judge": {
+   "flag": true,
+   "material": false,
+   "why": [
+    "unsupported: at locations across the country :: No research fact says the price applied at locations nationwide."
+   ]
+  },
+  "sentence": "By 2024, that same meal was running $11.99 at locations across the country — a jump of more than $6.50, which works out to more than 100% in a single decade."
+ },
+ {
+  "id": "C013",
+  "label": {
+   "label": "supported",
+   "material": false,
+   "evidence": [
+    "F86",
+    "F73"
+   ],
+   "note": "June 5 2019 request; Oct 2018 'TON of content' email"
+  },
+  "judge": {
+   "flag": true,
+   "material": false,
+   "why": [
+    "unsupported: Same day, same message thread :: F83 and F86 share the June 5, 2019 date, but the research never says it was the same message thread."
+   ]
+  },
+  "sentence": "Same day, same message thread: he asked CC-3 for another 10,000 AI songs so he could \"spread this out more\" — not a creative request, a dispersal strategy, the same logic from the October 2018 playbook applied at a larger scale."
+ },
+ {
+  "id": "C014",
+  "label": {
+   "label": "not_a_claim",
+   "material": false,
+   "evidence": [],
+   "note": "narration"
+  },
+  "judge": {
+   "flag": true,
+   "material": true,
+   "why": [
+    "overinterpretation*: the IQ scores cluster below average rather than above it :: The research says scores cluster around normal, average to slightly below.",
+    "unsupported: that something is already visible in the research :: No research fact states that another factor already explains serial offending."
+   ]
+  },
+  "sentence": "If the IQ scores cluster below average rather than above it, something other than raw cognitive firepower is doing the explanatory work — and that something is already visible in the research, waiting in a different part of the profile entirely."
+ },
+ {
+  "id": "C015",
+  "label": {
+   "label": "legitimate_inference",
+   "material": false,
+   "evidence": [
+    "F20",
+    "F24"
+   ],
+   "note": ""
+  },
+  "judge": {
+   "flag": true,
+   "material": true,
+   "why": [
+    "unsupported*: the trait most reliably associated with serial homicide — psychopathy itself :: The superlative 'most reliably' is not in the research; F20 only gives r = 0.74."
+   ]
+  },
+  "sentence": "So if the IQ data already point below average, the next question is whether the trait most reliably associated with serial homicide — psychopathy itself — carries any cognitive advantage at all."
+ },
+ {
+  "id": "C017",
+  "label": {
+   "label": "unsupported",
+   "material": false,
+   "evidence": [
+    "F2"
+   ],
+   "note": "textbook amygdala explanation outside research"
+  },
+  "judge": {
+   "flag": false,
+   "material": false,
+   "why": []
+  },
+  "sentence": "In typical fear conditioning, the amygdala encodes the emotional weight of aversive experiences — it is what makes a burned hand a lesson rather than just an event."
+ },
+ {
+  "id": "C020",
+  "label": {
+   "label": "supported",
+   "material": false,
+   "evidence": [
+    "F11"
+   ],
+   "note": ""
+  },
+  "judge": {
+   "flag": true,
+   "material": false,
+   "why": [
+    "unsupported: pooling studies that used standardized psychopathy measures alongside full-scale IQ testing :: F11 does not describe the study inclusion criteria."
+   ]
+  },
+  "sentence": "A meta-analytic review pooling studies that used standardized psychopathy measures alongside full-scale IQ testing found a statistically significant negative correlation between total psychopathy and FSIQ: r = -."
+ },
+ {
+  "id": "C021",
+  "label": {
+   "label": "overinterpretation",
+   "material": false,
+   "evidence": [],
+   "note": "mind-state claim with no stated knowledge in research",
+   "ambiguous": true
+  },
+  "judge": {
+   "flag": false,
+   "material": false,
+   "why": []
+  },
+  "sentence": "Smith had known that."
+ },
+ {
+  "id": "C026",
+  "label": {
+   "label": "not_a_claim",
+   "material": false,
+   "evidence": [],
+   "note": "narration about culture"
+  },
+  "judge": {
+   "flag": true,
+   "material": false,
+   "why": [
+    "unsupported: The culture took the idea of a distinctive psychopathic brain and read it as confirmation of superiority :: No research fact covers cultural interpretation."
+   ]
+  },
+  "sentence": "The culture took the idea of a distinctive psychopathic brain and read it as confirmation of superiority — a mind built differently and therefore built better for predation."
+ },
+ {
+  "id": "C028",
+  "label": {
+   "label": "legitimate_inference",
+   "material": false,
+   "evidence": [
+    "F23",
+    "F42",
+    "F43",
+    "F48"
+   ],
+   "note": "more than $78,600 + about $11,400 = roughly $90,000+",
+   "ambiguous": true
+  },
+  "judge": {
+   "flag": true,
+   "material": false,
+   "why": [
+    "overinterpretation: a restitution order exceeding $90,000 in total :: Research gives $90,000 total, not more than $90,000."
+   ]
+  },
+  "sentence": "Three years of probation, a restitution order exceeding $90,000 in total, and the slow drain of Social Security checks going back to the agency that had paid out on his death."
+ },
+ {
+  "id": "C045",
+  "label": {
+   "label": "overinterpretation",
+   "material": false,
+   "evidence": [
+    "F58",
+    "F59"
+   ],
+   "note": "corporate debit cards supported; 'defeated payment verification' adds a mechanism"
+  },
+  "judge": {
+   "flag": false,
+   "material": false,
+   "why": []
+  },
+  "sentence": "Corporate debit cards defeated payment verification."
+ },
+ {
+  "id": "C058",
+  "label": {
+   "label": "supported",
+   "material": false,
+   "evidence": [
+    "F61",
+    "F62"
+   ],
+   "note": "gate overblock"
+  },
+  "judge": {
+   "flag": true,
+   "material": false,
+   "why": [
+    "overinterpretation: debit cards that registered the bot accounts :: The research says the cards were 'for the Bot Accounts'; registration was done with the Fake Email Accounts."
+   ]
+  },
+  "sentence": "From approximately 2020 through 2023, Smith transferred $1.3 million in royalties into a bank account he controlled under the name SMH Entertainment, then routed those funds back out to fund the debit cards that registered the bot accounts."
+ },
+ {
+  "id": "C059",
+  "label": {
+   "label": "legitimate_inference",
+   "material": false,
+   "evidence": [
+    "F74",
+    "F81"
+   ],
+   "note": ""
+  },
+  "judge": {
+   "flag": true,
+   "material": false,
+   "why": [
+    "unsupported: Smith couldn't generate that himself fast enough :: The research does not say Smith tried or failed to generate the content himself."
+   ]
+  },
+  "sentence": "What the machine needed was an endless supply of raw material to stream — and Smith couldn't generate that himself fast enough."
+ },
+ {
+  "id": "C068",
+  "label": {
+   "label": "legitimate_inference",
+   "material": false,
+   "evidence": [
+    "F61"
+   ],
+   "note": "gate overblock"
+  },
+  "judge": {
+   "flag": true,
+   "material": true,
+   "why": [
+    "unsupported*: while he remained alive to benefit from being officially gone :: No research says Jones himself benefited from the declaration."
+   ]
+  },
+  "sentence": "His disappearance, once certified by a court, generated $47,000 for his family while he remained alive to benefit from being officially gone."
+ },
+ {
+  "id": "C082",
+  "label": {
+   "label": "legitimate_inference",
+   "material": false,
+   "evidence": [
+    "F61",
+    "F62"
+   ],
+   "note": "NRA five-year 35% food cost, Feb 2020 to Apr 2025 window; judge false positive"
+  },
+  "judge": {
+   "flag": true,
+   "material": false,
+   "why": [
+    "misattached: over the five years following February 2020 :: February 2020 is the start date for the menu-price figure, not the food-cost figure, which covers 'the last 5 years'."
+   ]
+  },
+  "sentence": "According to the National Restaurant Association, food costs for the average restaurant rose 35% over the five years following February 2020."
+ },
+ {
+  "id": "C084",
+  "label": {
+   "label": "legitimate_inference",
+   "material": false,
+   "evidence": [
+    "F37"
+   ],
+   "note": "30% + 30%, occupancy separate; judge false positive (flagged as gate-introduced, but correct)"
+  },
+  "judge": {
+   "flag": true,
+   "material": false,
+   "why": [
+    "unsupported: before rent, insurance, or equipment enters the equation :: F37 mentions occupancy, but insurance and equipment are not in the research."
+   ]
+  },
+  "sentence": "That means food and labor together account for roughly 60% of what it costs to run the kitchen before rent, insurance, or equipment enters the equation."
+ },
+ {
+  "id": "C088",
+  "label": {
+   "label": "misattached",
+   "material": true,
+   "evidence": [
+    "F33",
+    "F58"
+   ],
+   "note": "78% is the LendingTree/USA Today figure; context ties 'those respondents' to the Farmdoc survey",
+   "ambiguous": true
+  },
+  "judge": {
+   "flag": false,
+   "material": false,
+   "why": []
+  },
+  "sentence": "And 78% of those respondents had reclassified the experience entirely, not a quick, cheap meal, but a luxury."
+ },
+ {
+  "id": "C089",
+  "label": {
+   "label": "legitimate_inference",
+   "material": false,
+   "evidence": [
+    "F35",
+    "F2"
+   ],
+   "note": "judge false positive"
+  },
+  "judge": {
+   "flag": true,
+   "material": true,
+   "why": [
+    "overinterpretation*: has only a partial cost-based explanation — the arithmetic does not close on costs alone :: The research shows disagreement over pass-through and no measured analysis of margins versus costs."
+   ]
+  },
+  "sentence": "If roughly half of cost increases passed through to prices, and costs themselves rose sharply, then the 26% limited-service CPI increase from 2019 to 2024 has only a partial cost-based explanation — the arithmetic does not close on costs alone."
+ },
+ {
+  "id": "C095",
+  "label": {
+   "label": "legitimate_inference",
+   "material": false,
+   "evidence": [
+    "F60",
+    "F61"
+   ],
+   "note": "1979 to 1986 declared dead, then benefits; judge false positive"
+  },
+  "judge": {
+   "flag": true,
+   "material": false,
+   "why": [
+    "unsupported: The disappearance Jones staged :: The research does not say he staged the disappearance."
+   ]
+  },
+  "sentence": "The disappearance Jones staged to escape his debts had, within seven years, converted into a government check."
+ },
+ {
+  "id": "C117",
+  "label": {
+   "label": "legitimate_inference",
+   "material": false,
+   "evidence": [
+    "F69",
+    "F84"
+   ],
+   "note": ""
+  },
+  "judge": {
+   "flag": true,
+   "material": false,
+   "why": [
+    "unsupported: found work that matched the one skill his old life had genuinely sharpened: reading odds :: Interpretive skill claim not in the research; only the sports book job is."
+   ]
+  },
+  "sentence": "By the 1980s, Jones had settled into the city and found work that matched the one skill his old life had genuinely sharpened: reading odds."
+ },
+ {
+  "id": "C131",
+  "label": {
+   "label": "supported",
+   "material": false,
+   "evidence": [
+    "F38",
+    "F60"
+   ],
+   "note": ""
+  },
+  "judge": {
+   "flag": true,
+   "material": false,
+   "why": [
+    "unsupported: what the law does when a person stays gone long enough :: The legal mechanism is not in the research."
+   ]
+  },
+  "sentence": "Seven years after Jones walked out that door, an Illinois court did what the law does when a person stays gone long enough: it declared Arthur Gerald Jones legally dead."
+ }
+]

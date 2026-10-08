@@ -1,0 +1,372 @@
+[
+ {
+  "id": "C001",
+  "label": {
+   "label": "legitimate_inference",
+   "material": false,
+   "evidence": [
+    "F13"
+   ],
+   "note": "'agencies that may not recognize' is a mild extension of 'dispersed across jurisdictions'"
+  },
+  "judge": {
+   "flag": true,
+   "material": false,
+   "why": [
+    "unsupported: agencies may not initially recognize they are looking at connected events :: F13 does not mention agencies failing to recognize connected events; this is an added detail."
+   ]
+  },
+  "sentence": "Serial cases are harder to identify and clear than single-incident homicides because they are dispersed — across time, across jurisdictions, across agencies that may not initially recognize they are looking at connected events."
+ },
+ {
+  "id": "C002",
+  "label": {
+   "label": "misattached",
+   "material": true,
+   "evidence": [
+    "F160"
+   ],
+   "note": "Goldman's 35.9% is non-manager wages generally; 'in fast food' attaches it to the wrong population"
+  },
+  "judge": {
+   "flag": false,
+   "material": false,
+   "why": []
+  },
+  "sentence": "The Goldman Sachs data make the asymmetry legible: non-manager wages in fast food were up 35.9% since January 2017, and fast-food meal prices were up more than 41% over that same period."
+ },
+ {
+  "id": "C007",
+  "label": {
+   "label": "supported",
+   "material": false,
+   "evidence": [
+    "F1",
+    "F11",
+    "F18"
+   ],
+   "note": "r=-.07 broad, r=-.55 female sample, PCL-R in both"
+  },
+  "judge": {
+   "flag": true,
+   "material": false,
+   "why": [
+    "unsupported: psychopathy measured by the same instrument used in that homicide research :: The research does not confirm that the female offender study and the homicide research used the same instrument; F1 mentions PCL-R and F18 mentions PCL-R but the script's claim of 'same instrument' linking these two specific studies is not established."
+   ]
+  },
+  "sentence": "And psychopathy, measured by the same instrument used in that homicide research, correlates negatively with intelligence — modestly across the broader literature, substantially in the female offender sample."
+ },
+ {
+  "id": "C010",
+  "label": {
+   "label": "overinterpretation",
+   "material": true,
+   "evidence": [
+    "F19"
+   ],
+   "note": "research says subgroups differed in intelligence, not which was higher"
+  },
+  "judge": {
+   "flag": false,
+   "material": false,
+   "why": []
+  },
+  "sentence": "The high-psychopathy subgroup was not the cognitively dominant one."
+ },
+ {
+  "id": "C012",
+  "label": {
+   "label": "unsupported",
+   "material": false,
+   "evidence": [
+    "F9"
+   ],
+   "note": "self/third-party reports supported; 'news accounts, court records' added"
+  },
+  "judge": {
+   "flag": false,
+   "material": false,
+   "why": []
+  },
+  "sentence": "Radford is built from secondary sources — news accounts, court records, self-reports — and IQ figures in that kind of archive can be incomplete, inflated by subjects with obvious incentives to exaggerate, or degraded by the general noise of third-party reporting."
+ },
+ {
+  "id": "C013",
+  "label": {
+   "label": "supported",
+   "material": false,
+   "evidence": [
+    "F86",
+    "F73"
+   ],
+   "note": "June 5 2019 request; Oct 2018 'TON of content' email"
+  },
+  "judge": {
+   "flag": true,
+   "material": false,
+   "why": [
+    "unsupported: the same logic from the October 2018 playbook :: No research fact describes an 'October 2018 playbook'; this is a narrative framing device."
+   ]
+  },
+  "sentence": "Same day, same message thread: he asked CC-3 for another 10,000 AI songs so he could \"spread this out more\" — not a creative request, a dispersal strategy, the same logic from the October 2018 playbook applied at a larger scale."
+ },
+ {
+  "id": "C016",
+  "label": {
+   "label": "legitimate_inference",
+   "material": false,
+   "evidence": [
+    "F2",
+    "F14"
+   ],
+   "note": ""
+  },
+  "judge": {
+   "flag": true,
+   "material": false,
+   "why": [
+    "unsupported: an internal event that would make most people stop :: This is a narrative/rhetorical framing not directly stated in the research."
+   ]
+  },
+  "sentence": "The research suggests it's closer to an absence: of the fear signal, of the aversive conditioning, of the internal event that would make most people stop."
+ },
+ {
+  "id": "C021",
+  "label": {
+   "label": "overinterpretation",
+   "material": false,
+   "evidence": [],
+   "note": "mind-state claim with no stated knowledge in research",
+   "ambiguous": true
+  },
+  "judge": {
+   "flag": false,
+   "material": false,
+   "why": []
+  },
+  "sentence": "Smith had known that."
+ },
+ {
+  "id": "C022",
+  "label": {
+   "label": "overinterpretation",
+   "material": false,
+   "evidence": [
+    "F2",
+    "F8"
+   ],
+   "note": "'stays regulated where others destabilize' goes beyond 'perform normally on some tasks'"
+  },
+  "judge": {
+   "flag": false,
+   "material": false,
+   "why": []
+  },
+  "sentence": "That image is real in one narrow sense: the emotional flatness is documented, the reduced fear response is documented, the capacity to stay regulated in situations that would destabilize most people has empirical support."
+ },
+ {
+  "id": "C023",
+  "label": {
+   "label": "supported",
+   "material": false,
+   "evidence": [
+    "F5",
+    "F7"
+   ],
+   "note": ""
+  },
+  "judge": {
+   "flag": true,
+   "material": true,
+   "why": [
+    "overinterpretation*: neuroimaging and neuropsychological studies consistently link psychopathy to impaired function in these areas :: F7 notes the causal interpretation is contested and studies propose broader explanations; 'consistently' overstates the consensus described in the research."
+   ]
+  },
+  "sentence": "Neuroimaging and neuropsychological studies consistently link psychopathy to impaired function in these areas."
+ },
+ {
+  "id": "C026",
+  "label": {
+   "label": "not_a_claim",
+   "material": false,
+   "evidence": [],
+   "note": "narration about culture"
+  },
+  "judge": {
+   "flag": true,
+   "material": false,
+   "why": [
+    "unsupported: the culture took the idea of a distinctive psychopathic brain and read it as confirmation of superiority :: This is a cultural observation not supported by any research fact."
+   ]
+  },
+  "sentence": "The culture took the idea of a distinctive psychopathic brain and read it as confirmation of superiority — a mind built differently and therefore built better for predation."
+ },
+ {
+  "id": "C031",
+  "label": {
+   "label": "legitimate_inference",
+   "material": false,
+   "evidence": [
+    "F20",
+    "F11"
+   ],
+   "note": ""
+  },
+  "judge": {
+   "flag": true,
+   "material": true,
+   "why": [
+    "overinterpretation*: the traits most tightly linked to serial homicide are not the ones that require or reward high intelligence :: Research shows psychopathy is linked to serial homicide and negatively correlated with IQ, but the script's claim that these traits do not 'require or reward' high intelligence is a stronger causal/functional claim than the research supports."
+   ]
+  },
+  "sentence": "The traits most tightly linked to serial homicide are not the ones that require or reward high intelligence."
+ },
+ {
+  "id": "C032",
+  "label": {
+   "label": "unsupported",
+   "material": false,
+   "evidence": [],
+   "note": "outside background (true in the world, absent from research)"
+  },
+  "judge": {
+   "flag": false,
+   "material": false,
+   "why": []
+  },
+  "sentence": "The royalty pool is shared."
+ },
+ {
+  "id": "C041",
+  "label": {
+   "label": "overinterpretation",
+   "material": false,
+   "evidence": [
+    "F166"
+   ],
+   "note": "63% across 10 chains supported; 'industry-wide' and McDonald's 'leading the field' are not"
+  },
+  "judge": {
+   "flag": false,
+   "material": false,
+   "why": []
+  },
+  "sentence": "Visual Capitalist tracked the average price movement across ten major fast-food chains over that same stretch and found a 63% increase industry-wide, with McDonald's leading the field at that doubling."
+ },
+ {
+  "id": "C061",
+  "label": {
+   "label": "misattached",
+   "material": false,
+   "evidence": [
+    "F53"
+   ],
+   "note": "research: he left around noon, not morning (gate right, judge missed)"
+  },
+  "judge": {
+   "flag": false,
+   "material": false,
+   "why": []
+  },
+  "sentence": "The walls of the life he had built were coming down in a specific order, and May 10th was the morning he stopped waiting for the next one to fall."
+ },
+ {
+  "id": "C084",
+  "label": {
+   "label": "legitimate_inference",
+   "material": false,
+   "evidence": [
+    "F37"
+   ],
+   "note": "30% + 30%, occupancy separate; judge false positive (flagged as gate-introduced, but correct)"
+  },
+  "judge": {
+   "flag": true,
+   "material": true,
+   "why": [
+    "unsupported*: food and labor together account for roughly 60% of what it costs to run the kitchen :: No research fact states food and labor together are ~60% of operating costs; F37 puts labor at ~30% and food at ~30% (totaling ~60%), but this is for quick-service specifically and the script generalizes to 'the kitchen' without citing a source. However F37 does support the arithmetic implicitly."
+   ]
+  },
+  "sentence": "That means food and labor together account for roughly 60% of what it costs to run the kitchen before rent, insurance, or equipment enters the equation."
+ },
+ {
+  "id": "C088",
+  "label": {
+   "label": "misattached",
+   "material": true,
+   "evidence": [
+    "F33",
+    "F58"
+   ],
+   "note": "78% is the LendingTree/USA Today figure; context ties 'those respondents' to the Farmdoc survey",
+   "ambiguous": true
+  },
+  "judge": {
+   "flag": false,
+   "material": false,
+   "why": []
+  },
+  "sentence": "And 78% of those respondents had reclassified the experience entirely, not a quick, cheap meal, but a luxury."
+ },
+ {
+  "id": "C089",
+  "label": {
+   "label": "legitimate_inference",
+   "material": false,
+   "evidence": [
+    "F35",
+    "F2"
+   ],
+   "note": "judge false positive"
+  },
+  "judge": {
+   "flag": true,
+   "material": true,
+   "why": [
+    "overinterpretation*: the 26% limited-service CPI increase from 2019 to 2024 has only a partial cost-based explanation :: The research shows partial pass-through of labor costs specifically, but the script extends this to claim the entire 26% CPI increase cannot be explained by costs alone — this goes beyond what the research establishes."
+   ]
+  },
+  "sentence": "If roughly half of cost increases passed through to prices, and costs themselves rose sharply, then the 26% limited-service CPI increase from 2019 to 2024 has only a partial cost-based explanation — the arithmetic does not close on costs alone."
+ },
+ {
+  "id": "C112",
+  "label": {
+   "label": "supported",
+   "material": false,
+   "evidence": [
+    "F35",
+    "F63",
+    "F90"
+   ],
+   "note": ""
+  },
+  "judge": {
+   "flag": true,
+   "material": true,
+   "why": [
+    "unsupported*: Investigators reached Jones in July 2011 :: Research says Jones was arrested in July (F63) and tried to renew a license in 2011 (F29), but does not say investigators 'reached' him in July 2011; F39 says investigators began looking in May 2008. The arrest year 2011 is from F29 but the specific framing of investigators reaching him in July 2011"
+   ]
+  },
+  "sentence": "Investigators reached Jones in July 2011, and when they asked him directly whether he was the Chicago commodities trader who had walked away 32 years earlier, he said yes."
+ },
+ {
+  "id": "C117",
+  "label": {
+   "label": "legitimate_inference",
+   "material": false,
+   "evidence": [
+    "F69",
+    "F84"
+   ],
+   "note": ""
+  },
+  "judge": {
+   "flag": true,
+   "material": false,
+   "why": [
+    "unsupported: found work that matched the one skill his old life had genuinely sharpened: reading odds :: The characterization of commodities trading as 'reading odds' and the framing of it as a skill that matched sports book work is an interpretive editorial claim not found in the research."
+   ]
+  },
+  "sentence": "By the 1980s, Jones had settled into the city and found work that matched the one skill his old life had genuinely sharpened: reading odds."
+ }
+]

@@ -1,0 +1,221 @@
+{
+ "id": "fast-food-prices",
+ "run": 2,
+ "words": 2186,
+ "primaryPer1k": 1.37,
+ "overreachPer1k": 0,
+ "finalErrors": [
+  {
+   "i": 9,
+   "sentence": "By 2024, the same order cost $11.99 at the same chain, a $6.60 climb on a single item at a single restaurant.",
+   "script_quote": "the same order cost $11.99 at the same chain, a $6.60 climb on a single item",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research states the increase was 'about $6.50' (WSJ) or from $5.39 to $11.99 (FinanceBuzz/TheStreet), which is a $6.60 difference arithmetically, but the WSJ source cited for the $6.50 figure is a cross-chain comparison, not a single-item figure. The script attributes '$6.60' as the climb but th",
+   "first_seen": "section_1",
+   "seen_in": [
+    "section_1",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 27,
+   "sentence": "That four-point shift sounds small until you apply it across billions of dollars in annual sales.",
+   "script_quote": "That four-point shift sounds small",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research states the shift is from roughly 28% to 31.7%, which is approximately a 3.7-point shift, not a four-point shift. The script rounds up in a way that misstates the documented figure.",
+   "first_seen": "section_2",
+   "seen_in": [
+    "section_2",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 38,
+   "sentence": "Industry analysis puts the typical lag between a commodity shock and a menu-price adjustment at two to four months, a delay built into how contracts are structured and how operators decide when a shift is durable enough to justify reprinting the board.",
+   "script_quote": "Industry analysis puts the typical lag between a commodity shock and a menu-price adjustment at two to four months",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research states 'cost increases often appearing in menu prices within 2 to 4 months after commodity shocks' but attributes this to 'Industry analysis' from the National Restaurant Association research page, which the script reproduces accurately in substance; however the research also includes a",
+   "first_seen": "section_3",
+   "seen_in": [
+    "section_3",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  }
+ ],
+ "removed": [
+  {
+   "i": 6,
+   "sentence": "By 2024, the same order cost $11.99 at the same chain — a $6.62 climb on a single item at a single restaurant.",
+   "script_quote": "a $6.62 climb on a single item at a single restaurant",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research states the Quarter Pounder rose from $5.39 to $11.99, which is a $6.60 difference, not $6.62. The research also gives the WSJ figure as 'about $6.50.' Neither source supports $6.62.",
+   "first_seen": "section_1",
+   "seen_in": [
+    "section_1",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill"
+   ],
+   "in_final": false,
+   "removed_after": "after_refill"
+  },
+  {
+   "i": 57,
+   "sentence": "The Federal Reserve Bank of Chicago's own study on fast-food pricing put the figure at about 1.39% for a 10% wage increase — an elasticity of 0.139.",
+   "script_quote": "The Federal Reserve Bank of Chicago's own study on fast-food pricing put the figure at about 1.39% for a 10% wage increase — an elasticity of 0.139",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research attributes the 0.139 elasticity to 'A Federal Reserve Bank of Chicago paper' described as 'Restaurant Prices and the Minimum Wage' — a seminar paper, not a published Fed study. The script calls it 'The Federal Reserve Bank of Chicago's own study,' implying institutional authorship, whic",
+   "first_seen": "section_4",
+   "seen_in": [
+    "section_4",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill"
+   ],
+   "in_final": false,
+   "removed_after": "after_refill"
+  },
+  {
+   "i": 87,
+   "sentence": "The National Restaurant Association frames the last five years as a story of cost pressure absorbed heroically on thin margins: food costs up 35%, labor costs up 35%, and average menu prices up 31% — a number that, by the Association's own telling, actually falls short of the 26.2% increase its inflation infographic estimates would be needed just to cover higher input costs and hold the margin flat.",
+   "script_quote": "26.2% increase its inflation infographic estimates would be needed just to cover higher input costs and hold the margin flat",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research states the NRA inflation infographic estimates an average price increase of 26.2% is needed to cover higher input costs and maintain margin, but the script frames this as falling short of the 31% menu price increase, implying the 26.2% is less than 31%. The research does not present the",
+   "first_seen": "section_6",
+   "seen_in": [
+    "section_6",
+    "finalize_in",
+    "before_refine"
+   ],
+   "in_final": false,
+   "removed_after": "before_refine"
+  },
+  {
+   "i": 93,
+   "sentence": "A 1995 NBER paper documented that prices were systematically higher in franchised restaurants than in corporate-owned units, and that franchisors could not control franchisee pricing with the same precision they applied to company-owned locations.",
+   "script_quote": "prices were systematically higher in franchised restaurants than in corporate-owned units",
+   "category": "contradiction",
+   "verdict": "error",
+   "research_quote": "prices were systematically lower in corporate restaurants than in franchised restaurants",
+   "why": "The script correctly captures the direction (franchised higher than corporate), so this is consistent with the research. Marking as style.",
+   "first_seen": "section_6",
+   "seen_in": [
+    "section_6",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill"
+   ],
+   "in_final": false,
+   "removed_after": "after_refill"
+  }
+ ],
+ "draftErrors": 10,
+ "rejected": 0,
+ "stages": [
+  {
+   "stage": "plan",
+   "words": 700
+  },
+  {
+   "stage": "hook",
+   "words": 73
+  },
+  {
+   "stage": "section_1",
+   "words": 268
+  },
+  {
+   "stage": "section_2",
+   "words": 263
+  },
+  {
+   "stage": "section_3",
+   "words": 292
+  },
+  {
+   "stage": "section_4",
+   "words": 387
+  },
+  {
+   "stage": "section_5",
+   "words": 295
+  },
+  {
+   "stage": "section_6",
+   "words": 401
+  },
+  {
+   "stage": "section_7",
+   "words": 375
+  },
+  {
+   "stage": "finalize_in",
+   "words": 2281
+  },
+  {
+   "stage": "before_refine",
+   "words": 2354
+  },
+  {
+   "stage": "after_refine",
+   "words": 2251
+  },
+  {
+   "stage": "before_refill",
+   "words": 2221
+  },
+  {
+   "stage": "after_refill",
+   "words": 2221
+  },
+  {
+   "stage": "finalize_out",
+   "words": 2126
+  },
+  {
+   "stage": "review",
+   "words": 2186
+  },
+  {
+   "stage": "final_check",
+   "words": 2186
+  }
+ ],
+ "final": "Minimum wage hikes are part of the explanation for why fast food got expensive — but the evidence suggests they account for roughly half the story, at most.  A McDonald's Quarter Pounder meal that cost $5. 39 in 2014 now runs nearly $12, an increase that outpaced gasoline, movie tickets, and what workers themselves actually earned over the same decade.\n\nMinimum wage hikes are part of the explanation for why fast food got expensive — but the evidence suggests they account for roughly half the story, at most. A McDonald's Quarter Pounder meal that cost $5.39 in 2014 now runs nearly $12, an increase that outpaced gasoline, movie tickets, and what workers themselves actually earned over the same decade. Labor costs alone can't account for all of that. So where did the rest of the increase come from?\n\nYou used to be able to pull into a McDonald's drive-through, order a Quarter Pounder with cheese meal, and hand over a five-dollar bill. In 2014, that combo ran $5.39. By 2024, the same order cost $11.99 at the same chain, a $6.60 climb on a single item at a single restaurant. That is not a rounding error or a regional anomaly. A Wall Street Journal price comparison found that fast-food combo meals rose by roughly $6.50, or more than 100%, across the decade ending in 2024 — a rate of increase that outpaced gasoline, movie tickets, and median hourly wages over the same span. Wages are supposed to be the thing that keeps pace.\n\nZoom out from McDonald's and the picture doesn't soften much. Visual Capitalist tracked average prices across ten major chains from 2014 to 2024 and found a 63% increase industry-wide, with McDonald's sitting at the top at 100%. And that was before you account for the shorter window: items tracked across major chains since late 2019 alone averaged a 77.4% increase, according to a FinanceBuzz analysis.\n\nThe people eating this food noticed. A 2024 Harris Poll found 81% of adults who visit fast-food restaurants at least once a year said prices were higher than the year before. Only 32% agreed that quick-service restaurants still offer affordable meal options. Fast food was built for the customer who couldn't afford a sit-down restaurant. Now a significant share of that same customer is calling it a luxury. The question is why the gap got this wide — and whether the standard explanation actually closes it.\n\nThe industry has long had a ready answer for why prices climb: costs went up, so the menu had to follow. And to be fair to that argument, the cost data from this period is not manufactured. The National Restaurant Association's own benchmarking puts quick-service labor at roughly 30% of total operating costs, food and commodity inputs at another 30%, and occupancy at around 25%. Those are the three big levers — and two of them moved hard at the same time. By 2024, limited-service respondents reported that salaries, wages, and benefits together represented a median of 31.7% of sales, compared with roughly 28% across the Association's 2010, 2013, and 2016 reports. That four-point shift sounds small until you apply it across billions of dollars in annual sales.\n\nThe commodity side of the ledger moved at least as sharply. During the 2021–2023 producer-price run-up, beef, chicken, and cooking oil each peaked at double-digit percentage increases from their 2020 baselines. A 2022 restaurant cost inflation survey put the total year-over-year rise in restaurant costs at 11.7%, with the largest documented increases coming from raw materials and labor. Eleven-point-seven percent in a single year, across both major cost categories simultaneously, is the kind of pressure that genuinely compresses margins and forces operators to respond.\n\nSo the conventional story has real numbers behind it. On its surface, the explanation holds. The question the surface doesn't answer is whether those cost increases were large enough to account for what customers actually paid.\n\nBut the link between a commodity shock and a price change is neither immediate nor complete. A restaurant-cost analysis found that a one-percent rise in supply costs translates into roughly 0.33% higher cost of goods sold at constant menu prices — meaning operators absorb a meaningful share of any input spike before they pass anything along. And they don't pass it along right away. Industry analysis puts the typical lag between a commodity shock and a menu-price adjustment at two to four months, a delay built into how contracts are structured and how operators decide when a shift is durable enough to justify reprinting the board.\n\nThat lag matters for reading the data. The CPI for limited-service meals and snacks rose about 28% from 2019 to 2023, while overall CPI rose roughly 19% over the same stretch. Fast food was already pulling ahead of the broader price level before the full commodity shock had even worked its way through. And the National Restaurant Association's own models attribute only a minority of that menu-price growth to commodity cost shocks specifically — which means beef and oil explain some of the gap, but the record doesn't establish they explain most of it. The ingredients got more expensive. That's real. It just doesn't close the distance between what costs rose and what customers were charged.\n\nSo take the wage argument seriously for a moment, because it deserves a real examination before it gets discarded. Labor is the most visible cost in a fast-food kitchen — the person at the register, the crew running the fryer — and when minimum wages climb, the story writes itself: workers cost more, so the burger costs more. It sounds airtight. The numbers say otherwise.\n\nIn one restaurant sample, minimum wage costs specifically accounted for somewhere between 4% and 10% of total operating costs, even though labor overall ran about 36% of the total. Those two figures matter together. The total labor bill is large, but the slice of it that is directly governed by minimum wage law is considerably smaller — which means that even a significant mandated wage increase can only move a fraction of that fraction.\n\nThe empirical pass-through literature puts a precise number on how small that fraction is. A Federal Reserve Bank of Chicago study found that a 10% increase in the minimum wage raised restaurant prices by about 1.4% overall, with larger effects at limited-service establishments specifically. A separate fast-food chain study put the figure at about seven cents for every one-dollar increase in the minimum wage, an elasticity of roughly 0.13. The studies are not identical, but they cluster: the pass-through is real, it is measurable, and it is modest.\n\nNow run that against the actual price record. Limited-service CPI rose 26% from 2019 to 2024. Minimum wages rose meaningfully over that period, but applying even the higher end of the empirical elasticity range to the actual wage increases in play produces a price effect that accounts for a small share of that 26-point climb. The math simply does not reach.\n\nWhich puts the standard explanation in an uncomfortable place. Commodity costs explain part of the gap. Wage pass-through explains another sliver. But the combined documented cost increases, run through the models the economics literature actually supports, fall short of what customers were charged. Another lever was available to operators during this period — and prices stayed well above where the cost shock alone would put them.\n\nThe CPI figures already tracked across this story are themselves incomplete. They record what the menu board says. They do not record how much food arrives in the bag.\n\nRestaurants facing sustained cost pressure found a second lever alongside raising sticker prices: shrinking what those prices buy. Smaller portions, same box, same number on the receipt. The NBC News reporting that documented this practice described it as happening in tandem with price increases — not instead of them. Both moved at once. Which means a consumer paying more was also, in many cases, receiving less per dollar in ways the headline index was not built to detect.\n\nThat same Harris Poll found 35% of quick-service customers said they noticed shrinkflation at QSRs over the last year. One-in-three customers, at a category of restaurant where the value proposition is the entire point.\n\nThe CPI does capture some non-menu-board costs. The Bureau of Labor Statistics includes mandatory service charges in its food-away-from-home indexes — so a compulsory fee gets counted. But tips are excluded entirely, and portion changes — shrinkflation — are not a price-per-unit adjustment the index reliably captures in real time. The result is a measurement that can understate what a calorie of fast food actually costs a consumer on any given day.\n\nThe BLS's own release for the twelve months ending February 2026 puts limited-service meals and snacks at a 3.2% annual rise — a figure that, by construction, reflects only what operators charged, not what they delivered. If the patty is lighter and the fries are fewer, the cost per bite climbed further than that number shows. The gap between the official record and the customer's actual experience is real, it is structural, and it runs in one direction.\n\nThe industry's own arithmetic is where the story gets uncomfortable. The National Restaurant Association frames the last five years as a story of cost pressure absorbed on thin margins: food costs up 35%, labor costs up 35%, and average menu prices up 31% between February 2020 and April 2025. On the surface, that framing positions operators as victims of a cost environment they barely kept pace with, not beneficiaries of it.\n\nBut Numerator's tracking of quick-service restaurant prices since January 2018 puts the cumulative increase at 53.9% — against a 33.2% rise in the overall consumer basket over the same stretch. That is not a small premium over general inflation. A gap of more than twenty percentage points, sustained across years, and it does not resolve neatly into the cost-pressure story.\n\nThe franchise structure adds another layer the aggregate numbers obscure: prices can vary systematically between franchised restaurants and corporate-owned units, and franchisors cannot control franchisee pricing with the same precision they apply to company-owned locations. Franchisees set their own prices within that latitude — which means the national average conceals a wide distribution, and the higher end of that distribution is where much of the consumer experience actually lives.\n\nThen consider the behavioral evidence from operators themselves. A 2026 restaurant inflation analysis found that 82% of operators raised menu prices in 2023, and 61% planned to raise them again in 2024. Not a one-time response to a one-time shock. Sequential repricing, in consecutive years, at a moment when commodity costs were already pulling back from their 2022–2023 peaks.\n\nThe Association's own 3–5% pre-tax margin figure is doing a lot of work in that narrative. Margins that thin would suggest operators had no room to absorb anything. The cost pressure was real. The question the data leaves open is whether it was the ceiling on pricing decisions, or simply the floor.\n\nForty-seven percent of U.S. adults told the Harris Poll that a fair price for a full quick-service meal runs somewhere between five and ten dollars. That is the number that pulls the threads together. Because the combos are past it. The value meals are past it. The basic order at the counter — the one that used to be the affordable option — is past it. What the industry built its identity on was the premise that it could live inside that price range — affordable by design, accessible by default.\n\nThe survey responses put a human face on the arithmetic. Seventy-eight percent of respondents in LendingTree-related polling said fast food had become a luxury. Sixty-two percent said they were eating it less because of what it costs. Seventy-five percent said cooking at home was the more economical choice — which is not a statement people make when a drive-through run still feels manageable. The Farmdoc Daily consumer survey found that about half of respondents said fast-food prices were causing them to go less often. Not a fringe reaction. The median American consumer pulling back from a category specifically designed to catch them when other options cost more.\n\nFast food was not invented for people with options. It was invented for the shift worker, the family on a budget, the person who needed something hot and filling for under ten dollars and had twenty minutes to get it. The pricing logic of the industry rested on that customer showing up reliably — because fast food had positioned itself as the floor, the option of last resort before cooking at home. Now 75% of them say the grocery store is cheaper. The category has drifted upmarket in price while staying exactly where it was in perception — and the customers caught in that gap are not dining somewhere nicer. They are cooking more, going less, or going without.\n\nAnd it lands you right back where this video started: a drive-through window, a total on the screen, and the moment you do the math and realize the five-dollar bill you used to hand over wouldn't cover the tax."
+}

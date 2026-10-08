@@ -1,0 +1,389 @@
+{
+ "id": "chapo-chicago",
+ "run": 1,
+ "words": 1913,
+ "primaryPer1k": 3.14,
+ "overreachPer1k": 1.57,
+ "finalErrors": [
+  {
+   "i": 6,
+   "sentence": "The Commission made the announcement in partnership with the DEA Chicago Field Division.",
+   "script_quote": "The Commission made the announcement in partnership with the DEA Chicago Field Division",
+   "category": "certainty_inflation",
+   "verdict": "error",
+   "research_quote": "officially joined forces with the DEA Chicago Field Division in 2013 when we put the spotlight on Joaquín Guzmán Loera",
+   "why": "The research says the Commission 'officially joined forces' with the DEA Chicago Field Division in 2013 broadly, not specifically that the February 14 announcement was made 'in partnership' with them at that moment; however this is close enough to be a borderline case. More precisely, the research a",
+   "first_seen": "final_check",
+   "seen_in": [
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 30,
+   "sentence": "But the Chicago and Brooklyn indictments reached back to 1990, alleging nearly 200 metric tons of cocaine imported and more than $5.8 billion in cash proceeds smuggled back to Mexico.",
+   "script_quote": "the Chicago and Brooklyn indictments reached back to 1990, alleging nearly 200 metric tons of cocaine imported and more than $5.8 billion in cash proceeds smuggled back to Mexico",
+   "category": "certainty_inflation",
+   "verdict": "error",
+   "research_quote": "Between 1990 and December 2008, the Chicago and Brooklyn indictments said Guzman-Loera and others were responsible for importing nearly 200 metric tons of cocaine and smuggling more than $5.8 billion in cash proceeds.",
+   "why": "The research attributes these figures to what the indictments 'said,' making them allegations; the script states them as plain facts without hedging.",
+   "first_seen": "final_check",
+   "seen_in": [
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 45,
+   "sentence": "A Chicago federal complaint alleged that more than $100 million in narcotics proceeds moved through Chicago-area defendants and entities — not across the border, not through offshore accounts, but right here, through people with Chicago addresses and Chicago court dates.",
+   "script_quote": "moved through Chicago-area defendants and entities",
+   "category": "certainty_inflation",
+   "verdict": "error",
+   "research_quote": "A Chicago federal complaint alleged that more than $100 million in narcotics proceeds were laundered through Chicago-area defendants and entities.",
+   "why": "The research says this was alleged in a complaint; the script states it as fact by dropping the word 'alleged' and replacing 'laundered' with 'moved through.'",
+   "first_seen": "plan",
+   "seen_in": [
+    "plan",
+    "section_4",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 67,
+   "sentence": "Guzmán maintained a personal army of bodyguards and directed his hitmen to kidnap, interrogate, torture, and kill members of rival organizations.",
+   "script_quote": "directed his hitmen to kidnap, interrogate, torture, and kill members of rival organizations",
+   "category": "contradiction",
+   "verdict": "error",
+   "research_quote": "Guzman Loera directed his hitmen to kidnap, interrogate, torture, and slaughter members of rival drug organizations.",
+   "why": "The script says 'kill' where the research specifically says 'slaughter'; also the research specifies 'rival drug organizations,' not just 'rival organizations.'",
+   "first_seen": "section_5",
+   "seen_in": [
+    "section_5",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 86,
+   "sentence": "The three months of testimony, ledgers, and recordings had produced no acquittals, no hung counts, no cracks.",
+   "script_quote": "The three months of testimony, ledgers, and recordings had produced no acquittals, no hung counts, no cracks.",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research confirms the trial lasted three months and evidence included ledgers and recordings, but does not state there were no acquittals or no hung counts; that characterization adds unsupported specificity.",
+   "first_seen": "section_6",
+   "seen_in": [
+    "section_6",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 88,
+   "sentence": "Judge Brian M. Cogan looked across a federal courtroom in the Eastern District of New York and imposed the sentence: life imprisonment, plus 30 years, running consecutive to the life term.",
+   "script_quote": "federal courtroom in the Eastern District of New York",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research does not specify the Eastern District of New York as the location of sentencing; it only names Judge Brian M. Cogan and the sentencing date.",
+   "first_seen": "section_7",
+   "seen_in": [
+    "section_7",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 93,
+   "sentence": "Prosecutors said it represented drug proceeds traceable to the conspiracy; the earlier $5.8 billion was what the 2009 indictments had sought, covering 1990 through 2008.",
+   "script_quote": "the earlier $5.8 billion was what the 2009 indictments had sought, covering 1990 through 2008",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research states the 2009 indictments collectively sought forfeiture of more than $5.8 billion and that the conduct covered between 1990 and December 2008, but does not explicitly frame the $5.8 billion as what the 2009 indictments 'sought' in the same sentence linking both figures; however the r",
+   "first_seen": "final_check",
+   "seen_in": [
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 97,
+   "sentence": "And that is where the video began, on February 14, 2013, when the Chicago Crime Commission stood before reporters and gave Joaquín Guzmán Loera a title: Chicago's Public Enemy Number One.",
+   "script_quote": "on February 14, 2013, when the Chicago Crime Commission stood before reporters",
+   "category": "contradiction",
+   "verdict": "error",
+   "research_quote": "On February 14, 2013, the Chicago Crime Commission announced at a Chicago news conference",
+   "why": "The research says the announcement was on February 14, 2013, but also says the Commission 'officially joined forces with the DEA Chicago Field Division in 2013' — the date February 14 is Valentine's Day and is supported; however the PR Newswire source cited in research gives the date as February 14,",
+   "first_seen": "section_7",
+   "seen_in": [
+    "section_7",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 99,
+   "sentence": "Six years later, in a Brooklyn courtroom, Judge Cogan answered it.",
+   "script_quote": "in a Brooklyn courtroom, Judge Cogan answered it",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research does not specify that Judge Cogan's courtroom was in Brooklyn; it only names Judge Brian M. Cogan without specifying the district or location of the sentencing.",
+   "first_seen": "section_7",
+   "seen_in": [
+    "section_7",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  }
+ ],
+ "removed": [
+  {
+   "i": 5,
+   "sentence": "The Chicago Crime Commission stood before reporters and placed a label on a man who had never set foot in a Chicago courtroom — \"Chicago's Public Enemy Number One.\" Not a local gang leader.",
+   "script_quote": "placed a label on a man who had never set foot in a Chicago courtroom",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research does not state that Guzmán had never set foot in a Chicago courtroom; this specific claim is not supported.",
+   "first_seen": "section_1",
+   "seen_in": [
+    "section_1",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review"
+   ],
+   "in_final": false,
+   "removed_after": "review"
+  },
+  {
+   "i": 10,
+   "sentence": "Reviving it for a Mexican national, in a joint announcement with the DEA Chicago Field Division, was a deliberate institutional statement — that the threat to Chicago no longer lived inside the city but was being directed into it, systematically, from thousands of miles away.",
+   "script_quote": "in a joint announcement with the DEA Chicago Field Division",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research says the Commission 'officially joined forces with the DEA Chicago Field Division in 2013' but describes the February 14, 2013 announcement as a Chicago news conference by the Chicago Crime Commission; it does not describe it as a joint announcement with the DEA.",
+   "first_seen": "section_1",
+   "seen_in": [
+    "section_1",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review"
+   ],
+   "in_final": false,
+   "removed_after": "review"
+  },
+  {
+   "i": 36,
+   "sentence": "But the volume attached to those 16 names reached back nearly two decades.",
+   "script_quote": "the volume attached to those 16 names reached back nearly two decades",
+   "category": "causal_inflation",
+   "verdict": "error",
+   "research_quote": "Between 1990 and December 2008, the Chicago and Brooklyn indictments said Guzman-Loera and others were responsible for importing nearly 200 metric tons of cocaine",
+   "why": "The research attributes the nearly two-decade timeframe to both the Chicago and Brooklyn indictments together, not solely to the 16 individuals named in the Chicago indictment.",
+   "first_seen": "section_3",
+   "seen_in": [
+    "section_3",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review"
+   ],
+   "in_final": false,
+   "removed_after": "review"
+  },
+  {
+   "i": 37,
+   "sentence": "According to the DEA, the Chicago charges alleged that Guzmán Loera and his co-conspirators were responsible for importing nearly 200 metric tons of cocaine into the United States between 1990 and December 2008 — and for smuggling more than $5.8 billion in cash proceeds from those narcotics sales back to Mexico.",
+   "script_quote": "the Chicago charges alleged that Guzmán Loera and his co-conspirators were responsible for importing nearly 200 metric tons of cocaine into the United States between 1990 and December 2008",
+   "category": "contradiction",
+   "verdict": "error",
+   "research_quote": "Between 1990 and December 2008, the Chicago and Brooklyn indictments said Guzman-Loera and others were responsible for importing nearly 200 metric tons of cocaine",
+   "why": "The research attributes the 200 metric tons figure to both the Chicago and Brooklyn indictments together, not to the Chicago charges alone.",
+   "first_seen": "section_3",
+   "seen_in": [
+    "section_3",
+    "finalize_in",
+    "before_refine",
+    "after_refine"
+   ],
+   "in_final": false,
+   "removed_after": "after_refine"
+  },
+  {
+   "i": 64,
+   "sentence": "He formed an alliance with Ismael Zambada García, and together the two men built the Sinaloa Cartel into the dominant trafficking organization in the Western Hemisphere.",
+   "script_quote": "built the Sinaloa Cartel into the dominant trafficking organization in the Western Hemisphere",
+   "category": "evidence_inflation",
+   "verdict": "error",
+   "research_quote": "Together, Guzman Loera and Ismael Zambada Garcia became the preeminent leaders of the Sinaloa Cartel.",
+   "why": "The research says they became preeminent leaders of the cartel; it does not say they built it into the dominant organization in the Western Hemisphere.",
+   "first_seen": "section_5",
+   "seen_in": [
+    "section_5",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill"
+   ],
+   "in_final": false,
+   "removed_after": "after_refill"
+  },
+  {
+   "i": 105,
+   "sentence": "The 2009 indictments — the ones that first named Chicago as the distribution hub and first quantified the money flowing back toward Mexico — had sought forfeiture of more than $5.8 billion in drug proceeds.",
+   "script_quote": "first named Chicago as the distribution hub and first quantified the money flowing back toward Mexico",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research does not say the 2009 indictments were the first to name Chicago as a distribution hub or first to quantify money flowing to Mexico; the script adds 'first' claims not supported by the research.",
+   "first_seen": "section_7",
+   "seen_in": [
+    "section_7",
+    "finalize_in",
+    "before_refine"
+   ],
+   "in_final": false,
+   "removed_after": "before_refine"
+  },
+  {
+   "i": 105,
+   "sentence": "The 2009 indictments — the ones that first named Chicago as the distribution hub and first quantified the money flowing back toward Mexico — had sought forfeiture of more than $5.8 billion in drug proceeds.",
+   "script_quote": "the 2009 indictments — the ones that first named Chicago as the distribution hub",
+   "category": "unsupported_attribution",
+   "verdict": "error",
+   "why": "The research attributes the 'distribution hub' language to a Chicago federal indictment but does not specify it was the 2009 indictment that used this phrase, nor that it was the first to do so.",
+   "first_seen": "section_7",
+   "seen_in": [
+    "section_7",
+    "finalize_in",
+    "before_refine"
+   ],
+   "in_final": false,
+   "removed_after": "before_refine"
+  }
+ ],
+ "draftErrors": 8,
+ "rejected": 0,
+ "stages": [
+  {
+   "stage": "plan",
+   "words": 712
+  },
+  {
+   "stage": "hook",
+   "words": 132
+  },
+  {
+   "stage": "section_1",
+   "words": 228
+  },
+  {
+   "stage": "section_2",
+   "words": 291
+  },
+  {
+   "stage": "section_3",
+   "words": 297
+  },
+  {
+   "stage": "section_4",
+   "words": 261
+  },
+  {
+   "stage": "section_5",
+   "words": 354
+  },
+  {
+   "stage": "section_6",
+   "words": 282
+  },
+  {
+   "stage": "section_7",
+   "words": 385
+  },
+  {
+   "stage": "finalize_in",
+   "words": 2098
+  },
+  {
+   "stage": "before_refine",
+   "words": 2235
+  },
+  {
+   "stage": "after_refine",
+   "words": 2187
+  },
+  {
+   "stage": "before_refill",
+   "words": 2130
+  },
+  {
+   "stage": "after_refill",
+   "words": 2130
+  },
+  {
+   "stage": "finalize_out",
+   "words": 2035
+  },
+  {
+   "stage": "review",
+   "words": 2121
+  },
+  {
+   "stage": "final_check",
+   "words": 1913
+  }
+ ],
+ "final": "In February 2013, the Chicago Crime Commission stood before cameras and announced that its new Public Enemy Number One was not a Chicago gangster, not a local crime boss, but a man running a cartel from the mountains of Sinaloa, Mexico. Federal indictments had already described his organization using Chicago as a distribution hub, with more than a hundred million dollars in narcotics proceeds allegedly laundered through Chicago-area defendants alone. The question is how a cartel operating thousands of miles away became so deeply embedded in one U.S. city that Chicago's own crime watchdog put a Mexican kingpin at the top of its list.\n\nThe date was February 14, 2013, and the exact words were \"Chicago's Public Enemy Number One.\" Not a local gang leader. Not a Chicago outfit boss. A cartel chief operating out of Sinaloa, Mexico: Joaquín Guzmán Loera, El Chapo.\n\nThe Commission made the announcement in partnership with the DEA Chicago Field Division.\n\nAnd the question that announcement left hanging was the one that drove everything that followed: why Chicago? But Chicago was the city whose Crime Commission partnered with federal agents to put El Chapo's name on a marquee. What made this city the one worth naming?\n\nLess than a year later, on February 22, 2014, Guzmán was arrested in Mazatlán, Sinaloa. The label had barely dried. The answer to why Chicago claimed him — and what prosecutors would spend years proving — starts much earlier than that press conference.\n\nThe Flores brothers were twins from Chicago. When they flipped in late 2008, they didn't just hand prosecutors names — they handed them product, in motion, with money attached.\n\nIn Los Angeles, their cooperation led to the seizure of more than 1,600 kilograms of cocaine bound for Chicago. That shipment didn't need an informant's word to explain what it was or where it was going. The destination was the point. Chicago wasn't receiving a sample — it was the delivery address for a multi-ton supply line, and federal agents now had the physical evidence to say so.\n\nThen came the cash. More than $15 million seized in the Chicago area in that same period of late 2008, bills that had already made the first leg of the journey back toward Mexico. Prosecutors could now show both ends of the transaction — cocaine flowing in, currency flowing out — documented in a single investigative window.\n\nThat opening set the pace for everything that followed. The Chicago-based investigation, seeded by the Flores brothers' cooperation and running from 2008 forward, ultimately produced approximately 11 tons of cocaine seized, along with 265 kilograms of methamphetamine, 78 kilograms of heroin, and approximately $30.8 million in total cash seizures since 2008, a figure that encompasses the late-2008 Chicago-area cash seizures and all subsequent recoveries across the full investigation. Those numbers accumulated across years of subsequent arrests and indictments, but the logic behind them was visible in those first late-2008 seizures: the Flores brothers had given investigators a thread that ran through Chicago's role, and pulling it produced tonnage.\n\nBefore that cooperation, Chicago's position as a distribution hub was an allegation prosecutors could argue. After it, they had cocaine intercepted mid-shipment and millions in cash mid-laundering. The allegation had become a documented supply chain.\n\nWhat the 2009 indictments did was translate that documented supply chain into formal federal allegations, and the numbers inside those charging documents were unlike anything Chicago's courts had processed before.\n\nWhen federal prosecutors in Chicago unsealed their 2009 indictment, they named 16 individuals inside a distribution cell operating in the city. But the Chicago and Brooklyn indictments reached back to 1990, alleging nearly 200 metric tons of cocaine imported and more than $5.8 billion in cash proceeds smuggled back to Mexico. The indictment also sought forfeiture of that same figure: more than $5.8 billion, the government's formal claim on what the cartel had extracted.\n\nThat is the weight of the allegation Chicago chose to put its name on. Not a regional distribution dispute. Not a mid-level trafficking ring. A two-decade pipeline, running from Sinaloa into cities across the United States, with Chicago named as the hub through which the cocaine moved and from which the money reversed course toward Mexico.\n\nThe 2009 Chicago charges didn't stand alone. The DEA noted that the Brooklyn and Chicago indictments together named Guzmán Loera, Ismael Zambada-García, and Arturo Beltrán-Leyva among the defendants, framing the cartel's U.S. operation as a coordinated national enterprise rather than a series of isolated cells. Chicago's piece of that case was the distribution engine — the node where supply arrived, fractured into street-level volume, and generated the cash that then had to travel back the other way.\n\nThe indictments didn't prove that yet. That came later. Ed in 2009 was the formal legal claim: Chicago was not incidental to the cartel's U.S. business. It was structural to it.\n\nThe indictments had named the supply chain. What federal prosecutors built in the years that followed named the bank.\n\nA Chicago federal complaint alleged that more than $100 million in narcotics proceeds moved through Chicago-area defendants and entities — not across the border, not through offshore accounts, but right here, through people with Chicago addresses and Chicago court dates. The defendants named in that complaint — Pineda-Sanchez, Parra-Pedroza, Jose Abel Mendoza-Parra, Maria Loera-Alvarado, and Ernesto Ruiz-Ramirez — were the laundering layer, the conversion point where drug cash stopped being drug cash and became something a balance sheet could absorb.\n\nThe instruments were deliberately ordinary. Reloadable debit cards moved value in increments small enough to avoid scrutiny. U.S.-based insurance companies received premium payments that could later be redeemed as clean funds. Shell companies — including, according to prosecutors, a juice company and a fish flour company — provided the commercial cover: a business with invoices and inventory and a plausible reason to receive cash. None of those structures announced themselves as criminal. That was the design.\n\nOn January 27, 2015, Chicago federal prosecutors unsealed an eighth superseding indictment charging nine defendants, including Guzmán Loera himself, with a conspiracy running from May 2005 through December 2014 — nearly a decade of narcotics importation, distribution, and money laundering alleged in a single charging document out of the Northern District of Illinois.\n\nWhich is the turn the earlier indictments didn't fully surface: the supply chain and the laundering operation weren't parallel tracks. They were the same machine, and Chicago was running both ends of it.\n\nAfter his 2001 prison escape, Guzmán didn't simply go into hiding — he went into consolidation. He formed an alliance with Ismael Zambada García, and together the two men became the preeminent leaders of the Sinaloa Cartel. That partnership meant the enterprise feeding Chicago wasn't a single fugitive operating on instinct. It was a structured command with two leaders, divided authority, and a logistics operation that prosecutors had to document layer by layer before a jury could understand what Chicago was actually connected to.\n\nThe transportation network alone required its own accounting. Fishing boats, submarines, carbon fiber airplanes, trains with secret compartments, and transnational underground tunnels all carried narcotics toward the United States. Trains carried narcotics in purpose-built secret compartments through routes that crossed the border inside commerce that inspectors couldn't fully screen. And beneath the border itself, transnational underground tunnels moved product in volumes that no surface route could match — engineered infrastructure, not improvised smuggling. Once the shipments cleared the border, they reached wholesale distributors in New York, Miami, Atlanta, Chicago, Los Angeles, Arizona, and elsewhere. Chicago was one node in that distribution grid, but the seized tonnage had already marked it as a primary one.\n\nWhat kept that grid intact was force and money, applied in combination. Guzmán maintained a personal army of bodyguards and directed his hitmen to kidnap, interrogate, torture, and kill members of rival organizations. Corruption ran alongside the violence: a vast network of corrupt government officials and employees, paid millions of dollars in bribes.\n\nProsecutors building the Chicago case couldn't charge the hub without proving the hand that built it. The supply chain, the enforcers, the corrupted officials — each element had to be documented, because each one explained why Chicago's role wasn't opportunistic geography. It was the documented output of a transnational enterprise that had built Chicago's role deliberately, layer by layer.\n\nPutting the man who ran it all in front of a jury was a separate task.\n\nThe trial that opened in the Eastern District of New York stretched across three months. Prosecutors built their case not from the outside in — not from seized shipments and intercepted wire transfers alone — but from the inside out, through witnesses who had sat inside the cartel's command structure. Rey Zambada and Vicente Zambada had operated within the Sinaloa organization. Miguel Martinez, Tirso Martinez, Damaso Lopez, and Alex Cifuentes each carried knowledge of the enterprise that no surveillance recording could have produced on its own: the conversations, the orders, the personal decisions of the man at the top. They testified against him.\n\nThat testimony didn't stand unsupported. Prosecutors layered it against ledgers that tracked shipments, text messages sent between cartel members, photographs, videos, and intercepted recordings — a documentary record that gave the jury a second version of events alongside every witness account. When a witness described a meeting or a transaction, the physical record was there to confirm or detail it. No single element had to carry the weight alone.\n\nThe DEA, ICE HSI, and the FBI built the federal case, coordinating across jurisdictions with law enforcement authorities in Mexico, Ecuador, the Netherlands, the Dominican Republic, and Colombia. Five countries feeding one prosecution.\n\nOn February 12, 2019, the jury returned its verdict: guilty on all 10 counts of the superseding indictment — narcotics trafficking, using a firearm in furtherance of drug crimes, participating in a money laundering conspiracy. Every count. The three months of testimony, ledgers, and recordings had produced no acquittals, no hung counts, no cracks.\n\nJuly 17, 2019. Judge Brian M. Cogan looked across a federal courtroom in the Eastern District of New York and imposed the sentence: life imprisonment, plus 30 years, running consecutive to the life term. The life sentence was for being a principal leader of a continuing criminal enterprise, a charge that itself contained 26 drug-related violations and one murder conspiracy, each one documented, each one proven to the jury's satisfaction months earlier. The 30 years stacked on top were not symbolic. They were structural — a legal architecture built so that no appellate outcome, no procedural reversal, could produce a day of liberty.\n\nThen came the forfeiture order: $12.6 billion. Prosecutors said it represented drug proceeds traceable to the conspiracy; the earlier $5.8 billion was what the 2009 indictments had sought, covering 1990 through 2008.\n\nThe physical evidence that had accumulated over the investigation gave that number its foundation. Narcotics seizures connected to the case totaled over 130,000 kilograms of cocaine and heroin. The Sinaloa Cartel, prosecutors said at sentencing, was responsible for importing and distributing more than one million kilograms of cocaine, marijuana, methamphetamine, and heroin into the United States.\n\nAnd that is where the video began, on February 14, 2013, when the Chicago Crime Commission stood before reporters and gave Joaquín Guzmán Loera a title: Chicago's Public Enemy Number One. The question behind that announcement was always the same: what exactly had Chicago been to this operation, and what was it worth? Six years later, in a Brooklyn courtroom, Judge Cogan answered it. Life, plus thirty."
+}

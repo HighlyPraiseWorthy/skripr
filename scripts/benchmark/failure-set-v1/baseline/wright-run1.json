@@ -1,0 +1,398 @@
+{
+ "id": "wright",
+ "run": 1,
+ "words": 1616,
+ "primaryPer1k": 3.71,
+ "overreachPer1k": 1.86,
+ "finalErrors": [
+  {
+   "i": 22,
+   "sentence": "Wright was nineteen years old.",
+   "script_quote": "Wright was nineteen years old",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research gives Wright's birth date as March 29, 1943, and the crime date as November 23, 1962, making him 19 at the time — but the research never explicitly states his age at the time of the crime; however, the arithmetic from the research does support age 19, so this is actually supportable. Re",
+   "first_seen": "section_2",
+   "seen_in": [
+    "section_2",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 30,
+   "sentence": "What he walked into was the Black Liberation Army, a clandestine organization operating at the most militant edge of the Black power movement.",
+   "script_quote": "the Black Liberation Army, a clandestine organization operating at the most militant edge of the Black power movement",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research confirms Wright joined the Black Liberation Army but does not describe it as 'a clandestine organization operating at the most militant edge of the Black power movement'; this characterization is unsupported by the research.",
+   "first_seen": "section_3",
+   "seen_in": [
+    "section_3",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 34,
+   "sentence": "The Black Liberation Army gave Wright a political framework and a group of accomplices, and across the two years between a prison break and a cockpit, the operation was building toward something that required planning, coordination, and nerve: not another robbery, not another flight from local law enforcement, but the seizure of a commercial aircraft.",
+   "script_quote": "The Black Liberation Army gave Wright a political framework and a group of accomplices",
+   "category": "unsupported_attribution",
+   "verdict": "error",
+   "why": "The research does not state that the Black Liberation Army gave Wright a political framework; this is an unsupported attribution of motive and organizational role not found in the research.",
+   "first_seen": "finalize_out",
+   "seen_in": [
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 61,
+   "sentence": "From Algeria, Wright moved to Guinea-Bissau, the small nation on the west coast of Africa that had just won independence from Portugal.",
+   "script_quote": "the small nation on the west coast of Africa that had just won independence from Portugal",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research mentions Guinea-Bissau but says nothing about it having 'just won independence from Portugal' at the time Wright arrived there.",
+   "first_seen": "finalize_out",
+   "seen_in": [
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 63,
+   "sentence": "At some point Wright crossed back toward Europe, not to the United States, which was closed to him permanently, but to Portugal, the former colonial power whose language and legal systems ran through Guinea-Bissau like a current.",
+   "script_quote": "the former colonial power whose language and legal systems ran through Guinea-Bissau like a current",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research does not describe Portugal as Guinea-Bissau's former colonial power or mention any linguistic/legal connection as a reason Wright moved to Portugal.",
+   "first_seen": "section_5",
+   "seen_in": [
+    "section_5",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 63,
+   "sentence": "At some point Wright crossed back toward Europe, not to the United States, which was closed to him permanently, but to Portugal, the former colonial power whose language and legal systems ran through Guinea-Bissau like a current.",
+   "script_quote": "which was closed to him permanently",
+   "category": "certainty_inflation",
+   "verdict": "error",
+   "research_quote": "he had not returned to the United States since 1972",
+   "why": "The research says Wright had not returned to the US since 1972; the script states the US was 'closed to him permanently,' which is a stronger claim than the research supports.",
+   "first_seen": "section_5",
+   "seen_in": [
+    "section_5",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 79,
+   "sentence": "Portugal's constitution bars the extradition of its own citizens — and Wright held Portuguese citizenship, which made the Lisbon appeals court's November 17, 2011 ruling almost elegant in its precision.",
+   "script_quote": "Portugal's constitution bars the extradition of its own citizens",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research states Wright was not extradited because he had Portuguese citizenship, but does not cite Portugal's constitution as the specific legal basis.",
+   "first_seen": "section_7",
+   "seen_in": [
+    "section_7",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 80,
+   "sentence": "The court did not weigh the charges against him — air piracy, unlawful flight, the murder conviction out of New Jersey that had never been discharged.",
+   "script_quote": "the murder conviction out of New Jersey that had never been discharged",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research describes a murder indictment and a 15-to-30-year sentence with a no-defense plea, but does not state the conviction was 'never discharged' or remained outstanding in that sense.",
+   "first_seen": "section_7",
+   "seen_in": [
+    "section_7",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 88,
+   "sentence": "The Portuguese citizenship that put his prints in the database found him, and then the citizenship shielded him from the consequence of being found.",
+   "script_quote": "the citizenship shielded him from the consequence of being found",
+   "category": "causal_inflation",
+   "verdict": "error",
+   "research_quote": "a Lisbon appeals court ruled that Wright would not be extradited to the United States because he had Portuguese citizenship",
+   "why": "The research says the court ruled against extradition because of Portuguese citizenship, but the script frames citizenship as directly shielding him from 'the consequence of being found,' which is a causal claim beyond what the research states.",
+   "first_seen": "section_7",
+   "seen_in": [
+    "section_7",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  }
+ ],
+ "removed": [
+  {
+   "i": 32,
+   "sentence": "The sentence was 15 to 30 years, and he had served eight of them.",
+   "script_quote": "The sentence was 15 to 30 years, and he had served eight of them",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research confirms the 15-to-30-year sentence and the August 1970 escape, but does not state how many years Wright had served before escaping.",
+   "first_seen": "section_3",
+   "seen_in": [
+    "section_3",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill"
+   ],
+   "in_final": false,
+   "removed_after": "after_refill"
+  },
+  {
+   "i": 38,
+   "sentence": "The Black Liberation Army gave Wright a political framework and a network of co-conspirators.",
+   "script_quote": "The Black Liberation Army gave Wright a political framework and a network of co-conspirators",
+   "category": "causal_inflation",
+   "verdict": "error",
+   "research_quote": "escaped from a New Jersey prison in August 1970, joined the Black Liberation Army, hijacked Delta Air Lines Flight 841 on July 31, 1972",
+   "why": "The research only states Wright joined the Black Liberation Army; it does not say the BLA gave him a political framework or a network of co-conspirators for the hijacking.",
+   "first_seen": "section_3",
+   "seen_in": [
+    "section_3",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill"
+   ],
+   "in_final": false,
+   "removed_after": "after_refill"
+  },
+  {
+   "i": 63,
+   "sentence": "The money stayed with the hijackers.",
+   "script_quote": "The money stayed with the hijackers.",
+   "category": "contradiction",
+   "verdict": "error",
+   "research_quote": "the FBI later said the money and plane were returned to the United States by Algeria",
+   "why": "The research states Algeria returned both the money and the plane to the United States; the script says the money stayed with the hijackers.",
+   "first_seen": "section_4",
+   "seen_in": [
+    "section_4",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill"
+   ],
+   "in_final": false,
+   "removed_after": "after_refill"
+  },
+  {
+   "i": 65,
+   "sentence": "A firearm smuggled inside a religious text had been enough to redirect a commercial aircraft across the Atlantic.",
+   "script_quote": "redirect a commercial aircraft across the Atlantic",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "research_quote": "Delta Air Lines Flight 841 was hijacked from Detroit to Algeria on July 31, 1972",
+   "why": "The research does not describe the flight path as crossing the Atlantic; the route from Detroit/Miami to Algeria may cross the Atlantic but the research does not characterize it this way, and the script presents it as established fact.",
+   "first_seen": "section_4",
+   "seen_in": [
+    "section_4",
+    "finalize_in",
+    "before_refine"
+   ],
+   "in_final": false,
+   "removed_after": "before_refine"
+  },
+  {
+   "i": 72,
+   "sentence": "The passengers walked off the plane, the aircraft was returned, and the million dollars in ransom went with the hijackers — the FBI would later confirm that Algeria returned the plane to the United States, but the money itself was never recovered from Wright or his accomplices.",
+   "script_quote": "the million dollars in ransom went with the hijackers — the FBI would later confirm that Algeria returned the plane to the United States, but the money itself was never recovered from Wright or his accomplices",
+   "category": "contradiction",
+   "verdict": "error",
+   "research_quote": "the FBI later said the money and plane were returned to the United States by Algeria",
+   "why": "The research explicitly states Algeria returned both the money and the plane to the United States; the script contradicts this by saying the money went with the hijackers and was never recovered.",
+   "first_seen": "section_5",
+   "seen_in": [
+    "section_5",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill"
+   ],
+   "in_final": false,
+   "removed_after": "after_refill"
+  },
+  {
+   "i": 74,
+   "sentence": "From Algeria, Wright moved to Guinea-Bissau, the small West African nation that had just won independence from Portugal.",
+   "script_quote": "the small West African nation that had just won independence from Portugal",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "research_quote": "Wright went to Guinea-Bissau in West Africa",
+   "why": "The research identifies Guinea-Bissau as being in West Africa but does not describe it as having 'just won independence from Portugal' at the time Wright arrived there.",
+   "first_seen": "section_5",
+   "seen_in": [
+    "section_5",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill"
+   ],
+   "in_final": false,
+   "removed_after": "after_refill"
+  },
+  {
+   "i": 121,
+   "sentence": "That afternoon in 1972 was the thing Wright built everything else around: the escape, the network, the crossing to Algeria, the years in Guinea-Bissau, the new name, the Portuguese life.",
+   "script_quote": "the escape, the network, the crossing to Algeria, the years in Guinea-Bissau, the new name, the Portuguese life",
+   "category": "unsupported_attribution",
+   "verdict": "error",
+   "why": "The research does not state that Wright 'built everything else around' the 1972 hijacking or that the hijacking was the motivating center of his subsequent choices; attributing this causal/intentional framing to Wright's inner design goes beyond what the research supports.",
+   "first_seen": "section_7",
+   "seen_in": [
+    "section_7",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill"
+   ],
+   "in_final": false,
+   "removed_after": "after_refill"
+  }
+ ],
+ "draftErrors": 12,
+ "rejected": 0,
+ "stages": [
+  {
+   "stage": "plan",
+   "words": 666
+  },
+  {
+   "stage": "hook",
+   "words": 64
+  },
+  {
+   "stage": "section_1",
+   "words": 191
+  },
+  {
+   "stage": "section_2",
+   "words": 216
+  },
+  {
+   "stage": "section_3",
+   "words": 208
+  },
+  {
+   "stage": "section_4",
+   "words": 427
+  },
+  {
+   "stage": "section_5",
+   "words": 293
+  },
+  {
+   "stage": "section_6",
+   "words": 197
+  },
+  {
+   "stage": "section_7",
+   "words": 331
+  },
+  {
+   "stage": "finalize_in",
+   "words": 1863
+  },
+  {
+   "stage": "before_refine",
+   "words": 1906
+  },
+  {
+   "stage": "after_refine",
+   "words": 1881
+  },
+  {
+   "stage": "before_refill",
+   "words": 1797
+  },
+  {
+   "stage": "after_refill",
+   "words": 1797
+  },
+  {
+   "stage": "finalize_out",
+   "words": 1568
+  },
+  {
+   "stage": "review",
+   "words": 1616
+  },
+  {
+   "stage": "final_check",
+   "words": 1616
+  }
+ ],
+ "final": "In 1972, an escaped murderer smuggled a gun onto a Delta jet inside a hollowed-out Bible, extorted a million dollars in ransom, and vanished into another continent. What the record never fully explains is why a country that had him in custody simply refused to hand him back.\n\nIn 1972, an escaped murderer smuggled a gun onto a Delta jet inside a hollowed-out Bible, extorted a million dollars in ransom, and vanished into another continent. What the record never fully explains is why a country that had him in custody simply refused to hand him back.\n\nSeptember 26, 2011. Portuguese police arrive at a house in a town outside Lisbon. Inside is George Edward Wright, wanted by the FBI for air piracy, unlawful flight, and aiding and abetting, a man who had not set foot on U.S. soil since 1972. What unraveled his four decades of invisibility was not a tip, not a surveillance operation, not a spy. It was a fingerprint. A fingerprint found on Wright's Portuguese ID card was run against the national database. They matched. That single bureaucratic transaction, the kind millions of people complete without a second thought, was enough for U.S. authorities and Portuguese police to find him.\n\nThey arrested him. And then Portugal let him stay.\n\nA Lisbon appeals court ruled on November 17, 2011 that extradition was constitutionally forbidden — because Wright held Portuguese citizenship. Portugal's Supreme Court later rejected the U.S. appeal. The document that broke his cover was bound to the same legal identity that shielded him from extradition.\n\nThe FBI still lists him as wanted. He remains in Portugal.\n\nNovember 23, 1962. Thanksgiving week. George Edward Wright and an accomplice robbed a gas station in Wall, New Jersey, and shot the owner, Walter Patterson, dead.\n\nWright was nineteen years old.\n\nThree weeks later, on December 13, 1962, he was indicted for murder. He eventually entered a plea of nolo contendere and received a sentence of 15 to 30 years in a New Jersey prison — the kind of sentence that, served in full, would have kept him inside well into middle age.\n\nWhat the sentence could not do was hold him.\n\nWhat matters here is Walter Patterson — a man running a gas station who was killed during a robbery, whose death produced the murder charge that would follow Wright across continents and decades, embedding itself in the FBI's wanted language long after the crime itself had faded from public memory. When Portuguese police eventually found Wright in 2011, the escape from that murder conviction was still the first charge listed: unlawful flight to avoid confinement for a killing that happened nearly fifty years earlier.\n\nThe gas station in Wall, New Jersey is where George Wright's fugitive life began — not with a hijacking, not with a political cause, but with a dead man and a sentence he refused to finish.\n\nHe walked out of a New Jersey prison in August 1970. What he walked into was the Black Liberation Army, a clandestine organization operating at the most militant edge of the Black power movement. The FBI's own wanted language would later encode the sequence precisely: \"Unlawful Flight to Avoid Confinement — Escape (Murder); Air Piracy (Seizing by Force an Aircraft in Air Commerce); Aiding and Abetting.\" Each charge is a step. The escape set the first charge in motion. The two years that followed produced the rest.\n\nThe Black Liberation Army gave Wright a political framework and a group of accomplices, and across the two years between a prison break and a cockpit, the operation was building toward something that required planning, coordination, and nerve: not another robbery, not another flight from local law enforcement, but the seizure of a commercial aircraft. The murder charge had made him a fugitive. The Army made him something else — a man with accomplices, a cause he claimed as his own, and a plan that was now almost ready.\n\nAround 12:45 in the afternoon on July 31, 1972, Delta Flight 841 was somewhere over Orlando, midway between Detroit and Miami, when the plan that had been two years in the making finally moved.\n\nThe weapon came out of a Bible. Not carried openly, not rushed through in a moment of improvisation — concealed inside a hollowed-out copy, the kind of object a passenger boards a plane with and nobody questions. That detail is not incidental. A gun requires explanation at a checkpoint. Hiding the firearm inside a hollowed-out Bible was the plan working exactly as designed.\n\nWright and his accomplices took control of the aircraft. What followed was not a negotiation in any ordinary sense — it was a set of demands delivered to a crew that had no good options. Wright's own words, as later reported, were direct: \"We want a million dollars\" and \"we want to go to Algeria.\" Two sentences. One for the money, one for the destination. The crew understood both.\n\nWhen negotiations stalled, the hijackers threatened to shoot a hostage. That threat — made inside a sealed fuselage at altitude, against people who had boarded a domestic flight and had no part in anything Wright was running from or running toward — is the center of gravity in this section of the story. They were leverage.\n\nThe plane flew on. It did not go to Miami. It went to Algeria, carrying a crew, its passengers, and a million dollars in ransom that had been handed over during the ordeal. In Algeria, the passengers were released. The aircraft was released. The FBI later said Algeria returned both the money and the plane to the United States, though no recovery of the ransom from the hijackers themselves is documented in the available record.\n\nThe operation had worked — at least by the measure of its immediate objectives.\n\nWhich is where the story pivots. And then Wright walked off that plane in Algeria, and the question of what came next — where a man goes when he has just seized a jetliner and collected a ransom and can never go home — opened in front of him like a door with no frame around it.\n\nAlgeria gave him a landing strip, not a home.\n\nFrom Algeria, Wright moved to Guinea-Bissau, the small nation on the west coast of Africa that had just won independence from Portugal. Guinea-Bissau was a waypoint, not a destination. At some point Wright crossed back toward Europe, not to the United States, which was closed to him permanently, but to Portugal, the former colonial power whose language and legal systems ran through Guinea-Bissau like a current.\n\nIn Portugal, Wright did not simply hide. He built a new identity — Portuguese citizenship, a new name, a life that bore no visible connection to a New Jersey prison break or a hijacked Delta jet. For decades, that held. No arrest, no extradition request that found him, no public trace.\n\nThe record is quiet about those intervening years in a way that cannot be filled in without inventing it. The shape of what he built: a constructed identity durable enough to survive for roughly four decades, in a country that had no formal reason to look for him, until a routine ID card application made looking for him unavoidable.\n\nIt was a fingerprint — pressed onto a Portuguese ID card during a routine administrative application, fed into a national database, and matched.\n\nThe FBI's wanted notice had carried his physical description for years: a Black male, born March 29, 1943, approximately five feet eleven, around 170 pounds, black hair, brown eyes. That description, attached to the name George Edward Wright, was waiting in the record. What it needed was a print to compare against. The ID card application provided one. The database did the rest.\n\nThere was no dramatic moment of recognition, no informant in a café. When Portuguese police and U.S. authorities arrived at a house outside Lisbon, the man inside was the same man the wanted notice described, same name, same face, same prints.\n\nThe constructed identity had held for decades.\n\nPortugal's constitution bars the extradition of its own citizens — and Wright held Portuguese citizenship, which made the Lisbon appeals court's November 17, 2011 ruling almost elegant in its precision. The court did not weigh the charges against him — air piracy, unlawful flight, the murder conviction out of New Jersey that had never been discharged. None of that was in dispute. What was dispositive was the passport. The Supreme Court rejected the U.S. appeal.\n\nThe door closed twice.\n\nThe particular irony runs through the whole structure of what Wright had built. The citizenship was not incidental to his concealment — it was the core of it, the document that made him, on paper, a Portuguese man rather than a New Jersey fugitive. Without it, the ID card application that produced the fingerprint match would not have existed. The Portuguese citizenship that put his prints in the database found him, and then the citizenship shielded him from the consequence of being found. The same legal identity that ended his invisibility guaranteed his freedom.\n\nThe FBI's wanted notice still carries his name. Unlawful flight to avoid confinement. Aiding and abetting. The charges have not been withdrawn.\n\nThe charges have not been withdrawn — and the record loops back to where it started: a plane somewhere over Orlando, a Bible that was not a Bible, two sentences delivered to a crew that had no choice but to listen. All of it was the aftermath of one flight that never reached Miami. He is still living in that aftermath. The United States is still waiting at a door that, under Portuguese law, will not open."
+}

@@ -1,0 +1,22 @@
+{
+ "judge": "accuracy_judge_v1",
+ "scripts": 16,
+ "primaryPer1k": 2.11,
+ "overreachPer1k": 1.13,
+ "primaryErrorsInFinal": 63,
+ "firstSeenByStage": {
+  "section_writer": 57,
+  "finalize_out": 1,
+  "hook": 3,
+  "final_check": 2
+ },
+ "primaryRemovedBeforeFinal": 47,
+ "lastSeenBeforeRemoval": {
+  "after_refill": 22,
+  "before_refine": 7,
+  "after_refine": 2,
+  "review": 14,
+  "finalize_in": 1,
+  "hook": 1
+ }
+}
