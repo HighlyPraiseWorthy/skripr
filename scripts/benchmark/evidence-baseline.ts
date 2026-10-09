@@ -17,7 +17,8 @@ import { judgeAccuracyV1, ACCURACY_JUDGE_VERSION, type JudgedIssue } from "./acc
 const DIR = "scripts/benchmark";
 const val = (n: string) => { const i = process.argv.indexOf(n); return i >= 0 ? process.argv[i + 1] : undefined; };
 const runs = Number(val("--runs") || 2);
-const GATE = process.argv.includes("--gate"); // Experiment A: evidence gate at the section-writer boundary
+const GATE = process.argv.includes("--gate") || process.argv.includes("--gate-conservative"); // Experiment A: evidence gate at the section-writer boundary
+const GATE_REPAIR = process.argv.includes("--gate-conservative") ? "conservative" : "rewrite"; // conservative = clause-preserving repair
 // Step 2 (2026-10-07): settle conflicting research facts before generation. The WRITER gets the resolved facts;
 // the JUDGE still sees the full research, so provenance is never hidden from evaluation.
 const RESOLVE = process.argv.includes("--resolve-conflicts");
@@ -61,7 +62,7 @@ async function generateTraced(c: Case) {
   for (let i = 0; i < plan.length; i++) {
     const text = await writeSection(plan[i], i, plan.length, { topic: c.topic, title, sourceMaterial, previousTail, alreadyTold: sections.map((s) => s.content).join("\n\n"),
       reservedFacts: plan.slice(i + 1).flatMap((p) => p.assignedFacts || []), otherPoints: plan.filter((_, k) => k !== i).map((p) => p.point || "").filter(Boolean),
-      ...(GATE ? { evidenceGate: { log: gateLog } } : {}) } as any);
+      ...(GATE ? { evidenceGate: { log: gateLog, repair: GATE_REPAIR } } : {}) } as any);
     sections.push({ title: plan[i].name, content: text });
     stages.push({ stage: `section_${i + 1}`, text });
     previousTail = text.split(/\s+/).slice(-40).join(" ");

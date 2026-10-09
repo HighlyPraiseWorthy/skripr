@@ -10,6 +10,7 @@
 // rewritten without the unsupported specifics. A rewrite that still fails is cut back to its supported clause,
 // or removed. The repair can never add a fact: its output is re-checked by the same deterministic rule.
 import { Anthropic } from "@anthropic-ai/sdk";
+import { guardRewrite } from "@/lib/no-new-specifics";
 
 const UNITS: Record<string, number> = { zero: 0, one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10, eleven: 11, twelve: 12, thirteen: 13, fourteen: 14, fifteen: 15, sixteen: 16, seventeen: 17, eighteen: 18, nineteen: 19 };
 const TENS: Record<string, number> = { twenty: 20, thirty: 30, forty: 40, fifty: 50, sixty: 60, seventy: 70, eighty: 80, ninety: 90 };
@@ -186,7 +187,11 @@ async function verifyAttributes(sentences: string[], research: string): Promise<
   return out;
 }
 
-export interface GateOptions { log?: GateFlag[]; attributes?: boolean }
+// repair: "rewrite" (Experiment A, default): a whole-sentence rewrite first, clause cut as fallback.
+//         "conservative" (2026-10-08): keep the writer's words. A minimal edit may only delete/generalize the flagged
+//         words (plus a word or two of grammar); code checks 80%+ of the other words survive, at most 2 new content
+//         words, no new specific; a sentence that is almost all flagged, or fails, is removed. Never adds a proposition.
+export interface GateOptions { log?: GateFlag[]; attributes?: boolean; repair?: "rewrite" | "conservative" }
 export async function gateSection(text: string, research: string, opts: GateOptions = {}): Promise<string> {
   if (!text.trim() || !research.trim()) return text;
   const idx = indexResearch(research);
@@ -202,6 +207,7 @@ export async function gateSection(text: string, research: string, opts: GateOpti
   }).filter((f) => f.bad.length || f.attr.length);
   if (!flagged.length) return text;
 
+  if (opts.repair === "conservative") return conservativeRepair(text, research, idx, sentsByPara, flagged, opts);
   // Repair: one call; each sentence sees ONLY the research facts most related to it, never the whole research.
   let rewrites: Record<number, string> = {};
   try {
@@ -233,4 +239,113 @@ Output ONLY JSON: {"rewrites":[{"i":0,"text":"..."}]}` }] }));
     opts.log?.push({ sentence: f.sentence, unsupported: [...f.bad, ...f.attr.map((a) => a.quote)], layer: f.layer, why: f.attr.map((a) => a.why), action, result: result || undefined });
   });
   return sentsByPara.map((ss) => ss.join(" ").replace(/\s{2,}/g, " ").trim()).filter(Boolean).join("\n\n");
+}
+
+// CONSERVATIVE REPAIR (see GateOptions.repair). Candidates are tried in order (clean clause cut, then minimal edit),
+// every candidate is re-checked by BOTH layers, and the first that passes wins; nothing passes -> the sentence goes.
+const contentWords = (t: string) => normQ(t).replace(/\.(?!\d)/g, " ").split(/\s+/).filter((w) => w.length >= 4 || /\d/.test(w));
+async function conservativeRepair(text: string, research: string, idx: ResearchIndex, sentsByPara: string[][],
+  flagged: { p: number; s: number; sentence: string; bad: string[]; attr: { quote: string; why: string }[]; layer: GateFlag["layer"] }[], opts: GateOptions): Promise<string> {
+  const flaggedWords = (f: (typeof flagged)[number]) => new Set(contentWords([...f.bad, ...f.attr.map((a) => a.quote)].join(" ")));
+  const carries = (clause: string, f: (typeof flagged)[number]) => unsupportedSpecifics(clause, idx).length > 0 || f.attr.some((a) => normQ(clause).includes(normQ(a.quote)) || (normQ(a.quote).includes(normQ(clause)) && contentWords(clause).length >= 2));
+  // (A deterministic clause cut was tried first and dropped: splitting on commas is grammar-blind and left subjectless
+  //  fragments, e.g. "Around noon on May 10, 1979, told her he had a meeting". The minimal edit fixes grammar instead.)
+  const cuts: (string | null)[] = flagged.map(() => null);
+  // Minimal edits: only the flagged words may change (plus a word or two of grammar around them).
+  const needEdit = flagged.map((f, i) => ({ f, i }));
+  const edits: Record<number, string> = {};
+  const askEdits = async (batch: { f: (typeof flagged)[number]; i: number }[], note: string) => {
+    if (!batch.length) return;
+    try {
+      const j = jsonOf(await client().messages.create({ model: "claude-sonnet-4-6", max_tokens: 3000, temperature: 0,
+        messages: [{ role: "user", content: `${note}Each sentence below, from a documentary script, contains words the research does not support (listed). Make the SMALLEST possible edit: delete those words, or replace them with a LESS specific phrase ("a Las Vegas DMV" -> "a DMV"; "on September 30, 1959" -> "in 1959"). Keep every other word as written; you may change a word or two of grammar or punctuation around the edit so the sentence still reads naturally and stays a complete sentence (it must keep its subject and verb). Do not rephrase the rest, do not add any new fact, name, number, place, cause or detail, no em dashes. You may also replace the unsupported words with what the FACTS say about this same thing. The listed words must NOT appear in your output. Output CUT only when nothing meaningful is left once those words are gone; a sentence that still says something true after a deletion must be kept.
+
+${batch.map(({ f, i }) => `[${i}] SENTENCE: ${f.sentence}\nNOT SUPPORTED: ${[...f.bad.map((b) => `"${b}"`), ...f.attr.map((a) => `"${a.quote}" (${a.why})`)].join("; ")}\nFACTS:\n${relevantFacts(`${f.sentence} ${f.attr.map((a) => a.why).join(" ")}`, research, 6).map((x) => `- ${x}`).join("\n") || "- (none related)"}`).join("\n\n")}
+
+Output ONLY JSON: {"edits":[{"i":0,"text":"..."}]}` }] }));
+      // Accept an answer only for an index that was in THIS batch and only if it is plainly an edit of that sentence
+      // (seen: a one-item retry labelled [1] answered as i:0, overwriting a different sentence's good edit).
+      const inBatch = new Map(batch.map(({ f, i }) => [i, f]));
+      for (const r of Array.isArray(j?.edits) ? j.edits : []) {
+        const i = Number(r?.i); const f = inBatch.get(i); const t = typeof r?.text === "string" ? r.text.trim() : "";
+        if (!f || !t) continue;
+        if (t !== "CUT") { const S = new Set(contentWords(t)); const sw = contentWords(f.sentence); if (sw.length && sw.filter((w) => S.has(w)).length / sw.length < 0.5) continue; }
+        edits[i] = t;
+      }
+    } catch (e: any) { console.warn(`[evidence-gate] minimal edit failed, removing instead: ${e?.message || e}`); }
+  };
+  await askEdits(needEdit, "");
+  // Code checks on a minimal edit: kept 80%+ of the words that were NOT flagged, and introduced no new specific.
+  const editReason = (f: (typeof flagged)[number], e: string | undefined): string | null => {
+    if (!e || e === "CUT" || e.split(/\s+/).length < 4) return "cut or too short";
+    // The flagged words must actually be gone (seen: the model returning the sentence unchanged).
+    if (f.attr.some((a) => normQ(e).includes(normQ(a.quote)))) return "flagged words still present";
+    const left = unsupportedSpecifics(e, idx); if (left.length) return `unsupported specifics remain: ${left.join(", ")}`;
+    const fw = flaggedWords(f); const others = contentWords(f.sentence).filter((w) => !fw.has(w));
+    // A sentence that is (almost) all flagged has nothing to preserve: it is removed, never replaced.
+    if (others.length < 3) return "sentence is almost all flagged";
+    const E = new Set(contentWords(e));
+    const kept = others.filter((w) => E.has(w)).length / others.length; if (kept < 0.8) return `kept only ${Math.round(kept * 100)}% of other words`;
+    // The edit may not ADD content words beyond a couple of grammar fixes, unless they are the research's own words
+    // (replacing an unsupported phrase with what the research says); the specifics guard below still applies.
+    const O = new Set(contentWords(f.sentence)); const R = new Set(contentWords(research));
+    const added = contentWords(e).filter((w) => !O.has(w) && !R.has(w)); if (added.length > 2) return `added words: ${added.join(", ")}`;
+    const log: any[] = []; guardRewrite(f.sentence, e, { pass: "gate_minimal_edit", evidence: research, log, quiet: true });
+    return log.length ? `new proposition: ${log[0].added.join(", ")}` : null;
+  };
+  const editOk = (f: (typeof flagged)[number], e: string | undefined) => {
+    const why = editReason(f, e);
+    if (why && process.env.GATE_DEBUG && e && e !== "CUT") console.log(`[conservative] edit rejected (${why}): ${e.slice(0, 90)}`);
+    return !why;
+  };
+  // One retry for edits that failed the code checks (other than an honest CUT).
+  await askEdits(needEdit.filter(({ f, i }) => edits[i] && edits[i] !== "CUT" && !editOk(f, edits[i])), "Your previous edit kept unsupported words or changed too much. Try again. ");
+  // Fallback when the model won't make the edit: remove a PAIRED aside (", ... ," / " — ... — " / "( ... )") that
+  // contains every flagged span. A paired aside is grammatically removable, unlike an arbitrary comma clause.
+  const asideCut = (f: (typeof flagged)[number]): string | null => {
+    const spans = [...f.bad, ...f.attr.map((a) => a.quote)];
+    for (const re of [/,\s+([^,]+?),\s+/g, /\s+[—–]\s+([^—–]+?)\s+[—–]\s+/g, /\s*\(([^)]+)\)\s*/g]) {
+      for (const m of f.sentence.matchAll(re)) {
+        const inner = normQ(m[1]);
+        // Every flagged span must be covered by the aside (spans may include the name the aside hangs on, e.g. "McDonough, then president...").
+        const covered = spans.every((sp) => { const w = contentWords(sp); const I = new Set(contentWords(m[1])); const hits = w.filter((x) => I.has(x)).length; return inner.includes(normQ(sp)) || (w.length && hits / w.length >= 0.6); });
+        if (!covered) continue;
+        const out = (f.sentence.slice(0, m.index!) + " " + f.sentence.slice(m.index! + m[0].length)).replace(/\s{2,}/g, " ").replace(/\s+([,.;!?])/g, "$1").trim();
+        if (out.split(/\s+/).length >= 5) return out;
+      }
+    }
+    return null;
+  };
+  flagged.forEach((f, i) => { if (!editOk(f, edits[i])) { const a = asideCut(f); if (a) edits[i] = a; } });
+  const cand = flagged.map((f, i) => cuts[i] ? { text: cuts[i] as string, action: "clause_cut" as const } : editOk(f, edits[i]) ? { text: edits[i], action: "rewritten" as const } : null);
+  // Re-check every candidate with both layers.
+  const live = cand.map((c, i) => ({ c, i })).filter((x) => x.c && !unsupportedSpecifics(x.c.text, idx).length) as { c: { text: string; action: GateFlag["action"] }; i: number }[];
+  const re = opts.attributes === false ? new Map() : await verifyAttributes(live.map((x) => x.c.text), research);
+  // Only flags on words the repair ADDED count against it. A re-check flag on words carried over unchanged from the
+  // original is verifier noise (the first pass accepted them, and they would have stayed had the sentence not been
+  // flagged at all); rejecting on it would delete supported content.
+  const addedFlags = (k: number) => {
+    const orig = normQ(flagged[live[k].i].sentence);
+    return (re.get(k) || []).filter((a: { quote: string }) => !orig.includes(normQ(a.quote)));
+  };
+  const passed = new Map(live.filter((_, k) => !addedFlags(k).length).map((x) => [x.i, x.c]));
+  if (process.env.GATE_DEBUG) live.forEach((x, k) => re.has(k) && console.log(`[conservative] re-verify flags: ${x.c.text} :: ${re.get(k).map((a: any) => `"${a.quote}" ${a.why}`).join(" | ")} -> ${addedFlags(k).length ? "REJECTED (added words)" : "ignored (carried-over words)"}`));
+  flagged.forEach((f, i) => {
+    const ok = passed.get(i);
+    sentsByPara[f.p][f.s] = ok ? ` ${ok.text} ` : " ";
+    opts.log?.push({ sentence: f.sentence, unsupported: [...f.bad, ...f.attr.map((a) => a.quote)], layer: f.layer, why: f.attr.map((a) => a.why), action: ok ? ok.action : "removed", result: ok?.text });
+  });
+  return sentsByPara.map((ss) => ss.join(" ").replace(/\s{2,}/g, " ").trim()).filter(Boolean).join("\n\n");
+}
+
+// Benchmark entry point: run ONLY the conservative repair on sentences whose flags are already known (from a gate
+// log), so repair modes can be compared on identical inputs without re-generating or re-verifying the drafts.
+export async function repairFlaggedConservative(items: { sentence: string; bad: string[]; attr: { quote: string; why: string }[] }[], research: string): Promise<GateFlag[]> {
+  const idx = indexResearch(research);
+  setContext(items.map((x) => x.sentence).join(" "));
+  const sentsByPara = items.map((x) => [x.sentence]);
+  const flagged = items.map((x, p) => ({ p, s: 0, sentence: x.sentence, bad: x.bad, attr: x.attr, layer: [...(x.bad.length ? ["entity"] : []), ...(x.attr.length ? ["attribute"] : [])] as GateFlag["layer"] }));
+  const log: GateFlag[] = [];
+  await conservativeRepair("", research, idx, sentsByPara, flagged, { log });
+  return log;
 }
