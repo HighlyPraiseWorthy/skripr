@@ -138,7 +138,7 @@ export function unsupportedSpecifics(sentence: string, idx: ResearchIndex): stri
 
 // Periods inside numbers ("$12.8 billion") and common abbreviations don't end a sentence.
 export const splitSentences = (t: string) => t.match(/(?:\d\.\d|\b(?:Mr|Mrs|Ms|Dr|St|Jr|Sr|U\.S|vs|No)\.|[^.!?])+(?:[.!?]+["”’)]*|$)/g)?.filter((x) => x.trim()) || [t];
-function relevantFacts(sentence: string, research: string, k = 8): string[] {
+export function relevantFacts(sentence: string, research: string, k = 8): string[] {
   const words = new Set((sentence.toLowerCase().match(/[a-z]{4,}|\d+/g) || []));
   return research.split("\n").map((f) => ({ f, s: (f.toLowerCase().match(/[a-z]{4,}|\d+/g) || []).filter((w) => words.has(w)).length }))
     .filter((x) => x.s > 0).sort((a, b) => b.s - a.s).slice(0, k).map((x) => x.f);

@@ -25,6 +25,8 @@ const RESOLVE = process.argv.includes("--resolve-conflicts");
 // Step 3 (2026-10-07): no-new-checkable-proposition invariant on every rewrite pass (finalize checkpoints, then
 // self-review and the final check, each diffed against its input). Logs every revert for inspection.
 const INVARIANT = process.argv.includes("--no-new-specifics");
+// Step 4 (2026-10-09): evidence-first section writing (claims tied to assigned facts, validated before prose).
+const EVIDENCE_FIRST = process.argv.includes("--evidence-first");
 const PRIMARY = new Set(["unsupported_specificity", "contradiction"]);
 type Case = { id: string; topic: string; title: string; angle: string; hookType: string; kind: string; minutes: number; niche?: string };
 const cases: Case[] = JSON.parse(readFileSync(join(DIR, "cases.json"), "utf8"));
@@ -58,11 +60,12 @@ async function generateTraced(c: Case) {
   const sections: { title: string; content: string }[] = [];
   const gateLog: any[] = [];
   const invariantLog: InvariantViolation[] = [];
+  const efLog: any[] = [];
   let previousTail = "";
   for (let i = 0; i < plan.length; i++) {
     const text = await writeSection(plan[i], i, plan.length, { topic: c.topic, title, sourceMaterial, previousTail, alreadyTold: sections.map((s) => s.content).join("\n\n"),
       reservedFacts: plan.slice(i + 1).flatMap((p) => p.assignedFacts || []), otherPoints: plan.filter((_, k) => k !== i).map((p) => p.point || "").filter(Boolean),
-      ...(GATE ? { evidenceGate: { log: gateLog, repair: GATE_REPAIR } } : {}) } as any);
+      ...(GATE ? { evidenceGate: { log: gateLog, repair: GATE_REPAIR } } : {}), ...(EVIDENCE_FIRST ? { evidenceFirst: { log: efLog } } : {}) } as any);
     sections.push({ title: plan[i].name, content: text });
     stages.push({ stage: `section_${i + 1}`, text });
     previousTail = text.split(/\s+/).slice(-40).join(" ");
@@ -84,7 +87,7 @@ async function generateTraced(c: Case) {
     else { body = fc.body; hook = fc.hook; }
   }
   stages.push({ stage: "final_check", text: `${hook}\n\n${body}` });
-  return { title, sourceMaterial, stages, final: `${hook}\n\n${body}`, drafts: [presetHook || "", ...sections.map((s) => s.content)].join("\n\n"), gateLog, fullResearch, conflicts: resolved?.conflicts || null, invariantLog };
+  return { title, sourceMaterial, stages, final: `${hook}\n\n${body}`, drafts: [presetHook || "", ...sections.map((s) => s.content)].join("\n\n"), gateLog, fullResearch, conflicts: resolved?.conflicts || null, invariantLog, efLog };
 }
 
 function trace(issue: JudgedIssue, stages: { stage: string; text: string }[]) {
@@ -110,7 +113,7 @@ function trace(issue: JudgedIssue, stages: { stage: string; text: string }[]) {
         const row = { id: c.id, run: r, words, primaryPer1k: +((primary.length / words) * 1000).toFixed(2), overreachPer1k: +(((finalErrors.length - primary.length) / words) * 1000).toFixed(2),
           finalErrors, removed, draftErrors: draftJ.errors.length, rejected: finalJ.rejected, gate: GATE ? { flags: g.gateLog.length, actions: g.gateLog.reduce((m: any, f: any) => ({ ...m, [f.action]: (m[f.action] || 0) + 1 }), {}) } : null };
         rows.push(row);
-        writeFileSync(join(outDir, `${c.id}-run${r}.json`), JSON.stringify({ ...row, gateLog: g.gateLog, conflicts: g.conflicts, invariantLog: g.invariantLog, stages: g.stages.map((s) => ({ stage: s.stage, words: s.text.split(/\s+/).length })), final: g.final }, null, 1));
+        writeFileSync(join(outDir, `${c.id}-run${r}.json`), JSON.stringify({ ...row, gateLog: g.gateLog, conflicts: g.conflicts, invariantLog: g.invariantLog, stages: g.stages.map((s) => ({ stage: s.stage, words: s.text.split(/\s+/).length, text: s.text })), efLog: g.efLog, final: g.final }, null, 1));
         console.log(`[${c.id} run ${r}] ${words}w primary ${row.primaryPer1k}/1k (${primary.length}) overreach ${row.overreachPer1k}/1k | first seen: ${primary.map((e) => e.first_seen).join(", ") || "-"} | removed before final: ${removed.length}`);
       } catch (e: any) { console.log(`[${c.id} run ${r}] FAILED ${e?.message || e}`); }
     }

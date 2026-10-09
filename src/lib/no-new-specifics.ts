@@ -34,11 +34,11 @@ const CUES: { kind: string; re: RegExp }[] = [
 ];
 
 // What the sentence adds that neither the pass input nor the allowed evidence supports.
-function additions(after: string, aligned: string | null, idx: ReturnType<typeof indexResearch>, allowedText: string): string[] {
+function additions(after: string, aligned: string | null, idx: ReturnType<typeof indexResearch>, allowedText: string, cues = true): string[] {
   const added = unsupportedSpecifics(after, idx);
   for (const m of after.matchAll(/["“]([^"”]{3,200})["”]/g)) if (m[1].split(/\s+/).length >= 3 && !allowedText.includes(norm(m[1]))) added.push(`quote: "${m[1].slice(0, 60)}"`);
   const allowedWords = new Set(content(allowedText));
-  for (const cue of CUES) {
+  for (const cue of cues ? CUES : []) {
     const m = after.match(cue.re);
     if (!m || (aligned && cue.re.test(aligned))) continue; // cue already there before the pass
     // The proposition the cue introduces: the whole clause that contains it.
@@ -51,7 +51,9 @@ function additions(after: string, aligned: string | null, idx: ReturnType<typeof
   return [...new Set(added)];
 }
 
-export function guardRewrite(before: string, after: string, opts: { pass: string; evidence?: string; log?: InvariantViolation[]; quiet?: boolean }): string {
+// opts.cues=false: check only hard specifics (names, numbers, dates, quotes), not cause/comparison/attribution cues.
+// Use it for freshly WRITTEN prose (no earlier draft to diff against), where cue words fire on ordinary rhetoric.
+export function guardRewrite(before: string, after: string, opts: { pass: string; evidence?: string; log?: InvariantViolation[]; quiet?: boolean; cues?: boolean }): string {
   if (!after || after === before) { if (!opts.quiet) console.log(`[no-new-specifics] ${opts.pass}: no change`); return after; }
   let changed = 0; const startLog = opts.log ? opts.log.length : 0; const localLog: InvariantViolation[] = opts.log || [];
   const allowed = `${before}\n${opts.evidence || ""}`;
@@ -68,7 +70,7 @@ export function guardRewrite(before: string, after: string, opts: { pass: string
     let aligned: string | null = null, best = 0;
     for (const b of beforeSents) { const bw = content(b); const j = Math.max(jaccard(cw, bw), contained(bw, cw) >= 0.8 ? 0.8 : 0); if (j > best) { best = j; aligned = b; } }
     if (best < 0.5) aligned = null;
-    const added = additions(s, aligned, idx, allowedText);
+    const added = additions(s, aligned, idx, allowedText, opts.cues !== false);
     if (!added.length) return s;
     if (aligned) { localLog.push({ pass: opts.pass, sentence: s, added, action: "reverted", result: aligned }); return aligned; }
     // New sentence: cut a cleanly delimited clause that carries every addition, else drop the sentence.
@@ -76,7 +78,7 @@ export function guardRewrite(before: string, after: string, opts: { pass: string
     for (let k = 0; k < parts.length; k++) {
       const p = parts[k]; if (!p || /^\s*[,;—–]\s*$/.test(p)) continue;
       const rest = (parts.slice(0, k).join("") + parts.slice(k + 1).join("")).replace(/\s*[,;—–]\s*$/, "").replace(/^\s*[,;—–]\s*/, "").trim();
-      if (rest.split(/\s+/).length >= 5 && k > 0 && !additions(rest, null, idx, allowedText).length) {
+      if (rest.split(/\s+/).length >= 5 && k > 0 && !additions(rest, null, idx, allowedText, opts.cues !== false).length) {
         const fixed = /[.!?]["”’)]*$/.test(rest) ? rest : `${rest}.`;
         localLog.push({ pass: opts.pass, sentence: s, added, action: "clause_cut", result: fixed }); return fixed;
       }

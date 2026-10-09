@@ -7,6 +7,7 @@ import { validateTitle } from "@/lib/title-validate";
 import { getNicheOutlierPatterns } from "@/lib/viral-frameworks";
 import { gateSection, type GateFlag } from "@/lib/evidence-gate";
 import { guardRewrite, type InvariantViolation } from "@/lib/no-new-specifics";
+import { writeSectionEvidenceFirst, type EvidenceFirstLog } from "@/lib/evidence-first";
 
 let _anthropic: Anthropic | null = null;
 function getAnthropic(): Anthropic {
@@ -923,8 +924,14 @@ export async function writeSection(
   spec: SectionSpec,
   index: number,
   total: number,
-  context: { topic: string; title: string; sourceMaterial?: string; previousTail: string; recipe?: string; voice?: string; directorNote?: string; alreadyTold?: string; reservedFacts?: string[]; otherPoints?: string[]; openingHook?: string; evidenceGate?: { log?: GateFlag[]; repair?: "rewrite" | "conservative" } },
+  context: { topic: string; title: string; sourceMaterial?: string; previousTail: string; recipe?: string; voice?: string; directorNote?: string; alreadyTold?: string; reservedFacts?: string[]; otherPoints?: string[]; openingHook?: string; evidenceGate?: { log?: GateFlag[]; repair?: "rewrite" | "conservative" }; evidenceFirst?: { log?: EvidenceFirstLog[] } },
 ): Promise<string> {
+  // EVIDENCE-FIRST (step 4, off unless the caller opts in): claims tied to this section's facts are planned and
+  // validated BEFORE prose; this function then writes the prose from the approved claims only.
+  if (context.evidenceFirst) {
+    const { evidenceFirst, ...rest } = context;
+    return writeSectionEvidenceFirst(spec, index, total, rest, writeSection, evidenceFirst.log);
+  }
   const conceptBlock = spec.concept
     ? `\nTHE VIDEO'S CONCEPT (every sentence of this section serves it; this is not a history of the subject): ${spec.concept}\nTHIS SECTION'S ONE POINT: ${spec.point || spec.purpose}\n${spec.centralQuotes && spec.centralQuotes.length && (index === 0 || index === total - 1) ? `THE WORDS SPOKEN AT THE CENTRAL MOMENT (verbatim from the facts; never paraphrase, never drop): ${spec.centralQuotes.map((q) => `"${q}"`).join(" / ")}. ${index === 0 ? "This OPENING section must quote ALL of them, word for word, in the order they were said, with who reported them. If the hook teases them (\"he said three words\"), deliver them here." : "This FINAL section must echo the key line verbatim as the callback."}\n` : ""}${index === total - 1 ? "THIS IS THE FINAL SECTION: after making its point, RETURN to the central moment named in the concept (the scene the video opened on) and land the video THERE, so the ending pays off the opening. The last lines belong to that moment, not to a new topic. It is a CALLBACK: the viewer already saw that scene in the opening, so evoke it in a line or two and land its meaning; do NOT re-explain how it happened. " : ""}Make THIS point, deeply, as scenes from the facts. ${context.otherPoints && context.otherPoints.length ? `Do NOT make these points, other sections own them:\n${context.otherPoints.filter(Boolean).map((p) => `- ${p}`).join("\n").slice(0, 1500)}` : ""}\n`
     : "";
