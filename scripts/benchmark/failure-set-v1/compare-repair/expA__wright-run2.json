@@ -1,0 +1,2752 @@
+{
+ "case": "wright",
+ "file": "expA__wright-run2.json",
+ "judge": "accuracy_judge_v3@a61781c",
+ "repair": "conservative@0d92975",
+ "rows": [
+  {
+   "original": "Portuguese police and the FBI converged on a town outside Lisbon, and the man they arrested had been legally invisible to American law enforcement for more than four decades.",
+   "origV3": {
+    "i": 0,
+    "sentence": "Portuguese police and the FBI converged on a town outside Lisbon, and the man they arrested had been legally invisible to American law enforcement for more than four decades.",
+    "claims": [
+     {
+      "claim": "Portuguese police and the FBI converged on a town outside Lisbon",
+      "status": "supported",
+      "fact": "F20",
+      "quote": "the FBI and New Jersey officials tracking him to a town outside Lisbon before his arrest",
+      "verified": true,
+      "material": false,
+      "why": "F20 places the FBI tracking him to a town outside Lisbon, and F23 records Portuguese police locating and arresting him."
+     },
+     {
+      "claim": "the man they arrested",
+      "status": "supported",
+      "fact": "F23",
+      "quote": "led U.S. authorities and Portuguese police to locate and arrest him in September 2011",
+      "verified": true,
+      "material": false,
+      "why": "The arrest by U.S. authorities and Portuguese police is documented."
+     },
+     {
+      "claim": "had been legally invisible to American law enforcement",
+      "status": "overstated",
+      "fact": "F20",
+      "quote": "a fugitive who had evaded capture for more than four decades",
+      "verified": true,
+      "material": false,
+      "why": "The research says he evaded capture while openly wanted (F7), not that he was legally invisible; this is the narrator's characterization."
+     },
+     {
+      "claim": "for more than four decades",
+      "status": "supported",
+      "fact": "F21",
+      "quote": "after more than 40 years as a fugitive",
+      "verified": true,
+      "material": false,
+      "why": "The duration matches the research."
+     }
+    ],
+    "error": true,
+    "material": false
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "Portuguese police and the FBI converged on a town outside Lisbon, and the man they arrested had been evading capture for more than four decades.",
+    "v3": {
+     "i": 0,
+     "sentence": "Portuguese police and the FBI converged on a town outside Lisbon, and the man they arrested had been evading capture for more than four decades.",
+     "claims": [
+      {
+       "claim": "Portuguese police and the FBI converged on a town outside Lisbon",
+       "status": "supported",
+       "fact": "F20",
+       "quote": "the FBI and New Jersey officials tracking him to a town outside Lisbon before his arrest",
+       "verified": true,
+       "material": false,
+       "why": "F20 places the FBI's tracking at a town outside Lisbon, and F23 says Portuguese police and U.S. authorities located and arrested him."
+      },
+      {
+       "claim": "the man they arrested had been evading capture for more than four decades",
+       "status": "supported",
+       "fact": "F20",
+       "quote": "a fugitive who had evaded capture for more than four decades",
+       "verified": true,
+       "material": false,
+       "why": "F20 states this directly."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   }
+  },
+  {
+   "original": "What broke that silence wasn't a tip, wasn't surveillance, wasn't a slip — it was a fingerprint lifted from a Portuguese national ID card, run through a domestic database, and matched.",
+   "origV3": {
+    "i": 1,
+    "sentence": "What broke that silence wasn't a tip, wasn't surveillance, wasn't a slip — it was a fingerprint lifted from a Portuguese national ID card, run through a domestic database, and matched.",
+    "claims": [
+     {
+      "claim": "What broke that silence ... it was a fingerprint",
+      "status": "supported",
+      "fact": "F23",
+      "quote": "A fingerprint found on Wright’s Portuguese ID card matched records in a national Portuguese database, which led U.S. authorities and Portuguese police to locate and arrest him in September 2011.",
+      "verified": true,
+      "material": false,
+      "why": "The research says the fingerprint match led authorities to locate him."
+     },
+     {
+      "claim": "wasn't a tip, wasn't surveillance, wasn't a slip",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": true,
+      "why": "The research does not rule out tips, surveillance or a slip; it does not detail what else contributed to locating him."
+     },
+     {
+      "claim": "a fingerprint lifted from a Portuguese national ID card",
+      "status": "supported",
+      "fact": "F23",
+      "quote": "A fingerprint found on Wright’s Portuguese ID card",
+      "verified": true,
+      "material": false,
+      "why": "This paraphrases a fingerprint found on his Portuguese ID card."
+     },
+     {
+      "claim": "run through a domestic database, and matched",
+      "status": "supported",
+      "fact": "F23",
+      "quote": "matched records in a national Portuguese database",
+      "verified": true,
+      "material": false,
+      "why": "The research states the print matched records in a national Portuguese database."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "What broke that silence was a fingerprint lifted from a Portuguese national ID card, run through a domestic database, and matched.",
+    "v3": {
+     "i": 1,
+     "sentence": "What broke that silence was a fingerprint lifted from a Portuguese national ID card, run through a domestic database, and matched.",
+     "claims": [
+      {
+       "claim": "a fingerprint lifted from a Portuguese national ID card",
+       "status": "supported",
+       "fact": "F23",
+       "quote": "A fingerprint found on Wright’s Portuguese ID card",
+       "verified": true,
+       "material": false,
+       "why": "Research records the fingerprint on his Portuguese ID card."
+      },
+      {
+       "claim": "run through a domestic database, and matched",
+       "status": "supported",
+       "fact": "F23",
+       "quote": "matched records in a national Portuguese database",
+       "verified": true,
+       "material": false,
+       "why": "The match against a national Portuguese database is stated."
+      },
+      {
+       "claim": "What broke that silence was a fingerprint",
+       "status": "supported",
+       "fact": "F23",
+       "quote": "which led U.S. authorities and Portuguese police to locate and arrest him in September 2011",
+       "verified": true,
+       "material": false,
+       "why": "The fingerprint match led to locating him."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "What broke that silence was a fingerprint lifted from a Portuguese national ID card, run through a domestic database, and matched.",
+    "v3": {
+     "i": 25,
+     "sentence": "What broke that silence was a fingerprint lifted from a Portuguese national ID card, run through a domestic database, and matched.",
+     "claims": [
+      {
+       "claim": "What broke that silence was a fingerprint",
+       "status": "supported",
+       "fact": "F23",
+       "quote": "which led U.S. authorities and Portuguese police to locate and arrest him in September 2011",
+       "verified": true,
+       "material": false,
+       "why": "The research says the fingerprint match led to locating and arresting him."
+      },
+      {
+       "claim": "a fingerprint lifted from a Portuguese national ID card",
+       "status": "supported",
+       "fact": "F23",
+       "quote": "A fingerprint found on Wright’s Portuguese ID card",
+       "verified": true,
+       "material": false,
+       "why": "The research places the fingerprint on his Portuguese ID card."
+      },
+      {
+       "claim": "run through a domestic database, and matched",
+       "status": "supported",
+       "fact": "F23",
+       "quote": "matched records in a national Portuguese database",
+       "verified": true,
+       "material": false,
+       "why": "The research says it matched records in a national Portuguese database."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   }
+  },
+  {
+   "original": "Wright had built a Portuguese identity substantial enough to earn him citizenship, and citizenship requires documentation, and documentation in a modern state requires biometric records.",
+   "origV3": {
+    "i": 2,
+    "sentence": "Wright had built a Portuguese identity substantial enough to earn him citizenship, and citizenship requires documentation, and documentation in a modern state requires biometric records.",
+    "claims": [
+     {
+      "claim": "Wright had built a Portuguese identity",
+      "status": "supported",
+      "fact": "F9",
+      "quote": "George Edward Wright lived under a Portuguese identity after resurfacing in Portugal with Portuguese citizenship",
+      "verified": true,
+      "material": false,
+      "why": "Research states he lived under a Portuguese identity."
+     },
+     {
+      "claim": "substantial enough to earn him citizenship",
+      "status": "unsupported",
+      "fact": "F9",
+      "quote": "",
+      "verified": false,
+      "material": false,
+      "why": "Research says he had Portuguese citizenship but not how he got it; the causal framing is the narrator's interpretation."
+     },
+     {
+      "claim": "citizenship requires documentation",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": false,
+      "why": "General statement about how citizenship works; not in the research."
+     },
+     {
+      "claim": "documentation in a modern state requires biometric records",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": false,
+      "why": "General claim. Research only notes a fingerprint on his Portuguese ID card (F23), not that documentation requires biometrics."
+     }
+    ],
+    "error": true,
+    "material": false
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "Wright had built a Portuguese identity substantial enough to earn him citizenship, and citizenship requires documentation, and documentation requires records.",
+    "v3": {
+     "i": 2,
+     "sentence": "Wright had built a Portuguese identity substantial enough to earn him citizenship, and citizenship requires documentation, and documentation requires records.",
+     "claims": [
+      {
+       "claim": "Wright had built a Portuguese identity",
+       "status": "supported",
+       "fact": "F9",
+       "quote": "George Edward Wright lived under a Portuguese identity after resurfacing in Portugal with Portuguese citizenship",
+       "verified": true,
+       "material": false,
+       "why": "Research states he lived under a Portuguese identity."
+      },
+      {
+       "claim": "Wright had Portuguese citizenship",
+       "status": "supported",
+       "fact": "F14",
+       "quote": "later resurfaced in Portugal using Portuguese citizenship",
+       "verified": true,
+       "material": false,
+       "why": "Research states he had Portuguese citizenship."
+      },
+      {
+       "claim": "substantial enough to earn him citizenship",
+       "status": "unsupported",
+       "fact": "",
+       "quote": "",
+       "verified": false,
+       "material": false,
+       "why": "Research doesn't say how he obtained citizenship; this is the narrator's framing."
+      },
+      {
+       "claim": "citizenship requires documentation, and documentation requires records",
+       "status": "unsupported",
+       "fact": "",
+       "quote": "",
+       "verified": false,
+       "material": false,
+       "why": "A general statement about how things work that the research doesn't establish."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   }
+  },
+  {
+   "original": "The fingerprint he submitted to become a legal Portuguese resident was the same fingerprint the database returned when investigators went looking.",
+   "origV3": {
+    "i": 3,
+    "sentence": "The fingerprint he submitted to become a legal Portuguese resident was the same fingerprint the database returned when investigators went looking.",
+    "claims": [
+     {
+      "claim": "The fingerprint he submitted to become a legal Portuguese resident",
+      "status": "unsupported",
+      "fact": "F23",
+      "quote": "A fingerprint found on Wright’s Portuguese ID card",
+      "verified": true,
+      "material": true,
+      "why": "Research ties the fingerprint to his Portuguese ID card and says he had citizenship; it does not record him submitting it to become a legal resident."
+     },
+     {
+      "claim": "was the same fingerprint the database returned when investigators went looking",
+      "status": "supported",
+      "fact": "F23",
+      "quote": "matched records in a national Portuguese database, which led U.S. authorities and Portuguese police to locate and arrest him",
+      "verified": true,
+      "material": false,
+      "why": "The database match leading investigators to him is stated."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "The fingerprint on his Portuguese ID card was the same fingerprint the database returned when investigators went looking.",
+    "v3": {
+     "i": 3,
+     "sentence": "The fingerprint on his Portuguese ID card was the same fingerprint the database returned when investigators went looking.",
+     "claims": [
+      {
+       "claim": "The fingerprint on his Portuguese ID card was the same fingerprint the database returned",
+       "status": "supported",
+       "fact": "F23",
+       "quote": "A fingerprint found on Wright’s Portuguese ID card matched records in a national Portuguese database",
+       "verified": true,
+       "material": false,
+       "why": "Research states the ID-card fingerprint matched records in a national Portuguese database."
+      },
+      {
+       "claim": "when investigators went looking",
+       "status": "supported",
+       "fact": "F23",
+       "quote": "which led U.S. authorities and Portuguese police to locate and arrest him",
+       "verified": true,
+       "material": false,
+       "why": "The research records authorities using the match to locate him, which fits this paraphrase."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "The fingerprint on his Portuguese ID card was the same fingerprint the database returned when investigators went looking.",
+    "v3": {
+     "i": 26,
+     "sentence": "The fingerprint on his Portuguese ID card was the same fingerprint the database returned when investigators went looking.",
+     "claims": [
+      {
+       "claim": "The fingerprint on his Portuguese ID card was the same fingerprint the database returned",
+       "status": "supported",
+       "fact": "F23",
+       "quote": "A fingerprint found on Wright’s Portuguese ID card matched records in a national Portuguese database",
+       "verified": true,
+       "material": false,
+       "why": "Research states the ID-card fingerprint matched national database records."
+      },
+      {
+       "claim": "when investigators went looking",
+       "status": "supported",
+       "fact": "F23",
+       "quote": "which led U.S. authorities and Portuguese police to locate and arrest him in September 2011",
+       "verified": true,
+       "material": false,
+       "why": "The match was part of authorities' effort to locate him."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   }
+  },
+  {
+   "original": "Three weeks later, on December 13, 1962, a grand jury indicted Wright for murder.",
+   "origV3": {
+    "i": 4,
+    "sentence": "Three weeks later, on December 13, 1962, a grand jury indicted Wright for murder.",
+    "claims": [
+     {
+      "claim": "Three weeks later",
+      "status": "derived",
+      "fact": "F18",
+      "quote": "On December 13, 1962, George Edward Wright was indicted for murder after the November 23, 1962 shooting death",
+      "verified": true,
+      "material": false,
+      "why": "November 23 to December 13 is 20 days, roughly three weeks."
+     },
+     {
+      "claim": "on December 13, 1962, ... indicted Wright for murder",
+      "status": "supported",
+      "fact": "F12",
+      "quote": "he was indicted for murder on December 13, 1962",
+      "verified": true,
+      "material": false,
+      "why": "The date and charge match the research."
+     },
+     {
+      "claim": "a grand jury indicted",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": false,
+      "why": "The research does not name a grand jury, but indictment implies one, so this adds no new fact."
+     }
+    ],
+    "error": true,
+    "material": false
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "Three weeks later, on December 13, 1962, Wright was indicted for murder.",
+    "v3": {
+     "i": 4,
+     "sentence": "Three weeks later, on December 13, 1962, Wright was indicted for murder.",
+     "claims": [
+      {
+       "claim": "Three weeks later",
+       "status": "derived",
+       "fact": "F18",
+       "quote": "On December 13, 1962, George Edward Wright was indicted for murder after the November 23, 1962 shooting death",
+       "verified": true,
+       "material": false,
+       "why": "November 23 to December 13 is 20 days, roughly three weeks."
+      },
+      {
+       "claim": "on December 13, 1962, Wright was indicted for murder",
+       "status": "supported",
+       "fact": "F18",
+       "quote": "On December 13, 1962, George Edward Wright was indicted for murder",
+       "verified": true,
+       "material": false,
+       "why": "The research states the indictment date and charge directly."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "Three weeks later, on December 13, 1962, Wright was indicted for murder.",
+    "v3": {
+     "i": 27,
+     "sentence": "Three weeks later, on December 13, 1962, Wright was indicted for murder.",
+     "claims": [
+      {
+       "claim": "Three weeks later",
+       "status": "derived",
+       "fact": "F18",
+       "quote": "On December 13, 1962, George Edward Wright was indicted for murder after the November 23, 1962 shooting death",
+       "verified": true,
+       "material": false,
+       "why": "November 23 to December 13 is 20 days, roughly three weeks."
+      },
+      {
+       "claim": "on December 13, 1962, Wright was indicted for murder",
+       "status": "supported",
+       "fact": "F12",
+       "quote": "he was indicted for murder on December 13, 1962",
+       "verified": true,
+       "material": false,
+       "why": "The research states this date and charge directly."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   }
+  },
+  {
+   "original": "Within two years he would be standing in the aisle of a commercial aircraft with a weapon, which means the time between the prison break and that flight was not spent lying low.",
+   "origV3": {
+    "i": 5,
+    "sentence": "Within two years he would be standing in the aisle of a commercial aircraft with a weapon, which means the time between the prison break and that flight was not spent lying low.",
+    "claims": [
+     {
+      "claim": "Within two years he would be",
+      "status": "derived",
+      "fact": "F21",
+      "quote": "escaped from a New Jersey prison in August 1970, joined the Black Liberation Army, hijacked Delta Air Lines Flight 841 on July 31, 1972",
+      "verified": true,
+      "material": false,
+      "why": "August 1970 to July 31, 1972 is just under two years."
+     },
+     {
+      "claim": "standing in the aisle of a commercial aircraft",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": true,
+      "why": "The research records the hijacking but not that he stood in the aisle; this is an invented scene detail."
+     },
+     {
+      "claim": "with a weapon",
+      "status": "supported",
+      "fact": "F4",
+      "quote": "concealed a firearm in a hollowed-out Bible",
+      "verified": true,
+      "material": false,
+      "why": "The hijackers had a firearm."
+     },
+     {
+      "claim": "the time between the prison break and that flight was not spent lying low",
+      "status": "unsupported",
+      "fact": "F21",
+      "quote": "joined the Black Liberation Army",
+      "verified": true,
+      "material": false,
+      "why": "The research says he joined the BLA, but 'not lying low' is the narrator's own characterization."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "Within two years he would be seizing a commercial aircraft under gunpoint, which means the time between the prison break and that flight was not spent lying low.",
+    "v3": {
+     "i": 5,
+     "sentence": "Within two years he would be seizing a commercial aircraft under gunpoint, which means the time between the prison break and that flight was not spent lying low.",
+     "claims": [
+      {
+       "claim": "Within two years he would be seizing a commercial aircraft",
+       "status": "derived",
+       "fact": "F21",
+       "quote": "escaped from a New Jersey prison in August 1970, joined the Black Liberation Army, hijacked Delta Air Lines Flight 841 on July 31, 1972",
+       "verified": true,
+       "material": false,
+       "why": "August 1970 to July 31, 1972 is just under two years."
+      },
+      {
+       "claim": "seizing a commercial aircraft under gunpoint",
+       "status": "supported",
+       "fact": "F0",
+       "quote": "diverted under gunpoint",
+       "verified": true,
+       "material": false,
+       "why": "The research describes the flight being diverted under gunpoint."
+      },
+      {
+       "claim": "the time between the prison break and that flight was not spent lying low",
+       "status": "unsupported",
+       "fact": "",
+       "quote": "",
+       "verified": false,
+       "material": false,
+       "why": "Narrator's characterization; the research notes only that he joined the BLA in this period."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "Within two years he would be on a commercial aircraft with a weapon, which means the time between the prison break and that flight was not spent lying low.",
+    "v3": {
+     "i": 28,
+     "sentence": "Within two years he would be on a commercial aircraft with a weapon, which means the time between the prison break and that flight was not spent lying low.",
+     "claims": [
+      {
+       "claim": "Within two years he would be on a commercial aircraft",
+       "status": "derived",
+       "fact": "F21",
+       "quote": "escaped from a New Jersey prison in August 1970, joined the Black Liberation Army, hijacked Delta Air Lines Flight 841 on July 31, 1972",
+       "verified": true,
+       "material": false,
+       "why": "August 1970 to July 31, 1972 is just under two years."
+      },
+      {
+       "claim": "with a weapon",
+       "status": "supported",
+       "fact": "F4",
+       "quote": "concealed a firearm in a hollowed-out Bible",
+       "verified": true,
+       "material": false,
+       "why": "The research records a firearm brought aboard."
+      },
+      {
+       "claim": "the time between the prison break and that flight was not spent lying low",
+       "status": "unsupported",
+       "fact": "F21",
+       "quote": "",
+       "verified": false,
+       "material": false,
+       "why": "This is the narrator's inference; F21 notes he joined the BLA but does not describe how he spent that time."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   }
+  },
+  {
+   "original": "The BLA gave the escape a destination — not just freedom from confinement, but membership in an organized political and paramilitary network.",
+   "origV3": {
+    "i": 6,
+    "sentence": "The BLA gave the escape a destination — not just freedom from confinement, but membership in an organized political and paramilitary network.",
+    "claims": [
+     {
+      "claim": "membership in ... network (Wright joined the BLA after his escape)",
+      "status": "supported",
+      "fact": "F21",
+      "quote": "escaped from a New Jersey prison in August 1970, joined the Black Liberation Army",
+      "verified": true,
+      "material": false,
+      "why": "Research states he escaped in 1970 and then joined the Black Liberation Army."
+     },
+     {
+      "claim": "an organized political and paramilitary network",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": true,
+      "why": "The research never describes the BLA's structure or calls it paramilitary or organized; F17 notes only Wright's own 'Black Liberation struggle' framing."
+     },
+     {
+      "claim": "The BLA gave the escape a destination — not just freedom from confinement",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": false,
+      "why": "This is the narrator's interpretation of what joining the BLA meant."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "clause_cut",
+    "text": "Membership in an organized political and paramilitary network.",
+    "v3": {
+     "i": 6,
+     "sentence": "Membership in an organized political and paramilitary network.",
+     "claims": [
+      {
+       "claim": "Membership in an organized political and paramilitary network",
+       "status": "supported",
+       "fact": "F21",
+       "quote": "joined the Black Liberation Army",
+       "verified": true,
+       "material": false,
+       "why": "The research records that Wright joined the Black Liberation Army, which supports membership."
+      },
+      {
+       "claim": "an organized political and paramilitary network",
+       "status": "unsupported",
+       "fact": "",
+       "quote": "",
+       "verified": false,
+       "material": false,
+       "why": "The research names the Black Liberation Army but never describes it as an organized political and paramilitary network; this is the narrator's characterization."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   }
+  },
+  {
+   "original": "Whatever Wright was doing during that stretch, the outcome of it was not a man running.",
+   "origV3": {
+    "i": 7,
+    "sentence": "Whatever Wright was doing during that stretch, the outcome of it was not a man running.",
+    "claims": [
+     {
+      "claim": "the outcome of it was not a man running",
+      "status": "unsupported",
+      "fact": "F14",
+      "quote": "",
+      "verified": false,
+      "material": false,
+      "why": "The research records that he lived an assumed life in Portugal while evading capture, but calling him 'not a man running' is the narrator's characterization."
+     }
+    ],
+    "error": true,
+    "material": false
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "Whatever he was doing during that stretch, the outcome of it was not a man running.",
+    "v3": {
+     "i": 7,
+     "sentence": "Whatever he was doing during that stretch, the outcome of it was not a man running.",
+     "claims": [
+      {
+       "claim": "the outcome of it was not a man running",
+       "status": "unsupported",
+       "fact": "",
+       "quote": "",
+       "verified": false,
+       "material": false,
+       "why": "This is the narrator's characterization. The research says he lived under a Portuguese identity but also calls him a fugitive evading capture, and never describes him as not running."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "Whatever he was doing during that stretch, the outcome of it was not a man running.",
+    "v3": {
+     "i": 29,
+     "sentence": "Whatever he was doing during that stretch, the outcome of it was not a man running.",
+     "claims": [
+      {
+       "claim": "the outcome of it was not a man running",
+       "status": "unsupported",
+       "fact": "",
+       "quote": "",
+       "verified": false,
+       "material": false,
+       "why": "The research does not establish whether he was 'running' during the unspecified stretch, so this is the narrator's characterization, not a recorded fact."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   }
+  },
+  {
+   "original": "Around 12:45 in the afternoon on July 31, 1972, Delta Air Lines Flight 841 was somewhere over Orlando — it had left Detroit bound for Miami — when the operation Wright had spent two years building announced itself.",
+   "origV3": {
+    "i": 8,
+    "sentence": "Around 12:45 in the afternoon on July 31, 1972, Delta Air Lines Flight 841 was somewhere over Orlando — it had left Detroit bound for Miami — when the operation Wright had spent two years building announced itself.",
+    "claims": [
+     {
+      "claim": "Around 12:45 in the afternoon",
+      "status": "supported",
+      "fact": "F2",
+      "quote": "commandeered around 12:45 p.m. over Orlando",
+      "verified": true,
+      "material": false,
+      "why": "The research gives the time as around 12:45 p.m."
+     },
+     {
+      "claim": "on July 31, 1972",
+      "status": "supported",
+      "fact": "F4",
+      "quote": "On July 31, 1972, the hijackers seized Delta Air Lines Flight 841",
+      "verified": true,
+      "material": false,
+      "why": "The research gives this date."
+     },
+     {
+      "claim": "Delta Air Lines Flight 841 was somewhere over Orlando",
+      "status": "supported",
+      "fact": "F2",
+      "quote": "commandeered around 12:45 p.m. over Orlando",
+      "verified": true,
+      "material": false,
+      "why": "The research places the plane over Orlando."
+     },
+     {
+      "claim": "it had left Detroit bound for Miami",
+      "status": "supported",
+      "fact": "F2",
+      "quote": "after departing Detroit for Miami",
+      "verified": true,
+      "material": false,
+      "why": "The research states the Detroit-to-Miami route."
+     },
+     {
+      "claim": "the operation Wright had spent two years building",
+      "status": "unsupported",
+      "fact": "F21",
+      "quote": "",
+      "verified": false,
+      "material": true,
+      "why": "The research dates the escape to 1970 and the hijacking to 1972 but never says Wright spent two years planning or building the operation."
+     },
+     {
+      "claim": "announced itself",
+      "status": "supported",
+      "fact": "F2",
+      "quote": "Delta Flight 841 was commandeered around 12:45 p.m. over Orlando",
+      "verified": true,
+      "material": false,
+      "why": "The hijacking began at that point."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "Around 12:45 in the afternoon on July 31, 1972, Delta Air Lines Flight 841 was somewhere over Orlando — it had left Detroit bound for Miami — when Wright and his accomplices made their move.",
+    "v3": {
+     "i": 8,
+     "sentence": "Around 12:45 in the afternoon on July 31, 1972, Delta Air Lines Flight 841 was somewhere over Orlando — it had left Detroit bound for Miami — when Wright and his accomplices made their move.",
+     "claims": [
+      {
+       "claim": "Around 12:45 in the afternoon",
+       "status": "supported",
+       "fact": "F2",
+       "quote": "commandeered around 12:45 p.m. over Orlando",
+       "verified": true,
+       "material": false,
+       "why": "Time matches research."
+      },
+      {
+       "claim": "on July 31, 1972",
+       "status": "supported",
+       "fact": "F4",
+       "quote": "On July 31, 1972, the hijackers seized Delta Air Lines Flight 841",
+       "verified": true,
+       "material": false,
+       "why": "Date matches research."
+      },
+      {
+       "claim": "Delta Air Lines Flight 841 was somewhere over Orlando",
+       "status": "supported",
+       "fact": "F2",
+       "quote": "commandeered around 12:45 p.m. over Orlando",
+       "verified": true,
+       "material": false,
+       "why": "Location matches research."
+      },
+      {
+       "claim": "it had left Detroit bound for Miami",
+       "status": "supported",
+       "fact": "F2",
+       "quote": "after departing Detroit for Miami",
+       "verified": true,
+       "material": false,
+       "why": "Route matches research."
+      },
+      {
+       "claim": "when Wright and his accomplices made their move",
+       "status": "supported",
+       "fact": "F1",
+       "quote": "Wright and his accomplices demanded a $1 million ransom",
+       "verified": true,
+       "material": false,
+       "why": "Research establishes that Wright and accomplices hijacked the flight."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "Around 12:45 in the afternoon on July 31, 1972, Delta Air Lines Flight 841 was somewhere over Orlando — it had left Detroit bound for Miami — when the hijacking announced itself.",
+    "v3": {
+     "i": 30,
+     "sentence": "Around 12:45 in the afternoon on July 31, 1972, Delta Air Lines Flight 841 was somewhere over Orlando — it had left Detroit bound for Miami — when the hijacking announced itself.",
+     "claims": [
+      {
+       "claim": "Around 12:45 in the afternoon",
+       "status": "supported",
+       "fact": "F2",
+       "quote": "commandeered around 12:45 p.m. over Orlando",
+       "verified": true,
+       "material": false,
+       "why": "Time matches the reported time of the takeover."
+      },
+      {
+       "claim": "on July 31, 1972, Delta Air Lines Flight 841",
+       "status": "supported",
+       "fact": "F24",
+       "quote": "Delta Air Lines Flight 841 was hijacked from Detroit to Algeria on July 31, 1972.",
+       "verified": true,
+       "material": false,
+       "why": "Date and flight are stated."
+      },
+      {
+       "claim": "was somewhere over Orlando",
+       "status": "supported",
+       "fact": "F2",
+       "quote": "commandeered around 12:45 p.m. over Orlando",
+       "verified": true,
+       "material": false,
+       "why": "Location over Orlando is stated."
+      },
+      {
+       "claim": "it had left Detroit bound for Miami",
+       "status": "supported",
+       "fact": "F2",
+       "quote": "after departing Detroit for Miami",
+       "verified": true,
+       "material": false,
+       "why": "Origin and destination are stated."
+      },
+      {
+       "claim": "when the hijacking announced itself",
+       "status": "supported",
+       "fact": "F2",
+       "quote": "Delta Flight 841 was commandeered around 12:45 p.m. over Orlando",
+       "verified": true,
+       "material": false,
+       "why": "The hijacking began at that time and place."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   }
+  },
+  {
+   "original": "The object that passed inspection was the same object that changed the terms of the flight.",
+   "origV3": {
+    "i": 9,
+    "sentence": "The object that passed inspection was the same object that changed the terms of the flight.",
+    "claims": [
+     {
+      "claim": "The object that passed inspection",
+      "status": "unsupported",
+      "fact": "F4",
+      "quote": "",
+      "verified": false,
+      "material": true,
+      "why": "Research says a firearm was concealed in a hollowed-out Bible, but never says it went through or passed any inspection or screening."
+     },
+     {
+      "claim": "was the same object that changed the terms of the flight",
+      "status": "supported",
+      "fact": "F0",
+      "quote": "diverted under gunpoint",
+      "verified": true,
+      "material": false,
+      "why": "The concealed firearm was used to divert the flight, as F0 and F4 describe."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   },
+   "cons": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   }
+  },
+  {
+   "original": "A million dollars in 1972 was not a round number chosen for drama — it was a figure large enough to fund a sustained political operation abroad, which is the frame Wright himself later placed around the act.",
+   "origV3": {
+    "i": 10,
+    "sentence": "A million dollars in 1972 was not a round number chosen for drama — it was a figure large enough to fund a sustained political operation abroad, which is the frame Wright himself later placed around the act.",
+    "claims": [
+     {
+      "claim": "A million dollars in 1972",
+      "status": "supported",
+      "fact": "F13",
+      "quote": "During the 1972 hijacking, Wright told the crew, 'We want a million dollars'",
+      "verified": true,
+      "material": false,
+      "why": "The research documents the 1972 demand for $1 million."
+     },
+     {
+      "claim": "was not a round number chosen for drama",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": false,
+      "why": "This is the narrator's interpretation of why the amount was chosen."
+     },
+     {
+      "claim": "it was a figure large enough to fund a sustained political operation abroad",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": false,
+      "why": "This is narrator analysis; the research says nothing about funding an operation abroad."
+     },
+     {
+      "claim": "which is the frame Wright himself later placed around the act",
+      "status": "overstated",
+      "fact": "F17",
+      "quote": "presenting the action as part of Black Liberation struggle rather than ordinary criminal gain",
+      "verified": true,
+      "material": true,
+      "why": "Wright framed the act as Black Liberation struggle, not as funding a sustained political operation abroad."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "A million dollars in 1972 was not a round number chosen for drama — it was, in Wright's own telling, part of a Black Liberation struggle, the frame he later placed around the act.",
+    "v3": {
+     "i": 9,
+     "sentence": "A million dollars in 1972 was not a round number chosen for drama — it was, in Wright's own telling, part of a Black Liberation struggle, the frame he later placed around the act.",
+     "claims": [
+      {
+       "claim": "A million dollars in 1972",
+       "status": "supported",
+       "fact": "F4",
+       "quote": "On July 31, 1972, the hijackers seized Delta Air Lines Flight 841, concealed a firearm in a hollowed-out Bible, demanded $1 million",
+       "verified": true,
+       "material": false,
+       "why": "The research gives the $1 million demand and the 1972 date."
+      },
+      {
+       "claim": "was not a round number chosen for drama",
+       "status": "unsupported",
+       "fact": "",
+       "quote": "",
+       "verified": false,
+       "material": false,
+       "why": "This is the narrator's interpretation of the motive behind the figure."
+      },
+      {
+       "claim": "in Wright's own telling, part of a Black Liberation struggle, the frame he later placed around the act",
+       "status": "supported",
+       "fact": "F17",
+       "quote": "Wright's published account of the hijacking is quoted as saying he and the others wanted 'a million dollars' and 'to go to Algeria,' presenting the action as part of Black Liberation struggle rather than ordinary criminal gain.",
+       "verified": true,
+       "material": false,
+       "why": "His published account framed the act as part of the Black Liberation struggle."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "A million dollars in 1972 was not a round number chosen for drama, which is the frame Wright himself later placed around the act.",
+    "v3": {
+     "i": 31,
+     "sentence": "A million dollars in 1972 was not a round number chosen for drama, which is the frame Wright himself later placed around the act.",
+     "claims": [
+      {
+       "claim": "A million dollars in 1972",
+       "status": "supported",
+       "fact": "F4",
+       "quote": "On July 31, 1972, the hijackers seized Delta Air Lines Flight 841, concealed a firearm in a hollowed-out Bible, demanded $1 million",
+       "verified": true,
+       "material": false,
+       "why": "The research gives the 1972 ransom demand as $1 million."
+      },
+      {
+       "claim": "was not a round number chosen for drama",
+       "status": "unsupported",
+       "fact": "",
+       "quote": "",
+       "verified": false,
+       "material": false,
+       "why": "This is the narrator's interpretation of the amount; the research does not say why it was chosen."
+      },
+      {
+       "claim": "which is the frame Wright himself later placed around the act",
+       "status": "overstated",
+       "fact": "F17",
+       "quote": "presenting the action as part of Black Liberation struggle rather than ordinary criminal gain",
+       "verified": true,
+       "material": true,
+       "why": "Wright's published account frames the act as Black Liberation struggle, not as anything about why the ransom amount was chosen, so the sentence misstates what he said."
+      }
+     ],
+     "error": true,
+     "material": true
+    }
+   }
+  },
+  {
+   "original": "Algeria returned the aircraft and the money to the United States — the FBI's records are clear on that — but none of the ransom was recovered from Wright or his co-conspirators.",
+   "origV3": {
+    "i": 11,
+    "sentence": "Algeria returned the aircraft and the money to the United States — the FBI's records are clear on that — but none of the ransom was recovered from Wright or his co-conspirators.",
+    "claims": [
+     {
+      "claim": "Algeria returned the aircraft and the money to the United States",
+      "status": "supported",
+      "fact": "F3",
+      "quote": "the FBI later said the money and plane were returned to the United States by Algeria",
+      "verified": true,
+      "material": false,
+      "why": "F3 states Algeria returned the money and plane to the US."
+     },
+     {
+      "claim": "the FBI's records are clear on that",
+      "status": "supported",
+      "fact": "F3",
+      "quote": "the FBI later said the money and plane were returned to the United States by Algeria",
+      "verified": true,
+      "material": false,
+      "why": "The FBI is the source of the return account; 'clear' is a mild paraphrase."
+     },
+     {
+      "claim": "none of the ransom was recovered from Wright or his co-conspirators",
+      "status": "overstated",
+      "fact": "F3",
+      "quote": "with no recovery of the money from the hijackers themselves documented in the source set here",
+      "verified": true,
+      "material": true,
+      "why": "Research only says no such recovery is documented, not that none occurred."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "Algeria returned the aircraft and the money to the United States — the FBI's records are clear on that — but available records do not document recovery of the ransom from Wright or his co-conspirators.",
+    "v3": {
+     "i": 10,
+     "sentence": "Algeria returned the aircraft and the money to the United States — the FBI's records are clear on that — but available records do not document recovery of the ransom from Wright or his co-conspirators.",
+     "claims": [
+      {
+       "claim": "Algeria returned the aircraft and the money to the United States",
+       "status": "supported",
+       "fact": "F3",
+       "quote": "the FBI later said the money and plane were returned to the United States by Algeria",
+       "verified": true,
+       "material": false,
+       "why": "F3 states Algeria returned the money and plane."
+      },
+      {
+       "claim": "the FBI's records are clear on that",
+       "status": "overstated",
+       "fact": "F3",
+       "quote": "the FBI later said the money and plane were returned to the United States by Algeria",
+       "verified": true,
+       "material": false,
+       "why": "The research says the FBI stated this; calling its records 'clear' is the narrator's characterization."
+      },
+      {
+       "claim": "available records do not document recovery of the ransom from Wright or his co-conspirators",
+       "status": "supported",
+       "fact": "F3",
+       "quote": "with no recovery of the money from the hijackers themselves documented in the source set here",
+       "verified": true,
+       "material": false,
+       "why": "F3 says no recovery from the hijackers is documented."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "Algeria returned the aircraft and the money to the United States — the FBI's records are clear on that — but no recovery of the money from Wright or his co-conspirators is documented.",
+    "v3": {
+     "i": 32,
+     "sentence": "Algeria returned the aircraft and the money to the United States — the FBI's records are clear on that — but no recovery of the money from Wright or his co-conspirators is documented.",
+     "claims": [
+      {
+       "claim": "Algeria returned the aircraft and the money to the United States",
+       "status": "supported",
+       "fact": "F3",
+       "quote": "the FBI later said the money and plane were returned to the United States by Algeria",
+       "verified": true,
+       "material": false,
+       "why": "The research states that Algeria returned both the money and the plane."
+      },
+      {
+       "claim": "the FBI's records are clear on that",
+       "status": "overstated",
+       "fact": "F3",
+       "quote": "the FBI later said the money and plane were returned",
+       "verified": true,
+       "material": false,
+       "why": "The research says only that the FBI said this; 'records are clear' is the narrator's characterization."
+      },
+      {
+       "claim": "no recovery of the money from Wright or his co-conspirators is documented",
+       "status": "supported",
+       "fact": "F3",
+       "quote": "with no recovery of the money from the hijackers themselves documented in the source set here",
+       "verified": true,
+       "material": false,
+       "why": "The research says no recovery from the hijackers is documented."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   }
+  },
+  {
+   "original": "And what he carried onto Flight 841 — concealed inside the one object most likely to pass without question — was the physical proof that the two years between those two dates had been spent in preparation for exactly this.",
+   "origV3": {
+    "i": 12,
+    "sentence": "And what he carried onto Flight 841 — concealed inside the one object most likely to pass without question — was the physical proof that the two years between those two dates had been spent in preparation for exactly this.",
+    "claims": [
+     {
+      "claim": "what he carried onto Flight 841 — concealed inside",
+      "status": "overstated",
+      "fact": "F4",
+      "quote": "the hijackers seized Delta Air Lines Flight 841, concealed a firearm in a hollowed-out Bible",
+      "verified": true,
+      "material": true,
+      "why": "The research credits the hijackers as a group with concealing the gun, not Wright personally carrying it aboard."
+     },
+     {
+      "claim": "the one object most likely to pass without question",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": false,
+      "why": "The research names a hollowed-out Bible but does not say it was the object least likely to be questioned; this is the narrator's characterization."
+     },
+     {
+      "claim": "the two years between those two dates",
+      "status": "derived",
+      "fact": "F21",
+      "quote": "escaped from a New Jersey prison in August 1970, joined the Black Liberation Army, hijacked Delta Air Lines Flight 841 on July 31, 1972",
+      "verified": true,
+      "material": false,
+      "why": "August 1970 to July 1972 is roughly two years."
+     },
+     {
+      "claim": "was the physical proof that the two years between those two dates had been spent in preparation for exactly this",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": false,
+      "why": "The research does not say the interval was spent preparing for the hijacking; this is the narrator's inference."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   },
+   "cons": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   }
+  },
+  {
+   "original": "From Algiers, Wright made his way to Guinea-Bissau, the small West African nation that had only recently won independence from Portugal.",
+   "origV3": {
+    "i": 13,
+    "sentence": "From Algiers, Wright made his way to Guinea-Bissau, the small West African nation that had only recently won independence from Portugal.",
+    "claims": [
+     {
+      "claim": "From Algiers",
+      "status": "unsupported",
+      "fact": "F14",
+      "quote": "",
+      "verified": false,
+      "material": true,
+      "why": "The research says the plane landed in Algeria but never names Algiers as the city or as Wright's departure point."
+     },
+     {
+      "claim": "Wright made his way to Guinea-Bissau",
+      "status": "supported",
+      "fact": "F14",
+      "quote": "After the hijacking, Wright went to Guinea-Bissau in West Africa",
+      "verified": true,
+      "material": false,
+      "why": "F14 states he went to Guinea-Bissau after the hijacking."
+     },
+     {
+      "claim": "the small West African nation",
+      "status": "supported",
+      "fact": "F14",
+      "quote": "Guinea-Bissau in West Africa",
+      "verified": true,
+      "material": false,
+      "why": "West Africa is supported; 'small' is harmless color."
+     },
+     {
+      "claim": "that had only recently won independence from Portugal",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": true,
+      "why": "The research says nothing about Guinea-Bissau's independence or its timing."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "Wright made his way to Guinea-Bissau in West Africa, and later resurfaced in Portugal, where he lived under a Portuguese identity.",
+    "v3": {
+     "i": 11,
+     "sentence": "Wright made his way to Guinea-Bissau in West Africa, and later resurfaced in Portugal, where he lived under a Portuguese identity.",
+     "claims": [
+      {
+       "claim": "Wright made his way to Guinea-Bissau in West Africa",
+       "status": "supported",
+       "fact": "F14",
+       "quote": "Wright went to Guinea-Bissau in West Africa",
+       "verified": true,
+       "material": false,
+       "why": "Research states he went to Guinea-Bissau in West Africa."
+      },
+      {
+       "claim": "later resurfaced in Portugal",
+       "status": "supported",
+       "fact": "F14",
+       "quote": "later resurfaced in Portugal using Portuguese citizenship",
+       "verified": true,
+       "material": false,
+       "why": "Research states he later resurfaced in Portugal."
+      },
+      {
+       "claim": "where he lived under a Portuguese identity",
+       "status": "supported",
+       "fact": "F9",
+       "quote": "George Edward Wright lived under a Portuguese identity after resurfacing in Portugal",
+       "verified": true,
+       "material": false,
+       "why": "Research states he lived under a Portuguese identity in Portugal."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "After the hijacking, Wright made his way to Guinea-Bissau, a small nation in West Africa, and later resurfaced in Portugal.",
+    "v3": {
+     "i": 33,
+     "sentence": "After the hijacking, Wright made his way to Guinea-Bissau, a small nation in West Africa, and later resurfaced in Portugal.",
+     "claims": [
+      {
+       "claim": "After the hijacking, Wright made his way to Guinea-Bissau",
+       "status": "supported",
+       "fact": "F14",
+       "quote": "After the hijacking, Wright went to Guinea-Bissau in West Africa",
+       "verified": true,
+       "material": false,
+       "why": "Research states he went to Guinea-Bissau after the hijacking."
+      },
+      {
+       "claim": "in West Africa",
+       "status": "supported",
+       "fact": "F14",
+       "quote": "Guinea-Bissau in West Africa",
+       "verified": true,
+       "material": false,
+       "why": "Research places Guinea-Bissau in West Africa."
+      },
+      {
+       "claim": "a small nation",
+       "status": "unsupported",
+       "fact": "",
+       "quote": "",
+       "verified": false,
+       "material": false,
+       "why": "The research never describes the country's size; this is harmless color."
+      },
+      {
+       "claim": "and later resurfaced in Portugal",
+       "status": "supported",
+       "fact": "F14",
+       "quote": "later resurfaced in Portugal using Portuguese citizenship",
+       "verified": true,
+       "material": false,
+       "why": "Research states he later resurfaced in Portugal."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   }
+  },
+  {
+   "original": "It is a bureaucratic accumulation — residency, paperwork, time, a life that leaves institutional traces in the right places.",
+   "origV3": {
+    "i": 14,
+    "sentence": "It is a bureaucratic accumulation — residency, paperwork, time, a life that leaves institutional traces in the right places.",
+    "claims": [
+     {
+      "claim": "It is a bureaucratic accumulation — residency, paperwork, time, a life that leaves institutional traces in the right places.",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": false,
+      "why": "A general description of how citizenship is acquired; the research never says how Wright obtained Portuguese citizenship."
+     }
+    ],
+    "error": true,
+    "material": false
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "It is a life that leaves institutional traces in the right places.",
+    "v3": {
+     "i": 12,
+     "sentence": "It is a life that leaves institutional traces in the right places.",
+     "claims": [],
+     "error": false,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "It is a life that leaves institutional traces in the right places.",
+    "v3": {
+     "i": 34,
+     "sentence": "It is a life that leaves institutional traces in the right places.",
+     "claims": [],
+     "error": false,
+     "material": false
+    }
+   }
+  },
+  {
+   "original": "The man who had seized a commercial aircraft over Florida in 1972 was now, by the legal measure Portugal applied, one of its own.",
+   "origV3": {
+    "i": 15,
+    "sentence": "The man who had seized a commercial aircraft over Florida in 1972 was now, by the legal measure Portugal applied, one of its own.",
+    "claims": [
+     {
+      "claim": "The man who had seized a commercial aircraft ... in 1972",
+      "status": "supported",
+      "fact": "F21",
+      "quote": "hijacked Delta Air Lines Flight 841 on July 31, 1972",
+      "verified": true,
+      "material": false,
+      "why": "Research records Wright hijacking the Delta airliner in July 1972."
+     },
+     {
+      "claim": "seized ... over Florida",
+      "status": "supported",
+      "fact": "F2",
+      "quote": "Delta Flight 841 was commandeered around 12:45 p.m. over Orlando",
+      "verified": true,
+      "material": false,
+      "why": "Research places the takeover over Orlando, which is in Florida."
+     },
+     {
+      "claim": "was now, by the legal measure Portugal applied, one of its own",
+      "status": "supported",
+      "fact": "F15",
+      "quote": "Wright would not be extradited to the United States because he had Portuguese citizenship",
+      "verified": true,
+      "material": false,
+      "why": "Research states that Portuguese citizenship was the legal basis for refusing extradition."
+     }
+    ],
+    "error": false,
+    "material": false
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "The man who had seized a commercial aircraft in 1972 was now, by the legal measure Portugal applied, one of its own.",
+    "v3": {
+     "i": 13,
+     "sentence": "The man who had seized a commercial aircraft in 1972 was now, by the legal measure Portugal applied, one of its own.",
+     "claims": [
+      {
+       "claim": "The man who had seized a commercial aircraft in 1972",
+       "status": "supported",
+       "fact": "F21",
+       "quote": "hijacked Delta Air Lines Flight 841 on July 31, 1972",
+       "verified": true,
+       "material": false,
+       "why": "Research records Wright hijacking a Delta airliner in 1972."
+      },
+      {
+       "claim": "by the legal measure Portugal applied, one of its own",
+       "status": "supported",
+       "fact": "F15",
+       "quote": "Wright would not be extradited to the United States because he had Portuguese citizenship",
+       "verified": true,
+       "material": false,
+       "why": "The Portuguese court treated him as a citizen, which is the legal basis named in the research."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "The man who had seized a commercial aircraft over Orlando in 1972 was now, by the legal measure Portugal applied, one of its own.",
+    "v3": {
+     "i": 35,
+     "sentence": "The man who had seized a commercial aircraft over Orlando in 1972 was now, by the legal measure Portugal applied, one of its own.",
+     "claims": [
+      {
+       "claim": "The man who had seized a commercial aircraft over Orlando",
+       "status": "supported",
+       "fact": "F2",
+       "quote": "Delta Flight 841 was commandeered around 12:45 p.m. over Orlando",
+       "verified": true,
+       "material": false,
+       "why": "The research places the takeover over Orlando."
+      },
+      {
+       "claim": "in 1972",
+       "status": "supported",
+       "fact": "F21",
+       "quote": "hijacked Delta Air Lines Flight 841 on July 31, 1972",
+       "verified": true,
+       "material": false,
+       "why": "The hijacking date is in 1972."
+      },
+      {
+       "claim": "was now, by the legal measure Portugal applied, one of its own",
+       "status": "supported",
+       "fact": "F15",
+       "quote": "Wright would not be extradited to the United States because he had Portuguese citizenship",
+       "verified": true,
+       "material": false,
+       "why": "Portugal treated him as a Portuguese citizen in ruling against extradition."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   }
+  },
+  {
+   "original": "The citizenship he acquired was the reason it could stop.",
+   "origV3": {
+    "i": 16,
+    "sentence": "The citizenship he acquired was the reason it could stop.",
+    "claims": [
+     {
+      "claim": "The citizenship he acquired was the reason it could stop.",
+      "status": "supported",
+      "fact": "F15",
+      "quote": "a Lisbon appeals court ruled that Wright would not be extradited to the United States because he had Portuguese citizenship",
+      "verified": true,
+      "material": false,
+      "why": "Research gives his Portuguese citizenship as the reason the court refused extradition."
+     }
+    ],
+    "error": false,
+    "material": false
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "His Portuguese citizenship was the reason the courts ruled he could not be extradited.",
+    "v3": {
+     "i": 14,
+     "sentence": "His Portuguese citizenship was the reason the courts ruled he could not be extradited.",
+     "claims": [
+      {
+       "claim": "His Portuguese citizenship",
+       "status": "supported",
+       "fact": "F15",
+       "quote": "because he had Portuguese citizenship",
+       "verified": true,
+       "material": false,
+       "why": "Research states Wright had Portuguese citizenship."
+      },
+      {
+       "claim": "was the reason the courts ruled he could not be extradited",
+       "status": "supported",
+       "fact": "F15",
+       "quote": "a Lisbon appeals court ruled that Wright would not be extradited to the United States because he had Portuguese citizenship, and Portugal's Supreme Court later denied a U.S. appeal",
+       "verified": true,
+       "material": false,
+       "why": "Research gives citizenship as the basis of the non-extradition ruling, which the Supreme Court upheld."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   }
+  },
+  {
+   "original": "Under Portuguese law, citizens are not extraditable.",
+   "origV3": {
+    "i": 17,
+    "sentence": "Under Portuguese law, citizens are not extraditable.",
+    "claims": [
+     {
+      "claim": "Under Portuguese law, citizens are not extraditable.",
+      "status": "overstated",
+      "fact": "F15",
+      "quote": "a Lisbon appeals court ruled that Wright would not be extradited to the United States because he had Portuguese citizenship",
+      "verified": true,
+      "material": true,
+      "why": "The research records one court ruling based on Wright's citizenship, not a blanket legal rule that Portuguese citizens cannot be extradited."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "The courts ruled that Wright would not be extradited because he had Portuguese citizenship, and Portugal's Supreme Court later denied a U.S. appeal.",
+    "v3": {
+     "i": 15,
+     "sentence": "The courts ruled that Wright would not be extradited because he had Portuguese citizenship, and Portugal's Supreme Court later denied a U.S. appeal.",
+     "claims": [
+      {
+       "claim": "The courts ruled that Wright would not be extradited",
+       "status": "supported",
+       "fact": "F15",
+       "quote": "a Lisbon appeals court ruled that Wright would not be extradited to the United States",
+       "verified": true,
+       "material": false,
+       "why": "Research records a Lisbon appeals court ruling against extradition."
+      },
+      {
+       "claim": "because he had Portuguese citizenship",
+       "status": "supported",
+       "fact": "F15",
+       "quote": "because he had Portuguese citizenship",
+       "verified": true,
+       "material": false,
+       "why": "Research states citizenship as the reason."
+      },
+      {
+       "claim": "Portugal's Supreme Court later denied a U.S. appeal",
+       "status": "supported",
+       "fact": "F15",
+       "quote": "Portugal's Supreme Court later denied a U.S. appeal",
+       "verified": true,
+       "material": false,
+       "why": "Research states this directly."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   }
+  },
+  {
+   "original": "Whatever the FBI had built over forty years, whatever charges remained open — unlawful flight to avoid confinement, air piracy, aiding and abetting — none of it could reach across a border and compel a sovereign nation to hand over its own national.",
+   "origV3": {
+    "i": 18,
+    "sentence": "Whatever the FBI had built over forty years, whatever charges remained open — unlawful flight to avoid confinement, air piracy, aiding and abetting — none of it could reach across a border and compel a sovereign nation to hand over its own national.",
+    "claims": [
+     {
+      "claim": "whatever charges remained open — unlawful flight to avoid confinement, air piracy, aiding and abetting",
+      "status": "supported",
+      "fact": "F19",
+      "quote": "The FBI says George Edward Wright is wanted for unlawful flight to avoid confinement, air piracy, and aiding and abetting",
+      "verified": true,
+      "material": false,
+      "why": "The research lists these exact outstanding charges."
+     },
+     {
+      "claim": "Whatever the FBI had built over forty years",
+      "status": "supported",
+      "fact": "F21",
+      "quote": "after more than 40 years as a fugitive",
+      "verified": true,
+      "material": false,
+      "why": "The research places the fugitive period at more than four decades."
+     },
+     {
+      "claim": "none of it could reach across a border and compel a sovereign nation to hand over its own national",
+      "status": "supported",
+      "fact": "F15",
+      "quote": "a Lisbon appeals court ruled that Wright would not be extradited to the United States because he had Portuguese citizenship, and Portugal's Supreme Court later denied a U.S. appeal",
+      "verified": true,
+      "material": false,
+      "why": "Portugal refused to extradite Wright because he was its citizen."
+     }
+    ],
+    "error": false,
+    "material": false
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "Whatever charges remained open — unlawful flight to avoid confinement, air piracy, aiding and abetting — none of it could reach across a border and compel a sovereign nation to hand over its own national.",
+    "v3": {
+     "i": 16,
+     "sentence": "Whatever charges remained open — unlawful flight to avoid confinement, air piracy, aiding and abetting — none of it could reach across a border and compel a sovereign nation to hand over its own national.",
+     "claims": [
+      {
+       "claim": "Whatever charges remained open — unlawful flight to avoid confinement, air piracy, aiding and abetting",
+       "status": "supported",
+       "fact": "F19",
+       "quote": "The FBI says George Edward Wright is wanted for unlawful flight to avoid confinement, air piracy, and aiding and abetting",
+       "verified": true,
+       "material": false,
+       "why": "The FBI lists exactly these charges."
+      },
+      {
+       "claim": "hand over its own national",
+       "status": "supported",
+       "fact": "F15",
+       "quote": "a Lisbon appeals court ruled that Wright would not be extradited to the United States because he had Portuguese citizenship",
+       "verified": true,
+       "material": false,
+       "why": "Portugal refused extradition because Wright was a Portuguese citizen."
+      },
+      {
+       "claim": "none of it could reach across a border and compel a sovereign nation",
+       "status": "unsupported",
+       "fact": "",
+       "quote": "",
+       "verified": false,
+       "material": false,
+       "why": "Narrator's general interpretation of the limits of extradition, not a stated fact."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "Whatever charges remained open — unlawful flight to avoid confinement, air piracy, aiding and abetting — none of it could reach across a border and compel a sovereign nation to hand over its own national.",
+    "v3": {
+     "i": 36,
+     "sentence": "Whatever charges remained open — unlawful flight to avoid confinement, air piracy, aiding and abetting — none of it could reach across a border and compel a sovereign nation to hand over its own national.",
+     "claims": [
+      {
+       "claim": "Whatever charges remained open — unlawful flight to avoid confinement, air piracy, aiding and abetting",
+       "status": "supported",
+       "fact": "F19",
+       "quote": "The FBI says George Edward Wright is wanted for unlawful flight to avoid confinement, air piracy, and aiding and abetting",
+       "verified": true,
+       "material": false,
+       "why": "The research lists these exact pending charges."
+      },
+      {
+       "claim": "compel a sovereign nation to hand over its own national",
+       "status": "supported",
+       "fact": "F15",
+       "quote": "a Lisbon appeals court ruled that Wright would not be extradited to the United States because he had Portuguese citizenship, and Portugal's Supreme Court later denied a U.S. appeal",
+       "verified": true,
+       "material": false,
+       "why": "Portugal refused extradition because Wright was a Portuguese citizen."
+      },
+      {
+       "claim": "none of it could reach across a border and compel",
+       "status": "unsupported",
+       "fact": "",
+       "quote": "",
+       "verified": false,
+       "material": false,
+       "why": "This is the narrator's framing of a general limit on the charges, not a fact the research states."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   }
+  },
+  {
+   "original": "Portugal was not declining a request it found inconvenient; it was applying a legal principle with no exception written in for the severity of the underlying offense.",
+   "origV3": {
+    "i": 19,
+    "sentence": "Portugal was not declining a request it found inconvenient; it was applying a legal principle with no exception written in for the severity of the underlying offense.",
+    "claims": [
+     {
+      "claim": "Portugal was not declining a request it found inconvenient",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": false,
+      "why": "This is the narrator's view of Portugal's motives; the research does not address it."
+     },
+     {
+      "claim": "it was applying a legal principle",
+      "status": "supported",
+      "fact": "F15",
+      "quote": "ruled that Wright would not be extradited to the United States because he had Portuguese citizenship",
+      "verified": true,
+      "material": false,
+      "why": "The research says the refusal rested on a legal ground: his Portuguese citizenship."
+     },
+     {
+      "claim": "with no exception written in for the severity of the underlying offense",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": true,
+      "why": "The research says nothing about the content of Portuguese law or whether it allows exceptions for serious offenses."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "Portugal was not declining a request it found inconvenient; it was applying a legal principle rooted in his Portuguese citizenship.",
+    "v3": {
+     "i": 17,
+     "sentence": "Portugal was not declining a request it found inconvenient; it was applying a legal principle rooted in his Portuguese citizenship.",
+     "claims": [
+      {
+       "claim": "it was applying a legal principle rooted in his Portuguese citizenship",
+       "status": "supported",
+       "fact": "F15",
+       "quote": "a Lisbon appeals court ruled that Wright would not be extradited to the United States because he had Portuguese citizenship",
+       "verified": true,
+       "material": false,
+       "why": "The research says the court refused extradition because of his Portuguese citizenship."
+      },
+      {
+       "claim": "Portugal was not declining a request it found inconvenient",
+       "status": "unsupported",
+       "fact": "",
+       "quote": "",
+       "verified": false,
+       "material": false,
+       "why": "This is the narrator's view of Portugal's motives; the research does not address them."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "Portugal was not declining a request it found inconvenient; it was applying a legal principle.",
+    "v3": {
+     "i": 37,
+     "sentence": "Portugal was not declining a request it found inconvenient; it was applying a legal principle.",
+     "claims": [
+      {
+       "claim": "Portugal was not declining a request",
+       "status": "supported",
+       "fact": "F15",
+       "quote": "a Lisbon appeals court ruled that Wright would not be extradited to the United States",
+       "verified": true,
+       "material": false,
+       "why": "The research records that Portugal refused the US extradition request."
+      },
+      {
+       "claim": "it found inconvenient",
+       "status": "unsupported",
+       "fact": "",
+       "quote": "",
+       "verified": false,
+       "material": false,
+       "why": "This is the narrator's reading of Portugal's motive; the research says nothing about motive."
+      },
+      {
+       "claim": "it was applying a legal principle",
+       "status": "unsupported",
+       "fact": "F15",
+       "quote": "because he had Portuguese citizenship",
+       "verified": true,
+       "material": false,
+       "why": "The research gives citizenship as the ruling's basis, but calling it a 'legal principle' is the narrator's interpretation."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   }
+  },
+  {
+   "original": "There is a structural irony in the outcome that the courts themselves made plain.",
+   "origV3": {
+    "i": 20,
+    "sentence": "There is a structural irony in the outcome that the courts themselves made plain.",
+    "claims": [
+     {
+      "claim": "There is a structural irony in the outcome that the courts themselves made plain.",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": false,
+      "why": "This is the narrator's interpretation. The research gives the extradition rulings (F10, F15) but nothing about the courts making any irony plain; the sentence names no specific finding."
+     }
+    ],
+    "error": true,
+    "material": false
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "There is a structural irony in the outcome.",
+    "v3": {
+     "i": 18,
+     "sentence": "There is a structural irony in the outcome.",
+     "claims": [],
+     "error": false,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   }
+  },
+  {
+   "original": "And then the courts ruled, twice, and he walked out of it.",
+   "origV3": {
+    "i": 21,
+    "sentence": "And then the courts ruled, twice, and he walked out of it.",
+    "claims": [
+     {
+      "claim": "the courts ruled, twice",
+      "status": "supported",
+      "fact": "F10",
+      "quote": "A Lisbon appeals court ruled on November 17, 2011 that Wright would not be extradited, and Portugal’s Supreme Court later rejected the U.S. appeal",
+      "verified": true,
+      "material": false,
+      "why": "Two rulings are recorded: the appeals court decision and the Supreme Court's rejection of the U.S. appeal."
+     },
+     {
+      "claim": "he walked out of it",
+      "status": "supported",
+      "fact": "F10",
+      "quote": "leaving him in Portugal",
+      "verified": true,
+      "material": false,
+      "why": "The research says the rulings left him in Portugal rather than extradited, which the idiom paraphrases."
+     }
+    ],
+    "error": false,
+    "material": false
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "And then the courts ruled, twice, and he remained in Portugal.",
+    "v3": {
+     "i": 19,
+     "sentence": "And then the courts ruled, twice, and he remained in Portugal.",
+     "claims": [
+      {
+       "claim": "the courts ruled, twice",
+       "status": "supported",
+       "fact": "F10",
+       "quote": "A Lisbon appeals court ruled on November 17, 2011 that Wright would not be extradited, and Portugal’s Supreme Court later rejected the U.S. appeal",
+       "verified": true,
+       "material": false,
+       "why": "Two court rulings: the appeals court decision and the Supreme Court rejection."
+      },
+      {
+       "claim": "he remained in Portugal",
+       "status": "supported",
+       "fact": "F10",
+       "quote": "leaving him in Portugal",
+       "verified": true,
+       "material": false,
+       "why": "The research states the rulings left him in Portugal."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "And then the courts ruled, twice, and he remained in Portugal.",
+    "v3": {
+     "i": 38,
+     "sentence": "And then the courts ruled, twice, and he remained in Portugal.",
+     "claims": [
+      {
+       "claim": "the courts ruled, twice",
+       "status": "supported",
+       "fact": "F10",
+       "quote": "A Lisbon appeals court ruled on November 17, 2011 that Wright would not be extradited, and Portugal’s Supreme Court later rejected the U.S. appeal",
+       "verified": true,
+       "material": false,
+       "why": "Two court rulings: the appeals court ruling and the Supreme Court rejection."
+      },
+      {
+       "claim": "he remained in Portugal",
+       "status": "supported",
+       "fact": "F10",
+       "quote": "leaving him in Portugal",
+       "verified": true,
+       "material": false,
+       "why": "The research states the rulings left him in Portugal."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   }
+  },
+  {
+   "original": "The case, for the United States, was closed.",
+   "origV3": {
+    "i": 22,
+    "sentence": "The case, for the United States, was closed.",
+    "claims": [
+     {
+      "claim": "The case, for the United States, was closed.",
+      "status": "overstated",
+      "fact": "F10",
+      "quote": "Portugal’s Supreme Court later rejected the U.S. appeal, leaving him in Portugal",
+      "verified": true,
+      "material": false,
+      "why": "The research records only that the U.S. extradition appeal failed; it never says the U.S. closed the case, and the FBI still lists Wright as wanted (F19)."
+     }
+    ],
+    "error": true,
+    "material": false
+   },
+   "old": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   },
+   "cons": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   }
+  },
+  {
+   "original": "The name he had actually been living under in Portugal was not on that list, because the FBI did not have it.",
+   "origV3": {
+    "i": 23,
+    "sentence": "The name he had actually been living under in Portugal was not on that list, because the FBI did not have it.",
+    "claims": [
+     {
+      "claim": "The name he had actually been living under in Portugal",
+      "status": "supported",
+      "fact": "F9",
+      "quote": "George Edward Wright lived under a Portuguese identity after resurfacing in Portugal with Portuguese citizenship",
+      "verified": true,
+      "material": false,
+      "why": "Research says he lived under a Portuguese identity."
+     },
+     {
+      "claim": "was not on that list",
+      "status": "unsupported",
+      "fact": "F16",
+      "quote": "listed aliases including George Edward Wright and George Wright",
+      "verified": true,
+      "material": true,
+      "why": "The alias list is given as 'including', so the research does not establish that his Portuguese name was absent."
+     },
+     {
+      "claim": "because the FBI did not have it",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": true,
+      "why": "The research does not say what the FBI knew about his Portuguese name."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "clause_cut",
+    "text": "The name he had actually been living under in Portugal was not on that list.",
+    "v3": {
+     "i": 20,
+     "sentence": "The name he had actually been living under in Portugal was not on that list.",
+     "claims": [
+      {
+       "claim": "The name he had actually been living under in Portugal",
+       "status": "supported",
+       "fact": "F9",
+       "quote": "George Edward Wright lived under a Portuguese identity after resurfacing in Portugal with Portuguese citizenship",
+       "verified": true,
+       "material": false,
+       "why": "The research says he lived under a Portuguese identity in Portugal."
+      },
+      {
+       "claim": "was not on that list",
+       "status": "unsupported",
+       "fact": "F16",
+       "quote": "listed aliases including George Edward Wright and George Wright",
+       "verified": true,
+       "material": true,
+       "why": "The notice's alias list is only given as 'including' two names, and the Portuguese name never appears, so its absence from the list is not established."
+      }
+     ],
+     "error": true,
+     "material": true
+    }
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "The name he had actually been living under in Portugal was not on that list.",
+    "v3": {
+     "i": 39,
+     "sentence": "The name he had actually been living under in Portugal was not on that list.",
+     "claims": [
+      {
+       "claim": "The name he had actually been living under in Portugal",
+       "status": "supported",
+       "fact": "F9",
+       "quote": "lived under a Portuguese identity after resurfacing in Portugal with Portuguese citizenship",
+       "verified": true,
+       "material": false,
+       "why": "Research says he lived in Portugal under a Portuguese identity."
+      },
+      {
+       "claim": "was not on that list",
+       "status": "unsupported",
+       "fact": "F16",
+       "quote": "listed aliases including George Edward Wright and George Wright",
+       "verified": true,
+       "material": true,
+       "why": "The research never gives his Portuguese name or says whether the FBI alias list included it."
+      }
+     ],
+     "error": true,
+     "material": true
+    }
+   }
+  },
+  {
+   "original": "Not a forged one — an official one, issued by the state he had spent years earning the right to belong to.",
+   "origV3": {
+    "i": 24,
+    "sentence": "Not a forged one — an official one, issued by the state he had spent years earning the right to belong to.",
+    "claims": [
+     {
+      "claim": "Not a forged one — an official one",
+      "status": "unsupported",
+      "fact": "F23",
+      "quote": "",
+      "verified": false,
+      "material": true,
+      "why": "The research mentions a Portuguese ID card but never says whether it was genuine or forged; F14 even notes an 'assumed life'."
+     },
+     {
+      "claim": "issued by the state",
+      "status": "unsupported",
+      "fact": "F23",
+      "quote": "",
+      "verified": false,
+      "material": true,
+      "why": "The research mentions 'Wright's Portuguese ID card' and a national database match, but never says the Portuguese state issued the card."
+     },
+     {
+      "claim": "he had spent years earning the right to belong to",
+      "status": "unsupported",
+      "fact": "F15",
+      "quote": "",
+      "verified": false,
+      "material": true,
+      "why": "F15 and F9 say he had Portuguese citizenship, but the research never says how or over what period he obtained it."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   },
+   "cons": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   }
+  },
+  {
+   "original": "The document that gave him away was the same document that saved him.",
+   "origV3": {
+    "i": 25,
+    "sentence": "The document that gave him away was the same document that saved him.",
+    "claims": [
+     {
+      "claim": "The document that gave him away",
+      "status": "supported",
+      "fact": "F23",
+      "quote": "A fingerprint found on Wright’s Portuguese ID card matched records in a national Portuguese database, which led U.S. authorities and Portuguese police to locate and arrest him in September 2011.",
+      "verified": true,
+      "material": false,
+      "why": "The research says his Portuguese ID card led to his arrest."
+     },
+     {
+      "claim": "was the same document that saved him",
+      "status": "unsupported",
+      "fact": "F15",
+      "quote": "",
+      "verified": false,
+      "material": false,
+      "why": "The research says his Portuguese citizenship blocked extradition, not the ID card itself; equating the two is the narrator's framing."
+     }
+    ],
+    "error": true,
+    "material": false
+   },
+   "old": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   },
+   "cons": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   }
+  },
+  {
+   "original": "He had not returned to the United States since the afternoon of July 31, 1972, when a Delta jet lifted out of the jurisdiction and carried him toward Algeria.",
+   "origV3": {
+    "i": 26,
+    "sentence": "He had not returned to the United States since the afternoon of July 31, 1972, when a Delta jet lifted out of the jurisdiction and carried him toward Algeria.",
+    "claims": [
+     {
+      "claim": "He had not returned to the United States since",
+      "status": "supported",
+      "fact": "F9",
+      "quote": "he had not returned to the United States since 1972",
+      "verified": true,
+      "material": false,
+      "why": "Research states he had not returned since 1972."
+     },
+     {
+      "claim": "July 31, 1972",
+      "status": "supported",
+      "fact": "F21",
+      "quote": "hijacked Delta Air Lines Flight 841 on July 31, 1972",
+      "verified": true,
+      "material": false,
+      "why": "The hijacking date matches the research."
+     },
+     {
+      "claim": "the afternoon of",
+      "status": "unsupported",
+      "fact": "F2",
+      "quote": "commandeered around 12:45 p.m. over Orlando",
+      "verified": true,
+      "material": true,
+      "why": "Research gives only the takeover time, not when the jet left U.S. jurisdiction, so the departure time of day is unestablished."
+     },
+     {
+      "claim": "a Delta jet lifted out of the jurisdiction and carried him toward Algeria",
+      "status": "supported",
+      "fact": "F24",
+      "quote": "Delta Air Lines Flight 841 was hijacked from Detroit to Algeria on July 31, 1972.",
+      "verified": true,
+      "material": false,
+      "why": "Research says the Delta flight was diverted to Algeria."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "He had not returned to the United States since July 31, 1972, when a Delta jet carried him toward Algeria.",
+    "v3": {
+     "i": 21,
+     "sentence": "He had not returned to the United States since July 31, 1972, when a Delta jet carried him toward Algeria.",
+     "claims": [
+      {
+       "claim": "He had not returned to the United States since July 31, 1972",
+       "status": "supported",
+       "fact": "F9",
+       "quote": "he had not returned to the United States since 1972",
+       "verified": true,
+       "material": false,
+       "why": "F9 gives 1972, and F21/F24 date his departure via the hijacking to July 31, 1972."
+      },
+      {
+       "claim": "when a Delta jet carried him toward Algeria",
+       "status": "supported",
+       "fact": "F24",
+       "quote": "Delta Air Lines Flight 841 was hijacked from Detroit to Algeria on July 31, 1972.",
+       "verified": true,
+       "material": false,
+       "why": "The research directly states the Delta flight was taken to Algeria on that date."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "He had not returned to the United States since July 31, 1972, when a Delta jet was seized and carried him toward Algeria.",
+    "v3": {
+     "i": 40,
+     "sentence": "He had not returned to the United States since July 31, 1972, when a Delta jet was seized and carried him toward Algeria.",
+     "claims": [
+      {
+       "claim": "He had not returned to the United States since July 31, 1972",
+       "status": "supported",
+       "fact": "F9",
+       "quote": "he had not returned to the United States since 1972",
+       "verified": true,
+       "material": false,
+       "why": "F9 says he had not returned since 1972, and F21 dates his hijacking departure to July 31, 1972."
+      },
+      {
+       "claim": "on July 31, 1972, a Delta jet was seized",
+       "status": "supported",
+       "fact": "F4",
+       "quote": "On July 31, 1972, the hijackers seized Delta Air Lines Flight 841",
+       "verified": true,
+       "material": false,
+       "why": "The date and the seizure of the Delta flight are stated directly."
+      },
+      {
+       "claim": "carried him toward Algeria",
+       "status": "supported",
+       "fact": "F21",
+       "quote": "hijacked Delta Air Lines Flight 841 on July 31, 1972",
+       "verified": true,
+       "material": false,
+       "why": "Wright was a hijacker of the flight, and F4 says it was diverted to Algeria."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   }
+  },
+  {
+   "original": "Everything the FBI built its case on — the charges, the wanted notice, the physical description — was assembled from a man who had simply never come back within reach of it.",
+   "origV3": {
+    "i": 27,
+    "sentence": "Everything the FBI built its case on — the charges, the wanted notice, the physical description — was assembled from a man who had simply never come back within reach of it.",
+    "claims": [
+     {
+      "claim": "the charges",
+      "status": "supported",
+      "fact": "F22",
+      "quote": "The FBI lists George Edward Wright’s offenses as unlawful flight to avoid confinement, escape (murder), air piracy, and aiding and abetting.",
+      "verified": true,
+      "material": false,
+      "why": "The research lists the FBI's charges against Wright."
+     },
+     {
+      "claim": "the wanted notice, the physical description",
+      "status": "supported",
+      "fact": "F16",
+      "quote": "The FBI wanted notice described Wright as a Black male born March 29, 1943, approximately 5 feet 11 inches tall, weighing about 170 pounds, with black hair and brown eyes",
+      "verified": true,
+      "material": false,
+      "why": "The research describes the FBI wanted notice and its physical description."
+     },
+     {
+      "claim": "a man who had simply never come back within reach of it",
+      "status": "supported",
+      "fact": "F9",
+      "quote": "he had not returned to the United States since 1972",
+      "verified": true,
+      "material": false,
+      "why": "Paraphrases that he never returned to the U.S., and F10 shows he was never extradited."
+     }
+    ],
+    "error": false,
+    "material": false
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "The charges, the wanted notice, the physical description — all of it was assembled from a man who had simply never come back within reach.",
+    "v3": {
+     "i": 22,
+     "sentence": "The charges, the wanted notice, the physical description — all of it was assembled from a man who had simply never come back within reach.",
+     "claims": [
+      {
+       "claim": "The charges, the wanted notice",
+       "status": "supported",
+       "fact": "F7",
+       "quote": "The FBI poster identifies George Edward Wright as wanted for \"Unlawful Flight to Avoid Confinement - Escape (Murder); Air Piracy (Seizing by Force an Aircraft in Air Commerce); Aiding and Abetting.\"",
+       "verified": true,
+       "material": false,
+       "why": "The FBI wanted poster lists his charges."
+      },
+      {
+       "claim": "the physical description",
+       "status": "supported",
+       "fact": "F16",
+       "quote": "The FBI wanted notice described Wright as a Black male born March 29, 1943, approximately 5 feet 11 inches tall, weighing about 170 pounds, with black hair and brown eyes",
+       "verified": true,
+       "material": false,
+       "why": "The wanted notice included a physical description."
+      },
+      {
+       "claim": "a man who had simply never come back within reach",
+       "status": "supported",
+       "fact": "F9",
+       "quote": "he had not returned to the United States since 1972",
+       "verified": true,
+       "material": false,
+       "why": "The research says he never returned to the US after 1972."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "The charges, the wanted notice, the physical description — all of it was assembled from a man who had simply never come back within reach.",
+    "v3": {
+     "i": 41,
+     "sentence": "The charges, the wanted notice, the physical description — all of it was assembled from a man who had simply never come back within reach.",
+     "claims": [
+      {
+       "claim": "The charges, the wanted notice, the physical description",
+       "status": "supported",
+       "fact": "F16",
+       "quote": "The FBI wanted notice described Wright as a Black male born March 29, 1943, approximately 5 feet 11 inches tall, weighing about 170 pounds",
+       "verified": true,
+       "material": false,
+       "why": "The FBI wanted notice with charges and a physical description is in the research."
+      },
+      {
+       "claim": "a man who had simply never come back within reach",
+       "status": "supported",
+       "fact": "F9",
+       "quote": "he had not returned to the United States since 1972",
+       "verified": true,
+       "material": false,
+       "why": "The research says he never returned to the US, which matches 'never come back within reach'."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   }
+  },
+  {
+   "original": "That is where the story closes, and where it also began: a flight already in the air, a weapon that had cleared security inside a hollowed Bible, and a set of demands stated plainly to a crew that had no good options.",
+   "origV3": {
+    "i": 28,
+    "sentence": "That is where the story closes, and where it also began: a flight already in the air, a weapon that had cleared security inside a hollowed Bible, and a set of demands stated plainly to a crew that had no good options.",
+    "claims": [
+     {
+      "claim": "a flight already in the air",
+      "status": "supported",
+      "fact": "F2",
+      "quote": "Delta Flight 841 was commandeered around 12:45 p.m. over Orlando after departing Detroit for Miami",
+      "verified": true,
+      "material": false,
+      "why": "Research says the plane was commandeered over Orlando, so it was airborne."
+     },
+     {
+      "claim": "a weapon",
+      "status": "supported",
+      "fact": "F4",
+      "quote": "concealed a firearm in a hollowed-out Bible",
+      "verified": true,
+      "material": false,
+      "why": "Research records a concealed firearm."
+     },
+     {
+      "claim": "inside a hollowed Bible",
+      "status": "supported",
+      "fact": "F4",
+      "quote": "concealed a firearm in a hollowed-out Bible",
+      "verified": true,
+      "material": false,
+      "why": "Research states the firearm was hidden in a hollowed-out Bible."
+     },
+     {
+      "claim": "that had cleared security",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": true,
+      "why": "The research does not say the weapon passed through any security screening."
+     },
+     {
+      "claim": "a set of demands stated plainly to a crew",
+      "status": "supported",
+      "fact": "F13",
+      "quote": "Wright told the crew, 'We want a million dollars' and 'we want to go to Algeria,'",
+      "verified": true,
+      "material": false,
+      "why": "Research records the demands spoken directly to the crew."
+     },
+     {
+      "claim": "a crew that had no good options",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": false,
+      "why": "This is the narrator's interpretation of the crew's situation."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "That is where the story closes, and where it also began: a flight already in the air, a weapon concealed in a hollowed-out Bible, and a set of demands stated plainly to a crew that had no good options.",
+    "v3": {
+     "i": 23,
+     "sentence": "That is where the story closes, and where it also began: a flight already in the air, a weapon concealed in a hollowed-out Bible, and a set of demands stated plainly to a crew that had no good options.",
+     "claims": [
+      {
+       "claim": "a flight already in the air",
+       "status": "supported",
+       "fact": "F2",
+       "quote": "Delta Flight 841 was commandeered around 12:45 p.m. over Orlando after departing Detroit for Miami",
+       "verified": true,
+       "material": false,
+       "why": "Seized over Orlando, i.e. while airborne."
+      },
+      {
+       "claim": "a weapon concealed in a hollowed-out Bible",
+       "status": "supported",
+       "fact": "F4",
+       "quote": "concealed a firearm in a hollowed-out Bible",
+       "verified": true,
+       "material": false,
+       "why": "Research states the firearm was hidden in a hollowed-out Bible."
+      },
+      {
+       "claim": "a set of demands stated plainly to a crew",
+       "status": "supported",
+       "fact": "F13",
+       "quote": "Wright told the crew, 'We want a million dollars' and 'we want to go to Algeria,'",
+       "verified": true,
+       "material": false,
+       "why": "Demands were stated directly to the crew."
+      },
+      {
+       "claim": "that had no good options",
+       "status": "unsupported",
+       "fact": "",
+       "quote": "",
+       "verified": false,
+       "material": false,
+       "why": "Narrator's characterization of the crew's position, not in the research."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "That is where the story closes, and where it also began: a flight already in the air, a weapon concealed inside a hollowed Bible, and a set of demands stated plainly to a crew that had no good options.",
+    "v3": {
+     "i": 42,
+     "sentence": "That is where the story closes, and where it also began: a flight already in the air, a weapon concealed inside a hollowed Bible, and a set of demands stated plainly to a crew that had no good options.",
+     "claims": [
+      {
+       "claim": "a flight already in the air",
+       "status": "supported",
+       "fact": "F2",
+       "quote": "Delta Flight 841 was commandeered around 12:45 p.m. over Orlando",
+       "verified": true,
+       "material": false,
+       "why": "The research says the plane was seized over Orlando, so it was airborne."
+      },
+      {
+       "claim": "a weapon concealed inside a hollowed Bible",
+       "status": "supported",
+       "fact": "F4",
+       "quote": "concealed a firearm in a hollowed-out Bible",
+       "verified": true,
+       "material": false,
+       "why": "The research directly states the firearm was hidden in a hollowed-out Bible."
+      },
+      {
+       "claim": "a set of demands stated plainly to a crew",
+       "status": "supported",
+       "fact": "F13",
+       "quote": "Wright told the crew, 'We want a million dollars' and 'we want to go to Algeria,'",
+       "verified": true,
+       "material": false,
+       "why": "The research records the demands as spoken directly to the crew."
+      },
+      {
+       "claim": "a crew that had no good options",
+       "status": "unsupported",
+       "fact": "",
+       "quote": "",
+       "verified": false,
+       "material": false,
+       "why": "This is the narrator's characterization of the crew's situation, not a recorded fact."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   }
+  },
+  {
+   "original": "The passengers on that aircraft did not know, when they boarded in Detroit, that they were about to spend hours inside someone else's escape plan.",
+   "origV3": {
+    "i": 29,
+    "sentence": "The passengers on that aircraft did not know, when they boarded in Detroit, that they were about to spend hours inside someone else's escape plan.",
+    "claims": [
+     {
+      "claim": "when they boarded in Detroit",
+      "status": "supported",
+      "fact": "F2",
+      "quote": "after departing Detroit for Miami",
+      "verified": true,
+      "material": false,
+      "why": "Research says the flight departed Detroit."
+     },
+     {
+      "claim": "that they were about to spend hours",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": true,
+      "why": "The research describes an ordeal with multiple stops but never states how long passengers were held."
+     },
+     {
+      "claim": "The passengers on that aircraft did not know",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": false,
+      "why": "This is narrative framing of the passengers' state of mind, not a recorded fact."
+     },
+     {
+      "claim": "inside someone else's escape plan",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": false,
+      "why": "Characterizing the hijacking as an escape plan is the narrator's interpretation; the research records the demands for ransom, asylum and Algeria."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "The passengers on that aircraft did not know, when they boarded in Detroit, that they were about to be held during an ordeal that would end only when the plane landed in Algeria.",
+    "v3": {
+     "i": 24,
+     "sentence": "The passengers on that aircraft did not know, when they boarded in Detroit, that they were about to be held during an ordeal that would end only when the plane landed in Algeria.",
+     "claims": [
+      {
+       "claim": "when they boarded in Detroit",
+       "status": "supported",
+       "fact": "F2",
+       "quote": "after departing Detroit for Miami",
+       "verified": true,
+       "material": false,
+       "why": "The research records the flight departing Detroit."
+      },
+      {
+       "claim": "they were about to be held during an ordeal",
+       "status": "supported",
+       "fact": "F0",
+       "quote": "with passengers and crew held during the ordeal",
+       "verified": true,
+       "material": false,
+       "why": "The research says passengers were held during the ordeal."
+      },
+      {
+       "claim": "an ordeal that would end only when the plane landed in Algeria",
+       "status": "supported",
+       "fact": "F4",
+       "quote": "ordered the aircraft diverted to Algeria, where the incident ended after the ransom and passengers were released",
+       "verified": true,
+       "material": false,
+       "why": "The research says the incident ended in Algeria."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "The passengers on that aircraft did not know, when they boarded in Detroit, that they were about to be held during a hijacking.",
+    "v3": {
+     "i": 43,
+     "sentence": "The passengers on that aircraft did not know, when they boarded in Detroit, that they were about to be held during a hijacking.",
+     "claims": [
+      {
+       "claim": "The passengers on that aircraft ... boarded in Detroit",
+       "status": "supported",
+       "fact": "F2",
+       "quote": "after departing Detroit for Miami",
+       "verified": true,
+       "material": false,
+       "why": "The research records the flight departing Detroit."
+      },
+      {
+       "claim": "they were about to be held during a hijacking",
+       "status": "supported",
+       "fact": "F0",
+       "quote": "with passengers and crew held during the ordeal",
+       "verified": true,
+       "material": false,
+       "why": "The research states passengers were held during the hijacking."
+      },
+      {
+       "claim": "The passengers ... did not know, when they boarded ... that they were about to be held during a hijacking",
+       "status": "unsupported",
+       "fact": "",
+       "quote": "",
+       "verified": false,
+       "material": false,
+       "why": "The research says nothing about what the passengers knew; this is narrative framing."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   }
+  }
+ ]
+}

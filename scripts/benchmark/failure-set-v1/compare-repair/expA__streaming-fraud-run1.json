@@ -1,0 +1,1119 @@
+{
+ "case": "streaming-fraud",
+ "file": "expA__streaming-fraud-run1.json",
+ "judge": "accuracy_judge_v3@a61781c",
+ "repair": "conservative@0d92975",
+ "rows": [
+  {
+   "original": "Multiply that out and the operation was generating roughly 661,440 streams every single day.",
+   "origV3": {
+    "i": 0,
+    "sentence": "Multiply that out and the operation was generating roughly 661,440 streams every single day.",
+    "claims": [
+     {
+      "claim": "the operation was generating roughly 661,440 streams every single day",
+      "status": "overstated",
+      "fact": "F68",
+      "quote": "each Bot Account could stream approximately 636 songs per day, for a total of approximately 661,440 streams per day",
+      "verified": true,
+      "material": true,
+      "why": "The research gives 661,440 as Smith's own calculation in an October 2017 self-email of what the accounts could stream (F9 calls it what they were 'capable of'), not as streams actually generated."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   },
+   "cons": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   }
+  },
+  {
+   "original": "The operation had reached a point where Smith's account of it peaked at as many as 10,000 active bot accounts on the streaming platforms simultaneously — each one running on a virtual computer, cycling through browser tabs, each tab logged into a separate account, each account streaming.",
+   "origV3": {
+    "i": 1,
+    "sentence": "The operation had reached a point where Smith's account of it peaked at as many as 10,000 active bot accounts on the streaming platforms simultaneously — each one running on a virtual computer, cycling through browser tabs, each tab logged into a separate account, each account streaming.",
+    "claims": [
+     {
+      "claim": "Smith's account of it peaked at as many as 10,000 active bot accounts on the streaming platforms",
+      "status": "misattached",
+      "fact": "F54",
+      "quote": "At certain points, SMITH had as many as 10,000 active Bot Accounts on the Streaming Platforms.",
+      "verified": true,
+      "material": true,
+      "why": "The 10,000 figure is the indictment's allegation, not Smith's own account; his self-email described 1,040 bot accounts."
+     },
+     {
+      "claim": "simultaneously",
+      "status": "overstated",
+      "fact": "F40",
+      "quote": "At the height of the scheme, SMITH used over a thousand bot accounts simultaneously.",
+      "verified": true,
+      "material": true,
+      "why": "Research ties simultaneous use to over a thousand accounts, not to the 10,000 active accounts."
+     },
+     {
+      "claim": "each one running on a virtual computer",
+      "status": "supported",
+      "fact": "F64",
+      "quote": "SMITH used some of the Bot Accounts on each virtual computer simultaneously",
+      "verified": true,
+      "material": false,
+      "why": "Bot accounts ran on virtual computers."
+     },
+     {
+      "claim": "cycling through browser tabs",
+      "status": "unsupported",
+      "fact": "F64",
+      "quote": "",
+      "verified": false,
+      "material": false,
+      "why": "Research describes accounts streaming on separate tabs at the same time, not cycling between tabs; this is added color."
+     },
+     {
+      "claim": "each tab logged into a separate account, each account streaming",
+      "status": "supported",
+      "fact": "F64",
+      "quote": "using web players for each Streaming Platform with multiple Bot Accounts streaming on separate browser tabs",
+      "verified": true,
+      "material": false,
+      "why": "Separate tabs each held a streaming bot account."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "clause_cut",
+    "text": "The operation had reached a point cycling through browser tabs, each tab logged into a separate account, each account streaming.",
+    "v3": {
+     "i": 0,
+     "sentence": "The operation had reached a point cycling through browser tabs, each tab logged into a separate account, each account streaming.",
+     "claims": [
+      {
+       "claim": "each tab logged into a separate account, each account streaming",
+       "status": "supported",
+       "fact": "F64",
+       "quote": "using web players for each Streaming Platform with multiple Bot Accounts streaming on separate browser tabs",
+       "verified": true,
+       "material": false,
+       "why": "Research describes bot accounts streaming on separate browser tabs."
+      },
+      {
+       "claim": "cycling through browser tabs",
+       "status": "unsupported",
+       "fact": "F64",
+       "quote": "SMITH used some of the Bot Accounts on each virtual computer simultaneously",
+       "verified": true,
+       "material": false,
+       "why": "Research says the tabs streamed simultaneously, not that they were cycled through; this is narrative color."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "The operation had reached a point where, at certain points, Smith had as many as 10,000 active bot accounts on the streaming platforms — each one running on a virtual computer, cycling through browser tabs, each tab logged into a separate account, each account streaming.",
+    "v3": {
+     "i": 13,
+     "sentence": "The operation had reached a point where, at certain points, Smith had as many as 10,000 active bot accounts on the streaming platforms — each one running on a virtual computer, cycling through browser tabs, each tab logged into a separate account, each account streaming.",
+     "claims": [
+      {
+       "claim": "at certain points, Smith had as many as 10,000 active bot accounts on the streaming platforms",
+       "status": "supported",
+       "fact": "F54",
+       "quote": "At certain points, SMITH had as many as 10,000 active Bot Accounts on the Streaming Platforms.",
+       "verified": true,
+       "material": false,
+       "why": "Matches the research directly."
+      },
+      {
+       "claim": "each one running on a virtual computer",
+       "status": "supported",
+       "fact": "F64",
+       "quote": "SMITH used some of the Bot Accounts on each virtual computer simultaneously",
+       "verified": true,
+       "material": false,
+       "why": "The research says bot accounts ran on virtual computers."
+      },
+      {
+       "claim": "cycling through browser tabs",
+       "status": "overstated",
+       "fact": "F64",
+       "quote": "using web players for each Streaming Platform with multiple Bot Accounts streaming on separate browser tabs",
+       "verified": true,
+       "material": false,
+       "why": "The research describes simultaneous separate tabs; 'cycling' is added descriptive color."
+      },
+      {
+       "claim": "each tab logged into a separate account, each account streaming",
+       "status": "supported",
+       "fact": "F64",
+       "quote": "multiple Bot Accounts streaming on separate browser tabs",
+       "verified": true,
+       "material": false,
+       "why": "Separate tabs per account, each streaming."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   }
+  },
+  {
+   "original": "A single song needs to be heard hundreds of thousands of times before it generates money a person could live on.",
+   "origV3": {
+    "i": 2,
+    "sentence": "A single song needs to be heard hundreds of thousands of times before it generates money a person could live on.",
+    "claims": [
+     {
+      "claim": "A single song needs to be heard hundreds of thousands of times before it generates money a person could live on.",
+      "status": "unsupported",
+      "fact": "F42",
+      "quote": "Royalty payments per stream are often less than one cent per stream.",
+      "verified": true,
+      "material": false,
+      "why": "The research gives only a per-stream rate under one cent; no stream count tied to a livable income appears, and this is a general statement about how royalties typically work."
+     }
+    ],
+    "error": true,
+    "material": false
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "Smith spread his automated streams across thousands of songs to avoid triggering suspicion about any single one.",
+    "v3": {
+     "i": 1,
+     "sentence": "Smith spread his automated streams across thousands of songs to avoid triggering suspicion about any single one.",
+     "claims": [
+      {
+       "claim": "Smith spread his automated streams across thousands of songs",
+       "status": "supported",
+       "fact": "F72",
+       "quote": "SMITH spread his automated streams across thousands of songs",
+       "verified": true,
+       "material": false,
+       "why": "Directly stated in the research."
+      },
+      {
+       "claim": "to avoid triggering suspicion about any single one",
+       "status": "supported",
+       "fact": "F72",
+       "quote": "to avoid anomalous streaming as to any single song",
+       "verified": true,
+       "material": false,
+       "why": "A fair paraphrase of the stated purpose; F73 and F74 confirm detection avoidance."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   }
+  },
+  {
+   "original": "Smith had read the terms.",
+   "origV3": {
+    "i": 3,
+    "sentence": "Smith had read the terms.",
+    "claims": [
+     {
+      "claim": "Smith had read the terms",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": true,
+      "why": "The research shows Smith agreed to and falsely represented compliance with distributor terms (F50, F102), but never records that he actually read them."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "Smith claimed he had not violated the terms of his agreement.",
+    "v3": {
+     "i": 2,
+     "sentence": "Smith claimed he had not violated the terms of his agreement.",
+     "claims": [
+      {
+       "claim": "Smith claimed he had not violated the terms of his agreement",
+       "status": "supported",
+       "fact": "F102",
+       "quote": "I have not violated the terms of my agreement with you at all and you have provided no proof either.",
+       "verified": true,
+       "material": false,
+       "why": "F102 records Smith telling Distribution Company-3 he had not violated the terms of his agreement."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   }
+  },
+  {
+   "original": "The operation had three moving parts, and Smith built each one from scratch.",
+   "origV3": {
+    "i": 4,
+    "sentence": "The operation had three moving parts, and Smith built each one from scratch.",
+    "claims": [
+     {
+      "claim": "The operation had three moving parts",
+      "status": "supported",
+      "fact": "F51",
+      "quote": "The fraud proceeded in three stages: (1) creating Bot Accounts, (2) using software to cause Bot Accounts to continuously stream songs SMITH owned, and (3) collecting royalties based on fraudulent streams.",
+      "verified": true,
+      "material": false,
+      "why": "The research describes the fraud as having three stages."
+     },
+     {
+      "claim": "Smith built each one from scratch",
+      "status": "contradicted",
+      "fact": "F65",
+      "quote": "SMITH purchased and subsequently modified 'macros'—small pieces of computer code that automatically continuously played the music.",
+      "verified": true,
+      "material": true,
+      "why": "The research says he bought the macros, bought the email accounts and paid others to sign up the bot accounts, so he did not build each part from scratch."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "The operation had three moving parts, and Smith assembled each one.",
+    "v3": {
+     "i": 3,
+     "sentence": "The operation had three moving parts, and Smith assembled each one.",
+     "claims": [
+      {
+       "claim": "The operation had three moving parts",
+       "status": "supported",
+       "fact": "F51",
+       "quote": "The fraud proceeded in three stages: (1) creating Bot Accounts, (2) using software to cause Bot Accounts to continuously stream songs SMITH owned, and (3) collecting royalties based on fraudulent streams.",
+       "verified": true,
+       "material": false,
+       "why": "The research describes the fraud as having three stages; \"moving parts\" is a fair paraphrase."
+      },
+      {
+       "claim": "Smith assembled each one",
+       "status": "unsupported",
+       "fact": "F55",
+       "quote": "SMITH paid individuals located abroad as well as coconspirators located in the United States to do the data entry work of signing up for the Bot Accounts.",
+       "verified": true,
+       "material": false,
+       "why": "Saying Smith assembled every stage himself is the narrator's framing; the research shows others did some of the work, though Smith directed it."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   }
+  },
+  {
+   "original": "Those addresses became the registration credentials for his bot accounts, each one signed up under a fake name that matched its fake email.",
+   "origV3": {
+    "i": 5,
+    "sentence": "Those addresses became the registration credentials for his bot accounts, each one signed up under a fake name that matched its fake email.",
+    "claims": [
+     {
+      "claim": "Those addresses became the registration credentials for his bot accounts",
+      "status": "supported",
+      "fact": "F53",
+      "quote": "SMITH used the Fake Email Accounts to create and register Bot Accounts on the Streaming Platforms",
+      "verified": true,
+      "material": false,
+      "why": "Research states the fake email accounts were used to register the bot accounts."
+     },
+     {
+      "claim": "each one signed up under a fake name that matched its fake email",
+      "status": "overstated",
+      "fact": "F53",
+      "quote": "typically in fake names corresponding to the Fake Email Accounts",
+      "verified": true,
+      "material": false,
+      "why": "Research says this was typically the case; 'each one' turns that into every account, a minor generalization."
+     }
+    ],
+    "error": true,
+    "material": false
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "Those addresses became the registration credentials for his bot accounts, typically signed up under fake names corresponding to the fake email accounts.",
+    "v3": {
+     "i": 4,
+     "sentence": "Those addresses became the registration credentials for his bot accounts, typically signed up under fake names corresponding to the fake email accounts.",
+     "claims": [
+      {
+       "claim": "Those addresses became the registration credentials for his bot accounts",
+       "status": "supported",
+       "fact": "F53",
+       "quote": "SMITH used the Fake Email Accounts to create and register Bot Accounts on the Streaming Platforms",
+       "verified": true,
+       "material": false,
+       "why": "Research states the fake email accounts were used to create and register the bot accounts."
+      },
+      {
+       "claim": "typically signed up under fake names corresponding to the fake email accounts",
+       "status": "supported",
+       "fact": "F53",
+       "quote": "typically in fake names corresponding to the Fake Email Accounts",
+       "verified": true,
+       "material": false,
+       "why": "Research states the bot accounts were typically registered in fake names matching the fake email accounts."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "Those addresses became the registration credentials for his bot accounts, each one typically signed up under a fake name corresponding to its fake email.",
+    "v3": {
+     "i": 14,
+     "sentence": "Those addresses became the registration credentials for his bot accounts, each one typically signed up under a fake name corresponding to its fake email.",
+     "claims": [
+      {
+       "claim": "Those addresses became the registration credentials for his bot accounts",
+       "status": "supported",
+       "fact": "F53",
+       "quote": "SMITH used the Fake Email Accounts to create and register Bot Accounts on the Streaming Platforms",
+       "verified": true,
+       "material": false,
+       "why": "Research says the fake email accounts were used to create and register the bot accounts."
+      },
+      {
+       "claim": "each one typically signed up under a fake name corresponding to its fake email",
+       "status": "supported",
+       "fact": "F53",
+       "quote": "typically in fake names corresponding to the Fake Email Accounts",
+       "verified": true,
+       "material": false,
+       "why": "Research directly states the typical fake-name correspondence."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   }
+  },
+  {
+   "original": "The cards came back in those names, and the accounts got funded.",
+   "origV3": {
+    "i": 6,
+    "sentence": "The cards came back in those names, and the accounts got funded.",
+    "claims": [
+     {
+      "claim": "The cards came back in those names",
+      "status": "unsupported",
+      "fact": "F59",
+      "quote": "",
+      "verified": false,
+      "material": true,
+      "why": "Research says Smith gave Financial Service-1 fake names, but it never states the debit cards were actually issued in those names."
+     },
+     {
+      "claim": "the accounts got funded",
+      "status": "supported",
+      "fact": "F62",
+      "quote": "transferred the proceeds from the SMH Entertainment account to Financial Service-1 to fund debit cards for the Bot Accounts",
+      "verified": true,
+      "material": false,
+      "why": "Research states the royalty proceeds funded debit cards for the Bot Accounts."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "Those fake names got accepted, and the accounts got funded.",
+    "v3": {
+     "i": 5,
+     "sentence": "Those fake names got accepted, and the accounts got funded.",
+     "claims": [
+      {
+       "claim": "Those fake names got accepted",
+       "status": "unsupported",
+       "fact": "F59",
+       "quote": "SMITH lied to Financial Service-1 and provided it with dozens of fake names corresponding to the Fake Email Accounts and Bot Accounts",
+       "verified": true,
+       "material": false,
+       "why": "Research records the fake names being submitted, not explicitly accepted, though the funded debit cards strongly imply acceptance."
+      },
+      {
+       "claim": "the accounts got funded",
+       "status": "supported",
+       "fact": "F62",
+       "quote": "SMITH then transferred the proceeds from the SMH Entertainment account to Financial Service-1 to fund debit cards for the Bot Accounts",
+       "verified": true,
+       "material": false,
+       "why": "Debit cards for the Bot Accounts were funded with royalty proceeds."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   }
+  },
+  {
+   "original": "What the machine needed was an endless supply of raw material to stream — and Smith couldn't generate that himself fast enough.",
+   "origV3": {
+    "i": 7,
+    "sentence": "What the machine needed was an endless supply of raw material to stream — and Smith couldn't generate that himself fast enough.",
+    "claims": [
+     {
+      "claim": "What the machine needed was an endless supply of raw material to stream",
+      "status": "supported",
+      "fact": "F74",
+      "quote": "I can't run the bots without content. And I need enough content so I don't overrun each song.",
+      "verified": true,
+      "material": false,
+      "why": "Smith's own email says the bots needed a large volume of content; \"endless\" is color."
+     },
+     {
+      "claim": "Smith couldn't generate that himself fast enough",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": false,
+      "why": "Research shows he bought songs from a coconspirator but never says why; this is the narrator's inference about motive."
+     }
+    ],
+    "error": true,
+    "material": false
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "What the machine needed was an endless supply of raw material to stream — and Smith wrote to a coconspirator that he couldn't run the bots without enough content.",
+    "v3": {
+     "i": 6,
+     "sentence": "What the machine needed was an endless supply of raw material to stream — and Smith wrote to a coconspirator that he couldn't run the bots without enough content.",
+     "claims": [
+      {
+       "claim": "Smith wrote to a coconspirator that he couldn't run the bots without enough content",
+       "status": "supported",
+       "fact": "F74",
+       "quote": "SMITH emailed a coconspirator: 'I can't run the bots without content. And I need enough content so I don't overrun each song.",
+       "verified": true,
+       "material": false,
+       "why": "Accurate paraphrase of Smith's May 9, 2019 email to a coconspirator."
+      },
+      {
+       "claim": "What the machine needed was an endless supply of raw material to stream",
+       "status": "supported",
+       "fact": "F74",
+       "quote": "I can't run the bots without content.",
+       "verified": true,
+       "material": false,
+       "why": "Rhetorical framing of the documented need for content; 'endless' is narrative color."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "What the machine needed was an endless supply of raw material to stream.",
+    "v3": {
+     "i": 15,
+     "sentence": "What the machine needed was an endless supply of raw material to stream.",
+     "claims": [
+      {
+       "claim": "What the machine needed was an endless supply of raw material to stream.",
+       "status": "supported",
+       "fact": "F74",
+       "quote": "I can't run the bots without content. And I need enough content so I don't overrun each song.",
+       "verified": true,
+       "material": false,
+       "why": "Smith's email says the bots needed a large supply of content; 'endless' is rhetorical framing."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   }
+  },
+  {
+   "original": "The platforms, he knew, were watching for anomalies — a track with no promotional history and no organic discovery suddenly accumulating streams at a rate no real audience could produce.",
+   "origV3": {
+    "i": 8,
+    "sentence": "The platforms, he knew, were watching for anomalies — a track with no promotional history and no organic discovery suddenly accumulating streams at a rate no real audience could produce.",
+    "claims": [
+     {
+      "claim": "The platforms, he knew, were watching for anomalies",
+      "status": "supported",
+      "fact": "F72",
+      "quote": "SMITH spread his automated streams across thousands of songs to avoid anomalous streaming as to any single song.",
+      "verified": true,
+      "material": false,
+      "why": "He spread streams to avoid anomalous streaming, which shows awareness of detection (also F74: 'If we get too many streams on one song it comes down')."
+     },
+     {
+      "claim": "a track with no promotional history and no organic discovery",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": false,
+      "why": "The research does not say platforms looked at promotional history or organic discovery. This is a general description of how detection works, not a recorded fact."
+     },
+     {
+      "claim": "suddenly accumulating streams at a rate no real audience could produce",
+      "status": "unsupported",
+      "fact": "F74",
+      "quote": "If we get too many streams on one song it comes down.",
+      "verified": true,
+      "material": false,
+      "why": "The research supports concern about too many streams on one song, but not the specific 'rate no real audience could produce' framing. This is narrator characterization."
+     }
+    ],
+    "error": true,
+    "material": false
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "The platforms, he knew, were watching for anomalies — streams accumulating at a rate no real audience could produce.",
+    "v3": {
+     "i": 7,
+     "sentence": "The platforms, he knew, were watching for anomalies — streams accumulating at a rate no real audience could produce.",
+     "claims": [
+      {
+       "claim": "The platforms, he knew, were watching for anomalies",
+       "status": "supported",
+       "fact": "F72",
+       "quote": "SMITH spread his automated streams across thousands of songs to avoid anomalous streaming as to any single song.",
+       "verified": true,
+       "material": false,
+       "why": "Smith avoided anomalous streaming to evade detection, showing he knew platforms looked for anomalies; F74 also supports this."
+      },
+      {
+       "claim": "streams accumulating at a rate no real audience could produce",
+       "status": "unsupported",
+       "fact": "F74",
+       "quote": "If we get too many streams on one song it comes down.",
+       "verified": true,
+       "material": false,
+       "why": "The research says too many streams on one song drew removal; describing the trigger as a rate no real audience could produce is the narrator's characterization."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "The platforms, he knew, were watching for anomalies — a track suddenly accumulating streams at a rate no real audience could produce.",
+    "v3": {
+     "i": 16,
+     "sentence": "The platforms, he knew, were watching for anomalies — a track suddenly accumulating streams at a rate no real audience could produce.",
+     "claims": [
+      {
+       "claim": "The platforms, he knew, were watching for anomalies",
+       "status": "supported",
+       "fact": "F72",
+       "quote": "SMITH spread his automated streams across thousands of songs to avoid anomalous streaming as to any single song.",
+       "verified": true,
+       "material": false,
+       "why": "Research shows he deliberately avoided anomalous streaming to evade detection."
+      },
+      {
+       "claim": "a track suddenly accumulating streams at a rate no real audience could produce",
+       "status": "unsupported",
+       "fact": "F74",
+       "quote": "If we get too many streams on one song it comes down.",
+       "verified": true,
+       "material": false,
+       "why": "Research supports too many streams on one song triggering removal; the 'rate no real audience could produce' framing is narrator interpretation."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   }
+  },
+  {
+   "original": "The bots and macros, he directed, needed to be \"Unde[te]ctable\" — his spelling, his brackets, his word — with \"every safety measure\" in place to avoid detection.",
+   "origV3": {
+    "i": 9,
+    "sentence": "The bots and macros, he directed, needed to be \"Unde[te]ctable\" — his spelling, his brackets, his word — with \"every safety measure\" in place to avoid detection.",
+    "claims": [
+     {
+      "claim": "The bots and macros, he directed, needed to be \"Unde[te]ctable\"",
+      "status": "supported",
+      "fact": "F71",
+      "quote": "SMITH directed his coconspirators that the Bot Accounts and macros be 'Unde[te]ctable",
+      "verified": true,
+      "material": false,
+      "why": "Research records this directive and quoted word."
+     },
+     {
+      "claim": "his spelling, his brackets, his word",
+      "status": "unsupported",
+      "fact": "F71",
+      "quote": "",
+      "verified": false,
+      "material": true,
+      "why": "Research does not say who inserted the brackets. Bracketed letters typically mark an editorial correction, so attributing them to Smith is unestablished."
+     },
+     {
+      "claim": "with \"every safety measure\" in place to avoid detection",
+      "status": "supported",
+      "fact": "F71",
+      "quote": "At least put every safety measure in to avoid detection.",
+      "verified": true,
+      "material": false,
+      "why": "Matches the quoted directive."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "The bots and macros, he directed, needed to be \"Unde[te]ctable\" — with \"every safety measure\" in place to avoid detection.",
+    "v3": {
+     "i": 8,
+     "sentence": "The bots and macros, he directed, needed to be \"Unde[te]ctable\" — with \"every safety measure\" in place to avoid detection.",
+     "claims": [
+      {
+       "claim": "The bots and macros, he directed, needed to be \"Unde[te]ctable\"",
+       "status": "supported",
+       "fact": "F71",
+       "quote": "SMITH directed his coconspirators that the Bot Accounts and macros be 'Unde[te]ctable",
+       "verified": true,
+       "material": false,
+       "why": "Matches the directive quoted in the research."
+      },
+      {
+       "claim": "with \"every safety measure\" in place to avoid detection",
+       "status": "supported",
+       "fact": "F71",
+       "quote": "At least put every safety measure in to avoid detection.",
+       "verified": true,
+       "material": false,
+       "why": "Accurate paraphrase of the quoted directive."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "The bots and macros, he directed, needed to be \"Unde[te]ctable\" — with \"every safety measure\" in place to avoid detection.",
+    "v3": {
+     "i": 17,
+     "sentence": "The bots and macros, he directed, needed to be \"Unde[te]ctable\" — with \"every safety measure\" in place to avoid detection.",
+     "claims": [
+      {
+       "claim": "The bots and macros, he directed, needed to be \"Unde[te]ctable\"",
+       "status": "supported",
+       "fact": "F71",
+       "quote": "SMITH directed his coconspirators that the Bot Accounts and macros be 'Unde[te]ctable",
+       "verified": true,
+       "material": false,
+       "why": "Research records this directive about the Bot Accounts and macros."
+      },
+      {
+       "claim": "with \"every safety measure\" in place to avoid detection",
+       "status": "supported",
+       "fact": "F71",
+       "quote": "At least put every safety measure in to avoid detection.",
+       "verified": true,
+       "material": false,
+       "why": "Paraphrases the quoted directive."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   }
+  },
+  {
+   "original": "Streaming platforms don't pay artists from a fixed pot — they pay from a pool, divided proportionally among every rights holder whose music was played in a given period.",
+   "origV3": {
+    "i": 10,
+    "sentence": "Streaming platforms don't pay artists from a fixed pot — they pay from a pool, divided proportionally among every rights holder whose music was played in a given period.",
+    "claims": [
+     {
+      "claim": "Streaming platforms don't pay artists from a fixed pot — they pay from a pool",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": false,
+      "why": "The research says platforms pay royalties for reported plays but never describes a pool-based payout model; this is a general description of how the industry works."
+     },
+     {
+      "claim": "divided proportionally among every rights holder whose music was played in a given period",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": false,
+      "why": "The research never describes proportional division among rights holders; it only notes per-stream royalties are often under one cent, so this is general explanation of the industry, not a case fact."
+     }
+    ],
+    "error": true,
+    "material": false
+   },
+   "old": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   },
+   "cons": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   }
+  },
+  {
+   "original": "Every stream Smith's bots generated claimed a share of that pool.",
+   "origV3": {
+    "i": 11,
+    "sentence": "Every stream Smith's bots generated claimed a share of that pool.",
+    "claims": [
+     {
+      "claim": "Smith's bots generated streams",
+      "status": "supported",
+      "fact": "F39",
+      "quote": "SMITH used 'bots'—automated programs—to stream the AI-generated songs billions of times.",
+      "verified": true,
+      "material": false,
+      "why": "The research directly states that bots streamed the songs."
+     },
+     {
+      "claim": "Every stream ... claimed a share of that pool",
+      "status": "unsupported",
+      "fact": "F51",
+      "quote": "collecting royalties based on fraudulent streams",
+      "verified": true,
+      "material": false,
+      "why": "The research says royalties were collected based on fraudulent streams, but it never describes a pooled, pro-rata royalty system or says every stream drew a share; this is general mechanism framing."
+     }
+    ],
+    "error": true,
+    "material": false
+   },
+   "old": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   },
+   "cons": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   }
+  },
+  {
+   "original": "The money didn't appear from nowhere; it came out of what legitimate artists would otherwise have received.",
+   "origV3": {
+    "i": 12,
+    "sentence": "The money didn't appear from nowhere; it came out of what legitimate artists would otherwise have received.",
+    "claims": [
+     {
+      "claim": "it came out of what legitimate artists would otherwise have received",
+      "status": "overstated",
+      "fact": "F7",
+      "quote": "a scheme to defraud music streaming platforms and musicians of royalty payments",
+      "verified": true,
+      "material": false,
+      "why": "Clayton's statement names both platforms and musicians as defrauded; the research does not establish that the money came specifically out of other artists' share."
+     }
+    ],
+    "error": true,
+    "material": false
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "The money didn't appear from nowhere; prosecutors say the scheme defrauded both streaming platforms and musicians of royalty payments.",
+    "v3": {
+     "i": 9,
+     "sentence": "The money didn't appear from nowhere; prosecutors say the scheme defrauded both streaming platforms and musicians of royalty payments.",
+     "claims": [
+      {
+       "claim": "prosecutors say the scheme defrauded both streaming platforms and musicians of royalty payments",
+       "status": "supported",
+       "fact": "F7",
+       "quote": "U.S. Attorney Jay Clayton said Smith’s guilty plea was for a scheme to defraud music streaming platforms and musicians of royalty payments",
+       "verified": true,
+       "material": false,
+       "why": "The U.S. Attorney's statement matches the claim."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   }
+  },
+  {
+   "original": "His catalog of randomized Latin taxonomy and machine-generated audio was drawing from the same reservoir as every working musician on those platforms.",
+   "origV3": {
+    "i": 13,
+    "sentence": "His catalog of randomized Latin taxonomy and machine-generated audio was drawing from the same reservoir as every working musician on those platforms.",
+    "claims": [
+     {
+      "claim": "His catalog of randomized Latin taxonomy",
+      "status": "unsupported",
+      "fact": "F92",
+      "quote": "An alphabetically consecutive selection of 25 AI song names SMITH used includes: 'Zygophyceae,' 'Zygophyllaceae,' 'Zygophyllum,'",
+      "verified": true,
+      "material": false,
+      "why": "The research lists the song names but never calls them randomized Latin taxonomy; that label is the narrator's characterization."
+     },
+     {
+      "claim": "machine-generated audio",
+      "status": "supported",
+      "fact": "F37",
+      "quote": "SMITH purchased from a coconspirator hundreds of thousands of songs created through artificial intelligence ('AI').",
+      "verified": true,
+      "material": false,
+      "why": "The research states the songs were created through AI."
+     },
+     {
+      "claim": "was drawing from the same reservoir as every working musician on those platforms",
+      "status": "unsupported",
+      "fact": "F7",
+      "quote": "a scheme to defraud music streaming platforms and musicians of royalty payments",
+      "verified": true,
+      "material": false,
+      "why": "The research says musicians were defrauded of royalties but never describes a shared royalty pool; the pool mechanism is the narrator's general explanation."
+     }
+    ],
+    "error": true,
+    "material": false
+   },
+   "old": {
+    "action": "clause_cut",
+    "text": "Machine-generated audio was drawing from the same reservoir as every working musician on those platforms.",
+    "v3": {
+     "i": 10,
+     "sentence": "Machine-generated audio was drawing from the same reservoir as every working musician on those platforms.",
+     "claims": [
+      {
+       "claim": "Machine-generated audio was drawing from the same reservoir as every working musician on those platforms.",
+       "status": "unsupported",
+       "fact": "F7",
+       "quote": "a scheme to defraud music streaming platforms and musicians of royalty payments",
+       "verified": true,
+       "material": false,
+       "why": "The research says the scheme defrauded musicians of royalties but never describes a shared royalty pool; the 'same reservoir' mechanism is the narrator's framing."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "His catalog of randomized taxonomy and machine-generated audio was drawing from the same reservoir as every working musician on those platforms.",
+    "v3": {
+     "i": 18,
+     "sentence": "His catalog of randomized taxonomy and machine-generated audio was drawing from the same reservoir as every working musician on those platforms.",
+     "claims": [
+      {
+       "claim": "His catalog of randomized taxonomy",
+       "status": "unsupported",
+       "fact": "F92",
+       "quote": "'Zygophyceae,' 'Zygophyllaceae,' 'Zygophyllum,' 'Zygopteraceae,' 'Zygopteris,'",
+       "verified": true,
+       "material": false,
+       "why": "The research lists taxonomy-like song names, and F91 says file names were randomized; calling the catalog 'randomized taxonomy' is the narrator's characterization."
+      },
+      {
+       "claim": "machine-generated audio",
+       "status": "supported",
+       "fact": "F37",
+       "quote": "hundreds of thousands of songs created through artificial intelligence ('AI')",
+       "verified": true,
+       "material": false,
+       "why": "The songs were created through AI."
+      },
+      {
+       "claim": "was drawing from the same reservoir as every working musician on those platforms",
+       "status": "unsupported",
+       "fact": "F7",
+       "quote": "a scheme to defraud music streaming platforms and musicians of royalty payments",
+       "verified": true,
+       "material": false,
+       "why": "The research says musicians were defrauded of royalties but never describes a shared royalty pool; the 'same reservoir' framing is the narrator's interpretation of the mechanism."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   }
+  },
+  {
+   "original": "Smith had known that.",
+   "origV3": {
+    "i": 14,
+    "sentence": "Smith had known that.",
+    "claims": [
+     {
+      "claim": "Smith had known that",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": false,
+      "why": "The sentence doesn't say what 'that' refers to, so the research can't confirm Smith knew it. Records like his own emails about avoiding detection (F73, F74) and warnings he received (F96, F98) show awareness of some things, but the referent is unclear and the line reads as the narrator's characteriz"
+     }
+    ],
+    "error": true,
+    "material": false
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "Smith had worked to avoid detection.",
+    "v3": {
+     "i": 11,
+     "sentence": "Smith had worked to avoid detection.",
+     "claims": [
+      {
+       "claim": "Smith had worked to avoid detection",
+       "status": "supported",
+       "fact": "F71",
+       "quote": "SMITH directed his coconspirators that the Bot Accounts and macros be 'Unde[te]ctable: At least put every safety measure in to avoid detection.'",
+       "verified": true,
+       "material": false,
+       "why": "The research records Smith directing coconspirators to avoid detection; F70 and F72 also describe his concealment measures."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   }
+  },
+  {
+   "original": "The royalty pool is shared.",
+   "origV3": {
+    "i": 15,
+    "sentence": "The royalty pool is shared.",
+    "claims": [
+     {
+      "claim": "The royalty pool is shared.",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": false,
+      "why": "The research mentions royalties paid per reported play and defrauding musicians, but never says royalties come from a shared pool; this is a general statement about how streaming payouts work."
+     }
+    ],
+    "error": true,
+    "material": false
+   },
+   "old": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   },
+   "cons": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   }
+  },
+  {
+   "original": "Every fraudulent stream drew from the same reservoir that paid every legitimate artist on those platforms.",
+   "origV3": {
+    "i": 16,
+    "sentence": "Every fraudulent stream drew from the same reservoir that paid every legitimate artist on those platforms.",
+    "claims": [
+     {
+      "claim": "Every fraudulent stream drew from the same reservoir that paid every legitimate artist on those platforms.",
+      "status": "unsupported",
+      "fact": "F7",
+      "quote": "a scheme to defraud music streaming platforms and musicians of royalty payments",
+      "verified": true,
+      "material": false,
+      "why": "Research says musicians were defrauded of royalties but never describes a shared royalty pool. This is the narrator's general explanation of how royalties work."
+     }
+    ],
+    "error": true,
+    "material": false
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "Every fraudulent stream drew from the royalty payments that streaming platforms paid out to artists on those platforms.",
+    "v3": {
+     "i": 12,
+     "sentence": "Every fraudulent stream drew from the royalty payments that streaming platforms paid out to artists on those platforms.",
+     "claims": [
+      {
+       "claim": "Every fraudulent stream drew from the royalty payments that streaming platforms paid out",
+       "status": "supported",
+       "fact": "F30",
+       "quote": "exploiting royalty payments paid by streaming platforms for reported plays",
+       "verified": true,
+       "material": false,
+       "why": "Research says the scheme exploited royalty payments platforms paid for reported plays."
+      },
+      {
+       "claim": "paid out to artists on those platforms",
+       "status": "unsupported",
+       "fact": "F7",
+       "quote": "a scheme to defraud music streaming platforms and musicians of royalty payments",
+       "verified": true,
+       "material": false,
+       "why": "Research says musicians were defrauded of royalties but does not describe the payout mechanism; this is a general explanation of how payouts work."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   }
+  }
+ ]
+}

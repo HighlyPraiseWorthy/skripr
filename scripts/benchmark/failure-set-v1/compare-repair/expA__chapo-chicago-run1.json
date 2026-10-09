@@ -1,0 +1,3443 @@
+{
+ "case": "chapo-chicago",
+ "file": "expA__chapo-chicago-run1.json",
+ "judge": "accuracy_judge_v3@a61781c",
+ "repair": "conservative@0d92975",
+ "rows": [
+  {
+   "original": "Valentine's Day, 2013.",
+   "origV3": {
+    "i": 0,
+    "sentence": "Valentine's Day, 2013.",
+    "claims": [
+     {
+      "claim": "Valentine's Day, 2013.",
+      "status": "supported",
+      "fact": "F1",
+      "quote": "On February 14, 2013, the Chicago Crime Commission announced at a Chicago news conference",
+      "verified": true,
+      "material": false,
+      "why": "February 14, 2013 is Valentine's Day, the date of the announcement."
+     }
+    ],
+    "error": false,
+    "material": false
+   },
+   "old": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   },
+   "cons": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   }
+  },
+  {
+   "original": "The Chicago Crime Commission gathered at a news conference and did something it had not done in decades — it handed out a title.",
+   "origV3": {
+    "i": 1,
+    "sentence": "The Chicago Crime Commission gathered at a news conference and did something it had not done in decades — it handed out a title.",
+    "claims": [
+     {
+      "claim": "The Chicago Crime Commission gathered at a news conference",
+      "status": "supported",
+      "fact": "F1",
+      "quote": "the Chicago Crime Commission announced at a Chicago news conference",
+      "verified": true,
+      "material": false,
+      "why": "Research records the Commission's Chicago news conference."
+     },
+     {
+      "claim": "did something it had not done in decades",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": true,
+      "why": "The research never says how long it had been since the Commission last gave this title."
+     },
+     {
+      "claim": "it handed out a title",
+      "status": "supported",
+      "fact": "F1",
+      "quote": "Joaquín Guzmán Loera was its “Public Enemy Number One,” using the exact label “Chicago’s Public Enemy Number One.”",
+      "verified": true,
+      "material": false,
+      "why": "The Commission named Guzmán Public Enemy Number One."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "The Chicago Crime Commission gathered at a news conference and handed out a title.",
+    "v3": {
+     "i": 0,
+     "sentence": "The Chicago Crime Commission gathered at a news conference and handed out a title.",
+     "claims": [
+      {
+       "claim": "The Chicago Crime Commission gathered at a news conference",
+       "status": "supported",
+       "fact": "F1",
+       "quote": "the Chicago Crime Commission announced at a Chicago news conference",
+       "verified": true,
+       "material": false,
+       "why": "Research records the Commission's announcement at a Chicago news conference."
+      },
+      {
+       "claim": "handed out a title",
+       "status": "supported",
+       "fact": "F1",
+       "quote": "announced at a Chicago news conference that Joaquín Guzmán Loera was its “Public Enemy Number One,”",
+       "verified": true,
+       "material": false,
+       "why": "The Commission conferred the 'Public Enemy Number One' label at that conference."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "The Chicago Crime Commission gathered at a news conference and handed out a title.",
+    "v3": {
+     "i": 32,
+     "sentence": "The Chicago Crime Commission gathered at a news conference and handed out a title.",
+     "claims": [
+      {
+       "claim": "The Chicago Crime Commission gathered at a news conference",
+       "status": "supported",
+       "fact": "F1",
+       "quote": "the Chicago Crime Commission announced at a Chicago news conference",
+       "verified": true,
+       "material": false,
+       "why": "F1 records the Commission making its announcement at a news conference."
+      },
+      {
+       "claim": "handed out a title",
+       "status": "supported",
+       "fact": "F1",
+       "quote": "announced that Joaquín Guzmán Loera was its “Public Enemy Number One,”",
+       "verified": true,
+       "material": false,
+       "why": "The Commission gave Guzmán the title Public Enemy Number One."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   }
+  },
+  {
+   "original": "A man who had never set foot in a Chicago courtroom, whose operations ran out of the mountains of Sinaloa, and who at that moment was still a fugitive.",
+   "origV3": {
+    "i": 2,
+    "sentence": "A man who had never set foot in a Chicago courtroom, whose operations ran out of the mountains of Sinaloa, and who at that moment was still a fugitive.",
+    "claims": [
+     {
+      "claim": "A man who had never set foot in a Chicago courtroom",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": true,
+      "why": "The research doesn't say whether Guzmán ever appeared in a Chicago courtroom."
+     },
+     {
+      "claim": "whose operations ran out of the mountains of Sinaloa",
+      "status": "unsupported",
+      "fact": "F49",
+      "quote": "The Sinaloa Cartel is described as a Mexico-based international drug trafficking organization.",
+      "verified": true,
+      "material": true,
+      "why": "The research says only that the cartel was Mexico-based; 'the mountains of Sinaloa' is an added location."
+     },
+     {
+      "claim": "who at that moment was still a fugitive",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": true,
+      "why": "The research gives a 2001 escape and a February 2014 arrest but never states he was a fugitive at the February 2013 announcement."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "A man who, at that moment, had not been arrested, and whose cartel was accused of using Chicago as a distribution hub.",
+    "v3": {
+     "i": 1,
+     "sentence": "A man who, at that moment, had not been arrested, and whose cartel was accused of using Chicago as a distribution hub.",
+     "claims": [
+      {
+       "claim": "A man who, at that moment, had not been arrested",
+       "status": "derived",
+       "fact": "F0",
+       "quote": "says he was arrested in Mazatlán, Sinaloa, on February 22, 2014",
+       "verified": true,
+       "material": false,
+       "why": "The February 14, 2013 Public Enemy announcement (F1) came before the February 22, 2014 arrest."
+      },
+      {
+       "claim": "whose cartel was accused of using Chicago as a distribution hub",
+       "status": "supported",
+       "fact": "F2",
+       "quote": "described Guzmán’s organization as using Chicago “as a distribution hub”",
+       "verified": true,
+       "material": false,
+       "why": "A Chicago federal indictment states this directly."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   }
+  },
+  {
+   "original": "The city invented that designation.",
+   "origV3": {
+    "i": 3,
+    "sentence": "The city invented that designation.",
+    "claims": [
+     {
+      "claim": "The city invented that designation.",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": true,
+      "why": "The research says only that the Chicago Crime Commission announced and used the label in 2013. It does not say the city created the designation or who originated it."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   },
+   "cons": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   }
+  },
+  {
+   "original": "It was the taxonomy of Al Capone.",
+   "origV3": {
+    "i": 4,
+    "sentence": "It was the taxonomy of Al Capone.",
+    "claims": [
+     {
+      "claim": "It was the taxonomy of Al Capone.",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": true,
+      "why": "The research never mentions Al Capone or that the 'Public Enemy Number One' label was earlier applied to him, so this historical link is unestablished."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   },
+   "cons": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   }
+  },
+  {
+   "original": "Pedro and Margarito Flores were twin brothers from Chicago who had built themselves into mid-level distributors for the Sinaloa Cartel.",
+   "origV3": {
+    "i": 5,
+    "sentence": "Pedro and Margarito Flores were twin brothers from Chicago who had built themselves into mid-level distributors for the Sinaloa Cartel.",
+    "claims": [
+     {
+      "claim": "Pedro and Margarito Flores",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": true,
+      "why": "The research mentions only 'the Flores brothers' and never gives their first names."
+     },
+     {
+      "claim": "were twin brothers",
+      "status": "unsupported",
+      "fact": "F13",
+      "quote": "the Flores brothers' cooperation",
+      "verified": true,
+      "material": true,
+      "why": "The research says they were brothers but not that they were twins."
+     },
+     {
+      "claim": "from Chicago",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": true,
+      "why": "The research does not state where the brothers were from."
+     },
+     {
+      "claim": "had built themselves into mid-level distributors for the Sinaloa Cartel",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": true,
+      "why": "The research does not state the brothers' role or rank in the cartel."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   },
+   "cons": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   }
+  },
+  {
+   "original": "The brothers' cooperation told investigators where it was going and gave them the window to intercept it.",
+   "origV3": {
+    "i": 6,
+    "sentence": "The brothers' cooperation told investigators where it was going and gave them the window to intercept it.",
+    "claims": [
+     {
+      "claim": "The brothers' cooperation told investigators where it was going",
+      "status": "overstated",
+      "fact": "F14",
+      "quote": "the Flores brothers' cooperation facilitated the seizure of more than 1,600 kilograms of cocaine in the Los Angeles area that was bound for Chicago",
+      "verified": true,
+      "material": true,
+      "why": "Research says only that the cooperation facilitated the seizure. It does not say the brothers supplied the shipment's destination."
+     },
+     {
+      "claim": "gave them the window to intercept it",
+      "status": "supported",
+      "fact": "F14",
+      "quote": "the Flores brothers' cooperation facilitated the seizure of more than 1,600 kilograms of cocaine",
+      "verified": true,
+      "material": false,
+      "why": "This paraphrases the cooperation facilitating the seizure; \"window\" is harmless color."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "The brothers' cooperation facilitated the seizure of that shipment and gave investigators the window to intercept it.",
+    "v3": {
+     "i": 2,
+     "sentence": "The brothers' cooperation facilitated the seizure of that shipment and gave investigators the window to intercept it.",
+     "claims": [
+      {
+       "claim": "The brothers' cooperation facilitated the seizure of that shipment",
+       "status": "supported",
+       "fact": "F14",
+       "quote": "the Flores brothers' cooperation facilitated the seizure of more than 1,600 kilograms of cocaine in the Los Angeles area that was bound for Chicago",
+       "verified": true,
+       "material": false,
+       "why": "F14 states the Flores brothers' cooperation facilitated this seizure."
+      },
+      {
+       "claim": "gave investigators the window to intercept it",
+       "status": "unsupported",
+       "fact": "",
+       "quote": "",
+       "verified": false,
+       "material": false,
+       "why": "This is the narrator's framing of how the cooperation helped; it restates the seizure and adds no new record fact."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "The brothers' cooperation facilitated the seizure and gave them the window to intercept it.",
+    "v3": {
+     "i": 33,
+     "sentence": "The brothers' cooperation facilitated the seizure and gave them the window to intercept it.",
+     "claims": [
+      {
+       "claim": "The brothers' cooperation facilitated the seizure",
+       "status": "supported",
+       "fact": "F14",
+       "quote": "the Flores brothers' cooperation facilitated the seizure of more than 1,600 kilograms of cocaine in the Los Angeles area that was bound for Chicago",
+       "verified": true,
+       "material": false,
+       "why": "Research states the Flores brothers' cooperation facilitated the seizure."
+      },
+      {
+       "claim": "gave them the window to intercept it",
+       "status": "unsupported",
+       "fact": "",
+       "quote": "",
+       "verified": false,
+       "material": false,
+       "why": "The research does not describe a 'window' to intercept; this is the narrator's framing of how the facilitation worked."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   }
+  },
+  {
+   "original": "The Chicago-based investigation they seeded ran forward from 2008 and produced, by the time federal prosecutors publicly tallied the results in 2015, approximately 11 tons of cocaine seized, along with 265 kilograms of methamphetamine, 78 kilograms of heroin, and roughly $30.8 million in total cash.",
+   "origV3": {
+    "i": 7,
+    "sentence": "The Chicago-based investigation they seeded ran forward from 2008 and produced, by the time federal prosecutors publicly tallied the results in 2015, approximately 11 tons of cocaine seized, along with 265 kilograms of methamphetamine, 78 kilograms of heroin, and roughly $30.8 million in total cash.",
+    "claims": [
+     {
+      "claim": "The Chicago-based investigation they seeded",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": true,
+      "why": "The research does not say who started or seeded the Chicago-based investigation; the Flores brothers are only credited with facilitating late-2008 seizures."
+     },
+     {
+      "claim": "ran forward from 2008",
+      "status": "supported",
+      "fact": "F21",
+      "quote": "The Chicago-based investigation of the Sinaloa Cartel has resulted in total seizures of approximately $30.8 million since 2008",
+      "verified": true,
+      "material": false,
+      "why": "The research dates the investigation's results from 2008."
+     },
+     {
+      "claim": "by the time federal prosecutors publicly tallied the results in 2015",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": true,
+      "why": "The research gives no date or announcing party for the seizure tally."
+     },
+     {
+      "claim": "approximately 11 tons of cocaine seized",
+      "status": "supported",
+      "fact": "F22",
+      "quote": "seizures of approximately 11 tons of cocaine since 2008",
+      "verified": true,
+      "material": false,
+      "why": "Matches the research figure."
+     },
+     {
+      "claim": "265 kilograms of methamphetamine",
+      "status": "supported",
+      "fact": "F23",
+      "quote": "seizures of 265 kilograms of methamphetamine since 2008",
+      "verified": true,
+      "material": false,
+      "why": "Matches the research figure."
+     },
+     {
+      "claim": "78 kilograms of heroin",
+      "status": "supported",
+      "fact": "F24",
+      "quote": "seizures of 78 kilograms of heroin since 2008",
+      "verified": true,
+      "material": false,
+      "why": "Matches the research figure."
+     },
+     {
+      "claim": "roughly $30.8 million in total cash",
+      "status": "overstated",
+      "fact": "F21",
+      "quote": "resulted in total seizures of approximately $30.8 million since 2008",
+      "verified": true,
+      "material": true,
+      "why": "The research gives $30.8 million as the total of seizures, not specifically as cash."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "clause_cut",
+    "text": "Produced, approximately 11 tons of cocaine seized, along with 265 kilograms of methamphetamine, 78 kilograms of heroin, and roughly $30.8 million in total cash.",
+    "v3": {
+     "i": 3,
+     "sentence": "Produced, approximately 11 tons of cocaine seized, along with 265 kilograms of methamphetamine, 78 kilograms of heroin, and roughly $30.8 million in total cash.",
+     "claims": [
+      {
+       "claim": "approximately 11 tons of cocaine seized",
+       "status": "supported",
+       "fact": "F22",
+       "quote": "The Chicago-based investigation has resulted in seizures of approximately 11 tons of cocaine since 2008.",
+       "verified": true,
+       "material": false,
+       "why": "Matches the research figure."
+      },
+      {
+       "claim": "along with 265 kilograms of methamphetamine",
+       "status": "supported",
+       "fact": "F23",
+       "quote": "The Chicago-based investigation has resulted in seizures of 265 kilograms of methamphetamine since 2008.",
+       "verified": true,
+       "material": false,
+       "why": "Matches the research figure."
+      },
+      {
+       "claim": "78 kilograms of heroin",
+       "status": "supported",
+       "fact": "F24",
+       "quote": "The Chicago-based investigation has resulted in seizures of 78 kilograms of heroin since 2008.",
+       "verified": true,
+       "material": false,
+       "why": "Matches the research figure."
+      },
+      {
+       "claim": "roughly $30.8 million in total cash",
+       "status": "supported",
+       "fact": "F21",
+       "quote": "has resulted in total seizures of approximately $30.8 million since 2008",
+       "verified": true,
+       "material": false,
+       "why": "Same dollar total of seizures; calling it cash is a reasonable reading."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "The Chicago-based investigation ran forward from 2008 and produced approximately 11 tons of cocaine seized, along with 265 kilograms of methamphetamine, 78 kilograms of heroin, and roughly $30.8 million in total cash.",
+    "v3": {
+     "i": 34,
+     "sentence": "The Chicago-based investigation ran forward from 2008 and produced approximately 11 tons of cocaine seized, along with 265 kilograms of methamphetamine, 78 kilograms of heroin, and roughly $30.8 million in total cash.",
+     "claims": [
+      {
+       "claim": "The Chicago-based investigation ran forward from 2008",
+       "status": "supported",
+       "fact": "F22",
+       "quote": "The Chicago-based investigation has resulted in seizures of approximately 11 tons of cocaine since 2008.",
+       "verified": true,
+       "material": false,
+       "why": "Research gives the investigation's results 'since 2008'."
+      },
+      {
+       "claim": "produced approximately 11 tons of cocaine seized",
+       "status": "supported",
+       "fact": "F22",
+       "quote": "seizures of approximately 11 tons of cocaine since 2008",
+       "verified": true,
+       "material": false,
+       "why": "Matches the research exactly."
+      },
+      {
+       "claim": "265 kilograms of methamphetamine",
+       "status": "supported",
+       "fact": "F23",
+       "quote": "seizures of 265 kilograms of methamphetamine since 2008",
+       "verified": true,
+       "material": false,
+       "why": "Matches the research exactly."
+      },
+      {
+       "claim": "78 kilograms of heroin",
+       "status": "supported",
+       "fact": "F24",
+       "quote": "seizures of 78 kilograms of heroin since 2008",
+       "verified": true,
+       "material": false,
+       "why": "Matches the research exactly."
+      },
+      {
+       "claim": "roughly $30.8 million in total cash",
+       "status": "overstated",
+       "fact": "F21",
+       "quote": "total seizures of approximately $30.8 million since 2008",
+       "verified": true,
+       "material": true,
+       "why": "Research gives total seizures valued at $30.8M, not specifically cash."
+      }
+     ],
+     "error": true,
+     "material": true
+    }
+   }
+  },
+  {
+   "original": "Each of those numbers traces back to a chain of evidence that started with two brothers deciding, in late 2008, that cooperation was the better option.",
+   "origV3": {
+    "i": 8,
+    "sentence": "Each of those numbers traces back to a chain of evidence that started with two brothers deciding, in late 2008, that cooperation was the better option.",
+    "claims": [
+     {
+      "claim": "Each of those numbers traces back to a chain of evidence that started with two brothers",
+      "status": "overstated",
+      "fact": "F13",
+      "quote": "the Flores brothers' cooperation also facilitated seizures of more than $15 million in cash in the Chicago area",
+      "verified": true,
+      "material": true,
+      "why": "The research ties the brothers' cooperation only to specific late-2008 seizures, not to every figure or to the start of the evidence chain."
+     },
+     {
+      "claim": "two brothers",
+      "status": "supported",
+      "fact": "F14",
+      "quote": "the Flores brothers' cooperation facilitated the seizure of more than 1,600 kilograms of cocaine",
+      "verified": true,
+      "material": false,
+      "why": "The research names the Flores brothers as cooperators."
+     },
+     {
+      "claim": "deciding, in late 2008",
+      "status": "unsupported",
+      "fact": "F13",
+      "quote": "In late 2008, the Flores brothers' cooperation also facilitated seizures",
+      "verified": true,
+      "material": true,
+      "why": "The research dates the seizures to late 2008, not the brothers' decision to cooperate."
+     },
+     {
+      "claim": "that cooperation was the better option",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": false,
+      "why": "This is the narrator's inference about the brothers' motive."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "clause_cut",
+    "text": "In late 2008, that cooperation was the better option.",
+    "v3": {
+     "i": 4,
+     "sentence": "In late 2008, that cooperation was the better option.",
+     "claims": [
+      {
+       "claim": "In late 2008, that cooperation",
+       "status": "supported",
+       "fact": "F13",
+       "quote": "In late 2008, the Flores brothers' cooperation also facilitated seizures of more than $15 million in cash in the Chicago area.",
+       "verified": true,
+       "material": false,
+       "why": "The research places the Flores brothers' cooperation in late 2008."
+      },
+      {
+       "claim": "that cooperation was the better option",
+       "status": "unsupported",
+       "fact": "",
+       "quote": "",
+       "verified": false,
+       "material": false,
+       "why": "This is the narrator's judgment; the research does not assess the choice to cooperate."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "Those results traced back to two brothers deciding, in late 2008, that cooperation was the better option.",
+    "v3": {
+     "i": 35,
+     "sentence": "Those results traced back to two brothers deciding, in late 2008, that cooperation was the better option.",
+     "claims": [
+      {
+       "claim": "Those results traced back to two brothers",
+       "status": "supported",
+       "fact": "F13",
+       "quote": "the Flores brothers' cooperation also facilitated seizures of more than $15 million in cash in the Chicago area",
+       "verified": true,
+       "material": false,
+       "why": "The research credits the Flores brothers' cooperation with facilitating the seizures."
+      },
+      {
+       "claim": "deciding, in late 2008",
+       "status": "misattached",
+       "fact": "F13",
+       "quote": "In late 2008, the Flores brothers' cooperation also facilitated seizures",
+       "verified": true,
+       "material": true,
+       "why": "Late 2008 is when the seizures happened; the research does not say when the brothers decided to cooperate."
+      },
+      {
+       "claim": "that cooperation was the better option",
+       "status": "unsupported",
+       "fact": "",
+       "quote": "",
+       "verified": false,
+       "material": false,
+       "why": "This is the narrator's interpretation of their motive; the research records no reasoning."
+      }
+     ],
+     "error": true,
+     "material": true
+    }
+   }
+  },
+  {
+   "original": "Prosecutors alleged that Guzmán's organization had built Chicago into exactly that, and the forfeiture demand attached to the Chicago indictment reflected the scale they were claiming: more than $1.8 billion in cash proceeds traceable to the conspiracy.",
+   "origV3": {
+    "i": 9,
+    "sentence": "Prosecutors alleged that Guzmán's organization had built Chicago into exactly that, and the forfeiture demand attached to the Chicago indictment reflected the scale they were claiming: more than $1.8 billion in cash proceeds traceable to the conspiracy.",
+    "claims": [
+     {
+      "claim": "Prosecutors alleged that Guzmán's organization had built Chicago into exactly that",
+      "status": "supported",
+      "fact": "F2",
+      "quote": "described Guzmán’s organization as using Chicago “as a distribution hub”",
+      "verified": true,
+      "material": false,
+      "why": "The Chicago indictment describes the organization using Chicago as a distribution hub."
+     },
+     {
+      "claim": "the forfeiture demand attached to the Chicago indictment",
+      "status": "supported",
+      "fact": "F2",
+      "quote": "A Chicago federal indictment described Guzmán’s organization as using Chicago “as a distribution hub” and sought forfeiture",
+      "verified": true,
+      "material": false,
+      "why": "The research says the Chicago indictment sought forfeiture."
+     },
+     {
+      "claim": "more than $1.8 billion in cash proceeds",
+      "status": "supported",
+      "fact": "F2",
+      "quote": "sought forfeiture of “more than $1.8 billion in cash proceeds.”",
+      "verified": true,
+      "material": false,
+      "why": "This matches the research figure exactly."
+     },
+     {
+      "claim": "traceable to the conspiracy",
+      "status": "misattached",
+      "fact": "F3",
+      "quote": "which was the amount prosecutors said represented drug proceeds traceable to the conspiracy",
+      "verified": true,
+      "material": false,
+      "why": "The research uses 'traceable to the conspiracy' for the $12.6 billion Brooklyn forfeiture, not for the Chicago $1.8 billion. It is a minor characterization that a forfeiture demand already implies."
+     }
+    ],
+    "error": true,
+    "material": false
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "Prosecutors alleged that Guzmán's organization had built Chicago into exactly that, and the forfeiture demand attached to the Chicago indictment reflected the scale they were claiming: more than $1.8 billion in cash proceeds.",
+    "v3": {
+     "i": 5,
+     "sentence": "Prosecutors alleged that Guzmán's organization had built Chicago into exactly that, and the forfeiture demand attached to the Chicago indictment reflected the scale they were claiming: more than $1.8 billion in cash proceeds.",
+     "claims": [
+      {
+       "claim": "Prosecutors alleged that Guzmán's organization had built Chicago into exactly that",
+       "status": "supported",
+       "fact": "F2",
+       "quote": "A Chicago federal indictment described Guzmán’s organization as using Chicago “as a distribution hub”",
+       "verified": true,
+       "material": false,
+       "why": "The Chicago indictment alleged the organization used Chicago as a distribution hub."
+      },
+      {
+       "claim": "the forfeiture demand attached to the Chicago indictment",
+       "status": "supported",
+       "fact": "F2",
+       "quote": "sought forfeiture of “more than $1.8 billion in cash proceeds.”",
+       "verified": true,
+       "material": false,
+       "why": "The Chicago indictment sought forfeiture."
+      },
+      {
+       "claim": "more than $1.8 billion in cash proceeds",
+       "status": "supported",
+       "fact": "F2",
+       "quote": "more than $1.8 billion in cash proceeds",
+       "verified": true,
+       "material": false,
+       "why": "The research states this exact amount for the Chicago indictment."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "Prosecutors alleged that Guzmán's organization had built Chicago into exactly that, and the forfeiture demand attached to the Chicago indictment reflected the scale they were claiming: more than $1.8 billion in cash proceeds.",
+    "v3": {
+     "i": 36,
+     "sentence": "Prosecutors alleged that Guzmán's organization had built Chicago into exactly that, and the forfeiture demand attached to the Chicago indictment reflected the scale they were claiming: more than $1.8 billion in cash proceeds.",
+     "claims": [
+      {
+       "claim": "Prosecutors alleged that Guzmán's organization had built Chicago into exactly that",
+       "status": "supported",
+       "fact": "F2",
+       "quote": "A Chicago federal indictment described Guzmán’s organization as using Chicago “as a distribution hub”",
+       "verified": true,
+       "material": false,
+       "why": "The indictment alleged the organization used Chicago as a distribution hub."
+      },
+      {
+       "claim": "the forfeiture demand attached to the Chicago indictment",
+       "status": "supported",
+       "fact": "F2",
+       "quote": "sought forfeiture of “more than $1.8 billion in cash proceeds.”",
+       "verified": true,
+       "material": false,
+       "why": "The Chicago indictment sought forfeiture."
+      },
+      {
+       "claim": "more than $1.8 billion in cash proceeds",
+       "status": "supported",
+       "fact": "F2",
+       "quote": "more than $1.8 billion in cash proceeds",
+       "verified": true,
+       "material": false,
+       "why": "The amount matches the Chicago indictment's forfeiture figure."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   }
+  },
+  {
+   "original": "Submarines carried loads across Pacific waters.",
+   "origV3": {
+    "i": 10,
+    "sentence": "Submarines carried loads across Pacific waters.",
+    "claims": [
+     {
+      "claim": "Submarines carried loads",
+      "status": "supported",
+      "fact": "F62",
+      "quote": "Methods used to transport narcotics included submarines.",
+      "verified": true,
+      "material": false,
+      "why": "Research lists submarines as a transport method."
+     },
+     {
+      "claim": "across Pacific waters",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": true,
+      "why": "Research names no ocean or route for submarine shipments; the Pacific is an added place."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "Submarines carried loads across the waters.",
+    "v3": {
+     "i": 6,
+     "sentence": "Submarines carried loads across the waters.",
+     "claims": [
+      {
+       "claim": "Submarines carried loads across the waters",
+       "status": "supported",
+       "fact": "F62",
+       "quote": "Methods used to transport narcotics included submarines.",
+       "verified": true,
+       "material": false,
+       "why": "Research lists submarines as a narcotics transport method; 'across the waters' is harmless color."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   }
+  },
+  {
+   "original": "Carbon-fiber planes — light enough to evade certain radar signatures — flew consignments across borders.",
+   "origV3": {
+    "i": 11,
+    "sentence": "Carbon-fiber planes — light enough to evade certain radar signatures — flew consignments across borders.",
+    "claims": [
+     {
+      "claim": "Carbon-fiber planes",
+      "status": "supported",
+      "fact": "F63",
+      "quote": "Methods used to transport narcotics included carbon fiber airplanes.",
+      "verified": true,
+      "material": false,
+      "why": "The research lists carbon fiber airplanes as a transport method."
+     },
+     {
+      "claim": "light enough to evade certain radar signatures",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": false,
+      "why": "The research gives no reason or capability for the planes. This is the narrator's explanation of why they worked."
+     },
+     {
+      "claim": "flew consignments across borders",
+      "status": "supported",
+      "fact": "F61",
+      "quote": "Methods used to transport multi-ton narcotics shipments into the United States",
+      "verified": true,
+      "material": false,
+      "why": "These were transport methods for moving shipments into the US, which is a fair paraphrase of crossing borders."
+     }
+    ],
+    "error": true,
+    "material": false
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "Carbon-fiber planes flew consignments across borders.",
+    "v3": {
+     "i": 7,
+     "sentence": "Carbon-fiber planes flew consignments across borders.",
+     "claims": [
+      {
+       "claim": "Carbon-fiber planes flew consignments across borders.",
+       "status": "supported",
+       "fact": "F63",
+       "quote": "Methods used to transport narcotics included carbon fiber airplanes.",
+       "verified": true,
+       "material": false,
+       "why": "Research lists carbon fiber airplanes among the methods used to move narcotics into the United States."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "Carbon-fiber planes flew consignments across borders.",
+    "v3": {
+     "i": 37,
+     "sentence": "Carbon-fiber planes flew consignments across borders.",
+     "claims": [
+      {
+       "claim": "Carbon-fiber planes flew consignments across borders.",
+       "status": "supported",
+       "fact": "F63",
+       "quote": "Methods used to transport narcotics included carbon fiber airplanes.",
+       "verified": true,
+       "material": false,
+       "why": "Research lists carbon fiber airplanes among the methods used to move narcotics shipments into the United States."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   }
+  },
+  {
+   "original": "Trains with secret compartments rolled through ports of entry carrying concealed cargo alongside legitimate freight.",
+   "origV3": {
+    "i": 12,
+    "sentence": "Trains with secret compartments rolled through ports of entry carrying concealed cargo alongside legitimate freight.",
+    "claims": [
+     {
+      "claim": "Trains with secret compartments ... carrying concealed cargo",
+      "status": "supported",
+      "fact": "F64",
+      "quote": "Methods used to transport narcotics included trains with secret compartments.",
+      "verified": true,
+      "material": false,
+      "why": "Research states that trains with secret compartments were used to transport narcotics."
+     },
+     {
+      "claim": "rolled through ports of entry",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": true,
+      "why": "The research does not say the trains passed through ports of entry; this adds an unrecorded place."
+     },
+     {
+      "claim": "alongside legitimate freight",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": true,
+      "why": "The research does not record that the trains also carried legitimate freight; this is an added physical scene detail."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "Trains with secret compartments carried narcotics.",
+    "v3": {
+     "i": 8,
+     "sentence": "Trains with secret compartments carried narcotics.",
+     "claims": [
+      {
+       "claim": "Trains with secret compartments carried narcotics.",
+       "status": "supported",
+       "fact": "F64",
+       "quote": "Methods used to transport narcotics included trains with secret compartments.",
+       "verified": true,
+       "material": false,
+       "why": "Research lists trains with secret compartments as a transport method for narcotics."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   }
+  },
+  {
+   "original": "Transnational underground tunnels, some of them reinforced and ventilated, punched beneath the border wall entirely.",
+   "origV3": {
+    "i": 13,
+    "sentence": "Transnational underground tunnels, some of them reinforced and ventilated, punched beneath the border wall entirely.",
+    "claims": [
+     {
+      "claim": "Transnational underground tunnels",
+      "status": "supported",
+      "fact": "F65",
+      "quote": "Methods used to transport narcotics included transnational underground tunnels.",
+      "verified": true,
+      "material": false,
+      "why": "Research lists transnational underground tunnels as a transport method."
+     },
+     {
+      "claim": "some of them reinforced and ventilated",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": true,
+      "why": "The research does not describe the tunnels' construction, reinforcement or ventilation."
+     },
+     {
+      "claim": "punched beneath the border wall entirely",
+      "status": "unsupported",
+      "fact": "F65",
+      "quote": "transnational underground tunnels",
+      "verified": true,
+      "material": true,
+      "why": "Research says the tunnels were transnational but never mentions a border wall or that they passed beneath one."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "Transnational underground tunnels punched beneath the border.",
+    "v3": {
+     "i": 9,
+     "sentence": "Transnational underground tunnels punched beneath the border.",
+     "claims": [
+      {
+       "claim": "Transnational underground tunnels punched beneath the border",
+       "status": "supported",
+       "fact": "F65",
+       "quote": "Methods used to transport narcotics included transnational underground tunnels.",
+       "verified": true,
+       "material": false,
+       "why": "The research lists transnational underground tunnels as a transport method. A transnational tunnel by definition runs beneath a border; \"punched\" is narrative color."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "Transnational underground tunnels punched beneath the border wall entirely.",
+    "v3": {
+     "i": 38,
+     "sentence": "Transnational underground tunnels punched beneath the border wall entirely.",
+     "claims": [
+      {
+       "claim": "Transnational underground tunnels",
+       "status": "supported",
+       "fact": "F65",
+       "quote": "Methods used to transport narcotics included transnational underground tunnels.",
+       "verified": true,
+       "material": false,
+       "why": "The research lists transnational underground tunnels as a transport method."
+      },
+      {
+       "claim": "punched beneath the border wall",
+       "status": "unsupported",
+       "fact": "",
+       "quote": "",
+       "verified": false,
+       "material": true,
+       "why": "The research says the tunnels were transnational but never mentions a border wall or where the tunnels ran."
+      }
+     ],
+     "error": true,
+     "material": true
+    }
+   }
+  },
+  {
+   "original": "Each method addressed a specific vulnerability in the others: if one route drew attention, the load moved through a different one.",
+   "origV3": {
+    "i": 14,
+    "sentence": "Each method addressed a specific vulnerability in the others: if one route drew attention, the load moved through a different one.",
+    "claims": [
+     {
+      "claim": "Each method addressed a specific vulnerability in the others",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": false,
+      "why": "The research lists the transport methods (F61-F65) but not how they related; this is the narrator's analysis of the strategy."
+     },
+     {
+      "claim": "if one route drew attention, the load moved through a different one",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": true,
+      "why": "Presents an operational practice (rerouting shipments when a route was scrutinized) that the research does not record; it only lists the methods used."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "Each method addressed a specific vulnerability in the others.",
+    "v3": {
+     "i": 10,
+     "sentence": "Each method addressed a specific vulnerability in the others.",
+     "claims": [
+      {
+       "claim": "Each method addressed a specific vulnerability in the others.",
+       "status": "unsupported",
+       "fact": "",
+       "quote": "",
+       "verified": false,
+       "material": false,
+       "why": "The research lists the transport methods but says nothing about how they complemented each other; this is the narrator's own analysis."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   }
+  },
+  {
+   "original": "Chicago sat at the receiving end of that infrastructure — a wholesale destination built to absorb multi-ton deliveries and push them into a distribution network that reached across the country.",
+   "origV3": {
+    "i": 15,
+    "sentence": "Chicago sat at the receiving end of that infrastructure — a wholesale destination built to absorb multi-ton deliveries and push them into a distribution network that reached across the country.",
+    "claims": [
+     {
+      "claim": "Chicago sat at the receiving end of that infrastructure — a wholesale destination",
+      "status": "supported",
+      "fact": "F66",
+      "quote": "Once in the United States, narcotics were sold to wholesale distributors in New York, Miami, Atlanta, Chicago, Arizona, Los Angeles, and elsewhere.",
+      "verified": true,
+      "material": false,
+      "why": "The research lists Chicago among the wholesale distribution destinations."
+     },
+     {
+      "claim": "built to absorb multi-ton deliveries",
+      "status": "overstated",
+      "fact": "F61",
+      "quote": "Methods used to transport multi-ton narcotics shipments into the United States included fishing boats.",
+      "verified": true,
+      "material": false,
+      "why": "Multi-ton shipments are described for the United States generally; that Chicago was 'built to absorb' them is the narrator's characterization."
+     },
+     {
+      "claim": "push them into a distribution network that reached across the country",
+      "status": "supported",
+      "fact": "F37",
+      "quote": "showing how the organization used Chicago as a U.S. distribution and laundering hub",
+      "verified": true,
+      "material": false,
+      "why": "The research describes Chicago as a U.S. distribution hub."
+     }
+    ],
+    "error": true,
+    "material": false
+   },
+   "old": {
+    "action": "clause_cut",
+    "text": "Push them into a distribution network that reached across the country.",
+    "v3": {
+     "i": 11,
+     "sentence": "Push them into a distribution network that reached across the country.",
+     "claims": [
+      {
+       "claim": "a distribution network that reached across the country",
+       "status": "supported",
+       "fact": "F66",
+       "quote": "Once in the United States, narcotics were sold to wholesale distributors in New York, Miami, Atlanta, Chicago, Arizona, Los Angeles, and elsewhere.",
+       "verified": true,
+       "material": false,
+       "why": "Wholesale distribution in cities on both coasts and in between supports a nationwide reach."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "Chicago sat at the receiving end of that infrastructure — a wholesale destination that pushed deliveries into a distribution network that reached across the country.",
+    "v3": {
+     "i": 39,
+     "sentence": "Chicago sat at the receiving end of that infrastructure — a wholesale destination that pushed deliveries into a distribution network that reached across the country.",
+     "claims": [
+      {
+       "claim": "Chicago sat at the receiving end of that infrastructure — a wholesale destination",
+       "status": "supported",
+       "fact": "F66",
+       "quote": "Once in the United States, narcotics were sold to wholesale distributors in New York, Miami, Atlanta, Chicago, Arizona, Los Angeles, and elsewhere.",
+       "verified": true,
+       "material": false,
+       "why": "Research lists Chicago among the wholesale distribution destinations."
+      },
+      {
+       "claim": "that pushed deliveries into a distribution network",
+       "status": "supported",
+       "fact": "F2",
+       "quote": "using Chicago “as a distribution hub”",
+       "verified": true,
+       "material": false,
+       "why": "The indictment describes Chicago as a distribution hub."
+      },
+      {
+       "claim": "a distribution network that reached across the country",
+       "status": "unsupported",
+       "fact": "",
+       "quote": "",
+       "verified": false,
+       "material": true,
+       "why": "The research calls Chicago a distribution hub but never says its onward network reached nationwide."
+      }
+     ],
+     "error": true,
+     "material": true
+    }
+   }
+  },
+  {
+   "original": "The indictment charged a conspiracy running from May 2005 through December 2014 — nearly a decade of alleged narcotics importation, distribution, and money laundering, all anchored to the Northern District of Illinois.",
+   "origV3": {
+    "i": 16,
+    "sentence": "The indictment charged a conspiracy running from May 2005 through December 2014 — nearly a decade of alleged narcotics importation, distribution, and money laundering, all anchored to the Northern District of Illinois.",
+    "claims": [
+     {
+      "claim": "The indictment charged a conspiracy running from May 2005 through December 2014",
+      "status": "supported",
+      "fact": "F26",
+      "quote": "alleged a conspiracy running from May 2005 through December 2014",
+      "verified": true,
+      "material": false,
+      "why": "Dates match the eighth superseding indictment."
+     },
+     {
+      "claim": "nearly a decade",
+      "status": "derived",
+      "fact": "F26",
+      "quote": "from May 2005 through December 2014",
+      "verified": true,
+      "material": false,
+      "why": "May 2005 to Dec 2014 is about 9 years 7 months."
+     },
+     {
+      "claim": "alleged narcotics importation, distribution, and money laundering",
+      "status": "supported",
+      "fact": "F26",
+      "quote": "to import and distribute narcotics and launder money",
+      "verified": true,
+      "material": false,
+      "why": "Charged conduct matches."
+     },
+     {
+      "claim": "all anchored to the Northern District of Illinois",
+      "status": "overstated",
+      "fact": "F31",
+      "quote": "alleged operations in the Northern District of Illinois, Eastern Division, and elsewhere",
+      "verified": true,
+      "material": false,
+      "why": "The research places the case in Chicago, but its filings allege operations 'and elsewhere'. 'All anchored' is narrator framing."
+     }
+    ],
+    "error": true,
+    "material": false
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "The indictment charged a conspiracy running from May 2005 through December 2014, nearly a decade of alleged narcotics importation, distribution, and money laundering.",
+    "v3": {
+     "i": 12,
+     "sentence": "The indictment charged a conspiracy running from May 2005 through December 2014, nearly a decade of alleged narcotics importation, distribution, and money laundering.",
+     "claims": [
+      {
+       "claim": "The indictment charged a conspiracy running from May 2005 through December 2014",
+       "status": "supported",
+       "fact": "F26",
+       "quote": "alleged a conspiracy running from May 2005 through December 2014",
+       "verified": true,
+       "material": false,
+       "why": "The research states these exact conspiracy dates for the eighth superseding indictment."
+      },
+      {
+       "claim": "nearly a decade",
+       "status": "derived",
+       "fact": "F26",
+       "quote": "from May 2005 through December 2014",
+       "verified": true,
+       "material": false,
+       "why": "May 2005 to December 2014 is about 9.6 years, which is nearly a decade."
+      },
+      {
+       "claim": "of alleged narcotics importation, distribution, and money laundering",
+       "status": "supported",
+       "fact": "F26",
+       "quote": "to import and distribute narcotics and launder money",
+       "verified": true,
+       "material": false,
+       "why": "The research names these as the conspiracy's charged objects."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "The indictment charged a conspiracy running from May 2005 through December 2014 — nearly a decade of alleged narcotics importation, distribution, and money laundering.",
+    "v3": {
+     "i": 40,
+     "sentence": "The indictment charged a conspiracy running from May 2005 through December 2014 — nearly a decade of alleged narcotics importation, distribution, and money laundering.",
+     "claims": [
+      {
+       "claim": "The indictment charged a conspiracy running from May 2005 through December 2014",
+       "status": "supported",
+       "fact": "F26",
+       "quote": "alleged a conspiracy running from May 2005 through December 2014",
+       "verified": true,
+       "material": false,
+       "why": "The research states these exact dates for the eighth superseding indictment."
+      },
+      {
+       "claim": "nearly a decade",
+       "status": "derived",
+       "fact": "F26",
+       "quote": "from May 2005 through December 2014",
+       "verified": true,
+       "material": false,
+       "why": "May 2005 to December 2014 is about 9 years 7 months, which is nearly a decade."
+      },
+      {
+       "claim": "alleged narcotics importation, distribution, and money laundering",
+       "status": "supported",
+       "fact": "F26",
+       "quote": "to import and distribute narcotics and launder money",
+       "verified": true,
+       "material": false,
+       "why": "This paraphrases the alleged conspiracy objectives."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   }
+  },
+  {
+   "original": "The earlier filings had named the organization, documented the pipeline, and traced the cash.",
+   "origV3": {
+    "i": 17,
+    "sentence": "The earlier filings had named the organization, documented the pipeline, and traced the cash.",
+    "claims": [
+     {
+      "claim": "The earlier filings had named the organization",
+      "status": "supported",
+      "fact": "F32",
+      "quote": "The Northern District of Illinois indictment and related releases name Joaquín Guzmán Loera, Ismael Zambada-García, and the Sinaloa Cartel as the core criminal enterprise.",
+      "verified": true,
+      "material": false,
+      "why": "The filings named the cartel and its leaders."
+     },
+     {
+      "claim": "documented the pipeline",
+      "status": "supported",
+      "fact": "F6",
+      "quote": "Chicago indictments alleged the organization was responsible for importing nearly 200 metric tons of cocaine and smuggling more than $5.8 billion in cash proceeds from narcotics sales back to Mexico",
+      "verified": true,
+      "material": false,
+      "why": "The indictments alleged both the import and the distribution flow."
+     },
+     {
+      "claim": "and traced the cash",
+      "status": "overstated",
+      "fact": "F8",
+      "quote": "do not provide a complete traced end-to-end asset map in the cited filings",
+      "verified": true,
+      "material": true,
+      "why": "The filings alleged proceeds and sought forfeiture, but the research says they did not trace the money."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "The earlier filings had named the organization, documented the pipeline, and sought forfeiture of billions in alleged drug proceeds.",
+    "v3": {
+     "i": 13,
+     "sentence": "The earlier filings had named the organization, documented the pipeline, and sought forfeiture of billions in alleged drug proceeds.",
+     "claims": [
+      {
+       "claim": "The earlier filings had named the organization",
+       "status": "supported",
+       "fact": "F32",
+       "quote": "The Northern District of Illinois indictment and related releases name Joaquín Guzmán Loera, Ismael Zambada-García, and the Sinaloa Cartel as the core criminal enterprise.",
+       "verified": true,
+       "material": false,
+       "why": "The filings named the Sinaloa Cartel as the core enterprise."
+      },
+      {
+       "claim": "documented the pipeline",
+       "status": "supported",
+       "fact": "F6",
+       "quote": "Chicago indictments alleged the organization was responsible for importing nearly 200 metric tons of cocaine and smuggling more than $5.8 billion in cash proceeds from narcotics sales back to Mexico",
+       "verified": true,
+       "material": false,
+       "why": "The indictments described the import and cash-return flow, and F2 adds Chicago's role as a distribution hub."
+      },
+      {
+       "claim": "sought forfeiture of billions in alleged drug proceeds",
+       "status": "supported",
+       "fact": "F7",
+       "quote": "the indictments collectively sought forfeiture of more than $5.8 billion in drug proceeds",
+       "verified": true,
+       "material": false,
+       "why": "More than $5.8 billion is billions."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "The earlier filings had named the organization, documented the pipeline, and sought forfeiture of the cash.",
+    "v3": {
+     "i": 41,
+     "sentence": "The earlier filings had named the organization, documented the pipeline, and sought forfeiture of the cash.",
+     "claims": [
+      {
+       "claim": "The earlier filings had named the organization",
+       "status": "supported",
+       "fact": "F32",
+       "quote": "name Joaquín Guzmán Loera, Ismael Zambada-García, and the Sinaloa Cartel as the core criminal enterprise",
+       "verified": true,
+       "material": false,
+       "why": "The Northern District of Illinois filings named the Sinaloa Cartel as the enterprise."
+      },
+      {
+       "claim": "documented the pipeline",
+       "status": "supported",
+       "fact": "F2",
+       "quote": "described Guzmán’s organization as using Chicago “as a distribution hub”",
+       "verified": true,
+       "material": false,
+       "why": "The Chicago indictment described the distribution pipeline through Chicago."
+      },
+      {
+       "claim": "sought forfeiture of the cash",
+       "status": "supported",
+       "fact": "F2",
+       "quote": "sought forfeiture of “more than $1.8 billion in cash proceeds.”",
+       "verified": true,
+       "material": false,
+       "why": "The indictment sought forfeiture of cash proceeds."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   }
+  },
+  {
+   "original": "The eighth superseding indictment put Guzmán himself at the center of that specific conspiracy, over that specific span of years, with a dollar figure meant to represent what prosecutors said the Chicago operation had generated.",
+   "origV3": {
+    "i": 18,
+    "sentence": "The eighth superseding indictment put Guzmán himself at the center of that specific conspiracy, over that specific span of years, with a dollar figure meant to represent what prosecutors said the Chicago operation had generated.",
+    "claims": [
+     {
+      "claim": "The eighth superseding indictment put Guzmán himself",
+      "status": "supported",
+      "fact": "F26",
+      "quote": "unsealed an eighth superseding indictment on January 27, 2015 that charged nine defendants, including Joaquín Guzmán Loera",
+      "verified": true,
+      "material": false,
+      "why": "Research says the eighth superseding indictment charged Guzmán."
+     },
+     {
+      "claim": "at the center of that specific conspiracy",
+      "status": "overstated",
+      "fact": "F26",
+      "quote": "charged nine defendants, including Joaquín Guzmán Loera",
+      "verified": true,
+      "material": false,
+      "why": "Research lists him as one of nine defendants; 'at the center' is the narrator's characterization."
+     },
+     {
+      "claim": "over that specific span of years",
+      "status": "supported",
+      "fact": "F26",
+      "quote": "alleged a conspiracy running from May 2005 through December 2014",
+      "verified": true,
+      "material": false,
+      "why": "Callback to the alleged conspiracy period."
+     },
+     {
+      "claim": "with a dollar figure",
+      "status": "supported",
+      "fact": "F15",
+      "quote": "The eighth superseding indictment seeks forfeiture of $2 billion.",
+      "verified": true,
+      "material": false,
+      "why": "The indictment sought a forfeiture amount."
+     },
+     {
+      "claim": "meant to represent what prosecutors said the Chicago operation had generated",
+      "status": "misattached",
+      "fact": "F3",
+      "quote": "which was the amount prosecutors said represented drug proceeds traceable to the conspiracy",
+      "verified": true,
+      "material": true,
+      "why": "That description belongs to the $12.6 billion forfeiture in the sentencing; research does not say what the $2 billion represents."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "The eighth superseding indictment put Guzmán himself at the center of that specific conspiracy, over that specific span of years, and sought forfeiture of $2 billion.",
+    "v3": {
+     "i": 14,
+     "sentence": "The eighth superseding indictment put Guzmán himself at the center of that specific conspiracy, over that specific span of years, and sought forfeiture of $2 billion.",
+     "claims": [
+      {
+       "claim": "The eighth superseding indictment put Guzmán himself",
+       "status": "supported",
+       "fact": "F26",
+       "quote": "unsealed an eighth superseding indictment on January 27, 2015 that charged nine defendants, including Joaquín Guzmán Loera",
+       "verified": true,
+       "material": false,
+       "why": "The research says the eighth superseding indictment charged Guzmán."
+      },
+      {
+       "claim": "at the center of that specific conspiracy",
+       "status": "overstated",
+       "fact": "F26",
+       "quote": "charged nine defendants, including Joaquín Guzmán Loera",
+       "verified": true,
+       "material": false,
+       "why": "The research lists him as one of nine defendants; calling him the center is the narrator's characterization."
+      },
+      {
+       "claim": "over that specific span of years",
+       "status": "supported",
+       "fact": "F26",
+       "quote": "alleged a conspiracy running from May 2005 through December 2014",
+       "verified": true,
+       "material": false,
+       "why": "This refers back to the conspiracy period the indictment alleged."
+      },
+      {
+       "claim": "sought forfeiture of $2 billion",
+       "status": "supported",
+       "fact": "F15",
+       "quote": "The eighth superseding indictment seeks forfeiture of $2 billion.",
+       "verified": true,
+       "material": false,
+       "why": "The research states this forfeiture amount directly."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "The eighth superseding indictment put Guzmán himself at the center of that specific conspiracy, over that specific span of years, with a forfeiture demand attached.",
+    "v3": {
+     "i": 42,
+     "sentence": "The eighth superseding indictment put Guzmán himself at the center of that specific conspiracy, over that specific span of years, with a forfeiture demand attached.",
+     "claims": [
+      {
+       "claim": "The eighth superseding indictment put Guzmán himself",
+       "status": "supported",
+       "fact": "F26",
+       "quote": "unsealed an eighth superseding indictment on January 27, 2015 that charged nine defendants, including Joaquín Guzmán Loera",
+       "verified": true,
+       "material": false,
+       "why": "The research says the eighth superseding indictment charged Guzmán."
+      },
+      {
+       "claim": "at the center of that specific conspiracy",
+       "status": "overstated",
+       "fact": "F26",
+       "quote": "charged nine defendants, including Joaquín Guzmán Loera",
+       "verified": true,
+       "material": false,
+       "why": "The research lists him as one of nine defendants; calling him the center is the narrator's characterization."
+      },
+      {
+       "claim": "over that specific span of years",
+       "status": "supported",
+       "fact": "F26",
+       "quote": "alleged a conspiracy running from May 2005 through December 2014",
+       "verified": true,
+       "material": false,
+       "why": "The research gives the conspiracy's specific time span."
+      },
+      {
+       "claim": "with a forfeiture demand attached",
+       "status": "supported",
+       "fact": "F15",
+       "quote": "The eighth superseding indictment seeks forfeiture of $2 billion.",
+       "verified": true,
+       "material": false,
+       "why": "The research says the indictment seeks forfeiture."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   }
+  },
+  {
+   "original": "Part of what made that possible was the alliance Guzmán had formed after his 2001 prison escape — a partnership with fugitive co-defendant Ismael Zambada García that prosecutors said made the two of them the preeminent leaders of the Sinaloa Cartel.",
+   "origV3": {
+    "i": 19,
+    "sentence": "Part of what made that possible was the alliance Guzmán had formed after his 2001 prison escape — a partnership with fugitive co-defendant Ismael Zambada García that prosecutors said made the two of them the preeminent leaders of the Sinaloa Cartel.",
+    "claims": [
+     {
+      "claim": "Guzmán had formed an alliance after his 2001 escape",
+      "status": "supported",
+      "fact": "F57",
+      "quote": "After his 2001 escape, Guzman Loera formed an alliance with fugitive co-defendant Ismael Zambada Garcia.",
+      "verified": true,
+      "material": false,
+      "why": "Research states the alliance followed his 2001 escape."
+     },
+     {
+      "claim": "his 2001 prison escape",
+      "status": "unsupported",
+      "fact": "F57",
+      "quote": "After his 2001 escape",
+      "verified": true,
+      "material": false,
+      "why": "Research says only '2001 escape' and never says it was from a prison; this is minor added description."
+     },
+     {
+      "claim": "a partnership with fugitive co-defendant Ismael Zambada García",
+      "status": "supported",
+      "fact": "F57",
+      "quote": "formed an alliance with fugitive co-defendant Ismael Zambada Garcia",
+      "verified": true,
+      "material": false,
+      "why": "Directly stated."
+     },
+     {
+      "claim": "prosecutors said made the two of them the preeminent leaders of the Sinaloa Cartel",
+      "status": "supported",
+      "fact": "F58",
+      "quote": "Together, Guzman Loera and Ismael Zambada Garcia became the preeminent leaders of the Sinaloa Cartel.",
+      "verified": true,
+      "material": false,
+      "why": "Directly stated in the case facts."
+     },
+     {
+      "claim": "Part of what made that possible was the alliance",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": false,
+      "why": "This is the narrator's causal interpretation and is not established by the research."
+     }
+    ],
+    "error": true,
+    "material": false
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "Part of what made that possible was the alliance Guzmán had formed after his 2001 escape, a partnership with fugitive co-defendant Ismael Zambada García that prosecutors said made the two of them the preeminent leaders of the Sinaloa Cartel.",
+    "v3": {
+     "i": 15,
+     "sentence": "Part of what made that possible was the alliance Guzmán had formed after his 2001 escape, a partnership with fugitive co-defendant Ismael Zambada García that prosecutors said made the two of them the preeminent leaders of the Sinaloa Cartel.",
+     "claims": [
+      {
+       "claim": "Part of what made that possible was the alliance",
+       "status": "unsupported",
+       "fact": "",
+       "quote": "",
+       "verified": false,
+       "material": false,
+       "why": "The research never says the alliance caused what came before; this is the narrator's causal interpretation."
+      },
+      {
+       "claim": "the alliance Guzmán had formed after his 2001 escape",
+       "status": "supported",
+       "fact": "F57",
+       "quote": "After his 2001 escape, Guzman Loera formed an alliance with fugitive co-defendant Ismael Zambada Garcia.",
+       "verified": true,
+       "material": false,
+       "why": "Stated directly in F57."
+      },
+      {
+       "claim": "a partnership with fugitive co-defendant Ismael Zambada García",
+       "status": "supported",
+       "fact": "F57",
+       "quote": "formed an alliance with fugitive co-defendant Ismael Zambada Garcia",
+       "verified": true,
+       "material": false,
+       "why": "F57 names the partner and describes him as a fugitive co-defendant."
+      },
+      {
+       "claim": "made the two of them the preeminent leaders of the Sinaloa Cartel",
+       "status": "supported",
+       "fact": "F58",
+       "quote": "Together, Guzman Loera and Ismael Zambada Garcia became the preeminent leaders of the Sinaloa Cartel.",
+       "verified": true,
+       "material": false,
+       "why": "Stated directly in F58."
+      },
+      {
+       "claim": "prosecutors said",
+       "status": "unsupported",
+       "fact": "F58",
+       "quote": "Together, Guzman Loera and Ismael Zambada Garcia became the preeminent leaders of the Sinaloa Cartel.",
+       "verified": true,
+       "material": false,
+       "why": "F58 does not say who made the statement; the attribution to prosecutors only hedges an otherwise supported fact."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "Part of what made that possible was the alliance Guzmán had formed after his escape — a partnership with fugitive co-defendant Ismael Zambada García that prosecutors said made the two of them the preeminent leaders of the Sinaloa Cartel.",
+    "v3": {
+     "i": 43,
+     "sentence": "Part of what made that possible was the alliance Guzmán had formed after his escape — a partnership with fugitive co-defendant Ismael Zambada García that prosecutors said made the two of them the preeminent leaders of the Sinaloa Cartel.",
+     "claims": [
+      {
+       "claim": "Part of what made that possible was the alliance",
+       "status": "unsupported",
+       "fact": "",
+       "quote": "",
+       "verified": false,
+       "material": false,
+       "why": "The research does not say the alliance caused what came before; this is the narrator's interpretation."
+      },
+      {
+       "claim": "the alliance Guzmán had formed after his escape — a partnership with fugitive co-defendant Ismael Zambada García",
+       "status": "supported",
+       "fact": "F57",
+       "quote": "After his 2001 escape, Guzman Loera formed an alliance with fugitive co-defendant Ismael Zambada Garcia.",
+       "verified": true,
+       "material": false,
+       "why": "F57 states this directly."
+      },
+      {
+       "claim": "made the two of them the preeminent leaders of the Sinaloa Cartel",
+       "status": "supported",
+       "fact": "F58",
+       "quote": "Together, Guzman Loera and Ismael Zambada Garcia became the preeminent leaders of the Sinaloa Cartel.",
+       "verified": true,
+       "material": false,
+       "why": "F58 states this directly."
+      },
+      {
+       "claim": "prosecutors said",
+       "status": "unsupported",
+       "fact": "F58",
+       "quote": "Together, Guzman Loera and Ismael Zambada Garcia became the preeminent leaders of the Sinaloa Cartel.",
+       "verified": true,
+       "material": false,
+       "why": "The research states the fact but does not say prosecutors were its source; this is a minor framing addition."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   }
+  },
+  {
+   "original": "And the indictment alleged that Guzmán's organization maintained a vast network of corrupt government officials and employees, with the cartel paying those individuals millions of dollars in bribes to preserve its ability to operate.",
+   "origV3": {
+    "i": 20,
+    "sentence": "And the indictment alleged that Guzmán's organization maintained a vast network of corrupt government officials and employees, with the cartel paying those individuals millions of dollars in bribes to preserve its ability to operate.",
+    "claims": [
+     {
+      "claim": "the indictment alleged",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": true,
+      "why": "The research does not attribute the corruption network or the bribes to any indictment; the source document is unidentified."
+     },
+     {
+      "claim": "Guzmán's organization maintained a vast network of corrupt government officials and employees",
+      "status": "supported",
+      "fact": "F76",
+      "quote": "Guzman Loera's organization relied on a vast network of corrupt government officials and employees.",
+      "verified": true,
+      "material": false,
+      "why": "Close paraphrase of F76."
+     },
+     {
+      "claim": "with the cartel paying those individuals millions of dollars in bribes",
+      "status": "supported",
+      "fact": "F77",
+      "quote": "The Cartel paid corrupt individuals millions of dollars in bribes.",
+      "verified": true,
+      "material": false,
+      "why": "Directly stated in F77."
+     },
+     {
+      "claim": "to preserve its ability to operate",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": false,
+      "why": "The motive for the bribes is the narrator's interpretation; the research does not state it."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   },
+   "cons": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   }
+  },
+  {
+   "original": "The eighth put Guzmán's name on it directly.",
+   "origV3": {
+    "i": 21,
+    "sentence": "The eighth put Guzmán's name on it directly.",
+    "claims": [
+     {
+      "claim": "The eighth put Guzmán's name on it directly.",
+      "status": "supported",
+      "fact": "F26",
+      "quote": "unsealed an eighth superseding indictment on January 27, 2015 that charged nine defendants, including Joaquín Guzmán Loera",
+      "verified": true,
+      "material": false,
+      "why": "The research records the eighth superseding indictment charging Guzmán by name."
+     }
+    ],
+    "error": false,
+    "material": false
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "The eighth superseding indictment charged Guzmán directly, alongside eight other defendants.",
+    "v3": {
+     "i": 16,
+     "sentence": "The eighth superseding indictment charged Guzmán directly, alongside eight other defendants.",
+     "claims": [
+      {
+       "claim": "The eighth superseding indictment charged Guzmán directly",
+       "status": "supported",
+       "fact": "F26",
+       "quote": "an eighth superseding indictment on January 27, 2015 that charged nine defendants, including Joaquín Guzmán Loera",
+       "verified": true,
+       "material": false,
+       "why": "Research states the eighth superseding indictment charged Guzmán."
+      },
+      {
+       "claim": "alongside eight other defendants",
+       "status": "derived",
+       "fact": "F26",
+       "quote": "charged nine defendants, including Joaquín Guzmán Loera",
+       "verified": true,
+       "material": false,
+       "why": "Nine defendants minus Guzmán leaves eight others."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   }
+  },
+  {
+   "original": "The trial opened in Brooklyn in the fall of 2018, and what prosecutors brought into that courtroom was the accumulated weight of everything that had been built in Chicago and beyond — indictments, seizures, intercepted recordings, ledgers — now handed to a jury through the mouths of the people who had actually run the organization alongside Guzmán.",
+   "origV3": {
+    "i": 22,
+    "sentence": "The trial opened in Brooklyn in the fall of 2018, and what prosecutors brought into that courtroom was the accumulated weight of everything that had been built in Chicago and beyond — indictments, seizures, intercepted recordings, ledgers — now handed to a jury through the mouths of the people who had actually run the organization alongside Guzmán.",
+    "claims": [
+     {
+      "claim": "The trial opened in Brooklyn",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": true,
+      "why": "The research mentions Brooklyn indictments but never says where the trial took place."
+     },
+     {
+      "claim": "in the fall of 2018",
+      "status": "derived",
+      "fact": "F44",
+      "quote": "The trial lasted three months.",
+      "verified": true,
+      "material": false,
+      "why": "Three months before the February 12, 2019 conviction (F43) is about mid-November 2018, which is fall."
+     },
+     {
+      "claim": "what prosecutors brought into that courtroom was the accumulated weight of everything that had been built in Chicago and beyond — indictments, seizures",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": true,
+      "why": "The research does not say Chicago indictments or seizures were presented as evidence at the trial."
+     },
+     {
+      "claim": "intercepted recordings, ledgers",
+      "status": "supported",
+      "fact": "F56",
+      "quote": "Evidence also included ledgers, text messages, videos, photographs, and intercepted recordings.",
+      "verified": true,
+      "material": false,
+      "why": "Both are listed in the research as trial evidence."
+     },
+     {
+      "claim": "handed to a jury through the mouths of the people who had actually run the organization alongside Guzmán",
+      "status": "overstated",
+      "fact": "F51",
+      "quote": "Cooperating witnesses included Sinaloa Cartel members Rey Zambada and Vicente Zambada.",
+      "verified": true,
+      "material": true,
+      "why": "The research calls the witnesses cartel members, not people who ran the organization alongside Guzmán; his co-leader Zambada Garcia is described as a fugitive."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "clause_cut",
+    "text": "What prosecutors brought into that courtroom was the accumulated weight of everything that had been built in Chicago and beyond — indictments, seizures, intercepted recordings.",
+    "v3": {
+     "i": 17,
+     "sentence": "What prosecutors brought into that courtroom was the accumulated weight of everything that had been built in Chicago and beyond — indictments, seizures, intercepted recordings.",
+     "claims": [
+      {
+       "claim": "What prosecutors brought into that courtroom was ... intercepted recordings",
+       "status": "supported",
+       "fact": "F56",
+       "quote": "Evidence also included ledgers, text messages, videos, photographs, and intercepted recordings.",
+       "verified": true,
+       "material": false,
+       "why": "The research lists intercepted recordings among the trial evidence."
+      },
+      {
+       "claim": "the accumulated weight of everything that had been built in Chicago and beyond",
+       "status": "overstated",
+       "fact": "F29",
+       "quote": "The Chicago case overlapped with broader federal cartel prosecutions",
+       "verified": true,
+       "material": false,
+       "why": "The research shows the cases overlapped, not that the Chicago work as a whole was brought into the trial; this is narrative framing."
+      },
+      {
+       "claim": "indictments, seizures",
+       "status": "unsupported",
+       "fact": "",
+       "quote": "",
+       "verified": false,
+       "material": false,
+       "why": "The listed trial evidence does not include seizures or indictments; this reads as a rhetorical summary rather than a specific evidentiary claim."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "The trial opened in Brooklyn, and what prosecutors brought into that courtroom was the accumulated weight of everything that had been built in Chicago and beyond — indictments, seizures, intercepted recordings, ledgers — now handed to a jury through the mouths of cooperating witnesses including Sinaloa Cartel members Rey Zambada and Vicente Zambada.",
+    "v3": {
+     "i": 44,
+     "sentence": "The trial opened in Brooklyn, and what prosecutors brought into that courtroom was the accumulated weight of everything that had been built in Chicago and beyond — indictments, seizures, intercepted recordings, ledgers — now handed to a jury through the mouths of cooperating witnesses including Sinaloa Cartel members Rey Zambada and Vicente Zambada.",
+     "claims": [
+      {
+       "claim": "The trial opened in Brooklyn",
+       "status": "unsupported",
+       "fact": "",
+       "quote": "",
+       "verified": false,
+       "material": true,
+       "why": "Research mentions Brooklyn indictments and Judge Cogan but never says where the trial took place."
+      },
+      {
+       "claim": "what prosecutors brought into that courtroom was the accumulated weight of everything that had been built in Chicago and beyond — indictments, seizures",
+       "status": "unsupported",
+       "fact": "",
+       "quote": "",
+       "verified": false,
+       "material": false,
+       "why": "Research does not say Chicago-built indictments or seizures were presented at trial; this is narrative framing."
+      },
+      {
+       "claim": "intercepted recordings, ledgers",
+       "status": "supported",
+       "fact": "F56",
+       "quote": "Evidence also included ledgers, text messages, videos, photographs, and intercepted recordings.",
+       "verified": true,
+       "material": false,
+       "why": "Research lists ledgers and intercepted recordings as evidence."
+      },
+      {
+       "claim": "handed to a jury",
+       "status": "supported",
+       "fact": "F43",
+       "quote": "Guzman Loera was convicted by a federal jury on February 12, 2019.",
+       "verified": true,
+       "material": false,
+       "why": "A federal jury decided the case."
+      },
+      {
+       "claim": "cooperating witnesses including Sinaloa Cartel members Rey Zambada and Vicente Zambada",
+       "status": "supported",
+       "fact": "F51",
+       "quote": "Cooperating witnesses included Sinaloa Cartel members Rey Zambada and Vicente Zambada.",
+       "verified": true,
+       "material": false,
+       "why": "Research states this directly."
+      }
+     ],
+     "error": true,
+     "material": true
+    }
+   }
+  },
+  {
+   "original": "So did his brother Vicente.",
+   "origV3": {
+    "i": 23,
+    "sentence": "So did his brother Vicente.",
+    "claims": [
+     {
+      "claim": "So did his brother Vicente",
+      "status": "supported",
+      "fact": "F51",
+      "quote": "Cooperating witnesses included Sinaloa Cartel members Rey Zambada and Vicente Zambada.",
+      "verified": true,
+      "material": false,
+      "why": "Assuming the earlier sentence says Rey Zambada cooperated, the research lists Vicente Zambada as a cooperating witness too."
+     },
+     {
+      "claim": "his brother Vicente",
+      "status": "unsupported",
+      "fact": "F51",
+      "quote": "",
+      "verified": false,
+      "material": true,
+      "why": "The research names both Zambadas as cooperating witnesses but never says how they are related, so calling Vicente his brother adds an unestablished family relationship."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "So did his fellow cartel member Rey Zambada.",
+    "v3": {
+     "i": 18,
+     "sentence": "So did his fellow cartel member Rey Zambada.",
+     "claims": [
+      {
+       "claim": "his fellow cartel member Rey Zambada",
+       "status": "supported",
+       "fact": "F51",
+       "quote": "Cooperating witnesses included Sinaloa Cartel members Rey Zambada and Vicente Zambada.",
+       "verified": true,
+       "material": false,
+       "why": "The research names Rey Zambada as a Sinaloa Cartel member."
+      },
+      {
+       "claim": "So did ... Rey Zambada",
+       "status": "supported",
+       "fact": "F51",
+       "quote": "Cooperating witnesses included Sinaloa Cartel members Rey Zambada",
+       "verified": true,
+       "material": false,
+       "why": "Assuming the elided action is serving as a cooperating witness, the research lists Rey Zambada as one."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   }
+  },
+  {
+   "original": "They were cartel members who had operated at levels close enough to Guzmán that they could describe his decisions, his methods, and his violence from direct observation.",
+   "origV3": {
+    "i": 24,
+    "sentence": "They were cartel members who had operated at levels close enough to Guzmán that they could describe his decisions, his methods, and his violence from direct observation.",
+    "claims": [
+     {
+      "claim": "They were cartel members",
+      "status": "supported",
+      "fact": "F51",
+      "quote": "Cooperating witnesses included Sinaloa Cartel members Rey Zambada and Vicente Zambada.",
+      "verified": true,
+      "material": false,
+      "why": "The research identifies cooperating witnesses as Sinaloa Cartel members, though it names only the two Zambadas as members."
+     },
+     {
+      "claim": "who had operated at levels close enough to Guzmán",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": true,
+      "why": "The research does not describe the witnesses' rank or how close they were to Guzmán."
+     },
+     {
+      "claim": "that they could describe his decisions, his methods, and his violence from direct observation",
+      "status": "overstated",
+      "fact": "F71",
+      "quote": "Numerous co-conspirators testified that Guzman Loera at times carried out acts of violence himself.",
+      "verified": true,
+      "material": true,
+      "why": "The research records testimony about his violence only. It does not say the witnesses saw his decisions or methods firsthand."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "They were Sinaloa Cartel members who could describe his decisions, his methods, and his violence, and co-conspirators testified that Guzmán at times carried out acts of violence himself.",
+    "v3": {
+     "i": 19,
+     "sentence": "They were Sinaloa Cartel members who could describe his decisions, his methods, and his violence, and co-conspirators testified that Guzmán at times carried out acts of violence himself.",
+     "claims": [
+      {
+       "claim": "They were Sinaloa Cartel members",
+       "status": "supported",
+       "fact": "F51",
+       "quote": "Cooperating witnesses included Sinaloa Cartel members Rey Zambada and Vicente Zambada.",
+       "verified": true,
+       "material": false,
+       "why": "Research identifies cooperating witnesses as Sinaloa Cartel members."
+      },
+      {
+       "claim": "who could describe his decisions, his methods, and his violence",
+       "status": "unsupported",
+       "fact": "",
+       "quote": "",
+       "verified": false,
+       "material": false,
+       "why": "The research does not say what the witnesses could describe; this is the narrator's characterization."
+      },
+      {
+       "claim": "co-conspirators testified that Guzmán at times carried out acts of violence himself",
+       "status": "supported",
+       "fact": "F71",
+       "quote": "Numerous co-conspirators testified that Guzman Loera at times carried out acts of violence himself.",
+       "verified": true,
+       "material": false,
+       "why": "Directly stated in the research."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "Rey Zambada and Vicente Zambada were cartel members who could describe his decisions, his methods, and his violence from direct observation.",
+    "v3": {
+     "i": 45,
+     "sentence": "Rey Zambada and Vicente Zambada were cartel members who could describe his decisions, his methods, and his violence from direct observation.",
+     "claims": [
+      {
+       "claim": "Rey Zambada and Vicente Zambada were cartel members",
+       "status": "supported",
+       "fact": "F51",
+       "quote": "Cooperating witnesses included Sinaloa Cartel members Rey Zambada and Vicente Zambada.",
+       "verified": true,
+       "material": false,
+       "why": "The research names both as Sinaloa Cartel members."
+      },
+      {
+       "claim": "who could describe his decisions, his methods, and his violence from direct observation",
+       "status": "unsupported",
+       "fact": "F51",
+       "quote": "",
+       "verified": false,
+       "material": true,
+       "why": "The research lists them as cooperating witnesses but does not say what they observed firsthand or testified about."
+      }
+     ],
+     "error": true,
+     "material": true
+    }
+   }
+  },
+  {
+   "original": "The indictment's language on this was specific: Guzmán directed his hitmen to kidnap, interrogate, torture, and kill members of rival drug organizations.",
+   "origV3": {
+    "i": 25,
+    "sentence": "The indictment's language on this was specific: Guzmán directed his hitmen to kidnap, interrogate, torture, and kill members of rival drug organizations.",
+    "claims": [
+     {
+      "claim": "The indictment's language on this was specific",
+      "status": "unsupported",
+      "fact": "F70",
+      "quote": "",
+      "verified": false,
+      "material": true,
+      "why": "Research states the conduct but does not attribute this language to the indictment."
+     },
+     {
+      "claim": "Guzmán directed his hitmen to kidnap, interrogate, torture, and kill members of rival drug organizations",
+      "status": "supported",
+      "fact": "F70",
+      "quote": "Guzman Loera directed his hitmen to kidnap, interrogate, torture, and slaughter members of rival drug organizations.",
+      "verified": true,
+      "material": false,
+      "why": "'Kill' is a fair paraphrase of 'slaughter'."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "Prosecutors established that Guzmán directed his hitmen to kidnap, interrogate, torture, and kill members of rival drug organizations.",
+    "v3": {
+     "i": 20,
+     "sentence": "Prosecutors established that Guzmán directed his hitmen to kidnap, interrogate, torture, and kill members of rival drug organizations.",
+     "claims": [
+      {
+       "claim": "Guzmán directed his hitmen to kidnap, interrogate, torture, and kill members of rival drug organizations",
+       "status": "supported",
+       "fact": "F70",
+       "quote": "Guzman Loera directed his hitmen to kidnap, interrogate, torture, and slaughter members of rival drug organizations.",
+       "verified": true,
+       "material": false,
+       "why": "Close paraphrase; 'kill' matches 'slaughter'."
+      },
+      {
+       "claim": "Prosecutors established",
+       "status": "unsupported",
+       "fact": "",
+       "quote": "",
+       "verified": false,
+       "material": false,
+       "why": "The research states the fact but does not attribute it to prosecutors; this is framing, not a new fact."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "Prosecutors said Guzmán directed his hitmen to kidnap, interrogate, torture, and kill members of rival drug organizations.",
+    "v3": {
+     "i": 46,
+     "sentence": "Prosecutors said Guzmán directed his hitmen to kidnap, interrogate, torture, and kill members of rival drug organizations.",
+     "claims": [
+      {
+       "claim": "Guzmán directed his hitmen to kidnap, interrogate, torture, and kill members of rival drug organizations",
+       "status": "supported",
+       "fact": "F70",
+       "quote": "Guzman Loera directed his hitmen to kidnap, interrogate, torture, and slaughter members of rival drug organizations.",
+       "verified": true,
+       "material": false,
+       "why": "Matches the research; 'kill' is a fair paraphrase of 'slaughter'."
+      },
+      {
+       "claim": "Prosecutors said",
+       "status": "unsupported",
+       "fact": "F70",
+       "quote": "",
+       "verified": false,
+       "material": false,
+       "why": "The research states this without saying who said it; the attribution to prosecutors is framing, and the substance is supported."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   }
+  },
+  {
+   "original": "The verdict was unanimous and complete.",
+   "origV3": {
+    "i": 26,
+    "sentence": "The verdict was unanimous and complete.",
+    "claims": [
+     {
+      "claim": "The verdict was unanimous",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": true,
+      "why": "Research says he was convicted by a federal jury but never states the verdict was unanimous."
+     },
+     {
+      "claim": "and complete",
+      "status": "supported",
+      "fact": "F33",
+      "quote": "Guzmán Loera was convicted by a federal jury on all 10 counts of the superseding indictment",
+      "verified": true,
+      "material": false,
+      "why": "Conviction on all 10 counts supports a complete verdict."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "Guzmán Loera was convicted on all 10 counts of the superseding indictment.",
+    "v3": {
+     "i": 21,
+     "sentence": "Guzmán Loera was convicted on all 10 counts of the superseding indictment.",
+     "claims": [
+      {
+       "claim": "Guzmán Loera was convicted on all 10 counts of the superseding indictment",
+       "status": "supported",
+       "fact": "F45",
+       "quote": "Guzman Loera was convicted on all 10 counts of the superseding indictment.",
+       "verified": true,
+       "material": false,
+       "why": "Research states this directly."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   }
+  },
+  {
+   "original": "The Chicago evidence — the hub designation, the pipeline, the cooperating witnesses who had first opened that case — had traveled east to Brooklyn and held.",
+   "origV3": {
+    "i": 27,
+    "sentence": "The Chicago evidence — the hub designation, the pipeline, the cooperating witnesses who had first opened that case — had traveled east to Brooklyn and held.",
+    "claims": [
+     {
+      "claim": "the hub designation",
+      "status": "supported",
+      "fact": "F2",
+      "quote": "A Chicago federal indictment described Guzmán’s organization as using Chicago “as a distribution hub”",
+      "verified": true,
+      "material": false,
+      "why": "The Chicago indictment did call Chicago a distribution hub."
+     },
+     {
+      "claim": "The Chicago evidence ... had traveled east to Brooklyn",
+      "status": "unsupported",
+      "fact": "F29",
+      "quote": "",
+      "verified": false,
+      "material": true,
+      "why": "The research says the Chicago and Brooklyn indictments overlapped, not that Chicago evidence was used in the Brooklyn trial."
+     },
+     {
+      "claim": "the cooperating witnesses who had first opened that case",
+      "status": "unsupported",
+      "fact": "F13",
+      "quote": "",
+      "verified": false,
+      "material": true,
+      "why": "The research does not say the Chicago-case cooperators (the Flores brothers) were among the Brooklyn trial witnesses or that they opened the Chicago case."
+     },
+     {
+      "claim": "and held",
+      "status": "unsupported",
+      "fact": "F33",
+      "quote": "",
+      "verified": false,
+      "material": false,
+      "why": "A conviction on all counts is recorded, but crediting it to the Chicago evidence is the narrator's interpretation."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "The Chicago evidence — the hub designation, the pipeline, the overlapping indictments — had been part of a broader federal prosecution that reached Brooklyn.",
+    "v3": {
+     "i": 22,
+     "sentence": "The Chicago evidence — the hub designation, the pipeline, the overlapping indictments — had been part of a broader federal prosecution that reached Brooklyn.",
+     "claims": [
+      {
+       "claim": "the hub designation",
+       "status": "supported",
+       "fact": "F2",
+       "quote": "using Chicago “as a distribution hub”",
+       "verified": true,
+       "material": false,
+       "why": "The Chicago indictment described the city as a distribution hub."
+      },
+      {
+       "claim": "the overlapping indictments",
+       "status": "supported",
+       "fact": "F29",
+       "quote": "the 2009 Brooklyn and Chicago indictments together charged Guzmán Loera, Ismael Zambada-García, Arturo Beltrán-Leyva, and others",
+       "verified": true,
+       "material": false,
+       "why": "The research describes the Brooklyn and Chicago indictments as joint and overlapping."
+      },
+      {
+       "claim": "had been part of a broader federal prosecution that reached Brooklyn",
+       "status": "supported",
+       "fact": "F29",
+       "quote": "The Chicago case overlapped with broader federal cartel prosecutions: DEA said the 2009 Brooklyn and Chicago indictments together charged",
+       "verified": true,
+       "material": false,
+       "why": "The research states the Chicago case overlapped with broader prosecutions that included Brooklyn."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "The Chicago evidence — the hub designation, the pipeline, the cooperating witnesses — had contributed to the Brooklyn case.",
+    "v3": {
+     "i": 47,
+     "sentence": "The Chicago evidence — the hub designation, the pipeline, the cooperating witnesses — had contributed to the Brooklyn case.",
+     "claims": [
+      {
+       "claim": "The Chicago evidence — the hub designation, the pipeline ... — had contributed to the Brooklyn case",
+       "status": "overstated",
+       "fact": "F29",
+       "quote": "The Chicago case overlapped with broader federal cartel prosecutions",
+       "verified": true,
+       "material": true,
+       "why": "The research says only that the Chicago and Brooklyn cases overlapped, not that Chicago evidence was used in or contributed to the Brooklyn case."
+      },
+      {
+       "claim": "the cooperating witnesses — had contributed to the Brooklyn case",
+       "status": "unsupported",
+       "fact": "F28",
+       "quote": "",
+       "verified": false,
+       "material": true,
+       "why": "The research lists cooperating witnesses and says Zambada-Niebla cooperated with Chicago prosecutors, but never says Chicago witnesses fed into the Brooklyn case."
+      }
+     ],
+     "error": true,
+     "material": true
+    }
+   }
+  },
+  {
+   "original": "Cogan walked into a Brooklyn courtroom and imposed a sentence that the law structures in a specific sequence for a reason.",
+   "origV3": {
+    "i": 28,
+    "sentence": "Cogan walked into a Brooklyn courtroom and imposed a sentence that the law structures in a specific sequence for a reason.",
+    "claims": [
+     {
+      "claim": "Cogan ... imposed a sentence",
+      "status": "supported",
+      "fact": "F3",
+      "quote": "Judge Brian M. Cogan sentenced Joaquín Archivaldo Guzmán Loera on July 17, 2019, to life imprisonment plus 30 years",
+      "verified": true,
+      "material": false,
+      "why": "The research states that Cogan imposed the sentence."
+     },
+     {
+      "claim": "walked into a Brooklyn courtroom",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": true,
+      "why": "The research never says where the sentencing took place or describes Cogan walking in; it mentions Brooklyn only for the indictments."
+     },
+     {
+      "claim": "a sentence that the law structures in a specific sequence",
+      "status": "overstated",
+      "fact": "F40",
+      "quote": "with the 30 years running consecutive to the life sentence",
+      "verified": true,
+      "material": false,
+      "why": "The research says only that the 30 years run consecutive to the life term, not that the law mandates that sequence. This is the narrator's framing."
+     },
+     {
+      "claim": "for a reason",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": false,
+      "why": "This is the narrator's interpretation of the sentence's purpose."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "Judge Brian M. Cogan imposed a sentence that the law structures in a specific sequence for a reason.",
+    "v3": {
+     "i": 23,
+     "sentence": "Judge Brian M. Cogan imposed a sentence that the law structures in a specific sequence for a reason.",
+     "claims": [
+      {
+       "claim": "Judge Brian M. Cogan imposed a sentence",
+       "status": "supported",
+       "fact": "F39",
+       "quote": "Joaquin Archivaldo Guzman Loera was sentenced by U.S. District Judge Brian M. Cogan.",
+       "verified": true,
+       "material": false,
+       "why": "The research names Cogan as the sentencing judge."
+      },
+      {
+       "claim": "a sentence that the law structures in a specific sequence for a reason",
+       "status": "unsupported",
+       "fact": "F40",
+       "quote": "with the 30 years running consecutive to the life sentence",
+       "verified": true,
+       "material": false,
+       "why": "The research gives the consecutive structure but nothing on the law's reasons; this is the narrator's framing."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "Judge Brian M. Cogan imposed a sentence that the law structures in a specific sequence for a reason.",
+    "v3": {
+     "i": 48,
+     "sentence": "Judge Brian M. Cogan imposed a sentence that the law structures in a specific sequence for a reason.",
+     "claims": [
+      {
+       "claim": "Judge Brian M. Cogan imposed a sentence",
+       "status": "supported",
+       "fact": "F3",
+       "quote": "Judge Brian M. Cogan sentenced Joaquín Archivaldo Guzmán Loera on July 17, 2019, to life imprisonment plus 30 years",
+       "verified": true,
+       "material": false,
+       "why": "Research states Cogan sentenced Guzmán."
+      },
+      {
+       "claim": "that the law structures in a specific sequence for a reason",
+       "status": "unsupported",
+       "fact": "F40",
+       "quote": "with the 30 years running consecutive to the life sentence",
+       "verified": true,
+       "material": false,
+       "why": "Research gives the consecutive ordering, but not that the law requires this sequence or why; this is narrator framing."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   }
+  },
+  {
+   "original": "It was the court's own accounting of what the full conspiracy had generated, and it dwarfed every prior figure prosecutors had put on paper.",
+   "origV3": {
+    "i": 29,
+    "sentence": "It was the court's own accounting of what the full conspiracy had generated, and it dwarfed every prior figure prosecutors had put on paper.",
+    "claims": [
+     {
+      "claim": "It was the court's own accounting",
+      "status": "misattached",
+      "fact": "F3",
+      "quote": "which was the amount prosecutors said represented drug proceeds traceable to the conspiracy",
+      "verified": true,
+      "material": true,
+      "why": "The $12.6 billion was the prosecutors' figure that the court ordered forfeited, not the court's own accounting."
+     },
+     {
+      "claim": "of what the full conspiracy had generated",
+      "status": "overstated",
+      "fact": "F3",
+      "quote": "represented drug proceeds traceable to the conspiracy",
+      "verified": true,
+      "material": true,
+      "why": "The research describes proceeds traceable to the conspiracy, not the full total the conspiracy generated."
+     },
+     {
+      "claim": "it dwarfed every prior figure prosecutors had put on paper",
+      "status": "unsupported",
+      "fact": "F7",
+      "quote": "",
+      "verified": false,
+      "material": false,
+      "why": "$12.6B exceeds the cited $5.8B, $2B and $1.8B figures, but the research does not establish it as larger than every prior prosecution figure; 'dwarfed' is the narrator's characterization."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "clause_cut",
+    "text": "It dwarfed every prior figure prosecutors had put on paper.",
+    "v3": {
+     "i": 24,
+     "sentence": "It dwarfed every prior figure prosecutors had put on paper.",
+     "claims": [
+      {
+       "claim": "It dwarfed every prior figure prosecutors had put on paper.",
+       "status": "derived",
+       "fact": "F3",
+       "quote": "ordered $12.6 billion in forfeiture, which was the amount prosecutors said represented drug proceeds traceable to the conspiracy",
+       "verified": true,
+       "material": false,
+       "why": "Assuming 'It' is the $12.6B forfeiture, it exceeds every earlier figure in the research ($5.8B in F7, $2B in F15, $1.8B in F2), so the comparison follows by arithmetic."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "It was the amount prosecutors said represented drug proceeds traceable to the conspiracy, and it dwarfed every prior figure prosecutors had put on paper.",
+    "v3": {
+     "i": 49,
+     "sentence": "It was the amount prosecutors said represented drug proceeds traceable to the conspiracy, and it dwarfed every prior figure prosecutors had put on paper.",
+     "claims": [
+      {
+       "claim": "It was the amount prosecutors said represented drug proceeds traceable to the conspiracy",
+       "status": "supported",
+       "fact": "F3",
+       "quote": "which was the amount prosecutors said represented drug proceeds traceable to the conspiracy",
+       "verified": true,
+       "material": false,
+       "why": "F3 directly describes the $12.6 billion forfeiture this way."
+      },
+      {
+       "claim": "it dwarfed every prior figure prosecutors had put on paper",
+       "status": "unsupported",
+       "fact": "",
+       "quote": "",
+       "verified": false,
+       "material": false,
+       "why": "$12.6B exceeds every figure in the research ($5.8B, $2B, $1.8B), but the research does not establish that these were all prior prosecutorial figures; 'dwarfed' is the narrator's characterization."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   }
+  },
+  {
+   "original": "What made the number possible was the breadth of what the DEA, ICE HSI, and the FBI had assembled across years, working alongside law enforcement from Mexico, Ecuador, the Netherlands, the Dominican Republic, and Colombia.",
+   "origV3": {
+    "i": 30,
+    "sentence": "What made the number possible was the breadth of what the DEA, ICE HSI, and the FBI had assembled across years, working alongside law enforcement from Mexico, Ecuador, the Netherlands, the Dominican Republic, and Colombia.",
+    "claims": [
+     {
+      "claim": "What made the number possible was the breadth of what the DEA, ICE HSI, and the FBI had assembled across years",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": false,
+      "why": "The research does not say the investigation's breadth caused the figure or that evidence was assembled over years; this is the narrator's interpretation."
+     },
+     {
+      "claim": "the DEA, ICE HSI, and the FBI",
+      "status": "supported",
+      "fact": "F78",
+      "quote": "The case was investigated by the DEA, ICE HSI, and the FBI.",
+      "verified": true,
+      "material": false,
+      "why": "The research names these three investigating agencies."
+     },
+     {
+      "claim": "working alongside law enforcement from Mexico, Ecuador, the Netherlands, the Dominican Republic, and Colombia",
+      "status": "supported",
+      "fact": "F79",
+      "quote": "in cooperation with Mexican, Ecuadorian, Netherlands, Dominican, and Colombian law enforcement authorities",
+      "verified": true,
+      "material": false,
+      "why": "The research lists the same cooperating countries."
+     }
+    ],
+    "error": true,
+    "material": false
+   },
+   "old": {
+    "action": "clause_cut",
+    "text": "What made the number possible was the breadth of what the DEA, ICE HSI, and the FBI had assembled across years, working alongside law enforcement from Mexico, Ecuador, the Netherlands.",
+    "v3": {
+     "i": 25,
+     "sentence": "What made the number possible was the breadth of what the DEA, ICE HSI, and the FBI had assembled across years, working alongside law enforcement from Mexico, Ecuador, the Netherlands.",
+     "claims": [
+      {
+       "claim": "the DEA, ICE HSI, and the FBI had assembled",
+       "status": "supported",
+       "fact": "F78",
+       "quote": "The case was investigated by the DEA, ICE HSI, and the FBI.",
+       "verified": true,
+       "material": false,
+       "why": "Research names these three investigating agencies."
+      },
+      {
+       "claim": "working alongside law enforcement from Mexico, Ecuador, the Netherlands",
+       "status": "supported",
+       "fact": "F79",
+       "quote": "in cooperation with Mexican, Ecuadorian, Netherlands, Dominican, and Colombian law enforcement authorities",
+       "verified": true,
+       "material": false,
+       "why": "These three countries are among the cooperating authorities; the sentence gives a partial list."
+      },
+      {
+       "claim": "across years",
+       "status": "unsupported",
+       "fact": "",
+       "quote": "",
+       "verified": false,
+       "material": false,
+       "why": "The research gives no duration for this investigation; this is vague framing."
+      },
+      {
+       "claim": "What made the number possible was the breadth of what",
+       "status": "unsupported",
+       "fact": "",
+       "quote": "",
+       "verified": false,
+       "material": false,
+       "why": "This is the narrator's causal interpretation, which the research does not establish."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "What made the number possible was the breadth of what the DEA, ICE HSI, and the FBI had assembled across years, working alongside law enforcement from Mexico and the Netherlands.",
+    "v3": {
+     "i": 50,
+     "sentence": "What made the number possible was the breadth of what the DEA, ICE HSI, and the FBI had assembled across years, working alongside law enforcement from Mexico and the Netherlands.",
+     "claims": [
+      {
+       "claim": "What made the number possible was the breadth of what the DEA, ICE HSI, and the FBI had assembled",
+       "status": "unsupported",
+       "fact": "",
+       "quote": "",
+       "verified": false,
+       "material": false,
+       "why": "The research doesn't say what caused the figure; this is the narrator's interpretation."
+      },
+      {
+       "claim": "the DEA, ICE HSI, and the FBI had assembled",
+       "status": "supported",
+       "fact": "F78",
+       "quote": "The case was investigated by the DEA, ICE HSI, and the FBI.",
+       "verified": true,
+       "material": false,
+       "why": "The research names these three agencies as the investigators."
+      },
+      {
+       "claim": "across years",
+       "status": "unsupported",
+       "fact": "",
+       "quote": "",
+       "verified": false,
+       "material": false,
+       "why": "The research gives no duration for this investigation; this is vague color."
+      },
+      {
+       "claim": "working alongside law enforcement from Mexico and the Netherlands",
+       "status": "supported",
+       "fact": "F79",
+       "quote": "in cooperation with Mexican, Ecuadorian, Netherlands, Dominican, and Colombian law enforcement authorities",
+       "verified": true,
+       "material": false,
+       "why": "Mexico and the Netherlands are among the cooperating authorities listed."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   }
+  },
+  {
+   "original": "The forfeiture figure was not a projection or an estimate of market size — it was the amount prosecutors said they could trace to the conspiracy itself, the proceeds the operation had actually moved.",
+   "origV3": {
+    "i": 31,
+    "sentence": "The forfeiture figure was not a projection or an estimate of market size — it was the amount prosecutors said they could trace to the conspiracy itself, the proceeds the operation had actually moved.",
+    "claims": [
+     {
+      "claim": "it was the amount prosecutors said they could trace to the conspiracy itself",
+      "status": "supported",
+      "fact": "F3",
+      "quote": "which was the amount prosecutors said represented drug proceeds traceable to the conspiracy",
+      "verified": true,
+      "material": false,
+      "why": "Research states prosecutors said the $12.6 billion represented proceeds traceable to the conspiracy."
+     },
+     {
+      "claim": "The forfeiture figure was not a projection or an estimate of market size",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": false,
+      "why": "The research does not characterize the figure this way; this contrast is the narrator's own framing."
+     },
+     {
+      "claim": "the proceeds the operation had actually moved",
+      "status": "overstated",
+      "fact": "F3",
+      "quote": "the amount prosecutors said represented drug proceeds traceable to the conspiracy",
+      "verified": true,
+      "material": false,
+      "why": "The research gives this as what prosecutors said, not as established fact, but the line reads as an appositive to their claim."
+     }
+    ],
+    "error": true,
+    "material": false
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "The forfeiture figure was not a projection or an estimate of market size — it was the amount prosecutors said represented drug proceeds traceable to the conspiracy itself.",
+    "v3": {
+     "i": 26,
+     "sentence": "The forfeiture figure was not a projection or an estimate of market size — it was the amount prosecutors said represented drug proceeds traceable to the conspiracy itself.",
+     "claims": [
+      {
+       "claim": "it was the amount prosecutors said represented drug proceeds traceable to the conspiracy itself",
+       "status": "supported",
+       "fact": "F3",
+       "quote": "ordered $12.6 billion in forfeiture, which was the amount prosecutors said represented drug proceeds traceable to the conspiracy",
+       "verified": true,
+       "material": false,
+       "why": "F3 states this directly."
+      },
+      {
+       "claim": "The forfeiture figure was not a projection or an estimate of market size",
+       "status": "unsupported",
+       "fact": "",
+       "quote": "",
+       "verified": false,
+       "material": false,
+       "why": "The research does not say this; it is the narrator's characterization contrasting the figure with estimates."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "The forfeiture figure was not a projection or an estimate of market size — it was the amount prosecutors said they could trace to the conspiracy itself, the drug proceeds traceable to the conspiracy.",
+    "v3": {
+     "i": 51,
+     "sentence": "The forfeiture figure was not a projection or an estimate of market size — it was the amount prosecutors said they could trace to the conspiracy itself, the drug proceeds traceable to the conspiracy.",
+     "claims": [
+      {
+       "claim": "it was the amount prosecutors said they could trace to the conspiracy itself, the drug proceeds traceable to the conspiracy",
+       "status": "supported",
+       "fact": "F3",
+       "quote": "which was the amount prosecutors said represented drug proceeds traceable to the conspiracy",
+       "verified": true,
+       "material": false,
+       "why": "F3 states the forfeiture was the amount prosecutors said represented drug proceeds traceable to the conspiracy."
+      },
+      {
+       "claim": "The forfeiture figure was not a projection or an estimate of market size",
+       "status": "unsupported",
+       "fact": "",
+       "quote": "",
+       "verified": false,
+       "material": false,
+       "why": "The research does not address this; it is the narrator's framing of what the figure was not."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   }
+  },
+  {
+   "original": "The continuing criminal enterprise conviction is the federal statute's most severe drug charge.",
+   "origV3": {
+    "i": 32,
+    "sentence": "The continuing criminal enterprise conviction is the federal statute's most severe drug charge.",
+    "claims": [
+     {
+      "claim": "The continuing criminal enterprise conviction",
+      "status": "supported",
+      "fact": "F41",
+      "quote": "The life sentence was for being a principal leader of a continuing criminal enterprise.",
+      "verified": true,
+      "material": false,
+      "why": "The research records a life sentence on the continuing criminal enterprise charge, which implies a conviction on it."
+     },
+     {
+      "claim": "is the federal statute's most severe drug charge",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": true,
+      "why": "The research never ranks the continuing criminal enterprise charge against other federal drug charges, so this added legal superlative is unestablished."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "The continuing criminal enterprise conviction carried a charge that included 26 drug-related violations and one murder conspiracy.",
+    "v3": {
+     "i": 27,
+     "sentence": "The continuing criminal enterprise conviction carried a charge that included 26 drug-related violations and one murder conspiracy.",
+     "claims": [
+      {
+       "claim": "The continuing criminal enterprise conviction",
+       "status": "supported",
+       "fact": "F41",
+       "quote": "The life sentence was for being a principal leader of a continuing criminal enterprise.",
+       "verified": true,
+       "material": false,
+       "why": "The research records a sentence for the continuing criminal enterprise count, which implies a conviction."
+      },
+      {
+       "claim": "carried a charge that included 26 drug-related violations and one murder conspiracy",
+       "status": "supported",
+       "fact": "F42",
+       "quote": "The continuing criminal enterprise charge includes 26 drug-related violations and one murder conspiracy.",
+       "verified": true,
+       "material": false,
+       "why": "The research states this directly."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   }
+  },
+  {
+   "original": "It requires proving that a defendant occupied a position of principal leadership, that the enterprise involved five or more people under that leadership, and that the enterprise generated substantial income.",
+   "origV3": {
+    "i": 33,
+    "sentence": "It requires proving that a defendant occupied a position of principal leadership, that the enterprise involved five or more people under that leadership, and that the enterprise generated substantial income.",
+    "claims": [
+     {
+      "claim": "It requires proving that a defendant occupied a position of principal leadership",
+      "status": "unsupported",
+      "fact": "F41",
+      "quote": "The life sentence was for being a principal leader of a continuing criminal enterprise.",
+      "verified": true,
+      "material": true,
+      "why": "Research says Guzmán was sentenced as a principal leader, but it never states the legal elements the charge requires."
+     },
+     {
+      "claim": "the enterprise involved five or more people under that leadership",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": true,
+      "why": "The research does not mention a five-or-more-person requirement; this adds a number."
+     },
+     {
+      "claim": "the enterprise generated substantial income",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": true,
+      "why": "The research states no substantial-income element for the continuing criminal enterprise charge."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   },
+   "cons": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   }
+  },
+  {
+   "original": "The 26 underlying drug violations and the murder conspiracy weren't background — they were elements the jury had to find, individually, before the enterprise charge could stand.",
+   "origV3": {
+    "i": 34,
+    "sentence": "The 26 underlying drug violations and the murder conspiracy weren't background — they were elements the jury had to find, individually, before the enterprise charge could stand.",
+    "claims": [
+     {
+      "claim": "The 26 underlying drug violations and the murder conspiracy",
+      "status": "supported",
+      "fact": "F42",
+      "quote": "The continuing criminal enterprise charge includes 26 drug-related violations and one murder conspiracy.",
+      "verified": true,
+      "material": false,
+      "why": "The research states the CCE charge included 26 drug violations and one murder conspiracy."
+     },
+     {
+      "claim": "they were elements the jury had to find, individually, before the enterprise charge could stand",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": true,
+      "why": "The research does not say what the jury had to find or how the enterprise charge was proven."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "The 26 underlying drug violations and the murder conspiracy weren't background — they were part of the charge the jury had to weigh before convicting on all 10 counts.",
+    "v3": {
+     "i": 28,
+     "sentence": "The 26 underlying drug violations and the murder conspiracy weren't background — they were part of the charge the jury had to weigh before convicting on all 10 counts.",
+     "claims": [
+      {
+       "claim": "The 26 underlying drug violations and the murder conspiracy ... were part of the charge",
+       "status": "supported",
+       "fact": "F42",
+       "quote": "The continuing criminal enterprise charge includes 26 drug-related violations and one murder conspiracy.",
+       "verified": true,
+       "material": false,
+       "why": "Research states the CCE charge includes 26 drug violations and one murder conspiracy."
+      },
+      {
+       "claim": "the jury had to weigh before convicting",
+       "status": "unsupported",
+       "fact": "",
+       "quote": "",
+       "verified": false,
+       "material": false,
+       "why": "The research does not describe what the jury had to weigh; this is the narrator's framing of trial mechanics."
+      },
+      {
+       "claim": "convicting on all 10 counts",
+       "status": "supported",
+       "fact": "F45",
+       "quote": "Guzman Loera was convicted on all 10 counts of the superseding indictment.",
+       "verified": true,
+       "material": false,
+       "why": "Directly stated."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   }
+  },
+  {
+   "original": "Every one of them stood.",
+   "origV3": {
+    "i": 35,
+    "sentence": "Every one of them stood.",
+    "claims": [
+     {
+      "claim": "Every one of them stood.",
+      "status": "supported",
+      "fact": "F45",
+      "quote": "Guzman Loera was convicted on all 10 counts of the superseding indictment.",
+      "verified": true,
+      "material": false,
+      "why": "Read as a callback to the counts, the research supports conviction on all 10; read as people physically standing, no fact records that scene."
+     }
+    ],
+    "error": false,
+    "material": false
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "He was convicted on all 10 counts.",
+    "v3": {
+     "i": 29,
+     "sentence": "He was convicted on all 10 counts.",
+     "claims": [
+      {
+       "claim": "He was convicted on all 10 counts.",
+       "status": "supported",
+       "fact": "F45",
+       "quote": "Guzman Loera was convicted on all 10 counts of the superseding indictment.",
+       "verified": true,
+       "material": false,
+       "why": "Research states conviction on all 10 counts."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   }
+  },
+  {
+   "original": "When they stood at that news conference in February 2013 and called him Public Enemy Number One — invoking a designation the city had last used for Al Capone — the question hanging over it was whether the legal machinery would ever catch up to the argument.",
+   "origV3": {
+    "i": 36,
+    "sentence": "When they stood at that news conference in February 2013 and called him Public Enemy Number One — invoking a designation the city had last used for Al Capone — the question hanging over it was whether the legal machinery would ever catch up to the argument.",
+    "claims": [
+     {
+      "claim": "they stood at that news conference in February 2013 and called him Public Enemy Number One",
+      "status": "supported",
+      "fact": "F1",
+      "quote": "On February 14, 2013, the Chicago Crime Commission announced at a Chicago news conference that Joaquín Guzmán Loera was its “Public Enemy Number One,”",
+      "verified": true,
+      "material": false,
+      "why": "The research records the February 2013 news conference and the label."
+     },
+     {
+      "claim": "invoking a designation the city had last used for Al Capone",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": true,
+      "why": "The research never mentions Al Capone or any earlier use of the designation."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "When they stood at that news conference in February 2013 and called him Public Enemy Number One, the question hanging over it was whether the legal machinery would ever catch up to the argument.",
+    "v3": {
+     "i": 30,
+     "sentence": "When they stood at that news conference in February 2013 and called him Public Enemy Number One, the question hanging over it was whether the legal machinery would ever catch up to the argument.",
+     "claims": [
+      {
+       "claim": "they stood at that news conference in February 2013",
+       "status": "supported",
+       "fact": "F1",
+       "quote": "On February 14, 2013, the Chicago Crime Commission announced at a Chicago news conference",
+       "verified": true,
+       "material": false,
+       "why": "Research records a February 2013 news conference."
+      },
+      {
+       "claim": "called him Public Enemy Number One",
+       "status": "supported",
+       "fact": "F1",
+       "quote": "Joaquín Guzmán Loera was its “Public Enemy Number One,”",
+       "verified": true,
+       "material": false,
+       "why": "The research uses this exact label."
+      },
+      {
+       "claim": "the question hanging over it was whether the legal machinery would ever catch up to the argument",
+       "status": "unsupported",
+       "fact": "",
+       "quote": "",
+       "verified": false,
+       "material": false,
+       "why": "This is the narrator's framing of the moment, not a recorded fact."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "When they stood at that news conference in February 2013 and called him Public Enemy Number One, the question hanging over it was whether the legal machinery would ever catch up to the argument.",
+    "v3": {
+     "i": 52,
+     "sentence": "When they stood at that news conference in February 2013 and called him Public Enemy Number One, the question hanging over it was whether the legal machinery would ever catch up to the argument.",
+     "claims": [
+      {
+       "claim": "they stood at that news conference in February 2013",
+       "status": "supported",
+       "fact": "F1",
+       "quote": "On February 14, 2013, the Chicago Crime Commission announced at a Chicago news conference",
+       "verified": true,
+       "material": false,
+       "why": "Research records a February 14, 2013 news conference by the Commission."
+      },
+      {
+       "claim": "called him Public Enemy Number One",
+       "status": "supported",
+       "fact": "F1",
+       "quote": "announced at a Chicago news conference that Joaquín Guzmán Loera was its “Public Enemy Number One,”",
+       "verified": true,
+       "material": false,
+       "why": "The Commission gave Guzmán this exact label."
+      },
+      {
+       "claim": "the question hanging over it was whether the legal machinery would ever catch up to the argument",
+       "status": "unsupported",
+       "fact": "",
+       "quote": "",
+       "verified": false,
+       "material": false,
+       "why": "This is the narrator's own framing of the moment's significance, not a recorded fact."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   }
+  },
+  {
+   "original": "A federal judge, a jury's unanimous verdict, and a number: $12.6 billion, life, plus thirty years.",
+   "origV3": {
+    "i": 37,
+    "sentence": "A federal judge, a jury's unanimous verdict, and a number: $12.6 billion, life, plus thirty years.",
+    "claims": [
+     {
+      "claim": "A federal judge",
+      "status": "supported",
+      "fact": "F39",
+      "quote": "Joaquin Archivaldo Guzman Loera was sentenced by U.S. District Judge Brian M. Cogan.",
+      "verified": true,
+      "material": false,
+      "why": "Research names a U.S. District Judge as the sentencing judge."
+     },
+     {
+      "claim": "a jury's verdict",
+      "status": "supported",
+      "fact": "F33",
+      "quote": "Guzmán Loera was convicted by a federal jury on all 10 counts of the superseding indictment",
+      "verified": true,
+      "material": false,
+      "why": "Research records the jury conviction."
+     },
+     {
+      "claim": "unanimous",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": false,
+      "why": "Research does not say the verdict was unanimous, though federal criminal verdicts generally must be."
+     },
+     {
+      "claim": "$12.6 billion",
+      "status": "supported",
+      "fact": "F3",
+      "quote": "ordered $12.6 billion in forfeiture",
+      "verified": true,
+      "material": false,
+      "why": "Research matches the forfeiture amount."
+     },
+     {
+      "claim": "life, plus thirty years",
+      "status": "supported",
+      "fact": "F40",
+      "quote": "Guzman Loera received a life term of imprisonment plus 30 years",
+      "verified": true,
+      "material": false,
+      "why": "Research matches the sentence."
+     }
+    ],
+    "error": true,
+    "material": false
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "A federal judge, a jury's verdict, and a number: $12.6 billion, life, plus thirty years.",
+    "v3": {
+     "i": 31,
+     "sentence": "A federal judge, a jury's verdict, and a number: $12.6 billion, life, plus thirty years.",
+     "claims": [
+      {
+       "claim": "A federal judge",
+       "status": "supported",
+       "fact": "F39",
+       "quote": "Joaquin Archivaldo Guzman Loera was sentenced by U.S. District Judge Brian M. Cogan.",
+       "verified": true,
+       "material": false,
+       "why": "A U.S. District Judge is a federal judge who sentenced him."
+      },
+      {
+       "claim": "a jury's verdict",
+       "status": "supported",
+       "fact": "F43",
+       "quote": "Guzman Loera was convicted by a federal jury on February 12, 2019.",
+       "verified": true,
+       "material": false,
+       "why": "The research records a federal jury conviction."
+      },
+      {
+       "claim": "$12.6 billion",
+       "status": "supported",
+       "fact": "F9",
+       "quote": "The court ordered Guzman Loera to pay $12.6 billion in forfeiture.",
+       "verified": true,
+       "material": false,
+       "why": "The forfeiture amount matches the research."
+      },
+      {
+       "claim": "life, plus thirty years",
+       "status": "supported",
+       "fact": "F40",
+       "quote": "Guzman Loera received a life term of imprisonment plus 30 years",
+       "verified": true,
+       "material": false,
+       "why": "The sentence matches the research."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "A federal judge, a jury's verdict, and a number: $12.6 billion, life, plus thirty years.",
+    "v3": {
+     "i": 53,
+     "sentence": "A federal judge, a jury's verdict, and a number: $12.6 billion, life, plus thirty years.",
+     "claims": [
+      {
+       "claim": "A federal judge",
+       "status": "supported",
+       "fact": "F39",
+       "quote": "Joaquin Archivaldo Guzman Loera was sentenced by U.S. District Judge Brian M. Cogan.",
+       "verified": true,
+       "material": false,
+       "why": "Research names the U.S. District Judge who sentenced him."
+      },
+      {
+       "claim": "a jury's verdict",
+       "status": "supported",
+       "fact": "F43",
+       "quote": "Guzman Loera was convicted by a federal jury on February 12, 2019.",
+       "verified": true,
+       "material": false,
+       "why": "Research records a federal jury conviction."
+      },
+      {
+       "claim": "$12.6 billion",
+       "status": "supported",
+       "fact": "F3",
+       "quote": "ordered $12.6 billion in forfeiture",
+       "verified": true,
+       "material": false,
+       "why": "Matches the forfeiture amount the judge ordered."
+      },
+      {
+       "claim": "life, plus thirty years",
+       "status": "supported",
+       "fact": "F40",
+       "quote": "Guzman Loera received a life term of imprisonment plus 30 years",
+       "verified": true,
+       "material": false,
+       "why": "Matches the sentence in the research."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   }
+  }
+ ]
+}

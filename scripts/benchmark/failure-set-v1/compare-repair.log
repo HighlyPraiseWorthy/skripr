@@ -1,0 +1,73 @@
+[expA__chapo-chicago-run1.json] 38 sentences done
+[expA__chapo-chicago-run2.json] 23 sentences done
+[expA__fast-food-prices-run1.json] 16 sentences done
+[expA__fast-food-prices-run2.json] 24 sentences done
+[evidence-gate] minimal edit failed, removing instead: Unexpected non-whitespace character after JSON at position 216 (line 3 column 1)
+[expA__freshwaters-run1.json] 20 sentences done
+[expA__freshwaters-run2.json] 20 sentences done
+[expA__jones-run1.json] 22 sentences done
+[expA__jones-run2.json] 21 sentences done
+[expA__ltcm-run1.json] 30 sentences done
+[expA__ltcm-run2.json] 39 sentences done
+[expA__psychopathy-run1.json] 22 sentences done
+[expA__psychopathy-run2.json] 25 sentences done
+[expA__streaming-fraud-run1.json] 17 sentences done
+[expA__streaming-fraud-run2.json] 23 sentences done
+[expA__wright-run1.json] 15 sentences done
+[expA__wright-run2.json] 30 sentences done
+REPAIR COMPARISON, judge accuracy_judge_v3@a61781c, conservative repair @0d92975. Originals: 233 with a serious error, 28 fully supported.
+
+=== ALL flagged sentences: 385 sentences ===
+Original rewrite repair | ACCURACY: serious errors left 25 (unresolved 24, introduced 1), any error left 148 | PRESERVATION: removed 66, original wording kept 54%, supported specifics kept 378/461 (82%)
+Conservative repair    | ACCURACY: serious errors left 31 (unresolved 28, introduced 3), any error left 115 | PRESERVATION: removed 177, original wording kept 42%, supported specifics kept 302/461 (66%)
+
+=== Originals with a SERIOUS error: 233 sentences ===
+Original rewrite repair | ACCURACY: serious errors left 24 (unresolved 24, introduced 0), any error left 101 | PRESERVATION: removed 34, original wording kept 55%, supported specifics kept 258/290 (89%)
+Conservative repair    | ACCURACY: serious errors left 28 (unresolved 28, introduced 0), any error left 77 | PRESERVATION: removed 105, original wording kept 42%, supported specifics kept 209/290 (72%)
+
+=== Originals with only MINOR errors: 124 sentences ===
+Original rewrite repair | ACCURACY: serious errors left 1 (unresolved 0, introduced 1), any error left 45 | PRESERVATION: removed 27, original wording kept 51%, supported specifics kept 92/123 (75%)
+Conservative repair    | ACCURACY: serious errors left 2 (unresolved 0, introduced 2), any error left 34 | PRESERVATION: removed 57, original wording kept 42%, supported specifics kept 75/123 (61%)
+
+=== Originals FULLY SUPPORTED (should be left alone): 28 sentences ===
+Original rewrite repair | ACCURACY: serious errors left 0 (unresolved 0, introduced 0), any error left 2 | PRESERVATION: removed 5, original wording kept 54%, supported specifics kept 28/48 (58%)
+Conservative repair    | ACCURACY: serious errors left 1 (unresolved 0, introduced 1), any error left 4 | PRESERVATION: removed 15, original wording kept 38%, supported specifics kept 18/48 (38%)
+
+Sentences where the two modes differ in outcome (serious-error status or removal): 151
+- ORIGINAL: A man who had never set foot in a Chicago courtroom, whose operations ran out of the mountains of Sinaloa, and who at that moment was still 
+    old  (rewritten): A man who, at that moment, had not been arrested, and whose cartel was accused of using Chicago as a distribution hub.
+    cons (removed): (removed)
+- ORIGINAL: The Chicago-based investigation they seeded ran forward from 2008 and produced, by the time federal prosecutors publicly tallied the results
+    old  (clause_cut): Produced, approximately 11 tons of cocaine seized, along with 265 kilograms of methamphetamine, 78 kilograms of heroin, and roughly $30.8 million in total cash.
+    cons (rewritten, SERIOUS): The Chicago-based investigation ran forward from 2008 and produced approximately 11 tons of cocaine seized, along with 265 kilograms of methamphetamine, 78 kilograms of heroin, and roughly $30.8 million in total cash.
+- ORIGINAL: Each of those numbers traces back to a chain of evidence that started with two brothers deciding, in late 2008, that cooperation was the bet
+    old  (clause_cut): In late 2008, that cooperation was the better option.
+    cons (rewritten, SERIOUS): Those results traced back to two brothers deciding, in late 2008, that cooperation was the better option.
+- ORIGINAL: Submarines carried loads across Pacific waters.
+    old  (rewritten): Submarines carried loads across the waters.
+    cons (removed): (removed)
+- ORIGINAL: Trains with secret compartments rolled through ports of entry carrying concealed cargo alongside legitimate freight.
+    old  (rewritten): Trains with secret compartments carried narcotics.
+    cons (removed): (removed)
+- ORIGINAL: Transnational underground tunnels, some of them reinforced and ventilated, punched beneath the border wall entirely.
+    old  (rewritten): Transnational underground tunnels punched beneath the border.
+    cons (rewritten, SERIOUS): Transnational underground tunnels punched beneath the border wall entirely.
+- ORIGINAL: Each method addressed a specific vulnerability in the others: if one route drew attention, the load moved through a different one.
+    old  (rewritten): Each method addressed a specific vulnerability in the others.
+    cons (removed): (removed)
+- ORIGINAL: Chicago sat at the receiving end of that infrastructure — a wholesale destination built to absorb multi-ton deliveries and push them into a 
+    old  (clause_cut): Push them into a distribution network that reached across the country.
+    cons (rewritten, SERIOUS): Chicago sat at the receiving end of that infrastructure — a wholesale destination that pushed deliveries into a distribution network that reached across the country.
+- ORIGINAL: The eighth put Guzmán's name on it directly.
+    old  (rewritten): The eighth superseding indictment charged Guzmán directly, alongside eight other defendants.
+    cons (removed): (removed)
+- ORIGINAL: The trial opened in Brooklyn in the fall of 2018, and what prosecutors brought into that courtroom was the accumulated weight of everything 
+    old  (clause_cut): What prosecutors brought into that courtroom was the accumulated weight of everything that had been built in Chicago and beyond — indictments, seizures, intercepted recordings.
+    cons (rewritten, SERIOUS): The trial opened in Brooklyn, and what prosecutors brought into that courtroom was the accumulated weight of everything that had been built in Chicago and beyond — indictments, seizures, intercepted recordings, ledgers — now handed to a jury through the mouths of cooperating witnesses including Sinaloa Cartel members Rey Zambada and Vicente Zambada.
+- ORIGINAL: So did his brother Vicente.
+    old  (rewritten): So did his fellow cartel member Rey Zambada.
+    cons (removed): (removed)
+- ORIGINAL: They were cartel members who had operated at levels close enough to Guzmán that they could describe his decisions, his methods, and his viol
+    old  (rewritten): They were Sinaloa Cartel members who could describe his decisions, his methods, and his violence, and co-conspirators testified that Guzmán at times carried out acts of violence himself.
+    cons (rewritten, SERIOUS): Rey Zambada and Vicente Zambada were cartel members who could describe his decisions, his methods, and his violence from direct observation.
+TOKENS {"claude-sonnet-4-6":{"in":254866,"out":28467,"calls":32},"claude-opus-5-5":{"in":172462,"out":305389,"calls":543}}

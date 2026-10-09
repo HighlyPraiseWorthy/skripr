@@ -1,0 +1,1482 @@
+{
+ "case": "fast-food-prices",
+ "file": "expA__fast-food-prices-run1.json",
+ "judge": "accuracy_judge_v3@a61781c",
+ "repair": "conservative@0d92975",
+ "rows": [
+  {
+   "original": "You used to be able to pull through a drive-through, grab a combo meal, and hand over a five-dollar bill with change coming back.",
+   "origV3": {
+    "i": 0,
+    "sentence": "You used to be able to pull through a drive-through, grab a combo meal, and hand over a five-dollar bill with change coming back.",
+    "claims": [
+     {
+      "claim": "grab a combo meal, and hand over a five-dollar bill with change coming back",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": true,
+      "why": "The research gives no past combo price under $5; the closest figure, F3's 2014 Quarter Pounder meal at $5.39, is above $5."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "You used to be able to pull through a drive-through and grab a combo meal for under six dollars.",
+    "v3": {
+     "i": 0,
+     "sentence": "You used to be able to pull through a drive-through and grab a combo meal for under six dollars.",
+     "claims": [
+      {
+       "claim": "You used to be able to... grab a combo meal for under six dollars",
+       "status": "derived",
+       "fact": "F3",
+       "quote": "McDonald’s Quarter Pounder with cheese meal rose from $5.39 in 2014 to $11.99 in 2024",
+       "verified": true,
+       "material": false,
+       "why": "A $5.39 meal in 2014 is under six dollars."
+      },
+      {
+       "claim": "pull through a drive-through",
+       "status": "unsupported",
+       "fact": "",
+       "quote": "",
+       "verified": false,
+       "material": false,
+       "why": "The research never mentions drive-throughs; this is generic color, not a record fact."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   }
+  },
+  {
+   "original": "Visual Capitalist's analysis of ten major fast-food chains found an average price increase of 63% over that decade, with McDonald's at 100% leading the group.",
+   "origV3": {
+    "i": 1,
+    "sentence": "Visual Capitalist's analysis of ten major fast-food chains found an average price increase of 63% over that decade, with McDonald's at 100% leading the group.",
+    "claims": [
+     {
+      "claim": "Visual Capitalist's analysis of ten major fast-food chains found an average price increase of 63%",
+      "status": "supported",
+      "fact": "F166",
+      "quote": "Visual Capitalist reported that the average price increase across 10 major fast-food restaurants from 2014 to 2024 was 63%",
+      "verified": true,
+      "material": false,
+      "why": "Source, chain count and average match the research."
+     },
+     {
+      "claim": "over that decade",
+      "status": "supported",
+      "fact": "F166",
+      "quote": "from 2014 to 2024",
+      "verified": true,
+      "material": false,
+      "why": "2014 to 2024 is the decade referred to."
+     },
+     {
+      "claim": "with McDonald's at 100%",
+      "status": "supported",
+      "fact": "F166",
+      "quote": "with McDonald’s up 100%",
+      "verified": true,
+      "material": false,
+      "why": "The McDonald's figure matches the research."
+     },
+     {
+      "claim": "leading the group",
+      "status": "unsupported",
+      "fact": "F166",
+      "quote": "",
+      "verified": false,
+      "material": true,
+      "why": "The research does not say McDonald's had the largest increase among the ten chains."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "Visual Capitalist's analysis of ten major fast-food chains found an average price increase of 63% over that decade, with McDonald's up 100%.",
+    "v3": {
+     "i": 1,
+     "sentence": "Visual Capitalist's analysis of ten major fast-food chains found an average price increase of 63% over that decade, with McDonald's up 100%.",
+     "claims": [
+      {
+       "claim": "Visual Capitalist's analysis of ten major fast-food chains found an average price increase of 63% over that decade",
+       "status": "supported",
+       "fact": "F166",
+       "quote": "Visual Capitalist reported that the average price increase across 10 major fast-food restaurants from 2014 to 2024 was 63%",
+       "verified": true,
+       "material": false,
+       "why": "Source, chain count, 63% average and the 2014–2024 decade all match the research."
+      },
+      {
+       "claim": "with McDonald's up 100%",
+       "status": "supported",
+       "fact": "F166",
+       "quote": "with McDonald's up 100%",
+       "verified": true,
+       "material": false,
+       "why": "Stated directly in the same Visual Capitalist fact."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "Visual Capitalist's analysis of ten major fast-food chains found an average price increase of 63% over that decade, with McDonald's at 100%.",
+    "v3": {
+     "i": 15,
+     "sentence": "Visual Capitalist's analysis of ten major fast-food chains found an average price increase of 63% over that decade, with McDonald's at 100%.",
+     "claims": [
+      {
+       "claim": "Visual Capitalist's analysis of ten major fast-food chains",
+       "status": "supported",
+       "fact": "F166",
+       "quote": "Visual Capitalist reported that the average price increase across 10 major fast-food restaurants",
+       "verified": true,
+       "material": false,
+       "why": "Source and the ten-chain scope match the research."
+      },
+      {
+       "claim": "found an average price increase of 63% over that decade",
+       "status": "supported",
+       "fact": "F166",
+       "quote": "the average price increase across 10 major fast-food restaurants from 2014 to 2024 was 63%",
+       "verified": true,
+       "material": false,
+       "why": "The 63% average over 2014 to 2024 (a decade) matches."
+      },
+      {
+       "claim": "with McDonald's at 100%",
+       "status": "supported",
+       "fact": "F166",
+       "quote": "with McDonald’s up 100%",
+       "verified": true,
+       "material": false,
+       "why": "The McDonald's figure matches."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   }
+  },
+  {
+   "original": "A 2024 Harris Poll found that 81% of adults who order from fast-food restaurants at least once a year said prices were higher than the year before — and only 32% agreed that quick-service restaurants still offer affordable meal options.",
+   "origV3": {
+    "i": 2,
+    "sentence": "A 2024 Harris Poll found that 81% of adults who order from fast-food restaurants at least once a year said prices were higher than the year before — and only 32% agreed that quick-service restaurants still offer affordable meal options.",
+    "claims": [
+     {
+      "claim": "A 2024 Harris Poll",
+      "status": "unsupported",
+      "fact": "F57",
+      "quote": "",
+      "verified": false,
+      "material": true,
+      "why": "The research cites the Harris Poll but never gives its year."
+     },
+     {
+      "claim": "81% of adults who order from fast-food restaurants at least once a year said prices were higher than the year before",
+      "status": "supported",
+      "fact": "F57",
+      "quote": "81% of adults who order from QSRs at least once a year said prices were higher than a year earlier",
+      "verified": true,
+      "material": false,
+      "why": "Matches the Harris Poll finding."
+     },
+     {
+      "claim": "only 32% agreed that quick-service restaurants still offer affordable meal options",
+      "status": "supported",
+      "fact": "F57",
+      "quote": "only 32% of U.S. adults agreed QSRs offer affordable meal options",
+      "verified": true,
+      "material": false,
+      "why": "Matches the Harris Poll finding."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "A Harris Poll found that 81% of adults who order from fast-food restaurants at least once a year said prices were higher than the year before — and only 32% agreed that quick-service restaurants still offer affordable meal options.",
+    "v3": {
+     "i": 2,
+     "sentence": "A Harris Poll found that 81% of adults who order from fast-food restaurants at least once a year said prices were higher than the year before — and only 32% agreed that quick-service restaurants still offer affordable meal options.",
+     "claims": [
+      {
+       "claim": "A Harris Poll found that 81% of adults who order from fast-food restaurants at least once a year said prices were higher than the year before",
+       "status": "supported",
+       "fact": "F57",
+       "quote": "81% of adults who order from QSRs at least once a year said prices were higher than a year earlier",
+       "verified": true,
+       "material": false,
+       "why": "Harris Poll figure and population match the research."
+      },
+      {
+       "claim": "only 32% agreed that quick-service restaurants still offer affordable meal options",
+       "status": "supported",
+       "fact": "F57",
+       "quote": "The Harris Poll found only 32% of U.S. adults agreed QSRs offer affordable meal options",
+       "verified": true,
+       "material": false,
+       "why": "Same Harris Poll finding; 'still' is narrative color."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "A Harris Poll found that 81% of adults who order from fast-food restaurants at least once a year said prices were higher than the year before — and only 32% agreed that quick-service restaurants still offer affordable meal options.",
+    "v3": {
+     "i": 16,
+     "sentence": "A Harris Poll found that 81% of adults who order from fast-food restaurants at least once a year said prices were higher than the year before — and only 32% agreed that quick-service restaurants still offer affordable meal options.",
+     "claims": [
+      {
+       "claim": "A Harris Poll found that 81% of adults who order from fast-food restaurants at least once a year said prices were higher than the year before",
+       "status": "supported",
+       "fact": "F57",
+       "quote": "81% of adults who order from QSRs at least once a year said prices were higher than a year earlier",
+       "verified": true,
+       "material": false,
+       "why": "Matches the Harris Poll figure and population."
+      },
+      {
+       "claim": "only 32% agreed that quick-service restaurants still offer affordable meal options",
+       "status": "supported",
+       "fact": "F57",
+       "quote": "only 32% of U.S. adults agreed QSRs offer affordable meal options",
+       "verified": true,
+       "material": false,
+       "why": "Matches the Harris Poll figure."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   }
+  },
+  {
+   "original": "Restaurants felt it immediately in their cost of goods.",
+   "origV3": {
+    "i": 3,
+    "sentence": "Restaurants felt it immediately in their cost of goods.",
+    "claims": [
+     {
+      "claim": "Restaurants felt it ... in their cost of goods",
+      "status": "supported",
+      "fact": "F23",
+      "quote": "a 1% increase in supply costs translates into roughly 0.33% higher COGS at constant menu prices",
+      "verified": true,
+      "material": false,
+      "why": "Research links rising supply costs to higher restaurant COGS."
+     },
+     {
+      "claim": "felt it immediately",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": true,
+      "why": "No research fact says input-cost increases hit restaurants' cost of goods immediately; the timing is added."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "Restaurants felt it in their costs, shrinking portion sizes on some menu items while also raising prices, with menu prices reaching their highest in over 40 years.",
+    "v3": {
+     "i": 3,
+     "sentence": "Restaurants felt it in their costs, shrinking portion sizes on some menu items while also raising prices, with menu prices reaching their highest in over 40 years.",
+     "claims": [
+      {
+       "claim": "Restaurants felt it in their costs",
+       "status": "supported",
+       "fact": "F25",
+       "quote": "higher food prices led restaurants to shrink portion sizes on some menu items",
+       "verified": true,
+       "material": false,
+       "why": "Research ties higher food prices to restaurant responses."
+      },
+      {
+       "claim": "shrinking portion sizes on some menu items",
+       "status": "supported",
+       "fact": "F25",
+       "quote": "higher food prices led restaurants to shrink portion sizes on some menu items, a form of shrinkflation",
+       "verified": true,
+       "material": false,
+       "why": "Directly stated."
+      },
+      {
+       "claim": "while also raising prices",
+       "status": "supported",
+       "fact": "F25",
+       "quote": "while also raising prices",
+       "verified": true,
+       "material": false,
+       "why": "Directly stated."
+      },
+      {
+       "claim": "with menu prices reaching their highest in over 40 years",
+       "status": "supported",
+       "fact": "F25",
+       "quote": "restaurant menu prices were at their highest in over 40 years",
+       "verified": true,
+       "material": false,
+       "why": "Matches the separate article cited in the research."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   }
+  },
+  {
+   "original": "Industry analysis found that menu prices typically trail commodity shocks by two to four months — operators absorb the hit first, then reprice.",
+   "origV3": {
+    "i": 4,
+    "sentence": "Industry analysis found that menu prices typically trail commodity shocks by two to four months — operators absorb the hit first, then reprice.",
+    "claims": [
+     {
+      "claim": "Industry analysis found that menu prices typically trail commodity shocks by two to four months",
+      "status": "supported",
+      "fact": "F147",
+      "quote": "Industry analysis found restaurant menu prices typically lag food inflation by several months, with cost increases often appearing in menu prices within 2 to 4 months after commodity shocks.",
+      "verified": true,
+      "material": false,
+      "why": "F147 states the 2-to-4-month lag after commodity shocks."
+     },
+     {
+      "claim": "operators absorb the hit first, then reprice",
+      "status": "unsupported",
+      "fact": "F179",
+      "quote": "The gathered sources do not provide a peer-reviewed, measured sequence with timescales for absorb costs, shrink portions, raise prices, then close underperforming locations.",
+      "verified": true,
+      "material": false,
+      "why": "The research records the lag but not an absorb-then-reprice sequence; this is the narrator's explanation of the lag."
+     }
+    ],
+    "error": true,
+    "material": false
+   },
+   "old": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "Industry analysis found that menu prices typically trail commodity shocks by two to four months.",
+    "v3": {
+     "i": 17,
+     "sentence": "Industry analysis found that menu prices typically trail commodity shocks by two to four months.",
+     "claims": [
+      {
+       "claim": "Industry analysis found that menu prices typically trail commodity shocks by two to four months",
+       "status": "supported",
+       "fact": "F147",
+       "quote": "Industry analysis found restaurant menu prices typically lag food inflation by several months, with cost increases often appearing in menu prices within 2 to 4 months after commodity shocks",
+       "verified": true,
+       "material": false,
+       "why": "Industry analysis reports menu prices lag commodity shocks, appearing within 2 to 4 months."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   }
+  },
+  {
+   "original": "The Association's own inflation analysis estimates that an average price increase of 26.2% would be required just to cover higher input costs and hold a 5% margin — not grow it, not reward shareholders, just stay in place.",
+   "origV3": {
+    "i": 5,
+    "sentence": "The Association's own inflation analysis estimates that an average price increase of 26.2% would be required just to cover higher input costs and hold a 5% margin — not grow it, not reward shareholders, just stay in place.",
+    "claims": [
+     {
+      "claim": "The Association's own inflation analysis estimates that an average price increase of 26.2% would be required just to cover higher input costs",
+      "status": "supported",
+      "fact": "F215",
+      "quote": "its inflation infographic estimates an average price increase of 26.2% is needed to cover higher input costs and maintain margin",
+      "verified": true,
+      "material": false,
+      "why": "The research states the NRA infographic's 26.2% estimate directly."
+     },
+     {
+      "claim": "hold a 5% margin",
+      "status": "misattached",
+      "fact": "F151",
+      "quote": "restaurants have been trying to maintain about a 5% profit margin",
+      "verified": true,
+      "material": true,
+      "why": "The 5% figure comes from a Louisiana Restaurant Association-cited analysis, not the NRA 26.2% estimate, which only says 'maintain margin' (NRA cites margins of 3-5%)."
+     },
+     {
+      "claim": "not grow it, not reward shareholders, just stay in place",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": false,
+      "why": "This is the narrator's interpretive framing of 'maintain margin'; shareholders are not mentioned in the research."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "The Association's own inflation analysis estimates that an average price increase of 26.2% would be required just to cover higher input costs and maintain margin — not grow it, not reward shareholders, just stay in place.",
+    "v3": {
+     "i": 4,
+     "sentence": "The Association's own inflation analysis estimates that an average price increase of 26.2% would be required just to cover higher input costs and maintain margin — not grow it, not reward shareholders, just stay in place.",
+     "claims": [
+      {
+       "claim": "The Association's own inflation analysis estimates that an average price increase of 26.2% would be required just to cover higher input costs and maintain margin",
+       "status": "supported",
+       "fact": "F215",
+       "quote": "its inflation infographic estimates an average price increase of 26.2% is needed to cover higher input costs and maintain margin",
+       "verified": true,
+       "material": false,
+       "why": "The NRA inflation infographic gives the 26.2% figure needed to cover input costs and maintain margin."
+      },
+      {
+       "claim": "not grow it, not reward shareholders, just stay in place",
+       "status": "unsupported",
+       "fact": "",
+       "quote": "",
+       "verified": false,
+       "material": false,
+       "why": "This is the narrator's rhetorical gloss on 'maintain margin'; the shareholder framing is not in the research."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "The Association's own inflation analysis estimates that an average price increase of 26.2% would be required just to cover higher input costs and maintain margin — not grow it, not reward shareholders, just stay in place.",
+    "v3": {
+     "i": 18,
+     "sentence": "The Association's own inflation analysis estimates that an average price increase of 26.2% would be required just to cover higher input costs and maintain margin — not grow it, not reward shareholders, just stay in place.",
+     "claims": [
+      {
+       "claim": "The Association's own inflation analysis estimates that an average price increase of 26.2% would be required just to cover higher input costs and maintain margin",
+       "status": "supported",
+       "fact": "F215",
+       "quote": "its inflation infographic estimates an average price increase of 26.2% is needed to cover higher input costs and maintain margin",
+       "verified": true,
+       "material": false,
+       "why": "The National Restaurant Association's inflation infographic gives this exact estimate and purpose."
+      },
+      {
+       "claim": "not grow it, not reward shareholders, just stay in place",
+       "status": "unsupported",
+       "fact": "",
+       "quote": "",
+       "verified": false,
+       "material": false,
+       "why": "Narrator's interpretive framing of what 'maintain margin' means; the research says nothing about shareholders or margin growth."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   }
+  },
+  {
+   "original": "That means food and labor together account for nearly two thirds of what it costs to run the kitchen before rent, insurance, or equipment enters the equation.",
+   "origV3": {
+    "i": 6,
+    "sentence": "That means food and labor together account for nearly two thirds of what it costs to run the kitchen before rent, insurance, or equipment enters the equation.",
+    "claims": [
+     {
+      "claim": "food and labor together account for nearly two thirds of what it costs to run the kitchen",
+      "status": "overstated",
+      "fact": "F37",
+      "quote": "roughly 30% labor, 30% food/commodity inputs, and 25% occupancy",
+      "verified": true,
+      "material": true,
+      "why": "The research gives about 60% combined, which is three-fifths rather than nearly two-thirds, and it is a share of total QSR costs, not kitchen costs."
+     },
+     {
+      "claim": "before rent, insurance, or equipment enters the equation",
+      "status": "unsupported",
+      "fact": "F37",
+      "quote": "25% occupancy",
+      "verified": true,
+      "material": false,
+      "why": "The research lists occupancy as a separate cost category but never mentions insurance or equipment; the line is the narrator's framing of the cost structure."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "That means food and labor together account for roughly 60% of what it costs to run the kitchen before rent, insurance, or equipment enters the equation.",
+    "v3": {
+     "i": 5,
+     "sentence": "That means food and labor together account for roughly 60% of what it costs to run the kitchen before rent, insurance, or equipment enters the equation.",
+     "claims": [
+      {
+       "claim": "food and labor together account for roughly 60% of what it costs to run the kitchen",
+       "status": "derived",
+       "fact": "F37",
+       "quote": "quick-service restaurant costs at roughly 30% labor, 30% food/commodity inputs, and 25% occupancy",
+       "verified": true,
+       "material": false,
+       "why": "30% labor plus 30% food sums to roughly 60% of quick-service restaurant costs."
+      },
+      {
+       "claim": "before rent, insurance, or equipment enters the equation",
+       "status": "unsupported",
+       "fact": "F37",
+       "quote": "25% occupancy",
+       "verified": true,
+       "material": false,
+       "why": "In the research, occupancy is part of the same cost base, and insurance and equipment are not mentioned; this is the narrator's framing."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "That means food and labor each account for roughly 30% of what it costs to run the kitchen before rent, insurance, or equipment enters the equation.",
+    "v3": {
+     "i": 19,
+     "sentence": "That means food and labor each account for roughly 30% of what it costs to run the kitchen before rent, insurance, or equipment enters the equation.",
+     "claims": [
+      {
+       "claim": "food and labor each account for roughly 30% of what it costs",
+       "status": "supported",
+       "fact": "F37",
+       "quote": "quick-service restaurant costs at roughly 30% labor, 30% food/commodity inputs, and 25% occupancy",
+       "verified": true,
+       "material": false,
+       "why": "The NRA benchmark puts labor and food at roughly 30% each of quick-service restaurant costs."
+      },
+      {
+       "claim": "of what it costs to run the kitchen before rent, insurance, or equipment enters the equation",
+       "status": "misattached",
+       "fact": "F37",
+       "quote": "quick-service restaurant costs at roughly 30% labor, 30% food/commodity inputs, and 25% occupancy",
+       "verified": true,
+       "material": true,
+       "why": "The 30% shares are of total costs, which already include 25% occupancy, not of kitchen costs before rent and other expenses."
+      }
+     ],
+     "error": true,
+     "material": true
+    }
+   }
+  },
+  {
+   "original": "That's a pass-through rate of about 13 cents per dollar of wage increase — not nothing, but nowhere near enough to account for prices doubling over a decade.",
+   "origV3": {
+    "i": 7,
+    "sentence": "That's a pass-through rate of about 13 cents per dollar of wage increase — not nothing, but nowhere near enough to account for prices doubling over a decade.",
+    "claims": [
+     {
+      "claim": "That's a pass-through rate of about 13 cents per dollar of wage increase",
+      "status": "contradicted",
+      "fact": "F130",
+      "quote": "a $1 minimum wage increase raised average menu prices by 7 cents, implying a pass-through elasticity of about 0.13",
+      "verified": true,
+      "material": true,
+      "why": "The research gives 7 cents per $1 of wage increase; 0.13 is the elasticity, not a cents-per-dollar figure."
+     },
+     {
+      "claim": "prices doubling over a decade",
+      "status": "supported",
+      "fact": "F1",
+      "quote": "a fast-food combo meal price increase of about $6.50, or more than 100%, between 2014 and 2024",
+      "verified": true,
+      "material": false,
+      "why": "The combo meal price more than doubled from 2014 to 2024."
+     },
+     {
+      "claim": "not nothing, but nowhere near enough to account for prices doubling",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": false,
+      "why": "This is the narrator's interpretation of the significance of the pass-through rate."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "That's a pass-through elasticity of about 0.13, not nothing, but nowhere near enough to account for prices doubling over a decade.",
+    "v3": {
+     "i": 6,
+     "sentence": "That's a pass-through elasticity of about 0.13, not nothing, but nowhere near enough to account for prices doubling over a decade.",
+     "claims": [
+      {
+       "claim": "That's a pass-through elasticity of about 0.13",
+       "status": "supported",
+       "fact": "F130",
+       "quote": "implying a pass-through elasticity of about 0.13",
+       "verified": true,
+       "material": false,
+       "why": "Research states the 0.13 elasticity from the fast-food-chain study."
+      },
+      {
+       "claim": "prices doubling over a decade",
+       "status": "supported",
+       "fact": "F1",
+       "quote": "a fast-food combo meal price increase of about $6.50, or more than 100%, between 2014 and 2024",
+       "verified": true,
+       "material": false,
+       "why": "A rise of more than 100% from 2014 to 2024 matches doubling over a decade."
+      },
+      {
+       "claim": "not nothing, but nowhere near enough to account for prices doubling",
+       "status": "unsupported",
+       "fact": "",
+       "quote": "",
+       "verified": false,
+       "material": false,
+       "why": "This is the narrator's own comparison; the research never measures how much of the rise wages explain."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "That's a pass-through elasticity of about 0.13 — not nothing, but nowhere near enough to account for prices doubling over a decade.",
+    "v3": {
+     "i": 20,
+     "sentence": "That's a pass-through elasticity of about 0.13 — not nothing, but nowhere near enough to account for prices doubling over a decade.",
+     "claims": [
+      {
+       "claim": "That's a pass-through elasticity of about 0.13",
+       "status": "supported",
+       "fact": "F130",
+       "quote": "implying a pass-through elasticity of about 0.13",
+       "verified": true,
+       "material": false,
+       "why": "Research states the 7-cent-per-$1 finding implies an elasticity of about 0.13."
+      },
+      {
+       "claim": "prices doubling over a decade",
+       "status": "supported",
+       "fact": "F1",
+       "quote": "a fast-food combo meal price increase of about $6.50, or more than 100%, between 2014 and 2024",
+       "verified": true,
+       "material": false,
+       "why": "A combo-meal price rising more than 100% from 2014 to 2024 is a doubling over a decade (broad fast-food CPI rose only 47%, so this holds for the combo-meal benchmark)."
+      },
+      {
+       "claim": "nowhere near enough to account for prices doubling",
+       "status": "unsupported",
+       "fact": "",
+       "quote": "",
+       "verified": false,
+       "material": false,
+       "why": "Narrator's own analytical comparison; no research fact makes this decomposition."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   }
+  },
+  {
+   "original": "What they do not disagree on is that it is partial.",
+   "origV3": {
+    "i": 8,
+    "sentence": "What they do not disagree on is that it is partial.",
+    "claims": [
+     {
+      "claim": "What they do not disagree on is that it is partial.",
+      "status": "contradicted",
+      "fact": "F2",
+      "quote": "illustrating disagreement over whether pass-through is near-full or partial",
+      "verified": true,
+      "material": true,
+      "why": "The research shows disagreement over whether pass-through is partial, and F45 cites near-full pass-through in McDonald's data, so no consensus on 'partial' exists."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "What they do disagree on is how large that pass-through is.",
+    "v3": {
+     "i": 7,
+     "sentence": "What they do disagree on is how large that pass-through is.",
+     "claims": [
+      {
+       "claim": "What they do disagree on is how large that pass-through is.",
+       "status": "supported",
+       "fact": "F2",
+       "quote": "illustrating disagreement over whether pass-through is near-full or partial",
+       "verified": true,
+       "material": false,
+       "why": "Research describes disagreement over the size of pass-through."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   }
+  },
+  {
+   "original": "If labor is 30% to 36% of costs, and the empirical pass-through on wage increases runs somewhere between half and two-thirds at most, then labor costs — even rising sharply — produce a fraction of what actually appeared on the menu board.",
+   "origV3": {
+    "i": 9,
+    "sentence": "If labor is 30% to 36% of costs, and the empirical pass-through on wage increases runs somewhere between half and two-thirds at most, then labor costs — even rising sharply — produce a fraction of what actually appeared on the menu board.",
+    "claims": [
+     {
+      "claim": "labor is 30% to 36% of costs",
+      "status": "supported",
+      "fact": "F20",
+      "quote": "labor’s share of total costs was 36%",
+      "verified": true,
+      "material": false,
+      "why": "F20 gives 36% and F37/F210 give roughly 30% labor, which together cover the stated range."
+     },
+     {
+      "claim": "the empirical pass-through on wage increases runs somewhere between half",
+      "status": "supported",
+      "fact": "F2",
+      "quote": "consumers bore about 50% of higher labor costs through prices",
+      "verified": true,
+      "material": false,
+      "why": "Several studies estimate pass-through at about 50%."
+     },
+     {
+      "claim": "two-thirds at most",
+      "status": "contradicted",
+      "fact": "F45",
+      "quote": "more recent restaurant studies found much larger pass-through, including near-full pass-through in McDonald’s data",
+      "verified": true,
+      "material": true,
+      "why": "The research reports near-full pass-through and 60–70% estimates (F211), so two-thirds is not a ceiling."
+     },
+     {
+      "claim": "labor costs — even rising sharply — produce a fraction of what actually appeared on the menu board",
+      "status": "supported",
+      "fact": "F20",
+      "quote": "implying only a fraction of menu-price increases would be attributable directly to mandated wage hikes rather than other inputs",
+      "verified": true,
+      "material": false,
+      "why": "The research states that only a fraction of menu-price increases is attributable to wage hikes."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "clause_cut",
+    "text": "If labor is 30% to 36% of costs, and the empirical pass-through on wage increases runs somewhere between half then labor costs — even rising sharply — produce a fraction of what actually appeared on the menu board.",
+    "v3": {
+     "i": 8,
+     "sentence": "If labor is 30% to 36% of costs, and the empirical pass-through on wage increases runs somewhere between half then labor costs — even rising sharply — produce a fraction of what actually appeared on the menu board.",
+     "claims": [
+      {
+       "claim": "labor is 30% to 36% of costs",
+       "status": "supported",
+       "fact": "F20",
+       "quote": "labor’s share of total costs was 36%",
+       "verified": true,
+       "material": false,
+       "why": "F20 gives 36% in one sample and F37/F210 give about 30%, so the range spans the research figures."
+      },
+      {
+       "claim": "the empirical pass-through on wage increases runs somewhere between half",
+       "status": "supported",
+       "fact": "F28",
+       "quote": "cost-pass-through estimates near 50% for fast-food wage shocks",
+       "verified": true,
+       "material": false,
+       "why": "The research gives roughly 50% pass-through estimates; the sentence's range is left incomplete."
+      },
+      {
+       "claim": "labor costs — even rising sharply — produce a fraction of what actually appeared on the menu board",
+       "status": "overstated",
+       "fact": "F20",
+       "quote": "implying only a fraction of menu-price increases would be attributable directly to mandated wage hikes rather than other inputs",
+       "verified": true,
+       "material": false,
+       "why": "The research ties the 'fraction' to mandated wage hikes, not all labor costs, and F28/F45 note pass-through can be near-full or larger; this is the narrator's inference."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "If labor is 30% to 36% of costs, and the empirical pass-through on wage increases runs at roughly 60% to 70%, then labor costs — even rising sharply — produce a fraction of what actually appeared on the menu board.",
+    "v3": {
+     "i": 21,
+     "sentence": "If labor is 30% to 36% of costs, and the empirical pass-through on wage increases runs at roughly 60% to 70%, then labor costs — even rising sharply — produce a fraction of what actually appeared on the menu board.",
+     "claims": [
+      {
+       "claim": "labor is 30% to 36% of costs",
+       "status": "supported",
+       "fact": "F20",
+       "quote": "labor’s share of total costs was 36%",
+       "verified": true,
+       "material": false,
+       "why": "F20 gives 36% and F210 gives about 30% labor share of operating costs, so the range spans the research figures."
+      },
+      {
+       "claim": "the empirical pass-through on wage increases runs at roughly 60% to 70%",
+       "status": "overstated",
+       "fact": "F211",
+       "quote": "A Berkeley study estimated restaurant price pass-through from higher wages at about 60% to 70%",
+       "verified": true,
+       "material": true,
+       "why": "One Berkeley estimate is presented as the empirical rate, while other research finds about 50% or lower pass-through (F2, F28)."
+      },
+      {
+       "claim": "labor costs — even rising sharply — produce a fraction of what actually appeared on the menu board",
+       "status": "overstated",
+       "fact": "F20",
+       "quote": "implying only a fraction of menu-price increases would be attributable directly to mandated wage hikes rather than other inputs",
+       "verified": true,
+       "material": false,
+       "why": "The research says this about mandated wage hikes, not labor costs generally; the sentence's conclusion is the narrator's inference."
+      }
+     ],
+     "error": true,
+     "material": true
+    }
+   }
+  },
+  {
+   "original": "By the period when commodity costs were at their sharpest, menu prices were already at their highest in over forty years.",
+   "origV3": {
+    "i": 10,
+    "sentence": "By the period when commodity costs were at their sharpest, menu prices were already at their highest in over forty years.",
+    "claims": [
+     {
+      "claim": "menu prices were already at their highest in over forty years",
+      "status": "supported",
+      "fact": "F25",
+      "quote": "restaurant menu prices were at their highest in over 40 years",
+      "verified": true,
+      "material": false,
+      "why": "F25 states menu prices were at their highest in over 40 years."
+     },
+     {
+      "claim": "By the period when commodity costs were at their sharpest",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": true,
+      "why": "The research gives no date for the 40-year high, so tying it to the commodity-cost peak, and saying it came 'already' by then, is an unestablished sequence."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "Menu prices were at their highest in over forty years, with limited-service and full-service restaurants raising prices by at least 7% over the past year.",
+    "v3": {
+     "i": 9,
+     "sentence": "Menu prices were at their highest in over forty years, with limited-service and full-service restaurants raising prices by at least 7% over the past year.",
+     "claims": [
+      {
+       "claim": "Menu prices were at their highest in over forty years",
+       "status": "supported",
+       "fact": "F25",
+       "quote": "restaurant menu prices were at their highest in over 40 years",
+       "verified": true,
+       "material": false,
+       "why": "Research states the same"
+      },
+      {
+       "claim": "limited-service and full-service restaurants raising prices by at least 7% over the past year",
+       "status": "supported",
+       "fact": "F25",
+       "quote": "limited-service and full-service restaurants raising prices by at least 7% over the past year",
+       "verified": true,
+       "material": false,
+       "why": "Research states the same"
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "Menu prices were already at their highest in over forty years.",
+    "v3": {
+     "i": 22,
+     "sentence": "Menu prices were already at their highest in over forty years.",
+     "claims": [
+      {
+       "claim": "Menu prices were already at their highest in over forty years.",
+       "status": "supported",
+       "fact": "F25",
+       "quote": "restaurant menu prices were at their highest in over 40 years",
+       "verified": true,
+       "material": false,
+       "why": "A separate article cited in the research states menu prices were at their highest in over 40 years."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   }
+  },
+  {
+   "original": "Cost pressures were easing from their 2021-2023 peaks by then.",
+   "origV3": {
+    "i": 11,
+    "sentence": "Cost pressures were easing from their 2021-2023 peaks by then.",
+    "claims": [
+     {
+      "claim": "their 2021-2023 peaks",
+      "status": "supported",
+      "fact": "F22",
+      "quote": "A 2021–2023 producer-price run-up lifted key restaurant inputs sharply, with beef, chicken, and cooking-oil costs each peaking at double-digit percentage increases from their 2020 baselines",
+      "verified": true,
+      "material": false,
+      "why": "Research places the input-cost peaks in the 2021–2023 run-up."
+     },
+     {
+      "claim": "Cost pressures were easing",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": true,
+      "why": "No research fact says input costs eased; F66 covers menu-price inflation, not costs, and F135 shows beef costs still rising sharply in 2024–2025."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "Cost pressures were still present, with the National Restaurant Association reporting in 2026 that menu prices in the food-away-from-home category were still rising even as overall inflation moderated.",
+    "v3": {
+     "i": 10,
+     "sentence": "Cost pressures were still present, with the National Restaurant Association reporting in 2026 that menu prices in the food-away-from-home category were still rising even as overall inflation moderated.",
+     "claims": [
+      {
+       "claim": "Cost pressures were still present",
+       "status": "supported",
+       "fact": "F153",
+       "quote": "showing the sector’s continued cost pressure",
+       "verified": true,
+       "material": false,
+       "why": "F153 describes continued cost pressure in the sector."
+      },
+      {
+       "claim": "the National Restaurant Association reporting in 2026 that menu prices in the food-away-from-home category were still rising",
+       "status": "supported",
+       "fact": "F153",
+       "quote": "The National Restaurant Association reported in 2026 that menu prices in the food-away-from-home category were still rising",
+       "verified": true,
+       "material": false,
+       "why": "Directly stated in F153."
+      },
+      {
+       "claim": "even as overall inflation moderated",
+       "status": "supported",
+       "fact": "F153",
+       "quote": "even as overall inflation moderated",
+       "verified": true,
+       "material": false,
+       "why": "Directly stated in F153."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   }
+  },
+  {
+   "original": "In a system where most locations are franchised, the pricing decisions are being made by hundreds of independent operators, each running their own margin calculus — which means the move toward higher prices was not a single corporate decree but a distributed choice, made repeatedly, across the industry, even as the loudest cost justifications began to fade.",
+   "origV3": {
+    "i": 12,
+    "sentence": "In a system where most locations are franchised, the pricing decisions are being made by hundreds of independent operators, each running their own margin calculus — which means the move toward higher prices was not a single corporate decree but a distributed choice, made repeatedly, across the industry, even as the loudest cost justifications began to fade.",
+    "claims": [
+     {
+      "claim": "In a system where most locations are franchised",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": true,
+      "why": "The research gives no share of quick-service locations that are franchised."
+     },
+     {
+      "claim": "the pricing decisions are being made by hundreds of independent operators",
+      "status": "overstated",
+      "fact": "F193",
+      "quote": "franchisors could not control franchisee prices as tightly as company-owned unit prices",
+      "verified": true,
+      "material": true,
+      "why": "The 1995 paper says only that franchisor control was looser; it gives no count of operators and does not say franchisees make the pricing decisions."
+     },
+     {
+      "claim": "each running their own margin calculus",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": false,
+      "why": "Narrator's characterization of operator behavior."
+     },
+     {
+      "claim": "the move toward higher prices was not a single corporate decree but a distributed choice, made repeatedly, across the industry",
+      "status": "unsupported",
+      "fact": "F181",
+      "quote": "the gathered sources do not separate corporate chains from franchisee-operated locations to test pricing autonomy",
+      "verified": true,
+      "material": false,
+      "why": "Interpretive conclusion that the research explicitly says it cannot test."
+     },
+     {
+      "claim": "even as the loudest cost justifications began to fade",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": false,
+      "why": "Narrator framing; the research does not document cost justifications fading."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "In a system where pricing decisions are tied to labor, food, and other operating costs, the move toward higher prices was not a single corporate decree but a distributed choice, made repeatedly, across the industry, even as overall inflation moderated.",
+    "v3": {
+     "i": 11,
+     "sentence": "In a system where pricing decisions are tied to labor, food, and other operating costs, the move toward higher prices was not a single corporate decree but a distributed choice, made repeatedly, across the industry, even as overall inflation moderated.",
+     "claims": [
+      {
+       "claim": "pricing decisions are tied to labor, food, and other operating costs",
+       "status": "supported",
+       "fact": "F31",
+       "quote": "Industry and analyst reporting most often points to labor, food, and other operating-cost pressures",
+       "verified": true,
+       "material": false,
+       "why": "Research links higher prices to labor, food, and other operating-cost pressures."
+      },
+      {
+       "claim": "the move toward higher prices was not a single corporate decree but a distributed choice, made repeatedly, across the industry",
+       "status": "unsupported",
+       "fact": "",
+       "quote": "",
+       "verified": false,
+       "material": false,
+       "why": "The narrator's characterization of how pricing decisions were made; the research doesn't establish it."
+      },
+      {
+       "claim": "even as overall inflation moderated",
+       "status": "supported",
+       "fact": "F153",
+       "quote": "menu prices in the food-away-from-home category were still rising even as overall inflation moderated",
+       "verified": true,
+       "material": false,
+       "why": "Directly stated in the research."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   }
+  },
+  {
+   "original": "A 2024 analysis cited by the Louisiana Restaurant Association described chains trying to hold a 5% profit margin while food and labor costs climbed sharply around them.",
+   "origV3": {
+    "i": 13,
+    "sentence": "A 2024 analysis cited by the Louisiana Restaurant Association described chains trying to hold a 5% profit margin while food and labor costs climbed sharply around them.",
+    "claims": [
+     {
+      "claim": "A 2024 analysis cited by the Louisiana Restaurant Association",
+      "status": "supported",
+      "fact": "F151",
+      "quote": "A 2024 analysis cited by the Louisiana Restaurant Association",
+      "verified": true,
+      "material": false,
+      "why": "Research names the same 2024 analysis and the same citing organization."
+     },
+     {
+      "claim": "described chains trying to hold a 5% profit margin",
+      "status": "misattached",
+      "fact": "F151",
+      "quote": "said restaurants have been trying to maintain about a 5% profit margin",
+      "verified": true,
+      "material": true,
+      "why": "The research attributes the margin goal to restaurants generally, not specifically to chains."
+     },
+     {
+      "claim": "while food and labor costs climbed sharply around them",
+      "status": "supported",
+      "fact": "F151",
+      "quote": "while food and labor costs rose sharply",
+      "verified": true,
+      "material": false,
+      "why": "This paraphrases the research; \"around them\" is harmless color."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "A 2024 analysis cited by the Louisiana Restaurant Association described restaurants trying to maintain about a 5% profit margin while food and labor costs rose sharply around them.",
+    "v3": {
+     "i": 12,
+     "sentence": "A 2024 analysis cited by the Louisiana Restaurant Association described restaurants trying to maintain about a 5% profit margin while food and labor costs rose sharply around them.",
+     "claims": [
+      {
+       "claim": "A 2024 analysis cited by the Louisiana Restaurant Association",
+       "status": "supported",
+       "fact": "F151",
+       "quote": "A 2024 analysis cited by the Louisiana Restaurant Association",
+       "verified": true,
+       "material": false,
+       "why": "Source, year and citing organization match the research."
+      },
+      {
+       "claim": "described restaurants trying to maintain about a 5% profit margin",
+       "status": "supported",
+       "fact": "F151",
+       "quote": "restaurants have been trying to maintain about a 5% profit margin",
+       "verified": true,
+       "material": false,
+       "why": "The research states this directly."
+      },
+      {
+       "claim": "while food and labor costs rose sharply around them",
+       "status": "supported",
+       "fact": "F151",
+       "quote": "while food and labor costs rose sharply",
+       "verified": true,
+       "material": false,
+       "why": "Matches the research; 'around them' is harmless color."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "A 2024 analysis cited by the Louisiana Restaurant Association described restaurants trying to maintain about a 5% profit margin while food and labor costs rose sharply around them.",
+    "v3": {
+     "i": 23,
+     "sentence": "A 2024 analysis cited by the Louisiana Restaurant Association described restaurants trying to maintain about a 5% profit margin while food and labor costs rose sharply around them.",
+     "claims": [
+      {
+       "claim": "A 2024 analysis cited by the Louisiana Restaurant Association",
+       "status": "supported",
+       "fact": "F151",
+       "quote": "A 2024 analysis cited by the Louisiana Restaurant Association",
+       "verified": true,
+       "material": false,
+       "why": "Source and year match the research."
+      },
+      {
+       "claim": "described restaurants trying to maintain about a 5% profit margin",
+       "status": "supported",
+       "fact": "F151",
+       "quote": "restaurants have been trying to maintain about a 5% profit margin",
+       "verified": true,
+       "material": false,
+       "why": "Margin figure matches the research."
+      },
+      {
+       "claim": "while food and labor costs rose sharply around them",
+       "status": "supported",
+       "fact": "F151",
+       "quote": "while food and labor costs rose sharply",
+       "verified": true,
+       "material": false,
+       "why": "Matches the research; 'around them' is harmless color."
+      }
+     ],
+     "error": false,
+     "material": false
+    }
+   }
+  },
+  {
+   "original": "If roughly half of cost increases passed through to prices, and costs themselves rose sharply, then roughly half of the 26% limited-service CPI increase from 2019 to 2024 has a clean cost-based explanation.",
+   "origV3": {
+    "i": 14,
+    "sentence": "If roughly half of cost increases passed through to prices, and costs themselves rose sharply, then roughly half of the 26% limited-service CPI increase from 2019 to 2024 has a clean cost-based explanation.",
+    "claims": [
+     {
+      "claim": "roughly half of cost increases passed through to prices",
+      "status": "supported",
+      "fact": "F2",
+      "quote": "another cited study found only about half of restaurant cost increases were passed through",
+      "verified": true,
+      "material": false,
+      "why": "Research cites about-half pass-through estimates, though F2 notes disagreement over whether pass-through is near-full or partial."
+     },
+     {
+      "claim": "costs themselves rose sharply",
+      "status": "supported",
+      "fact": "F151",
+      "quote": "food and labor costs rose sharply",
+      "verified": true,
+      "material": false,
+      "why": "Research states food and labor costs rose sharply."
+     },
+     {
+      "claim": "the 26% limited-service CPI increase from 2019 to 2024",
+      "status": "supported",
+      "fact": "F35",
+      "quote": "Limited service meals and snacks CPI rose 26.0% from 2019 to 2024",
+      "verified": true,
+      "material": false,
+      "why": "Matches F35; F209 gives 19.8%, but a claim matching any source counts as supported."
+     },
+     {
+      "claim": "roughly half of the 26% limited-service CPI increase from 2019 to 2024 has a clean cost-based explanation",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": false,
+      "why": "Narrator's own inference; no research attributes half of the CPI rise to costs, and F26 says untangling cost effects remains difficult."
+     }
+    ],
+    "error": true,
+    "material": false
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "If roughly half of cost increases passed through to prices, and costs themselves rose sharply, then the 19.8% limited-service CPI increase from 2019 to 2024 has only a partial cost-based explanation.",
+    "v3": {
+     "i": 13,
+     "sentence": "If roughly half of cost increases passed through to prices, and costs themselves rose sharply, then the 19.8% limited-service CPI increase from 2019 to 2024 has only a partial cost-based explanation.",
+     "claims": [
+      {
+       "claim": "roughly half of cost increases passed through to prices",
+       "status": "supported",
+       "fact": "F2",
+       "quote": "another cited study found only about half of restaurant cost increases were passed through",
+       "verified": true,
+       "material": false,
+       "why": "Research reports roughly half pass-through of restaurant cost increases."
+      },
+      {
+       "claim": "costs themselves rose sharply",
+       "status": "supported",
+       "fact": "F62",
+       "quote": "in the last 5 years, food and labor costs for the average restaurant each rose 35%",
+       "verified": true,
+       "material": false,
+       "why": "A 35% rise in food and labor costs supports 'rose sharply'."
+      },
+      {
+       "claim": "the 19.8% limited-service CPI increase from 2019 to 2024",
+       "status": "supported",
+       "fact": "F209",
+       "quote": "The BLS Consumer Price Index for limited-service meals and snacks rose 19.8% from 2019 to 2024",
+       "verified": true,
+       "material": false,
+       "why": "Matches F209; other sources give different figures, but a claim matching any source is supported."
+      },
+      {
+       "claim": "has only a partial cost-based explanation",
+       "status": "unsupported",
+       "fact": "",
+       "quote": "",
+       "verified": false,
+       "material": false,
+       "why": "This is the narrator's inference; the research does not state it, and it is interpretation, not a factual record."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "rewritten",
+    "text": "If roughly half of cost increases passed through to prices, and costs themselves rose sharply, then roughly half of the limited-service CPI increase from 2019 to 2024 has a cost-based explanation.",
+    "v3": {
+     "i": 24,
+     "sentence": "If roughly half of cost increases passed through to prices, and costs themselves rose sharply, then roughly half of the limited-service CPI increase from 2019 to 2024 has a cost-based explanation.",
+     "claims": [
+      {
+       "claim": "roughly half of cost increases passed through to prices",
+       "status": "supported",
+       "fact": "F2",
+       "quote": "another cited study found only about half of restaurant cost increases were passed through",
+       "verified": true,
+       "material": false,
+       "why": "Research reports roughly 50% pass-through estimates, and the sentence frames this as a premise."
+      },
+      {
+       "claim": "costs themselves rose sharply",
+       "status": "supported",
+       "fact": "F62",
+       "quote": "in the last 5 years, food and labor costs for the average restaurant each rose 35%",
+       "verified": true,
+       "material": false,
+       "why": "Research documents large rises in food and labor costs."
+      },
+      {
+       "claim": "roughly half of the limited-service CPI increase from 2019 to 2024 has a cost-based explanation",
+       "status": "unsupported",
+       "fact": "F22",
+       "quote": "National Restaurant Association models have attributed only a minority of QSR menu-price growth to commodity cost shocks",
+       "verified": true,
+       "material": false,
+       "why": "This is the narrator's own inference; no source attributes half of the 2019–2024 limited-service CPI rise to costs."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   }
+  },
+  {
+   "original": "The rest points toward something the cost narrative alone does not produce: margin held, or expanded, inside a period of visible economic pressure, while customers were told the prices were a necessary response to that same pressure.",
+   "origV3": {
+    "i": 15,
+    "sentence": "The rest points toward something the cost narrative alone does not produce: margin held, or expanded, inside a period of visible economic pressure, while customers were told the prices were a necessary response to that same pressure.",
+    "claims": [
+     {
+      "claim": "margin held, or expanded, inside a period of visible economic pressure",
+      "status": "unsupported",
+      "fact": "F182",
+      "quote": "The gathered sources do not identify a specific unresolved empirical question about profit-margin expansion versus input-cost pass-through in quick-service inflation",
+      "verified": true,
+      "material": true,
+      "why": "The research shows operators aiming to preserve about a 5% margin, but it never establishes that margins actually held or expanded."
+     },
+     {
+      "claim": "while customers were told the prices were a necessary response to that same pressure",
+      "status": "unsupported",
+      "fact": "",
+      "quote": "",
+      "verified": false,
+      "material": true,
+      "why": "The research records analysts and industry attributing prices to costs, but no messaging delivered to customers that the prices were necessary."
+     },
+     {
+      "claim": "something the cost narrative alone does not produce",
+      "status": "unsupported",
+      "fact": "F182",
+      "quote": "The gathered sources do not identify a specific unresolved empirical question about profit-margin expansion versus input-cost pass-through",
+      "verified": true,
+      "material": false,
+      "why": "This is the narrator's interpretation that cost pass-through cannot explain the pattern."
+     }
+    ],
+    "error": true,
+    "material": true
+   },
+   "old": {
+    "action": "rewritten",
+    "text": "The rest points toward something the cost narrative alone does not produce: prices continued rising even as overall inflation moderated, outpacing grocery prices, while the industry pointed to costs as the driver.",
+    "v3": {
+     "i": 14,
+     "sentence": "The rest points toward something the cost narrative alone does not produce: prices continued rising even as overall inflation moderated, outpacing grocery prices, while the industry pointed to costs as the driver.",
+     "claims": [
+      {
+       "claim": "The rest points toward something the cost narrative alone does not produce",
+       "status": "unsupported",
+       "fact": "",
+       "quote": "",
+       "verified": false,
+       "material": false,
+       "why": "Narrator's interpretation; the research does not establish that costs fail to explain the pattern."
+      },
+      {
+       "claim": "prices continued rising even as overall inflation moderated",
+       "status": "supported",
+       "fact": "F153",
+       "quote": "menu prices in the food-away-from-home category were still rising even as overall inflation moderated",
+       "verified": true,
+       "material": false,
+       "why": "Directly stated by the NRA report."
+      },
+      {
+       "claim": "outpacing grocery prices",
+       "status": "supported",
+       "fact": "F48",
+       "quote": "illustrating that restaurant prices were outpacing grocery inflation",
+       "verified": true,
+       "material": false,
+       "why": "BLS data show restaurant prices rising faster than food at home."
+      },
+      {
+       "claim": "while the industry pointed to costs as the driver",
+       "status": "supported",
+       "fact": "F31",
+       "quote": "Industry and analyst reporting most often points to labor, food, and other operating-cost pressures",
+       "verified": true,
+       "material": false,
+       "why": "Industry attributes the price increases to operating costs."
+      }
+     ],
+     "error": true,
+     "material": false
+    }
+   },
+   "cons": {
+    "action": "removed",
+    "text": null,
+    "v3": null
+   }
+  }
+ ]
+}
