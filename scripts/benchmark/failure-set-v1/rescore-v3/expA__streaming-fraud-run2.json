@@ -1,0 +1,3941 @@
+{
+ "set": "expA",
+ "file": "streaming-fraud-run2.json",
+ "case": "streaming-fraud",
+ "words": 1929,
+ "judged": [
+  {
+   "i": 0,
+   "sentence": "Somewhere on Spotify, Amazon Music, Apple Music, and YouTube Music, songs were racking up billions of streams that no human ever chose to play.",
+   "claims": [
+    {
+     "claim": "Somewhere on Spotify, Amazon Music, Apple Music, and YouTube Music, songs were",
+     "status": "supported",
+     "fact": "F19",
+     "quote": "streamed AI-generated songs on platforms including Spotify, Amazon Music, Apple Music, and YouTube Music",
+     "verified": true,
+     "material": false,
+     "why": "The research names all four platforms as places the songs were streamed."
+    },
+    {
+     "claim": "racking up billions of streams",
+     "status": "supported",
+     "fact": "F39",
+     "quote": "to stream the AI-generated songs billions of times",
+     "verified": true,
+     "material": false,
+     "why": "The research states the songs were streamed billions of times."
+    },
+    {
+     "claim": "that no human ever chose to play",
+     "status": "supported",
+     "fact": "F39",
+     "quote": "SMITH used 'bots'—automated programs—to stream the AI-generated songs",
+     "verified": true,
+     "material": false,
+     "why": "Plays made by automated bot programs are a fair paraphrase of streams no human chose."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 1,
+   "sentence": "The royalty system paid out anyway, treating each play as if a real listener had pressed play on purpose.",
+   "claims": [
+    {
+     "claim": "The royalty system paid out anyway",
+     "status": "supported",
+     "fact": "F41",
+     "quote": "SMITH fraudulently obtained more than $10 million in royalty payments.",
+     "verified": true,
+     "material": false,
+     "why": "Research records that royalties were paid on the fraudulent streams."
+    },
+    {
+     "claim": "treating each play as if a real listener had pressed play on purpose",
+     "status": "unsupported",
+     "fact": "F30",
+     "quote": "exploiting royalty payments paid by streaming platforms for reported plays",
+     "verified": true,
+     "material": false,
+     "why": "The research says royalties were paid for reported plays; the 'as if a real listener' framing is the narrator's interpretation."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 2,
+   "sentence": "For years, that gap between what the platforms assumed was happening and what was actually happening quietly generated millions of dollars for one man in North Carolina.",
+   "claims": [
+    {
+     "claim": "For years",
+     "status": "supported",
+     "fact": "F34",
+     "quote": "The scheme ran from approximately 2017 up to and including 2024.",
+     "verified": true,
+     "material": false,
+     "why": "The scheme spanned roughly 2017 to 2024."
+    },
+    {
+     "claim": "generated millions of dollars",
+     "status": "supported",
+     "fact": "F41",
+     "quote": "SMITH fraudulently obtained more than $10 million in royalty payments.",
+     "verified": true,
+     "material": false,
+     "why": "More than $10 million counts as millions."
+    },
+    {
+     "claim": "for one man in North Carolina",
+     "status": "supported",
+     "fact": "F18",
+     "quote": "operating near Cornelius, North Carolina",
+     "verified": true,
+     "material": false,
+     "why": "Reporting places Smith near Cornelius, North Carolina."
+    },
+    {
+     "claim": "that gap between what the platforms assumed was happening and what was actually happening",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "This is the narrator's framing of how the fraud worked, not a stated fact."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 3,
+   "sentence": "On October 20, 2017, Michael Smith sent himself an email.",
+   "claims": [
+    {
+     "claim": "On October 20, 2017, Michael Smith sent himself an email.",
+     "status": "supported",
+     "fact": "F66",
+     "quote": "On October 20, 2017, SMITH emailed himself a financial breakdown of his streaming operation.",
+     "verified": true,
+     "material": false,
+     "why": "Research states the date and that Smith emailed himself."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 4,
+   "sentence": "Not to a partner, not to a lawyer — to himself.",
+   "claims": [
+    {
+     "claim": "to himself",
+     "status": "supported",
+     "fact": "F66",
+     "quote": "On October 20, 2017, SMITH emailed himself a financial breakdown of his streaming operation.",
+     "verified": true,
+     "material": false,
+     "why": "The research records that Smith emailed the financial breakdown to himself."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 5,
+   "sentence": "And what it contained was less a message than a ledger: a cold, column-by-column projection of exactly how much money his operation was going to make.",
+   "claims": [
+    {
+     "claim": "what it contained was less a message than a ledger: a cold ... projection of exactly how much money his operation was going to make",
+     "status": "supported",
+     "fact": "F69",
+     "quote": "SMITH estimated the average royalty per stream was half of one cent ($0.005), yielding daily royalties of $3,307.20, monthly royalties of $99,216, and annual royalties of $1,207,128.",
+     "verified": true,
+     "material": false,
+     "why": "The self-email contained a financial breakdown projecting daily, monthly and annual royalties."
+    },
+    {
+     "claim": "column-by-column",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research does not describe the email's layout; this reads as metaphorical color extending 'ledger'."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 6,
+   "sentence": "The math started small and built fast.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 7,
+   "sentence": "Smith documented that he was running 52 cloud service accounts.",
+   "claims": [
+    {
+     "claim": "Smith documented that he was running 52 cloud service accounts.",
+     "status": "supported",
+     "fact": "F67",
+     "quote": "In the October 20, 2017 self-email, SMITH wrote he had 52 cloud services accounts",
+     "verified": true,
+     "material": false,
+     "why": "Smith's self-email recorded 52 cloud services accounts."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 8,
+   "sentence": "Each one hosted 20 bot accounts, giving him 1,040 bots in total.",
+   "claims": [
+    {
+     "claim": "Each one hosted 20 bot accounts",
+     "status": "supported",
+     "fact": "F67",
+     "quote": "he had 52 cloud services accounts, each with 20 Bot Accounts",
+     "verified": true,
+     "material": false,
+     "why": "Research states each cloud services account had 20 bot accounts."
+    },
+    {
+     "claim": "giving him 1,040 bots in total",
+     "status": "supported",
+     "fact": "F67",
+     "quote": "for a total of 1,040 Bot Accounts",
+     "verified": true,
+     "material": false,
+     "why": "Research states the total of 1,040 bot accounts."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 9,
+   "sentence": "Each bot could stream approximately 636 songs per day.",
+   "claims": [
+    {
+     "claim": "Each bot could stream approximately 636 songs per day.",
+     "status": "supported",
+     "fact": "F68",
+     "quote": "each Bot Account could stream approximately 636 songs per day",
+     "verified": true,
+     "material": false,
+     "why": "F68 gives this per-account figure. It comes from Smith's October 20, 2017 self-email, and F9 likewise states the bots' capacity as fact."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 10,
+   "sentence": "Multiply those two figures together and you get 661,440 streams flowing every single day — not from listeners, not from fans stumbling onto a playlist, but from a system Smith had built to run without any of that.",
+   "claims": [
+    {
+     "claim": "Multiply those two figures together and you get 661,440 streams",
+     "status": "derived",
+     "fact": "F67",
+     "quote": "he had 52 cloud services accounts, each with 20 Bot Accounts, for a total of 1,040 Bot Accounts",
+     "verified": true,
+     "material": false,
+     "why": "1,040 bot accounts × 636 songs per day = 661,440, matching F68."
+    },
+    {
+     "claim": "661,440 streams flowing every single day",
+     "status": "overstated",
+     "fact": "F68",
+     "quote": "each Bot Account could stream approximately 636 songs per day, for a total of approximately 661,440 streams per day",
+     "verified": true,
+     "material": true,
+     "why": "The research gives an approximate capacity from Smith's own self-email estimate, not a record of actual streams every day."
+    },
+    {
+     "claim": "not from listeners, not from fans stumbling onto a playlist, but from a system Smith had built",
+     "status": "supported",
+     "fact": "F39",
+     "quote": "SMITH used 'bots'—automated programs—to stream the AI-generated songs billions of times.",
+     "verified": true,
+     "material": false,
+     "why": "The research says the streams were generated by bots Smith used."
+    },
+    {
+     "claim": "to run without any of that",
+     "status": "supported",
+     "fact": "F65",
+     "quote": "small pieces of computer code that automatically continuously played the music",
+     "verified": true,
+     "material": false,
+     "why": "The macros played the music automatically, with no human listeners needed."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 11,
+   "sentence": "From there, the royalty math was almost mundane in its precision.",
+   "claims": [
+    {
+     "claim": "the royalty math was almost mundane in its precision",
+     "status": "unsupported",
+     "fact": "F69",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research records Smith's royalty estimates; calling them 'mundane in its precision' is the narrator's characterization."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 12,
+   "sentence": "Smith pegged the average payout per stream at half a cent — $0.005.",
+   "claims": [
+    {
+     "claim": "Smith pegged the average payout per stream at half a cent — $0.005",
+     "status": "supported",
+     "fact": "F69",
+     "quote": "SMITH estimated the average royalty per stream was half of one cent ($0.005)",
+     "verified": true,
+     "material": false,
+     "why": "Research states Smith's own estimate of half a cent per stream."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 13,
+   "sentence": "Carry that across a month: $99,216.",
+   "claims": [
+    {
+     "claim": "Carry that across a month: $99,216.",
+     "status": "supported",
+     "fact": "F69",
+     "quote": "monthly royalties of $99,216",
+     "verified": true,
+     "material": false,
+     "why": "Smith's own estimate in his October 2017 self-email put monthly royalties at $99,216."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 14,
+   "sentence": "What makes the email striking is not the ambition — it's the timing.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 15,
+   "sentence": "This was 2017.",
+   "claims": [
+    {
+     "claim": "This was 2017.",
+     "status": "supported",
+     "fact": "F34",
+     "quote": "The scheme ran from approximately 2017 up to and including 2024.",
+     "verified": true,
+     "material": false,
+     "why": "The research dates the scheme's start, the May 2017 email and the October 2017 self-email to 2017."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 16,
+   "sentence": "Smith was already running the bot infrastructure and projecting its economics, the AI catalog would come later, but the machinery to exploit it was already in place.",
+   "claims": [
+    {
+     "claim": "Smith was already running the bot infrastructure",
+     "status": "supported",
+     "fact": "F67",
+     "quote": "In the October 20, 2017 self-email, SMITH wrote he had 52 cloud services accounts, each with 20 Bot Accounts, for a total of 1,040 Bot Accounts.",
+     "verified": true,
+     "material": false,
+     "why": "By October 2017 Smith had more than a thousand bot accounts across cloud services."
+    },
+    {
+     "claim": "and projecting its economics",
+     "status": "supported",
+     "fact": "F69",
+     "quote": "SMITH estimated the average royalty per stream was half of one cent ($0.005), yielding daily royalties of $3,307.20, monthly royalties of $99,216, and annual royalties of $1,207,128.",
+     "verified": true,
+     "material": false,
+     "why": "The October 2017 self-email projected daily, monthly and annual royalties."
+    },
+    {
+     "claim": "the AI catalog would come later",
+     "status": "derived",
+     "fact": "F78",
+     "quote": "SMITH began manipulating streams of AI-generated music in or about October 2018.",
+     "verified": true,
+     "material": false,
+     "why": "The AI music started in October 2018, which is after the October 2017 bot projections."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 17,
+   "sentence": "The cloud infrastructure, the per-stream economics — he had reduced the entire operation to a formula before the formula had a name.",
+   "claims": [
+    {
+     "claim": "The cloud infrastructure, the per-stream economics — he had reduced the entire operation to a formula",
+     "status": "supported",
+     "fact": "F67",
+     "quote": "SMITH wrote he had 52 cloud services accounts, each with 20 Bot Accounts, for a total of 1,040 Bot Accounts",
+     "verified": true,
+     "material": false,
+     "why": "F66-F69 record his self-emailed financial breakdown covering cloud accounts and per-stream royalty math."
+    },
+    {
+     "claim": "before the formula had a name",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Rhetorical framing about novelty; the research does not establish it, and it is narrator interpretation."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 18,
+   "sentence": "Before the bots, before the AI catalog, before the October 2017 email that reduced the whole operation to arithmetic, there was a musician.",
+   "claims": [
+    {
+     "claim": "the October 2017 email that reduced the whole operation to arithmetic",
+     "status": "supported",
+     "fact": "F66",
+     "quote": "On October 20, 2017, SMITH emailed himself a financial breakdown of his streaming operation.",
+     "verified": true,
+     "material": false,
+     "why": "Research records an October 2017 self-email giving a financial breakdown of the operation."
+    },
+    {
+     "claim": "Before the bots, before the AI catalog ... there was a musician",
+     "status": "supported",
+     "fact": "F11",
+     "quote": "described Smith as a musician with his own catalogue before the scheme began",
+     "verified": true,
+     "material": false,
+     "why": "Research says Smith was a musician with his own catalogue before the scheme began."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 19,
+   "sentence": "Smith had his own songs, his own catalog, and was based near Cornelius, North Carolina.",
+   "claims": [
+    {
+     "claim": "Smith had his own songs, his own catalog",
+     "status": "supported",
+     "fact": "F1",
+     "quote": "Smith had been a musician with a catalog of his own",
+     "verified": true,
+     "material": false,
+     "why": "Research states he was a musician with his own catalog."
+    },
+    {
+     "claim": "was based near Cornelius, North Carolina",
+     "status": "supported",
+     "fact": "F18",
+     "quote": "operating near Cornelius, North Carolina",
+     "verified": true,
+     "material": false,
+     "why": "Reporting places him operating near Cornelius, NC."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 20,
+   "sentence": "The paper trail shows the choice arriving early.",
+   "claims": [
+    {
+     "claim": "The paper trail shows the choice arriving early.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Narrator's interpretation that documents show an early decision; the research has early 2017 emails (F56) but does not frame any 'choice'."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 21,
+   "sentence": "In a May 11, 2017 email, he asked a co-conspirator to create bot accounts on a streaming platform: \"Make up names and addresses[.] [J]ust make sure they all are the same for family member and also make sure everyone is over 18.\"",
+   "claims": [
+    {
+     "claim": "In a May 11, 2017 email, he asked a co-conspirator to create bot accounts on a streaming platform",
+     "status": "supported",
+     "fact": "F56",
+     "quote": "In a May 11, 2017 email to coconspirator CC-1, SMITH asked CC-1 to create Bot Accounts on a particular Streaming Platform",
+     "verified": true,
+     "material": false,
+     "why": "Date, recipient, and request match F56."
+    },
+    {
+     "claim": "\"Make up names and addresses[.] [J]ust make sure they all are the same for family member and also make sure everyone is over 18.\"",
+     "status": "supported",
+     "fact": "F56",
+     "quote": "'Make up names and addresses[.] [J]ust make sure they all are the same for family member and also make sure everyone is over 18.'",
+     "verified": true,
+     "material": false,
+     "why": "Quote matches F56 exactly."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 22,
+   "sentence": "What followed ran in three documented stages: build the bot accounts, deploy software to keep them streaming continuously, then collect the royalties those fake plays generated.",
+   "claims": [
+    {
+     "claim": "What followed ran in three documented stages",
+     "status": "supported",
+     "fact": "F51",
+     "quote": "The fraud proceeded in three stages",
+     "verified": true,
+     "material": false,
+     "why": "Research states the fraud proceeded in three stages."
+    },
+    {
+     "claim": "build the bot accounts",
+     "status": "supported",
+     "fact": "F51",
+     "quote": "(1) creating Bot Accounts",
+     "verified": true,
+     "material": false,
+     "why": "Matches stage one."
+    },
+    {
+     "claim": "deploy software to keep them streaming continuously",
+     "status": "supported",
+     "fact": "F51",
+     "quote": "(2) using software to cause Bot Accounts to continuously stream songs SMITH owned",
+     "verified": true,
+     "material": false,
+     "why": "Matches stage two."
+    },
+    {
+     "claim": "then collect the royalties those fake plays generated",
+     "status": "supported",
+     "fact": "F51",
+     "quote": "(3) collecting royalties based on fraudulent streams",
+     "verified": true,
+     "material": false,
+     "why": "Matches stage three."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 23,
+   "sentence": "The AI came later.",
+   "claims": [
+    {
+     "claim": "The AI came later.",
+     "status": "derived",
+     "fact": "F78",
+     "quote": "SMITH began manipulating streams of AI-generated music in or about October 2018.",
+     "verified": true,
+     "material": false,
+     "why": "The scheme began around 2017 and first used CC-2's catalog (F34, F75). AI music streaming started in October 2018, so it came later by date comparison."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 24,
+   "sentence": "The corruption of the royalty system came first.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 25,
+   "sentence": "The foundation was identity — thousands of them, purchased in bulk from vendors who sold fake email accounts the way a wholesaler moves inventory.",
+   "claims": [
+    {
+     "claim": "thousands of them, purchased in bulk",
+     "status": "supported",
+     "fact": "F52",
+     "quote": "SMITH obtained thousands of email accounts ('Fake Email Accounts') purchased from vendors who sold bulk email accounts",
+     "verified": true,
+     "material": false,
+     "why": "The research states that thousands of email accounts were bought in bulk from vendors."
+    },
+    {
+     "claim": "from vendors who sold fake email accounts",
+     "status": "supported",
+     "fact": "F52",
+     "quote": "purchased from vendors who sold bulk email accounts, often in the names of fictitious identities",
+     "verified": true,
+     "material": false,
+     "why": "The vendors sold bulk accounts, often in fictitious names, which the research itself calls Fake Email Accounts."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 26,
+   "sentence": "Each name became a bot account on a streaming platform.",
+   "claims": [
+    {
+     "claim": "Each name became a bot account on a streaming platform.",
+     "status": "overstated",
+     "fact": "F53",
+     "quote": "SMITH used the Fake Email Accounts to create and register Bot Accounts on the Streaming Platforms, typically in fake names corresponding to the Fake Email Accounts.",
+     "verified": true,
+     "material": false,
+     "why": "The research says bot accounts were 'typically' registered in the fake names, not that every name became one; a minor generalization of the same fact."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 27,
+   "sentence": "At certain points, Smith had as many as 10,000 active bot accounts on the streaming platforms.",
+   "claims": [
+    {
+     "claim": "At certain points, Smith had as many as 10,000 active bot accounts on the streaming platforms",
+     "status": "supported",
+     "fact": "F54",
+     "quote": "At certain points, SMITH had as many as 10,000 active Bot Accounts on the Streaming Platforms.",
+     "verified": true,
+     "material": false,
+     "why": "Matches the research nearly verbatim."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 28,
+   "sentence": "He paid individuals abroad and co-conspirators inside the United States to do the data-entry work of signing them up, turning registration into an outsourced assembly line.",
+   "claims": [
+    {
+     "claim": "He paid individuals abroad and co-conspirators inside the United States to do the data-entry work of signing them up",
+     "status": "supported",
+     "fact": "F55",
+     "quote": "SMITH paid individuals located abroad as well as coconspirators located in the United States to do the data entry work of signing up for the Bot Accounts.",
+     "verified": true,
+     "material": false,
+     "why": "Directly stated in the research."
+    },
+    {
+     "claim": "turning registration into an outsourced assembly line",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Narrator's characterization; the research does not describe the work as an assembly line."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 29,
+   "sentence": "Payment was the next problem.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 30,
+   "sentence": "Smith solved that by approaching a Manhattan-based financial service that issued corporate debit cards in bulk — the kind a company distributes to employees.",
+   "claims": [
+    {
+     "claim": "Smith solved that by approaching a Manhattan-based financial service",
+     "status": "supported",
+     "fact": "F58",
+     "quote": "SMITH used a Manhattan-based service ('Financial Service-1')",
+     "verified": true,
+     "material": false,
+     "why": "Research records Smith using a Manhattan-based financial service."
+    },
+    {
+     "claim": "that issued corporate debit cards in bulk",
+     "status": "supported",
+     "fact": "F58",
+     "quote": "provided large numbers of debit cards, typically corporate debit cards",
+     "verified": true,
+     "material": false,
+     "why": "'In bulk' paraphrases 'large numbers'."
+    },
+    {
+     "claim": "the kind a company distributes to employees",
+     "status": "supported",
+     "fact": "F58",
+     "quote": "typically corporate debit cards for employees of a company",
+     "verified": true,
+     "material": false,
+     "why": "Matches the research description of the cards."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 31,
+   "sentence": "He lied to them.",
+   "claims": [
+    {
+     "claim": "He lied to them.",
+     "status": "supported",
+     "fact": "F59",
+     "quote": "SMITH lied to Financial Service-1 and provided it with dozens of fake names",
+     "verified": true,
+     "material": false,
+     "why": "The research records Smith lying to several parties, including Financial Service-1 (F59), Distribution Company-2 (F50) and Distribution Company-3 (F102)."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 32,
+   "sentence": "He submitted dozens of the fake names from his bot account roster and claimed they were employees of his company.",
+   "claims": [
+    {
+     "claim": "He submitted dozens of the fake names from his bot account roster",
+     "status": "supported",
+     "fact": "F59",
+     "quote": "provided it with dozens of fake names corresponding to the Fake Email Accounts and Bot Accounts",
+     "verified": true,
+     "material": false,
+     "why": "Research says he provided dozens of fake names matching his Bot Accounts."
+    },
+    {
+     "claim": "claimed they were employees of his company",
+     "status": "supported",
+     "fact": "F59",
+     "quote": "claiming those fake names belonged to employees of his company",
+     "verified": true,
+     "material": false,
+     "why": "Research states this directly."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 33,
+   "sentence": "The cards came back.",
+   "claims": [
+    {
+     "claim": "The cards came back.",
+     "status": "supported",
+     "fact": "F58",
+     "quote": "provided large numbers of debit cards",
+     "verified": true,
+     "material": false,
+     "why": "Read as the debit cards being issued after Smith submitted fake names (F59). The research records the service providing debit cards, but it does not describe a return or delivery event."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 34,
+   "sentence": "The subscriptions went live.",
+   "claims": [
+    {
+     "claim": "The subscriptions went live.",
+     "status": "supported",
+     "fact": "F57",
+     "quote": "SMITH typically paid for 'family plans' on the Streaming Platforms to maximize streams",
+     "verified": true,
+     "material": false,
+     "why": "The research records Smith paying for streaming subscriptions (family plans) for the bot accounts, so they were active."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 35,
+   "sentence": "He ran those subscriptions on family plans, which cost less per user than individual accounts, stretching each dollar of overhead across more active bot slots.",
+   "claims": [
+    {
+     "claim": "He ran those subscriptions on family plans",
+     "status": "supported",
+     "fact": "F57",
+     "quote": "SMITH typically paid for 'family plans' on the Streaming Platforms to maximize streams",
+     "verified": true,
+     "material": false,
+     "why": "Research says Smith typically paid for family plans."
+    },
+    {
+     "claim": "which cost less per user than individual accounts",
+     "status": "supported",
+     "fact": "F57",
+     "quote": "family plans cost less per user than individual plans",
+     "verified": true,
+     "material": false,
+     "why": "Directly stated in the research."
+    },
+    {
+     "claim": "stretching each dollar of overhead across more active bot slots",
+     "status": "unsupported",
+     "fact": "F57",
+     "quote": "to maximize streams",
+     "verified": true,
+     "material": false,
+     "why": "Narrator's framing of the cost logic; the research only says the purpose was to maximize streams."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 36,
+   "sentence": "Then he loaded the bots onto cloud computers — virtual machines he could run in parallel — with multiple browser tabs open at once, each tab logged into a separate bot account, each account streaming.",
+   "claims": [
+    {
+     "claim": "he loaded the bots onto cloud computers — virtual machines he could run in parallel",
+     "status": "supported",
+     "fact": "F63",
+     "quote": "SMITH used cloud computer services to use many virtual computers at the same time.",
+     "verified": true,
+     "material": false,
+     "why": "Research states he used cloud services to run many virtual computers simultaneously."
+    },
+    {
+     "claim": "with multiple browser tabs open at once, each tab logged into a separate bot account, each account streaming",
+     "status": "supported",
+     "fact": "F64",
+     "quote": "using web players for each Streaming Platform with multiple Bot Accounts streaming on separate browser tabs",
+     "verified": true,
+     "material": false,
+     "why": "Research describes multiple bot accounts streaming on separate browser tabs on each virtual computer."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 37,
+   "sentence": "To keep that streaming continuous and automatic, he purchased macros, small pieces of code that loop a task without human input, and modified them for his specific setup.",
+   "claims": [
+    {
+     "claim": "he purchased macros",
+     "status": "supported",
+     "fact": "F65",
+     "quote": "SMITH purchased and subsequently modified 'macros'",
+     "verified": true,
+     "material": false,
+     "why": "Research states he purchased macros."
+    },
+    {
+     "claim": "small pieces of code that loop a task without human input",
+     "status": "supported",
+     "fact": "F65",
+     "quote": "small pieces of computer code that automatically continuously played the music",
+     "verified": true,
+     "material": false,
+     "why": "A fair paraphrase of the research's definition of macros."
+    },
+    {
+     "claim": "To keep that streaming continuous and automatic",
+     "status": "supported",
+     "fact": "F65",
+     "quote": "automatically continuously played the music",
+     "verified": true,
+     "material": false,
+     "why": "The macros' function was automatic, continuous play."
+    },
+    {
+     "claim": "and modified them",
+     "status": "supported",
+     "fact": "F65",
+     "quote": "purchased and subsequently modified 'macros'",
+     "verified": true,
+     "material": false,
+     "why": "Research states he modified the macros."
+    },
+    {
+     "claim": "for his specific setup",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research does not say why or how he modified them; this is harmless interpretive color."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 38,
+   "sentence": "The modified macros played the music on their own, indefinitely.",
+   "claims": [
+    {
+     "claim": "The modified macros played the music on their own",
+     "status": "supported",
+     "fact": "F65",
+     "quote": "SMITH purchased and subsequently modified 'macros'—small pieces of computer code that automatically continuously played the music.",
+     "verified": true,
+     "material": false,
+     "why": "Research says Smith modified the macros and that they automatically played the music."
+    },
+    {
+     "claim": "indefinitely",
+     "status": "supported",
+     "fact": "F65",
+     "quote": "automatically continuously played the music",
+     "verified": true,
+     "material": false,
+     "why": "A fair paraphrase of 'continuously'."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 39,
+   "sentence": "The last layer was concealment.",
+   "claims": [
+    {
+     "claim": "was concealment",
+     "status": "supported",
+     "fact": "F70",
+     "quote": "SMITH caused the Bot Accounts to log in using different virtual private networks ('VPNs') to conceal that the Bot Accounts were all operating from SMITH's home.",
+     "verified": true,
+     "material": false,
+     "why": "The research documents concealment efforts as part of the scheme."
+    },
+    {
+     "claim": "The last layer",
+     "status": "unsupported",
+     "fact": "F51",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Treating concealment as the final 'layer' is the script's own structure; the research lists collecting royalties, not concealment, as the third stage."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 40,
+   "sentence": "Thousands of streams appeared to originate from thousands of different locations — all of them, in fact, running out of the same house.",
+   "claims": [
+    {
+     "claim": "streams appeared to originate from ... different locations",
+     "status": "supported",
+     "fact": "F70",
+     "quote": "SMITH caused the Bot Accounts to log in using different virtual private networks ('VPNs') to conceal that the Bot Accounts were all operating from SMITH's home.",
+     "verified": true,
+     "material": false,
+     "why": "Different VPNs used to disguise the origin of the bot accounts."
+    },
+    {
+     "claim": "Thousands of streams appeared to originate from thousands of different locations",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research gives no count of apparent locations or VPN endpoints."
+    },
+    {
+     "claim": "all of them, in fact, running out of the same house",
+     "status": "supported",
+     "fact": "F70",
+     "quote": "to conceal that the Bot Accounts were all operating from SMITH's home",
+     "verified": true,
+     "material": false,
+     "why": "The bot accounts all operated from Smith's home."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 41,
+   "sentence": "Smith's own instruction to his co-conspirators captured the priority clearly: the bots and macros needed to be \"Unde[te]ctable: At least put every safety measure in to avoid detection.\" Smith caused the bot accounts to log in using different virtual private networks to conceal that they were all operating from his home.",
+   "claims": [
+    {
+     "claim": "Smith's own instruction to his co-conspirators: the bots and macros needed to be \"Unde[te]ctable: At least put every safety measure in to avoid detection.\"",
+     "status": "supported",
+     "fact": "F71",
+     "quote": "SMITH directed his coconspirators that the Bot Accounts and macros be 'Unde[te]ctable: At least put every safety measure in to avoid detection.'",
+     "verified": true,
+     "material": false,
+     "why": "The research records this instruction and quote verbatim."
+    },
+    {
+     "claim": "Smith caused the bot accounts to log in using different virtual private networks",
+     "status": "supported",
+     "fact": "F70",
+     "quote": "SMITH caused the Bot Accounts to log in using different virtual private networks ('VPNs')",
+     "verified": true,
+     "material": false,
+     "why": "The research states this directly."
+    },
+    {
+     "claim": "to conceal that they were all operating from his home",
+     "status": "supported",
+     "fact": "F70",
+     "quote": "to conceal that the Bot Accounts were all operating from SMITH's home",
+     "verified": true,
+     "material": false,
+     "why": "The research states this purpose directly."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 42,
+   "sentence": "On October 4, 2018, he spelled out the strategy to two co-conspirators: \"in order to not raise any issues with the powers that be we need a TON of content with small amounts of Streams.\"",
+   "claims": [
+    {
+     "claim": "On October 4, 2018, he spelled out the strategy to two co-conspirators",
+     "status": "supported",
+     "fact": "F73",
+     "quote": "On or about October 4, 2018, SMITH emailed two coconspirators",
+     "verified": true,
+     "material": false,
+     "why": "Date and recipients match; 'spelled out the strategy' is narrative framing of the email."
+    },
+    {
+     "claim": "\"in order to not raise any issues with the powers that be we need a TON of content with small amounts of Streams.\"",
+     "status": "supported",
+     "fact": "F73",
+     "quote": "'in order to not raise any issues with the powers that be we need a TON of content with small amounts of Streams.'",
+     "verified": true,
+     "material": false,
+     "why": "Exact quote."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 43,
+   "sentence": "By May 2019, Smith was stating the problem plainly in his own words: \"I can't run the bots without content.",
+   "claims": [
+    {
+     "claim": "By May 2019",
+     "status": "supported",
+     "fact": "F74",
+     "quote": "On or about May 9, 2019, SMITH emailed a coconspirator",
+     "verified": true,
+     "material": false,
+     "why": "The research dates the email to on or about May 9, 2019."
+    },
+    {
+     "claim": "Smith was stating the problem plainly in his own words: \"I can't run the bots without content.",
+     "status": "supported",
+     "fact": "F74",
+     "quote": "I can't run the bots without content.",
+     "verified": true,
+     "material": false,
+     "why": "This is an exact quote from Smith's email; \"plainly\" is narrative framing."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 44,
+   "sentence": "And I need enough content so I don't overrun each song.",
+   "claims": [
+    {
+     "claim": "And I need enough content so I don't overrun each song.",
+     "status": "supported",
+     "fact": "F74",
+     "quote": "And I need enough content so I don't overrun each song.",
+     "verified": true,
+     "material": false,
+     "why": "Exact wording from Smith's May 9, 2019 email to a coconspirator."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 45,
+   "sentence": "That's the problem.",
+   "claims": [
+    {
+     "claim": "That's the problem.",
+     "status": "supported",
+     "fact": "F74",
+     "quote": "And I need enough content so I don't overrun each song. That's the problem.",
+     "verified": true,
+     "material": false,
+     "why": "If this line quotes Smith's May 9, 2019 email, F74 has it word for word; as plain narration it states no checkable fact."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 46,
+   "sentence": "If we get too many streams on one song it comes down.\" The machine he had built could generate hundreds of thousands of streams a day, but it had a structural weakness he couldn't engineer away: it needed songs.",
+   "claims": [
+    {
+     "claim": "If we get too many streams on one song it comes down.",
+     "status": "supported",
+     "fact": "F74",
+     "quote": "If we get too many streams on one song it comes down.",
+     "verified": true,
+     "material": false,
+     "why": "Exact quote from Smith's May 9, 2019 email."
+    },
+    {
+     "claim": "The machine he had built could generate hundreds of thousands of streams a day",
+     "status": "supported",
+     "fact": "F68",
+     "quote": "for a total of approximately 661,440 streams per day",
+     "verified": true,
+     "material": false,
+     "why": "661,440 per day is hundreds of thousands."
+    },
+    {
+     "claim": "it needed songs",
+     "status": "supported",
+     "fact": "F74",
+     "quote": "I can't run the bots without content. And I need enough content so I don't overrun each song.",
+     "verified": true,
+     "material": false,
+     "why": "Smith said the bots required content."
+    },
+    {
+     "claim": "it had a structural weakness he couldn't engineer away",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Narrator's interpretation; the research does not say he couldn't engineer around it."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 47,
+   "sentence": "Not one song, but a constantly replenishing supply of distinct tracks large enough that no single title ever accumulated a suspicious play count.",
+   "claims": [
+    {
+     "claim": "a constantly replenishing supply of distinct tracks",
+     "status": "supported",
+     "fact": "F81",
+     "quote": "CC-3 began providing SMITH with thousands of songs each week to upload to the Streaming Platforms.",
+     "verified": true,
+     "material": false,
+     "why": "A weekly supply of thousands of songs matches a constantly replenished catalog."
+    },
+    {
+     "claim": "large enough that no single title ever accumulated a suspicious play count",
+     "status": "contradicted",
+     "fact": "F96",
+     "quote": "one of his songs 'fit the criteria that is usually linked to store end streaming abuse.'",
+     "verified": true,
+     "material": true,
+     "why": "Research records at least one song being flagged for suspicious streaming; spreading streams across songs was a goal (F72), not a guaranteed outcome."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 48,
+   "sentence": "Around 2018, Smith began working with two new figures: the CEO of an AI music company, identified in the indictment as CC-3, and a music promoter identified as CC-4.",
+   "claims": [
+    {
+     "claim": "Around 2018, Smith began working with the CEO of an AI music company",
+     "status": "supported",
+     "fact": "F77",
+     "quote": "In or about 2018, SMITH began working with the Chief Executive Officer of an AI music company designated as CC-3",
+     "verified": true,
+     "material": false,
+     "why": "Matches research."
+    },
+    {
+     "claim": "identified in the indictment as CC-3",
+     "status": "supported",
+     "fact": "F77",
+     "quote": "Chief Executive Officer of an AI music company designated as CC-3",
+     "verified": true,
+     "material": false,
+     "why": "Designation matches."
+    },
+    {
+     "claim": "a music promoter identified as CC-4",
+     "status": "supported",
+     "fact": "F77",
+     "quote": "a music promoter designated as CC-4",
+     "verified": true,
+     "material": false,
+     "why": "Matches research."
+    },
+    {
+     "claim": "two new figures",
+     "status": "supported",
+     "fact": "F75",
+     "quote": "Early in the scheme, SMITH used the catalog of a music publicist designated as CC-2",
+     "verified": true,
+     "material": false,
+     "why": "Earlier collaborator was CC-2, so CC-3 and CC-4 were new later additions."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 49,
+   "sentence": "The approach was cautious at first.",
+   "claims": [
+    {
+     "claim": "The approach was cautious at first.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research records evasion tactics but never says the early approach was cautious; this is the narrator's characterization."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 50,
+   "sentence": "Smith began streaming AI-generated music in or about October 2018, in what CC-4 called a \"proof of concept.\" By October 18, 2018, Smith reported hundreds of thousands of streams generated from that test, and CC-4 replied, \"we've proved the model works.\"",
+   "claims": [
+    {
+     "claim": "Smith began streaming AI-generated music in or about October 2018",
+     "status": "supported",
+     "fact": "F78",
+     "quote": "SMITH began manipulating streams of AI-generated music in or about October 2018.",
+     "verified": true,
+     "material": false,
+     "why": "Matches the research date and activity."
+    },
+    {
+     "claim": "in what CC-4 called a \"proof of concept.\"",
+     "status": "supported",
+     "fact": "F79",
+     "quote": "CC-4 described the initial streams of the AI music as 'proof of concept.'",
+     "verified": true,
+     "material": false,
+     "why": "Quote correctly attributed to CC-4."
+    },
+    {
+     "claim": "By October 18, 2018, Smith reported hundreds of thousands of streams generated from that test",
+     "status": "supported",
+     "fact": "F80",
+     "quote": "As of October 18, 2018, SMITH reported he had generated hundreds of thousands of streams of the AI music",
+     "verified": true,
+     "material": false,
+     "why": "Date and figure match; 'test' paraphrases 'proof of concept'."
+    },
+    {
+     "claim": "CC-4 replied, \"we've proved the model works.\"",
+     "status": "supported",
+     "fact": "F80",
+     "quote": "CC-4 replied, 'we've proved the model works.'",
+     "verified": true,
+     "material": false,
+     "why": "Quote and speaker match."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 51,
+   "sentence": "What followed was industrialization.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 52,
+   "sentence": "On or about February 1, 2019, Smith and CC-3 formalized the arrangement in a Master Services Agreement.",
+   "claims": [
+    {
+     "claim": "On or about February 1, 2019, Smith and CC-3 formalized the arrangement in a Master Services Agreement.",
+     "status": "supported",
+     "fact": "F87",
+     "quote": "On or about February 1, 2019, SMITH and CC-3 entered into a 'Master Services Agreement.'",
+     "verified": true,
+     "material": false,
+     "why": "The date, the parties and the agreement name match the research; F77 shows they had already been working together since 2018, so 'formalized' is a fair paraphrase."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 53,
+   "sentence": "Smith would own the intellectual property outright.",
+   "claims": [
+    {
+     "claim": "Smith would own the intellectual property outright",
+     "status": "supported",
+     "fact": "F89",
+     "quote": "Under the Master Services Agreement, SMITH would have full ownership of the intellectual property rights in the songs.",
+     "verified": true,
+     "material": false,
+     "why": "'Outright' paraphrases 'full ownership' of the IP rights in the songs under the Master Services Agreement."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 54,
+   "sentence": "He would supply the metadata — song titles, artist names — and pay CC-3's company either $2,000 per month or 15 percent of the streaming revenue generated from those tracks, whichever was greater.",
+   "claims": [
+    {
+     "claim": "He would supply the metadata — song titles, artist names",
+     "status": "supported",
+     "fact": "F90",
+     "quote": "SMITH agreed to provide metadata including song and artist names",
+     "verified": true,
+     "material": false,
+     "why": "Matches the Master Services Agreement terms."
+    },
+    {
+     "claim": "pay CC-3's company either $2,000 per month or 15 percent of the streaming revenue generated from those tracks, whichever was greater",
+     "status": "supported",
+     "fact": "F90",
+     "quote": "to pay CC-3's company each month the greater of $2,000 or 15% of the streaming revenue generated from the AI songs",
+     "verified": true,
+     "material": false,
+     "why": "Accurate paraphrase of the payment terms."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 55,
+   "sentence": "CC-3 had a financial stake in the volume Smith could push through the bots.",
+   "claims": [
+    {
+     "claim": "CC-3 had a financial stake in the volume Smith could push through the bots.",
+     "status": "supported",
+     "fact": "F90",
+     "quote": "pay CC-3's company each month the greater of $2,000 or 15% of the streaming revenue generated from the AI songs",
+     "verified": true,
+     "material": false,
+     "why": "CC-3's pay was a share of streaming revenue, and F85 records CC-3 receiving 10% of the fraud proceeds."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 56,
+   "sentence": "The songs themselves arrived as raw files — names like \"n_7a2b2d74-1621-4385-895d-b1e4af78d860.mp3,\" randomized strings of letters and numbers that meant nothing to a listener, because no listener was ever the point.",
+   "claims": [
+    {
+     "claim": "The songs themselves arrived as raw files — names like \"n_7a2b2d74-1621-4385-895d-b1e4af78d860.mp3,\"",
+     "status": "supported",
+     "fact": "F91",
+     "quote": "CC-3's songs were typically given file names that were a randomized list of letters and numbers, such as 'n_7a2b2d74-1621-4385-895d-b1e4af78d860.mp3.'",
+     "verified": true,
+     "material": false,
+     "why": "Research gives this exact file name as an example."
+    },
+    {
+     "claim": "randomized strings of letters and numbers",
+     "status": "supported",
+     "fact": "F91",
+     "quote": "file names that were a randomized list of letters and numbers",
+     "verified": true,
+     "material": false,
+     "why": "Direct paraphrase of the research."
+    },
+    {
+     "claim": "that meant nothing to a listener, because no listener was ever the point",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Narrator's interpretation of the scheme's purpose, not a stated fact."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 57,
+   "sentence": "Smith's job was to dress them.",
+   "claims": [
+    {
+     "claim": "Smith's job was to dress them.",
+     "status": "supported",
+     "fact": "F90",
+     "quote": "SMITH agreed to provide metadata including song and artist names",
+     "verified": true,
+     "material": false,
+     "why": "Read as a metaphor for Smith supplying the song and artist names, which the Master Services Agreement assigned to him."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 58,
+   "sentence": "Procedurally generated word combinations: \"Zygophyceae,\" \"Zygosporic,\" \"Zyme Bedewing,\" \"Zymotechny.\" Artists named \"Calm Knuckles,\" \"Calorie Screams,\" \"Camel Edible,\" \"Cambists Cagelings.\" The names had no logic, no identity, no human origin — which was precisely the point.",
+   "claims": [
+    {
+     "claim": "Procedurally generated word combinations",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research does not say how the song or artist names were created. It says only that Smith agreed to provide the metadata."
+    },
+    {
+     "claim": "\"Zygophyceae,\" \"Zygosporic,\" \"Zyme Bedewing,\" \"Zymotechny.\"",
+     "status": "supported",
+     "fact": "F92",
+     "quote": "'Zygophyceae,' 'Zygophyllaceae,' 'Zygophyllum,' 'Zygopteraceae,' 'Zygopteris,' 'Zygopteron,' 'Zygopterous,' 'Zygosporic,'",
+     "verified": true,
+     "material": false,
+     "why": "All four names appear in the list of AI song names Smith used."
+    },
+    {
+     "claim": "Artists named \"Calm Knuckles,\" \"Calorie Screams,\" \"Camel Edible,\" \"Cambists Cagelings.\"",
+     "status": "supported",
+     "fact": "F93",
+     "quote": "'Calm Knuckles,'",
+     "verified": true,
+     "material": false,
+     "why": "All four names appear in the list of AI artist names Smith used."
+    },
+    {
+     "claim": "no human origin",
+     "status": "unsupported",
+     "fact": "F90",
+     "quote": "SMITH agreed to provide metadata including song and artist names",
+     "verified": true,
+     "material": true,
+     "why": "The research does not establish that the names had no human origin. Smith himself was responsible for supplying the names."
+    },
+    {
+     "claim": "The names had no logic, no identity",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "This is the narrator's characterization."
+    },
+    {
+     "claim": "which was precisely the point",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "This is the narrator's interpretation of intent. The research does not say the names served this purpose."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 59,
+   "sentence": "They weren't meant to be found.",
+   "claims": [
+    {
+     "claim": "They weren't meant to be found.",
+     "status": "supported",
+     "fact": "F71",
+     "quote": "SMITH directed his coconspirators that the Bot Accounts and macros be 'Unde[te]ctable: At least put every safety measure in to avoid detection.'",
+     "verified": true,
+     "material": false,
+     "why": "Research records Smith's stated intent that the bots and macros avoid detection."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 60,
+   "sentence": "They were meant to exist, to occupy a slot in a catalog, to be streamed by a bot and forgotten.",
+   "claims": [
+    {
+     "claim": "to be streamed by a bot",
+     "status": "supported",
+     "fact": "F39",
+     "quote": "SMITH used 'bots'—automated programs—to stream the AI-generated songs billions of times.",
+     "verified": true,
+     "material": false,
+     "why": "The research states that bots streamed the AI-generated songs."
+    },
+    {
+     "claim": "They were meant to exist, to occupy a slot in a catalog, to be streamed by a bot and forgotten",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "This is the narrator's characterization of the songs' purpose and fate, not a fact the research states."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 61,
+   "sentence": "In a March 11, 2019 email, CC-3 wrote to Smith: \"Keep in mind what we're doing musically here...",
+   "claims": [
+    {
+     "claim": "In a March 11, 2019 email, CC-3 wrote to Smith",
+     "status": "supported",
+     "fact": "F82",
+     "quote": "In a March 11, 2019 email to SMITH, CC-3 wrote",
+     "verified": true,
+     "material": false,
+     "why": "Date, sender and recipient match the research."
+    },
+    {
+     "claim": "\"Keep in mind what we're doing musically here...",
+     "status": "supported",
+     "fact": "F82",
+     "quote": "'Keep in mind what we're doing musically here...",
+     "verified": true,
+     "material": false,
+     "why": "The quoted words match the research exactly."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 62,
+   "sentence": "this is not music, it's instant music;).\" The winked semicolon didn't soften what he was describing.",
+   "claims": [
+    {
+     "claim": "this is not music, it's instant music;).\"",
+     "status": "supported",
+     "fact": "F82",
+     "quote": "this is not music, it's instant music ;).",
+     "verified": true,
+     "material": false,
+     "why": "Matches CC-3's March 11, 2019 email quote."
+    },
+    {
+     "claim": "The winked semicolon didn't soften what he was describing.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "This is the narrator's interpretation of the emoticon's tone. The research also does not state CC-3's gender."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 63,
+   "sentence": "The first warning arrived on March 6, 2018.",
+   "claims": [
+    {
+     "claim": "warning arrived on March 6, 2018",
+     "status": "supported",
+     "fact": "F96",
+     "quote": "On or about March 6, 2018, Distribution Company-1 informed SMITH that one of his songs 'fit the criteria that is usually linked to store end streaming abuse.'",
+     "verified": true,
+     "material": false,
+     "why": "The research records this warning to Smith on that date."
+    },
+    {
+     "claim": "The first warning",
+     "status": "unsupported",
+     "fact": "F96",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "It is the earliest warning in the research, but the research never says no warning came before it; 'first' adds a sequence claim."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 64,
+   "sentence": "Distribution Company-1 contacted Smith to tell him that one of his songs \"fit the criteria that is usually linked to store end streaming abuse.\" The language was careful, almost diplomatic — criteria, usually linked — but the implication was plain.",
+   "claims": [
+    {
+     "claim": "Distribution Company-1 contacted Smith to tell him that one of his songs \"fit the criteria that is usually linked to store end streaming abuse.\"",
+     "status": "supported",
+     "fact": "F96",
+     "quote": "Distribution Company-1 informed SMITH that one of his songs 'fit the criteria that is usually linked to store end streaming abuse.'",
+     "verified": true,
+     "material": false,
+     "why": "The research records this notice and quote from Distribution Company-1 to Smith."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 65,
+   "sentence": "Something in his numbers had tripped a flag.",
+   "claims": [
+    {
+     "claim": "Something in his numbers had tripped a flag.",
+     "status": "supported",
+     "fact": "F96",
+     "quote": "one of his songs 'fit the criteria that is usually linked to store end streaming abuse.'",
+     "verified": true,
+     "material": false,
+     "why": "Distribution Company-1 told Smith a song matched criteria linked to streaming abuse, a loose paraphrase of a flag being raised."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 66,
+   "sentence": "Smith wrote back the same day.",
+   "claims": [
+    {
+     "claim": "Smith wrote back the same day.",
+     "status": "supported",
+     "fact": "F97",
+     "quote": "SMITH responded to Distribution Company-1 on March 6, 2018",
+     "verified": true,
+     "material": false,
+     "why": "F96 dates the warning to March 6, 2018, and F97 dates Smith's reply to the same day."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 67,
+   "sentence": "\"I acknowledge what you wrote and I ask that you still release it.",
+   "claims": [
+    {
+     "claim": "I acknowledge what you wrote and I ask that you still release it.",
+     "status": "supported",
+     "fact": "F97",
+     "quote": "I acknowledge what you wrote and I ask that you still release it.",
+     "verified": true,
+     "material": false,
+     "why": "Exact quote from Smith's March 6, 2018 reply to Distribution Company-1."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 68,
+   "sentence": "We have no intentions of committing streaming fraud.\" He didn't ask which song, or which store, or what the pattern looked like.",
+   "claims": [
+    {
+     "claim": "We have no intentions of committing streaming fraud.\"",
+     "status": "supported",
+     "fact": "F97",
+     "quote": "I acknowledge what you wrote and I ask that you still release it. We have no intentions of committing streaming fraud.",
+     "verified": true,
+     "material": false,
+     "why": "Smith's March 6, 2018 reply to Distribution Company-1 is quoted verbatim."
+    },
+    {
+     "claim": "He didn't ask which song, or which store, or what the pattern looked like.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research doesn't say what he did or didn't ask; this is the narrator's reading of the quoted reply, and F96's 'one of his songs' may mean the song was already named."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 69,
+   "sentence": "He acknowledged and denied in the same breath, as if the goal were to close the conversation before it deepened.",
+   "claims": [
+    {
+     "claim": "He acknowledged and denied in the same breath",
+     "status": "supported",
+     "fact": "F97",
+     "quote": "I acknowledge what you wrote and I ask that you still release it. We have no intentions of committing streaming fraud.",
+     "verified": true,
+     "material": false,
+     "why": "His March 6, 2018 reply both acknowledged the warning and denied fraud in one response."
+    },
+    {
+     "claim": "as if the goal were to close the conversation before it deepened",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "This is the narrator's hedged reading of his motive, which the research does not record."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 70,
+   "sentence": "It didn't close.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 71,
+   "sentence": "By October 2018, Distribution Company-1 came back with a harder message: it had received \"multiple reports of streaming abuse from different stores\" and was planning to pull his releases entirely.",
+   "claims": [
+    {
+     "claim": "By October 2018, Distribution Company-1 came back",
+     "status": "supported",
+     "fact": "F98",
+     "quote": "In or about October 2018, Distribution Company-1 advised SMITH",
+     "verified": true,
+     "material": false,
+     "why": "Research dates this Distribution Company-1 warning to about October 2018, after its March 2018 contact (F96)."
+    },
+    {
+     "claim": "it had received \"multiple reports of streaming abuse from different stores\"",
+     "status": "supported",
+     "fact": "F98",
+     "quote": "it had received 'multiple reports of streaming abuse from different stores'",
+     "verified": true,
+     "material": false,
+     "why": "The quote matches the research exactly."
+    },
+    {
+     "claim": "was planning to pull his releases entirely",
+     "status": "supported",
+     "fact": "F98",
+     "quote": "planned to remove SMITH's releases from all stores",
+     "verified": true,
+     "material": false,
+     "why": "Faithful paraphrase of the planned removal from all stores."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 72,
+   "sentence": "This time Smith dropped the measured tone.",
+   "claims": [
+    {
+     "claim": "This time Smith dropped the measured tone",
+     "status": "unsupported",
+     "fact": "F99",
+     "quote": "This is absolutely wrong and crazy! . . . There is absolutely no fraud going on whatsoever! How can I appeal this?",
+     "verified": true,
+     "material": false,
+     "why": "The research records his emphatic October 2018 reply and calmer March 2018 reply (F97), but the tone shift is the narrator's interpretation."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 73,
+   "sentence": "\"This is absolutely wrong and crazy!...",
+   "claims": [
+    {
+     "claim": "This is absolutely wrong and crazy!...",
+     "status": "supported",
+     "fact": "F99",
+     "quote": "This is absolutely wrong and crazy! . . . There is absolutely no fraud going on whatsoever! How can I appeal this?",
+     "verified": true,
+     "material": false,
+     "why": "Smith's quoted words in his response to Distribution Company-1's October 2018 warning."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 74,
+   "sentence": "There is absolutely no fraud going on whatsoever!",
+   "claims": [
+    {
+     "claim": "There is absolutely no fraud going on whatsoever!",
+     "status": "supported",
+     "fact": "F99",
+     "quote": "There is absolutely no fraud going on whatsoever!",
+     "verified": true,
+     "material": false,
+     "why": "These are Smith's exact words to Distribution Company-1 in response to its October 2018 warning."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 75,
+   "sentence": "How can I appeal this?\"",
+   "claims": [
+    {
+     "claim": "How can I appeal this?",
+     "status": "supported",
+     "fact": "F99",
+     "quote": "How can I appeal this?",
+     "verified": true,
+     "material": false,
+     "why": "Exact words from Smith's October 2018 reply to Distribution Company-1."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 76,
+   "sentence": "When Streaming Platform-1 made its own determination of fraud in March 2019 and informed Distribution Company-3, Smith escalated to direct confrontation.",
+   "claims": [
+    {
+     "claim": "Streaming Platform-1 made its own determination of fraud in March 2019",
+     "status": "supported",
+     "fact": "F100",
+     "quote": "In or about March 2019, Streaming Platform-1 informed Distribution Company-3 that it believed SMITH had engaged in streaming fraud.",
+     "verified": true,
+     "material": false,
+     "why": "Research records the platform's March 2019 fraud finding, also called a 'determination' in F102."
+    },
+    {
+     "claim": "and informed Distribution Company-3",
+     "status": "supported",
+     "fact": "F100",
+     "quote": "Streaming Platform-1 informed Distribution Company-3",
+     "verified": true,
+     "material": false,
+     "why": "Directly stated."
+    },
+    {
+     "claim": "Smith escalated to direct confrontation",
+     "status": "supported",
+     "fact": "F103",
+     "quote": "SMITH communicated directly with Streaming Platform-1 to deny streaming fraud and demand reinstatement of his music",
+     "verified": true,
+     "material": false,
+     "why": "Direct communication denying fraud and demanding reinstatement matches 'direct confrontation'; 'escalated' is narrative framing."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 77,
+   "sentence": "He wrote to the platform demanding proof, accusing it of slander, and insisting it had withheld money owed to him.",
+   "claims": [
+    {
+     "claim": "He wrote to the platform demanding proof",
+     "status": "supported",
+     "fact": "F103",
+     "quote": "SMITH communicated directly with Streaming Platform-1 to deny streaming fraud and demand reinstatement of his music, writing: 'I need to see some proof as to why you are claiming I had artificial Streams?",
+     "verified": true,
+     "material": false,
+     "why": "Research records Smith writing directly to Streaming Platform-1 asking for proof."
+    },
+    {
+     "claim": "accusing it of slander",
+     "status": "supported",
+     "fact": "F103",
+     "quote": "You have slandered me to my distributors claiming I've had fraudulent streams",
+     "verified": true,
+     "material": false,
+     "why": "His message accused the platform of slander."
+    },
+    {
+     "claim": "insisting it had withheld money owed to him",
+     "status": "supported",
+     "fact": "F103",
+     "quote": "you have withheld money that is owed to me",
+     "verified": true,
+     "material": false,
+     "why": "His message states that the platform withheld money owed to him."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 78,
+   "sentence": "\"I have never done anything to artificially inflate my streams,\" he wrote — a sentence composed while thousands of bots were streaming his catalog on a loop.",
+   "claims": [
+    {
+     "claim": "\"I have never done anything to artificially inflate my streams,\" he wrote",
+     "status": "supported",
+     "fact": "F103",
+     "quote": "I have never done anything to artificially inflate my streams.",
+     "verified": true,
+     "material": false,
+     "why": "Exact quote from Smith's written message to Streaming Platform-1."
+    },
+    {
+     "claim": "a sentence composed while thousands of bots were streaming his catalog on a loop",
+     "status": "unsupported",
+     "fact": "F54",
+     "quote": "At certain points, SMITH had as many as 10,000 active Bot Accounts on the Streaming Platforms.",
+     "verified": true,
+     "material": false,
+     "why": "The scheme ran 2017–2024 with bots continuously streaming, but the research does not tie a bot count to the moment of this message; the line is narrative juxtaposition."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 79,
+   "sentence": "By June 5, 2019, Smith was celebrating.",
+   "claims": [
+    {
+     "claim": "By June 5, 2019, Smith was celebrating.",
+     "status": "unsupported",
+     "fact": "F83",
+     "quote": "By June 5, 2019, SMITH reported to CC-3 and CC-4: 'We are at 88 million TOTAL STREAMS so far!!!'",
+     "verified": true,
+     "material": false,
+     "why": "The date and an exclamatory email are recorded; 'celebrating' is the narrator's reading of Smith's tone, not a documented event."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 80,
+   "sentence": "He messaged CC-3 and CC-4: \"We are at 88 million TOTAL STREAMS so far!!!\" Three exclamation points.",
+   "claims": [
+    {
+     "claim": "He messaged CC-3 and CC-4",
+     "status": "supported",
+     "fact": "F83",
+     "quote": "SMITH reported to CC-3 and CC-4",
+     "verified": true,
+     "material": false,
+     "why": "Research records Smith reporting to CC-3 and CC-4."
+    },
+    {
+     "claim": "\"We are at 88 million TOTAL STREAMS so far!!!\"",
+     "status": "supported",
+     "fact": "F83",
+     "quote": "'We are at 88 million TOTAL STREAMS so far!!!'",
+     "verified": true,
+     "material": false,
+     "why": "The quote matches the research exactly."
+    },
+    {
+     "claim": "Three exclamation points.",
+     "status": "unsupported",
+     "fact": "F83",
+     "quote": "so far!!!",
+     "verified": false,
+     "material": false,
+     "why": "The quoted message ends with three exclamation points."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 81,
+   "sentence": "Same day, he asked CC-3 for another 10,000 AI songs so he could \"spread this out more\" — not a creative request, a dispersal strategy, the same logic from the October 2018 playbook applied at a larger scale.",
+   "claims": [
+    {
+     "claim": "Same day, he asked CC-3 for another 10,000 AI songs",
+     "status": "supported",
+     "fact": "F86",
+     "quote": "On June 5, 2019, SMITH asked CC-3 to provide another 10,000 AI songs",
+     "verified": true,
+     "material": false,
+     "why": "The research records the June 5, 2019 request for 10,000 more AI songs."
+    },
+    {
+     "claim": "so he could \"spread this out more\"",
+     "status": "supported",
+     "fact": "F86",
+     "quote": "so he could 'spread this out more' to evade detection",
+     "verified": true,
+     "material": false,
+     "why": "The quote matches the research word for word."
+    },
+    {
+     "claim": "not a creative request, a dispersal strategy",
+     "status": "supported",
+     "fact": "F86",
+     "quote": "so he could 'spread this out more' to evade detection",
+     "verified": true,
+     "material": false,
+     "why": "The research ties the request to spreading streams out to evade detection."
+    },
+    {
+     "claim": "the same logic from the October 2018 playbook",
+     "status": "supported",
+     "fact": "F73",
+     "quote": "in order to not raise any issues with the powers that be we need a TON of content with small amounts of Streams.",
+     "verified": true,
+     "material": false,
+     "why": "The October 2018 email states the same strategy of using lots of content with small stream counts."
+    },
+    {
+     "claim": "applied at a larger scale",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "This is the narrator's comparative interpretation; the research does not establish it."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 82,
+   "sentence": "In an August 17, 2020 email, CC-3 told Smith the song quality was \"10x-20x better now,\" with \"vocal generation capabilities.\"",
+   "claims": [
+    {
+     "claim": "In an August 17, 2020 email, CC-3 told Smith",
+     "status": "supported",
+     "fact": "F94",
+     "quote": "In an August 17, 2020 email, CC-3 wrote to SMITH",
+     "verified": true,
+     "material": false,
+     "why": "Date, sender and recipient match."
+    },
+    {
+     "claim": "the song quality was \"10x-20x better now,\"",
+     "status": "supported",
+     "fact": "F94",
+     "quote": "Song quality is 10x-20x better now",
+     "verified": true,
+     "material": false,
+     "why": "Quote matches."
+    },
+    {
+     "claim": "with \"vocal generation capabilities.\"",
+     "status": "supported",
+     "fact": "F94",
+     "quote": "we also have vocal generation capabilities",
+     "verified": true,
+     "material": false,
+     "why": "Quote matches."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 83,
+   "sentence": "The money moved on a loop.",
+   "claims": [
+    {
+     "claim": "The money moved on a loop.",
+     "status": "supported",
+     "fact": "F60",
+     "quote": "SMITH used more than $1.3 million in fraudulently obtained royalties to fund the debit cards.",
+     "verified": true,
+     "material": false,
+     "why": "Royalties from bot streams funded debit cards for the bot accounts (F62), which is the loop described."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 84,
+   "sentence": "From approximately 2020 through 2023, Smith transferred $1.3 million in royalties into a bank account he controlled under the name SMH Entertainment, then routed those funds back out to fund debit cards for the bot accounts.",
+   "claims": [
+    {
+     "claim": "From approximately 2020 through 2023, Smith transferred $1.3 million in royalties",
+     "status": "supported",
+     "fact": "F61",
+     "quote": "In multiple transactions from approximately 2020 through 2023, SMITH transferred $1.3 million in fraudulently obtained royalties",
+     "verified": true,
+     "material": false,
+     "why": "Matches dates and amount."
+    },
+    {
+     "claim": "into a bank account he controlled under the name SMH Entertainment",
+     "status": "supported",
+     "fact": "F61",
+     "quote": "to a bank account he controlled at a U.S.-based financial institution in the name of SMH Entertainment",
+     "verified": true,
+     "material": false,
+     "why": "Matches account and name."
+    },
+    {
+     "claim": "then routed those funds back out to fund debit cards for the bot accounts",
+     "status": "supported",
+     "fact": "F62",
+     "quote": "SMITH then transferred the proceeds from the SMH Entertainment account to Financial Service-1 to fund debit cards for the Bot Accounts.",
+     "verified": true,
+     "material": false,
+     "why": "Paraphrase of the transfer to fund debit cards."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 85,
+   "sentence": "Fraud financing fraud — the scheme recycling its own output to stay alive.",
+   "claims": [
+    {
+     "claim": "Fraud financing fraud",
+     "status": "supported",
+     "fact": "F60",
+     "quote": "SMITH used more than $1.3 million in fraudulently obtained royalties to fund the debit cards.",
+     "verified": true,
+     "material": false,
+     "why": "Research records fraudulent royalties being used to fund the debit cards for the bot accounts."
+    },
+    {
+     "claim": "the scheme recycling its own output to stay alive",
+     "status": "unsupported",
+     "fact": "F62",
+     "quote": "SMITH then transferred the proceeds from the SMH Entertainment account to Financial Service-1 to fund debit cards for the Bot Accounts.",
+     "verified": true,
+     "material": false,
+     "why": "Proceeds were reinvested, but the claim that this kept the scheme alive is narrator interpretation."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 86,
+   "sentence": "By February 2024, Smith wasn't managing risk anymore.",
+   "claims": [
+    {
+     "claim": "By February 2024, Smith wasn't managing risk anymore",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research records only a February 2024 boast (F95), not that Smith had stopped managing risk; this is the narrator's interpretation."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 87,
+   "sentence": "He was keeping score.",
+   "claims": [
+    {
+     "claim": "He was keeping score.",
+     "status": "supported",
+     "fact": "F83",
+     "quote": "By June 5, 2019, SMITH reported to CC-3 and CC-4: 'We are at 88 million TOTAL STREAMS so far!!!'",
+     "verified": true,
+     "material": false,
+     "why": "Read as figurative framing that Smith tracked his stream totals, which the research records him reporting."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 88,
+   "sentence": "In an email that year, he wrote that his music had generated \"over 4 billion streams and $12 million in royalties since 2019.\" He was bragging.",
+   "claims": [
+    {
+     "claim": "In an email that year, he wrote",
+     "status": "supported",
+     "fact": "F95",
+     "quote": "In a February 2024 email, SMITH boasted",
+     "verified": true,
+     "material": false,
+     "why": "Research records the email; 'that year' is accurate only if the prior context set the year as 2024."
+    },
+    {
+     "claim": "his music had generated \"over 4 billion streams and $12 million in royalties since 2019.\"",
+     "status": "supported",
+     "fact": "F95",
+     "quote": "his 'existing music has generated at this point over 4 billion streams and $12 million in royalties since 2019.'",
+     "verified": true,
+     "material": false,
+     "why": "The quote matches the research verbatim."
+    },
+    {
+     "claim": "He was bragging.",
+     "status": "supported",
+     "fact": "F95",
+     "quote": "SMITH boasted",
+     "verified": true,
+     "material": false,
+     "why": "The research describes the email as a boast."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 89,
+   "sentence": "He also tried to sell the scheme as a service, in which other musicians would pay him or share royalties in exchange for fraudulent streams of their music.",
+   "claims": [
+    {
+     "claim": "He also tried to sell the scheme as a service",
+     "status": "supported",
+     "fact": "F76",
+     "quote": "SMITH later attempted to sell his fraudulent streaming scheme as a service",
+     "verified": true,
+     "material": false,
+     "why": "Directly stated."
+    },
+    {
+     "claim": "in which other musicians would pay him or share royalties in exchange for fraudulent streams of their music",
+     "status": "supported",
+     "fact": "F76",
+     "quote": "in which other musicians would pay him for streams or share royalties in exchange for fraudulent streams of their music",
+     "verified": true,
+     "material": false,
+     "why": "Close paraphrase of the research."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 90,
+   "sentence": "The indictment was unsealed on September 4, 2024.",
+   "claims": [
+    {
+     "claim": "The indictment was unsealed on September 4, 2024.",
+     "status": "supported",
+     "fact": "F15",
+     "quote": "the charges were unsealed on September 4, 2024",
+     "verified": true,
+     "material": false,
+     "why": "Research states the unsealing date directly."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 91,
+   "sentence": "The Southern District of New York and the FBI announced three counts: wire fraud conspiracy, wire fraud, and money laundering conspiracy.",
+   "claims": [
+    {
+     "claim": "The Southern District of New York and the FBI announced three counts",
+     "status": "supported",
+     "fact": "F29",
+     "quote": "the Southern District of New York and the FBI announcing the unsealing of a three-count indictment on September 4, 2024",
+     "verified": true,
+     "material": false,
+     "why": "Research states SDNY and FBI announced the three-count indictment."
+    },
+    {
+     "claim": "wire fraud conspiracy, wire fraud, and money laundering conspiracy",
+     "status": "supported",
+     "fact": "F29",
+     "quote": "charging Smith with wire fraud conspiracy, wire fraud, and money laundering conspiracy",
+     "verified": true,
+     "material": false,
+     "why": "The three charges match the research exactly."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 92,
+   "sentence": "For the first time, the full shape of what Smith had built was public, not a distribution company's internal flag, but a federal criminal case.",
+   "claims": [
+    {
+     "claim": "the full shape of what Smith had built was public, ... but a federal criminal case",
+     "status": "supported",
+     "fact": "F29",
+     "quote": "the Southern District of New York and the FBI announcing the unsealing of a three-count indictment on September 4, 2024",
+     "verified": true,
+     "material": false,
+     "why": "The unsealing of the indictment made the case public."
+    },
+    {
+     "claim": "For the first time",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research does not say whether the scheme was ever public before; this is narrative framing."
+    },
+    {
+     "claim": "not a distribution company's internal flag",
+     "status": "supported",
+     "fact": "F96",
+     "quote": "Distribution Company-1 informed SMITH that one of his songs 'fit the criteria that is usually linked to store end streaming abuse.'",
+     "verified": true,
+     "material": false,
+     "why": "Calls back to the earlier distributor warnings."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 93,
+   "sentence": "Smith later pleaded guilty to one count of conspiracy to commit wire fraud.",
+   "claims": [
+    {
+     "claim": "Smith later pleaded guilty to one count of conspiracy to commit wire fraud",
+     "status": "supported",
+     "fact": "F14",
+     "quote": "later pleaded guilty to one count of conspiracy to commit wire fraud",
+     "verified": true,
+     "material": false,
+     "why": "Research states he later pleaded guilty to this single count after the three-count indictment."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 94,
+   "sentence": "The maximum exposure under that plea: five years in prison.",
+   "claims": [
+    {
+     "claim": "The maximum exposure under that plea: five years in prison.",
+     "status": "supported",
+     "fact": "F3",
+     "quote": "faced a maximum sentence of five years in prison under the plea",
+     "verified": true,
+     "material": false,
+     "why": "Research states five-year maximum under the plea."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 95,
+   "sentence": "And then the number that gives the whole scheme its final measurement — he agreed to forfeit $8,091,843.64.",
+   "claims": [
+    {
+     "claim": "he agreed to forfeit $8,091,843.64",
+     "status": "supported",
+     "fact": "F2",
+     "quote": "Smith agreed to forfeit $8,091,843.64",
+     "verified": true,
+     "material": false,
+     "why": "Forfeiture amount matches the research exactly."
+    },
+    {
+     "claim": "the number that gives the whole scheme its final measurement",
+     "status": "overstated",
+     "fact": "F13",
+     "quote": "Smith fraudulently obtained more than $10 million in royalty payments in the indictment, then agreed in his plea to forfeit $8,091,843.64",
+     "verified": true,
+     "material": false,
+     "why": "Narrator framing; the research gives over $10M obtained, so the forfeiture is not the scheme's full measure."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 96,
+   "sentence": "Not a round figure.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 97,
+   "sentence": "Not an estimate.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 98,
+   "sentence": "The government said that figure represented proceeds traceable to the offense; the indictment had alleged he obtained more than $10 million in royalty payments.",
+   "claims": [
+    {
+     "claim": "The government said that figure represented proceeds traceable to the offense",
+     "status": "supported",
+     "fact": "F25",
+     "quote": "the plea agreement required him to forfeit $8,091,843.64 as proceeds traceable to the offense",
+     "verified": true,
+     "material": false,
+     "why": "F25 calls the forfeiture proceeds traceable to the offense, and F2 says the DOJ described it as the scheme's proceeds."
+    },
+    {
+     "claim": "the indictment had alleged he obtained more than $10 million in royalty payments",
+     "status": "supported",
+     "fact": "F20",
+     "quote": "The indictment alleged Smith fraudulently obtained more than $10 million in royalty payments",
+     "verified": true,
+     "material": false,
+     "why": "F20 directly states the indictment's more-than-$10-million allegation."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 99,
+   "sentence": "U.S. Attorney Jay Clayton described the plea as covering a scheme to defraud both the streaming platforms and the musicians whose royalties Smith's fake plays had displaced.",
+   "claims": [
+    {
+     "claim": "U.S. Attorney Jay Clayton described the plea",
+     "status": "supported",
+     "fact": "F7",
+     "quote": "U.S. Attorney Jay Clayton said Smith's guilty plea was for a scheme",
+     "verified": true,
+     "material": false,
+     "why": "Research names Clayton as U.S. Attorney commenting on the plea."
+    },
+    {
+     "claim": "a scheme to defraud both the streaming platforms and the musicians",
+     "status": "supported",
+     "fact": "F7",
+     "quote": "a scheme to defraud music streaming platforms and musicians of royalty payments",
+     "verified": true,
+     "material": false,
+     "why": "Matches Clayton's stated description."
+    },
+    {
+     "claim": "whose royalties Smith's fake plays had displaced",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research says musicians were defrauded of royalty payments but never describes royalties being displaced; this is the narrator's explanation of the mechanism."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 100,
+   "sentence": "Federal regulations at 37 C.F.R. §§ 385.2 and 385.21 are explicit: manipulated streams are not eligible for royalties.",
+   "claims": [
+    {
+     "claim": "Federal regulations at 37 C.F.R. §§ 385.2 and 385.21 are explicit: manipulated streams are not eligible for royalties.",
+     "status": "supported",
+     "fact": "F43",
+     "quote": "Federal regulations at 37 C.F.R. §§ 385.2 and 385.21 provide that manipulated streams are not eligible for royalties.",
+     "verified": true,
+     "material": false,
+     "why": "The research states that these regulations make manipulated streams ineligible for royalties; 'explicit' is narrator framing."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 101,
+   "sentence": "Every fraudulent play Smith's bots generated was counted toward royalty payments drawn from the same pools that paid legitimate artists.",
+   "claims": [
+    {
+     "claim": "Every fraudulent play Smith's bots generated was counted toward royalty payments",
+     "status": "overstated",
+     "fact": "F12",
+     "quote": "then manipulated streaming data to generate royalty payments",
+     "verified": true,
+     "material": true,
+     "why": "The research says the manipulated streams generated royalties, not that every play counted. F74 notes songs with too many streams 'comes down.'"
+    },
+    {
+     "claim": "drawn from the same pools that paid legitimate artists",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "F7 says the scheme defrauded musicians of royalty payments, but the research never describes shared royalty pools."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 102,
+   "sentence": "The streams were fake.",
+   "claims": [
+    {
+     "claim": "The streams were fake.",
+     "status": "supported",
+     "fact": "F51",
+     "quote": "collecting royalties based on fraudulent streams",
+     "verified": true,
+     "material": false,
+     "why": "The research describes the bot-generated streams as fraudulent."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 103,
+   "sentence": "Distribution Company-1 put it plainly in its own definition of streaming manipulation: plays that \"do not represent bona fide end-user listening.\" That phrase — bona fide end-user listening — is the standard the whole system is built on.",
+   "claims": [
+    {
+     "claim": "Distribution Company-1 put it plainly in its own definition of streaming manipulation: plays that \"do not represent bona fide end-user listening.\"",
+     "status": "supported",
+     "fact": "F47",
+     "quote": "where such plays do not represent bona fide end-user listening and/or views initiated by genuine consumers",
+     "verified": true,
+     "material": false,
+     "why": "Quoted phrase appears in Distribution Company-1's definition of streaming manipulation."
+    },
+    {
+     "claim": "That phrase — bona fide end-user listening — is the standard the whole system is built on.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research does not establish this; it is the narrator's own characterization of the system."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 104,
+   "sentence": "Streaming Platform-1's user guidelines prohibited any bot, script, or automated process used to artificially increase play counts.",
+   "claims": [
+    {
+     "claim": "Streaming Platform-1's user guidelines prohibited any bot, script, or automated process used to artificially increase play counts.",
+     "status": "supported",
+     "fact": "F44",
+     "quote": "Streaming Platform-1's User Guidelines prohibited 'artificially increasing play counts or follow counts, artificially promoting Content, or other manipulation including by (i) using any bot, script, or other automated process.'",
+     "verified": true,
+     "material": false,
+     "why": "A faithful paraphrase of the guideline language quoted in the research."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 105,
+   "sentence": "Smith's operation violated both the contractual terms and the federal regulatory framework, simultaneously, at scale, for years.",
+   "claims": [
+    {
+     "claim": "Smith's operation violated both the contractual terms",
+     "status": "supported",
+     "fact": "F50",
+     "quote": "SMITH falsely represented to Distribution Company-2 that he would not engage in fraudulent streaming",
+     "verified": true,
+     "material": false,
+     "why": "The research records his false representations against distributor terms that prohibited fraudulent streaming (F49), and F44 shows platform guidelines barred bots."
+    },
+    {
+     "claim": "and the federal regulatory framework",
+     "status": "overstated",
+     "fact": "F43",
+     "quote": "Federal regulations at 37 C.F.R. §§ 385.2 and 385.21 provide that manipulated streams are not eligible for royalties.",
+     "verified": true,
+     "material": false,
+     "why": "The research says the regulations make manipulated streams ineligible for royalties; calling his conduct a regulatory 'violation' is the narrator's legal characterization."
+    },
+    {
+     "claim": "at scale",
+     "status": "supported",
+     "fact": "F39",
+     "quote": "SMITH used 'bots'—automated programs—to stream the AI-generated songs billions of times.",
+     "verified": true,
+     "material": false,
+     "why": "Billions of streams and over a thousand simultaneous bot accounts (F40) support 'at scale'."
+    },
+    {
+     "claim": "for years",
+     "status": "derived",
+     "fact": "F34",
+     "quote": "The scheme ran from approximately 2017 up to and including 2024.",
+     "verified": true,
+     "material": false,
+     "why": "2017 to 2024 spans multiple years."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 106,
+   "sentence": "Reporting has described this prosecution as the first major criminal conviction for AI-assisted music streaming fraud in the United States.",
+   "claims": [
+    {
+     "claim": "Reporting has described this prosecution as the first major criminal conviction for AI-assisted music streaming fraud in the United States.",
+     "status": "supported",
+     "fact": "F31",
+     "quote": "described as the first major criminal conviction for AI-assisted music streaming fraud in the United States",
+     "verified": true,
+     "material": false,
+     "why": "F31 says coverage gave this exact description of the Smith prosecution."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 107,
+   "sentence": "No other defendant was charged in the SDNY criminal case.",
+   "claims": [
+    {
+     "claim": "No other defendant was charged in the SDNY criminal case.",
+     "status": "supported",
+     "fact": "F21",
+     "quote": "no other person was charged in the SDNY criminal case",
+     "verified": true,
+     "material": false,
+     "why": "Research states no other person was charged in the SDNY case."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 108,
+   "sentence": "It started with an email Smith sent himself on October 20, 2017, turning bot streams into dollars.",
+   "claims": [
+    {
+     "claim": "It started with an email",
+     "status": "contradicted",
+     "fact": "F56",
+     "quote": "In a May 11, 2017 email to coconspirator CC-1, SMITH asked CC-1 to create Bot Accounts on a particular Streaming Platform",
+     "verified": true,
+     "material": true,
+     "why": "Earlier scheme activity is recorded (May 2017 bot-account email), so the October 2017 email was not the start."
+    },
+    {
+     "claim": "an email Smith sent himself on October 20, 2017",
+     "status": "supported",
+     "fact": "F66",
+     "quote": "On October 20, 2017, SMITH emailed himself a financial breakdown of his streaming operation.",
+     "verified": true,
+     "material": false,
+     "why": "Matches the research."
+    },
+    {
+     "claim": "turning bot streams into dollars",
+     "status": "supported",
+     "fact": "F69",
+     "quote": "SMITH estimated the average royalty per stream was half of one cent ($0.005), yielding daily royalties of $3,307.20, monthly royalties of $99,216, and annual royalties of $1,207,128.",
+     "verified": true,
+     "material": false,
+     "why": "The financial breakdown converted bot streams into estimated royalties."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 109,
+   "sentence": "The streams were never heard.",
+   "claims": [
+    {
+     "claim": "The streams were never heard.",
+     "status": "unsupported",
+     "fact": "F39",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research says bots streamed the songs but never says no person heard them; this is narrator framing drawn from the bot streaming."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 110,
+   "sentence": "The money was real.",
+   "claims": [
+    {
+     "claim": "The money was real.",
+     "status": "supported",
+     "fact": "F41",
+     "quote": "SMITH fraudulently obtained more than $10 million in royalty payments.",
+     "verified": true,
+     "material": false,
+     "why": "The research records actual royalty payments obtained."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 111,
+   "sentence": "Nearly seven years after that email, a federal indictment turned the same arithmetic into the case against him.",
+   "claims": [
+    {
+     "claim": "Nearly seven years after that email",
+     "status": "derived",
+     "fact": "F66",
+     "quote": "On October 20, 2017, SMITH emailed himself a financial breakdown of his streaming operation.",
+     "verified": true,
+     "material": false,
+     "why": "October 20, 2017 to the September 2024 indictment (F4, unsealed September 4, 2024 per F15) is just under seven years."
+    },
+    {
+     "claim": "a federal indictment",
+     "status": "supported",
+     "fact": "F29",
+     "quote": "the Southern District of New York and the FBI announcing the unsealing of a three-count indictment on September 4, 2024",
+     "verified": true,
+     "material": false,
+     "why": "The research records a federal SDNY indictment against Smith."
+    },
+    {
+     "claim": "turned the same arithmetic into the case against him",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research does not say the indictment built its case on the email's arithmetic; this is narrator framing."
+    }
+   ],
+   "error": true,
+   "material": false
+  }
+ ],
+ "gateLog": [
+  {
+   "sentence": "AI-generated music was barely a concept most of the industry had registered, and Smith was already writing himself memos that treated it as a solved production problem.",
+   "unsupported": [
+    "AI-generated music was barely a concept most of the industry had registered",
+    "Smith was already writing himself memos that treated it as a solved production problem"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research",
+    "research differs: \"SMITH began manipulating streams of AI-generated music in or about October 2018.\""
+   ],
+   "action": "rewritten",
+   "result": "Smith was already manipulating streams of AI-generated music, treating it as a solved production problem."
+  },
+  {
+   "sentence": "The content pipeline, the cloud infrastructure, the per-stream economics — he had reduced the entire operation to a formula before the formula had a name.",
+   "unsupported": [
+    "The content pipeline"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "clause_cut",
+   "result": "The cloud infrastructure, the per-stream economics — he had reduced the entire operation to a formula before the formula had a name."
+  },
+  {
+   "sentence": "Smith had his own songs, his own catalog — a working artist based near Cornelius, North Carolina, who understood, from the inside, how streaming royalties actually moved from platform to rights holder.",
+   "unsupported": [
+    "understood, from the inside, how streaming royalties actually moved from platform to rights holder"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "Smith had his own songs, his own catalog, a working artist based near Cornelius, North Carolina, who ran a scheme to fraudulently generate millions of dollars in streaming royalties."
+  },
+  {
+   "sentence": "In a May 11, 2017 email to a co-conspirator identified only as CC-1, Smith laid out the first operational instruction: \"Make up names and addresses.",
+   "unsupported": [
+    "Smith laid out the first operational instruction"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"SMITH asked CC-1 to create Bot Accounts on a particular Streaming Platform\""
+   ],
+   "action": "rewritten",
+   "result": "In a May 11, 2017 email to a co-conspirator identified only as CC-1, Smith asked CC-1 to create bot accounts on a streaming platform: \"Make up names and addresses."
+  },
+  {
+   "sentence": "Each address corresponded to a fictitious name, and each name became a bot account on a streaming platform.",
+   "unsupported": [
+    "Each address corresponded to a fictitious name"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"often in the names of fictitious identities\""
+   ],
+   "action": "rewritten",
+   "result": "Each name became a bot account on a streaming platform."
+  },
+  {
+   "sentence": "At the peak of the operation, Smith had as many as 10,000 of these accounts active simultaneously.",
+   "unsupported": [
+    "At the peak of the operation, Smith had as many as 10,000 of these accounts active simultaneously"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"At certain points, SMITH had as many as 10,000 active Bot Accounts on the Streaming Platforms.\""
+   ],
+   "action": "rewritten",
+   "result": "At certain points, Smith had as many as 10,000 active bot accounts on the streaming platforms."
+  },
+  {
+   "sentence": "Streaming platforms require a card on file, and 10,000 accounts need 10,000 ways to pay.",
+   "unsupported": [
+    "Streaming platforms require a card on file"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "Ten thousand accounts need 10,000 ways to pay."
+  },
+  {
+   "sentence": "Every one of those bot accounts routed its connection through a different VPN, so that thousands of streams appearing to originate from thousands of different locations were, in fact, all running out of the same house.",
+   "unsupported": [
+    "VPN",
+    "Every one of those bot accounts routed its connection through a different VPN"
+   ],
+   "layer": [
+    "entity",
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"SMITH caused the Bot Accounts to log in using different virtual private networks ('VPNs')\""
+   ],
+   "action": "clause_cut",
+   "result": "So that thousands of streams appearing to originate from thousands of different locations were, in fact, all running out of the same house."
+  },
+  {
+   "sentence": "Fake emails defeated identity checks.",
+   "unsupported": [
+    "Fake emails defeated identity checks."
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "Smith used fake email accounts to create and register bot accounts on the streaming platforms."
+  },
+  {
+   "sentence": "Corporate debit cards defeated payment verification.",
+   "unsupported": [
+    "Corporate debit cards defeated payment verification."
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "Smith used a Manhattan-based service that provided large numbers of debit cards, typically corporate debit cards for employees of a company."
+  },
+  {
+   "sentence": "Not one song, not a hundred — a constantly replenishing supply of distinct tracks large enough that no single title ever accumulated a suspicious play count.",
+   "unsupported": [
+    "100"
+   ],
+   "layer": [
+    "entity"
+   ],
+   "why": [],
+   "action": "rewritten",
+   "result": "Not one song, but a constantly replenishing supply of distinct tracks large enough that no single title ever accumulated a suspicious play count."
+  },
+  {
+   "sentence": "That constraint was the ceiling on everything else he had built, and by October 2018, he was stating it plainly in his own words: \"I can't run the bots without content.",
+   "unsupported": [
+    "by October 2018, he was stating it plainly in his own words"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"On or about May 9, 2019, SMITH emailed a coconspirator\""
+   ],
+   "action": "rewritten",
+   "result": "That constraint was the ceiling on everything else he had built, and by May 2019, he was stating it plainly in his own words: \"I can't run the bots without content."
+  },
+  {
+   "sentence": "CC-4's response was four words: \"we've proved the model works.\"",
+   "unsupported": [
+    "CC-4's response was four words"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"CC-4 replied, 'we've proved the model works.'\""
+   ],
+   "action": "removed"
+  },
+  {
+   "sentence": "He assigned titles pulled from taxonomic Latin and procedurally generated word combinations: \"Zygophyceae,\" \"Zygosporic,\" \"Zyme Bedewing,\" \"Zymotechny.\"",
+   "unsupported": [
+    "Latin"
+   ],
+   "layer": [
+    "entity"
+   ],
+   "why": [],
+   "action": "clause_cut",
+   "result": "Procedurally generated word combinations: \"Zygophyceae,\" \"Zygosporic,\" \"Zyme Bedewing,\" \"Zymotechny.\""
+  },
+  {
+   "sentence": "What the October warning couldn't have known was what Smith had written to his co-conspirators just four days earlier, on October 4, 2018: \"in order to not raise any issues with the powers that be we need a TON of content with small amounts of Streams.\"",
+   "unsupported": [
+    "just four days earlier"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "What the October warning couldn't have known was what Smith had written to his co-conspirators on October 4, 2018: \"in order to not raise any issues with the powers that be we need a TON of content with small amounts of Streams.\""
+  },
+  {
+   "sentence": "\"I have never done anything to artificially inflate my streams,\" he wrote — a sentence composed while thousands of bots were, at that moment, streaming his catalog on a loop.",
+   "unsupported": [
+    "thousands of bots were, at that moment, streaming his catalog on a loop"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"At certain points, SMITH had as many as 10,000 active Bot Accounts\""
+   ],
+   "action": "clause_cut",
+   "result": "\"I have never done anything to artificially inflate my streams,\" he wrote — a sentence composed while thousands of bots were, streaming his catalog on a loop."
+  },
+  {
+   "sentence": "Same day, same message thread: he asked CC-3 for another 10,000 AI songs so he could \"spread this out more\" — not a creative request, a dispersal strategy, the same logic from the October 2018 playbook applied at a larger scale.",
+   "unsupported": [
+    "same message thread"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "Same day, he asked CC-3 for another 10,000 AI songs so he could 'spread this out more' — not a creative request, a dispersal strategy, the same logic from the October 2018 playbook applied at a larger scale."
+  },
+  {
+   "sentence": "The operation that had started with randomized ambient files was acquiring something closer to a human voice.",
+   "unsupported": [
+    "started with randomized ambient files"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"CC-3's songs were typically given file names that were a randomized list of letters and numbers\""
+   ],
+   "action": "rewritten",
+   "result": "The operation was acquiring something closer to a human voice."
+  },
+  {
+   "sentence": "From approximately 2020 through 2023, Smith transferred $1.3 million in royalties into a bank account he controlled under the name SMH Entertainment, then routed those funds back out to fund the debit cards that registered the bot accounts.",
+   "unsupported": [
+    "the debit cards that registered the bot accounts"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"fund debit cards for the Bot Accounts\""
+   ],
+   "action": "rewritten",
+   "result": "From approximately 2020 through 2023, Smith transferred $1.3 million in royalties into a bank account he controlled under the name SMH Entertainment, then routed those funds back out to fund debit cards for the Bot Accounts."
+  },
+  {
+   "sentence": "That gap between the two numbers — what the streams produced and what he agreed to surrender — reflects how forfeiture works: it reaches what can be traced and documented as proceeds.",
+   "unsupported": [
+    "forfeiture works: it reaches what can be traced and documented as proceeds"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "That gap between the two numbers, what the streams produced and what he agreed to surrender, reflects how forfeiture was applied here: the $8,091,843.64 he agreed to pay represented proceeds traceable to the offense."
+  },
+  {
+   "sentence": "Royalty pools on streaming platforms are not open-ended — each platform allocates a fixed share of its subscription and advertising revenue to rights holders in a given period.",
+   "unsupported": [
+    "each platform allocates a fixed share of its subscription and advertising revenue"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "removed"
+  },
+  {
+   "sentence": "They are ineligible precisely because the pool is finite.",
+   "unsupported": [
+    "They are ineligible precisely because the pool is finite"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "removed"
+  },
+  {
+   "sentence": "Every fraudulent play Smith's bots generated was counted against the same pool that paid out to every legitimate artist on those platforms.",
+   "unsupported": [
+    "counted against the same pool that paid out to every legitimate artist"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "Every fraudulent play Smith's bots generated was counted toward royalty payments drawn from the same platforms that paid out to legitimate artists."
+  }
+ ],
+ "gateOriginals": [
+  {
+   "i": 0,
+   "sentence": "AI-generated music was barely a concept most of the industry had registered, and Smith was already writing himself memos that treated it as a solved production problem.",
+   "claims": [
+    {
+     "claim": "AI-generated music was barely a concept most of the industry had registered",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research says nothing about industry awareness of AI music; this is narrator framing."
+    },
+    {
+     "claim": "Smith was already writing himself memos",
+     "status": "misattached",
+     "fact": "F66",
+     "quote": "On October 20, 2017, SMITH emailed himself a financial breakdown of his streaming operation.",
+     "verified": true,
+     "material": true,
+     "why": "The research records one self-email, about his bot streaming operation and not AI music, which he only began streaming in October 2018 (F78)."
+    },
+    {
+     "claim": "that treated it as a solved production problem",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "No research shows Smith writing documents that treat AI music as a solved production problem."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 1,
+   "sentence": "The content pipeline, the cloud infrastructure, the per-stream economics — he had reduced the entire operation to a formula before the formula had a name.",
+   "claims": [
+    {
+     "claim": "the cloud infrastructure, the per-stream economics — he had reduced the entire operation to a formula",
+     "status": "supported",
+     "fact": "F67",
+     "quote": "SMITH wrote he had 52 cloud services accounts, each with 20 Bot Accounts, for a total of 1,040 Bot Accounts",
+     "verified": true,
+     "material": false,
+     "why": "His October 2017 self-email set out cloud accounts, streams per day and royalty per stream (F66-F69)."
+    },
+    {
+     "claim": "The content pipeline",
+     "status": "overstated",
+     "fact": "F69",
+     "quote": "SMITH estimated the average royalty per stream was half of one cent ($0.005), yielding daily royalties of $3,307.20, monthly royalties of $99,216, and annual royalties of $1,207,128",
+     "verified": true,
+     "material": false,
+     "why": "The research does not show the 2017 breakdown covering a content pipeline. This is the narrator's characterization of the formula."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 2,
+   "sentence": "Smith had his own songs, his own catalog — a working artist based near Cornelius, North Carolina, who understood, from the inside, how streaming royalties actually moved from platform to rights holder.",
+   "claims": [
+    {
+     "claim": "Smith had his own songs, his own catalog",
+     "status": "supported",
+     "fact": "F1",
+     "quote": "Smith had been a musician with a catalog of his own",
+     "verified": true,
+     "material": false,
+     "why": "The indictment describes him as a musician with his own catalog."
+    },
+    {
+     "claim": "a working artist",
+     "status": "supported",
+     "fact": "F18",
+     "quote": "Michael Smith was a musician with a catalogue of his own",
+     "verified": true,
+     "material": false,
+     "why": "This paraphrases 'musician' and adds no new detail."
+    },
+    {
+     "claim": "based near Cornelius, North Carolina",
+     "status": "supported",
+     "fact": "F18",
+     "quote": "while operating near Cornelius, North Carolina",
+     "verified": true,
+     "material": false,
+     "why": "Reporting places his operation near Cornelius."
+    },
+    {
+     "claim": "who understood, from the inside, how streaming royalties actually moved from platform to rights holder",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "This is the narrator's characterization of his insider knowledge, which the research does not establish."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 3,
+   "sentence": "In a May 11, 2017 email to a co-conspirator identified only as CC-1, Smith laid out the first operational instruction: \"Make up names and addresses.",
+   "claims": [
+    {
+     "claim": "In a May 11, 2017 email to a co-conspirator identified only as CC-1",
+     "status": "supported",
+     "fact": "F56",
+     "quote": "In a May 11, 2017 email to coconspirator CC-1",
+     "verified": true,
+     "material": false,
+     "why": "Date, email and CC-1 designation match the research."
+    },
+    {
+     "claim": "Smith laid out the first operational instruction",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research never says this was the first instruction; that adds a sequence claim."
+    },
+    {
+     "claim": "\"Make up names and addresses.",
+     "status": "supported",
+     "fact": "F56",
+     "quote": "'Make up names and addresses[.]",
+     "verified": true,
+     "material": false,
+     "why": "The quote matches the email text."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 4,
+   "sentence": "Each address corresponded to a fictitious name, and each name became a bot account on a streaming platform.",
+   "claims": [
+    {
+     "claim": "Each address corresponded to a fictitious name",
+     "status": "overstated",
+     "fact": "F52",
+     "quote": "often in the names of fictitious identities",
+     "verified": true,
+     "material": false,
+     "why": "Research says the accounts were 'often' in fictitious names, not each one."
+    },
+    {
+     "claim": "each name became a bot account on a streaming platform",
+     "status": "overstated",
+     "fact": "F53",
+     "quote": "SMITH used the Fake Email Accounts to create and register Bot Accounts on the Streaming Platforms, typically in fake names corresponding to the Fake Email Accounts.",
+     "verified": true,
+     "material": false,
+     "why": "Research says 'typically', not that every name became a bot account."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 5,
+   "sentence": "At the peak of the operation, Smith had as many as 10,000 of these accounts active simultaneously.",
+   "claims": [
+    {
+     "claim": "Smith had as many as 10,000 of these accounts active",
+     "status": "supported",
+     "fact": "F54",
+     "quote": "At certain points, SMITH had as many as 10,000 active Bot Accounts on the Streaming Platforms.",
+     "verified": true,
+     "material": false,
+     "why": "Research states up to 10,000 active bot accounts at certain points."
+    },
+    {
+     "claim": "At the peak of the operation, ... active simultaneously",
+     "status": "misattached",
+     "fact": "F40",
+     "quote": "At the height of the scheme, SMITH used over a thousand bot accounts simultaneously.",
+     "verified": true,
+     "material": true,
+     "why": "The research ties 'height' and 'simultaneously' to over a thousand accounts, not to the 10,000 figure."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 6,
+   "sentence": "Streaming platforms require a card on file, and 10,000 accounts need 10,000 ways to pay.",
+   "claims": [
+    {
+     "claim": "Streaming platforms require a card on file",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research never says platforms require a payment card. This is a general statement about how platforms work."
+    },
+    {
+     "claim": "10,000 accounts",
+     "status": "supported",
+     "fact": "F54",
+     "quote": "At certain points, SMITH had as many as 10,000 active Bot Accounts on the Streaming Platforms.",
+     "verified": true,
+     "material": false,
+     "why": "The research gives up to 10,000 active bot accounts."
+    },
+    {
+     "claim": "10,000 accounts need 10,000 ways to pay",
+     "status": "overstated",
+     "fact": "F57",
+     "quote": "SMITH typically paid for 'family plans' on the Streaming Platforms to maximize streams, as family plans cost less per user than individual plans.",
+     "verified": true,
+     "material": true,
+     "why": "The research shows shared family plans and debit cards tied to dozens of fake names (F59), not one payment method per account."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 7,
+   "sentence": "Every one of those bot accounts routed its connection through a different VPN, so that thousands of streams appearing to originate from thousands of different locations were, in fact, all running out of the same house.",
+   "claims": [
+    {
+     "claim": "Every one of those bot accounts routed its connection through a different VPN",
+     "status": "overstated",
+     "fact": "F70",
+     "quote": "SMITH caused the Bot Accounts to log in using different virtual private networks ('VPNs')",
+     "verified": true,
+     "material": true,
+     "why": "Research says the accounts used different VPNs, not that each account had its own distinct VPN."
+    },
+    {
+     "claim": "thousands of streams appearing to originate from thousands of different locations",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research does not describe the apparent locations; this is narrator interpretation of the VPN effect."
+    },
+    {
+     "claim": "were, in fact, all running out of the same house",
+     "status": "supported",
+     "fact": "F70",
+     "quote": "to conceal that the Bot Accounts were all operating from SMITH's home",
+     "verified": true,
+     "material": false,
+     "why": "The research states the bot accounts all operated from Smith's home."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 8,
+   "sentence": "Fake emails defeated identity checks.",
+   "claims": [
+    {
+     "claim": "Fake emails",
+     "status": "supported",
+     "fact": "F53",
+     "quote": "SMITH used the Fake Email Accounts to create and register Bot Accounts on the Streaming Platforms, typically in fake names corresponding to the Fake Email Accounts.",
+     "verified": true,
+     "material": false,
+     "why": "The research records that Smith used fake email accounts to register bot accounts."
+    },
+    {
+     "claim": "defeated identity checks",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research never mentions identity checks being bypassed; this is the narrator's explanation of why the fake emails worked."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 9,
+   "sentence": "Corporate debit cards defeated payment verification.",
+   "claims": [
+    {
+     "claim": "Corporate debit cards",
+     "status": "supported",
+     "fact": "F58",
+     "quote": "provided large numbers of debit cards, typically corporate debit cards for employees of a company",
+     "verified": true,
+     "material": false,
+     "why": "The research says Smith used a service that provided corporate debit cards."
+    },
+    {
+     "claim": "defeated payment verification",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research never mentions payment verification; this is the narrator's reading of why the cards worked."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 10,
+   "sentence": "Not one song, not a hundred — a constantly replenishing supply of distinct tracks large enough that no single title ever accumulated a suspicious play count.",
+   "claims": [
+    {
+     "claim": "a constantly replenishing supply of distinct tracks",
+     "status": "supported",
+     "fact": "F81",
+     "quote": "CC-3 began providing SMITH with thousands of songs each week to upload to the Streaming Platforms.",
+     "verified": true,
+     "material": false,
+     "why": "Weekly supply of thousands of new songs matches a replenishing supply."
+    },
+    {
+     "claim": "large enough that no single title ever accumulated a suspicious play count",
+     "status": "contradicted",
+     "fact": "F96",
+     "quote": "Distribution Company-1 informed SMITH that one of his songs 'fit the criteria that is usually linked to store end streaming abuse.'",
+     "verified": true,
+     "material": true,
+     "why": "The research shows spreading streams was only the aim (F72), and at least one song was flagged for suspicious streaming."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 11,
+   "sentence": "That constraint was the ceiling on everything else he had built, and by October 2018, he was stating it plainly in his own words: \"I can't run the bots without content.",
+   "claims": [
+    {
+     "claim": "That constraint was the ceiling on everything else he had built",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research does not call this a ceiling; it is the narrator's interpretation."
+    },
+    {
+     "claim": "he was stating it plainly in his own words: \"I can't run the bots without content.",
+     "status": "supported",
+     "fact": "F74",
+     "quote": "I can't run the bots without content.",
+     "verified": true,
+     "material": false,
+     "why": "Smith wrote these words in an email to a coconspirator."
+    },
+    {
+     "claim": "by October 2018",
+     "status": "misattached",
+     "fact": "F74",
+     "quote": "On or about May 9, 2019, SMITH emailed a coconspirator: 'I can't run the bots without content.",
+     "verified": true,
+     "material": true,
+     "why": "The quote comes from a May 2019 email. The October 2018 email (F73) used different wording."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 12,
+   "sentence": "CC-4's response was four words: \"we've proved the model works.\"",
+   "claims": [
+    {
+     "claim": "CC-4's response was \"we've proved the model works.\"",
+     "status": "supported",
+     "fact": "F80",
+     "quote": "CC-4 replied, 'we've proved the model works.'",
+     "verified": true,
+     "material": false,
+     "why": "Research records CC-4 replying with this exact quote."
+    },
+    {
+     "claim": "was four words",
+     "status": "contradicted",
+     "fact": "F80",
+     "quote": "'we've proved the model works.'",
+     "verified": true,
+     "material": true,
+     "why": "The quoted reply is five words (we've, proved, the, model, works), not four."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 13,
+   "sentence": "He assigned titles pulled from taxonomic Latin and procedurally generated word combinations: \"Zygophyceae,\" \"Zygosporic,\" \"Zyme Bedewing,\" \"Zymotechny.\"",
+   "claims": [
+    {
+     "claim": "He assigned titles",
+     "status": "supported",
+     "fact": "F90",
+     "quote": "SMITH agreed to provide metadata including song and artist names",
+     "verified": true,
+     "material": false,
+     "why": "Smith supplied the song names under the Master Services Agreement."
+    },
+    {
+     "claim": "pulled from taxonomic Latin",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research lists the names but never says where they came from; this is the narrator's description of how they look."
+    },
+    {
+     "claim": "procedurally generated word combinations",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "Asserts how the titles were produced, and the research does not record that method."
+    },
+    {
+     "claim": "\"Zygophyceae,\" \"Zygosporic,\" \"Zyme Bedewing,\" \"Zymotechny.\"",
+     "status": "supported",
+     "fact": "F92",
+     "quote": "'Zygophyceae,' 'Zygophyllaceae,' 'Zygophyllum,' 'Zygopteraceae,' 'Zygopteris,' 'Zygopteron,' 'Zygopterous,' 'Zygosporic,' 'Zygotenes,' 'Zygotes,' 'Zygotic,' 'Zygotic Lanie,' 'Zygotic Washstands,' 'Zyme Bedewing,' 'Zymes,' 'Zymite,' 'Zymo Phyte,' 'Zymogenes,' 'Zymogenic,' 'Zymologies,' 'Zymoplastic,'",
+     "verified": true,
+     "material": false,
+     "why": "All four titles appear in the indictment's list of AI song names Smith used."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 14,
+   "sentence": "What the October warning couldn't have known was what Smith had written to his co-conspirators just four days earlier, on October 4, 2018: \"in order to not raise any issues with the powers that be we need a TON of content with small amounts of Streams.\"",
+   "claims": [
+    {
+     "claim": "the October warning",
+     "status": "supported",
+     "fact": "F98",
+     "quote": "In or about October 2018, Distribution Company-1 advised SMITH it had received 'multiple reports of streaming abuse from different stores'",
+     "verified": true,
+     "material": false,
+     "why": "The research records a warning to Smith in about October 2018."
+    },
+    {
+     "claim": "just four days earlier",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research dates the warning only 'in or about October 2018', so the four-day gap and the sequence are not established."
+    },
+    {
+     "claim": "what Smith had written to his co-conspirators ... on October 4, 2018",
+     "status": "supported",
+     "fact": "F73",
+     "quote": "On or about October 4, 2018, SMITH emailed two coconspirators",
+     "verified": true,
+     "material": false,
+     "why": "The date and the recipients match the research."
+    },
+    {
+     "claim": "\"in order to not raise any issues with the powers that be we need a TON of content with small amounts of Streams.\"",
+     "status": "supported",
+     "fact": "F73",
+     "quote": "'in order to not raise any issues with the powers that be we need a TON of content with small amounts of Streams.'",
+     "verified": true,
+     "material": false,
+     "why": "The quote matches the research exactly."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 15,
+   "sentence": "\"I have never done anything to artificially inflate my streams,\" he wrote — a sentence composed while thousands of bots were, at that moment, streaming his catalog on a loop.",
+   "claims": [
+    {
+     "claim": "\"I have never done anything to artificially inflate my streams,\" he wrote",
+     "status": "supported",
+     "fact": "F103",
+     "quote": "I have never done anything to artificially inflate my streams.",
+     "verified": true,
+     "material": false,
+     "why": "Exact quote from Smith's written message to Streaming Platform-1."
+    },
+    {
+     "claim": "thousands of bots were, at that moment, streaming his catalog",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research does not date this message or say how many bots were active when it was written; only that he used over a thousand at the scheme's height and up to 10,000 at certain points."
+    },
+    {
+     "claim": "on a loop",
+     "status": "supported",
+     "fact": "F65",
+     "quote": "small pieces of computer code that automatically continuously played the music",
+     "verified": true,
+     "material": false,
+     "why": "The macros continuously played the music, which matches \"on a loop\"."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 16,
+   "sentence": "Same day, same message thread: he asked CC-3 for another 10,000 AI songs so he could \"spread this out more\" — not a creative request, a dispersal strategy, the same logic from the October 2018 playbook applied at a larger scale.",
+   "claims": [
+    {
+     "claim": "Same day",
+     "status": "supported",
+     "fact": "F86",
+     "quote": "On June 5, 2019, SMITH asked CC-3 to provide another 10,000 AI songs",
+     "verified": true,
+     "material": false,
+     "why": "The request is dated June 5, 2019, the same day as the 88 million streams report (F83)."
+    },
+    {
+     "claim": "same message thread",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research does not say the request came in the same message or thread as the June 5 report."
+    },
+    {
+     "claim": "he asked CC-3 for another 10,000 AI songs so he could \"spread this out more\"",
+     "status": "supported",
+     "fact": "F86",
+     "quote": "SMITH asked CC-3 to provide another 10,000 AI songs so he could 'spread this out more' to evade detection",
+     "verified": true,
+     "material": false,
+     "why": "Matches the research directly."
+    },
+    {
+     "claim": "not a creative request, a dispersal strategy",
+     "status": "supported",
+     "fact": "F86",
+     "quote": "so he could 'spread this out more' to evade detection",
+     "verified": true,
+     "material": false,
+     "why": "The research states the purpose was spreading streams out to evade detection."
+    },
+    {
+     "claim": "the same logic from the October 2018 playbook",
+     "status": "supported",
+     "fact": "F73",
+     "quote": "On or about October 4, 2018, SMITH emailed two coconspirators: 'in order to not raise any issues with the powers that be we need a TON of content with small amounts of Streams.'",
+     "verified": true,
+     "material": false,
+     "why": "The October 2018 email states the same dispersal logic."
+    },
+    {
+     "claim": "applied at a larger scale",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "This is the narrator's characterization of scale, not a stated fact."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 17,
+   "sentence": "The operation that had started with randomized ambient files was acquiring something closer to a human voice.",
+   "claims": [
+    {
+     "claim": "The operation that had started with randomized ambient files",
+     "status": "unsupported",
+     "fact": "F91",
+     "quote": "CC-3's songs were typically given file names that were a randomized list of letters and numbers",
+     "verified": true,
+     "material": true,
+     "why": "The research records randomized file names, not that the songs were ambient. The scheme also began with CC-2's catalog, not AI files."
+    },
+    {
+     "claim": "was acquiring something closer to a human voice",
+     "status": "supported",
+     "fact": "F94",
+     "quote": "Song quality is 10x-20x better now, and we also have vocal generation capabilities",
+     "verified": true,
+     "material": false,
+     "why": "CC-3's 2020 email reports new vocal generation capabilities."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 18,
+   "sentence": "From approximately 2020 through 2023, Smith transferred $1.3 million in royalties into a bank account he controlled under the name SMH Entertainment, then routed those funds back out to fund the debit cards that registered the bot accounts.",
+   "claims": [
+    {
+     "claim": "From approximately 2020 through 2023, Smith transferred $1.3 million in royalties",
+     "status": "supported",
+     "fact": "F61",
+     "quote": "In multiple transactions from approximately 2020 through 2023, SMITH transferred $1.3 million in fraudulently obtained royalties",
+     "verified": true,
+     "material": false,
+     "why": "Timeframe, amount and transfer are stated directly."
+    },
+    {
+     "claim": "into a bank account he controlled under the name SMH Entertainment",
+     "status": "supported",
+     "fact": "F61",
+     "quote": "to a bank account he controlled at a U.S.-based financial institution in the name of SMH Entertainment",
+     "verified": true,
+     "material": false,
+     "why": "Account control and name match the research."
+    },
+    {
+     "claim": "then routed those funds back out to fund the debit cards",
+     "status": "supported",
+     "fact": "F62",
+     "quote": "SMITH then transferred the proceeds from the SMH Entertainment account to Financial Service-1 to fund debit cards for the Bot Accounts.",
+     "verified": true,
+     "material": false,
+     "why": "The transfer to fund debit cards is stated directly."
+    },
+    {
+     "claim": "the debit cards that registered the bot accounts",
+     "status": "overstated",
+     "fact": "F62",
+     "quote": "to fund debit cards for the Bot Accounts",
+     "verified": true,
+     "material": true,
+     "why": "The research says the cards were for the bot accounts; it says the bot accounts were registered using the Fake Email Accounts (F53), not the cards."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 19,
+   "sentence": "That gap between the two numbers — what the streams produced and what he agreed to surrender — reflects how forfeiture works: it reaches what can be traced and documented as proceeds.",
+   "claims": [
+    {
+     "claim": "That gap between the two numbers — what the streams produced and what he agreed to surrender",
+     "status": "supported",
+     "fact": "F25",
+     "quote": "Michael Smith fraudulently obtained more than $10 million in royalty payments, and the plea agreement required him to forfeit $8,091,843.64",
+     "verified": true,
+     "material": false,
+     "why": "The research gives more than $10 million obtained versus $8,091,843.64 forfeited, so the gap exists."
+    },
+    {
+     "claim": "reflects how forfeiture works",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research never explains why the two figures differ; this is the narrator's interpretation."
+    },
+    {
+     "claim": "it reaches what can be traced and documented as proceeds",
+     "status": "unsupported",
+     "fact": "F25",
+     "quote": "forfeit $8,091,843.64 as proceeds traceable to the offense",
+     "verified": true,
+     "material": false,
+     "why": "The research describes only this forfeiture as traceable proceeds, not how forfeiture works in general or a 'documented' requirement; this is a general explanation."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 20,
+   "sentence": "Royalty pools on streaming platforms are not open-ended — each platform allocates a fixed share of its subscription and advertising revenue to rights holders in a given period.",
+   "claims": [
+    {
+     "claim": "Royalty pools on streaming platforms are not open-ended",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research never describes royalty pools as fixed or capped. This is a general statement about how the industry works."
+    },
+    {
+     "claim": "each platform allocates a fixed share of its subscription and advertising revenue to rights holders in a given period",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research mentions only per-stream royalties for reported plays, not a revenue-share pool mechanism. This is general industry background."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 21,
+   "sentence": "They are ineligible precisely because the pool is finite.",
+   "claims": [
+    {
+     "claim": "They are ineligible",
+     "status": "supported",
+     "fact": "F43",
+     "quote": "manipulated streams are not eligible for royalties",
+     "verified": true,
+     "material": false,
+     "why": "Federal regulations make manipulated streams ineligible for royalties."
+    },
+    {
+     "claim": "precisely because the pool is finite",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research gives neither a finite royalty pool nor any reason for ineligibility; this is the narrator's explanation of how royalties work."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 22,
+   "sentence": "Every fraudulent play Smith's bots generated was counted against the same pool that paid out to every legitimate artist on those platforms.",
+   "claims": [
+    {
+     "claim": "Smith's bots generated fraudulent plays",
+     "status": "supported",
+     "fact": "F39",
+     "quote": "SMITH used 'bots'—automated programs—to stream the AI-generated songs billions of times.",
+     "verified": true,
+     "material": false,
+     "why": "Research states bots streamed the songs fraudulently."
+    },
+    {
+     "claim": "Every fraudulent play ... was counted against the same pool that paid out to every legitimate artist on those platforms",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "No shared royalty-pool mechanism is in the research; F7 only says the scheme defrauded platforms and musicians. This is a general how-it-works explanation."
+    }
+   ],
+   "error": true,
+   "material": false
+  }
+ ],
+ "v1Errors": [
+  {
+   "i": 18,
+   "sentence": "Before the bots, before the AI catalog, before the October 2017 email that reduced the whole operation to arithmetic, there was a musician.",
+   "script_quote": "Before the bots, before the AI catalog, before the October 2017 email",
+   "category": "contradiction",
+   "verdict": "error",
+   "research_quote": "In a May 11, 2017 email to coconspirator CC-1, SMITH asked CC-1 to create Bot Accounts on a particular Streaming Platform",
+   "why": "The research shows bots were already being set up in May 2017, before the October 2017 email, so the script's framing that the October 2017 email preceded the bots contradicts the research.",
+   "first_seen": "section_2",
+   "seen_in": [
+    "section_2",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 42,
+   "sentence": "On October 4, 2018, he spelled out the strategy to two co-conspirators: \"in order to not raise any issues with the powers that be we need a TON of content with small amounts of Streams.\"",
+   "script_quote": "On October 4, 2018, he spelled out the strategy",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "Research says 'On or about October 4, 2018' — the script drops the hedging 'on or about' and states the date as exact fact.",
+   "first_seen": "final_check",
+   "seen_in": [
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 48,
+   "sentence": "Around 2018, Smith began working with two new figures: the CEO of an AI music company, identified in the indictment as CC-3, and a music promoter identified as CC-4.",
+   "script_quote": "Around 2018, Smith began working with two new figures",
+   "category": "contradiction",
+   "verdict": "error",
+   "research_quote": "In or about 2018, SMITH began working with the Chief Executive Officer of an AI music company designated as CC-3 and a music promoter designated as CC-4.",
+   "why": "The research also identifies CC-2 (a music publicist) as an earlier co-conspirator, and the indictment says Smith acted with 'others known and unknown,' so calling CC-3 and CC-4 'two new figures' is accurate in context; however, the script omits that CC-2 was already involved. This is borderline sty",
+   "first_seen": "section_4",
+   "seen_in": [
+    "section_4",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 55,
+   "sentence": "CC-3 had a financial stake in the volume Smith could push through the bots.",
+   "script_quote": "CC-3 had a financial stake in the volume Smith could push through the bots.",
+   "category": "causal_inflation",
+   "verdict": "error",
+   "research_quote": "SMITH agreed to provide metadata including song and artist names, and to pay CC-3's company each month the greater of $2,000 or 15% of the streaming revenue generated from the AI songs.",
+   "why": "The research establishes CC-3 received a percentage of streaming revenue, but the script infers CC-3 had a stake specifically in 'the volume Smith could push through the bots' — linking CC-3's financial interest directly to bot volume is a causal inference the research does not state.",
+   "first_seen": "section_4",
+   "seen_in": [
+    "section_4",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 108,
+   "sentence": "It started with an email Smith sent himself on October 20, 2017, turning bot streams into dollars.",
+   "script_quote": "It started with an email Smith sent himself on October 20, 2017, turning bot streams into dollars.",
+   "category": "causal_inflation",
+   "verdict": "error",
+   "research_quote": "On October 20, 2017, SMITH emailed himself a financial breakdown of his streaming operation.",
+   "why": "The research says the scheme started 'from approximately 2017' and the email was a financial breakdown; the script says the scheme 'started with' that email, which the research does not support — the scheme was already running by then.",
+   "first_seen": "final_check",
+   "seen_in": [
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 111,
+   "sentence": "Nearly seven years after that email, a federal indictment turned the same arithmetic into the case against him.",
+   "script_quote": "Nearly seven years after that email, a federal indictment turned the same arithmetic into the case against him.",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The indictment was unsealed September 4, 2024; the email was October 20, 2017 — that is approximately six years and ten months, not 'nearly seven years.' However this is borderline arithmetic; more precisely the script implies the email was the start, which the research does not confirm, making the ",
+   "first_seen": "final_check",
+   "seen_in": [
+    "final_check"
+   ],
+   "in_final": true
+  }
+ ]
+}

@@ -1,0 +1,3004 @@
+{
+ "set": "baseline",
+ "file": "freshwaters-run2.json",
+ "case": "freshwaters",
+ "words": 1678,
+ "judged": [
+  {
+   "i": 0,
+   "sentence": "In 1959, Frank Freshwaters walked away from an honor camp near Sandusky, Ohio, and simply never came back.",
+   "claims": [
+    {
+     "claim": "In 1959, Frank Freshwaters [left] an honor camp near Sandusky, Ohio",
+     "status": "supported",
+     "fact": "F2",
+     "quote": "moved to an honor camp near Sandusky, and was reported missing on Sept. 30, 1959",
+     "verified": true,
+     "material": false,
+     "why": "The research places him at the honor camp near Sandusky and records him missing in 1959."
+    },
+    {
+     "claim": "walked away",
+     "status": "unsupported",
+     "fact": "F20",
+     "quote": "Freshwaters escaped from an Ohio prison farm in 1959",
+     "verified": true,
+     "material": false,
+     "why": "The research says he escaped but gives no manner; 'walked away' is harmless added color."
+    },
+    {
+     "claim": "simply never came back",
+     "status": "supported",
+     "fact": "F8",
+     "quote": "beginning a long fugitive period that ended with a 2015 arrest",
+     "verified": true,
+     "material": false,
+     "why": "He did not return on his own; his fugitive period ended only with his 2015 arrest."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 1,
+   "sentence": "Fifty-six years later, U.S. Marshals tracked him down to a weathered trailer in rural Brevard County, Florida, where he had been living under a fake name for roughly two decades.",
+   "claims": [
+    {
+     "claim": "Fifty-six years later",
+     "status": "supported",
+     "fact": "F26",
+     "quote": "Freshwaters had spent 56 years as a fugitive escapee before being captured in 2015",
+     "verified": true,
+     "material": false,
+     "why": "Research states 56 years as a fugitive before the 2015 capture."
+    },
+    {
+     "claim": "U.S. Marshals tracked him down",
+     "status": "supported",
+     "fact": "F4",
+     "quote": "he was found there by U.S. Marshals working with the Ohio Adult Parole Authority",
+     "verified": true,
+     "material": false,
+     "why": "Research credits U.S. Marshals with finding him."
+    },
+    {
+     "claim": "to a weathered trailer in rural Brevard County, Florida",
+     "status": "supported",
+     "fact": "F10",
+     "quote": "was found in a weathered trailer in rural Brevard County, Florida",
+     "verified": true,
+     "material": false,
+     "why": "Research states this location and scene detail directly."
+    },
+    {
+     "claim": "where he had been living under a fake name",
+     "status": "supported",
+     "fact": "F10",
+     "quote": "Freshwaters lived for years under the alias William Harold Cox",
+     "verified": true,
+     "material": false,
+     "why": "Research confirms he lived under an alias."
+    },
+    {
+     "claim": "for roughly two decades",
+     "status": "supported",
+     "fact": "F4",
+     "quote": "living in Melbourne, Florida under the alias William Harold Cox for about two decades before his 2015 arrest",
+     "verified": true,
+     "material": false,
+     "why": "Research states about two decades."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 2,
+   "sentence": "What the record leaves unresolved is how a man wanted for manslaughter managed to stay out of reach for that long.",
+   "claims": [
+    {
+     "claim": "What the record leaves unresolved is how a man ... managed to stay out of reach for that long",
+     "status": "overstated",
+     "fact": "F6",
+     "quote": "leaves unresolved details about how Freshwaters financed his years abroad and the full extent of any outside assistance",
+     "verified": true,
+     "material": false,
+     "why": "The research names two specific open questions, financing and outside help, not how he evaded capture overall; it does record the alias and where he lived."
+    },
+    {
+     "claim": "a man wanted for manslaughter",
+     "status": "overstated",
+     "fact": "F20",
+     "quote": "Freshwaters escaped from an Ohio prison farm in 1959 while serving time for manslaughter",
+     "verified": true,
+     "material": false,
+     "why": "He was a convicted escapee serving a manslaughter sentence, not wanted on a manslaughter charge; the sentence's phrasing is loose wording."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 3,
+   "sentence": "In 1959, Frank Freshwaters walked away from an honor camp near Sandusky, Ohio, and simply never came back.",
+   "claims": [
+    {
+     "claim": "In 1959, Frank Freshwaters",
+     "status": "supported",
+     "fact": "F2",
+     "quote": "was reported missing on Sept. 30, 1959",
+     "verified": true,
+     "material": false,
+     "why": "Research dates his disappearance to 1959."
+    },
+    {
+     "claim": "from an honor camp near Sandusky, Ohio",
+     "status": "supported",
+     "fact": "F2",
+     "quote": "moved to an honor camp near Sandusky, and was reported missing on Sept. 30, 1959",
+     "verified": true,
+     "material": false,
+     "why": "Research places him at an honor camp near Sandusky when he went missing (F8 names Mansfield, but sources disagree)."
+    },
+    {
+     "claim": "walked away",
+     "status": "unsupported",
+     "fact": "F20",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Research says he escaped or was reported missing; the casual 'walked away' manner is added color."
+    },
+    {
+     "claim": "and simply never came back",
+     "status": "supported",
+     "fact": "F26",
+     "quote": "Freshwaters had spent 56 years as a fugitive escapee before being captured in 2015",
+     "verified": true,
+     "material": false,
+     "why": "Research records a long fugitive period with no voluntary return."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 4,
+   "sentence": "Fifty-six years later, U.S. Marshals tracked him down to a weathered trailer in rural Brevard County, Florida, where he had been living under a fake name for roughly two decades.",
+   "claims": [
+    {
+     "claim": "Fifty-six years later",
+     "status": "supported",
+     "fact": "F26",
+     "quote": "Freshwaters had spent 56 years as a fugitive escapee before being captured in 2015",
+     "verified": true,
+     "material": false,
+     "why": "Research states 56 years on the run before the 2015 capture."
+    },
+    {
+     "claim": "U.S. Marshals tracked him down",
+     "status": "supported",
+     "fact": "F4",
+     "quote": "he was found there by U.S. Marshals working with the Ohio Adult Parole Authority",
+     "verified": true,
+     "material": false,
+     "why": "Research credits the Marshals with finding him."
+    },
+    {
+     "claim": "to a weathered trailer in rural Brevard County, Florida",
+     "status": "supported",
+     "fact": "F10",
+     "quote": "was found in a weathered trailer in rural Brevard County, Florida",
+     "verified": true,
+     "material": false,
+     "why": "Research gives this exact location detail."
+    },
+    {
+     "claim": "where he had been living under a fake name",
+     "status": "supported",
+     "fact": "F10",
+     "quote": "Freshwaters lived for years under the alias William Harold Cox",
+     "verified": true,
+     "material": false,
+     "why": "Research confirms he lived under an alias."
+    },
+    {
+     "claim": "for roughly two decades",
+     "status": "supported",
+     "fact": "F4",
+     "quote": "had been living in Melbourne, Florida under the alias William Harold Cox for about two decades before his 2015 arrest",
+     "verified": true,
+     "material": false,
+     "why": "Research gives about two decades living under the alias in Florida."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 5,
+   "sentence": "What the record leaves unresolved is how a man wanted for manslaughter managed to stay out of reach for that long.",
+   "claims": [
+    {
+     "claim": "What the record leaves unresolved is how a man ... managed to stay out of reach for that long",
+     "status": "overstated",
+     "fact": "F6",
+     "quote": "leaves unresolved details about how Freshwaters financed his years abroad and the full extent of any outside assistance",
+     "verified": true,
+     "material": false,
+     "why": "The research names two specific open questions, financing and outside assistance; the sentence broadens them into narrator framing about how he evaded capture in general."
+    },
+    {
+     "claim": "a man wanted for manslaughter",
+     "status": "supported",
+     "fact": "F20",
+     "quote": "Freshwaters escaped from an Ohio prison farm in 1959 while serving time for manslaughter",
+     "verified": true,
+     "material": false,
+     "why": "He was an escapee serving a manslaughter sentence, which fits a loose paraphrase of 'wanted for manslaughter'."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 6,
+   "sentence": "The marshals laid a photograph on the table in front of Frank Freshwaters.",
+   "claims": [
+    {
+     "claim": "a photograph ... in front of Frank Freshwaters",
+     "status": "supported",
+     "fact": "F28",
+     "quote": "Freshwaters was shown an old photograph of himself",
+     "verified": true,
+     "material": false,
+     "why": "Research records that Freshwaters was shown an old photograph of himself."
+    },
+    {
+     "claim": "The marshals",
+     "status": "unsupported",
+     "fact": "F28",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "Research does not say who showed him the photo; the only named figure is Major Tod Goodyear, not identified as a marshal."
+    },
+    {
+     "claim": "laid ... on the table",
+     "status": "unsupported",
+     "fact": "F28",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The physical scene detail of laying the photo on a table is not recorded in the research."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 7,
+   "sentence": "The man looking back from it was young — a face from another decade, another name, another life entirely.",
+   "claims": [
+    {
+     "claim": "The man looking back from it was young",
+     "status": "unsupported",
+     "fact": "F28",
+     "quote": "Freshwaters was shown an old photograph of himself, and according to Major Tod Goodyear, \"he hadn't seen that guy in a long time,\"",
+     "verified": true,
+     "material": false,
+     "why": "Research says the photo was old but never says he looked young in it; this is descriptive color inferred from \"old photograph.\""
+    },
+    {
+     "claim": "a face from another decade",
+     "status": "unsupported",
+     "fact": "F28",
+     "quote": "Freshwaters was shown an old photograph of himself",
+     "verified": true,
+     "material": false,
+     "why": "\"Old photograph\" does not establish which decade it came from; this is harmless framing."
+    },
+    {
+     "claim": "another name",
+     "status": "supported",
+     "fact": "F19",
+     "quote": "The alias used by Frank Freshwaters during his time on the run was William Harold Cox.",
+     "verified": true,
+     "material": false,
+     "why": "He lived under an alias, so the photo shows him under his original name."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 8,
+   "sentence": "Freshwaters studied it for a moment.",
+   "claims": [
+    {
+     "claim": "Freshwaters studied it for a moment",
+     "status": "unsupported",
+     "fact": "F28",
+     "quote": "Freshwaters was shown an old photograph of himself",
+     "verified": true,
+     "material": true,
+     "why": "Research says he was shown the photo, but it does not record him studying it or for how long; this is an invented scene action."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 9,
+   "sentence": "Then, according to Major Tod Goodyear, he said he hadn't seen that guy in a long time.",
+   "claims": [
+    {
+     "claim": "according to Major Tod Goodyear, he said he hadn't seen that guy in a long time",
+     "status": "supported",
+     "fact": "F28",
+     "quote": "according to Major Tod Goodyear, \"he hadn't seen that guy in a long time,\"",
+     "verified": true,
+     "material": false,
+     "why": "The research attributes this statement to Major Tod Goodyear."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 10,
+   "sentence": "And then, three words: \"You got me.\"",
+   "claims": [
+    {
+     "claim": "three words: \"You got me.\"",
+     "status": "supported",
+     "fact": "F28",
+     "quote": "before admitting \"You got me.\"",
+     "verified": true,
+     "material": false,
+     "why": "The research records Freshwaters admitting \"You got me\" after being shown an old photo."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 11,
+   "sentence": "That was May 4, 2015, in rural Brevard County, Florida, and with those words, the longest successful manhunt in the history of the U.S. Marshals Service came to a close.",
+   "claims": [
+    {
+     "claim": "That was May 4, 2015",
+     "status": "supported",
+     "fact": "F18",
+     "quote": "Frank Freshwaters was captured on May 4, 2015 in Melbourne, Florida",
+     "verified": true,
+     "material": false,
+     "why": "The capture date matches the research."
+    },
+    {
+     "claim": "in rural Brevard County, Florida",
+     "status": "supported",
+     "fact": "F27",
+     "quote": "when US marshals arrested Freshwaters in rural Brevard county, Florida",
+     "verified": true,
+     "material": false,
+     "why": "The arrest location matches the Guardian report."
+    },
+    {
+     "claim": "the longest successful manhunt in the history of the U.S. Marshals Service came to a close",
+     "status": "supported",
+     "fact": "F27",
+     "quote": "he became the object of the longest successful manhunt in the history of the marshal's service.",
+     "verified": true,
+     "material": false,
+     "why": "The superlative is stated directly in the research."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 12,
+   "sentence": "Not with a chase.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 13,
+   "sentence": "Not with a standoff.",
+   "claims": [
+    {
+     "claim": "Not with a standoff.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research describes him admitting \"You got me\" but never says whether there was or wasn't a standoff; the line works as narrative framing of the arrest."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 14,
+   "sentence": "With an old photograph and a quiet admission from an old man sitting in a weathered trailer.",
+   "claims": [
+    {
+     "claim": "With an old photograph",
+     "status": "supported",
+     "fact": "F28",
+     "quote": "Freshwaters was shown an old photograph of himself",
+     "verified": true,
+     "material": false,
+     "why": "Research records he was shown an old photograph of himself."
+    },
+    {
+     "claim": "a quiet admission",
+     "status": "supported",
+     "fact": "F28",
+     "quote": "before admitting \"You got me.\"",
+     "verified": true,
+     "material": false,
+     "why": "The admission is recorded; 'quiet' is color covered separately."
+    },
+    {
+     "claim": "quiet",
+     "status": "unsupported",
+     "fact": "F28",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research does not describe the manner of the admission; this is harmless color."
+    },
+    {
+     "claim": "from an old man",
+     "status": "unsupported",
+     "fact": "F26",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "No age is given, though 56 years on the run implies an older man; this is narrator characterization."
+    },
+    {
+     "claim": "sitting in a weathered trailer",
+     "status": "unsupported",
+     "fact": "F10",
+     "quote": "was found in a weathered trailer in rural Brevard County, Florida",
+     "verified": true,
+     "material": false,
+     "why": "The trailer is supported, but the research does not say the admission happened there or that he was sitting; this is scene color."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 15,
+   "sentence": "The question the photograph raises — how a man disappears long enough to become unrecognizable to himself — is exactly what this story is about.",
+   "claims": [
+    {
+     "claim": "how a man disappears long enough to become unrecognizable to himself",
+     "status": "overstated",
+     "fact": "F28",
+     "quote": "he hadn't seen that guy in a long time",
+     "verified": true,
+     "material": false,
+     "why": "Narrator's rhetorical reading of the photo anecdote; the research records only that he hadn't seen that guy in a long time, then admitted 'You got me', not that he was unrecognizable to himself."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 16,
+   "sentence": "It began on a July night in 1957 in Akron, Ohio, with a car and a man named Eugene Flynt dead on the road.",
+   "claims": [
+    {
+     "claim": "It began on a July night in 1957",
+     "status": "supported",
+     "fact": "F7",
+     "quote": "a July 1957 Akron car accident",
+     "verified": true,
+     "material": false,
+     "why": "Research gives July 1957 for the accident."
+    },
+    {
+     "claim": "on a July night",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research does not record the time of day of the accident."
+    },
+    {
+     "claim": "in Akron, Ohio",
+     "status": "supported",
+     "fact": "F7",
+     "quote": "a July 1957 Akron car accident",
+     "verified": true,
+     "material": false,
+     "why": "Research places the accident in Akron."
+    },
+    {
+     "claim": "with a car",
+     "status": "supported",
+     "fact": "F7",
+     "quote": "car accident that killed Eugene Flynt",
+     "verified": true,
+     "material": false,
+     "why": "Research says a car accident was involved."
+    },
+    {
+     "claim": "a man named Eugene Flynt dead",
+     "status": "supported",
+     "fact": "F7",
+     "quote": "car accident that killed Eugene Flynt",
+     "verified": true,
+     "material": false,
+     "why": "Research names Eugene Flynt as the person killed."
+    },
+    {
+     "claim": "dead on the road",
+     "status": "unsupported",
+     "fact": "F1",
+     "quote": "fatally striking a 24-year-old pedestrian with a vehicle",
+     "verified": true,
+     "material": false,
+     "why": "A pedestrian was struck, but the research does not specify the road location; this is harmless scene color."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 17,
+   "sentence": "Frank Freshwaters pleaded guilty to voluntary manslaughter.",
+   "claims": [
+    {
+     "claim": "Frank Freshwaters pleaded guilty to voluntary manslaughter",
+     "status": "supported",
+     "fact": "F1",
+     "quote": "Frank Freshwaters pleaded guilty to voluntary manslaughter",
+     "verified": true,
+     "material": false,
+     "why": "F1 and F14 state this directly; F7 says second-degree manslaughter, but a claim matching any source is supported."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 18,
+   "sentence": "The judge had discretion, and he used it generously — a one-to-twenty-year sentence, suspended, replaced with five years of probation.",
+   "claims": [
+    {
+     "claim": "The judge had discretion",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research does not discuss judicial discretion; this is the narrator's framing."
+    },
+    {
+     "claim": "he used it generously",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Characterizing the sentence as generous is interpretation, not a research fact."
+    },
+    {
+     "claim": "a one-to-twenty-year sentence, suspended",
+     "status": "supported",
+     "fact": "F14",
+     "quote": "his original one-to-20-year sentence was suspended",
+     "verified": true,
+     "material": false,
+     "why": "F14 states the suspended one-to-20-year sentence."
+    },
+    {
+     "claim": "replaced with five years of probation",
+     "status": "supported",
+     "fact": "F14",
+     "quote": "suspended in favor of five years’ probation",
+     "verified": true,
+     "material": false,
+     "why": "F14 states the sentence was suspended in favor of five years' probation."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 19,
+   "sentence": "No cell.",
+   "claims": [
+    {
+     "claim": "No cell.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Research places him at an honor camp and prison farm but never describes whether he had a cell; this reads as the narrator's characterization of those settings."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 20,
+   "sentence": "No walls.",
+   "claims": [
+    {
+     "claim": "No walls.",
+     "status": "unsupported",
+     "fact": "F2",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research mentions an honor camp near Sandusky and a prison farm, but never says the facility had no walls."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 21,
+   "sentence": "A second chance extended before the first one had fully closed.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 22,
+   "sentence": "What the court gave Freshwaters was something rarer than leniency: it gave him the open road and the obligation to stay off it.",
+   "claims": [
+    {
+     "claim": "it gave him the open road",
+     "status": "supported",
+     "fact": "F7",
+     "quote": "the court imposed a five-year probation instead of a prison term",
+     "verified": true,
+     "material": false,
+     "why": "Research says the court gave probation rather than prison, which is the freedom the line describes."
+    },
+    {
+     "claim": "the obligation to stay off it",
+     "status": "supported",
+     "fact": "F2",
+     "quote": "After violating probation by driving and getting a driver’s license",
+     "verified": true,
+     "material": false,
+     "why": "Driving counted as a probation violation, so his probation barred him from driving."
+    },
+    {
+     "claim": "something rarer than leniency",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Narrator's own characterization of the sentence, which the research does not establish."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 23,
+   "sentence": "That turned out to be the condition he could not meet.",
+   "claims": [
+    {
+     "claim": "That turned out to be the condition he could not meet.",
+     "status": "supported",
+     "fact": "F2",
+     "quote": "After violating probation by driving and getting a driver’s license",
+     "verified": true,
+     "material": false,
+     "why": "Research records that he violated his probation conditions."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 24,
+   "sentence": "He drove anyway.",
+   "claims": [
+    {
+     "claim": "He drove anyway.",
+     "status": "supported",
+     "fact": "F2",
+     "quote": "After violating probation by driving and getting a driver’s license",
+     "verified": true,
+     "material": false,
+     "why": "Research says he violated probation by driving."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 25,
+   "sentence": "He got a driver's license.",
+   "claims": [
+    {
+     "claim": "He got a driver's license.",
+     "status": "supported",
+     "fact": "F2",
+     "quote": "After violating probation by driving and getting a driver’s license",
+     "verified": true,
+     "material": false,
+     "why": "F2 states he got a driver's license, which violated his probation."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 26,
+   "sentence": "And when Ohio discovered those violations, the suspended sentence collapsed back into reality — the prison term that had been waiting in the wings finally landed.",
+   "claims": [
+    {
+     "claim": "when Ohio discovered those violations",
+     "status": "supported",
+     "fact": "F8",
+     "quote": "Ohio authorities later found that Freshwaters had violated probation",
+     "verified": true,
+     "material": false,
+     "why": "Research states Ohio authorities found he had violated probation."
+    },
+    {
+     "claim": "the suspended sentence collapsed back into reality — the prison term that had been waiting in the wings finally landed",
+     "status": "supported",
+     "fact": "F1",
+     "quote": "his initial one-to-20-year prison sentence was suspended before being imposed after a probation violation in 1959",
+     "verified": true,
+     "material": false,
+     "why": "Research states the suspended sentence was imposed after the probation violation."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 27,
+   "sentence": "The court had offered the most forgiving outcome the law allowed.",
+   "claims": [
+    {
+     "claim": "The court had offered",
+     "status": "supported",
+     "fact": "F14",
+     "quote": "his original one-to-20-year sentence was suspended in favor of five years’ probation",
+     "verified": true,
+     "material": false,
+     "why": "The research records that the court suspended the prison sentence and gave probation instead."
+    },
+    {
+     "claim": "the most forgiving outcome the law allowed",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research does not say probation was the most lenient sentence legally available, so this superlative about the legal range is unestablished."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 28,
+   "sentence": "What happened next was not the system's doing.",
+   "claims": [
+    {
+     "claim": "What happened next was not the system's doing.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The narrator's framing of causation; it names no specific event, and the research does not address it."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 29,
+   "sentence": "The sentence landed, finally, in February 1959, and Freshwaters went into the Ohio State Reformatory — the same Mansfield facility that would later stand in for Shawshank in a very different story — and the walls that had been suspended over him for two years came down for real.",
+   "claims": [
+    {
+     "claim": "The sentence landed, finally, in February 1959, and Freshwaters went into the Ohio State Reformatory",
+     "status": "supported",
+     "fact": "F2",
+     "quote": "Freshwaters was imprisoned in February 1959 at the Ohio State Reformatory",
+     "verified": true,
+     "material": false,
+     "why": "Research gives the February 1959 imprisonment at the Ohio State Reformatory."
+    },
+    {
+     "claim": "the same Mansfield facility",
+     "status": "supported",
+     "fact": "F8",
+     "quote": "he disappeared from the Ohio State Reformatory in Mansfield",
+     "verified": true,
+     "material": false,
+     "why": "Research places the reformatory in Mansfield."
+    },
+    {
+     "claim": "that would later stand in for Shawshank in a very different story",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research makes no mention of the facility's use in any film."
+    },
+    {
+     "claim": "the walls that had been suspended over him for two years",
+     "status": "derived",
+     "fact": "F1",
+     "quote": "in July 1957, and his initial one-to-20-year prison sentence was suspended before being imposed after a probation violation in 1959",
+     "verified": true,
+     "material": false,
+     "why": "July 1957 to February 1959 is about 19 months, which rounds to roughly two years."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 30,
+   "sentence": "But the system that put him there also offered him a way out of it, because Freshwaters was not classified as a violent or high-risk prisoner.",
+   "claims": [
+    {
+     "claim": "the system that put him there also offered him a way out of it",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Narrator's interpretation. The research notes a move to an honor camp but does not frame it as the system offering a way out."
+    },
+    {
+     "claim": "Freshwaters was not classified as a violent or high-risk prisoner",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research gives no prisoner classification for Freshwaters."
+    },
+    {
+     "claim": "because Freshwaters was not classified as a violent or high-risk prisoner",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The causal link between a classification and his placement or escape is the narrator's own analysis."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 31,
+   "sentence": "He was transferred to an honor camp near Sandusky, the kind of minimum-security arrangement built on the premise that some men, given a measure of trust, will earn it.",
+   "claims": [
+    {
+     "claim": "He was transferred to an honor camp near Sandusky",
+     "status": "supported",
+     "fact": "F2",
+     "quote": "moved to an honor camp near Sandusky",
+     "verified": true,
+     "material": false,
+     "why": "Research states he was moved to an honor camp near Sandusky."
+    },
+    {
+     "claim": "the kind of minimum-security arrangement",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research never calls it minimum-security; this is a general characterization of honor camps."
+    },
+    {
+     "claim": "built on the premise that some men, given a measure of trust, will earn it",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "This is the narrator's interpretation of the honor-camp concept, not a stated fact."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 32,
+   "sentence": "Freshwaters did not earn it.",
+   "claims": [
+    {
+     "claim": "Freshwaters did not earn it",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "This is the narrator's value judgment. The research notes prosecutors opposed parole (F13) but says nothing about whether he 'earned' anything."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 33,
+   "sentence": "On September 30, 1959, he was reported missing.",
+   "claims": [
+    {
+     "claim": "On September 30, 1959, he was reported missing.",
+     "status": "supported",
+     "fact": "F2",
+     "quote": "was reported missing on Sept. 30, 1959",
+     "verified": true,
+     "material": false,
+     "why": "F2 states the exact date he was reported missing."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 34,
+   "sentence": "No tunnel.",
+   "claims": [
+    {
+     "claim": "No tunnel.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research never says how he escaped or mentions a tunnel. This reads as the narrator's contrast framing, not a retained fact."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 35,
+   "sentence": "No fence cut in the dark.",
+   "claims": [
+    {
+     "claim": "No fence cut in the dark",
+     "status": "unsupported",
+     "fact": "F2",
+     "quote": "moved to an honor camp near Sandusky, and was reported missing on Sept. 30, 1959",
+     "verified": true,
+     "material": false,
+     "why": "Research says only that he went missing from an honor camp, not how he left. This is rhetorical framing of the escape's manner rather than a recorded fact."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 36,
+   "sentence": "An honor camp functions on the assumption that the men there will stay, and Freshwaters simply declined to.",
+   "claims": [
+    {
+     "claim": "An honor camp functions on the assumption that the men there will stay",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "A general statement about how honor camps work; the research does not describe this, but it is not a specific factual claim about the case."
+    },
+    {
+     "claim": "Freshwaters simply declined to",
+     "status": "supported",
+     "fact": "F2",
+     "quote": "moved to an honor camp near Sandusky, and was reported missing on Sept. 30, 1959",
+     "verified": true,
+     "material": false,
+     "why": "The research records that he left the honor camp (also F20: escaped from an Ohio prison farm in 1959); 'simply declined' is narrative framing."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 37,
+   "sentence": "He walked away from a farm.",
+   "claims": [
+    {
+     "claim": "He walked away from a farm.",
+     "status": "supported",
+     "fact": "F20",
+     "quote": "Freshwaters escaped from an Ohio prison farm in 1959",
+     "verified": true,
+     "material": false,
+     "why": "Research says he escaped from an Ohio prison farm; 'walked away' paraphrases that escape."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 38,
+   "sentence": "What followed that walk was not an immediate dragnet closing in.",
+   "claims": [
+    {
+     "claim": "What followed that walk was not an immediate dragnet closing in.",
+     "status": "unsupported",
+     "fact": "F8",
+     "quote": "beginning a long fugitive period that ended with a 2015 arrest",
+     "verified": true,
+     "material": false,
+     "why": "The research confirms a long fugitive period but says nothing about the scale or timing of the initial search. The 'no immediate dragnet' framing is narrative characterization."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 39,
+   "sentence": "The trail went cold, and years passed before the next documented moment in the record.",
+   "claims": [
+    {
+     "claim": "years passed before the next documented moment in the record",
+     "status": "derived",
+     "fact": "F2",
+     "quote": "was reported missing on Sept. 30, 1959; he was later arrested in West Virginia in 1975",
+     "verified": true,
+     "material": false,
+     "why": "From his 1959 disappearance to the 1975 West Virginia arrest is 16 years, so years did pass between documented events."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 40,
+   "sentence": "The next documented moment in the record comes sixteen years later — a 1975 arrest in West Virginia, a state where, by then, he had apparently settled long enough that the governor concluded he had built a \"flawless 16-year residency\" there and refused to extradite him back to Ohio.",
+   "claims": [
+    {
+     "claim": "sixteen years later",
+     "status": "derived",
+     "fact": "F2",
+     "quote": "was reported missing on Sept. 30, 1959; he was later arrested in West Virginia in 1975",
+     "verified": true,
+     "material": false,
+     "why": "1959 to 1975 is 16 years."
+    },
+    {
+     "claim": "a 1975 arrest in West Virginia",
+     "status": "supported",
+     "fact": "F0",
+     "quote": "A 1975 West Virginia arrest was reported",
+     "verified": true,
+     "material": false,
+     "why": "Research records a 1975 arrest in West Virginia."
+    },
+    {
+     "claim": "the governor concluded he had built a \"flawless 16-year residency\" there",
+     "status": "supported",
+     "fact": "F0",
+     "quote": "the governor refused extradition after concluding Freshwaters had a \"flawless 16-year residency\" there",
+     "verified": true,
+     "material": false,
+     "why": "The governor's conclusion and the quote match the research."
+    },
+    {
+     "claim": "refused to extradite him back to Ohio",
+     "status": "supported",
+     "fact": "F2",
+     "quote": "disappeared again after the governor refused extradition",
+     "verified": true,
+     "material": false,
+     "why": "The research states the governor refused extradition."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 41,
+   "sentence": "Refused.",
+   "claims": [
+    {
+     "claim": "Refused.",
+     "status": "supported",
+     "fact": "F0",
+     "quote": "the governor refused extradition",
+     "verified": true,
+     "material": false,
+     "why": "Read in context as the governor's refusal of extradition, which the research records."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 42,
+   "sentence": "A man who had walked off a prison farm in 1959 was handed back his freedom by an official decision in 1975, and then he was gone again.",
+   "claims": [
+    {
+     "claim": "A man who had walked off a prison farm in 1959",
+     "status": "supported",
+     "fact": "F20",
+     "quote": "Freshwaters escaped from an Ohio prison farm in 1959 while serving time for manslaughter.",
+     "verified": true,
+     "material": false,
+     "why": "Research records the 1959 escape from a prison farm."
+    },
+    {
+     "claim": "was handed back his freedom by an official decision in 1975",
+     "status": "supported",
+     "fact": "F15",
+     "quote": "After a 1975 arrest in West Virginia, Freshwaters was released when the governor refused extradition",
+     "verified": true,
+     "material": false,
+     "why": "His 1975 release followed the governor's refusal of extradition."
+    },
+    {
+     "claim": "and then he was gone again",
+     "status": "supported",
+     "fact": "F2",
+     "quote": "disappeared again after the governor refused extradition",
+     "verified": true,
+     "material": false,
+     "why": "Research says he vanished again after the refusal."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 43,
+   "sentence": "That 1975 arrest should have been the end of it.",
+   "claims": [
+    {
+     "claim": "That 1975 arrest",
+     "status": "supported",
+     "fact": "F15",
+     "quote": "After a 1975 arrest in West Virginia, Freshwaters was released when the governor refused extradition",
+     "verified": true,
+     "material": false,
+     "why": "The research records a 1975 arrest; 'should have been the end of it' is narrative framing."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 44,
+   "sentence": "The paperwork existed.",
+   "claims": [
+    {
+     "claim": "The paperwork existed.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research never mentions paperwork or records existing. The line is vague narrative framing, not a specific fact a viewer would retain."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 45,
+   "sentence": "The outstanding sentence existed.",
+   "claims": [
+    {
+     "claim": "The outstanding sentence existed.",
+     "status": "supported",
+     "fact": "F20",
+     "quote": "Freshwaters escaped from an Ohio prison farm in 1959 while serving time for manslaughter.",
+     "verified": true,
+     "material": false,
+     "why": "Escaping mid-sentence means his manslaughter sentence was left unserved."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 46,
+   "sentence": "All Ohio needed was the governor's signature on an extradition order.",
+   "claims": [
+    {
+     "claim": "the governor's signature on an extradition order",
+     "status": "supported",
+     "fact": "F0",
+     "quote": "the governor refused extradition",
+     "verified": true,
+     "material": false,
+     "why": "Research shows extradition depended on the West Virginia governor, who refused it."
+    },
+    {
+     "claim": "All Ohio needed",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research doesn't establish that the governor's approval was the only remaining step; this is narrative framing."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 47,
+   "sentence": "The governor looked at Frank Freshwaters and saw something different.",
+   "claims": [
+    {
+     "claim": "The governor looked at Frank Freshwaters",
+     "status": "supported",
+     "fact": "F0",
+     "quote": "the governor refused extradition after concluding Freshwaters had a \"flawless 16-year residency\" there",
+     "verified": true,
+     "material": false,
+     "why": "The research records that the governor assessed Freshwaters' case; the line reads as a figurative reference to that evaluation."
+    },
+    {
+     "claim": "saw something different",
+     "status": "unsupported",
+     "fact": "F0",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Vague narrative framing of the governor's conclusion; it is the narrator's interpretation, not a retained fact."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 48,
+   "sentence": "That flawless sixteen-year residency — the governor's own words — was enough.",
+   "claims": [
+    {
+     "claim": "That flawless sixteen-year residency — the governor's own words",
+     "status": "supported",
+     "fact": "F0",
+     "quote": "the governor refused extradition after concluding Freshwaters had a \"flawless 16-year residency\" there",
+     "verified": true,
+     "material": false,
+     "why": "The research quotes this phrase in connection with the governor's conclusion."
+    },
+    {
+     "claim": "was enough",
+     "status": "supported",
+     "fact": "F0",
+     "quote": "the governor refused extradition after concluding Freshwaters had a \"flawless 16-year residency\" there",
+     "verified": true,
+     "material": false,
+     "why": "The research ties the refusal of extradition to the governor's conclusion about the residency."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 49,
+   "sentence": "Not a fugitive.",
+   "claims": [
+    {
+     "claim": "Not a fugitive.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "No fact uses this wording. Read alone, it is the narrator's framing of a status, most likely contrasting his fugitive years with his later parole and release (F9/F22). The research never states it directly."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 50,
+   "sentence": "A resident.",
+   "claims": [
+    {
+     "claim": "A resident.",
+     "status": "supported",
+     "fact": "F0",
+     "quote": "Freshwaters had a \"flawless 16-year residency\" there",
+     "verified": true,
+     "material": false,
+     "why": "The fragment echoes the governor's finding that Freshwaters had been a long-term resident of West Virginia."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 51,
+   "sentence": "And on the strength of that conclusion, he refused to send Freshwaters back.",
+   "claims": [
+    {
+     "claim": "he refused to send Freshwaters back",
+     "status": "supported",
+     "fact": "F0",
+     "quote": "the governor refused extradition",
+     "verified": true,
+     "material": false,
+     "why": "The research states that the governor refused extradition."
+    },
+    {
+     "claim": "on the strength of that conclusion",
+     "status": "overstated",
+     "fact": "F0",
+     "quote": "refused extradition after concluding Freshwaters had a \"flawless 16-year residency\" there",
+     "verified": true,
+     "material": false,
+     "why": "The research gives the sequence ('after concluding'), not an explicit causal basis; reading it as the reason is the narrator's interpretation."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 52,
+   "sentence": "That word — flawless — is the pivot the whole story turns on.",
+   "claims": [
+    {
+     "claim": "That word — flawless — is the pivot the whole story turns on.",
+     "status": "unsupported",
+     "fact": "F0",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research records the governor's phrase 'flawless 16-year residency', but calling it the story's pivot is the narrator's own interpretation."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 53,
+   "sentence": "West Virginia's executive looked at the same man and saw someone who had spent sixteen years without incident in his state.",
+   "claims": [
+    {
+     "claim": "West Virginia's executive looked at the same man and saw someone who had spent sixteen years without incident in his state",
+     "status": "supported",
+     "fact": "F0",
+     "quote": "the governor refused extradition after concluding Freshwaters had a \"flawless 16-year residency\" there",
+     "verified": true,
+     "material": false,
+     "why": "The research says the West Virginia governor concluded he had a flawless 16-year residency there."
+    },
+    {
+     "claim": "sixteen years",
+     "status": "supported",
+     "fact": "F0",
+     "quote": "flawless 16-year residency",
+     "verified": true,
+     "material": false,
+     "why": "The 16-year figure matches the research."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 54,
+   "sentence": "The governor's conclusion about Freshwaters's residency outweighed Ohio's outstanding warrant, and on the strength of that executive discretion, the case was closed.",
+   "claims": [
+    {
+     "claim": "The governor's conclusion about Freshwaters's residency",
+     "status": "supported",
+     "fact": "F0",
+     "quote": "the governor refused extradition after concluding Freshwaters had a \"flawless 16-year residency\" there",
+     "verified": true,
+     "material": false,
+     "why": "Research records the governor's conclusion about his residency."
+    },
+    {
+     "claim": "outweighed Ohio's outstanding warrant",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Narrator's framing of the extradition refusal; no warrant weighing is described."
+    },
+    {
+     "claim": "on the strength of that executive discretion, the case was closed",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "Research says he was released and disappeared again; no official closure of the case after the refusal is recorded."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 55,
+   "sentence": "Freshwaters walked out of custody in 1975 the same way he had walked off the farm in 1959: because an institution with the power to hold him chose not to use it.",
+   "claims": [
+    {
+     "claim": "Freshwaters walked out of custody in 1975",
+     "status": "supported",
+     "fact": "F15",
+     "quote": "After a 1975 arrest in West Virginia, Freshwaters was released when the governor refused extradition",
+     "verified": true,
+     "material": false,
+     "why": "Research records his 1975 release from custody."
+    },
+    {
+     "claim": "he had walked off the farm in 1959",
+     "status": "supported",
+     "fact": "F20",
+     "quote": "Freshwaters escaped from an Ohio prison farm in 1959",
+     "verified": true,
+     "material": false,
+     "why": "Research records the 1959 escape from a prison farm."
+    },
+    {
+     "claim": "in 1975 an institution with the power to hold him chose not to use it",
+     "status": "supported",
+     "fact": "F0",
+     "quote": "the governor refused extradition after concluding Freshwaters had a \"flawless 16-year residency\" there",
+     "verified": true,
+     "material": false,
+     "why": "The governor's refusal of extradition matches this framing."
+    },
+    {
+     "claim": "the same way he had walked off the farm in 1959: because an institution with the power to hold him chose not to use it",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Research gives no institutional decision behind the 1959 escape; the parallel is the narrator's interpretation."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 56,
+   "sentence": "When the deputies brought the photograph out, Major Tod Goodyear recorded what happened next: Freshwaters looked at it, said he hadn't seen that guy in a long time, and then said, \"You got me.\" Those two statements, in sequence, are the whole arc compressed into a single exchange — the distance between the young man in the image and the old man in the trailer, acknowledged and then surrendered in the same breath.",
+   "claims": [
+    {
+     "claim": "When the deputies brought the photograph out",
+     "status": "unsupported",
+     "fact": "F28",
+     "quote": "Freshwaters was shown an old photograph of himself",
+     "verified": true,
+     "material": true,
+     "why": "The research does not say who showed him the photograph, so attributing it to deputies adds an unrecorded actor."
+    },
+    {
+     "claim": "Major Tod Goodyear recorded what happened next",
+     "status": "supported",
+     "fact": "F28",
+     "quote": "according to Major Tod Goodyear",
+     "verified": true,
+     "material": false,
+     "why": "The account is attributed to Goodyear in the research."
+    },
+    {
+     "claim": "Freshwaters looked at it",
+     "status": "supported",
+     "fact": "F28",
+     "quote": "Freshwaters was shown an old photograph of himself",
+     "verified": true,
+     "material": false,
+     "why": "Being shown the photo and reacting to it implies he looked at it."
+    },
+    {
+     "claim": "said he hadn't seen that guy in a long time",
+     "status": "supported",
+     "fact": "F28",
+     "quote": "\"he hadn't seen that guy in a long time,\"",
+     "verified": true,
+     "material": false,
+     "why": "The research directly records this statement."
+    },
+    {
+     "claim": "and then said, \"You got me.\"",
+     "status": "supported",
+     "fact": "F28",
+     "quote": "before admitting \"You got me.\"",
+     "verified": true,
+     "material": false,
+     "why": "The research records both the quote and its order after the first remark."
+    },
+    {
+     "claim": "the young man in the image",
+     "status": "unsupported",
+     "fact": "F28",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research says only that it was an old photograph; his age in it is narrator color."
+    },
+    {
+     "claim": "the old man in the trailer",
+     "status": "supported",
+     "fact": "F10",
+     "quote": "was found in a weathered trailer in rural Brevard County, Florida",
+     "verified": true,
+     "material": false,
+     "why": "The research places him in a trailer when he was found."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 57,
+   "sentence": "The alias had worked for decades, and the record does not describe what, if anything, finally changed that.",
+   "claims": [
+    {
+     "claim": "The alias had worked for decades",
+     "status": "supported",
+     "fact": "F4",
+     "quote": "living in Melbourne, Florida under the alias William Harold Cox for about two decades before his 2015 arrest",
+     "verified": true,
+     "material": false,
+     "why": "Research says he lived under the alias for about two decades."
+    },
+    {
+     "claim": "the record does not describe what, if anything, finally changed that",
+     "status": "contradicted",
+     "fact": "F24",
+     "quote": "The manhunt was reopened in early 2015 when the U.S. Marshals Service set up a cold case unit in northern Ohio and traced Freshwaters to Florida.",
+     "verified": true,
+     "material": true,
+     "why": "The research does record what changed: a new Marshals cold case unit reopened the case and traced him."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 58,
+   "sentence": "The case that should have closed in West Virginia would stay open for another forty years — until a different institution, with different tools, decided to look again.",
+   "claims": [
+    {
+     "claim": "would stay open for another forty years",
+     "status": "derived",
+     "fact": "F2",
+     "quote": "he was later arrested in West Virginia in 1975",
+     "verified": true,
+     "material": false,
+     "why": "The 1975 arrest in West Virginia and the May 4, 2015 capture (F18) are 40 years apart."
+    },
+    {
+     "claim": "until a different institution",
+     "status": "supported",
+     "fact": "F15",
+     "quote": "the U.S. Marshals later reopened the case in 2015 as their longest capture",
+     "verified": true,
+     "material": false,
+     "why": "The U.S. Marshals reopened the case, not West Virginia authorities."
+    },
+    {
+     "claim": "decided to look again",
+     "status": "supported",
+     "fact": "F24",
+     "quote": "The manhunt was reopened in early 2015 when the U.S. Marshals Service set up a cold case unit in northern Ohio",
+     "verified": true,
+     "material": false,
+     "why": "The research records the case being reopened."
+    },
+    {
+     "claim": "with different tools",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research mentions a cold case unit but no new tools; this is narrative color."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 59,
+   "sentence": "Between 1975 and 2015, Frank Freshwaters became William Harold Cox.",
+   "claims": [
+    {
+     "claim": "Frank Freshwaters became William Harold Cox",
+     "status": "supported",
+     "fact": "F19",
+     "quote": "The alias used by Frank Freshwaters during his time on the run was William Harold Cox.",
+     "verified": true,
+     "material": false,
+     "why": "Research confirms he used the alias William Harold Cox."
+    },
+    {
+     "claim": "Between 1975 and 2015",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "Research does not say when he adopted the alias; it says only that he lived under it for about two decades before 2015."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 60,
+   "sentence": "Not through any elaborate construction the record describes.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 61,
+   "sentence": "Just a name, and the discipline to answer to it.",
+   "claims": [
+    {
+     "claim": "Just a name",
+     "status": "supported",
+     "fact": "F19",
+     "quote": "The alias used by Frank Freshwaters during his time on the run was William Harold Cox.",
+     "verified": true,
+     "material": false,
+     "why": "Refers back to the alias he used while on the run, which the research records."
+    },
+    {
+     "claim": "the discipline to answer to it",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Narrator's characterization of his consistency in using the alias; the research does not describe his discipline."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 62,
+   "sentence": "For roughly two decades before investigators arrived at his door in 2015, that was the man living in a weathered trailer in Brevard County, Florida.",
+   "claims": [
+    {
+     "claim": "For roughly two decades before ... 2015, that was the man living",
+     "status": "supported",
+     "fact": "F4",
+     "quote": "Freshwaters had been living in Melbourne, Florida under the alias William Harold Cox for about two decades before his 2015 arrest",
+     "verified": true,
+     "material": false,
+     "why": "Research gives about two decades of residence before the 2015 arrest."
+    },
+    {
+     "claim": "investigators arrived at his door in 2015",
+     "status": "supported",
+     "fact": "F25",
+     "quote": "Local deputies arrested Frank Freshwaters at his home in Brevard County after U.S. Marshals developed the lead",
+     "verified": true,
+     "material": false,
+     "why": "Research records an arrest at his home, dated 2015 in F18."
+    },
+    {
+     "claim": "living in a weathered trailer in Brevard County, Florida",
+     "status": "supported",
+     "fact": "F10",
+     "quote": "was found in a weathered trailer in rural Brevard County, Florida",
+     "verified": true,
+     "material": false,
+     "why": "Trailer and county match the research."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 63,
+   "sentence": "The name itself is the whole strategy laid bare.",
+   "claims": [
+    {
+     "claim": "The name itself is the whole strategy laid bare.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research records the alias William Harold Cox but nothing about strategy; this is the narrator's interpretation."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 64,
+   "sentence": "William Harold Cox sounds like someone's neighbor, someone's uncle, the kind of name that generates no second glance, the kind that belongs in a county where nobody is looking for an Ohio fugitive from 1959.",
+   "claims": [
+    {
+     "claim": "William Harold Cox",
+     "status": "supported",
+     "fact": "F19",
+     "quote": "The alias used by Frank Freshwaters during his time on the run was William Harold Cox.",
+     "verified": true,
+     "material": false,
+     "why": "The research names this as his alias."
+    },
+    {
+     "claim": "an Ohio fugitive from 1959",
+     "status": "supported",
+     "fact": "F20",
+     "quote": "Freshwaters escaped from an Ohio prison farm in 1959 while serving time for manslaughter.",
+     "verified": true,
+     "material": false,
+     "why": "The research records his 1959 escape from an Ohio prison farm."
+    },
+    {
+     "claim": "belongs in a county",
+     "status": "supported",
+     "fact": "F10",
+     "quote": "found in a weathered trailer in rural Brevard County, Florida",
+     "verified": true,
+     "material": false,
+     "why": "The research places him in Brevard County."
+    },
+    {
+     "claim": "where nobody is looking for an Ohio fugitive",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "This is the narrator's characterization, not a recorded fact."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 65,
+   "sentence": "What the alias bought was not invisibility so much as irrelevance.",
+   "claims": [
+    {
+     "claim": "What the alias bought was not invisibility so much as irrelevance.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research records the alias but not what it achieved; this is the narrator's interpretation."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 66,
+   "sentence": "A man in a rural Florida trailer, living quietly under an ordinary name, does not register as a problem.",
+   "claims": [
+    {
+     "claim": "A man in a rural Florida trailer",
+     "status": "supported",
+     "fact": "F10",
+     "quote": "was found in a weathered trailer in rural Brevard County, Florida",
+     "verified": true,
+     "material": false,
+     "why": "Research places him in a trailer in rural Brevard County, Florida."
+    },
+    {
+     "claim": "living quietly under an ordinary name",
+     "status": "supported",
+     "fact": "F10",
+     "quote": "Freshwaters lived for years under the alias William Harold Cox",
+     "verified": true,
+     "material": false,
+     "why": "The alias is in the research; 'quietly' and 'ordinary' are harmless color."
+    },
+    {
+     "claim": "does not register as a problem",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The narrator's interpretation of how he went unnoticed; the research does not state it."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 67,
+   "sentence": "He had become someone the system had no reason to look for, in a place the system had not thought to look.",
+   "claims": [
+    {
+     "claim": "He had become someone the system had no reason to look for",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Narrator's interpretation of his assumed identity; the research does not say authorities lacked reason to search."
+    },
+    {
+     "claim": "in a place the system had not thought to look",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Interpretive framing; the research does not describe where authorities had or had not searched before the 2015 cold-case unit traced him to Florida."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 68,
+   "sentence": "The unit that finally ended it did not exist until early 2015.",
+   "claims": [
+    {
+     "claim": "The unit that finally ended it",
+     "status": "supported",
+     "fact": "F24",
+     "quote": "the U.S. Marshals Service set up a cold case unit in northern Ohio and traced Freshwaters to Florida",
+     "verified": true,
+     "material": false,
+     "why": "The cold case unit traced him, which led to his capture."
+    },
+    {
+     "claim": "did not exist until early 2015",
+     "status": "supported",
+     "fact": "F24",
+     "quote": "The manhunt was reopened in early 2015 when the U.S. Marshals Service set up a cold case unit in northern Ohio",
+     "verified": true,
+     "material": false,
+     "why": "The unit was set up in early 2015."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 69,
+   "sentence": "The U.S. Marshals Service stood up a cold case unit in northern Ohio, and the Freshwaters file — decades old, twice failed — went back into active hands.",
+   "claims": [
+    {
+     "claim": "The U.S. Marshals Service stood up a cold case unit in northern Ohio",
+     "status": "supported",
+     "fact": "F24",
+     "quote": "the U.S. Marshals Service set up a cold case unit in northern Ohio",
+     "verified": true,
+     "material": false,
+     "why": "Research states the unit was set up in northern Ohio."
+    },
+    {
+     "claim": "the Freshwaters file — decades old",
+     "status": "derived",
+     "fact": "F20",
+     "quote": "Freshwaters escaped from an Ohio prison farm in 1959",
+     "verified": true,
+     "material": false,
+     "why": "The 1959 escape to the 2015 reopening spans decades."
+    },
+    {
+     "claim": "twice failed",
+     "status": "unsupported",
+     "fact": "F15",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Characterizing the case as having failed twice is the narrator's framing, loosely based on the 1959 escape and the 1975 refused extradition."
+    },
+    {
+     "claim": "went back into active hands",
+     "status": "supported",
+     "fact": "F24",
+     "quote": "The manhunt was reopened in early 2015",
+     "verified": true,
+     "material": false,
+     "why": "Research says the manhunt was reopened."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 70,
+   "sentence": "That institutional decision, the deliberate choice to treat an old warrant as a live case rather than a bureaucratic relic, is what changed the outcome.",
+   "claims": [
+    {
+     "claim": "the deliberate choice to treat an old warrant as a live case",
+     "status": "supported",
+     "fact": "F24",
+     "quote": "The manhunt was reopened in early 2015 when the U.S. Marshals Service set up a cold case unit in northern Ohio",
+     "verified": true,
+     "material": false,
+     "why": "The research records the Marshals reopening the case through a cold case unit."
+    },
+    {
+     "claim": "is what changed the outcome",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "This is the narrator's causal interpretation of why the case ended in capture, which the research does not state."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 71,
+   "sentence": "Not new evidence.",
+   "claims": [
+    {
+     "claim": "Not new evidence.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research says the case reopened when a cold case unit was set up, but it never says whether new evidence was involved. This is the narrator's framing."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 72,
+   "sentence": "Not a tip.",
+   "claims": [
+    {
+     "claim": "Not a tip.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research says Marshals traced him through a cold-case search (F18) but never says the lead did not come from a tip. This is the narrator's inference from that fact."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 73,
+   "sentence": "A new unit with a mandate to look.",
+   "claims": [
+    {
+     "claim": "A new unit",
+     "status": "supported",
+     "fact": "F24",
+     "quote": "the U.S. Marshals Service set up a cold case unit in northern Ohio",
+     "verified": true,
+     "material": false,
+     "why": "Research records that a cold case unit was newly set up in early 2015."
+    },
+    {
+     "claim": "with a mandate to look",
+     "status": "supported",
+     "fact": "F24",
+     "quote": "set up a cold case unit in northern Ohio and traced Freshwaters to Florida",
+     "verified": true,
+     "material": false,
+     "why": "A cold case unit's purpose of searching old cases is a fair paraphrase."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 74,
+   "sentence": "What they found, once they looked, was that William Harold Cox had been living quietly in Melbourne, Florida for roughly two decades.",
+   "claims": [
+    {
+     "claim": "William Harold Cox had been living in Melbourne, Florida",
+     "status": "supported",
+     "fact": "F4",
+     "quote": "Freshwaters had been living in Melbourne, Florida under the alias William Harold Cox",
+     "verified": true,
+     "material": false,
+     "why": "The research states the alias and the location."
+    },
+    {
+     "claim": "for roughly two decades",
+     "status": "supported",
+     "fact": "F4",
+     "quote": "for about two decades before his 2015 arrest",
+     "verified": true,
+     "material": false,
+     "why": "\"Roughly\" paraphrases \"about two decades.\""
+    },
+    {
+     "claim": "living quietly",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "This is harmless descriptive color that the research does not establish."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 75,
+   "sentence": "The marshals worked alongside the Ohio Adult Parole Authority to develop the lead, and once they had it, the arrest itself was not a federal operation closing in on a dangerous fugitive.",
+   "claims": [
+    {
+     "claim": "The marshals worked alongside the Ohio Adult Parole Authority to develop the lead",
+     "status": "supported",
+     "fact": "F4",
+     "quote": "he was found there by U.S. Marshals working with the Ohio Adult Parole Authority",
+     "verified": true,
+     "material": false,
+     "why": "F4 records the joint work, and F25 says the marshals developed the lead."
+    },
+    {
+     "claim": "the arrest itself was not a federal operation",
+     "status": "supported",
+     "fact": "F25",
+     "quote": "Local deputies arrested Frank Freshwaters at his home in Brevard County after U.S. Marshals developed the lead",
+     "verified": true,
+     "material": false,
+     "why": "Local deputies, not federal agents, made the arrest."
+    },
+    {
+     "claim": "closing in on a dangerous fugitive",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "This is the narrator's framing; the research does not describe how dangerous he was."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 76,
+   "sentence": "Local Brevard County deputies went to the address.",
+   "claims": [
+    {
+     "claim": "Local Brevard County deputies went to the address.",
+     "status": "supported",
+     "fact": "F25",
+     "quote": "Local deputies arrested Frank Freshwaters at his home in Brevard County",
+     "verified": true,
+     "material": false,
+     "why": "Research says local deputies arrested him at his Brevard County home, which implies they went to the address."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 77,
+   "sentence": "They had a fugitive warrant.",
+   "claims": [
+    {
+     "claim": "They had a fugitive warrant.",
+     "status": "supported",
+     "fact": "F25",
+     "quote": "he was taken into custody on a fugitive warrant while awaiting extradition to Ohio",
+     "verified": true,
+     "material": false,
+     "why": "Research states he was taken into custody on a fugitive warrant."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 78,
+   "sentence": "They knocked.",
+   "claims": [
+    {
+     "claim": "They knocked.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research records an arrest at his home but never says anyone knocked; this is an invented scene detail."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 79,
+   "sentence": "On May 4, 2015, Frank Freshwaters was taken into custody at his home and held pending extradition to Ohio.",
+   "claims": [
+    {
+     "claim": "On May 4, 2015, Frank Freshwaters was taken into custody",
+     "status": "supported",
+     "fact": "F18",
+     "quote": "Frank Freshwaters was captured on May 4, 2015 in Melbourne, Florida",
+     "verified": true,
+     "material": false,
+     "why": "Date of capture matches the research."
+    },
+    {
+     "claim": "at his home",
+     "status": "supported",
+     "fact": "F25",
+     "quote": "Local deputies arrested Frank Freshwaters at his home in Brevard County",
+     "verified": true,
+     "material": false,
+     "why": "Arrest at his home is stated."
+    },
+    {
+     "claim": "held pending extradition to Ohio",
+     "status": "supported",
+     "fact": "F25",
+     "quote": "he was taken into custody on a fugitive warrant while awaiting extradition to Ohio",
+     "verified": true,
+     "material": false,
+     "why": "Awaiting extradition to Ohio is stated."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 80,
+   "sentence": "The warrant that had been waiting since 1959 was still valid.",
+   "claims": [
+    {
+     "claim": "The warrant that had been waiting since 1959",
+     "status": "unsupported",
+     "fact": "F25",
+     "quote": "he was taken into custody on a fugitive warrant while awaiting extradition to Ohio",
+     "verified": true,
+     "material": true,
+     "why": "Research mentions a fugitive warrant at the 2015 arrest but never says when it was issued or that it dated to 1959."
+    },
+    {
+     "claim": "was still valid",
+     "status": "unsupported",
+     "fact": "F25",
+     "quote": "he was taken into custody on a fugitive warrant",
+     "verified": true,
+     "material": false,
+     "why": "The warrant's legal validity is never stated; it is only implied by the arrest on a fugitive warrant."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 81,
+   "sentence": "It had never needed to be reissued.",
+   "claims": [
+    {
+     "claim": "It had never needed to be reissued.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research never says whether any warrant or document was or was not reissued."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 82,
+   "sentence": "It had only needed someone to act on it.",
+   "claims": [
+    {
+     "claim": "It had only needed someone to act on it.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The narrator's interpretation that the case was solvable all along and only needed action; the research doesn't establish it."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 83,
+   "sentence": "That gap — between a warrant that existed and an institution willing to pursue it — is the whole distance between 1959 and 2015.",
+   "claims": [
+    {
+     "claim": "between a warrant that existed and an institution willing to pursue it — is the whole distance",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research does not say the long fugitive period was caused by institutional unwillingness to pursue a standing warrant; this is the narrator's interpretation."
+    },
+    {
+     "claim": "1959",
+     "status": "supported",
+     "fact": "F20",
+     "quote": "Freshwaters escaped from an Ohio prison farm in 1959 while serving time for manslaughter.",
+     "verified": true,
+     "material": false,
+     "why": "The escape year of 1959 is stated in the research."
+    },
+    {
+     "claim": "2015",
+     "status": "supported",
+     "fact": "F26",
+     "quote": "Freshwaters had spent 56 years as a fugitive escapee before being captured in 2015",
+     "verified": true,
+     "material": false,
+     "why": "The capture year of 2015 is stated in the research."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 84,
+   "sentence": "The cold case unit closed it not with superior technology or a dramatic break in the case, but with the basic decision to assign the file to people whose job was to finish it.",
+   "claims": [
+    {
+     "claim": "The cold case unit closed it",
+     "status": "supported",
+     "fact": "F24",
+     "quote": "the U.S. Marshals Service set up a cold case unit in northern Ohio and traced Freshwaters to Florida",
+     "verified": true,
+     "material": false,
+     "why": "Research credits the cold case unit with tracing him."
+    },
+    {
+     "claim": "not with superior technology or a dramatic break in the case",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research says nothing about the methods used; this is the narrator's characterization of how it worked."
+    },
+    {
+     "claim": "with the basic decision to assign the file to people whose job was to finish it",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research does not establish why it succeeded; this is the narrator's interpretation."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 85,
+   "sentence": "Freshwaters had outlasted the indifference.",
+   "claims": [
+    {
+     "claim": "Freshwaters had outlasted the indifference",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research never describes authorities or anyone else as indifferent to his case; this is the narrator's interpretive framing."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 86,
+   "sentence": "He did not outlast the attention.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 87,
+   "sentence": "After the deputies left with him, Frank Freshwaters had something to say.",
+   "claims": [
+    {
+     "claim": "the deputies left with him",
+     "status": "supported",
+     "fact": "F25",
+     "quote": "Local deputies arrested Frank Freshwaters at his home in Brevard County after U.S. Marshals developed the lead, and he was taken into custody",
+     "verified": true,
+     "material": false,
+     "why": "Deputies arresting him and taking him into custody matches F25."
+    },
+    {
+     "claim": "After the deputies left with him, Frank Freshwaters had something to say",
+     "status": "unsupported",
+     "fact": "F12",
+     "quote": "a statement reported by ABC affiliate WFTV after his 2015 arrest",
+     "verified": true,
+     "material": false,
+     "why": "Research places the statement's reporting after the arrest but not his speaking after deputies left; the line is transitional framing."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 88,
+   "sentence": "He had not done anything wrong, he told reporters through ABC affiliate WFTV.",
+   "claims": [
+    {
+     "claim": "He had not done anything wrong",
+     "status": "supported",
+     "fact": "F12",
+     "quote": "Freshwaters said he had not done anything wrong",
+     "verified": true,
+     "material": false,
+     "why": "Research records him saying he had not done anything wrong."
+    },
+    {
+     "claim": "he told reporters through ABC affiliate WFTV",
+     "status": "supported",
+     "fact": "F12",
+     "quote": "a statement reported by ABC affiliate WFTV after his 2015 arrest",
+     "verified": true,
+     "material": false,
+     "why": "His statement was reported by ABC affiliate WFTV."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 89,
+   "sentence": "He had made a mistake.",
+   "claims": [
+    {
+     "claim": "He had made a mistake.",
+     "status": "supported",
+     "fact": "F12",
+     "quote": "Freshwaters said he had not done anything wrong and had made a mistake",
+     "verified": true,
+     "material": false,
+     "why": "This echoes Freshwaters' own reported statement after his 2015 arrest. It is acceptable only if the script frames it as his words."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 90,
+   "sentence": "That framing — a mistake, not a flight, not a choice made again and again across five and a half decades — is the last piece of the man the photograph had to contend with.",
+   "claims": [
+    {
+     "claim": "a mistake",
+     "status": "supported",
+     "fact": "F12",
+     "quote": "Freshwaters said he had not done anything wrong and had made a mistake",
+     "verified": true,
+     "material": false,
+     "why": "Calls back to his reported statement framing it as a mistake."
+    },
+    {
+     "claim": "across five and a half decades",
+     "status": "derived",
+     "fact": "F26",
+     "quote": "Freshwaters had spent 56 years as a fugitive escapee before being captured in 2015",
+     "verified": true,
+     "material": false,
+     "why": "Rounds the research's 56 years."
+    },
+    {
+     "claim": "not a flight, not a choice made again and again",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The narrator's interpretive contrast with his framing; it states no new fact."
+    },
+    {
+     "claim": "is the last piece of the man the photograph had to contend with",
+     "status": "unsupported",
+     "fact": "F28",
+     "quote": "Freshwaters was shown an old photograph of himself",
+     "verified": true,
+     "material": false,
+     "why": "Calls back to the photograph scene; 'last piece' is narrative framing, not an established sequence."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 91,
+   "sentence": "The deputies knocked.",
+   "claims": [
+    {
+     "claim": "The deputies",
+     "status": "supported",
+     "fact": "F25",
+     "quote": "Local deputies arrested Frank Freshwaters at his home in Brevard County",
+     "verified": true,
+     "material": false,
+     "why": "Research records local deputies making the arrest at his home."
+    },
+    {
+     "claim": "knocked",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research does not say the deputies knocked; this physical scene detail is not recorded."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 92,
+   "sentence": "He went quietly.",
+   "claims": [
+    {
+     "claim": "He went quietly.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "F28 records only that he admitted 'You got me'; nothing in the research says he submitted to arrest without resistance."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 93,
+   "sentence": "And then he offered the same logic the system had extended to him in 1957: this was an error, not a character.",
+   "claims": [
+    {
+     "claim": "he offered ... this was an error, not a character",
+     "status": "supported",
+     "fact": "F12",
+     "quote": "Freshwaters said he had not done anything wrong and had made a mistake",
+     "verified": true,
+     "material": false,
+     "why": "F12 reports him calling it a mistake and saying he had done nothing wrong; 'not a character' is a fair paraphrase."
+    },
+    {
+     "claim": "the same logic the system had extended to him in 1957",
+     "status": "unsupported",
+     "fact": "F14",
+     "quote": "his original one-to-20-year sentence was suspended in favor of five years’ probation",
+     "verified": true,
+     "material": false,
+     "why": "The research records probation but not the court's reasoning or that the leniency came in 1957; framing it as the same logic is the narrator's interpretation."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 94,
+   "sentence": "The court had accepted that reasoning once.",
+   "claims": [
+    {
+     "claim": "The court had accepted that reasoning once.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research records no court accepting any reasoning; the closest acceptance, of the 16-year residency, was by the governor (F0), not a court."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 95,
+   "sentence": "The parole board would have to decide whether to accept it again.",
+   "claims": [
+    {
+     "claim": "The parole board would have to decide",
+     "status": "supported",
+     "fact": "F21",
+     "quote": "The Ohio Adult Parole Authority voted on February 25, 2016 to release Frank Freshwaters on parole.",
+     "verified": true,
+     "material": false,
+     "why": "The research records a parole board decision on his release."
+    },
+    {
+     "claim": "whether to accept it again",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research records no earlier acceptance and no repeat decision by the parole board."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 96,
+   "sentence": "Summit County prosecutors recommended against parole.",
+   "claims": [
+    {
+     "claim": "Summit County prosecutors recommended against parole",
+     "status": "supported",
+     "fact": "F13",
+     "quote": "prosecutors in Summit County had recommended against parole",
+     "verified": true,
+     "material": false,
+     "why": "Directly stated in research."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 97,
+   "sentence": "Their position, stated through Ohio Parole Board spokeswoman JoEllen Smith in 2016, was straightforward: Freshwaters had avoided accountability, and he had not paid restitution.",
+   "claims": [
+    {
+     "claim": "Their position, stated through Ohio Parole Board spokeswoman JoEllen Smith in 2016",
+     "status": "misattached",
+     "fact": "F13",
+     "quote": "Ohio Parole Board spokeswoman JoEllen Smith said in 2016 that Freshwaters was set for release on parole after the board's decision, and prosecutors in Summit County had recommended against parole",
+     "verified": true,
+     "material": true,
+     "why": "Smith announced the release; the research does not say she stated the prosecutors' position against parole."
+    },
+    {
+     "claim": "JoEllen Smith in 2016",
+     "status": "supported",
+     "fact": "F13",
+     "quote": "Ohio Parole Board spokeswoman JoEllen Smith said in 2016",
+     "verified": true,
+     "material": false,
+     "why": "Her title and the year match the research."
+    },
+    {
+     "claim": "Freshwaters had avoided accountability",
+     "status": "supported",
+     "fact": "F13",
+     "quote": "because he had avoided accountability",
+     "verified": true,
+     "material": false,
+     "why": "This matches the prosecutors' stated reason."
+    },
+    {
+     "claim": "he had not paid restitution",
+     "status": "supported",
+     "fact": "F13",
+     "quote": "not paid restitution",
+     "verified": true,
+     "material": false,
+     "why": "This matches the prosecutors' stated reason."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 98,
+   "sentence": "The years under William Harold Cox were not a gap in the record — they were the record.",
+   "claims": [
+    {
+     "claim": "The years under William Harold Cox",
+     "status": "supported",
+     "fact": "F10",
+     "quote": "Freshwaters lived for years under the alias William Harold Cox",
+     "verified": true,
+     "material": false,
+     "why": "Research states he lived for years under this alias."
+    },
+    {
+     "claim": "were not a gap in the record — they were the record",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Narrator's rhetorical framing, not a checkable fact."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 99,
+   "sentence": "The prosecutors looked at a man who had been given probation instead of prison, then given his freedom again by a West Virginia governor, and saw someone who had treated every act of institutional mercy as an exit.",
+   "claims": [
+    {
+     "claim": "a man who had been given probation instead of prison",
+     "status": "supported",
+     "fact": "F7",
+     "quote": "the court imposed a five-year probation instead of a prison term",
+     "verified": true,
+     "material": false,
+     "why": "Research states probation was imposed instead of prison."
+    },
+    {
+     "claim": "then given his freedom again by a West Virginia governor",
+     "status": "supported",
+     "fact": "F15",
+     "quote": "Freshwaters was released when the governor refused extradition",
+     "verified": true,
+     "material": false,
+     "why": "He was released after the West Virginia governor refused extradition."
+    },
+    {
+     "claim": "The prosecutors looked at a man ... and saw someone who had treated every act of institutional mercy as an exit",
+     "status": "overstated",
+     "fact": "F13",
+     "quote": "prosecutors in Summit County had recommended against parole because he had avoided accountability and not paid restitution",
+     "verified": true,
+     "material": false,
+     "why": "Prosecutors cited avoided accountability and unpaid restitution; the 'every act of mercy as an exit' view is the narrator's interpretive framing."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 100,
+   "sentence": "The parole board voted anyway, on February 25, 2016, to release him.",
+   "claims": [
+    {
+     "claim": "The parole board voted ... on February 25, 2016, to release him",
+     "status": "supported",
+     "fact": "F21",
+     "quote": "The Ohio Adult Parole Authority voted on February 25, 2016 to release Frank Freshwaters on parole.",
+     "verified": true,
+     "material": false,
+     "why": "Research gives this exact vote and date."
+    },
+    {
+     "claim": "anyway",
+     "status": "supported",
+     "fact": "F13",
+     "quote": "prosecutors in Summit County had recommended against parole because he had avoided accountability and not paid restitution",
+     "verified": true,
+     "material": false,
+     "why": "The vote came despite the prosecutors' recommendation against parole."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 101,
+   "sentence": "The Ohio Adult Parole Authority set the terms: parole, five years of supervision.",
+   "claims": [
+    {
+     "claim": "The Ohio Adult Parole Authority set the terms: parole",
+     "status": "supported",
+     "fact": "F3",
+     "quote": "the Ohio Adult Parole Authority later ordered Freshwaters freed on parole",
+     "verified": true,
+     "material": false,
+     "why": "Research states the Authority ordered parole."
+    },
+    {
+     "claim": "five years of supervision",
+     "status": "supported",
+     "fact": "F3",
+     "quote": "with five years of supervision",
+     "verified": true,
+     "material": false,
+     "why": "Research states the five-year supervision term."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 102,
+   "sentence": "He walked out of an Ohio correctional facility on June 15, 2016 — less than thirteen months after Brevard County deputies had come to his door.",
+   "claims": [
+    {
+     "claim": "He walked out of an Ohio correctional facility on June 15, 2016",
+     "status": "supported",
+     "fact": "F22",
+     "quote": "Freshwaters was released from an Ohio correctional facility on June 15, 2016.",
+     "verified": true,
+     "material": false,
+     "why": "Release date and facility type match the research."
+    },
+    {
+     "claim": "less than thirteen months after",
+     "status": "contradicted",
+     "fact": "F18",
+     "quote": "Frank Freshwaters was captured on May 4, 2015 in Melbourne, Florida",
+     "verified": true,
+     "material": true,
+     "why": "May 4, 2015 to June 15, 2016 is more than thirteen months, not less."
+    },
+    {
+     "claim": "Brevard County deputies had come to his door",
+     "status": "supported",
+     "fact": "F25",
+     "quote": "Local deputies arrested Frank Freshwaters at his home in Brevard County",
+     "verified": true,
+     "material": false,
+     "why": "Local deputies arresting him at his Brevard County home matches the research."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 103,
+   "sentence": "What the record leaves you with is not a chase, not a standoff, not a confession extracted under pressure.",
+   "claims": [
+    {
+     "claim": "not a chase, not a standoff",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research does not say whether the arrest involved a chase or standoff; this is the narrator's characterization of the record."
+    },
+    {
+     "claim": "not a confession extracted under pressure",
+     "status": "unsupported",
+     "fact": "F28",
+     "quote": "Freshwaters was shown an old photograph of himself, and according to Major Tod Goodyear, \"he hadn't seen that guy in a long time,\" before admitting \"You got me.\"",
+     "verified": true,
+     "material": false,
+     "why": "The research records his admission but not whether pressure was involved; this is the narrator's interpretation."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 104,
+   "sentence": "It is a photograph on a table, an old man who recognized himself in it, and two words that closed a gap of 56 years.",
+   "claims": [
+    {
+     "claim": "a photograph",
+     "status": "supported",
+     "fact": "F28",
+     "quote": "Freshwaters was shown an old photograph of himself",
+     "verified": true,
+     "material": false,
+     "why": "Research records he was shown an old photograph."
+    },
+    {
+     "claim": "on a table",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research does not say where the photograph was; the table is an added scene detail."
+    },
+    {
+     "claim": "an old man who recognized himself in it",
+     "status": "supported",
+     "fact": "F28",
+     "quote": "\"he hadn't seen that guy in a long time,\" before admitting \"You got me.\"",
+     "verified": true,
+     "material": false,
+     "why": "He was shown his own photo and acknowledged it was him."
+    },
+    {
+     "claim": "two words",
+     "status": "contradicted",
+     "fact": "F28",
+     "quote": "\"You got me.\"",
+     "verified": true,
+     "material": true,
+     "why": "The recorded admission \"You got me\" is three words, not two."
+    },
+    {
+     "claim": "closed a gap of 56 years",
+     "status": "supported",
+     "fact": "F26",
+     "quote": "Freshwaters had spent 56 years as a fugitive escapee before being captured in 2015",
+     "verified": true,
+     "material": false,
+     "why": "Research gives a 56-year fugitive span ending with his capture."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 105,
+   "sentence": "The trailer is still there in Brevard County.",
+   "claims": [
+    {
+     "claim": "The trailer ... in Brevard County",
+     "status": "supported",
+     "fact": "F10",
+     "quote": "was found in a weathered trailer in rural Brevard County, Florida",
+     "verified": true,
+     "material": false,
+     "why": "Research places the trailer where he was found in Brevard County."
+    },
+    {
+     "claim": "is still there",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research does not record whether the trailer still exists today."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 106,
+   "sentence": "The warrant is not.",
+   "claims": [
+    {
+     "claim": "The warrant is not.",
+     "status": "supported",
+     "fact": "F25",
+     "quote": "he was taken into custody on a fugitive warrant while awaiting extradition to Ohio",
+     "verified": true,
+     "material": false,
+     "why": "Read as saying the warrant was still in force; the research records his arrest on a fugitive warrant."
+    }
+   ],
+   "error": false,
+   "material": false
+  }
+ ],
+ "gateLog": [],
+ "gateOriginals": [],
+ "v1Errors": [
+  {
+   "i": 11,
+   "sentence": "That was May 4, 2015, in rural Brevard County, Florida, and with those words, the longest successful manhunt in the history of the U.S. Marshals Service came to a close.",
+   "script_quote": "the longest successful manhunt in the history of the U.S. Marshals Service came to a close",
+   "category": "certainty_inflation",
+   "verdict": "error",
+   "research_quote": "\"he became the object of the longest successful manhunt in the history of the marshal's service.\"",
+   "why": "The research attributes this claim to The Guardian's reporting (a quote), not as established fact; the script states it as plain fact.",
+   "first_seen": "section_1",
+   "seen_in": [
+    "section_1",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 54,
+   "sentence": "The governor's conclusion about Freshwaters's residency outweighed Ohio's outstanding warrant, and on the strength of that executive discretion, the case was closed.",
+   "script_quote": "the case was closed",
+   "category": "certainty_inflation",
+   "verdict": "error",
+   "research_quote": "disappeared again after the governor refused extradition",
+   "why": "The research says Freshwaters disappeared again after extradition was refused; the script says the case was closed, which contradicts the record showing the case remained open.",
+   "first_seen": "finalize_out",
+   "seen_in": [
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 58,
+   "sentence": "The case that should have closed in West Virginia would stay open for another forty years — until a different institution, with different tools, decided to look again.",
+   "script_quote": "stay open for another forty years",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research does not state the case stayed open for forty years after 1975; it simply notes he vanished again and was later caught in 2015.",
+   "first_seen": "section_4",
+   "seen_in": [
+    "section_4",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 72,
+   "sentence": "Not a tip.",
+   "script_quote": "Not a tip",
+   "category": "certainty_inflation",
+   "verdict": "error",
+   "research_quote": "The record shown in the retrieved reporting leaves unresolved details about how Freshwaters financed his years abroad and the full extent of any outside assistance",
+   "why": "The research leaves unresolved how he was found; the script flatly states it was not a tip, which goes beyond what the research supports.",
+   "first_seen": "section_6",
+   "seen_in": [
+    "section_6",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 88,
+   "sentence": "He had not done anything wrong, he told reporters through ABC affiliate WFTV.",
+   "script_quote": "he told reporters through ABC affiliate WFTV",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research says the statement was 'reported by ABC affiliate WFTV after his 2015 arrest' but does not say Freshwaters told reporters through WFTV — it does not specify he spoke directly to reporters or that WFTV was the conduit he used.",
+   "first_seen": "section_7",
+   "seen_in": [
+    "section_7",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 99,
+   "sentence": "The prosecutors looked at a man who had been given probation instead of prison, then given his freedom again by a West Virginia governor, and saw someone who had treated every act of institutional mercy as an exit.",
+   "script_quote": "given his freedom again by a West Virginia governor",
+   "category": "certainty_inflation",
+   "verdict": "error",
+   "research_quote": "the governor refused extradition after concluding Freshwaters had a \"flawless 16-year residency\" there",
+   "why": "The research says the governor refused extradition, not that he gave Freshwaters his freedom; Freshwaters had already been released by West Virginia authorities before the extradition question arose, and the script conflates the two.",
+   "first_seen": "section_7",
+   "seen_in": [
+    "section_7",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  }
+ ]
+}

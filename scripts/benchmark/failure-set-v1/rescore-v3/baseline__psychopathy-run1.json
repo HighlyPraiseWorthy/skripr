@@ -1,0 +1,2680 @@
+{
+ "set": "baseline",
+ "file": "psychopathy-run1.json",
+ "case": "psychopathy",
+ "words": 2025,
+ "judged": [
+  {
+   "i": 0,
+   "sentence": "Hollywood has sold us the same idea for decades: the psychopathic killer is always the smartest person in the room, a cold chess master running circles around everyone who tries to catch him.",
+   "claims": [
+    {
+     "claim": "Hollywood has sold us the same idea for decades",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research mentions a stereotype but says nothing about Hollywood or how long it has lasted. This is cultural framing, not a record fact."
+    },
+    {
+     "claim": "the psychopathic killer is always the smartest person in the room, a cold chess master running circles around everyone who tries to catch him",
+     "status": "supported",
+     "fact": "F17",
+     "quote": "the assumption that serial homicide offenders are typically highly intelligent and especially hard to apprehend",
+     "verified": true,
+     "material": false,
+     "why": "This describes the stereotype the research identifies: killers seen as highly intelligent and hard to catch."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 1,
+   "sentence": "But when researchers actually measured the IQ of serial killers, what they found doesn't match that story at all.",
+   "claims": [
+    {
+     "claim": "when researchers actually measured the IQ of serial killers",
+     "status": "overstated",
+     "fact": "F9",
+     "quote": "it is a secondary-source database relying on self-reports and third-party reports, so cognitive assessments and other offender data may be incomplete or affected by memory errors, exaggeration, and misinformation",
+     "verified": true,
+     "material": true,
+     "why": "The Radford data compile reported IQs from secondary sources; researchers did not directly measure them."
+    },
+    {
+     "claim": "what they found doesn't match that story at all",
+     "status": "supported",
+     "fact": "F15",
+     "quote": "The best-known database evidence does not support the stereotype of an exceptionally intelligent serial killer",
+     "verified": true,
+     "material": false,
+     "why": "The research states the data contradict the high-IQ stereotype."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 2,
+   "sentence": "The data are messier, stranger, and in some ways more unsettling than the genius myth ever was.",
+   "claims": [
+    {
+     "claim": "the genius myth",
+     "status": "supported",
+     "fact": "F15",
+     "quote": "The best-known database evidence does not support the stereotype of an exceptionally intelligent serial killer",
+     "verified": true,
+     "material": false,
+     "why": "Research establishes that the 'genius serial killer' idea is a stereotype not supported by the data."
+    },
+    {
+     "claim": "The data are messier, stranger, and in some ways more unsettling",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "This is the narrator's evaluative framing, not a checkable fact."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 3,
+   "sentence": "That image has shaped what most people think they know about serial killers: that the ones who keep going, who evade capture across years, must be operating at some elevated cognitive frequency the rest of us simply can't access.",
+   "claims": [
+    {
+     "claim": "That image has shaped what most people think they know about serial killers",
+     "status": "unsupported",
+     "fact": "F15",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research notes a stereotype exists but not that it shaped what 'most people' believe; this is narrator framing."
+    },
+    {
+     "claim": "the ones who keep going, who evade capture across years, must be operating at some elevated cognitive frequency the rest of us simply can't access",
+     "status": "supported",
+     "fact": "F17",
+     "quote": "the assumption that serial homicide offenders are typically highly intelligent and especially hard to apprehend",
+     "verified": true,
+     "material": false,
+     "why": "The research describes this assumption linking high intelligence to evading capture."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 4,
+   "sentence": "And audiences don't just enjoy it; they absorb it as a template for how the real world works.",
+   "claims": [
+    {
+     "claim": "audiences don't just enjoy it",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research says nothing about audience enjoyment; this is the narrator's framing."
+    },
+    {
+     "claim": "they absorb it as a template for how the real world works",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "No research fact covers media effects on audience beliefs; this is the narrator's interpretation, not a cited finding."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 5,
+   "sentence": "That assumption has a grip on the culture that the actual research has never managed to loosen.",
+   "claims": [
+    {
+     "claim": "That assumption has a grip on the culture",
+     "status": "unsupported",
+     "fact": "F15",
+     "quote": "does not support the stereotype of an exceptionally intelligent serial killer",
+     "verified": true,
+     "material": false,
+     "why": "Research names the stereotype but says nothing about how widely the culture holds it."
+    },
+    {
+     "claim": "the actual research has never managed to loosen",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "No research fact covers whether findings have changed public belief over time; this is the narrator's interpretation."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 6,
+   "sentence": "What the data actually show about who these offenders are — cognitively and neurologically — lands very differently than the myth prepared anyone to expect.",
+   "claims": [
+    {
+     "claim": "What the data actually show about who these offenders are — cognitively ... — lands very differently than the myth prepared anyone to expect",
+     "status": "supported",
+     "fact": "F15",
+     "quote": "The best-known database evidence does not support the stereotype of an exceptionally intelligent serial killer",
+     "verified": true,
+     "material": false,
+     "why": "Research states the IQ data contradict the intelligent-serial-killer stereotype."
+    },
+    {
+     "claim": "neurologically",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research does not say neurological findings contradict a myth; this is the narrator's framing of an upcoming section."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 7,
+   "sentence": "The Radford University Serial Killer Database contains IQ records for 202 offenders, and those records do not cluster at the high end of the scale.",
+   "claims": [
+    {
+     "claim": "The Radford University Serial Killer Database contains IQ records for 202 offenders",
+     "status": "supported",
+     "fact": "F10",
+     "quote": "The Radford Serial Killer Database reports IQ information for 202 serial killers",
+     "verified": true,
+     "material": false,
+     "why": "Research states the database reports IQ information for 202 serial killers."
+    },
+    {
+     "claim": "those records do not cluster at the high end of the scale",
+     "status": "supported",
+     "fact": "F3",
+     "quote": "the sample of 202 serial killers clustering around normal rather than exceptional intelligence",
+     "verified": true,
+     "material": false,
+     "why": "Research says the scores cluster around normal rather than exceptional intelligence."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 8,
+   "sentence": "The mean sits at 95.1.",
+   "claims": [
+    {
+     "claim": "The mean sits at 95.1.",
+     "status": "supported",
+     "fact": "F10",
+     "quote": "median 89.0, mean 95.1",
+     "verified": true,
+     "material": false,
+     "why": "Radford sample mean IQ is 95.1."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 9,
+   "sentence": "The median sits lower, at 89.0.",
+   "claims": [
+    {
+     "claim": "The median sits at 89.0",
+     "status": "supported",
+     "fact": "F10",
+     "quote": "median 89.0, mean 95.1",
+     "verified": true,
+     "material": false,
+     "why": "Research gives the Radford sample median IQ as 89.0."
+    },
+    {
+     "claim": "sits lower",
+     "status": "derived",
+     "fact": "F15",
+     "quote": "mean IQ of 95.1 and median of 89.0",
+     "verified": true,
+     "material": false,
+     "why": "89.0 is lower than the 95.1 mean by simple comparison."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 10,
+   "sentence": "The population average is 100, and the serial killers in this sample fall below it.",
+   "claims": [
+    {
+     "claim": "The population average is 100",
+     "status": "supported",
+     "fact": "F0",
+     "quote": "compared with the general-population mean of 100",
+     "verified": true,
+     "material": false,
+     "why": "Research states population mean of 100."
+    },
+    {
+     "claim": "the serial killers in this sample fall below it",
+     "status": "supported",
+     "fact": "F4",
+     "quote": "Radford’s sample mean is 95.1, below the population mean of 100",
+     "verified": true,
+     "material": false,
+     "why": "Sample mean 95.1 is below 100."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 11,
+   "sentence": "Below it as a central tendency, across a sample large enough to carry statistical weight.",
+   "claims": [
+    {
+     "claim": "Below it as a central tendency",
+     "status": "supported",
+     "fact": "F4",
+     "quote": "Radford’s sample mean is 95.1, below the population mean of 100",
+     "verified": true,
+     "material": false,
+     "why": "Research states the mean serial killer IQ falls below the population mean of 100."
+    },
+    {
+     "claim": "across a sample large enough to carry statistical weight",
+     "status": "unsupported",
+     "fact": "F10",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research gives a sample of 202 but never judges it statistically weighty, and F9 notes data-quality limits; this is the narrator's interpretation."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 12,
+   "sentence": "The range does run wide — from 57 at the floor to 165 at the ceiling — so exceptional scores exist in the data.",
+   "claims": [
+    {
+     "claim": "from 57 at the floor to 165 at the ceiling",
+     "status": "supported",
+     "fact": "F10",
+     "quote": "with scores ranging from 57 to 165",
+     "verified": true,
+     "material": false,
+     "why": "Research gives the Radford IQ range as 57 to 165."
+    },
+    {
+     "claim": "so exceptional scores exist in the data",
+     "status": "unsupported",
+     "fact": "F10",
+     "quote": "with scores ranging from 57 to 165",
+     "verified": true,
+     "material": false,
+     "why": "Calling the 165 ceiling 'exceptional' is the narrator's interpretation of the range."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 13,
+   "sentence": "But a range is not a portrait.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 14,
+   "sentence": "A distribution is.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 15,
+   "sentence": "And this distribution clusters where ordinary human cognition clusters, pulled slightly downward from the norm rather than elevated above it.",
+   "claims": [
+    {
+     "claim": "this distribution clusters where ordinary human cognition clusters",
+     "status": "supported",
+     "fact": "F3",
+     "quote": "the sample of 202 serial killers clustering around normal rather than exceptional intelligence",
+     "verified": true,
+     "material": false,
+     "why": "Research states the sample clusters around normal intelligence."
+    },
+    {
+     "claim": "pulled slightly downward from the norm rather than elevated above it",
+     "status": "supported",
+     "fact": "F15",
+     "quote": "mean IQ of 95.1 and median of 89.0, which is around average to slightly below average",
+     "verified": true,
+     "material": false,
+     "why": "Research describes the scores as slightly below average, not elevated."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 16,
+   "sentence": "The rare high-scoring individual in the dataset is exactly that: rare, and statistically overwhelmed by the mass of scores grouped around and beneath the average.",
+   "claims": [
+    {
+     "claim": "The rare high-scoring individual in the dataset is exactly that: rare",
+     "status": "unsupported",
+     "fact": "F10",
+     "quote": "with scores ranging from 57 to 165",
+     "verified": true,
+     "material": false,
+     "why": "Research gives a high score of 165 but never says how many high scorers there are; calling them rare is the narrator's reading of the distribution."
+    },
+    {
+     "claim": "statistically overwhelmed by the mass of scores grouped around and beneath the average",
+     "status": "supported",
+     "fact": "F15",
+     "quote": "the Radford Serial Killer IQ sample had a mean IQ of 95.1 and median of 89.0, which is around average to slightly below average",
+     "verified": true,
+     "material": false,
+     "why": "The research places the scores around and slightly below average; 'overwhelmed' is framing."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 17,
+   "sentence": "What makes this gap between 95.1 and 100 meaningful is what it displaces.",
+   "claims": [
+    {
+     "claim": "this gap between 95.1 and 100",
+     "status": "supported",
+     "fact": "F4",
+     "quote": "Radford’s sample mean is 95.1, below the population mean of 100",
+     "verified": true,
+     "material": false,
+     "why": "Research gives the serial killer mean of 95.1 against the population mean of 100."
+    },
+    {
+     "claim": "What makes this gap ... meaningful is what it displaces",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "This is the narrator's view of the gap's significance, not a stated research fact."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 18,
+   "sentence": "The cultural image built by decades of prestige television and literary fiction rests on the premise that sustained predatory behavior requires elevated planning capacity — that evading detection across multiple victims demands something closer to genius than to ordinary cognition.",
+   "claims": [
+    {
+     "claim": "The cultural image built by decades of prestige television and literary fiction",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research mentions a stereotype but not that television or fiction created it; this is the narrator's cultural framing."
+    },
+    {
+     "claim": "rests on the premise that sustained predatory behavior requires elevated planning capacity — that evading detection across multiple victims demands something closer to genius than to ordinary cognition",
+     "status": "supported",
+     "fact": "F17",
+     "quote": "the assumption that serial homicide offenders are typically highly intelligent and especially hard to apprehend",
+     "verified": true,
+     "material": false,
+     "why": "The research describes this assumption and stereotype (see also F15)."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 19,
+   "sentence": "The Radford data offer no support for that premise.",
+   "claims": [
+    {
+     "claim": "The Radford data offer no support for that premise.",
+     "status": "supported",
+     "fact": "F15",
+     "quote": "The best-known database evidence does not support the stereotype of an exceptionally intelligent serial killer",
+     "verified": true,
+     "material": false,
+     "why": "Research states the Radford IQ data do not support the high-intelligence stereotype."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 20,
+   "sentence": "The average offender in the sample carries no cognitive advantage over the general population.",
+   "claims": [
+    {
+     "claim": "The average offender in the sample carries no cognitive advantage over the general population.",
+     "status": "supported",
+     "fact": "F4",
+     "quote": "Radford’s sample mean is 95.1, below the population mean of 100",
+     "verified": true,
+     "material": false,
+     "why": "A sample mean IQ below the population mean means the average offender has no advantage."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 21,
+   "sentence": "The numbers describe someone operating near, or just beneath, the cognitive midpoint of any random group of people you might assemble.",
+   "claims": [
+    {
+     "claim": "The numbers describe someone operating near, or just beneath, the cognitive midpoint of any random group of people you might assemble.",
+     "status": "supported",
+     "fact": "F15",
+     "quote": "the Radford Serial Killer IQ sample had a mean IQ of 95.1 and median of 89.0, which is around average to slightly below average",
+     "verified": true,
+     "material": false,
+     "why": "Research describes the sample IQ as around average to slightly below average, against a population mean of 100."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 22,
+   "sentence": "Which raises the question the IQ data alone cannot answer: if not superior intelligence, what actually drives the pattern?",
+   "claims": [
+    {
+     "claim": "if not superior intelligence",
+     "status": "supported",
+     "fact": "F4",
+     "quote": "The empirical data contradict the assumption that serial homicide offenders systematically have superior IQ",
+     "verified": true,
+     "material": false,
+     "why": "The research states the IQ data do not show superior intelligence; the rest of the sentence is a rhetorical question."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 23,
+   "sentence": "Before accepting what the Radford data show, it's fair to ask how solid that foundation actually is.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 24,
+   "sentence": "The database draws on secondary sources, self-reports and third-party accounts, which means the IQ figures it contains are vulnerable to memory errors, exaggeration, and misinformation.",
+   "claims": [
+    {
+     "claim": "The database draws on secondary sources, self-reports and third-party accounts",
+     "status": "supported",
+     "fact": "F9",
+     "quote": "it is a secondary-source database relying on self-reports and third-party reports",
+     "verified": true,
+     "material": false,
+     "why": "Research states the database relies on secondary sources, self-reports and third-party reports."
+    },
+    {
+     "claim": "the IQ figures it contains are vulnerable to memory errors, exaggeration, and misinformation",
+     "status": "supported",
+     "fact": "F9",
+     "quote": "cognitive assessments and other offender data may be incomplete or affected by memory errors, exaggeration, and misinformation",
+     "verified": true,
+     "material": false,
+     "why": "'Vulnerable' fairly paraphrases 'may be affected by', and the cognitive assessments include the IQ figures."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 25,
+   "sentence": "That's a genuine methodological caveat, and researchers who use the database say so plainly.",
+   "claims": [
+    {
+     "claim": "researchers who use the database say so plainly",
+     "status": "supported",
+     "fact": "F9",
+     "quote": "Researchers using the Radford University Serial Killer Database note that it is a secondary-source database relying on self-reports and third-party reports",
+     "verified": true,
+     "material": false,
+     "why": "F9 records researchers using the database noting its limitations."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 26,
+   "sentence": "But notice what the caveat does not do.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 27,
+   "sentence": "It does not suggest the data are biased toward underestimating intelligence.",
+   "claims": [
+    {
+     "claim": "It does not suggest the data are biased toward underestimating intelligence.",
+     "status": "unsupported",
+     "fact": "F9",
+     "quote": "cognitive assessments and other offender data may be incomplete or affected by memory errors, exaggeration, and misinformation",
+     "verified": true,
+     "material": false,
+     "why": "The research notes possible data errors but never says which way any bias runs. This is the narrator's interpretation of the caveat."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 28,
+   "sentence": "And even with that caveat, the central tendency lands below the population norm.",
+   "claims": [
+    {
+     "claim": "the central tendency lands below the population norm",
+     "status": "supported",
+     "fact": "F4",
+     "quote": "Radford’s sample mean is 95.1, below the population mean of 100",
+     "verified": true,
+     "material": false,
+     "why": "Research states the Radford sample mean of 95.1 is below the population mean of 100."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 29,
+   "sentence": "The limitation also doesn't explain away the shape of the distribution.",
+   "claims": [
+    {
+     "claim": "The limitation also doesn't explain away the shape of the distribution.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Narrator's own judgment: the research notes the database's limitations (F9) but never assesses whether they account for the IQ distribution."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 30,
+   "sentence": "A secondary-source database with incomplete records might produce a noisier spread than a controlled clinical sample would — but it would have to be wrong in a very specific and consistent direction to move that mean from 95.1 up to anything resembling the exceptional range the cultural narrative assumes.",
+   "claims": [
+    {
+     "claim": "A secondary-source database with incomplete records",
+     "status": "supported",
+     "fact": "F9",
+     "quote": "it is a secondary-source database relying on self-reports and third-party reports, so cognitive assessments and other offender data may be incomplete",
+     "verified": true,
+     "material": false,
+     "why": "F9 describes the Radford database as secondary-source with possibly incomplete data."
+    },
+    {
+     "claim": "might produce a noisier spread than a controlled clinical sample would",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Hedged narrator speculation comparing the database to clinical samples; the research does not make this comparison."
+    },
+    {
+     "claim": "that mean from 95.1",
+     "status": "supported",
+     "fact": "F10",
+     "quote": "median 89.0, mean 95.1",
+     "verified": true,
+     "material": false,
+     "why": "The Radford mean IQ is 95.1."
+    },
+    {
+     "claim": "it would have to be wrong in a very specific and consistent direction to move that mean ... up to anything resembling the exceptional range",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The narrator's own analytic reasoning about bias; the research does not state it."
+    },
+    {
+     "claim": "the exceptional range the cultural narrative assumes",
+     "status": "supported",
+     "fact": "F15",
+     "quote": "does not support the stereotype of an exceptionally intelligent serial killer",
+     "verified": true,
+     "material": false,
+     "why": "F15 notes the stereotype of exceptional intelligence."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 31,
+   "sentence": "The data, even with their imperfections, point somewhere.",
+   "claims": [
+    {
+     "claim": "The data, even with their imperfections",
+     "status": "supported",
+     "fact": "F9",
+     "quote": "cognitive assessments and other offender data may be incomplete or affected by memory errors, exaggeration, and misinformation",
+     "verified": true,
+     "material": false,
+     "why": "The research notes the database's limitations, which matches 'imperfections'."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 32,
+   "sentence": "They point to ordinary.",
+   "claims": [
+    {
+     "claim": "They point to ordinary.",
+     "status": "supported",
+     "fact": "F10",
+     "quote": "those offenders appear to be of normal IQ overall (median 89.0, mean 95.1)",
+     "verified": true,
+     "material": false,
+     "why": "Research says the Radford data show serial killers clustering around normal, not exceptional, intelligence."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 33,
+   "sentence": "That's what the numbers describe when you let them speak without the myth doing the translating.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 34,
+   "sentence": "A 2019 meta-analysis pulled together 22 studies covering 2,603 homicide offenders across 29 unique samples, and the number it produced changes the frame entirely.",
+   "claims": [
+    {
+     "claim": "A 2019 meta-analysis pulled together 22 studies",
+     "status": "supported",
+     "fact": "F18",
+     "quote": "A 2019 meta-analysis of 29 unique homicide offender samples from 22 studies",
+     "verified": true,
+     "material": false,
+     "why": "Year, method and study count match."
+    },
+    {
+     "claim": "covering 2,603 homicide offenders",
+     "status": "supported",
+     "fact": "F18",
+     "quote": "(2,603 offenders)",
+     "verified": true,
+     "material": false,
+     "why": "Offender count matches."
+    },
+    {
+     "claim": "across 29 unique samples",
+     "status": "supported",
+     "fact": "F18",
+     "quote": "29 unique homicide offender samples",
+     "verified": true,
+     "material": false,
+     "why": "Sample count matches."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 35,
+   "sentence": "The overall correlation between psychopathy and homicide was r = 0.68 — a large association by any standard in behavioral research.",
+   "claims": [
+    {
+     "claim": "The overall correlation between psychopathy and homicide was r = 0.68",
+     "status": "supported",
+     "fact": "F20",
+     "quote": "the overall psychopathy–homicide association was large (r = 0.68)",
+     "verified": true,
+     "material": false,
+     "why": "The research gives exactly this overall correlation."
+    },
+    {
+     "claim": "a large association",
+     "status": "supported",
+     "fact": "F20",
+     "quote": "the overall psychopathy–homicide association was large",
+     "verified": true,
+     "material": false,
+     "why": "The review itself describes the association as large."
+    },
+    {
+     "claim": "by any standard in behavioral research",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "This is the narrator's own framing of significance; the research makes no comparison across behavioral research."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 36,
+   "sentence": "Then the analysis broke the data down by type.",
+   "claims": [
+    {
+     "claim": "the analysis broke the data down by type",
+     "status": "supported",
+     "fact": "F24",
+     "quote": "the 2019 meta-analysis also showed it is strongest in more severe forms of homicide such as serial homicide (r = 0.74) and multi-offender homicide (r = 0.80)",
+     "verified": true,
+     "material": false,
+     "why": "The 2019 meta-analysis reported results separately by homicide subtype."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 37,
+   "sentence": "For serial homicide specifically, the correlation rose to r = 0.74.",
+   "claims": [
+    {
+     "claim": "For serial homicide specifically, the correlation rose to r = 0.74.",
+     "status": "supported",
+     "fact": "F20",
+     "quote": "the overall psychopathy–homicide association was large (r = 0.68), and it was stronger in serial homicide (r = 0.74) than in homicide overall",
+     "verified": true,
+     "material": false,
+     "why": "The research gives r = 0.74 for serial homicide, higher than the overall r = 0.68."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 38,
+   "sentence": "The more times the killing repeated, the stronger psychopathy's fingerprint on it.",
+   "claims": [
+    {
+     "claim": "The more times the killing repeated, the stronger psychopathy's fingerprint on it.",
+     "status": "overstated",
+     "fact": "F20",
+     "quote": "it was stronger in serial homicide (r = 0.74) than in homicide overall",
+     "verified": true,
+     "material": true,
+     "why": "Research compares serial homicide with homicide overall; it does not show the link strengthening with each additional killing."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 39,
+   "sentence": "That is not a subtle gradient.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 40,
+   "sentence": "That is psychopathy tracking serial homicide more tightly than homicide in general, though the same analysis found an even stronger link, r = 0.80, for homicides with multiple offenders.",
+   "claims": [
+    {
+     "claim": "psychopathy tracking serial homicide more tightly than homicide in general",
+     "status": "supported",
+     "fact": "F20",
+     "quote": "it was stronger in serial homicide (r = 0.74) than in homicide overall",
+     "verified": true,
+     "material": false,
+     "why": "Research states the association is stronger for serial homicide than for homicide overall."
+    },
+    {
+     "claim": "the same analysis found an even stronger link, r = 0.80, for homicides with multiple offenders",
+     "status": "supported",
+     "fact": "F24",
+     "quote": "the 2019 meta-analysis also showed it is strongest in more severe forms of homicide such as serial homicide (r = 0.74) and multi-offender homicide (r = 0.80)",
+     "verified": true,
+     "material": false,
+     "why": "The same 2019 meta-analysis reports r = 0.80 for multi-offender homicide."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 41,
+   "sentence": "The researchers also produced a mean PCL-R score for homicide offenders across that sample: 21.2.",
+   "claims": [
+    {
+     "claim": "a mean PCL-R score for homicide offenders across that sample: 21.2",
+     "status": "supported",
+     "fact": "F18",
+     "quote": "found the mean PCL-R score for homicide offenders was 21.2",
+     "verified": true,
+     "material": false,
+     "why": "F18 reports the 2019 meta-analysis's mean PCL-R of 21.2 for homicide offenders."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 42,
+   "sentence": "On the PCL-R, a score of 30 or above marks clinical psychopathy.",
+   "claims": [
+    {
+     "claim": "On the PCL-R, a score of 30 or above marks clinical psychopathy.",
+     "status": "supported",
+     "fact": "F23",
+     "quote": "clinically psychopathic with PCL-R scores of 30 or greater",
+     "verified": true,
+     "material": false,
+     "why": "Research ties clinical psychopathy to PCL-R scores of 30 or greater."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 43,
+   "sentence": "A 2023 study of condemned capital murderers pushed that further — the sample mean there was 23.31, and one in three of those individuals scored 30 or above, meeting the clinical threshold outright.",
+   "claims": [
+    {
+     "claim": "A 2023 study of condemned capital murderers",
+     "status": "supported",
+     "fact": "F23",
+     "quote": "A 2023 condemned-capital-murderer sample",
+     "verified": true,
+     "material": false,
+     "why": "Research describes a 2023 sample of condemned capital murderers."
+    },
+    {
+     "claim": "the sample mean there was 23.31",
+     "status": "supported",
+     "fact": "F23",
+     "quote": "the sample mean score was 23.31",
+     "verified": true,
+     "material": false,
+     "why": "The mean score matches the research exactly."
+    },
+    {
+     "claim": "one in three of those individuals scored 30 or above",
+     "status": "supported",
+     "fact": "F23",
+     "quote": "one-third of individuals were clinically psychopathic with PCL-R scores of 30 or greater",
+     "verified": true,
+     "material": false,
+     "why": "'One in three' paraphrases one-third, and the score of 30 or above matches."
+    },
+    {
+     "claim": "meeting the clinical threshold outright",
+     "status": "supported",
+     "fact": "F23",
+     "quote": "clinically psychopathic with PCL-R scores of 30 or greater",
+     "verified": true,
+     "material": false,
+     "why": "Research says these individuals were clinically psychopathic at 30 or above."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 44,
+   "sentence": "What the psychopathy research describes is something structurally different: not a sharper mind, but a mind that processes the emotional consequences of violence differently.",
+   "claims": [
+    {
+     "claim": "What the psychopathy research describes is ... not a sharper mind",
+     "status": "supported",
+     "fact": "F11",
+     "quote": "a small, statistically significant negative relationship between intelligence and psychopathy",
+     "verified": true,
+     "material": false,
+     "why": "Research finds psychopathy is not linked to higher intelligence; the association is slightly negative."
+    },
+    {
+     "claim": "a mind that processes the emotional consequences of violence differently",
+     "status": "supported",
+     "fact": "F2",
+     "quote": "reduced fear conditioning and emotional processing to impaired aversive learning, which weakens the emotional inhibition that would otherwise deter repeated offending",
+     "verified": true,
+     "material": false,
+     "why": "Research links psychopathic traits to altered emotional processing that weakens the inhibition deterring offending."
+    },
+    {
+     "claim": "something structurally different",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "This is the narrator's framing. The research reports associations and does not call the difference structural in kind."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 45,
+   "sentence": "The repetition isn't driven by elevated planning capacity.",
+   "claims": [
+    {
+     "claim": "The repetition isn't driven by elevated planning capacity.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Research shows serial killers' IQ is average (F4, F17), and F14 says amygdala dysfunction only 'may help explain' repeat offending; no fact addresses planning capacity, so this is the narrator's causal interpretation."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 46,
+   "sentence": "The association with psychopathy suggests it is driven by something the IQ score was never going to capture.",
+   "claims": [
+    {
+     "claim": "The association with psychopathy",
+     "status": "supported",
+     "fact": "F20",
+     "quote": "it was stronger in serial homicide (r = 0.74) than in homicide overall",
+     "verified": true,
+     "material": false,
+     "why": "Research reports a psychopathy association with serial homicide."
+    },
+    {
+     "claim": "suggests it is driven by something the IQ score was never going to capture",
+     "status": "overstated",
+     "fact": "F16",
+     "quote": "The peer-reviewed literature still debates whether observed psychopathy-related brain differences are causes, consequences, or correlates of violent behavior",
+     "verified": true,
+     "material": false,
+     "why": "This is the narrator's causal interpretation. The research reports association, not that psychopathy drives the killing."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 47,
+   "sentence": "What psychopathy appears to do to the brain is not sharpen it.",
+   "claims": [
+    {
+     "claim": "What psychopathy appears to do to the brain",
+     "status": "overstated",
+     "fact": "F16",
+     "quote": "The peer-reviewed literature still debates whether observed psychopathy-related brain differences are causes, consequences, or correlates of violent behavior",
+     "verified": true,
+     "material": false,
+     "why": "Implies psychopathy causes brain changes, which the research says is unresolved; hedged by 'appears', so it reads as narrator interpretation."
+    },
+    {
+     "claim": "is not sharpen it",
+     "status": "supported",
+     "fact": "F11",
+     "quote": "a small, statistically significant negative relationship between intelligence and psychopathy",
+     "verified": true,
+     "material": false,
+     "why": "The research links psychopathy to lower, not higher, intelligence and to prefrontal impairment."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 48,
+   "sentence": "It disrupts a specific set of functions — the ones that make consequences feel real before they arrive.",
+   "claims": [
+    {
+     "claim": "It disrupts a specific set of functions",
+     "status": "supported",
+     "fact": "F5",
+     "quote": "social-affective decision making and reinforcement-based learning appearing disrupted while some executive functions can remain relatively intact",
+     "verified": true,
+     "material": false,
+     "why": "Research says a specific set of functions appears disrupted while others stay intact."
+    },
+    {
+     "claim": "the ones that make consequences feel real before they arrive",
+     "status": "unsupported",
+     "fact": "F2",
+     "quote": "impaired aversive learning, which weakens the emotional inhibition that would otherwise deter repeated offending",
+     "verified": true,
+     "material": false,
+     "why": "Loose interpretive gloss on impaired aversive learning; the research does not describe these functions this way."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 49,
+   "sentence": "Neuroimaging and neuropsychological research consistently links psychopathy to impaired function in the ventromedial prefrontal cortex and the orbitofrontal cortex.",
+   "claims": [
+    {
+     "claim": "Neuroimaging and neuropsychological research links psychopathy to impaired function in the ventromedial prefrontal cortex and the orbitofrontal cortex",
+     "status": "supported",
+     "fact": "F5",
+     "quote": "Neuroimaging and neuropsychological studies link psychopathy to impaired ventromedial/orbitofrontal prefrontal cortex function",
+     "verified": true,
+     "material": false,
+     "why": "F5 states this link directly."
+    },
+    {
+     "claim": "consistently links",
+     "status": "overstated",
+     "fact": "F7",
+     "quote": "reports a consistent association between psychopathy and reduced prefrontal gray matter, especially in vmPFC/OFC and anterior cingulate cortex, but the causal interpretation remains contested",
+     "verified": true,
+     "material": false,
+     "why": "The research calls the vmPFC/OFC association consistent only for structural gray-matter findings, not for impaired function, so applying 'consistently' to function goes slightly beyond it."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 50,
+   "sentence": "These regions are involved in social-affective decision making and in reinforcement-based learning — the process by which the brain updates its behavior based on what a previous action cost.",
+   "claims": [
+    {
+     "claim": "These regions are involved in social-affective decision making and in reinforcement-based learning",
+     "status": "supported",
+     "fact": "F5",
+     "quote": "impaired ventromedial/orbitofrontal prefrontal cortex function, with social-affective decision making and reinforcement-based learning appearing disrupted",
+     "verified": true,
+     "material": false,
+     "why": "F5 links vmPFC/OFC impairment to disrupted social-affective decision making and reinforcement-based learning."
+    },
+    {
+     "claim": "reinforcement-based learning — the process by which the brain updates its behavior based on what a previous action cost",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research gives no definition of reinforcement-based learning; this is the narrator's general explanation."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 51,
+   "sentence": "When this circuitry is disrupted, the feedback loop that connects a past outcome to a future choice degrades.",
+   "claims": [
+    {
+     "claim": "When this circuitry is disrupted, the feedback loop that connects a past outcome to a future choice degrades.",
+     "status": "overstated",
+     "fact": "F5",
+     "quote": "link psychopathy to impaired ventromedial/orbitofrontal prefrontal cortex function, with social-affective decision making and reinforcement-based learning appearing disrupted",
+     "verified": true,
+     "material": false,
+     "why": "The research links psychopathy to impaired prefrontal function and says reinforcement learning only appears disrupted, with causation contested (F7, F16); the sentence presents a definite cause-and-effect mechanism, which is the narrator's interpretation."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 52,
+   "sentence": "The person can reason through a problem.",
+   "claims": [
+    {
+     "claim": "The person can reason through a problem.",
+     "status": "supported",
+     "fact": "F8",
+     "quote": "they can perform normally on some attentional and cognitive tasks",
+     "verified": true,
+     "material": false,
+     "why": "Research says high-psychopathy individuals can perform normally on some cognitive tasks; F5 also notes some executive functions remain relatively intact."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 53,
+   "sentence": "Some executive functions stay relatively intact.",
+   "claims": [
+    {
+     "claim": "Some executive functions stay relatively intact.",
+     "status": "supported",
+     "fact": "F5",
+     "quote": "some executive functions can remain relatively intact",
+     "verified": true,
+     "material": false,
+     "why": "F5 states this directly; 'stay' paraphrases 'can remain'."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 54,
+   "sentence": "What changes is the emotional weight the brain assigns to the result of what they did.",
+   "claims": [
+    {
+     "claim": "What changes is the emotional weight the brain assigns to the result of what they did.",
+     "status": "overstated",
+     "fact": "F5",
+     "quote": "social-affective decision making and reinforcement-based learning appearing disrupted while some executive functions can remain relatively intact",
+     "verified": true,
+     "material": false,
+     "why": "Research only links psychopathy to disrupted affective and reinforcement learning, and the causal role is contested (F7, F16); the sentence states it as the settled mechanism."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 55,
+   "sentence": "The amygdala adds a second layer to this.",
+   "claims": [
+    {
+     "claim": "The amygdala adds a second layer to this.",
+     "status": "supported",
+     "fact": "F14",
+     "quote": "reduced emotional responsiveness and impaired threat/fear processing are associated with psychopathic traits and may help explain repeated violent offending",
+     "verified": true,
+     "material": false,
+     "why": "Research links amygdala dysfunction to psychopathic traits; 'second layer' is a narrative transition."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 56,
+   "sentence": "Research on callous-unemotional traits links amygdala dysfunction to reduced fear conditioning — the process through which most people learn, viscerally and automatically, to associate certain actions with aversive outcomes.",
+   "claims": [
+    {
+     "claim": "Research on callous-unemotional traits links amygdala dysfunction to reduced fear conditioning",
+     "status": "supported",
+     "fact": "F2",
+     "quote": "Research on callous-unemotional traits and amygdala dysfunction links reduced fear conditioning and emotional processing to impaired aversive learning",
+     "verified": true,
+     "material": false,
+     "why": "F2 directly states this link."
+    },
+    {
+     "claim": "the process through which most people learn, viscerally and automatically, to associate certain actions with aversive outcomes",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research mentions aversive learning but never defines fear conditioning this way; this is general explanatory framing, not a factual record claim."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 57,
+   "sentence": "Normally, that conditioning functions as an internal brake.",
+   "claims": [
+    {
+     "claim": "Normally, that conditioning functions as an internal brake.",
+     "status": "supported",
+     "fact": "F2",
+     "quote": "reduced fear conditioning and emotional processing to impaired aversive learning, which weakens the emotional inhibition that would otherwise deter repeated offending",
+     "verified": true,
+     "material": false,
+     "why": "Calling intact fear conditioning an 'internal brake' paraphrases F2's emotional inhibition that deters offending."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 58,
+   "sentence": "The memory of punishment, guilt, or fear becomes attached to the act, and that attachment suppresses the impulse to repeat it.",
+   "claims": [
+    {
+     "claim": "The memory of punishment, or fear becomes attached to the act",
+     "status": "supported",
+     "fact": "F2",
+     "quote": "reduced fear conditioning and emotional processing to impaired aversive learning",
+     "verified": true,
+     "material": false,
+     "why": "F2 implies that normal fear conditioning and aversive learning tie punishment and fear to behavior."
+    },
+    {
+     "claim": "guilt ... becomes attached to the act",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Guilt is not mentioned in the research, but this is a general description of how the mechanism typically works."
+    },
+    {
+     "claim": "that attachment suppresses the impulse to repeat it",
+     "status": "supported",
+     "fact": "F2",
+     "quote": "the emotional inhibition that would otherwise deter repeated offending",
+     "verified": true,
+     "material": false,
+     "why": "F2 states that emotional inhibition from aversive learning deters repeated offending."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 59,
+   "sentence": "In individuals with high callous-unemotional traits, this conditioning appears impaired.",
+   "claims": [
+    {
+     "claim": "In individuals with high callous-unemotional traits, this conditioning appears impaired.",
+     "status": "supported",
+     "fact": "F2",
+     "quote": "Research on callous-unemotional traits and amygdala dysfunction links reduced fear conditioning and emotional processing to impaired aversive learning",
+     "verified": true,
+     "material": false,
+     "why": "Research ties callous-unemotional traits to reduced fear conditioning; the sentence hedges with 'appears'."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 60,
+   "sentence": "The brake engages weakly, or not at all.",
+   "claims": [
+    {
+     "claim": "The brake engages weakly, or not at all.",
+     "status": "overstated",
+     "fact": "F2",
+     "quote": "weakens the emotional inhibition that would otherwise deter repeated offending",
+     "verified": true,
+     "material": false,
+     "why": "Metaphor for weakened emotional inhibition; research says weakened, not absent ('not at all' goes further), but this is narrative framing."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 61,
+   "sentence": "Put these two disruptions together and you get something the IQ score was never going to reveal.",
+   "claims": [
+    {
+     "claim": "you get something the IQ score was never going to reveal",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The narrator's interpretation that IQ cannot capture the combined deficits; the research notes intact cognitive performance but never says this."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 62,
+   "sentence": "The orbitofrontal and vmPFC impairment means the brain isn't updating its cost-benefit register from experience the way it should.",
+   "claims": [
+    {
+     "claim": "The orbitofrontal and vmPFC impairment",
+     "status": "supported",
+     "fact": "F5",
+     "quote": "Neuroimaging and neuropsychological studies link psychopathy to impaired ventromedial/orbitofrontal prefrontal cortex function",
+     "verified": true,
+     "material": false,
+     "why": "Research links psychopathy to impaired vmPFC/OFC function."
+    },
+    {
+     "claim": "means the brain isn't updating its cost-benefit register from experience the way it should",
+     "status": "supported",
+     "fact": "F5",
+     "quote": "social-affective decision making and reinforcement-based learning appearing disrupted",
+     "verified": true,
+     "material": false,
+     "why": "A fair paraphrase of disrupted reinforcement-based learning and decision making."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 63,
+   "sentence": "The amygdala dysfunction means the emotional signal that should make violence feel dangerous — to the person committing it — is attenuated.",
+   "claims": [
+    {
+     "claim": "The amygdala dysfunction means the emotional signal that should make violence feel dangerous — to the person committing it — is attenuated.",
+     "status": "supported",
+     "fact": "F2",
+     "quote": "links reduced fear conditioning and emotional processing to impaired aversive learning, which weakens the emotional inhibition that would otherwise deter repeated offending",
+     "verified": true,
+     "material": false,
+     "why": "F2 links amygdala dysfunction to weakened emotional inhibition that would otherwise deter offending; the sentence paraphrases this."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 64,
+   "sentence": "Repetition, then, isn't the product of a mind sophisticated enough to keep escaping consequences.",
+   "claims": [
+    {
+     "claim": "Repetition, then, isn't the product of a mind sophisticated enough to keep escaping consequences.",
+     "status": "overstated",
+     "fact": "F17",
+     "quote": "Available data sources do not support the assumption that serial homicide offenders are typically highly intelligent and especially hard to apprehend",
+     "verified": true,
+     "material": false,
+     "why": "The research only says the data don't support the high-intelligence assumption, and that emotional deficits 'may help explain' repeat offending. Flatly ruling out sophistication as the cause of repetition is the narrator's interpretive conclusion."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 65,
+   "sentence": "It may be the product of a mind that processes those consequences differently from the start.",
+   "claims": [
+    {
+     "claim": "It may be the product of a mind that processes those consequences differently",
+     "status": "supported",
+     "fact": "F2",
+     "quote": "links reduced fear conditioning and emotional processing to impaired aversive learning, which weakens the emotional inhibition that would otherwise deter repeated offending",
+     "verified": true,
+     "material": false,
+     "why": "Research links impaired aversive learning to repeated offending, and the claim is hedged."
+    },
+    {
+     "claim": "from the start",
+     "status": "unsupported",
+     "fact": "F16",
+     "quote": "whether structural versus functional prefrontal/amygdala findings reflect developmental deficits, environmental effects, or sample-specific criminal history",
+     "verified": true,
+     "material": false,
+     "why": "Research leaves open whether these differences are innate or developmental; this is hedged speculation, not a stated fact."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 66,
+   "sentence": "The research is careful to note that the causal direction here remains debated — whether these brain differences precede violent behavior, develop alongside it, or reflect something else entirely is still an open question.",
+   "claims": [
+    {
+     "claim": "The research is careful to note that the causal direction here remains debated",
+     "status": "supported",
+     "fact": "F16",
+     "quote": "The peer-reviewed literature still debates whether observed psychopathy-related brain differences are causes, consequences, or correlates of violent behavior",
+     "verified": true,
+     "material": false,
+     "why": "F16 states the causal question is still debated."
+    },
+    {
+     "claim": "whether these brain differences precede violent behavior, develop alongside it, or reflect something else entirely is still an open question",
+     "status": "supported",
+     "fact": "F16",
+     "quote": "whether observed psychopathy-related brain differences are causes, consequences, or correlates of violent behavior, and whether structural versus functional prefrontal/amygdala findings reflect developmental deficits, environmental effects, or sample-specific criminal history",
+     "verified": true,
+     "material": false,
+     "why": "This paraphrases the causes/consequences/correlates debate and the alternative explanations in F16."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 67,
+   "sentence": "What the studies do show, consistently, is that the emotional inhibition most people carry without thinking about it appears structurally weaker in this population.",
+   "claims": [
+    {
+     "claim": "What the studies do show, consistently",
+     "status": "overstated",
+     "fact": "F7",
+     "quote": "reports a consistent association between psychopathy and reduced prefrontal gray matter, especially in vmPFC/OFC and anterior cingulate cortex, but the causal interpretation remains contested",
+     "verified": true,
+     "material": true,
+     "why": "The research calls only the gray-matter association consistent, with causation contested; it never says studies consistently show weaker emotional inhibition."
+    },
+    {
+     "claim": "the emotional inhibition most people carry without thinking about it appears structurally weaker in this population",
+     "status": "overstated",
+     "fact": "F2",
+     "quote": "links reduced fear conditioning and emotional processing to impaired aversive learning, which weakens the emotional inhibition",
+     "verified": true,
+     "material": false,
+     "why": "The research links weakened inhibition to amygdala dysfunction, and F16 says whether the brain findings are structural or functional is debated; 'structurally' goes beyond that, though 'appears' hedges it."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 68,
+   "sentence": "The research does not support the idea that the killer keeps going because of a superior mind outpacing everyone trying to stop him.",
+   "claims": [
+    {
+     "claim": "The research does not support the idea that the killer keeps going because of a superior mind outpacing everyone trying to stop him.",
+     "status": "supported",
+     "fact": "F17",
+     "quote": "Available data sources do not support the assumption that serial homicide offenders are typically highly intelligent and especially hard to apprehend",
+     "verified": true,
+     "material": false,
+     "why": "F17 directly states the data do not support the highly-intelligent, hard-to-apprehend assumption."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 69,
+   "sentence": "The research points somewhere harder and stranger than that.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 70,
+   "sentence": "But the meta-analytic literature goes further than that.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 71,
+   "sentence": "It doesn't just find no positive link — it finds a negative one.",
+   "claims": [
+    {
+     "claim": "it finds a negative one",
+     "status": "supported",
+     "fact": "F11",
+     "quote": "A meta-analytic review found a small, statistically significant negative relationship between intelligence and psychopathy",
+     "verified": true,
+     "material": false,
+     "why": "The meta-analysis reports a negative intelligence–psychopathy correlation (r = -.07)."
+    },
+    {
+     "claim": "It doesn't just find no positive link",
+     "status": "supported",
+     "fact": "F11",
+     "quote": "total psychopathy correlated with FSIQ at r = -.07",
+     "verified": true,
+     "material": false,
+     "why": "A negative correlation means the review found no positive link."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 72,
+   "sentence": "Across the studies pooled in that meta-analytic review, total psychopathy correlated with full-scale IQ at r = −.07.",
+   "claims": [
+    {
+     "claim": "Across the studies pooled in that meta-analytic review, total psychopathy correlated with full-scale IQ at r = −.07.",
+     "status": "supported",
+     "fact": "F11",
+     "quote": "A meta-analytic review found a small, statistically significant negative relationship between intelligence and psychopathy, with total psychopathy correlated with FSIQ at r = -.07.",
+     "verified": true,
+     "material": false,
+     "why": "The research states the meta-analytic correlation of total psychopathy with FSIQ as r = -.07."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 73,
+   "sentence": "Small, but statistically significant, and pointing in the direction the myth least expects.",
+   "claims": [
+    {
+     "claim": "Small, but statistically significant",
+     "status": "supported",
+     "fact": "F11",
+     "quote": "a small, statistically significant negative relationship between intelligence and psychopathy",
+     "verified": true,
+     "material": false,
+     "why": "The meta-analysis reports a small, statistically significant relationship."
+    },
+    {
+     "claim": "pointing in the direction the myth least expects",
+     "status": "supported",
+     "fact": "F11",
+     "quote": "negative relationship between intelligence and psychopathy, with total psychopathy correlated with FSIQ at r = -.07",
+     "verified": true,
+     "material": false,
+     "why": "The negative direction is established; contrasting it with the myth is narrative framing."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 74,
+   "sentence": "Higher psychopathy, marginally lower measured intelligence.",
+   "claims": [
+    {
+     "claim": "Higher psychopathy, marginally lower measured intelligence.",
+     "status": "supported",
+     "fact": "F11",
+     "quote": "found a small, statistically significant negative relationship between intelligence and psychopathy, with total psychopathy correlated with FSIQ at r = -.07",
+     "verified": true,
+     "material": false,
+     "why": "The meta-analysis reports a small negative association, which matches 'marginally lower.'"
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 75,
+   "sentence": "The relationship is not dramatic at that scale, but its direction matters: the data are not neutral.",
+   "claims": [
+    {
+     "claim": "The relationship is not dramatic at that scale",
+     "status": "supported",
+     "fact": "F11",
+     "quote": "a small, statistically significant negative relationship between intelligence and psychopathy",
+     "verified": true,
+     "material": false,
+     "why": "The research describes the relationship as small (r = -.07)."
+    },
+    {
+     "claim": "its direction matters: the data are not neutral",
+     "status": "supported",
+     "fact": "F11",
+     "quote": "small, statistically significant negative relationship",
+     "verified": true,
+     "material": false,
+     "why": "The research reports a statistically significant negative direction, so the data are not null."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 76,
+   "sentence": "They lean against the premise the cultural story was built on.",
+   "claims": [
+    {
+     "claim": "They lean against the premise the cultural story was built on.",
+     "status": "supported",
+     "fact": "F15",
+     "quote": "The best-known database evidence does not support the stereotype of an exceptionally intelligent serial killer",
+     "verified": true,
+     "material": false,
+     "why": "Research says the data do not support the intelligent-serial-killer stereotype."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 77,
+   "sentence": "Then there is the study of insane female offenders, where the Pearson correlation between total PCL-R score and IQ was r = −0.55.",
+   "claims": [
+    {
+     "claim": "the study of insane female offenders, where the Pearson correlation between total PCL-R score and IQ was r = −0.55",
+     "status": "supported",
+     "fact": "F1",
+     "quote": "A study of insane female offenders found the Pearson correlation between total PCL-R score and IQ was r = -0.55",
+     "verified": true,
+     "material": false,
+     "why": "Matches F1 exactly."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 78,
+   "sentence": "That is not a marginal lean.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 79,
+   "sentence": "A moderate-to-strong inverse relationship, in a specific clinical population, where psychopathy scores and cognitive performance moved in opposite directions with enough consistency to produce a correlation of that size.",
+   "claims": [
+    {
+     "claim": "A moderate-to-strong inverse relationship",
+     "status": "unsupported",
+     "fact": "F1",
+     "quote": "the Pearson correlation between total PCL-R score and IQ was r = -0.55",
+     "verified": true,
+     "material": false,
+     "why": "Research gives r = -0.55 and its direction; the 'moderate-to-strong' label is the narrator's own characterization."
+    },
+    {
+     "claim": "in a specific clinical population",
+     "status": "supported",
+     "fact": "F1",
+     "quote": "A study of insane female offenders",
+     "verified": true,
+     "material": false,
+     "why": "The study sample was insane female offenders, a specific clinical population."
+    },
+    {
+     "claim": "psychopathy scores and cognitive performance moved in opposite directions",
+     "status": "supported",
+     "fact": "F1",
+     "quote": "higher psychopathy predicted lower cognitive performance",
+     "verified": true,
+     "material": false,
+     "why": "A negative correlation between PCL-R score and IQ matches the research."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 80,
+   "sentence": "The population is specific and the generalization to all offenders would be a step beyond what the data license — but the number itself is hard to square with any version of the genius-killer narrative.",
+   "claims": [
+    {
+     "claim": "the number itself is hard to square with any version of the genius-killer narrative",
+     "status": "supported",
+     "fact": "F15",
+     "quote": "The best-known database evidence does not support the stereotype of an exceptionally intelligent serial killer",
+     "verified": true,
+     "material": false,
+     "why": "Narrator's interpretation, consistent with the research rejecting the genius stereotype."
+    },
+    {
+     "claim": "The population is specific and the generalization to all offenders would be a step beyond what the data license",
+     "status": "supported",
+     "fact": "F1",
+     "quote": "A study of insane female offenders found the Pearson correlation between total PCL-R score and IQ was r = -0.55",
+     "verified": true,
+     "material": false,
+     "why": "Hedge noting a specific sample; F1 shows a specific population, though the sentence does not name which number it means."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 81,
+   "sentence": "What makes these correlations land differently than a simple IQ average is what they describe structurally.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 82,
+   "sentence": "A mean score tells you where a group sits.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 83,
+   "sentence": "A correlation tells you which direction two things move relative to each other.",
+   "claims": [
+    {
+     "claim": "A correlation tells you which direction two things move relative to each other.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "A general explanation of what correlation means; the research reports correlation values but never defines the concept."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 84,
+   "sentence": "And these two measures are pulling in the same direction: as psychopathy increases, cognitive performance either holds flat or declines.",
+   "claims": [
+    {
+     "claim": "these two measures are pulling in the same direction",
+     "status": "supported",
+     "fact": "F11",
+     "quote": "a small, statistically significant negative relationship between intelligence and psychopathy, with total psychopathy correlated with FSIQ at r = -.07",
+     "verified": true,
+     "material": false,
+     "why": "Both cited correlations (r = -0.55 in F1 and r = -.07 here) are negative, so they point the same way."
+    },
+    {
+     "claim": "as psychopathy increases, cognitive performance either holds flat or declines",
+     "status": "supported",
+     "fact": "F1",
+     "quote": "r = -0.55, meaning higher psychopathy predicted lower cognitive performance",
+     "verified": true,
+     "material": false,
+     "why": "F1 shows a decline; F11's small r = -.07 is consistent with performance holding near flat."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 85,
+   "sentence": "The trait that the research has already shown to carry the strongest association with serial homicide is not bundled with elevated intelligence.",
+   "claims": [
+    {
+     "claim": "The trait that the research has already shown to carry the strongest association with serial homicide",
+     "status": "overstated",
+     "fact": "F20",
+     "quote": "it was stronger in serial homicide (r = 0.74) than in homicide overall",
+     "verified": true,
+     "material": true,
+     "why": "Research says psychopathy's link is stronger for serial homicide than for homicide overall; it never ranks psychopathy as the trait most strongly associated with serial homicide."
+    },
+    {
+     "claim": "is not bundled with elevated intelligence",
+     "status": "supported",
+     "fact": "F11",
+     "quote": "a small, statistically significant negative relationship between intelligence and psychopathy",
+     "verified": true,
+     "material": false,
+     "why": "A negative psychopathy–IQ correlation supports the claim that the trait does not come with elevated intelligence."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 86,
+   "sentence": "It runs alongside average cognition, or below it.",
+   "claims": [
+    {
+     "claim": "It runs alongside average cognition, or below it.",
+     "status": "supported",
+     "fact": "F15",
+     "quote": "the Radford Serial Killer IQ sample had a mean IQ of 95.1 and median of 89.0, which is around average to slightly below average",
+     "verified": true,
+     "material": false,
+     "why": "Research describes serial killer IQ as average to slightly below average."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 87,
+   "sentence": "The controlled laboratory research adds one more layer.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 88,
+   "sentence": "Studies of high-psychopathy participants have found that they can perform normally on certain attentional and cognitive tasks even while showing the characteristic emotional and behavioral abnormalities the trait produces.",
+   "claims": [
+    {
+     "claim": "Studies of high-psychopathy participants have found that they can perform normally on certain attentional and cognitive tasks",
+     "status": "supported",
+     "fact": "F8",
+     "quote": "Controlled studies of high-psychopathy participants have found that they can perform normally on some attentional and cognitive tasks",
+     "verified": true,
+     "material": false,
+     "why": "Close paraphrase of F8."
+    },
+    {
+     "claim": "even while showing the characteristic emotional and behavioral abnormalities",
+     "status": "supported",
+     "fact": "F8",
+     "quote": "despite showing characteristic emotional and behavioral abnormalities",
+     "verified": true,
+     "material": false,
+     "why": "Directly stated in F8."
+    },
+    {
+     "claim": "the trait produces",
+     "status": "overstated",
+     "fact": "F8",
+     "quote": "despite showing characteristic emotional and behavioral abnormalities",
+     "verified": true,
+     "material": false,
+     "why": "The research calls the abnormalities characteristic of psychopathy but does not say the trait causes them. This is the narrator's interpretive framing."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 89,
+   "sentence": "Attention can be intact.",
+   "claims": [
+    {
+     "claim": "Attention can be intact.",
+     "status": "supported",
+     "fact": "F8",
+     "quote": "they can perform normally on some attentional and cognitive tasks despite showing characteristic emotional and behavioral abnormalities",
+     "verified": true,
+     "material": false,
+     "why": "F8 reports that high-psychopathy participants can perform normally on some attentional tasks."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 90,
+   "sentence": "Some executive processes hold.",
+   "claims": [
+    {
+     "claim": "Some executive processes hold.",
+     "status": "supported",
+     "fact": "F5",
+     "quote": "some executive functions can remain relatively intact",
+     "verified": true,
+     "material": false,
+     "why": "Research says some executive functions can remain relatively intact in psychopathy."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 91,
+   "sentence": "The disruption lives elsewhere, not in raw cognitive horsepower.",
+   "claims": [
+    {
+     "claim": "The disruption lives elsewhere",
+     "status": "supported",
+     "fact": "F5",
+     "quote": "social-affective decision making and reinforcement-based learning appearing disrupted while some executive functions can remain relatively intact",
+     "verified": true,
+     "material": false,
+     "why": "Research places the psychopathy-linked disruption in social-affective decision making and reinforcement learning."
+    },
+    {
+     "claim": "not in raw cognitive horsepower",
+     "status": "overstated",
+     "fact": "F5",
+     "quote": "some executive functions can remain relatively intact",
+     "verified": true,
+     "material": false,
+     "why": "Research says only some functions stay intact; it also reports executive deficits (F12) and a small negative IQ correlation (F11). The flat denial is the narrator's interpretation."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 92,
+   "sentence": "Research into young violent offenders has made this separation explicit: intelligence was not necessarily pertinent to understanding aggressive antisocial or psychopathic behaviors.",
+   "claims": [
+    {
+     "claim": "Research into young violent offenders has made this separation explicit",
+     "status": "unsupported",
+     "fact": "F21",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Calling the finding an explicit 'separation' is the narrator's interpretation, not something the research states."
+    },
+    {
+     "claim": "Research into young violent offenders ... intelligence was not necessarily pertinent to understanding aggressive antisocial or psychopathic behaviors",
+     "status": "supported",
+     "fact": "F21",
+     "quote": "A 2019 study of young violent offenders found that intelligence was not necessarily pertinent to understanding aggressive antisocial or psychopathic behaviors",
+     "verified": true,
+     "material": false,
+     "why": "Near-verbatim match to the 2019 study's finding."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 93,
+   "sentence": "The interpersonal and affective facets of psychopathy — the dimensions most central to the trait's definition — had very low impact on explaining variance in aggressive antisocial behavior.",
+   "claims": [
+    {
+     "claim": "The interpersonal and affective facets of psychopathy had very low impact on explaining variance in aggressive antisocial behavior",
+     "status": "supported",
+     "fact": "F21",
+     "quote": "the interpersonal and affective psychopathy facets had very low impact on explained variance in aggressive antisocial behavior",
+     "verified": true,
+     "material": false,
+     "why": "Matches the 2019 study of young violent offenders."
+    },
+    {
+     "claim": "the dimensions most central to the trait's definition",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research never calls these facets the most central to psychopathy's definition; this is the narrator's characterization."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 94,
+   "sentence": "What drove the behavior wasn't measured by IQ.",
+   "claims": [
+    {
+     "claim": "What drove the behavior wasn't measured by IQ.",
+     "status": "overstated",
+     "fact": "F21",
+     "quote": "intelligence was not necessarily pertinent to understanding aggressive antisocial or psychopathic behaviors",
+     "verified": true,
+     "material": false,
+     "why": "The research hedges that intelligence is 'not necessarily pertinent'; the narrator's flat claim about what drove the behavior is interpretation, not a stated finding."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 95,
+   "sentence": "The cognitive score and the behavioral pattern were, to a meaningful degree, running on separate tracks.",
+   "claims": [
+    {
+     "claim": "The cognitive score and the behavioral pattern were, to a meaningful degree, running on separate tracks.",
+     "status": "overstated",
+     "fact": "F21",
+     "quote": "intelligence was not necessarily pertinent to understanding aggressive antisocial or psychopathic behaviors",
+     "verified": true,
+     "material": false,
+     "why": "The research hedges ('not necessarily pertinent'), and 'separate tracks to a meaningful degree' is the narrator's own stronger interpretive framing."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 96,
+   "sentence": "The myth collapsed them into one.",
+   "claims": [
+    {
+     "claim": "The myth collapsed them into one.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research records the assumption that serial killers are highly intelligent and hard to catch (F17), but saying the myth 'collapsed' distinct traits into one is the narrator's interpretation."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 97,
+   "sentence": "The research keeps them apart.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 98,
+   "sentence": "What actually keeps an offender undetected across multiple victims is not a superior mind — it is a structural problem that would slow any investigation regardless of who was conducting it.",
+   "claims": [
+    {
+     "claim": "What actually keeps an offender undetected across multiple victims is not a superior mind",
+     "status": "overstated",
+     "fact": "F17",
+     "quote": "Available data sources do not support the assumption that serial homicide offenders are typically highly intelligent and especially hard to apprehend",
+     "verified": true,
+     "material": false,
+     "why": "The research shows average IQ, not that intelligence plays no role in evading detection; this is the narrator's inference."
+    },
+    {
+     "claim": "it is a structural problem",
+     "status": "supported",
+     "fact": "F13",
+     "quote": "serial homicide is often harder to identify and clear than single-incident homicide because cases are dispersed across time and jurisdictions",
+     "verified": true,
+     "material": false,
+     "why": "Dispersal across time and jurisdictions is a structural cause of detection difficulty."
+    },
+    {
+     "claim": "that would slow any investigation regardless of who was conducting it",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "This is the narrator's generalization; the research does not address investigator-independence."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 99,
+   "sentence": "The FBI's own guidance on serial homicide is direct about this: cases are harder to identify and clear than single-incident homicides because they scatter across time and jurisdictions.",
+   "claims": [
+    {
+     "claim": "The FBI's own guidance on serial homicide is direct about this: cases are harder to identify and clear than single-incident homicides",
+     "status": "supported",
+     "fact": "F13",
+     "quote": "FBI guidance on serial homicide emphasizes that offenders can operate for long periods without detection, and serial homicide is often harder to identify and clear than single-incident homicide",
+     "verified": true,
+     "material": false,
+     "why": "The research attributes this point directly to FBI guidance."
+    },
+    {
+     "claim": "because they scatter across time and jurisdictions",
+     "status": "supported",
+     "fact": "F13",
+     "quote": "because cases are dispersed across time and jurisdictions",
+     "verified": true,
+     "material": false,
+     "why": "This paraphrases the cause given in the guidance."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 100,
+   "sentence": "A victim found in one county, another found two states away, a third case never linked to the first two — these are not puzzles that required a genius to construct.",
+   "claims": [
+    {
+     "claim": "A victim found in one county, another found two states away, a third case never linked to the first two",
+     "status": "supported",
+     "fact": "F13",
+     "quote": "serial homicide is often harder to identify and clear than single-incident homicide because cases are dispersed across time and jurisdictions",
+     "verified": true,
+     "material": false,
+     "why": "An illustrative scenario of cases dispersed across jurisdictions, matching F13."
+    },
+    {
+     "claim": "these are not puzzles that required a genius to construct",
+     "status": "unsupported",
+     "fact": "F17",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Narrator's inference linking jurisdictional dispersal to the lack of need for high intelligence; the research does not state this directly."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 101,
+   "sentence": "They are the natural consequence of geography and time fragmenting the evidence before anyone knows there is a pattern to look for.",
+   "claims": [
+    {
+     "claim": "They are the natural consequence of geography and time fragmenting the evidence",
+     "status": "supported",
+     "fact": "F13",
+     "quote": "serial homicide is often harder to identify and clear than single-incident homicide because cases are dispersed across time and jurisdictions",
+     "verified": true,
+     "material": false,
+     "why": "F13 attributes the difficulty to cases being dispersed across time and jurisdictions."
+    },
+    {
+     "claim": "before anyone knows there is a pattern to look for",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The narrator's account of how the dispersal plays out; the research does not describe this specific sequence."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 102,
+   "sentence": "The clearance data give that problem a number.",
+   "claims": [
+    {
+     "claim": "The clearance data give that problem a number.",
+     "status": "supported",
+     "fact": "F6",
+     "quote": "FBI homicide clearance data show that only 54% of homicides were cleared in 2020, meaning 46% remained unsolved",
+     "verified": true,
+     "material": false,
+     "why": "A transition line; the research does include FBI clearance data that put numbers on unsolved homicides."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 103,
+   "sentence": "In 2020, only 54% of homicides were cleared, leaving 46% unsolved.",
+   "claims": [
+    {
+     "claim": "In 2020, only 54% of homicides were cleared",
+     "status": "supported",
+     "fact": "F6",
+     "quote": "only 54% of homicides were cleared in 2020",
+     "verified": true,
+     "material": false,
+     "why": "Matches FBI clearance figure for 2020."
+    },
+    {
+     "claim": "leaving 46% unsolved",
+     "status": "supported",
+     "fact": "F6",
+     "quote": "meaning 46% remained unsolved",
+     "verified": true,
+     "material": false,
+     "why": "Research states 46% remained unsolved."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 104,
+   "sentence": "By 2024 that figure had moved to 61% — an improvement, but still a portrait of how often homicide goes unanswered even before you layer in the additional complexity of cases spread across multiple agencies.",
+   "claims": [
+    {
+     "claim": "By 2024 that figure had moved to 61%",
+     "status": "supported",
+     "fact": "F6",
+     "quote": "reported clearance for 2024 was 61%",
+     "verified": true,
+     "material": false,
+     "why": "The research states the 61% clearance figure for 2024."
+    },
+    {
+     "claim": "an improvement",
+     "status": "derived",
+     "fact": "F6",
+     "quote": "54% clearance rate in 2020 vs 61% reported for 2024",
+     "verified": true,
+     "material": false,
+     "why": "A rise from 54% to 61% is an increase by plain arithmetic."
+    },
+    {
+     "claim": "the additional complexity of cases spread across multiple agencies",
+     "status": "supported",
+     "fact": "F13",
+     "quote": "serial homicide is often harder to identify and clear than single-incident homicide because cases are dispersed across time and jurisdictions",
+     "verified": true,
+     "material": false,
+     "why": "\"Multiple agencies\" paraphrases cases dispersed across jurisdictions."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 105,
+   "sentence": "The myth was never built on that reality.",
+   "claims": [
+    {
+     "claim": "The myth was never built on that reality.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research shows the data do not support the stereotype, but it says nothing about how the myth originated; this is the narrator's interpretation."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 106,
+   "sentence": "And ordinary is what the research keeps returning to.",
+   "claims": [
+    {
+     "claim": "ordinary is what the research keeps returning to",
+     "status": "overstated",
+     "fact": "F10",
+     "quote": "those offenders appear to be of normal IQ overall (median 89.0, mean 95.1)",
+     "verified": true,
+     "material": false,
+     "why": "The 'ordinary' finding comes from one secondary-source database (Radford), which F9 flags as possibly incomplete, not from repeated research. The line is the narrator's framing."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 107,
+   "sentence": "Not in the sense of unremarkable lives, but in the precise, measurable sense: cognition clustering around the population norm, not above it.",
+   "claims": [
+    {
+     "claim": "cognition clustering around the population norm",
+     "status": "supported",
+     "fact": "F3",
+     "quote": "the sample of 202 serial killers clustering around normal rather than exceptional intelligence",
+     "verified": true,
+     "material": false,
+     "why": "The Radford data show serial killer IQs clustering around normal."
+    },
+    {
+     "claim": "not above it",
+     "status": "supported",
+     "fact": "F4",
+     "quote": "Radford’s sample mean is 95.1, below the population mean of 100",
+     "verified": true,
+     "material": false,
+     "why": "The sample mean is below, not above, the population mean."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 108,
+   "sentence": "The literature reports a consistent association between psychopathy and reduced prefrontal gray matter, particularly in the vmPFC, the orbitofrontal cortex, and the anterior cingulate, regions involved in how the brain weights consequences before acting.",
+   "claims": [
+    {
+     "claim": "The literature reports a consistent association between psychopathy and reduced prefrontal gray matter",
+     "status": "supported",
+     "fact": "F7",
+     "quote": "The peer-reviewed literature reports a consistent association between psychopathy and reduced prefrontal gray matter",
+     "verified": true,
+     "material": false,
+     "why": "Directly stated in F7."
+    },
+    {
+     "claim": "particularly in the vmPFC, the orbitofrontal cortex, and the anterior cingulate",
+     "status": "supported",
+     "fact": "F7",
+     "quote": "especially in vmPFC/OFC and anterior cingulate cortex",
+     "verified": true,
+     "material": false,
+     "why": "F7 names the same regions."
+    },
+    {
+     "claim": "regions involved in how the brain weights consequences before acting",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "No fact says these regions weigh consequences before acting. F5 only ties vmPFC/OFC to decision making and reinforcement learning, not the anterior cingulate. This is a general functional gloss."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 109,
+   "sentence": "But the literature is equally insistent on what that finding does not license.",
+   "claims": [
+    {
+     "claim": "the literature is equally insistent on what that finding does not license",
+     "status": "overstated",
+     "fact": "F16",
+     "quote": "The peer-reviewed literature still debates whether observed psychopathy-related brain differences are causes, consequences, or correlates of violent behavior",
+     "verified": true,
+     "material": false,
+     "why": "The research says the literature debates the interpretation, not that it is 'equally insistent'; this is the narrator's framing."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 110,
+   "sentence": "Studies debate whether the findings reflect developmental deficits, environmental effects, or factors specific to criminal history in the samples being studied.",
+   "claims": [
+    {
+     "claim": "Studies debate whether the findings reflect developmental deficits, environmental effects, or factors specific to criminal history in the samples being studied.",
+     "status": "supported",
+     "fact": "F16",
+     "quote": "whether structural versus functional prefrontal/amygdala findings reflect developmental deficits, environmental effects, or sample-specific criminal history",
+     "verified": true,
+     "material": false,
+     "why": "F16 states this debate in the peer-reviewed literature; the sentence paraphrases it faithfully."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 111,
+   "sentence": "The neuroscience points at something real and then stops short of telling us exactly what it means — which is the honest position, and the opposite of the clean story the myth prefers.",
+   "claims": [
+    {
+     "claim": "The neuroscience points at something real",
+     "status": "supported",
+     "fact": "F7",
+     "quote": "The peer-reviewed literature reports a consistent association between psychopathy and reduced prefrontal gray matter",
+     "verified": true,
+     "material": false,
+     "why": "Research reports a consistent neuroscientific association."
+    },
+    {
+     "claim": "then stops short of telling us exactly what it means",
+     "status": "supported",
+     "fact": "F16",
+     "quote": "The peer-reviewed literature still debates whether observed psychopathy-related brain differences are causes, consequences, or correlates of violent behavior",
+     "verified": true,
+     "material": false,
+     "why": "The meaning of the brain findings remains debated."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 112,
+   "sentence": "The myth is not harmless.",
+   "claims": [
+    {
+     "claim": "The myth is not harmless.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research never says the myth causes harm; this is the narrator's own judgment."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 113,
+   "sentence": "If the public and even investigators start from the premise that an offender evading capture must be exceptionally intelligent, that premise shapes what they look for and where they look.",
+   "claims": [
+    {
+     "claim": "that premise shapes what they look for and where they look",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research does not say this premise shapes investigations; it is the narrator's general analysis, framed conditionally."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 114,
+   "sentence": "It flatters the killer and obscures the actual problem: cases that should be connected aren't, because the systems for connecting them are imperfect.",
+   "claims": [
+    {
+     "claim": "cases that should be connected aren't, because the systems for connecting them are imperfect",
+     "status": "unsupported",
+     "fact": "F13",
+     "quote": "serial homicide is often harder to identify and clear than single-incident homicide because cases are dispersed across time and jurisdictions",
+     "verified": true,
+     "material": false,
+     "why": "The research attributes the difficulty to cases being dispersed across time and jurisdictions; it says nothing about imperfect linkage systems, so this causal claim is the narrator's own general analysis."
+    },
+    {
+     "claim": "It flatters the killer and obscures the actual problem",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "This is the narrator's interpretation of the myth's effect; no research fact states it."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 115,
+   "sentence": "The genius narrative makes that a story about the offender's superiority.",
+   "claims": [
+    {
+     "claim": "The genius narrative makes that a story about the offender's superiority",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research notes a stereotype of the exceptionally intelligent serial killer (F15), but saying it frames cases as a story of offender superiority is the narrator's interpretation."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 116,
+   "sentence": "The research makes it a story about the limits of coordination across time and place.",
+   "claims": [
+    {
+     "claim": "The research makes it a story about the limits of coordination across time and place",
+     "status": "unsupported",
+     "fact": "F13",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The narrator's framing. F13 says cases are dispersed across time and jurisdictions, but no research fact names coordination limits as the central story."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 117,
+   "sentence": "The data never supported that image.",
+   "claims": [
+    {
+     "claim": "The data never supported that image.",
+     "status": "supported",
+     "fact": "F15",
+     "quote": "The best-known database evidence does not support the stereotype of an exceptionally intelligent serial killer",
+     "verified": true,
+     "material": false,
+     "why": "Research states the database evidence does not support the intelligent-serial-killer stereotype."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 118,
+   "sentence": "It is also the one the evidence actually builds.",
+   "claims": [],
+   "error": false,
+   "material": false
+  }
+ ],
+ "gateLog": [],
+ "gateOriginals": [],
+ "v1Errors": [
+  {
+   "i": 34,
+   "sentence": "A 2019 meta-analysis pulled together 22 studies covering 2,603 homicide offenders across 29 unique samples, and the number it produced changes the frame entirely.",
+   "script_quote": "pulled together 22 studies covering 2,603 homicide offenders across 29 unique samples",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research states '29 unique homicide offender samples from 22 studies (2,603 offenders)' — the script reverses the relationship, saying '22 studies covering 2,603 homicide offenders across 29 unique samples', which correctly lists the numbers but the phrasing matches the research closely enough; ",
+   "first_seen": "section_4",
+   "seen_in": [
+    "section_4",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 38,
+   "sentence": "The more times the killing repeated, the stronger psychopathy's fingerprint on it.",
+   "script_quote": "The more times the killing repeated, the stronger psychopathy's fingerprint on it",
+   "category": "evidence_inflation",
+   "verdict": "error",
+   "research_quote": "it was stronger in serial homicide (r = 0.74) than in homicide overall",
+   "why": "The research only compares serial homicide to homicide overall; it does not show a gradient where more repetitions correlate with stronger psychopathy association, so the script's causal/gradient claim is not supported.",
+   "first_seen": "section_4",
+   "seen_in": [
+    "section_4",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 42,
+   "sentence": "On the PCL-R, a score of 30 or above marks clinical psychopathy.",
+   "script_quote": "On the PCL-R, a score of 30 or above marks clinical psychopathy.",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research never states that 30 is the clinical threshold for psychopathy on the PCL-R; it only reports scores relative to that number without defining it as a clinical cutoff.",
+   "first_seen": "final_check",
+   "seen_in": [
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 67,
+   "sentence": "What the studies do show, consistently, is that the emotional inhibition most people carry without thinking about it appears structurally weaker in this population.",
+   "script_quote": "the emotional inhibition most people carry without thinking about it appears structurally weaker in this population",
+   "category": "evidence_inflation",
+   "verdict": "error",
+   "research_quote": "the causal interpretation remains contested because studies also propose broader limbic and fronto-limbic connectivity explanations rather than a single prefrontal deficit",
+   "why": "The script states this as a consistent finding about structural weakness, but the research explicitly notes causal interpretation is contested and the findings may reflect developmental, environmental, or sample-specific factors.",
+   "first_seen": "section_5",
+   "seen_in": [
+    "section_5",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 84,
+   "sentence": "And these two measures are pulling in the same direction: as psychopathy increases, cognitive performance either holds flat or declines.",
+   "script_quote": "as psychopathy increases, cognitive performance either holds flat or declines",
+   "category": "evidence_inflation",
+   "verdict": "error",
+   "research_quote": "A meta-analytic review found a small, statistically significant negative relationship between intelligence and psychopathy, with total psychopathy correlated with FSIQ at r = -.07.",
+   "why": "The research shows a small negative correlation (r=-.07) and one study-specific correlation (r=-0.55 in a specific female offender sample); the script generalises this as a clean directional rule ('holds flat or declines') without the research supporting that framing as a general law.",
+   "first_seen": "section_6",
+   "seen_in": [
+    "section_6",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 85,
+   "sentence": "The trait that the research has already shown to carry the strongest association with serial homicide is not bundled with elevated intelligence.",
+   "script_quote": "the trait that the research has already shown to carry the strongest association with serial homicide",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The script implies a prior research finding within this script establishing which trait carries the 'strongest association with serial homicide'; the research does not frame any single trait this way in the provided text.",
+   "first_seen": "section_6",
+   "seen_in": [
+    "section_6",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 93,
+   "sentence": "The interpersonal and affective facets of psychopathy — the dimensions most central to the trait's definition — had very low impact on explaining variance in aggressive antisocial behavior.",
+   "script_quote": "The interpersonal and affective facets of psychopathy — the dimensions most central to the trait's definition — had very low impact on explaining variance in aggressive antisocial behavior",
+   "category": "evidence_inflation",
+   "verdict": "error",
+   "research_quote": "the interpersonal and affective psychopathy facets had very low impact on explained variance in aggressive antisocial behavior",
+   "why": "The script adds the characterisation 'most central to the trait's definition' for the interpersonal and affective facets, which the research does not state.",
+   "first_seen": "section_6",
+   "seen_in": [
+    "section_6",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 108,
+   "sentence": "The literature reports a consistent association between psychopathy and reduced prefrontal gray matter, particularly in the vmPFC, the orbitofrontal cortex, and the anterior cingulate, regions involved in how the brain weights consequences before acting.",
+   "script_quote": "regions involved in how the brain weights consequences before acting",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research describes vmPFC/OFC and anterior cingulate as linked to psychopathy and social-affective decision making, but does not characterise them specifically as regions involved in 'how the brain weights consequences before acting'; this functional description is not in the research.",
+   "first_seen": "section_7",
+   "seen_in": [
+    "section_7",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  }
+ ]
+}

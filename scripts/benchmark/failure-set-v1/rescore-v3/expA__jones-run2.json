@@ -1,0 +1,3679 @@
+{
+ "set": "expA",
+ "file": "jones-run2.json",
+ "case": "jones",
+ "words": 1587,
+ "judged": [
+  {
+   "i": 0,
+   "sentence": "In May of 1979, a Chicago commodities broker walked out his front door, told his wife he'd be back after a business meeting, and never returned.",
+   "claims": [
+    {
+     "claim": "In May of 1979",
+     "status": "supported",
+     "fact": "F53",
+     "quote": "Arthur Jones rushed out the door around noon on May 10, 1979",
+     "verified": true,
+     "material": false,
+     "why": "Research gives May 10, 1979."
+    },
+    {
+     "claim": "a Chicago commodities broker",
+     "status": "supported",
+     "fact": "F26",
+     "quote": "a 73-year-old former Chicago commodities broker",
+     "verified": true,
+     "material": false,
+     "why": "Research describes him as a former Chicago commodities broker."
+    },
+    {
+     "claim": "walked out his front door",
+     "status": "supported",
+     "fact": "F53",
+     "quote": "Arthur Jones rushed out the door",
+     "verified": true,
+     "material": false,
+     "why": "Paraphrase of leaving through the door."
+    },
+    {
+     "claim": "told his wife he'd be back after a business meeting",
+     "status": "supported",
+     "fact": "F53",
+     "quote": "promising his wife he would return after a business meeting",
+     "verified": true,
+     "material": false,
+     "why": "Directly stated in the research."
+    },
+    {
+     "claim": "and never returned",
+     "status": "supported",
+     "fact": "F58",
+     "quote": "Jones never returned after leaving on May 10, 1979",
+     "verified": true,
+     "material": false,
+     "why": "Directly stated in the research."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 1,
+   "sentence": "A court eventually declared him legally dead, and his family started collecting survivor benefits.",
+   "claims": [
+    {
+     "claim": "A court eventually declared him legally dead",
+     "status": "supported",
+     "fact": "F60",
+     "quote": "A court declared Arthur Jones legally dead in 1986.",
+     "verified": true,
+     "material": false,
+     "why": "Research states a court declared him legally dead."
+    },
+    {
+     "claim": "his family started collecting survivor benefits",
+     "status": "supported",
+     "fact": "F61",
+     "quote": "Social Security paid Jones's family $47,000 in survivor benefits after he was declared legally dead.",
+     "verified": true,
+     "material": false,
+     "why": "Research states his family received survivor benefits after he was declared dead."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 2,
+   "sentence": "But decades later, he was renewing a driver's license at a Nevada DMV, very much alive, under a name that wasn't his own.",
+   "claims": [
+    {
+     "claim": "decades later",
+     "status": "derived",
+     "fact": "F39",
+     "quote": "Investigators began looking at Jones in May 2008, when he went to a Henderson DMV office to renew his driver's license",
+     "verified": true,
+     "material": false,
+     "why": "1979 disappearance to 2008 renewal is about 29 years, i.e. decades."
+    },
+    {
+     "claim": "he was renewing a driver's license at a Nevada DMV",
+     "status": "supported",
+     "fact": "F39",
+     "quote": "he went to a Henderson DMV office to renew his driver's license under the name Joseph Richard Sandelli",
+     "verified": true,
+     "material": false,
+     "why": "Research records the renewal at a Henderson (Nevada) DMV office."
+    },
+    {
+     "claim": "under a name that wasn't his own",
+     "status": "supported",
+     "fact": "F29",
+     "quote": "trying to renew a Nevada driver's license under the name Joseph Richard Sandelli",
+     "verified": true,
+     "material": false,
+     "why": "Sandelli was his alias."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 3,
+   "sentence": "Arthur Gerald Jones was forty years old when he left around noon on May 10, 1979, dressed in a tennis shirt and slacks rather than his normal corporate attire.",
+   "claims": [
+    {
+     "claim": "Arthur Gerald Jones was forty years old when he left",
+     "status": "supported",
+     "fact": "F55",
+     "quote": "Arthur Jones, then 40,",
+     "verified": true,
+     "material": false,
+     "why": "Age 40 at departure stated."
+    },
+    {
+     "claim": "he left around noon on May 10, 1979",
+     "status": "supported",
+     "fact": "F53",
+     "quote": "Arthur Jones rushed out the door around noon on May 10, 1979",
+     "verified": true,
+     "material": false,
+     "why": "Time and date match."
+    },
+    {
+     "claim": "dressed in a tennis shirt and slacks rather than his normal corporate attire",
+     "status": "supported",
+     "fact": "F55",
+     "quote": "was wearing a tennis shirt and slacks rather than his normal corporate attire",
+     "verified": true,
+     "material": false,
+     "why": "Clothing detail matches."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 4,
+   "sentence": "He was frazzled enough that he left without his bracelet, the one he cherished.",
+   "claims": [
+    {
+     "claim": "He was frazzled enough that he left without his bracelet",
+     "status": "supported",
+     "fact": "F56",
+     "quote": "Arthur Jones was frazzled enough when he left that he forgot to put on his cherished bracelet.",
+     "verified": true,
+     "material": false,
+     "why": "Research states he was frazzled and forgot the bracelet."
+    },
+    {
+     "claim": "the one he cherished",
+     "status": "supported",
+     "fact": "F56",
+     "quote": "his cherished bracelet",
+     "verified": true,
+     "material": false,
+     "why": "Research describes the bracelet as cherished."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 5,
+   "sentence": "And before he sped away, as his wife Joanne recalled it, he said: \"The meeting is not in a business office.\"",
+   "claims": [
+    {
+     "claim": "before he sped away",
+     "status": "supported",
+     "fact": "F57",
+     "quote": "before he sped away from their suburban Chicago home",
+     "verified": true,
+     "material": false,
+     "why": "Research records him speeding away."
+    },
+    {
+     "claim": "as his wife Joanne recalled it, he said: \"The meeting is not in a business office.\"",
+     "status": "supported",
+     "fact": "F57",
+     "quote": "Joanne Jones recalled her husband saying, 'The meeting is not in a business office,'",
+     "verified": true,
+     "material": false,
+     "why": "Quote and attribution match the research."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 6,
+   "sentence": "Not a reassurance.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 7,
+   "sentence": "Not a destination.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 8,
+   "sentence": "Just a location ruled out.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 9,
+   "sentence": "Before the exit, there was a life worth leaving — and Jones had spent years quietly dismantling it.",
+   "claims": [
+    {
+     "claim": "Jones had spent years quietly dismantling it",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research records gambling debts, a forged second mortgage and selling his Board of Trade slot a few months before he left, but no multi-year 'quiet dismantling'. This is narrator characterization."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 10,
+   "sentence": "As a young man he worked delivery routes for his future father-in-law's store, Mr. Joseph's Liquor Cabinet, eventually rising to manage the place.",
+   "claims": [
+    {
+     "claim": "As a young man",
+     "status": "unsupported",
+     "fact": "F74",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research gives no age for this period; 'delivery boy' implies youth, so this is harmless color."
+    },
+    {
+     "claim": "he worked delivery routes for his future father-in-law's store, Mr. Joseph's Liquor Cabinet",
+     "status": "supported",
+     "fact": "F74",
+     "quote": "Jones had met his wife while working as a delivery boy for her father's store, Mr. Joseph's Liquor Cabinet",
+     "verified": true,
+     "material": false,
+     "why": "He worked as a delivery boy at the store of the father of the woman he met there and married."
+    },
+    {
+     "claim": "eventually rising to manage the place",
+     "status": "supported",
+     "fact": "F74",
+     "quote": "which he later managed",
+     "verified": true,
+     "material": false,
+     "why": "The research states he later managed the store."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 11,
+   "sentence": "From a liquor store stockroom to the floor of the Chicago Board of Trade is not a short distance, but Jones made it, becoming a commodities trader.",
+   "claims": [
+    {
+     "claim": "From a liquor store stockroom",
+     "status": "unsupported",
+     "fact": "F74",
+     "quote": "working as a delivery boy for her father's store, Mr. Joseph's Liquor Cabinet, which he later managed",
+     "verified": true,
+     "material": false,
+     "why": "The research places him at a liquor store as delivery boy and later manager; 'stockroom' is added color for that starting point."
+    },
+    {
+     "claim": "to the floor of the Chicago Board of Trade",
+     "status": "supported",
+     "fact": "F75",
+     "quote": "Jones eventually became a commodities trader at the Chicago Board of Trade.",
+     "verified": true,
+     "material": false,
+     "why": "The research confirms he traded at the CBOT; 'floor' is harmless phrasing."
+    },
+    {
+     "claim": "is not a short distance",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "This is the narrator's interpretation of how far he rose."
+    },
+    {
+     "claim": "Jones made it, becoming a commodities trader",
+     "status": "supported",
+     "fact": "F75",
+     "quote": "Jones eventually became a commodities trader at the Chicago Board of Trade.",
+     "verified": true,
+     "material": false,
+     "why": "The research states this directly."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 12,
+   "sentence": "The ranch house in suburban Chicago followed, sprawling enough to have a volleyball court out back.",
+   "claims": [
+    {
+     "claim": "The ranch house in suburban Chicago",
+     "status": "supported",
+     "fact": "F76",
+     "quote": "Jones lived in a sprawling ranch home with a volleyball court in suburban Chicago.",
+     "verified": true,
+     "material": false,
+     "why": "Research states he lived in a ranch home in suburban Chicago."
+    },
+    {
+     "claim": "sprawling enough to have a volleyball court",
+     "status": "supported",
+     "fact": "F76",
+     "quote": "a sprawling ranch home with a volleyball court",
+     "verified": true,
+     "material": false,
+     "why": "Sprawling home with a volleyball court is stated."
+    },
+    {
+     "claim": "out back",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The court's location behind the house is not recorded; harmless color."
+    },
+    {
+     "claim": "followed",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "No timing is given for the house relative to his career; this is a narrative transition."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 13,
+   "sentence": "By any surface measure, the life had worked.",
+   "claims": [
+    {
+     "claim": "By any surface measure, the life had worked.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Narrator's evaluative judgment of his Las Vegas life; the research records no such assessment."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 14,
+   "sentence": "The gambling was eating it from the inside.",
+   "claims": [
+    {
+     "claim": "The gambling was eating it from the inside.",
+     "status": "supported",
+     "fact": "F1",
+     "quote": "forced to sell his seat to cover giant gambling debts",
+     "verified": true,
+     "material": false,
+     "why": "Research records that his gambling debts forced him to sell his Board of Trade seat; the metaphor itself is narration."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 15,
+   "sentence": "Joanne told investigators he once put $30,000 on a single basketball game — not a season, not a run of bad months, one game.",
+   "claims": [
+    {
+     "claim": "Joanne told investigators",
+     "status": "supported",
+     "fact": "F77",
+     "quote": "his wife told authorities",
+     "verified": true,
+     "material": false,
+     "why": "F77 says his wife told authorities; F57 names his wife as Joanne Jones."
+    },
+    {
+     "claim": "he once put $30,000 on a single basketball game",
+     "status": "supported",
+     "fact": "F77",
+     "quote": "Jones had once blown $30,000 on a basketball game",
+     "verified": true,
+     "material": false,
+     "why": "The research records a $30,000 loss on a single basketball game."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 16,
+   "sentence": "Desperate for cash, Jones forged Joanne's name on a second mortgage application.",
+   "claims": [
+    {
+     "claim": "Desperate for cash",
+     "status": "supported",
+     "fact": "F78",
+     "quote": "while desperate for cash",
+     "verified": true,
+     "material": false,
+     "why": "Research states he was desperate for cash."
+    },
+    {
+     "claim": "Jones forged Joanne's name on a second mortgage application",
+     "status": "supported",
+     "fact": "F78",
+     "quote": "Jones had forged his wife's name on a second mortgage application",
+     "verified": true,
+     "material": false,
+     "why": "F78 states the forgery of his wife's name; F57 identifies his wife as Joanne Jones."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 17,
+   "sentence": "Then, a few months before May 10, 1979, he sold his Board of Trade seat outright to cover $210,000 in debts.",
+   "claims": [
+    {
+     "claim": "a few months before May 10, 1979",
+     "status": "supported",
+     "fact": "F79",
+     "quote": "A few months before he ran off",
+     "verified": true,
+     "material": false,
+     "why": "F79 says a few months before he ran off; F53 dates his departure to May 10, 1979."
+    },
+    {
+     "claim": "he sold his Board of Trade seat",
+     "status": "supported",
+     "fact": "F79",
+     "quote": "Jones sold his slot on the Board of Trade",
+     "verified": true,
+     "material": false,
+     "why": "Selling his slot is the same as selling his seat (F1 also says 'sell his seat')."
+    },
+    {
+     "claim": "outright",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research does not describe the manner of the sale; this is added color."
+    },
+    {
+     "claim": "to cover $210,000 in debts",
+     "status": "supported",
+     "fact": "F79",
+     "quote": "to pay off $210,000 in debts",
+     "verified": true,
+     "material": false,
+     "why": "The amount and purpose match F79."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 18,
+   "sentence": "The seat was the credential, the access, the identity — and he liquidated it.",
+   "claims": [
+    {
+     "claim": "The seat was the credential, the access, the identity",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Narrator's interpretation of what the seat meant; the research does not characterize it this way."
+    },
+    {
+     "claim": "he liquidated it",
+     "status": "supported",
+     "fact": "F79",
+     "quote": "Jones sold his slot on the Board of Trade to pay off $210,000 in debts",
+     "verified": true,
+     "material": false,
+     "why": "The research records that he sold his Board of Trade seat."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 19,
+   "sentence": "He kept commuting to Chicago afterward.",
+   "claims": [
+    {
+     "claim": "He kept commuting to Chicago afterward.",
+     "status": "supported",
+     "fact": "F80",
+     "quote": "he continued going to Chicago to work after selling his Board of Trade slot",
+     "verified": true,
+     "material": false,
+     "why": "Research says he kept going to Chicago to work after selling his Board of Trade slot; the script drops that this was his wife's account."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 20,
+   "sentence": "Joanne told investigators she didn't know for whom.",
+   "claims": [
+    {
+     "claim": "Joanne told investigators",
+     "status": "supported",
+     "fact": "F80",
+     "quote": "Jones's wife told investigators that he continued going to Chicago to work after selling his Board of Trade slot",
+     "verified": true,
+     "material": false,
+     "why": "The wife spoke to investigators. F57 names her as Joanne Jones."
+    },
+    {
+     "claim": "she didn't know for whom",
+     "status": "overstated",
+     "fact": "F80",
+     "quote": "though it was unclear for whom",
+     "verified": true,
+     "material": false,
+     "why": "The research says only that it was unclear who he worked for. It does not say she told investigators she didn't know, though this is a close paraphrase."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 21,
+   "sentence": "She suspected the mob.",
+   "claims": [
+    {
+     "claim": "She suspected the mob.",
+     "status": "supported",
+     "fact": "F81",
+     "quote": "Jones's wife suspected he was working for the mob after selling his Board of Trade slot.",
+     "verified": true,
+     "material": false,
+     "why": "The research records the wife's suspicion of mob involvement; the vague paraphrase adds no new fact."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 22,
+   "sentence": "Then in April 1979, a fellow commodities trader was shot and killed in his suburban home by masked intruders.",
+   "claims": [
+    {
+     "claim": "in April 1979",
+     "status": "supported",
+     "fact": "F82",
+     "quote": "In April 1979, a fellow local commodities trader was shot and killed",
+     "verified": true,
+     "material": false,
+     "why": "Date matches research."
+    },
+    {
+     "claim": "a fellow commodities trader was shot and killed",
+     "status": "supported",
+     "fact": "F82",
+     "quote": "a fellow local commodities trader was shot and killed",
+     "verified": true,
+     "material": false,
+     "why": "Research states a fellow trader was shot and killed."
+    },
+    {
+     "claim": "in his suburban home",
+     "status": "supported",
+     "fact": "F82",
+     "quote": "in his suburban home",
+     "verified": true,
+     "material": false,
+     "why": "Location matches research."
+    },
+    {
+     "claim": "by masked intruders",
+     "status": "supported",
+     "fact": "F82",
+     "quote": "by masked intruders",
+     "verified": true,
+     "material": false,
+     "why": "Perpetrators match research."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 23,
+   "sentence": "Court papers would later describe Jones as having left shortly after that shooting to get a fresh start.",
+   "claims": [
+    {
+     "claim": "Court papers would later describe Jones as having left shortly after that shooting to get a fresh start.",
+     "status": "supported",
+     "fact": "F83",
+     "quote": "Court papers said Jones took off shortly after the April 1979 shooting 'to get a fresh start.'",
+     "verified": true,
+     "material": false,
+     "why": "Research states court papers said this."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 24,
+   "sentence": "The exit on May 10 was the last step in a process that had been running for years.",
+   "claims": [
+    {
+     "claim": "The exit on May 10",
+     "status": "supported",
+     "fact": "F58",
+     "quote": "Jones never returned after leaving on May 10, 1979",
+     "verified": true,
+     "material": false,
+     "why": "Research records he left on May 10, 1979 and never returned."
+    },
+    {
+     "claim": "was the last step in a process that had been running for years",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Research records debts and the seat sale months before, but not a years-long process; this is narrator interpretation."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 25,
+   "sentence": "Investigators later found his abandoned silver Buick and a pair of sunglasses near O'Hare International Airport.",
+   "claims": [
+    {
+     "claim": "Investigators later found his abandoned silver Buick",
+     "status": "supported",
+     "fact": "F59",
+     "quote": "Investigators found Jones's abandoned silver Buick",
+     "verified": true,
+     "material": false,
+     "why": "Directly stated."
+    },
+    {
+     "claim": "and a pair of sunglasses",
+     "status": "supported",
+     "fact": "F59",
+     "quote": "and a pair of sunglasses",
+     "verified": true,
+     "material": false,
+     "why": "Directly stated."
+    },
+    {
+     "claim": "near O'Hare International Airport",
+     "status": "supported",
+     "fact": "F59",
+     "quote": "near O'Hare International Airport",
+     "verified": true,
+     "material": false,
+     "why": "Directly stated."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 26,
+   "sentence": "By his own account in court records, he had paid an associate eight hundred dollars for a new identity.",
+   "claims": [
+    {
+     "claim": "By his own account in court records",
+     "status": "supported",
+     "fact": "F67",
+     "quote": "Jones told authorities that he had paid an associate $800 for a fake Illinois driver's license, birth certificate, and Social Security number, according to court records",
+     "verified": true,
+     "material": false,
+     "why": "Research states Jones told authorities this, per court records."
+    },
+    {
+     "claim": "he had paid an associate eight hundred dollars for a new identity",
+     "status": "supported",
+     "fact": "F67",
+     "quote": "he had paid an associate $800 for a fake Illinois driver's license, birth certificate, and Social Security number",
+     "verified": true,
+     "material": false,
+     "why": "Buying fake identity documents for $800 is fairly paraphrased as paying for a new identity."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 27,
+   "sentence": "For that single eight-hundred-dollar payment, he said, he received three documents: a fake Illinois driver's license, a fake birth certificate, and a Social Security card carrying a number that belonged to a real man.",
+   "claims": [
+    {
+     "claim": "For that single eight-hundred-dollar payment ... he received three documents",
+     "status": "supported",
+     "fact": "F16",
+     "quote": "The three false documents — Illinois driver's license, birth certificate, and Social Security card — were purchased together for a total of $800.",
+     "verified": true,
+     "material": false,
+     "why": "Research states the three documents were bought together for $800 total."
+    },
+    {
+     "claim": "he said",
+     "status": "supported",
+     "fact": "F67",
+     "quote": "Jones told authorities that he had paid an associate $800 for a fake Illinois driver's license, birth certificate, and Social Security number",
+     "verified": true,
+     "material": false,
+     "why": "The account comes from Jones's own statement to authorities."
+    },
+    {
+     "claim": "a fake Illinois driver's license, a fake birth certificate",
+     "status": "supported",
+     "fact": "F67",
+     "quote": "a fake Illinois driver's license, birth certificate",
+     "verified": true,
+     "material": false,
+     "why": "Both documents are listed in the research."
+    },
+    {
+     "claim": "a Social Security card carrying a number that belonged to a real man",
+     "status": "supported",
+     "fact": "F40",
+     "quote": "Jones supplied a Social Security number that belonged to an Arizona man named Clifton Goodenough.",
+     "verified": true,
+     "material": false,
+     "why": "The number belonged to a real person, Clifton Goodenough; the card is listed in F15."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 28,
+   "sentence": "Not three separate transactions, not three separate risks — one exchange, one price, one complete kit.",
+   "claims": [
+    {
+     "claim": "Not three separate transactions",
+     "status": "supported",
+     "fact": "F16",
+     "quote": "The three false documents — Illinois driver's license, birth certificate, and Social Security card — were purchased together for a total of $800.",
+     "verified": true,
+     "material": false,
+     "why": "The research says the three documents were bought together."
+    },
+    {
+     "claim": "one exchange, one price",
+     "status": "supported",
+     "fact": "F16",
+     "quote": "were purchased together for a total of $800",
+     "verified": true,
+     "material": false,
+     "why": "A single total price for all three documents bought together."
+    },
+    {
+     "claim": "not three separate risks",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The narrator's own reading of risk; the research does not address it."
+    },
+    {
+     "claim": "one complete kit",
+     "status": "supported",
+     "fact": "F67",
+     "quote": "he had paid an associate $800 for a fake Illinois driver's license, birth certificate, and Social Security number",
+     "verified": true,
+     "material": false,
+     "why": "A fair paraphrase of the bundled set of identity documents."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 29,
+   "sentence": "Against the $210,000 in debts he had just sold his Board of Trade seat to cover, $800 was not a strain — it was a rounding error.",
+   "claims": [
+    {
+     "claim": "the $210,000 in debts he had just sold his Board of Trade seat to cover",
+     "status": "supported",
+     "fact": "F79",
+     "quote": "A few months before he ran off, Jones sold his slot on the Board of Trade to pay off $210,000 in debts.",
+     "verified": true,
+     "material": false,
+     "why": "Research states he sold the slot to pay off $210,000 in debts a few months before leaving."
+    },
+    {
+     "claim": "$800",
+     "status": "supported",
+     "fact": "F16",
+     "quote": "purchased together for a total of $800",
+     "verified": true,
+     "material": false,
+     "why": "Research gives $800 as the total paid for the fake documents."
+    },
+    {
+     "claim": "$800 was not a strain — it was a rounding error",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Narrator's interpretation of the sum's significance, not a recorded fact."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 30,
+   "sentence": "What it purchased was something no amount of cash could build from scratch: a documented past.",
+   "claims": [
+    {
+     "claim": "What it purchased was ... a documented past",
+     "status": "supported",
+     "fact": "F16",
+     "quote": "The three false documents — Illinois driver's license, birth certificate, and Social Security card — were purchased together for a total of $800.",
+     "verified": true,
+     "material": false,
+     "why": "The $800 bought a set of identity documents, including a birth certificate, which fairly supports the 'documented past' paraphrase."
+    },
+    {
+     "claim": "something no amount of cash could build from scratch",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "This is the narrator's interpretation of the purchase's significance and is not established by the research."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 31,
+   "sentence": "The driver's license said the state of Illinois had verified him.",
+   "claims": [
+    {
+     "claim": "The driver's license said the state of Illinois had verified him.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "Research says only that Jones bought a false Illinois driver's license; it records nothing about what the license said or about Illinois verifying him."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 32,
+   "sentence": "The Social Security card gave him a number the federal government already recognized as belonging to a living person.",
+   "claims": [
+    {
+     "claim": "The Social Security card gave him a number",
+     "status": "supported",
+     "fact": "F67",
+     "quote": "Jones told authorities that he had paid an associate $800 for a fake Illinois driver's license, birth certificate, and Social Security number",
+     "verified": true,
+     "material": false,
+     "why": "Research says he bought a false Social Security card and number."
+    },
+    {
+     "claim": "belonging to a living person",
+     "status": "supported",
+     "fact": "F40",
+     "quote": "Jones supplied a Social Security number that belonged to an Arizona man named Clifton Goodenough.",
+     "verified": true,
+     "material": false,
+     "why": "The number belonged to Goodenough, who is described as working as a nurse, so he is alive."
+    },
+    {
+     "claim": "the federal government already recognized",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research does not describe federal recognition of the number; this is the narrator's framing."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 33,
+   "sentence": "Each document authenticated the others in a loop that required no further explanation.",
+   "claims": [
+    {
+     "claim": "Each document authenticated the others in a loop that required no further explanation.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research records only that the documents were bought together for $800; that they authenticated each other is the narrator's interpretation of why the scheme worked."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 34,
+   "sentence": "From Chicago he skipped around the country, stopping in California and Florida, before eventually settling.",
+   "claims": [
+    {
+     "claim": "From Chicago he skipped around the country",
+     "status": "supported",
+     "fact": "F68",
+     "quote": "After disappearing, Jones skipped around the country",
+     "verified": true,
+     "material": false,
+     "why": "Research states he skipped around the country after disappearing from Chicago."
+    },
+    {
+     "claim": "stopping in California and Florida",
+     "status": "supported",
+     "fact": "F68",
+     "quote": "stopping in California and Florida",
+     "verified": true,
+     "material": false,
+     "why": "Research states these stops directly."
+    },
+    {
+     "claim": "before eventually settling",
+     "status": "supported",
+     "fact": "F69",
+     "quote": "In the 1980s, Jones vanished into Las Vegas.",
+     "verified": true,
+     "material": false,
+     "why": "Research records that he ended up living in Las Vegas."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 35,
+   "sentence": "The criminal complaint described his stated reasons plainly: he was fleeing the mob and starting a new life.",
+   "claims": [
+    {
+     "claim": "The criminal complaint described his stated reasons plainly: he was fleeing the mob",
+     "status": "supported",
+     "fact": "F2",
+     "quote": "A criminal complaint said Jones was \"fleeing the mob\" in Chicago",
+     "verified": true,
+     "material": false,
+     "why": "Complaint said he was fleeing the mob."
+    },
+    {
+     "claim": "starting a new life",
+     "status": "supported",
+     "fact": "F2",
+     "quote": "left in 1979 because he was \"starting a new life.\"",
+     "verified": true,
+     "material": false,
+     "why": "Complaint said he left to start a new life."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 36,
+   "sentence": "Whatever the proportion of those two motives, the $800 purchase had made both possible.",
+   "claims": [
+    {
+     "claim": "the $800 purchase",
+     "status": "supported",
+     "fact": "F67",
+     "quote": "Jones told authorities that he had paid an associate $800 for a fake Illinois driver's license, birth certificate, and Social Security number",
+     "verified": true,
+     "material": false,
+     "why": "Research records the $800 purchase of fake documents."
+    },
+    {
+     "claim": "had made both possible",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "This is the narrator's interpretation of the purchase's significance, not a recorded fact."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 37,
+   "sentence": "Arthur Jones had not simply run.",
+   "claims": [
+    {
+     "claim": "Arthur Jones had not simply run",
+     "status": "supported",
+     "fact": "F3",
+     "quote": "Arthur Gerald Jones had lived 32 years under an assumed identity",
+     "verified": true,
+     "material": false,
+     "why": "The research shows he did more than flee: he lived 32 years under an assumed identity."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 38,
+   "sentence": "He had acquired a replacement, document by document, for the identity he was discarding — and then he used it.",
+   "claims": [
+    {
+     "claim": "He had acquired a replacement ... for the identity he was discarding",
+     "status": "supported",
+     "fact": "F67",
+     "quote": "Jones told authorities that he had paid an associate $800 for a fake Illinois driver's license, birth certificate, and Social Security number",
+     "verified": true,
+     "material": false,
+     "why": "Research records him buying fake identity documents."
+    },
+    {
+     "claim": "document by document",
+     "status": "overstated",
+     "fact": "F16",
+     "quote": "The three false documents — Illinois driver's license, birth certificate, and Social Security card — were purchased together for a total of $800.",
+     "verified": true,
+     "material": false,
+     "why": "The documents were bought together in one purchase, but the phrase reads as stylistic emphasis rather than a stated sequence."
+    },
+    {
+     "claim": "and then he used it",
+     "status": "supported",
+     "fact": "F20",
+     "quote": "Jones used the name Joseph Richard Sandelli and a Social Security number belonging to Clifton Goodenough to obtain and renew identification in Nevada",
+     "verified": true,
+     "material": false,
+     "why": "Research records him using the false identity."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 39,
+   "sentence": "Joanne was left with three children, and in 1986 a court declared Arthur Jones legally dead.",
+   "claims": [
+    {
+     "claim": "Joanne was left with three children",
+     "status": "supported",
+     "fact": "F22",
+     "quote": "In 1979, Jones walked out on his wife and three children in north suburban Highland Park, Illinois",
+     "verified": true,
+     "material": false,
+     "why": "Research says he left his wife, named Joanne in F57, and three children."
+    },
+    {
+     "claim": "in 1986 a court declared Arthur Jones legally dead",
+     "status": "supported",
+     "fact": "F60",
+     "quote": "A court declared Arthur Jones legally dead in 1986.",
+     "verified": true,
+     "material": false,
+     "why": "F60 states the year and the declaration directly."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 40,
+   "sentence": "Social Security issued $47,000 in survivor benefits to Jones's family — money routed to a widow and children who had no reason to question it, because as far as any court had determined, the man was gone.",
+   "claims": [
+    {
+     "claim": "Social Security issued $47,000 in survivor benefits to Jones's family",
+     "status": "supported",
+     "fact": "F61",
+     "quote": "Social Security paid Jones's family $47,000 in survivor benefits after he was declared legally dead.",
+     "verified": true,
+     "material": false,
+     "why": "Amount, payer and recipients match the research."
+    },
+    {
+     "claim": "money routed to a widow and children",
+     "status": "supported",
+     "fact": "F12",
+     "quote": "Jones's wife and three children collected Social Security benefits worth $47,000 as a result of his being declared dead.",
+     "verified": true,
+     "material": false,
+     "why": "The wife and children received the benefits; 'widow' reflects the legal death declaration."
+    },
+    {
+     "claim": "who had no reason to question it",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "This is the narrator's interpretation of the family's state of mind, which the research does not establish."
+    },
+    {
+     "claim": "as far as any court had determined, the man was gone",
+     "status": "supported",
+     "fact": "F60",
+     "quote": "A court declared Arthur Jones legally dead in 1986.",
+     "verified": true,
+     "material": false,
+     "why": "A court declared him legally dead."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 41,
+   "sentence": "That payment is where the story quietly doubles back on itself.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 42,
+   "sentence": "The disappearance Jones staged to escape his debts had, within seven years, converted into a government check.",
+   "claims": [
+    {
+     "claim": "The disappearance Jones staged",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "Research says he fled or walked out, not that he staged or faked his disappearance."
+    },
+    {
+     "claim": "to escape his debts",
+     "status": "supported",
+     "fact": "F37",
+     "quote": "In 1979, Jones fled Chicago and his gambling debts",
+     "verified": true,
+     "material": false,
+     "why": "Research states he fled his gambling debts."
+    },
+    {
+     "claim": "within seven years",
+     "status": "derived",
+     "fact": "F60",
+     "quote": "A court declared Arthur Jones legally dead in 1986.",
+     "verified": true,
+     "material": false,
+     "why": "From disappearing in 1979 (F58) to being declared dead in 1986 is seven years."
+    },
+    {
+     "claim": "converted into a government check",
+     "status": "supported",
+     "fact": "F61",
+     "quote": "Social Security paid Jones's family $47,000 in survivor benefits after he was declared legally dead.",
+     "verified": true,
+     "material": false,
+     "why": "Social Security survivor benefits were paid to his family."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 43,
+   "sentence": "His absence was the proof.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 44,
+   "sentence": "The court's declaration was the mechanism.",
+   "claims": [
+    {
+     "claim": "The court's declaration was the mechanism.",
+     "status": "supported",
+     "fact": "F12",
+     "quote": "Jones's wife and three children collected Social Security benefits worth $47,000 as a result of his being declared dead.",
+     "verified": true,
+     "material": false,
+     "why": "Research states the benefits resulted from the declaration of death."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 45,
+   "sentence": "And Joanne and the children, who were the ones actually abandoned, became the conduit through which the fraud paid out — not to them as victims seeking justice, but to them as beneficiaries of a legal process that Jones had set in motion simply by vanishing well enough and long enough.",
+   "claims": [
+    {
+     "claim": "Joanne and the children, who were the ones actually abandoned",
+     "status": "supported",
+     "fact": "F22",
+     "quote": "In 1979, Jones walked out on his wife and three children in north suburban Highland Park, Illinois",
+     "verified": true,
+     "material": false,
+     "why": "The research records that he left his wife and three children."
+    },
+    {
+     "claim": "became the conduit through which the fraud paid out",
+     "status": "supported",
+     "fact": "F12",
+     "quote": "Jones's wife and three children collected Social Security benefits worth $47,000 as a result of his being declared dead.",
+     "verified": true,
+     "material": false,
+     "why": "The family received the benefits that resulted from his disappearance."
+    },
+    {
+     "claim": "beneficiaries of a legal process",
+     "status": "supported",
+     "fact": "F61",
+     "quote": "Social Security paid Jones's family $47,000 in survivor benefits after he was declared legally dead.",
+     "verified": true,
+     "material": false,
+     "why": "The survivor benefits followed a legal declaration of death."
+    },
+    {
+     "claim": "that Jones had set in motion simply by vanishing well enough and long enough",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "This is the narrator's interpretation of how the declaration of death came about."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 46,
+   "sentence": "Las Vegas in the 1980s was where Joseph Richard Sandelli arrived and quietly took root.",
+   "claims": [
+    {
+     "claim": "Las Vegas in the 1980s was where ... arrived",
+     "status": "supported",
+     "fact": "F69",
+     "quote": "In the 1980s, Jones vanished into Las Vegas.",
+     "verified": true,
+     "material": false,
+     "why": "Research places his arrival in Las Vegas in the 1980s."
+    },
+    {
+     "claim": "Joseph Richard Sandelli arrived and quietly took root",
+     "status": "supported",
+     "fact": "F19",
+     "quote": "where he worked under the alias Joseph Richard Sandelli",
+     "verified": true,
+     "material": false,
+     "why": "He lived and worked in Las Vegas under the Sandelli alias; the quiet settling is narrative color."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 47,
+   "sentence": "He and his longtime girlfriend settled into a neighborhood of stucco homes, dusty lots, and a scattering of horse corrals.",
+   "claims": [
+    {
+     "claim": "He and his longtime girlfriend settled into a neighborhood",
+     "status": "supported",
+     "fact": "F70",
+     "quote": "Jones and his longtime girlfriend lived on a block of stucco homes",
+     "verified": true,
+     "material": false,
+     "why": "Research states Jones and his longtime girlfriend lived there together."
+    },
+    {
+     "claim": "a neighborhood of stucco homes, dusty lots, and a scattering of horse corrals",
+     "status": "supported",
+     "fact": "F70",
+     "quote": "a block of stucco homes, dusty lots, and a few horse corrals",
+     "verified": true,
+     "material": false,
+     "why": "Paraphrase of the research description; 'a scattering' matches 'a few'."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 48,
+   "sentence": "They registered to vote.",
+   "claims": [
+    {
+     "claim": "They registered to vote.",
+     "status": "supported",
+     "fact": "F71",
+     "quote": "Jones and his girlfriend were registered to vote.",
+     "verified": true,
+     "material": false,
+     "why": "Research states Jones and his girlfriend were registered to vote."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 49,
+   "sentence": "Not hiding, not invisible — registered, on a list, a civic participant.",
+   "claims": [
+    {
+     "claim": "registered",
+     "status": "supported",
+     "fact": "F71",
+     "quote": "Jones and his girlfriend were registered to vote.",
+     "verified": true,
+     "material": false,
+     "why": "The research states he was registered to vote."
+    },
+    {
+     "claim": "on a list",
+     "status": "supported",
+     "fact": "F71",
+     "quote": "Jones and his girlfriend were registered to vote.",
+     "verified": true,
+     "material": false,
+     "why": "Being on the voter rolls is a plain paraphrase of being registered to vote."
+    },
+    {
+     "claim": "a civic participant",
+     "status": "overstated",
+     "fact": "F71",
+     "quote": "Jones and his girlfriend were registered to vote.",
+     "verified": true,
+     "material": false,
+     "why": "The research records only registration, not voting or other participation; this is the narrator's characterization."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 50,
+   "sentence": "Arthur Jones had ceased to exist in any form the surrounding world could reach.",
+   "claims": [
+    {
+     "claim": "Arthur Jones had ceased to exist in any form the surrounding world could reach",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Narrator's metaphor for his disappearance. The research records that he disappeared but also that he held a driver's license, was registered to vote and worked under an alias, so this framing is interpretation, not an established fact."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 51,
+   "sentence": "The girlfriend and her family knew him only as Sandelli.",
+   "claims": [
+    {
+     "claim": "The girlfriend and her family knew him only as Sandelli.",
+     "status": "supported",
+     "fact": "F72",
+     "quote": "The girlfriend and her family knew Jones only as Joseph Richard Sandelli",
+     "verified": true,
+     "material": false,
+     "why": "Matches the attorney's statement in the research; the sentence omits the attribution to Stein."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 52,
+   "sentence": "His attorney, Stephen Stein, put it plainly: \"They had no idea about anything, which makes sense.",
+   "claims": [
+    {
+     "claim": "His attorney, Stephen Stein",
+     "status": "supported",
+     "fact": "F73",
+     "quote": "Jones's attorney, Stephen Stein",
+     "verified": true,
+     "material": false,
+     "why": "Research names Stein as Jones's attorney."
+    },
+    {
+     "claim": "\"They had no idea about anything, which makes sense.",
+     "status": "supported",
+     "fact": "F73",
+     "quote": "'They had no idea about anything, which makes sense.",
+     "verified": true,
+     "material": false,
+     "why": "Exact quote attributed to Stein."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 53,
+   "sentence": "Common sense tells you the guy's not going to go around telling anybody about this kind of thing.\" He had simply become someone else, and the people closest to him had no reason to look for a seam.",
+   "claims": [
+    {
+     "claim": "Common sense tells you the guy's not going to go around telling anybody about this kind of thing.",
+     "status": "supported",
+     "fact": "F73",
+     "quote": "Common sense tells you the guy's not going to go around telling anybody about this kind of thing.",
+     "verified": true,
+     "material": false,
+     "why": "Exact quote from attorney Stephen Stein."
+    },
+    {
+     "claim": "the people closest to him had no reason to look for a seam",
+     "status": "unsupported",
+     "fact": "F72",
+     "quote": "The girlfriend and her family knew Jones only as Joseph Richard Sandelli",
+     "verified": true,
+     "material": false,
+     "why": "Research says the girlfriend's family knew him only by his alias; that they had no reason to suspect is the narrator's interpretation."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 54,
+   "sentence": "He found work that suited the name.",
+   "claims": [
+    {
+     "claim": "He found work",
+     "status": "supported",
+     "fact": "F19",
+     "quote": "centrally associated with a Las Vegas casino sports book, where he worked under the alias Joseph Richard Sandelli",
+     "verified": true,
+     "material": false,
+     "why": "Research records him working under the Sandelli alias in Las Vegas."
+    },
+    {
+     "claim": "that suited the name",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research never says the work fit the alias; this is narrator interpretation."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 55,
+   "sentence": "According to his attorney, Jones worked at the Desert Inn, under a different man's Social Security number.",
+   "claims": [
+    {
+     "claim": "According to his attorney, Jones worked at the Desert Inn",
+     "status": "supported",
+     "fact": "F84",
+     "quote": "In Las Vegas, Jones worked at the Desert Inn and then for a local casino's sports book, according to his attorney.",
+     "verified": true,
+     "material": false,
+     "why": "The research attributes the Desert Inn job to his attorney."
+    },
+    {
+     "claim": "under a different man's Social Security number",
+     "status": "overstated",
+     "fact": "F87",
+     "quote": "his statements showed income from Las Vegas casinos where he had never worked",
+     "verified": true,
+     "material": true,
+     "why": "The research says Goodenough's number showed income from unnamed Las Vegas casinos. It never says the Desert Inn job used that number, and the sentence frames this as part of the attorney's account."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 56,
+   "sentence": "That number belonged to a real person: an Arizona man named Clifton Goodenough.",
+   "claims": [
+    {
+     "claim": "That number belonged to a real person: an Arizona man named Clifton Goodenough.",
+     "status": "supported",
+     "fact": "F40",
+     "quote": "Jones supplied a Social Security number that belonged to an Arizona man named Clifton Goodenough.",
+     "verified": true,
+     "material": false,
+     "why": "Research states the Social Security number belonged to Arizona man Clifton Goodenough."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 57,
+   "sentence": "Jones had been using Goodenough's Social Security number in Nevada for years, and the record of that use had been accumulating under the Sandelli name.",
+   "claims": [
+    {
+     "claim": "Jones had been using Goodenough's Social Security number in Nevada for years",
+     "status": "supported",
+     "fact": "F20",
+     "quote": "Jones used the name Joseph Richard Sandelli and a Social Security number belonging to Clifton Goodenough to obtain and renew identification in Nevada",
+     "verified": true,
+     "material": false,
+     "why": "Research records his use of Goodenough's number in Nevada, with a license issued in 1988 (F88) and renewed in 2008 (F89)."
+    },
+    {
+     "claim": "the record of that use had been accumulating under the Sandelli name",
+     "status": "supported",
+     "fact": "F88",
+     "quote": "had issued Jones a driver's license in 1988 with his Sandelli alias and fake Social Security number",
+     "verified": true,
+     "material": false,
+     "why": "The DMV records tied the fake number to the Sandelli alias from 1988 onward; 'accumulating' is narrative framing."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 58,
+   "sentence": "Clifton Goodenough was a nurse at a Phoenix veterans hospital.",
+   "claims": [
+    {
+     "claim": "Clifton Goodenough was a nurse at a Phoenix veterans hospital.",
+     "status": "supported",
+     "fact": "F44",
+     "quote": "Clifton Goodenough is a nurse at a Phoenix veterans hospital.",
+     "verified": true,
+     "material": false,
+     "why": "Research states his occupation and workplace directly."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 59,
+   "sentence": "Clifton Goodenough had never worked at a Las Vegas casino.",
+   "claims": [
+    {
+     "claim": "Clifton Goodenough had never worked at a Las Vegas casino.",
+     "status": "supported",
+     "fact": "F87",
+     "quote": "his statements showed income from Las Vegas casinos where he had never worked",
+     "verified": true,
+     "material": false,
+     "why": "The research says the Arizona man, Goodenough (F40), had never worked at the Las Vegas casinos that showed up as income on his statements."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 60,
+   "sentence": "But starting in 1995, his statements told a different story — year after year, they showed casino income earned in Las Vegas, income tied to a Social Security number that was his in name only.",
+   "claims": [
+    {
+     "claim": "starting in 1995",
+     "status": "supported",
+     "fact": "F45",
+     "quote": "\"extra income\" he supposedly had earned in Las Vegas every year since 1995",
+     "verified": true,
+     "material": false,
+     "why": "Research dates the phantom Las Vegas income to every year since 1995."
+    },
+    {
+     "claim": "his statements told a different story — year after year, they showed casino income earned in Las Vegas",
+     "status": "supported",
+     "fact": "F87",
+     "quote": "his statements showed income from Las Vegas casinos where he had never worked",
+     "verified": true,
+     "material": false,
+     "why": "Goodenough's statements showed Las Vegas casino income he never earned, recurring yearly per F45."
+    },
+    {
+     "claim": "income tied to a Social Security number",
+     "status": "supported",
+     "fact": "F40",
+     "quote": "Jones supplied a Social Security number that belonged to an Arizona man named Clifton Goodenough",
+     "verified": true,
+     "material": false,
+     "why": "The income was recorded under Goodenough's SSN, which Jones was using."
+    },
+    {
+     "claim": "that was his in name only",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Narrator's characterization of the SSN's status; not a fact stated in the research."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 61,
+   "sentence": "He fought the IRS for years over what he called \"extra income\" he supposedly had in Las Vegas.",
+   "claims": [
+    {
+     "claim": "He fought the IRS for years",
+     "status": "supported",
+     "fact": "F45",
+     "quote": "he had been embroiled in a longtime feud with the IRS",
+     "verified": true,
+     "material": false,
+     "why": "Goodenough's longtime feud with the IRS is stated."
+    },
+    {
+     "claim": "over what he called \"extra income\" he supposedly had in Las Vegas",
+     "status": "supported",
+     "fact": "F45",
+     "quote": "over \"extra income\" he supposedly had earned in Las Vegas every year since 1995",
+     "verified": true,
+     "material": false,
+     "why": "The quoted phrase and the Las Vegas source of the income match the research."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 62,
+   "sentence": "The agency garnisheed his wages.",
+   "claims": [
+    {
+     "claim": "The agency garnisheed his wages.",
+     "status": "supported",
+     "fact": "F46",
+     "quote": "The IRS had garnisheed Goodenough's wages",
+     "verified": true,
+     "material": false,
+     "why": "The research says the IRS garnisheed Goodenough's wages; this holds if 'the agency' refers to the IRS rather than the Social Security Administration."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 63,
+   "sentence": "It pulled funds directly from his bank account.",
+   "claims": [
+    {
+     "claim": "It pulled funds directly from his bank account.",
+     "status": "supported",
+     "fact": "F46",
+     "quote": "taken funds from his bank account",
+     "verified": true,
+     "material": false,
+     "why": "Research says the IRS took funds from Goodenough's bank account; \"directly\" is harmless paraphrase."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 64,
+   "sentence": "Every tax season brought the same fight, the same insistence that the income on the federal paperwork was not his.",
+   "claims": [
+    {
+     "claim": "Every tax season brought the same fight",
+     "status": "supported",
+     "fact": "F45",
+     "quote": "he had been embroiled in a longtime feud with the IRS over \"extra income\" he supposedly had earned in Las Vegas every year since 1995",
+     "verified": true,
+     "material": false,
+     "why": "A recurring yearly IRS feud matches the research; F46 adds 'substantial annual grief.'"
+    },
+    {
+     "claim": "the same insistence that the income on the federal paperwork was not his",
+     "status": "supported",
+     "fact": "F87",
+     "quote": "his statements showed income from Las Vegas casinos where he had never worked",
+     "verified": true,
+     "material": false,
+     "why": "He reported income on federal statements from casinos where he never worked, which is the insistence described."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 65,
+   "sentence": "At some point, he reported the discrepancy to the Social Security Administration.",
+   "claims": [
+    {
+     "claim": "he reported the discrepancy to the Social Security Administration",
+     "status": "supported",
+     "fact": "F87",
+     "quote": "An Arizona man reported to the Social Security Administration that his statements showed income from Las Vegas casinos where he had never worked.",
+     "verified": true,
+     "material": false,
+     "why": "Research states the Arizona man reported the income discrepancy to the SSA."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 66,
+   "sentence": "That report set off a chain with a very short fuse.",
+   "claims": [
+    {
+     "claim": "That report set off a chain",
+     "status": "supported",
+     "fact": "F88",
+     "quote": "The resulting investigation led to the Nevada Department of Motor Vehicles",
+     "verified": true,
+     "material": false,
+     "why": "Research says the Arizona man's report led to an investigation that reached the DMV."
+    },
+    {
+     "claim": "with a very short fuse",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research gives no date for the report, so it cannot show the chain moved quickly; this is the narrator's framing of pace."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 67,
+   "sentence": "Investigators traced the number to Nevada.",
+   "claims": [
+    {
+     "claim": "Investigators traced the number to Nevada.",
+     "status": "supported",
+     "fact": "F88",
+     "quote": "The resulting investigation led to the Nevada Department of Motor Vehicles, which had issued Jones a driver's license in 1988 with his Sandelli alias and fake Social Security number.",
+     "verified": true,
+     "material": false,
+     "why": "The investigation into the misused Social Security number led to the Nevada DMV."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 68,
+   "sentence": "Nevada's DMV records showed that a license had been issued in 1988 under the name Joseph Richard Sandelli, carrying Goodenough's Social Security number.",
+   "claims": [
+    {
+     "claim": "Nevada's DMV records showed that a license had been issued in 1988 under the name Joseph Richard Sandelli",
+     "status": "supported",
+     "fact": "F88",
+     "quote": "the Nevada Department of Motor Vehicles, which had issued Jones a driver's license in 1988 with his Sandelli alias and fake Social Security number",
+     "verified": true,
+     "material": false,
+     "why": "Research states the Nevada DMV issued the license in 1988 under the Sandelli alias."
+    },
+    {
+     "claim": "carrying Goodenough's Social Security number",
+     "status": "supported",
+     "fact": "F20",
+     "quote": "Jones used the name Joseph Richard Sandelli and a Social Security number belonging to Clifton Goodenough to obtain and renew identification in Nevada",
+     "verified": true,
+     "material": false,
+     "why": "Goodenough's number was used to obtain the Nevada identification."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 69,
+   "sentence": "And then investigators found something that made the whole thing concrete: in May 2008, the man holding that license had walked into a Henderson DMV office to renew it.",
+   "claims": [
+    {
+     "claim": "in May 2008, the man holding that license had walked into a Henderson DMV office to renew it",
+     "status": "supported",
+     "fact": "F39",
+     "quote": "in May 2008, when he went to a Henderson DMV office to renew his driver's license under the name Joseph Richard Sandelli",
+     "verified": true,
+     "material": false,
+     "why": "Research states the May 2008 renewal visit to a Henderson DMV office."
+    },
+    {
+     "claim": "investigators found something",
+     "status": "supported",
+     "fact": "F89",
+     "quote": "Jones renewed his driver's license in 2008, which proved to be his undoing when investigators contacted the DMV.",
+     "verified": true,
+     "material": false,
+     "why": "Investigators learned of the renewal through the DMV."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 70,
+   "sentence": "What Jones couldn't account for was that Clifton Goodenough was still out there — still filing taxes, still fighting a government that kept insisting he owed money on earnings he had never seen.",
+   "claims": [
+    {
+     "claim": "What Jones couldn't account for",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Narrator's framing of what Jones anticipated; the research says nothing about his expectations."
+    },
+    {
+     "claim": "Clifton Goodenough was still out there — still filing taxes",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research never says Goodenough filed taxes; this is an added factual detail."
+    },
+    {
+     "claim": "still fighting a government that kept insisting he owed money",
+     "status": "supported",
+     "fact": "F45",
+     "quote": "he had been embroiled in a longtime feud with the IRS over \"extra income\" he supposedly had earned in Las Vegas every year since 1995",
+     "verified": true,
+     "material": false,
+     "why": "A longtime IRS feud, with wages garnisheed, matches."
+    },
+    {
+     "claim": "on earnings he had never seen",
+     "status": "supported",
+     "fact": "F87",
+     "quote": "his statements showed income from Las Vegas casinos where he had never worked",
+     "verified": true,
+     "material": false,
+     "why": "The income was attributed to casinos where he never worked."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 71,
+   "sentence": "That 2008 renewal was what led investigators to him.",
+   "claims": [
+    {
+     "claim": "That 2008 renewal was what led investigators to him.",
+     "status": "supported",
+     "fact": "F39",
+     "quote": "Investigators began looking at Jones in May 2008, when he went to a Henderson DMV office to renew his driver's license under the name Joseph Richard Sandelli.",
+     "verified": true,
+     "material": false,
+     "why": "F39 and F89 tie the 2008 renewal to investigators finding him."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 72,
+   "sentence": "It was simply the moment when a live wire finally touched something it couldn't pass through.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 73,
+   "sentence": "Investigators reached Jones in July 2011, and when they asked him directly whether he was the Chicago commodities trader who had walked away 32 years earlier, he said yes.",
+   "claims": [
+    {
+     "claim": "Investigators reached Jones in July 2011",
+     "status": "supported",
+     "fact": "F35",
+     "quote": "Jones was busted in July by state and federal investigators.",
+     "verified": true,
+     "material": false,
+     "why": "F35 gives the July arrest by investigators, and F29 places the arrest in 2011."
+    },
+    {
+     "claim": "when they asked him whether he was the Chicago commodities trader who had walked away 32 years earlier",
+     "status": "supported",
+     "fact": "F90",
+     "quote": "When authorities asked if he was the Chicago trader who had vanished 32 years ago",
+     "verified": true,
+     "material": false,
+     "why": "F90 records the question, and F75 confirms he was a commodities trader."
+    },
+    {
+     "claim": "asked him directly",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The manner 'directly' is added color the research does not describe."
+    },
+    {
+     "claim": "he said yes",
+     "status": "supported",
+     "fact": "F90",
+     "quote": "Jones said yes.",
+     "verified": true,
+     "material": false,
+     "why": "F90 states his answer was yes."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 74,
+   "sentence": "No elaborate cover story, no sustained denial.",
+   "claims": [
+    {
+     "claim": "no sustained denial",
+     "status": "supported",
+     "fact": "F90",
+     "quote": "When authorities asked if he was the Chicago trader who had vanished 32 years ago, Jones said yes.",
+     "verified": true,
+     "material": false,
+     "why": "Jones admitted his identity when asked, so there was no denial."
+    },
+    {
+     "claim": "No elaborate cover story",
+     "status": "supported",
+     "fact": "F90",
+     "quote": "Jones said yes",
+     "verified": true,
+     "material": false,
+     "why": "Jones answered with a direct admission, so he offered no cover story when confronted."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 75,
+   "sentence": "Just confirmation.",
+   "claims": [
+    {
+     "claim": "Just confirmation.",
+     "status": "supported",
+     "fact": "F90",
+     "quote": "When authorities asked if he was the Chicago trader who had vanished 32 years ago, Jones said yes.",
+     "verified": true,
+     "material": false,
+     "why": "Read as a callback to Jones confirming his identity when asked; the research records that he said yes."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 76,
+   "sentence": "Arthur Gerald Jones, who had been legally dead on an Illinois court's docket for decades, was standing in Nevada, alive, and he admitted it.",
+   "claims": [
+    {
+     "claim": "had been legally dead on an Illinois court's docket",
+     "status": "supported",
+     "fact": "F38",
+     "quote": "Illinois courts declared Jones dead 25 years ago.",
+     "verified": true,
+     "material": false,
+     "why": "Research records an Illinois court declaring him dead; 'docket' is harmless phrasing."
+    },
+    {
+     "claim": "for decades",
+     "status": "derived",
+     "fact": "F60",
+     "quote": "A court declared Arthur Jones legally dead in 1986.",
+     "verified": true,
+     "material": false,
+     "why": "1986 to his 2011 arrest is 25 years, which is decades."
+    },
+    {
+     "claim": "was standing in Nevada, alive",
+     "status": "supported",
+     "fact": "F29",
+     "quote": "In 2011, Jones was arrested in Las Vegas after trying to renew a Nevada driver's license",
+     "verified": true,
+     "material": false,
+     "why": "Research confirms he was found alive in Las Vegas, Nevada."
+    },
+    {
+     "claim": "he admitted it",
+     "status": "supported",
+     "fact": "F90",
+     "quote": "When authorities asked if he was the Chicago trader who had vanished 32 years ago, Jones said yes.",
+     "verified": true,
+     "material": false,
+     "why": "Research records him confirming his identity."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 77,
+   "sentence": "At the time of his arrest he was working the sport and race book at the Rampart, still under the Sandelli name.",
+   "claims": [
+    {
+     "claim": "At the time of his arrest he was working the sport and race book at the Rampart",
+     "status": "supported",
+     "fact": "F36",
+     "quote": "Jones was working at the Rampart's sport and race book at the time of his arrest under an assumed name.",
+     "verified": true,
+     "material": false,
+     "why": "Research states he worked at the Rampart's sport and race book when arrested."
+    },
+    {
+     "claim": "still under the Sandelli name",
+     "status": "supported",
+     "fact": "F19",
+     "quote": "where he worked under the alias Joseph Richard Sandelli",
+     "verified": true,
+     "material": false,
+     "why": "F19 says he worked at the sports book as Sandelli; F36 confirms an assumed name at arrest."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 78,
+   "sentence": "The Nevada state attorney general's office charged him with an array of fraud, identity theft, and related counts.",
+   "claims": [
+    {
+     "claim": "The Nevada state attorney general's office charged him",
+     "status": "supported",
+     "fact": "F64",
+     "quote": "The Nevada state attorney general's office charged Jones",
+     "verified": true,
+     "material": false,
+     "why": "Research names the Nevada AG's office as the charging authority."
+    },
+    {
+     "claim": "with an array of fraud, identity theft, and related counts",
+     "status": "supported",
+     "fact": "F64",
+     "quote": "an array of fraud, identity theft, and burglary counts",
+     "verified": true,
+     "material": false,
+     "why": "Fair paraphrase; 'related counts' generalizes the burglary counts without adding a fact."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 79,
+   "sentence": "The plea deal that followed collapsed the charges into one.",
+   "claims": [
+    {
+     "claim": "The plea deal that followed",
+     "status": "supported",
+     "fact": "F34",
+     "quote": "As part of a deal with prosecutors, Jones avoided trial on several other felony counts",
+     "verified": true,
+     "material": false,
+     "why": "Research records a deal with prosecutors after the charges."
+    },
+    {
+     "claim": "collapsed the charges into one",
+     "status": "supported",
+     "fact": "F23",
+     "quote": "Jones pleaded guilty to one count of felony identity fraud in Clark County court",
+     "verified": true,
+     "material": false,
+     "why": "He pleaded to a single count and avoided trial on the other felony counts (F34)."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 80,
+   "sentence": "Jones pleaded guilty in September to a single felony — using a false name to obtain a driver's license or identity card — and avoided trial on the remaining charges, including identity theft, under the terms of the agreement with prosecutors.",
+   "claims": [
+    {
+     "claim": "Jones pleaded guilty in September",
+     "status": "supported",
+     "fact": "F33",
+     "quote": "Arthur Gerald Jones pleaded guilty in September to a felony",
+     "verified": true,
+     "material": false,
+     "why": "Research states the September guilty plea."
+    },
+    {
+     "claim": "to a single felony",
+     "status": "supported",
+     "fact": "F23",
+     "quote": "Jones pleaded guilty to one count of felony identity fraud",
+     "verified": true,
+     "material": false,
+     "why": "Research records one count."
+    },
+    {
+     "claim": "using a false name to obtain a driver's license or identity card",
+     "status": "supported",
+     "fact": "F33",
+     "quote": "a felony for using a false name to obtain a driver's license or identity card",
+     "verified": true,
+     "material": false,
+     "why": "Research states this as the felony."
+    },
+    {
+     "claim": "avoided trial on the remaining charges, including identity theft",
+     "status": "supported",
+     "fact": "F34",
+     "quote": "Jones avoided trial on several other felony counts, including identity theft",
+     "verified": true,
+     "material": false,
+     "why": "Research states he avoided trial on other counts, including identity theft."
+    },
+    {
+     "claim": "under the terms of the agreement with prosecutors",
+     "status": "supported",
+     "fact": "F34",
+     "quote": "As part of a deal with prosecutors",
+     "verified": true,
+     "material": false,
+     "why": "Research describes a deal with prosecutors."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 81,
+   "sentence": "On January 31, 2012, Clark County District Judge James Bixler sentenced him.",
+   "claims": [
+    {
+     "claim": "On January 31, 2012, ... sentenced him",
+     "status": "supported",
+     "fact": "F30",
+     "quote": "Arthur Gerald Jones was sentenced to three years of probation on January 31, 2012.",
+     "verified": true,
+     "material": false,
+     "why": "The research gives this sentencing date."
+    },
+    {
+     "claim": "Clark County District Judge James Bixler sentenced him",
+     "status": "supported",
+     "fact": "F0",
+     "quote": "Clark County District Judge James Bixler ordered Jones to pay more than $78,600 to the Social Security Administration as part of sentencing.",
+     "verified": true,
+     "material": false,
+     "why": "The judge's name and title match; F41 confirms that Bixler handed down the sentence."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 82,
+   "sentence": "Jones was 73 years old.",
+   "claims": [
+    {
+     "claim": "Jones was 73 years old",
+     "status": "supported",
+     "fact": "F32",
+     "quote": "Arthur Gerald Jones was 73 years old at the time of his sentencing.",
+     "verified": true,
+     "material": false,
+     "why": "Research states he was 73 at sentencing; F62 gives 72 at an earlier point, but a claim matching any source counts as supported."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 83,
+   "sentence": "The sentence was three years of probation.",
+   "claims": [
+    {
+     "claim": "The sentence was three years of probation.",
+     "status": "supported",
+     "fact": "F30",
+     "quote": "Arthur Gerald Jones was sentenced to three years of probation on January 31, 2012.",
+     "verified": true,
+     "material": false,
+     "why": "F30 and F23 state three years of probation; F5's five years is a conflicting source, and matching any source counts as supported."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 84,
+   "sentence": "And then came the restitution, which is where the full shape of what he had done became visible as a dollar figure.",
+   "claims": [
+    {
+     "claim": "And then came the restitution",
+     "status": "supported",
+     "fact": "F23",
+     "quote": "sentenced to three years of probation with restitution ordered",
+     "verified": true,
+     "material": false,
+     "why": "The research records that restitution was ordered as part of the sentence."
+    },
+    {
+     "claim": "which is where the full shape of what he had done became visible as a dollar figure",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "This is the narrator's interpretation of what the restitution meant, not a recorded fact."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 85,
+   "sentence": "Judge Bixler ordered Jones to repay more than $78,600 to the Social Security Administration, the court's accounting of what the government had paid his family after the Illinois death declaration, with about $11,400 going separately to Goodenough, bringing the total restitution to $90,000.",
+   "claims": [
+    {
+     "claim": "Judge Bixler ordered Jones to repay more than $78,600 to the Social Security Administration",
+     "status": "supported",
+     "fact": "F0",
+     "quote": "Clark County District Judge James Bixler ordered Jones to pay more than $78,600 to the Social Security Administration as part of sentencing.",
+     "verified": true,
+     "material": false,
+     "why": "Judge, amount and recipient match F0."
+    },
+    {
+     "claim": "what the government had paid his family after the Illinois death declaration",
+     "status": "supported",
+     "fact": "F42",
+     "quote": "for their payments to Jones' family after he was declared dead in Illinois",
+     "verified": true,
+     "material": false,
+     "why": "F42 ties the $78,600 to payments to the family after the Illinois death declaration."
+    },
+    {
+     "claim": "with about $11,400 going separately to Goodenough",
+     "status": "supported",
+     "fact": "F43",
+     "quote": "Jones was ordered to pay about $11,400 to Goodenough for missed work and legal fees",
+     "verified": true,
+     "material": false,
+     "why": "Amount and recipient match F43."
+    },
+    {
+     "claim": "bringing the total restitution to $90,000",
+     "status": "supported",
+     "fact": "F6",
+     "quote": "A Clark County court ordered Jones to pay $90,000 in restitution.",
+     "verified": true,
+     "material": false,
+     "why": "F6 and F31 give $90,000, which also equals $78,600 plus $11,400; the $70,000 figure in other reporting does not negate this, since a claim matching any source is supported."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 86,
+   "sentence": "Now Jones would repay it.",
+   "claims": [
+    {
+     "claim": "Now Jones would repay it.",
+     "status": "supported",
+     "fact": "F42",
+     "quote": "Jones was ordered to pay more than $78,600 to the Social Security Administration for their payments to Jones' family after he was declared dead in Illinois.",
+     "verified": true,
+     "material": false,
+     "why": "The research records that Jones was ordered to repay the benefits paid to his family."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 87,
+   "sentence": "That $11,400 to Goodenough was for missed work and legal fees caused by the misuse of his Social Security number.",
+   "claims": [
+    {
+     "claim": "That $11,400 to Goodenough",
+     "status": "supported",
+     "fact": "F43",
+     "quote": "Jones was ordered to pay about $11,400 to Goodenough",
+     "verified": true,
+     "material": false,
+     "why": "Research states the roughly $11,400 payment to Goodenough."
+    },
+    {
+     "claim": "was for missed work and legal fees caused by the misuse of his Social Security number",
+     "status": "supported",
+     "fact": "F43",
+     "quote": "for missed work and legal fees incurred because of the misuse of his Social Security number",
+     "verified": true,
+     "material": false,
+     "why": "Research gives exactly this purpose for the payment."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 88,
+   "sentence": "His attorney said the money would come out of Jones's own Social Security benefits.",
+   "claims": [
+    {
+     "claim": "His attorney said the money would come out of Jones's own Social Security benefits.",
+     "status": "supported",
+     "fact": "F48",
+     "quote": "Jones' attorney, Stephen Stein, said the money would come out of his Social Security benefits.",
+     "verified": true,
+     "material": false,
+     "why": "Research directly states the attorney said this."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 89,
+   "sentence": "That morning is where this ends, because it's where it started.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 90,
+   "sentence": "A man walked out a front door, told his wife the meeting wasn't in a business office, and drove away.",
+   "claims": [
+    {
+     "claim": "A man walked out a front door",
+     "status": "unsupported",
+     "fact": "F53",
+     "quote": "Arthur Jones rushed out the door around noon on May 10, 1979",
+     "verified": true,
+     "material": false,
+     "why": "Research says he rushed out 'the door'; 'front' is added but harmless color."
+    },
+    {
+     "claim": "told his wife the meeting wasn't in a business office",
+     "status": "supported",
+     "fact": "F57",
+     "quote": "Joanne Jones recalled her husband saying, 'The meeting is not in a business office,'",
+     "verified": true,
+     "material": false,
+     "why": "Paraphrases the recalled quote."
+    },
+    {
+     "claim": "and drove away",
+     "status": "supported",
+     "fact": "F57",
+     "quote": "before he sped away from their suburban Chicago home",
+     "verified": true,
+     "material": false,
+     "why": "'Sped away' supports 'drove away'."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 91,
+   "sentence": "He promised to return.",
+   "claims": [
+    {
+     "claim": "He promised to return.",
+     "status": "supported",
+     "fact": "F53",
+     "quote": "promising his wife he would return after a business meeting",
+     "verified": true,
+     "material": false,
+     "why": "Research states he promised his wife he would return."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 92,
+   "sentence": "What he left behind: a wife, three children, and through the machinery of courts and federal programs, $47,000 in survivor benefits paid out in his name.",
+   "claims": [
+    {
+     "claim": "What he left behind: a wife, three children",
+     "status": "supported",
+     "fact": "F22",
+     "quote": "In 1979, Jones walked out on his wife and three children in north suburban Highland Park, Illinois",
+     "verified": true,
+     "material": false,
+     "why": "Research states he left his wife and three children."
+    },
+    {
+     "claim": "through the machinery of courts and federal programs, $47,000 in survivor benefits",
+     "status": "supported",
+     "fact": "F61",
+     "quote": "Social Security paid Jones's family $47,000 in survivor benefits after he was declared legally dead.",
+     "verified": true,
+     "material": false,
+     "why": "A court declared him dead (F60) and Social Security paid $47,000 in survivor benefits."
+    },
+    {
+     "claim": "paid out in his name",
+     "status": "supported",
+     "fact": "F12",
+     "quote": "Jones's wife and three children collected Social Security benefits worth $47,000 as a result of his being declared dead.",
+     "verified": true,
+     "material": false,
+     "why": "The benefits were paid to his family because of his declared death; the paraphrase is reasonable."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 93,
+   "sentence": "What he built in place of that life eventually became a court order to pay it back.",
+   "claims": [
+    {
+     "claim": "eventually became a court order to pay it back",
+     "status": "supported",
+     "fact": "F42",
+     "quote": "Jones was ordered to pay more than $78,600 to the Social Security Administration for their payments to Jones' family after he was declared dead in Illinois.",
+     "verified": true,
+     "material": false,
+     "why": "Research records a court ordering Jones to repay Social Security."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 94,
+   "sentence": "The door he walked through in 1979 was the same one the sentence closed behind him in 2012, just from the other side.",
+   "claims": [
+    {
+     "claim": "The door he walked through in 1979",
+     "status": "supported",
+     "fact": "F22",
+     "quote": "In 1979, Jones walked out on his wife and three children in north suburban Highland Park, Illinois",
+     "verified": true,
+     "material": false,
+     "why": "Research records that he walked out in 1979; the door imagery is a metaphor."
+    },
+    {
+     "claim": "the sentence closed behind him in 2012",
+     "status": "supported",
+     "fact": "F30",
+     "quote": "Arthur Gerald Jones was sentenced to three years of probation on January 31, 2012.",
+     "verified": true,
+     "material": false,
+     "why": "Research records his sentencing in 2012."
+    }
+   ],
+   "error": false,
+   "material": false
+  }
+ ],
+ "gateLog": [
+  {
+   "sentence": "He was frazzled enough that he left without his bracelet, the one he cherished and almost never removed.",
+   "unsupported": [
+    "almost never removed"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "He was frazzled enough that he left without his bracelet, the one he cherished."
+  },
+  {
+   "sentence": "Joanne reported him missing the next morning, May 11.",
+   "unsupported": [
+    "Joanne reported him missing the next morning, May 11"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"his wife reported him missing on May 11\""
+   ],
+   "action": "removed"
+  },
+  {
+   "sentence": "He had started with almost nothing.",
+   "unsupported": [
+    "He had started with almost nothing."
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "removed"
+  },
+  {
+   "sentence": "From a liquor store stockroom to the floor of the Chicago Board of Trade is not a short distance, but Jones made it — becoming a commodities trader in one of the most competitive pits in the country.",
+   "unsupported": [
+    "one of the most competitive pits in the country"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "From a liquor store stockroom to the floor of the Chicago Board of Trade is not a short distance, but Jones made it, becoming a commodities trader."
+  },
+  {
+   "sentence": "By the morning he walked out the door, the volleyball court and the ranch house were already abstractions.",
+   "unsupported": [
+    "By the morning he walked out the door"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"Arthur Jones rushed out the door around noon on May 10, 1979\""
+   ],
+   "action": "rewritten",
+   "result": "Around noon on May 10, 1979, the volleyball court and the ranch house were already abstractions."
+  },
+  {
+   "sentence": "He had sold the one thing that made him a trader, signed his wife's name to paper he had no right to sign, and watched a colleague in his own world get killed.",
+   "unsupported": [
+    "watched a colleague in his own world get killed"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"a fellow local commodities trader was shot and killed in his suburban home by masked intruders\""
+   ],
+   "action": "clause_cut",
+   "result": "He had sold the one thing that made him a trader, signed his wife's name to paper he had no right to sign."
+  },
+  {
+   "sentence": "Eight hundred dollars in 1979 is roughly three thousand dollars today.",
+   "unsupported": [
+    "3000",
+    "Eight hundred dollars in 1979 is roughly three thousand dollars today."
+   ],
+   "layer": [
+    "entity",
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "Jones paid $800 for the fake documents in 1979."
+  },
+  {
+   "sentence": "Jones had recently covered $210,000 in Board of Trade debts and had bet $30,000 on a single basketball game.",
+   "unsupported": [
+    "Jones had recently covered $210,000 in Board of Trade debts"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"A few months before he ran off, Jones sold his slot on the Board of Trade to pay off $210,000 in debts.\""
+   ],
+   "action": "rewritten",
+   "result": "A few months before he ran off, Jones sold his slot on the Board of Trade to pay off $210,000 in debts, and had once bet $30,000 on a single basketball game."
+  },
+  {
+   "sentence": "The birth certificate said Joseph Sandelli had been born.",
+   "unsupported": [
+    "Joseph Sandelli"
+   ],
+   "layer": [
+    "entity"
+   ],
+   "why": [],
+   "action": "rewritten",
+   "result": "The birth certificate said Joseph Richard Sandelli had been born."
+  },
+  {
+   "sentence": "From Chicago he moved — California, then Florida — before eventually settling.",
+   "unsupported": [
+    "From Chicago he moved — California, then Florida"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"After disappearing, Jones skipped around the country, stopping in California and Florida.\""
+   ],
+   "action": "rewritten",
+   "result": "From Chicago he skipped around the country, stopping in California and Florida, before eventually settling."
+  },
+  {
+   "sentence": "Joanne was left with three children and a husband the law had officially stopped looking for, and once the death declaration was on record, the federal government responded the way it was designed to: it paid.",
+   "unsupported": [
+    "a husband the law had officially stopped looking for"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "Joanne was left with three children and a husband who had vanished, and once the death declaration was on record, the federal government responded the way it was designed to: it paid."
+  },
+  {
+   "sentence": "He didn't file a claim.",
+   "unsupported": [
+    "He didn't file a claim."
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "removed"
+  },
+  {
+   "sentence": "He didn't forge a document.",
+   "unsupported": [
+    "He didn't forge a document."
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"Jones had forged his wife's name on a second mortgage application\""
+   ],
+   "action": "rewritten",
+   "result": "He forged his wife's name on a second mortgage application."
+  },
+  {
+   "sentence": "Joseph Sandelli had a girlfriend, a precinct, and a street address.",
+   "unsupported": [
+    "Joseph Sandelli"
+   ],
+   "layer": [
+    "entity"
+   ],
+   "why": [],
+   "action": "rewritten",
+   "result": "Jones had a girlfriend, a job, and a street address."
+  },
+  {
+   "sentence": "Jones worked at the Desert Inn, and later moved to a local casino's sports book — the same professional world he had occupied in Chicago, now wearing a different man's Social Security number.",
+   "unsupported": [
+    "the same professional world he had occupied in Chicago"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "clause_cut",
+   "result": "Jones worked at the Desert Inn, now wearing a different man's Social Security number."
+  },
+  {
+   "sentence": "Jones had been running Goodenough's number through Nevada casino payroll systems for years, building a documented employment history under a name the government already recognized as living.",
+   "unsupported": [
+    "under a name the government already recognized as living"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "Jones had been running Goodenough's number through Nevada casino payroll systems for years, building a documented employment history under an assumed name."
+  },
+  {
+   "sentence": "It had an address, a ballot, a job, a partner, and a number that anchored all of it to a man in Phoenix who had no idea any of it was happening.",
+   "unsupported": [
+    "It had an address, a ballot",
+    "who had no idea any of it was happening"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"Jones and his girlfriend were registered to vote.\"",
+    "research differs: \"Goodenough told the Review-Journal in July that he had been embroiled in a longtime feud with the IRS over \"extra income\" he supposedly had earned in Las Vegas \""
+   ],
+   "action": "rewritten",
+   "result": "It had a job, a partner, and a number that anchored all of it to an Arizona man who had spent years feuding with the IRS over income he had supposedly earned in Las Vegas."
+  },
+  {
+   "sentence": "But starting in 1995, his IRS statements told a different story — year after year, they showed casino income earned in Nevada, income he had never touched because he had never earned it.",
+   "unsupported": [
+    "his IRS statements told a different story"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"his statements showed income from Las Vegas casinos where he had never worked\""
+   ],
+   "action": "rewritten",
+   "result": "But starting in 1995, his statements told a different story — year after year, they showed casino income earned in Las Vegas, income he had never touched because he had never earned it."
+  },
+  {
+   "sentence": "He was working the sport and race book at the Rampart Casino at the time of his arrest, still under the Sandelli name, still running Goodenough's Social Security number through a Nevada employer's payroll system.",
+   "unsupported": [
+    "Rampart Casino",
+    "still running Goodenough's Social Security number through a Nevada employer's payroll system"
+   ],
+   "layer": [
+    "entity",
+    "attribute"
+   ],
+   "why": [
+    "not in research"
+   ],
+   "action": "rewritten",
+   "result": "He was working the sport and race book at the Rampart at the time of his arrest, still under the Sandelli name, still using Goodenough's Social Security number."
+  },
+  {
+   "sentence": "The man who had fraudulently triggered a survivor payout by disappearing would now fund the repayment from the same program, drawing on benefits he had earned under his own name — the one he had abandoned in a tennis shirt and slacks on a May morning in 1979.",
+   "unsupported": [
+    "drawing on benefits he had earned under his own name",
+    "on a May morning in 1979"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "not in research",
+    "research differs: \"rushed out the door around noon on May 10, 1979\""
+   ],
+   "action": "rewritten",
+   "result": "The man who had fraudulently triggered a survivor payout by disappearing would now fund the repayment from the same program, drawing on his Social Security benefits — the name he had abandoned in a tennis shirt and slacks around noon on May 10, 1979."
+  },
+  {
+   "sentence": "What he left behind — a wife, three children, a bracelet on the nightstand — eventually became, through the machinery of courts and federal programs, a $78,600 government check.",
+   "unsupported": [
+    "a bracelet on the nightstand"
+   ],
+   "layer": [
+    "attribute"
+   ],
+   "why": [
+    "research differs: \"he forgot to put on his cherished bracelet\""
+   ],
+   "action": "clause_cut",
+   "result": "What he left behind — a wife, three children, through the machinery of courts and federal programs, a $78,600 government check."
+  }
+ ],
+ "gateOriginals": [
+  {
+   "i": 0,
+   "sentence": "He was frazzled enough that he left without his bracelet, the one he cherished and almost never removed.",
+   "claims": [
+    {
+     "claim": "He was frazzled enough that he left without his bracelet",
+     "status": "supported",
+     "fact": "F56",
+     "quote": "Arthur Jones was frazzled enough when he left that he forgot to put on his cherished bracelet.",
+     "verified": true,
+     "material": false,
+     "why": "Research states he was frazzled and forgot his bracelet."
+    },
+    {
+     "claim": "the one he cherished",
+     "status": "supported",
+     "fact": "F56",
+     "quote": "his cherished bracelet",
+     "verified": true,
+     "material": false,
+     "why": "Research calls the bracelet cherished."
+    },
+    {
+     "claim": "almost never removed",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research gives no detail about how often he wore or removed the bracelet; this adds an unrecorded fact about his habits."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 1,
+   "sentence": "Joanne reported him missing the next morning, May 11.",
+   "claims": [
+    {
+     "claim": "Joanne reported him missing",
+     "status": "supported",
+     "fact": "F58",
+     "quote": "his wife reported him missing on May 11",
+     "verified": true,
+     "material": false,
+     "why": "F57 identifies Joanne as his wife, and F58 says his wife reported him missing."
+    },
+    {
+     "claim": "May 11",
+     "status": "supported",
+     "fact": "F58",
+     "quote": "his wife reported him missing on May 11",
+     "verified": true,
+     "material": false,
+     "why": "The date is stated directly."
+    },
+    {
+     "claim": "the next morning",
+     "status": "unsupported",
+     "fact": "F58",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "'Next' follows from May 10 to May 11, but the research never says it was morning; this is minor time-of-day color."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 2,
+   "sentence": "He had started with almost nothing.",
+   "claims": [
+    {
+     "claim": "He had started with almost nothing.",
+     "status": "unsupported",
+     "fact": "F74",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research only says he began as a delivery boy at his future father-in-law's store. It records nothing about his wealth, so 'almost nothing' is the narrator's own characterization."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 3,
+   "sentence": "From a liquor store stockroom to the floor of the Chicago Board of Trade is not a short distance, but Jones made it — becoming a commodities trader in one of the most competitive pits in the country.",
+   "claims": [
+    {
+     "claim": "From a liquor store stockroom",
+     "status": "unsupported",
+     "fact": "F74",
+     "quote": "Jones had met his wife while working as a delivery boy for her father's store, Mr. Joseph's Liquor Cabinet, which he later managed.",
+     "verified": true,
+     "material": true,
+     "why": "The research places him at a liquor store as delivery boy and later manager; it never mentions a stockroom role."
+    },
+    {
+     "claim": "to the floor of the Chicago Board of Trade ... Jones made it — becoming a commodities trader",
+     "status": "supported",
+     "fact": "F75",
+     "quote": "Jones eventually became a commodities trader at the Chicago Board of Trade.",
+     "verified": true,
+     "material": false,
+     "why": "Directly stated in the research."
+    },
+    {
+     "claim": "in one of the most competitive pits in the country",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "This is the narrator's characterization; the research says nothing about how competitive the Board of Trade was."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 4,
+   "sentence": "By the morning he walked out the door, the volleyball court and the ranch house were already abstractions.",
+   "claims": [
+    {
+     "claim": "the morning he walked out the door",
+     "status": "contradicted",
+     "fact": "F53",
+     "quote": "Arthur Jones rushed out the door around noon on May 10, 1979",
+     "verified": true,
+     "material": true,
+     "why": "The research places his departure around noon, not in the morning."
+    },
+    {
+     "claim": "the volleyball court and the ranch house",
+     "status": "supported",
+     "fact": "F76",
+     "quote": "Jones lived in a sprawling ranch home with a volleyball court in suburban Chicago.",
+     "verified": true,
+     "material": false,
+     "why": "The research describes the ranch home and volleyball court."
+    },
+    {
+     "claim": "were already abstractions",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "This is the narrator's interpretation of his financial or emotional state, not a recorded fact."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 5,
+   "sentence": "He had sold the one thing that made him a trader, signed his wife's name to paper he had no right to sign, and watched a colleague in his own world get killed.",
+   "claims": [
+    {
+     "claim": "He had sold the one thing that made him a trader",
+     "status": "supported",
+     "fact": "F79",
+     "quote": "Jones sold his slot on the Board of Trade to pay off $210,000 in debts",
+     "verified": true,
+     "material": false,
+     "why": "Research records the sale of his Board of Trade slot; 'the one thing' is narrative framing."
+    },
+    {
+     "claim": "signed his wife's name to paper he had no right to sign",
+     "status": "supported",
+     "fact": "F78",
+     "quote": "Jones had forged his wife's name on a second mortgage application",
+     "verified": true,
+     "material": false,
+     "why": "Paraphrase of the forgery."
+    },
+    {
+     "claim": "a colleague in his own world get killed",
+     "status": "supported",
+     "fact": "F82",
+     "quote": "a fellow local commodities trader was shot and killed in his suburban home by masked intruders",
+     "verified": true,
+     "material": false,
+     "why": "A fellow commodities trader was killed."
+    },
+    {
+     "claim": "watched a colleague in his own world get killed",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "Research does not say Jones witnessed the killing; 'watched' presents him as an eyewitness."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 6,
+   "sentence": "Eight hundred dollars in 1979 is roughly three thousand dollars today.",
+   "claims": [
+    {
+     "claim": "Eight hundred dollars in 1979",
+     "status": "supported",
+     "fact": "F4",
+     "quote": "Investigators said Jones obtained his false identity in 1979 by paying $800 for fake documents",
+     "verified": true,
+     "material": false,
+     "why": "Research records the $800 payment in 1979."
+    },
+    {
+     "claim": "is roughly three thousand dollars today",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research gives no inflation figure or equivalent value for $800 today."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 7,
+   "sentence": "Jones had recently covered $210,000 in Board of Trade debts and had bet $30,000 on a single basketball game.",
+   "claims": [
+    {
+     "claim": "Jones had recently covered $210,000 in Board of Trade debts",
+     "status": "misattached",
+     "fact": "F79",
+     "quote": "A few months before he ran off, Jones sold his slot on the Board of Trade to pay off $210,000 in debts.",
+     "verified": true,
+     "material": true,
+     "why": "Research says he sold his Board of Trade slot to pay $210,000 in debts, which F1 calls gambling debts; it does not say they were Board of Trade debts."
+    },
+    {
+     "claim": "had bet $30,000 on a single basketball game",
+     "status": "supported",
+     "fact": "F11",
+     "quote": "Jones's former wife said he once bet $30,000 on a basketball game.",
+     "verified": true,
+     "material": false,
+     "why": "Matches the research."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 8,
+   "sentence": "The birth certificate said Joseph Sandelli had been born.",
+   "claims": [
+    {
+     "claim": "The birth certificate",
+     "status": "supported",
+     "fact": "F14",
+     "quote": "Jones claimed to have purchased a false birth certificate for $800.",
+     "verified": true,
+     "material": false,
+     "why": "Research records that Jones obtained a false birth certificate."
+    },
+    {
+     "claim": "said Joseph Sandelli had been born",
+     "status": "supported",
+     "fact": "F7",
+     "quote": "fake identity documents using the name Joseph Richard Sandelli",
+     "verified": true,
+     "material": false,
+     "why": "The fake documents, which F16 says included the birth certificate, used the Sandelli name."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 9,
+   "sentence": "From Chicago he moved — California, then Florida — before eventually settling.",
+   "claims": [
+    {
+     "claim": "From Chicago he moved — California",
+     "status": "supported",
+     "fact": "F68",
+     "quote": "After disappearing, Jones skipped around the country, stopping in California and Florida.",
+     "verified": true,
+     "material": false,
+     "why": "Research records that he stopped in California after disappearing from Chicago."
+    },
+    {
+     "claim": "then Florida",
+     "status": "unsupported",
+     "fact": "F68",
+     "quote": "stopping in California and Florida",
+     "verified": true,
+     "material": true,
+     "why": "Research names both states but does not say he went to California before Florida, so the order is added."
+    },
+    {
+     "claim": "before eventually settling",
+     "status": "supported",
+     "fact": "F69",
+     "quote": "In the 1980s, Jones vanished into Las Vegas.",
+     "verified": true,
+     "material": false,
+     "why": "Research records that he later settled in Las Vegas."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 10,
+   "sentence": "Joanne was left with three children and a husband the law had officially stopped looking for, and once the death declaration was on record, the federal government responded the way it was designed to: it paid.",
+   "claims": [
+    {
+     "claim": "Joanne was left with three children",
+     "status": "supported",
+     "fact": "F22",
+     "quote": "In 1979, Jones walked out on his wife and three children in north suburban Highland Park, Illinois",
+     "verified": true,
+     "material": false,
+     "why": "Research names the wife Joanne (F57) and says he left her and three children."
+    },
+    {
+     "claim": "a husband the law had officially stopped looking for",
+     "status": "unsupported",
+     "fact": "F60",
+     "quote": "A court declared Arthur Jones legally dead in 1986.",
+     "verified": true,
+     "material": false,
+     "why": "Research records a death declaration, not an official end to a search; this is narrator framing of that declaration."
+    },
+    {
+     "claim": "once the death declaration was on record",
+     "status": "supported",
+     "fact": "F60",
+     "quote": "A court declared Arthur Jones legally dead in 1986.",
+     "verified": true,
+     "material": false,
+     "why": "The death declaration is recorded in the research."
+    },
+    {
+     "claim": "the federal government responded ... it paid",
+     "status": "supported",
+     "fact": "F61",
+     "quote": "Social Security paid Jones's family $47,000 in survivor benefits after he was declared legally dead.",
+     "verified": true,
+     "material": false,
+     "why": "Social Security paid the family survivor benefits after the declaration."
+    },
+    {
+     "claim": "the way it was designed to",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Narrator's interpretation of how the system works, not stated in the research."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 11,
+   "sentence": "He didn't file a claim.",
+   "claims": [
+    {
+     "claim": "He didn't file a claim.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research never says whether anyone did or did not file a claim; F87 only records an Arizona man reporting to the Social Security Administration."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 12,
+   "sentence": "He didn't forge a document.",
+   "claims": [
+    {
+     "claim": "He didn't forge a document",
+     "status": "contradicted",
+     "fact": "F78",
+     "quote": "Jones had forged his wife's name on a second mortgage application while desperate for cash.",
+     "verified": true,
+     "material": true,
+     "why": "The research says Jones did forge a document (his wife's name on a mortgage application). If the line means he bought rather than made his fake ID (F67), the research does not say who made those documents, so a flat denial of forgery is still not supported."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 13,
+   "sentence": "Joseph Sandelli had a girlfriend, a precinct, and a street address.",
+   "claims": [
+    {
+     "claim": "Joseph Sandelli had a girlfriend",
+     "status": "supported",
+     "fact": "F72",
+     "quote": "The girlfriend and her family knew Jones only as Joseph Richard Sandelli",
+     "verified": true,
+     "material": false,
+     "why": "Research records a longtime girlfriend who knew him as Sandelli."
+    },
+    {
+     "claim": "a precinct",
+     "status": "unsupported",
+     "fact": "F71",
+     "quote": "Jones and his girlfriend were registered to vote.",
+     "verified": true,
+     "material": false,
+     "why": "Research says he was registered to vote but never mentions a precinct; this is the narrator's color drawn from that fact."
+    },
+    {
+     "claim": "a street address",
+     "status": "supported",
+     "fact": "F70",
+     "quote": "Jones and his longtime girlfriend lived on a block of stucco homes, dusty lots, and a few horse corrals in Las Vegas.",
+     "verified": true,
+     "material": false,
+     "why": "Research records that he lived in a house on a residential block."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 14,
+   "sentence": "Jones worked at the Desert Inn, and later moved to a local casino's sports book — the same professional world he had occupied in Chicago, now wearing a different man's Social Security number.",
+   "claims": [
+    {
+     "claim": "Jones worked at the Desert Inn",
+     "status": "supported",
+     "fact": "F84",
+     "quote": "In Las Vegas, Jones worked at the Desert Inn",
+     "verified": true,
+     "material": false,
+     "why": "Research states he worked at the Desert Inn in Las Vegas."
+    },
+    {
+     "claim": "and later moved to a local casino's sports book",
+     "status": "supported",
+     "fact": "F84",
+     "quote": "and then for a local casino's sports book, according to his attorney",
+     "verified": true,
+     "material": false,
+     "why": "Research states he then worked for a local casino's sports book."
+    },
+    {
+     "claim": "the same professional world he had occupied in Chicago",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research shows he was a commodities trader in Chicago; equating that with sports-book work is the narrator's interpretation."
+    },
+    {
+     "claim": "now wearing a different man's Social Security number",
+     "status": "supported",
+     "fact": "F40",
+     "quote": "Jones supplied a Social Security number that belonged to an Arizona man named Clifton Goodenough.",
+     "verified": true,
+     "material": false,
+     "why": "Research states he used another man's Social Security number."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 15,
+   "sentence": "Jones had been running Goodenough's number through Nevada casino payroll systems for years, building a documented employment history under a name the government already recognized as living.",
+   "claims": [
+    {
+     "claim": "Jones had been running Goodenough's number through Nevada casino payroll systems for years",
+     "status": "supported",
+     "fact": "F87",
+     "quote": "his statements showed income from Las Vegas casinos where he had never worked",
+     "verified": true,
+     "material": false,
+     "why": "F87 and F45 record years of Las Vegas casino income reported under Goodenough's number."
+    },
+    {
+     "claim": "building a documented employment history",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Narrator's characterization of the reported income; not stated in the research."
+    },
+    {
+     "claim": "under a name the government already recognized as living",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research does not say any government agency recognized the name used, Sandelli, as a living person."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 16,
+   "sentence": "It had an address, a ballot, a job, a partner, and a number that anchored all of it to a man in Phoenix who had no idea any of it was happening.",
+   "claims": [
+    {
+     "claim": "It had an address",
+     "status": "supported",
+     "fact": "F70",
+     "quote": "Jones and his longtime girlfriend lived on a block of stucco homes, dusty lots, and a few horse corrals in Las Vegas.",
+     "verified": true,
+     "material": false,
+     "why": "He had a residence in Las Vegas."
+    },
+    {
+     "claim": "a ballot",
+     "status": "overstated",
+     "fact": "F71",
+     "quote": "Jones and his girlfriend were registered to vote.",
+     "verified": true,
+     "material": true,
+     "why": "The research says he was registered to vote, not that he cast a ballot."
+    },
+    {
+     "claim": "a job",
+     "status": "supported",
+     "fact": "F36",
+     "quote": "Jones was working at the Rampart's sport and race book at the time of his arrest under an assumed name.",
+     "verified": true,
+     "material": false,
+     "why": "He worked under the alias."
+    },
+    {
+     "claim": "a partner",
+     "status": "supported",
+     "fact": "F72",
+     "quote": "The girlfriend and her family knew Jones only as Joseph Richard Sandelli",
+     "verified": true,
+     "material": false,
+     "why": "His longtime girlfriend knew him by the alias."
+    },
+    {
+     "claim": "a number that anchored all of it to a man in Phoenix",
+     "status": "supported",
+     "fact": "F44",
+     "quote": "Clifton Goodenough is a nurse at a Phoenix veterans hospital.",
+     "verified": true,
+     "material": false,
+     "why": "The SSN belonged to Goodenough, who works in Phoenix (F40)."
+    },
+    {
+     "claim": "who had no idea any of it was happening",
+     "status": "unsupported",
+     "fact": "F87",
+     "quote": "An Arizona man reported to the Social Security Administration that his statements showed income from Las Vegas casinos where he had never worked.",
+     "verified": true,
+     "material": true,
+     "why": "Goodenough knew about the phantom income and fought the IRS over it; the research never says he was unaware."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 17,
+   "sentence": "But starting in 1995, his IRS statements told a different story — year after year, they showed casino income earned in Nevada, income he had never touched because he had never earned it.",
+   "claims": [
+    {
+     "claim": "starting in 1995, his IRS statements told a different story — year after year",
+     "status": "supported",
+     "fact": "F45",
+     "quote": "embroiled in a longtime feud with the IRS over \"extra income\" he supposedly had earned in Las Vegas every year since 1995",
+     "verified": true,
+     "material": false,
+     "why": "Research records an IRS dispute over income attributed to him every year since 1995."
+    },
+    {
+     "claim": "they showed casino income earned in Nevada",
+     "status": "supported",
+     "fact": "F87",
+     "quote": "his statements showed income from Las Vegas casinos where he had never worked",
+     "verified": true,
+     "material": false,
+     "why": "His statements showed income from Las Vegas casinos, which are in Nevada."
+    },
+    {
+     "claim": "income he had never touched because he had never earned it",
+     "status": "supported",
+     "fact": "F87",
+     "quote": "income from Las Vegas casinos where he had never worked",
+     "verified": true,
+     "material": false,
+     "why": "The research says he never worked at those casinos, so he never earned the income."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 18,
+   "sentence": "He was working the sport and race book at the Rampart Casino at the time of his arrest, still under the Sandelli name, still running Goodenough's Social Security number through a Nevada employer's payroll system.",
+   "claims": [
+    {
+     "claim": "He was working the sport and race book at the Rampart Casino at the time of his arrest",
+     "status": "supported",
+     "fact": "F36",
+     "quote": "Jones was working at the Rampart's sport and race book at the time of his arrest under an assumed name.",
+     "verified": true,
+     "material": false,
+     "why": "Directly stated in the research."
+    },
+    {
+     "claim": "still under the Sandelli name",
+     "status": "supported",
+     "fact": "F19",
+     "quote": "where he worked under the alias Joseph Richard Sandelli",
+     "verified": true,
+     "material": false,
+     "why": "F36 says he worked under an assumed name, and F19 names the alias as Sandelli."
+    },
+    {
+     "claim": "still running Goodenough's Social Security number through a Nevada employer's payroll system",
+     "status": "unsupported",
+     "fact": "F87",
+     "quote": "An Arizona man reported to the Social Security Administration that his statements showed income from Las Vegas casinos where he had never worked.",
+     "verified": true,
+     "material": false,
+     "why": "The research implies casino income was reported under Goodenough's number, but the payroll mechanism and its continuation at the time of arrest are the narrator's inference."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 19,
+   "sentence": "The man who had fraudulently triggered a survivor payout by disappearing would now fund the repayment from the same program, drawing on benefits he had earned under his own name — the one he had abandoned in a tennis shirt and slacks on a May morning in 1979.",
+   "claims": [
+    {
+     "claim": "had fraudulently triggered a survivor payout by disappearing",
+     "status": "supported",
+     "fact": "F61",
+     "quote": "Social Security paid Jones's family $47,000 in survivor benefits after he was declared legally dead.",
+     "verified": true,
+     "material": false,
+     "why": "Research says his family received survivor benefits after he was declared dead; 'fraudulently' is narrator characterization."
+    },
+    {
+     "claim": "would now fund the repayment from the same program",
+     "status": "supported",
+     "fact": "F48",
+     "quote": "Jones' attorney, Stephen Stein, said the money would come out of his Social Security benefits.",
+     "verified": true,
+     "material": false,
+     "why": "His attorney said repayment would come from his Social Security benefits."
+    },
+    {
+     "claim": "drawing on benefits he had earned under his own name",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "Research does not say the benefits were earned under his own name."
+    },
+    {
+     "claim": "the one he had abandoned in a tennis shirt and slacks",
+     "status": "supported",
+     "fact": "F55",
+     "quote": "was wearing a tennis shirt and slacks rather than his normal corporate attire when he left on May 10, 1979",
+     "verified": true,
+     "material": false,
+     "why": "Matches the research on his clothing when he left."
+    },
+    {
+     "claim": "on a May morning",
+     "status": "contradicted",
+     "fact": "F53",
+     "quote": "rushed out the door around noon on May 10, 1979",
+     "verified": true,
+     "material": true,
+     "why": "Research says he left around noon, not in the morning."
+    },
+    {
+     "claim": "in 1979",
+     "status": "supported",
+     "fact": "F53",
+     "quote": "May 10, 1979",
+     "verified": true,
+     "material": false,
+     "why": "Year of departure matches."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 20,
+   "sentence": "What he left behind — a wife, three children, a bracelet on the nightstand — eventually became, through the machinery of courts and federal programs, a $78,600 government check.",
+   "claims": [
+    {
+     "claim": "What he left behind — a wife",
+     "status": "supported",
+     "fact": "F22",
+     "quote": "Jones walked out on his wife and three children",
+     "verified": true,
+     "material": false,
+     "why": "Research records he left his wife."
+    },
+    {
+     "claim": "three children",
+     "status": "supported",
+     "fact": "F22",
+     "quote": "his wife and three children",
+     "verified": true,
+     "material": false,
+     "why": "Research records three children."
+    },
+    {
+     "claim": "a bracelet on the nightstand",
+     "status": "unsupported",
+     "fact": "F56",
+     "quote": "he forgot to put on his cherished bracelet",
+     "verified": true,
+     "material": true,
+     "why": "The research says he forgot the bracelet but never says where it was; 'on the nightstand' is an added scene detail."
+    },
+    {
+     "claim": "through the machinery of courts and federal programs",
+     "status": "supported",
+     "fact": "F61",
+     "quote": "Social Security paid Jones's family $47,000 in survivor benefits after he was declared legally dead",
+     "verified": true,
+     "material": false,
+     "why": "A court declared him dead and Social Security then paid his family benefits."
+    },
+    {
+     "claim": "a $78,600 government check",
+     "status": "misattached",
+     "fact": "F42",
+     "quote": "Jones was ordered to pay more than $78,600 to the Social Security Administration",
+     "verified": true,
+     "material": true,
+     "why": "$78,600 is what Jones was ordered to repay; the family received $47,000 in benefits."
+    }
+   ],
+   "error": true,
+   "material": true
+  }
+ ],
+ "v1Errors": [
+  {
+   "i": 42,
+   "sentence": "The disappearance Jones staged to escape his debts had, within seven years, converted into a government check.",
+   "script_quote": "within seven years, converted into a government check",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research states a court declared Jones legally dead in 1986 (seven years after 1979), but does not state that the $47,000 payment was issued within seven years of his disappearance; the timing of the payment relative to the declaration is not given.",
+   "first_seen": "section_4",
+   "seen_in": [
+    "section_4",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 55,
+   "sentence": "According to his attorney, Jones worked at the Desert Inn, under a different man's Social Security number.",
+   "script_quote": "Jones worked at the Desert Inn, under a different man's Social Security number",
+   "category": "causal_inflation",
+   "verdict": "error",
+   "research_quote": "In Las Vegas, Jones worked at the Desert Inn and then for a local casino's sports book, according to his attorney.",
+   "why": "The research confirms Jones worked at the Desert Inn but does not state he was using Goodenough's Social Security number specifically while at the Desert Inn; the script links the two without research support.",
+   "first_seen": "finalize_out",
+   "seen_in": [
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 60,
+   "sentence": "But starting in 1995, his statements told a different story — year after year, they showed casino income earned in Las Vegas, income tied to a Social Security number that was his in name only.",
+   "script_quote": "starting in 1995, his statements told a different story",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "research_quote": "Goodenough told the Review-Journal in July that he had been embroiled in a longtime feud with the IRS over \"extra income\" he supposedly had earned in Las Vegas every year since 1995.",
+   "why": "The research attributes the 1995 start date to Goodenough's own account to the Review-Journal, not to his statements/tax records directly; however the research does support 1995 as the start year, so this is adequately supported. Retracting flag — style.",
+   "first_seen": "section_6",
+   "seen_in": [
+    "section_6",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 76,
+   "sentence": "Arthur Gerald Jones, who had been legally dead on an Illinois court's docket for decades, was standing in Nevada, alive, and he admitted it.",
+   "script_quote": "legally dead on an Illinois court's docket for decades",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "research_quote": "A court declared Arthur Jones legally dead in 1986.",
+   "why": "The research says Jones was declared dead in 1986 and arrested in 2011 — about 25 years, not 'decades' (plural). The research also says 'Illinois courts declared Jones dead 25 years ago,' consistent with one decade and a half, making 'decades' a contradiction.",
+   "first_seen": "section_7",
+   "seen_in": [
+    "section_7",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 83,
+   "sentence": "The sentence was three years of probation.",
+   "script_quote": "The sentence was three years of probation.",
+   "category": "contradiction",
+   "verdict": "error",
+   "research_quote": "Jones pleaded guilty to one count of felony identity fraud in Clark County court and was sentenced to three years of probation with restitution ordered.",
+   "why": "One source says three years of probation, but the sentencing source (reviewjournal) says Jones was sentenced to three years of probation — however, another research source says 'five years' probation.' The primary sentencing source (abcnews) says three years, but a later report (abc7news) says five ",
+   "first_seen": "section_7",
+   "seen_in": [
+    "section_7",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 85,
+   "sentence": "Judge Bixler ordered Jones to repay more than $78,600 to the Social Security Administration, the court's accounting of what the government had paid his family after the Illinois death declaration, with about $11,400 going separately to Goodenough, bringing the total restitution to $90,000.",
+   "script_quote": "bringing the total restitution to $90,000",
+   "category": "contradiction",
+   "verdict": "error",
+   "research_quote": "Jones was ordered to pay $70,000 in restitution.",
+   "why": "The research gives $78,600 + $11,400 = $90,000 from one source, but other research sources state the total restitution was $70,000. The script presents $90,000 as the definitive total while the research is contradictory across sources.",
+   "first_seen": "review",
+   "seen_in": [
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  }
+ ]
+}

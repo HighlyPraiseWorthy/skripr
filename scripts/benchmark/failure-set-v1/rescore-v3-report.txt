@@ -1,0 +1,60 @@
+RE-SCORE with accuracy_judge_v3 (holdout-validated): 16 baseline + 16 Experiment A scripts; failed sentence calls: 0
+Baseline      serious errors per script 14.56 | per 1,000 words 7.63 | any error per script 54.44 | words 1884
+Experiment A  serious errors per script 5.56 | per 1,000 words 3.38 | any error per script 40.50 | words 1702
+Experiment A minus baseline, serious per script: -9.00 (95% interval -13.56 to -4.94, 16 matched pairs) | by case: -9.00 (-13.19 to -5.19, 8 cases)
+Experiment A minus baseline, serious per 1,000 words: -4.25 (95% interval -6.27 to -2.36, 16 matched pairs) | by case: -4.25 (-5.88 to -2.56, 8 cases)
+
+Per case (serious errors per script, run1/run2): baseline -> Experiment A
+  chapo-chicago      21/16 -> 9/8
+  fast-food-prices   15/24 -> 5/8
+  freshwaters        9/22 -> 6/6
+  jones              8/10 -> 3/4
+  ltcm               43/14 -> 9/4
+  psychopathy        4/10 -> 5/2
+  streaming-fraud    9/2 -> 2/7
+  wright             21/5 -> 6/5
+
+Baseline: serious claims by category
+  163  invented detail or event
+   59  overstatement (stronger than the source)
+   25  misattachment (real fact, wrong target)
+   13  contradiction
+   12  outside fact (name/place/title/work not in research)
+   11  unsupported number/date
+Baseline: serious sentences by first stage (traceable only where it matches an old-run trace)
+  202  untraced
+   25  section_writer
+    5  finalize_out
+    1  hook
+
+Experiment A: serious claims by category
+   52  invented detail or event
+   25  overstatement (stronger than the source)
+    8  misattachment (real fact, wrong target)
+    6  unsupported number/date
+    4  contradiction
+    4  outside fact (name/place/title/work not in research)
+Experiment A: serious sentences by first stage (traceable only where it matches an old-run trace)
+   75  untraced
+    5  section_writer
+    3  finalize_out
+    2  after_refill
+    2  final_check
+    1  before_refine
+    1  after_refine
+
+Experiment A gate: 385 sentences changed | serious errors in the changed originals that no longer appear in the final: 233 | serious errors in the final that came from a gate rewrite of a non-serious original: 0
+
+Examples of serious errors (baseline):
+  [chapo-chicago] invented detail or event: "from the mountains of Sinaloa, Mexico" :: The research does not say where he ran the cartel from, and 'the mountains' adds a location.
+  [chapo-chicago] misattachment (real fact, wrong target): "more than a hundred million dollars in narcotics proceeds allegedly laundered through Chic" :: The $100 million allegation comes from a separate complaint, not the indictments. It also covered entities as well as de
+  [chapo-chicago] invented detail or event: "operating out of Sinaloa, Mexico" :: Research establishes a Mexico base and an arrest in Mazatlán, Sinaloa, but not that he operated out of Sinaloa.
+  [chapo-chicago] contradiction: "Less than a year later" :: February 14, 2013 to February 22, 2014 is slightly more than a year, not less.
+  [chapo-chicago] invented detail or event: "The Flores brothers were twins" :: The research mentions the Flores brothers only for their cooperation; it never says they were twins.
+  [chapo-chicago] invented detail or event: "from Chicago" :: The research ties the brothers' cooperation to Chicago-area seizures but never states where they were from.
+  [chapo-chicago] overstatement (stronger than the source): "When they flipped in late 2008" :: Research dates seizures their cooperation enabled to late 2008, not when they began cooperating.
+  [chapo-chicago] invented detail or event: "bills that had already made the first leg of the journey back toward Mexico" :: The research does not say this seized cash was in transit toward Mexico; the smuggling-to-Mexico claim is general, not a
+  [chapo-chicago] invented detail or event: "The Chicago-based investigation, seeded by the Flores brothers' cooperation" :: Research says the Flores cooperation facilitated late-2008 seizures, not that it started the investigation.
+  [chapo-chicago] overstatement (stronger than the source): "approximately $30.8 million in total cash seizures since 2008" :: The research gives total seizures of $30.8 million without specifying that they were cash.
+  [chapo-chicago] unsupported number/date: "a figure that encompasses the late-2008 Chicago-area cash seizures and all subsequent reco" :: The research does not say the $30.8 million includes the late-2008 $15 million or all recoveries.
+  [chapo-chicago] invented detail or event: "fractured into street-level volume" :: The research describes sales to wholesale distributors in Chicago, not a breakdown into street-level quantities.

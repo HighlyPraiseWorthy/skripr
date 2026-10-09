@@ -1,0 +1,2650 @@
+{
+ "set": "baseline",
+ "file": "fast-food-prices-run2.json",
+ "case": "fast-food-prices",
+ "words": 2186,
+ "judged": [
+  {
+   "i": 0,
+   "sentence": "Minimum wage hikes are part of the explanation for why fast food got expensive — but the evidence suggests they account for roughly half the story, at most.",
+   "claims": [
+    {
+     "claim": "Minimum wage hikes are part of the explanation for why fast food got expensive",
+     "status": "supported",
+     "fact": "F189",
+     "quote": "restaurant prices rise unambiguously after minimum-wage increases are enacted",
+     "verified": true,
+     "material": false,
+     "why": "Research shows minimum-wage increases raise restaurant prices."
+    },
+    {
+     "claim": "the evidence suggests they account for roughly half the story, at most",
+     "status": "misattached",
+     "fact": "F2",
+     "quote": "consumers bore about 50% of higher labor costs through prices in a $20 minimum wage case",
+     "verified": true,
+     "material": true,
+     "why": "The ~50% figure is the share of wage costs passed through to prices, not minimum wage's share of fast-food price growth. Other research cites near-full pass-through, so 'at most' is not established."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 1,
+   "sentence": "A McDonald's Quarter Pounder meal that cost $5.",
+   "claims": [
+    {
+     "claim": "A McDonald's Quarter Pounder meal that cost $5",
+     "status": "derived",
+     "fact": "F3",
+     "quote": "McDonald’s Quarter Pounder with cheese meal rose from $5.39 in 2014",
+     "verified": true,
+     "material": false,
+     "why": "$5 is a rounding of the research's $5.39 price for the meal in 2014."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 2,
+   "sentence": "39 in 2014 now runs nearly $12, an increase that outpaced gasoline, movie tickets, and what workers themselves actually earned over the same decade.",
+   "claims": [
+    {
+     "claim": "39 in 2014",
+     "status": "supported",
+     "fact": "F3",
+     "quote": "McDonald’s Quarter Pounder with cheese meal rose from $5.39 in 2014",
+     "verified": true,
+     "material": false,
+     "why": "The research gives the 2014 price as $5.39."
+    },
+    {
+     "claim": "now runs nearly $12",
+     "status": "derived",
+     "fact": "F3",
+     "quote": "to $11.99 in 2024",
+     "verified": true,
+     "material": false,
+     "why": "Rounds the 2024 price of $11.99 up to nearly $12."
+    },
+    {
+     "claim": "an increase that outpaced gasoline, movie tickets, and what workers themselves actually earned over the same decade",
+     "status": "misattached",
+     "fact": "F1",
+     "quote": "a fast-food combo meal price increase of about $6.50, or more than 100%, between 2014 and 2024, larger than the rise in gasoline, movie tickets, and median hourly wages over the same period",
+     "verified": true,
+     "material": true,
+     "why": "The comparison is for an unnamed combo meal (about $6.50), not tied in the research to the Quarter Pounder meal ($6.60 increase)."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 3,
+   "sentence": "Minimum wage hikes are part of the explanation for why fast food got expensive — but the evidence suggests they account for roughly half the story, at most.",
+   "claims": [
+    {
+     "claim": "Minimum wage hikes are part of the explanation for why fast food got expensive",
+     "status": "supported",
+     "fact": "F189",
+     "quote": "restaurant prices rise unambiguously after minimum-wage increases are enacted",
+     "verified": true,
+     "material": false,
+     "why": "Research shows minimum-wage increases raise restaurant prices."
+    },
+    {
+     "claim": "the evidence suggests they account for roughly half the story, at most",
+     "status": "misattached",
+     "fact": "F2",
+     "quote": "consumers bore about 50% of higher labor costs through prices in a $20 minimum wage case",
+     "verified": true,
+     "material": true,
+     "why": "The ~50% figure is the share of wage costs passed through to prices, not minimum wages' share of fast-food price growth. F20 puts minimum-wage costs at only 4% to 10% of total costs."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 4,
+   "sentence": "A McDonald's Quarter Pounder meal that cost $5.39 in 2014 now runs nearly $12, an increase that outpaced gasoline, movie tickets, and what workers themselves actually earned over the same decade.",
+   "claims": [
+    {
+     "claim": "A McDonald's Quarter Pounder meal that cost $5.39 in 2014",
+     "status": "supported",
+     "fact": "F3",
+     "quote": "McDonald’s Quarter Pounder with cheese meal rose from $5.39 in 2014",
+     "verified": true,
+     "material": false,
+     "why": "Matches the 2014 price in F3."
+    },
+    {
+     "claim": "now runs nearly $12",
+     "status": "derived",
+     "fact": "F3",
+     "quote": "to $11.99 in 2024",
+     "verified": true,
+     "material": false,
+     "why": "$11.99 rounds to nearly $12, and the research figure is for 2024."
+    },
+    {
+     "claim": "an increase that outpaced gasoline, movie tickets, and what workers themselves actually earned over the same decade",
+     "status": "misattached",
+     "fact": "F1",
+     "quote": "a fast-food combo meal price increase of about $6.50, or more than 100%, between 2014 and 2024, larger than the rise in gasoline, movie tickets, and median hourly wages over the same period",
+     "verified": true,
+     "material": true,
+     "why": "The comparison with gasoline, movie tickets and wages comes from a separate source about an unspecified combo meal, not the Quarter Pounder meal in F3."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 5,
+   "sentence": "Labor costs alone can't account for all of that.",
+   "claims": [
+    {
+     "claim": "Labor costs alone can't account for all of that.",
+     "status": "supported",
+     "fact": "F31",
+     "quote": "Industry and analyst reporting most often points to labor, food, and other operating-cost pressures",
+     "verified": true,
+     "material": false,
+     "why": "Research attributes price increases to labor plus food and other operating costs, not labor alone."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 6,
+   "sentence": "So where did the rest of the increase come from?",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 7,
+   "sentence": "You used to be able to pull into a McDonald's drive-through, order a Quarter Pounder with cheese meal, and hand over a five-dollar bill.",
+   "claims": [
+    {
+     "claim": "order a Quarter Pounder with cheese meal, and hand over a five-dollar bill",
+     "status": "contradicted",
+     "fact": "F3",
+     "quote": "McDonald’s Quarter Pounder with cheese meal rose from $5.39 in 2014 to $11.99 in 2024",
+     "verified": true,
+     "material": true,
+     "why": "The earliest price in the research is $5.39 in 2014, so a five-dollar bill would not cover it; nothing shows the meal ever cost $5 or less."
+    },
+    {
+     "claim": "pull into a McDonald's drive-through",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The drive-through setting is harmless scene color the research does not mention."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 8,
+   "sentence": "In 2014, that combo ran $5.39.",
+   "claims": [
+    {
+     "claim": "In 2014, that combo ran $5.39.",
+     "status": "supported",
+     "fact": "F3",
+     "quote": "McDonald’s Quarter Pounder with cheese meal rose from $5.39 in 2014",
+     "verified": true,
+     "material": false,
+     "why": "Research gives the Quarter Pounder with cheese meal price as $5.39 in 2014."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 9,
+   "sentence": "By 2024, the same order cost $11.99 at the same chain, a $6.60 climb on a single item at a single restaurant.",
+   "claims": [
+    {
+     "claim": "By 2024, the same order cost $11.99 at the same chain",
+     "status": "supported",
+     "fact": "F3",
+     "quote": "McDonald’s Quarter Pounder with cheese meal rose from $5.39 in 2014 to $11.99 in 2024",
+     "verified": true,
+     "material": false,
+     "why": "Research gives $11.99 in 2024 for the same McDonald's meal."
+    },
+    {
+     "claim": "a $6.60 climb on a single item at a single restaurant",
+     "status": "derived",
+     "fact": "F3",
+     "quote": "rose from $5.39 in 2014 to $11.99 in 2024",
+     "verified": true,
+     "material": false,
+     "why": "$11.99 minus $5.39 equals $6.60."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 10,
+   "sentence": "That is not a rounding error or a regional anomaly.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 11,
+   "sentence": "A Wall Street Journal price comparison found that fast-food combo meals rose by roughly $6.50, or more than 100%, across the decade ending in 2024 — a rate of increase that outpaced gasoline, movie tickets, and median hourly wages over the same span.",
+   "claims": [
+    {
+     "claim": "A Wall Street Journal price comparison",
+     "status": "unsupported",
+     "fact": "F1",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "Research cites only 'a published consumer-price comparison' and does not name the Wall Street Journal as the source."
+    },
+    {
+     "claim": "fast-food combo meals rose by roughly $6.50, or more than 100%",
+     "status": "supported",
+     "fact": "F1",
+     "quote": "a fast-food combo meal price increase of about $6.50, or more than 100%",
+     "verified": true,
+     "material": false,
+     "why": "Matches the research figures."
+    },
+    {
+     "claim": "across the decade ending in 2024",
+     "status": "derived",
+     "fact": "F1",
+     "quote": "between 2014 and 2024",
+     "verified": true,
+     "material": false,
+     "why": "2014 to 2024 is ten years."
+    },
+    {
+     "claim": "a rate of increase that outpaced gasoline, movie tickets, and median hourly wages over the same span",
+     "status": "supported",
+     "fact": "F1",
+     "quote": "larger than the rise in gasoline, movie tickets, and median hourly wages over the same period",
+     "verified": true,
+     "material": false,
+     "why": "Matches the research comparison."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 12,
+   "sentence": "Wages are supposed to be the thing that keeps pace.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 13,
+   "sentence": "Zoom out from McDonald's and the picture doesn't soften much.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 14,
+   "sentence": "Visual Capitalist tracked average prices across ten major chains from 2014 to 2024 and found a 63% increase industry-wide, with McDonald's sitting at the top at 100%.",
+   "claims": [
+    {
+     "claim": "Visual Capitalist tracked average prices across ten major chains from 2014 to 2024",
+     "status": "supported",
+     "fact": "F166",
+     "quote": "Visual Capitalist reported that the average price increase across 10 major fast-food restaurants from 2014 to 2024",
+     "verified": true,
+     "material": false,
+     "why": "Source, chain count and period match the research."
+    },
+    {
+     "claim": "found a 63% increase",
+     "status": "supported",
+     "fact": "F166",
+     "quote": "was 63%",
+     "verified": true,
+     "material": false,
+     "why": "The figure matches the research."
+    },
+    {
+     "claim": "industry-wide",
+     "status": "overstated",
+     "fact": "F166",
+     "quote": "the average price increase across 10 major fast-food restaurants",
+     "verified": true,
+     "material": true,
+     "why": "The 63% is an average across 10 chains, not an industry-wide figure."
+    },
+    {
+     "claim": "with McDonald's ... at 100%",
+     "status": "supported",
+     "fact": "F166",
+     "quote": "with McDonald's up 100%",
+     "verified": true,
+     "material": false,
+     "why": "The McDonald's figure matches the research."
+    },
+    {
+     "claim": "sitting at the top",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research does not say McDonald's had the largest increase among the chains."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 15,
+   "sentence": "And that was before you account for the shorter window: items tracked across major chains since late 2019 alone averaged a 77.4% increase, according to a FinanceBuzz analysis.",
+   "claims": [
+    {
+     "claim": "items tracked across major chains since late 2019 alone averaged a 77.4% increase",
+     "status": "supported",
+     "fact": "F3",
+     "quote": "the same report found the item set at major chains had averaged a 77.4% increase since late 2019",
+     "verified": true,
+     "material": false,
+     "why": "Figure, scope and time window match the research."
+    },
+    {
+     "claim": "according to a FinanceBuzz analysis",
+     "status": "supported",
+     "fact": "F3",
+     "quote": "A FinanceBuzz-based report",
+     "verified": true,
+     "material": false,
+     "why": "The research attributes the figure to a FinanceBuzz-based report."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 16,
+   "sentence": "The people eating this food noticed.",
+   "claims": [
+    {
+     "claim": "The people eating this food noticed.",
+     "status": "supported",
+     "fact": "F57",
+     "quote": "81% of adults who order from QSRs at least once a year said prices were higher than a year earlier",
+     "verified": true,
+     "material": false,
+     "why": "Research records that most fast-food customers reported noticing higher prices."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 17,
+   "sentence": "A 2024 Harris Poll found 81% of adults who visit fast-food restaurants at least once a year said prices were higher than the year before.",
+   "claims": [
+    {
+     "claim": "A 2024 Harris Poll",
+     "status": "unsupported",
+     "fact": "F162",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research cites a Harris Poll but never gives its year."
+    },
+    {
+     "claim": "found 81% of adults who visit fast-food restaurants at least once a year said prices were higher than the year before",
+     "status": "supported",
+     "fact": "F162",
+     "quote": "81% of U.S. adults who order from quick-service restaurants at least once a year said prices were higher than a year ago",
+     "verified": true,
+     "material": false,
+     "why": "Matches the Harris Poll finding; 'visit' is a fair paraphrase of 'order from'."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 18,
+   "sentence": "Only 32% agreed that quick-service restaurants still offer affordable meal options.",
+   "claims": [
+    {
+     "claim": "Only 32% agreed that quick-service restaurants still offer affordable meal options",
+     "status": "supported",
+     "fact": "F57",
+     "quote": "The Harris Poll found only 32% of U.S. adults agreed QSRs offer affordable meal options",
+     "verified": true,
+     "material": false,
+     "why": "The Harris Poll figure matches; 'still' is narrative framing."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 19,
+   "sentence": "Fast food was built for the customer who couldn't afford a sit-down restaurant.",
+   "claims": [
+    {
+     "claim": "Fast food was built for the customer who couldn't afford a sit-down restaurant.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research says nothing about fast food's origins or intended customer; this is the narrator's broad framing, not a specific recorded fact."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 20,
+   "sentence": "Now a significant share of that same customer is calling it a luxury.",
+   "claims": [
+    {
+     "claim": "a significant share of that same customer is calling it a luxury",
+     "status": "supported",
+     "fact": "F33",
+     "quote": "78% said fast food had become a luxury",
+     "verified": true,
+     "material": false,
+     "why": "Research reports 78% of respondents said fast food had become a luxury, which is a significant share."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 21,
+   "sentence": "The question is why the gap got this wide — and whether the standard explanation actually closes it.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 22,
+   "sentence": "The industry has long had a ready answer for why prices climb: costs went up, so the menu had to follow.",
+   "claims": [
+    {
+     "claim": "The industry has a ready answer for why prices climb: costs went up, so the menu had to follow",
+     "status": "supported",
+     "fact": "F31",
+     "quote": "Industry and analyst reporting most often points to labor, food, and other operating-cost pressures",
+     "verified": true,
+     "material": false,
+     "why": "Research says industry reporting attributes higher prices mainly to rising operating costs."
+    },
+    {
+     "claim": "has long had",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "No research establishes how long the industry has used this explanation; this is narrative framing."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 23,
+   "sentence": "And to be fair to that argument, the cost data from this period is not manufactured.",
+   "claims": [
+    {
+     "claim": "the cost data from this period is not manufactured",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research does report cost increases (e.g., food and labor costs), but calling the data genuine is the narrator's own assessment, which the research does not establish."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 24,
+   "sentence": "The National Restaurant Association's own benchmarking puts quick-service labor at roughly 30% of total operating costs, food and commodity inputs at another 30%, and occupancy at around 25%.",
+   "claims": [
+    {
+     "claim": "The National Restaurant Association's own benchmarking puts quick-service labor at roughly 30% of total operating costs",
+     "status": "supported",
+     "fact": "F37",
+     "quote": "National Restaurant Association benchmarking data typically puts quick-service restaurant costs at roughly 30% labor",
+     "verified": true,
+     "material": false,
+     "why": "The research directly states the NRA benchmark of roughly 30% labor for quick-service restaurants."
+    },
+    {
+     "claim": "food and commodity inputs at another 30%",
+     "status": "supported",
+     "fact": "F37",
+     "quote": "30% food/commodity inputs",
+     "verified": true,
+     "material": false,
+     "why": "This matches the same NRA benchmark."
+    },
+    {
+     "claim": "occupancy at around 25%",
+     "status": "supported",
+     "fact": "F37",
+     "quote": "25% occupancy",
+     "verified": true,
+     "material": false,
+     "why": "This matches the same NRA benchmark."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 25,
+   "sentence": "Those are the three big levers — and two of them moved hard at the same time.",
+   "claims": [
+    {
+     "claim": "two of them moved hard at the same time",
+     "status": "supported",
+     "fact": "F62",
+     "quote": "in the last 5 years, food and labor costs for the average restaurant each rose 35%",
+     "verified": true,
+     "material": false,
+     "why": "Research shows food and labor costs each rose 35% over the same five-year period."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 26,
+   "sentence": "By 2024, limited-service respondents reported that salaries, wages, and benefits together represented a median of 31.7% of sales, compared with roughly 28% across the Association's 2010, 2013, and 2016 reports.",
+   "claims": [
+    {
+     "claim": "By 2024, limited-service respondents reported that salaries, wages, and benefits together represented a median of 31.7% of sales",
+     "status": "supported",
+     "fact": "F140",
+     "quote": "salaries and wages, including benefits, represented a median of 31.7% of sales among limited-service respondents in 2024",
+     "verified": true,
+     "material": false,
+     "why": "Matches the research figure, year and population."
+    },
+    {
+     "claim": "compared with roughly 28% across the Association's 2010, 2013, and 2016 reports",
+     "status": "supported",
+     "fact": "F140",
+     "quote": "up from about 28% on average in the 2010, 2013, and 2016 reports",
+     "verified": true,
+     "material": false,
+     "why": "Matches the research's earlier-report average."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 27,
+   "sentence": "That four-point shift sounds small until you apply it across billions of dollars in annual sales.",
+   "claims": [
+    {
+     "claim": "That four-point shift",
+     "status": "derived",
+     "fact": "F140",
+     "quote": "represented a median of 31.7% of sales among limited-service respondents in 2024, up from about 28% on average in the 2010, 2013, and 2016 reports",
+     "verified": true,
+     "material": false,
+     "why": "28% to 31.7% is a 3.7-point rise, which rounds to about four points."
+    },
+    {
+     "claim": "billions of dollars in annual sales",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research gives no figure for industry sales; this is vague scale framing rather than a specific stated number."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 28,
+   "sentence": "The commodity side of the ledger moved at least as sharply.",
+   "claims": [
+    {
+     "claim": "The commodity side of the ledger moved at least as sharply",
+     "status": "supported",
+     "fact": "F62",
+     "quote": "food and labor costs for the average restaurant each rose 35%",
+     "verified": true,
+     "material": false,
+     "why": "Research reports food costs rising as much as labor costs (35% each); F149's 34% vs 39% conflicts, but a claim matching any source counts as supported."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 29,
+   "sentence": "During the 2021–2023 producer-price run-up, beef, chicken, and cooking oil each peaked at double-digit percentage increases from their 2020 baselines.",
+   "claims": [
+    {
+     "claim": "During the 2021–2023 producer-price run-up",
+     "status": "supported",
+     "fact": "F22",
+     "quote": "A 2021–2023 producer-price run-up lifted key restaurant inputs sharply",
+     "verified": true,
+     "material": false,
+     "why": "Research describes a 2021–2023 producer-price run-up."
+    },
+    {
+     "claim": "beef, chicken, and cooking oil each peaked at double-digit percentage increases from their 2020 baselines",
+     "status": "supported",
+     "fact": "F22",
+     "quote": "with beef, chicken, and cooking-oil costs each peaking at double-digit percentage increases from their 2020 baselines",
+     "verified": true,
+     "material": false,
+     "why": "Directly stated in research."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 30,
+   "sentence": "A 2022 restaurant cost inflation survey put the total year-over-year rise in restaurant costs at 11.7%, with the largest documented increases coming from raw materials and labor.",
+   "claims": [
+    {
+     "claim": "A 2022 restaurant cost inflation survey",
+     "status": "supported",
+     "fact": "F191",
+     "quote": "A 2022 restaurant cost inflation survey",
+     "verified": true,
+     "material": false,
+     "why": "Research identifies the source as a 2022 restaurant cost inflation survey."
+    },
+    {
+     "claim": "put the total year-over-year rise in restaurant costs at 11.7%",
+     "status": "supported",
+     "fact": "F191",
+     "quote": "restaurants’ costs had risen 11.7% year over year",
+     "verified": true,
+     "material": false,
+     "why": "The 11.7% year-over-year figure is stated directly."
+    },
+    {
+     "claim": "with the largest documented increases coming from raw materials and labor",
+     "status": "supported",
+     "fact": "F191",
+     "quote": "with the largest increases coming from raw materials and labor",
+     "verified": true,
+     "material": false,
+     "why": "Research states the largest increases came from raw materials and labor."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 31,
+   "sentence": "Eleven-point-seven percent in a single year, across both major cost categories simultaneously, is the kind of pressure that genuinely compresses margins and forces operators to respond.",
+   "claims": [
+    {
+     "claim": "Eleven-point-seven percent in a single year",
+     "status": "supported",
+     "fact": "F191",
+     "quote": "restaurants’ costs had risen 11.7% year over year",
+     "verified": true,
+     "material": false,
+     "why": "Research records an 11.7% year-over-year rise in restaurant costs."
+    },
+    {
+     "claim": "across both major cost categories simultaneously",
+     "status": "overstated",
+     "fact": "F39",
+     "quote": "restaurant costs rose 11.7% year over year, with the largest increases coming from raw materials and labor",
+     "verified": true,
+     "material": true,
+     "why": "11.7% is the total cost rise; research names raw materials and labor only as the largest contributors, not as each rising 11.7%."
+    },
+    {
+     "claim": "is the kind of pressure that genuinely compresses margins and forces operators to respond",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "This is the narrator's interpretation of the effect on margins and operators."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 32,
+   "sentence": "So the conventional story has real numbers behind it.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 33,
+   "sentence": "On its surface, the explanation holds.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 34,
+   "sentence": "The question the surface doesn't answer is whether those cost increases were large enough to account for what customers actually paid.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 35,
+   "sentence": "But the link between a commodity shock and a price change is neither immediate nor complete.",
+   "claims": [
+    {
+     "claim": "the link between a commodity shock and a price change is neither immediate",
+     "status": "supported",
+     "fact": "F147",
+     "quote": "cost increases often appearing in menu prices within 2 to 4 months after commodity shocks",
+     "verified": true,
+     "material": false,
+     "why": "Research says menu prices lag commodity shocks by months."
+    },
+    {
+     "claim": "nor complete",
+     "status": "supported",
+     "fact": "F23",
+     "quote": "indicating partial pass-through rather than immediate full transmission",
+     "verified": true,
+     "material": false,
+     "why": "Research describes supply-cost pass-through as partial rather than full."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 36,
+   "sentence": "A restaurant-cost analysis found that a one-percent rise in supply costs translates into roughly 0.33% higher cost of goods sold at constant menu prices — meaning operators absorb a meaningful share of any input spike before they pass anything along.",
+   "claims": [
+    {
+     "claim": "A restaurant-cost analysis found that a one-percent rise in supply costs translates into roughly 0.33% higher cost of goods sold at constant menu prices",
+     "status": "supported",
+     "fact": "F23",
+     "quote": "A restaurant-cost analysis found that a 1% increase in supply costs translates into roughly 0.33% higher COGS at constant menu prices",
+     "verified": true,
+     "material": false,
+     "why": "Matches the research figure and framing."
+    },
+    {
+     "claim": "meaning operators absorb a meaningful share of any input spike before they pass anything along",
+     "status": "overstated",
+     "fact": "F23",
+     "quote": "indicating partial pass-through rather than immediate full transmission",
+     "verified": true,
+     "material": false,
+     "why": "The research says only that pass-through is partial; absorbing costs before passing anything along is the narrator's own interpretation of the finding."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 37,
+   "sentence": "And they don't pass it along right away.",
+   "claims": [
+    {
+     "claim": "they don't pass it along right away",
+     "status": "supported",
+     "fact": "F147",
+     "quote": "restaurant menu prices typically lag food inflation by several months, with cost increases often appearing in menu prices within 2 to 4 months after commodity shocks",
+     "verified": true,
+     "material": false,
+     "why": "Research records a lag in cost pass-through (also F0, F137); F47 differs, but a claim matching any source counts as supported."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 38,
+   "sentence": "Industry analysis puts the typical lag between a commodity shock and a menu-price adjustment at two to four months, a delay built into how contracts are structured and how operators decide when a shift is durable enough to justify reprinting the board.",
+   "claims": [
+    {
+     "claim": "Industry analysis puts the typical lag between a commodity shock and a menu-price adjustment at two to four months",
+     "status": "supported",
+     "fact": "F147",
+     "quote": "Industry analysis found restaurant menu prices typically lag food inflation by several months, with cost increases often appearing in menu prices within 2 to 4 months after commodity shocks.",
+     "verified": true,
+     "material": false,
+     "why": "Research states the 2-to-4-month lag from industry analysis."
+    },
+    {
+     "claim": "a delay built into how contracts are structured",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "No research explains the lag through contract structure; this is the narrator's general explanation of how things work."
+    },
+    {
+     "claim": "how operators decide when a shift is durable enough to justify reprinting the board",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Operator decision-making about durability is not in the research; this is interpretive color."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 39,
+   "sentence": "That lag matters for reading the data.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 40,
+   "sentence": "The CPI for limited-service meals and snacks rose about 28% from 2019 to 2023, while overall CPI rose roughly 19% over the same stretch.",
+   "claims": [
+    {
+     "claim": "The CPI for limited-service meals and snacks rose about 28% from 2019 to 2023",
+     "status": "supported",
+     "fact": "F213",
+     "quote": "The CPI for limited-service meals and snacks rose about 28% from 2019 to 2023",
+     "verified": true,
+     "material": false,
+     "why": "Directly stated in F213 (also F59, F24)."
+    },
+    {
+     "claim": "overall CPI rose roughly 19% over the same stretch",
+     "status": "supported",
+     "fact": "F213",
+     "quote": "while the overall CPI rose about 19% in the same period",
+     "verified": true,
+     "material": false,
+     "why": "Directly stated in F213."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 41,
+   "sentence": "Fast food was already pulling ahead of the broader price level before the full commodity shock had even worked its way through.",
+   "claims": [
+    {
+     "claim": "Fast food was already pulling ahead of the broader price level",
+     "status": "supported",
+     "fact": "F35",
+     "quote": "Limited service meals and snacks CPI rose 26.0% from 2019 to 2024, compared with about 21.2% cumulative headline CPI inflation",
+     "verified": true,
+     "material": false,
+     "why": "Research shows limited-service prices outpacing headline CPI; F209 disagrees, but a claim matching any source counts."
+    },
+    {
+     "claim": "before the full commodity shock had even worked its way through",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research does not show fast food outpacing CPI before the 2021–2023 commodity run-up had passed through, so this sequence is not established."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 42,
+   "sentence": "And the National Restaurant Association's own models attribute only a minority of that menu-price growth to commodity cost shocks specifically — which means beef and oil explain some of the gap, but the record doesn't establish they explain most of it.",
+   "claims": [
+    {
+     "claim": "the National Restaurant Association's own models attribute only a minority of that menu-price growth to commodity cost shocks specifically",
+     "status": "supported",
+     "fact": "F22",
+     "quote": "National Restaurant Association models have attributed only a minority of QSR menu-price growth to commodity cost shocks",
+     "verified": true,
+     "material": false,
+     "why": "F22 directly states that NRA models attribute only a minority of the growth to commodity shocks."
+    },
+    {
+     "claim": "beef and oil explain some of the gap",
+     "status": "supported",
+     "fact": "F27",
+     "quote": "beef, chicken, and cooking-oil costs spiked in the early 2020s and analysts linked those input-cost increases to higher fast-food menu prices",
+     "verified": true,
+     "material": false,
+     "why": "Analysts linked beef and oil cost increases to higher menu prices, which matches 'some'."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 43,
+   "sentence": "The ingredients got more expensive.",
+   "claims": [
+    {
+     "claim": "The ingredients got more expensive.",
+     "status": "supported",
+     "fact": "F27",
+     "quote": "beef, chicken, and cooking-oil costs spiked in the early 2020s",
+     "verified": true,
+     "material": false,
+     "why": "Research records sharp increases in key ingredient costs such as beef, chicken and cooking oil."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 44,
+   "sentence": "That's real.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 45,
+   "sentence": "It just doesn't close the distance between what costs rose and what customers were charged.",
+   "claims": [
+    {
+     "claim": "the distance between what costs rose and what customers were charged",
+     "status": "supported",
+     "fact": "F62",
+     "quote": "food and labor costs for the average restaurant each rose 35%, while average menu prices increased 31% between February 2020 and April 2025",
+     "verified": true,
+     "material": false,
+     "why": "Research records a gap: costs rose 35% while menu prices rose 31%."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 46,
+   "sentence": "So take the wage argument seriously for a moment, because it deserves a real examination before it gets discarded.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 47,
+   "sentence": "Labor is the most visible cost in a fast-food kitchen — the person at the register, the crew running the fryer — and when minimum wages climb, the story writes itself: workers cost more, so the burger costs more.",
+   "claims": [
+    {
+     "claim": "Labor is the most visible cost in a fast-food kitchen",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research says labor is the largest operating expense, not the 'most visible'; that is the narrator's characterization."
+    },
+    {
+     "claim": "when minimum wages climb ... workers cost more, so the burger costs more",
+     "status": "supported",
+     "fact": "F189",
+     "quote": "restaurant prices rise unambiguously after minimum-wage increases are enacted",
+     "verified": true,
+     "material": false,
+     "why": "Research finds restaurant prices rise after minimum-wage increases."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 48,
+   "sentence": "It sounds airtight.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 49,
+   "sentence": "The numbers say otherwise.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 50,
+   "sentence": "In one restaurant sample, minimum wage costs specifically accounted for somewhere between 4% and 10% of total operating costs, even though labor overall ran about 36% of the total.",
+   "claims": [
+    {
+     "claim": "In one restaurant sample, minimum wage costs specifically accounted for somewhere between 4% and 10% of total operating costs",
+     "status": "supported",
+     "fact": "F20",
+     "quote": "minimum wage costs were estimated to be 4% to 10% of total costs",
+     "verified": true,
+     "material": false,
+     "why": "Same sample and range; the research gives it as an estimate of total costs."
+    },
+    {
+     "claim": "labor overall ran about 36% of the total",
+     "status": "supported",
+     "fact": "F20",
+     "quote": "In one restaurant sample, labor’s share of total costs was 36%",
+     "verified": true,
+     "material": false,
+     "why": "Labor share of 36% in the same sample."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 51,
+   "sentence": "Those two figures matter together.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 52,
+   "sentence": "The total labor bill is large, but the slice of it that is directly governed by minimum wage law is considerably smaller — which means that even a significant mandated wage increase can only move a fraction of that fraction.",
+   "claims": [
+    {
+     "claim": "The total labor bill is large",
+     "status": "supported",
+     "fact": "F20",
+     "quote": "labor’s share of total costs was 36%",
+     "verified": true,
+     "material": false,
+     "why": "Research gives labor as 36% of total costs in one restaurant sample."
+    },
+    {
+     "claim": "the slice of it that is directly governed by minimum wage law is considerably smaller",
+     "status": "supported",
+     "fact": "F20",
+     "quote": "minimum wage costs were estimated to be 4% to 10% of total costs",
+     "verified": true,
+     "material": false,
+     "why": "4–10% of costs is much smaller than labor's 36% share."
+    },
+    {
+     "claim": "even a significant mandated wage increase can only move a fraction of that fraction",
+     "status": "supported",
+     "fact": "F20",
+     "quote": "implying only a fraction of menu-price increases would be attributable directly to mandated wage hikes rather than other inputs",
+     "verified": true,
+     "material": false,
+     "why": "Paraphrases the research's stated implication."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 53,
+   "sentence": "The empirical pass-through literature puts a precise number on how small that fraction is.",
+   "claims": [
+    {
+     "claim": "The empirical pass-through literature puts a precise number on how small that fraction is.",
+     "status": "overstated",
+     "fact": "F28",
+     "quote": "The literature contains both cost-pass-through estimates near 50% for fast-food wage shocks and arguments that labor’s share and market power can make price responses larger than simple cost-based models predict.",
+     "verified": true,
+     "material": true,
+     "why": "The research shows widely varying, disputed pass-through estimates, not one precise number confirming the fraction is small."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 54,
+   "sentence": "A Federal Reserve Bank of Chicago study found that a 10% increase in the minimum wage raised restaurant prices by about 1.4% overall, with larger effects at limited-service establishments specifically.",
+   "claims": [
+    {
+     "claim": "A Federal Reserve Bank of Chicago study found that a 10% increase in the minimum wage raised restaurant prices by about 1.4% overall",
+     "status": "misattached",
+     "fact": "F36",
+     "quote": "fast-food restaurant prices rise about 0.139% for each 1% increase in the minimum wage, i.e. about 1.39% for a 10% increase",
+     "verified": true,
+     "material": true,
+     "why": "The 1.39% figure is for fast-food restaurant prices, not restaurant prices overall; the research gives 0.7% as the overall figure (F186)."
+    },
+    {
+     "claim": "with larger effects at limited-service establishments specifically",
+     "status": "supported",
+     "fact": "F186",
+     "quote": "raised restaurant prices by about 0.7% overall and 1.6% at limited-service establishments",
+     "verified": true,
+     "material": false,
+     "why": "The research reports a larger effect at limited-service establishments than overall."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 55,
+   "sentence": "A separate fast-food chain study put the figure at about seven cents for every one-dollar increase in the minimum wage, an elasticity of roughly 0.13.",
+   "claims": [
+    {
+     "claim": "A separate fast-food chain study put the figure at about seven cents for every one-dollar increase in the minimum wage",
+     "status": "supported",
+     "fact": "F130",
+     "quote": "A fast-food-chain study found a $1 minimum wage increase raised average menu prices by 7 cents",
+     "verified": true,
+     "material": false,
+     "why": "Research states 7 cents per $1 minimum wage increase from a fast-food-chain study."
+    },
+    {
+     "claim": "an elasticity of roughly 0.13",
+     "status": "supported",
+     "fact": "F130",
+     "quote": "implying a pass-through elasticity of about 0.13",
+     "verified": true,
+     "material": false,
+     "why": "Research states pass-through elasticity of about 0.13."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 56,
+   "sentence": "The studies are not identical, but they cluster: the pass-through is real, it is measurable, and it is modest.",
+   "claims": [
+    {
+     "claim": "The studies are not identical, but they cluster",
+     "status": "overstated",
+     "fact": "F2",
+     "quote": "illustrating disagreement over whether pass-through is near-full or partial",
+     "verified": true,
+     "material": true,
+     "why": "The research shows the studies disagree over the size of pass-through, not that they cluster."
+    },
+    {
+     "claim": "the pass-through is real",
+     "status": "supported",
+     "fact": "F189",
+     "quote": "restaurant prices rise unambiguously after minimum-wage increases are enacted",
+     "verified": true,
+     "material": false,
+     "why": "The research directly states that prices rise after minimum-wage increases."
+    },
+    {
+     "claim": "it is measurable",
+     "status": "supported",
+     "fact": "F36",
+     "quote": "fast-food restaurant prices rise about 0.139% for each 1% increase in the minimum wage",
+     "verified": true,
+     "material": false,
+     "why": "The studies report quantified pass-through estimates."
+    },
+    {
+     "claim": "it is modest",
+     "status": "overstated",
+     "fact": "F45",
+     "quote": "more recent restaurant studies found much larger pass-through, including near-full pass-through in McDonald’s data",
+     "verified": true,
+     "material": true,
+     "why": "Some studies find near-full or larger pass-through, so 'modest' misstates the range of findings."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 57,
+   "sentence": "Now run that against the actual price record.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 58,
+   "sentence": "Limited-service CPI rose 26% from 2019 to 2024.",
+   "claims": [
+    {
+     "claim": "Limited-service CPI rose 26% from 2019 to 2024.",
+     "status": "supported",
+     "fact": "F35",
+     "quote": "Limited service meals and snacks CPI rose 26.0% from 2019 to 2024",
+     "verified": true,
+     "material": false,
+     "why": "F35 states 26.0% for 2019–2024. F209 gives 19.8%, but a claim matching any one of conflicting sources counts as supported."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 59,
+   "sentence": "Minimum wages rose meaningfully over that period, but applying even the higher end of the empirical elasticity range to the actual wage increases in play produces a price effect that accounts for a small share of that 26-point climb.",
+   "claims": [
+    {
+     "claim": "Minimum wages rose meaningfully over that period",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research does not document general minimum-wage increases or their size over 2019–2024; it only discusses specific cases such as California's $20 wage."
+    },
+    {
+     "claim": "applying even the higher end of the empirical elasticity range to the actual wage increases in play produces a price effect that accounts for a small share",
+     "status": "unsupported",
+     "fact": "F45",
+     "quote": "more recent restaurant studies found much larger pass-through, including near-full pass-through in McDonald’s data",
+     "verified": true,
+     "material": false,
+     "why": "This is the narrator's own calculation. The research gives no wage-increase figures to apply, and it notes high-end estimates near full pass-through."
+    },
+    {
+     "claim": "that 26-point climb",
+     "status": "supported",
+     "fact": "F35",
+     "quote": "Limited service meals and snacks CPI rose 26.0% from 2019 to 2024",
+     "verified": true,
+     "material": false,
+     "why": "This is a callback to the 26% rise in limited-service CPI."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 60,
+   "sentence": "The math simply does not reach.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 61,
+   "sentence": "Which puts the standard explanation in an uncomfortable place.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 62,
+   "sentence": "Commodity costs explain part of the gap.",
+   "claims": [
+    {
+     "claim": "Commodity costs explain part of the gap.",
+     "status": "supported",
+     "fact": "F22",
+     "quote": "National Restaurant Association models have attributed only a minority of QSR menu-price growth to commodity cost shocks",
+     "verified": true,
+     "material": false,
+     "why": "Research attributes a minority (part) of quick-service menu-price growth to commodity cost shocks."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 63,
+   "sentence": "Wage pass-through explains another sliver.",
+   "claims": [
+    {
+     "claim": "Wage pass-through explains another sliver",
+     "status": "supported",
+     "fact": "F20",
+     "quote": "implying only a fraction of menu-price increases would be attributable directly to mandated wage hikes rather than other inputs",
+     "verified": true,
+     "material": false,
+     "why": "The research says only a fraction of menu-price increases is attributable to mandated wage hikes, which matches 'sliver'."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 64,
+   "sentence": "But the combined documented cost increases, run through the models the economics literature actually supports, fall short of what customers were charged.",
+   "claims": [
+    {
+     "claim": "the combined documented cost increases, run through the models the economics literature actually supports, fall short of what customers were charged",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "No source runs combined costs through pass-through models to find a shortfall versus prices. F182 says the sources do not settle margin expansion versus pass-through, and F62 reports costs rising 35% against 31% menu-price growth."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 65,
+   "sentence": "Another lever was available to operators during this period — and prices stayed well above where the cost shock alone would put them.",
+   "claims": [
+    {
+     "claim": "Another lever was available to operators during this period",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Vague interpretive framing; the research names no specific additional lever for this period."
+    },
+    {
+     "claim": "prices stayed well above where the cost shock alone would put them",
+     "status": "overstated",
+     "fact": "F28",
+     "quote": "arguments that labor’s share and market power can make price responses larger than simple cost-based models predict",
+     "verified": true,
+     "material": true,
+     "why": "The research presents only arguments, alongside ~50% pass-through estimates and a finding consistent with cost pass-through (F216). It does not establish that prices stayed well above cost-implied levels."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 66,
+   "sentence": "The CPI figures already tracked across this story are themselves incomplete.",
+   "claims": [
+    {
+     "claim": "The CPI figures already tracked across this story are themselves incomplete.",
+     "status": "supported",
+     "fact": "F138",
+     "quote": "a rule that helps capture some non-portion price changes but not every shrinkflation adjustment",
+     "verified": true,
+     "material": false,
+     "why": "BLS notes CPI does not capture every shrinkflation adjustment, so the figures are incomplete."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 67,
+   "sentence": "They record what the menu board says.",
+   "claims": [
+    {
+     "claim": "They record what the menu board says.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research never says the CPI records menu-board prices. F51/F138 say measured prices also include mandatory service charges and fees, so they can differ from menu stickers."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 68,
+   "sentence": "They do not record how much food arrives in the bag.",
+   "claims": [
+    {
+     "claim": "They do not record how much food arrives in the bag.",
+     "status": "overstated",
+     "fact": "F138",
+     "quote": "a rule that helps capture some non-portion price changes but not every shrinkflation adjustment",
+     "verified": true,
+     "material": true,
+     "why": "The research says the CPI misses not every shrinkflation adjustment, which is weaker than saying it does not record portion quantity at all."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 69,
+   "sentence": "Restaurants facing sustained cost pressure found a second lever alongside raising sticker prices: shrinking what those prices buy.",
+   "claims": [
+    {
+     "claim": "Restaurants ... found a second lever alongside raising sticker prices: shrinking what those prices buy.",
+     "status": "supported",
+     "fact": "F25",
+     "quote": "higher food prices led restaurants to shrink portion sizes on some menu items, a form of shrinkflation, while also raising prices",
+     "verified": true,
+     "material": false,
+     "why": "Research records restaurants shrinking portions while also raising prices."
+    },
+    {
+     "claim": "Restaurants facing sustained cost pressure",
+     "status": "supported",
+     "fact": "F25",
+     "quote": "higher food prices led restaurants to shrink portion sizes",
+     "verified": true,
+     "material": false,
+     "why": "Cost pressure as the driver of portion shrinking is stated; 'sustained' is narrative framing."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 70,
+   "sentence": "Smaller portions, same box, same number on the receipt.",
+   "claims": [
+    {
+     "claim": "Smaller portions",
+     "status": "supported",
+     "fact": "F25",
+     "quote": "higher food prices led restaurants to shrink portion sizes on some menu items, a form of shrinkflation",
+     "verified": true,
+     "material": false,
+     "why": "Research records restaurants shrinking portions on some items."
+    },
+    {
+     "claim": "same box",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Packaging staying the same is not in the research; it is illustrative color for shrinkflation."
+    },
+    {
+     "claim": "same number on the receipt",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "No research says prices stayed unchanged (F25 says restaurants also raised prices); this is a general description of the shrinkflation mechanism."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 71,
+   "sentence": "The NBC News reporting that documented this practice described it as happening in tandem with price increases — not instead of them.",
+   "claims": [
+    {
+     "claim": "The NBC News reporting that documented this practice",
+     "status": "unsupported",
+     "fact": "F25",
+     "quote": "A restaurant report noted that higher food prices led restaurants to shrink portion sizes on some menu items, a form of shrinkflation",
+     "verified": true,
+     "material": true,
+     "why": "The research credits 'a restaurant report' and never names NBC News as the source."
+    },
+    {
+     "claim": "described it as happening in tandem with price increases — not instead of them",
+     "status": "supported",
+     "fact": "F25",
+     "quote": "shrink portion sizes on some menu items, a form of shrinkflation, while also raising prices",
+     "verified": true,
+     "material": false,
+     "why": "The report describes portion shrinking happening alongside price increases."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 72,
+   "sentence": "Both moved at once.",
+   "claims": [
+    {
+     "claim": "Both moved at once.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Vague callback with no clear referent; the research establishes no simultaneous movement, so the timing is unverifiable and reads as narrative framing."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 73,
+   "sentence": "Which means a consumer paying more was also, in many cases, receiving less per dollar in ways the headline index was not built to detect.",
+   "claims": [
+    {
+     "claim": "a consumer paying more was also, in many cases, receiving less per dollar",
+     "status": "overstated",
+     "fact": "F25",
+     "quote": "higher food prices led restaurants to shrink portion sizes on some menu items, a form of shrinkflation, while also raising prices",
+     "verified": true,
+     "material": false,
+     "why": "Research says portions shrank on 'some' items; 'in many cases' is the narrator's broader generalization."
+    },
+    {
+     "claim": "in ways the headline index was not built to detect",
+     "status": "supported",
+     "fact": "F138",
+     "quote": "a rule that helps capture some non-portion price changes but not every shrinkflation adjustment",
+     "verified": true,
+     "material": false,
+     "why": "BLS notes the CPI does not capture every shrinkflation adjustment."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 74,
+   "sentence": "That same Harris Poll found 35% of quick-service customers said they noticed shrinkflation at QSRs over the last year.",
+   "claims": [
+    {
+     "claim": "Harris Poll found 35% of quick-service customers said they noticed shrinkflation at QSRs over the last year",
+     "status": "supported",
+     "fact": "F164",
+     "quote": "The Harris Poll reported that 35% of quick-service restaurant customers said they noticed shrinkflation at QSRs over the last year.",
+     "verified": true,
+     "material": false,
+     "why": "Matches the research figure, population and timeframe."
+    },
+    {
+     "claim": "That same Harris Poll",
+     "status": "unsupported",
+     "fact": "F164",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research attributes several findings to The Harris Poll but does not establish that they come from a single survey."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 75,
+   "sentence": "One-in-three customers, at a category of restaurant where the value proposition is the entire point.",
+   "claims": [
+    {
+     "claim": "One-in-three customers, at a category of restaurant",
+     "status": "derived",
+     "fact": "F164",
+     "quote": "35% of quick-service restaurant customers said they noticed shrinkflation at QSRs over the last year",
+     "verified": true,
+     "material": false,
+     "why": "Rounding 35% of QSR customers to one-in-three; the sentence reads as a callback to this figure."
+    },
+    {
+     "claim": "where the value proposition is the entire point",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "This is the narrator's characterization of quick-service restaurants, not a sourced fact."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 76,
+   "sentence": "The CPI does capture some non-menu-board costs.",
+   "claims": [
+    {
+     "claim": "The CPI does capture some non-menu-board costs.",
+     "status": "supported",
+     "fact": "F51",
+     "quote": "BLS notes that mandatory service charges are included in food-away-from-home CPI categories, which matters because service charges can raise the measured price of quick meals even when menu stickers change little.",
+     "verified": true,
+     "material": false,
+     "why": "Research says CPI includes mandatory service charges that raise measured prices beyond menu stickers."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 77,
+   "sentence": "The Bureau of Labor Statistics includes mandatory service charges in its food-away-from-home indexes — so a compulsory fee gets counted.",
+   "claims": [
+    {
+     "claim": "The Bureau of Labor Statistics includes mandatory service charges in its food-away-from-home indexes",
+     "status": "supported",
+     "fact": "F198",
+     "quote": "mandatory service charges and fees are included in food-away-from-home indexes such as limited-service meals and snacks",
+     "verified": true,
+     "material": false,
+     "why": "Research directly states BLS includes mandatory service charges in food-away-from-home indexes."
+    },
+    {
+     "claim": "so a compulsory fee gets counted",
+     "status": "supported",
+     "fact": "F51",
+     "quote": "BLS notes that mandatory service charges are included in food-away-from-home CPI categories",
+     "verified": true,
+     "material": false,
+     "why": "Restates that mandatory charges are counted in the measured price."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 78,
+   "sentence": "But tips are excluded entirely, and portion changes — shrinkflation — are not a price-per-unit adjustment the index reliably captures in real time.",
+   "claims": [
+    {
+     "claim": "tips are excluded entirely",
+     "status": "supported",
+     "fact": "F138",
+     "quote": "CPI excludes tips",
+     "verified": true,
+     "material": false,
+     "why": "F138 states the CPI excludes tips. F198 says 'generally excluded', but a claim matching any source counts as supported."
+    },
+    {
+     "claim": "portion changes — shrinkflation — are not a price-per-unit adjustment the index reliably captures",
+     "status": "supported",
+     "fact": "F138",
+     "quote": "helps capture some non-portion price changes but not every shrinkflation adjustment",
+     "verified": true,
+     "material": false,
+     "why": "Paraphrases BLS: the index does not capture every shrinkflation adjustment."
+    },
+    {
+     "claim": "in real time",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research says nothing about the timing of capture; this is the narrator's added qualifier."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 79,
+   "sentence": "The result is a measurement that can understate what a calorie of fast food actually costs a consumer on any given day.",
+   "claims": [
+    {
+     "claim": "The result is a measurement that can understate what a calorie of fast food actually costs a consumer on any given day.",
+     "status": "unsupported",
+     "fact": "F138",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research says CPI misses some shrinkflation and that menu-board prices can understate unit cost, but nothing addresses per-calorie cost; this is hedged narrator interpretation."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 80,
+   "sentence": "The BLS's own release for the twelve months ending February 2026 puts limited-service meals and snacks at a 3.2% annual rise — a figure that, by construction, reflects only what operators charged, not what they delivered.",
+   "claims": [
+    {
+     "claim": "The BLS's own release for the twelve months ending February 2026 puts limited-service meals and snacks at a 3.2% annual rise",
+     "status": "supported",
+     "fact": "F221",
+     "quote": "BLS reported that prices for limited service meals and snacks rose 3.2% over the 12 months ending February 2026",
+     "verified": true,
+     "material": false,
+     "why": "BLS figure and period match the research."
+    },
+    {
+     "claim": "a figure that, by construction, reflects only what operators charged, not what they delivered",
+     "status": "overstated",
+     "fact": "F138",
+     "quote": "a rule that helps capture some non-portion price changes but not every shrinkflation adjustment",
+     "verified": true,
+     "material": true,
+     "why": "Research says the CPI misses some shrinkflation adjustments, not that it ignores what was delivered entirely by construction."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 81,
+   "sentence": "If the patty is lighter and the fries are fewer, the cost per bite climbed further than that number shows.",
+   "claims": [
+    {
+     "claim": "If the patty is lighter and the fries are fewer",
+     "status": "unsupported",
+     "fact": "F25",
+     "quote": "higher food prices led restaurants to shrink portion sizes on some menu items, a form of shrinkflation",
+     "verified": true,
+     "material": false,
+     "why": "Research records portion shrinking on some items, but not patties or fries specifically; the line is framed as a hypothetical."
+    },
+    {
+     "claim": "the cost per bite climbed further than that number shows",
+     "status": "supported",
+     "fact": "F144",
+     "quote": "menu-board prices can understate the real increase in unit cost to consumers",
+     "verified": true,
+     "material": false,
+     "why": "Research says shrinkflation means menu prices can understate the true rise in unit cost."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 82,
+   "sentence": "The gap between the official record and the customer's actual experience is real, it is structural, and it runs in one direction.",
+   "claims": [
+    {
+     "claim": "The gap between the official record and the customer's actual experience is real",
+     "status": "supported",
+     "fact": "F138",
+     "quote": "a rule that helps capture some non-portion price changes but not every shrinkflation adjustment",
+     "verified": true,
+     "material": false,
+     "why": "BLS notes CPI does not capture every shrinkflation adjustment, so some gap between measured prices and customers' experience exists."
+    },
+    {
+     "claim": "it is structural",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Calling the gap 'structural' is the narrator's own characterization; no research fact establishes it."
+    },
+    {
+     "claim": "it runs in one direction",
+     "status": "overstated",
+     "fact": "F144",
+     "quote": "evidence that menu-board prices can understate the real increase in unit cost to consumers",
+     "verified": true,
+     "material": false,
+     "why": "The research says official prices 'can understate' the real cost, not that the gap always runs one way; this is the narrator's analytic framing."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 83,
+   "sentence": "The industry's own arithmetic is where the story gets uncomfortable.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 84,
+   "sentence": "The National Restaurant Association frames the last five years as a story of cost pressure absorbed on thin margins: food costs up 35%, labor costs up 35%, and average menu prices up 31% between February 2020 and April 2025.",
+   "claims": [
+    {
+     "claim": "The National Restaurant Association frames the last five years as a story of cost pressure absorbed on thin margins",
+     "status": "unsupported",
+     "fact": "F215",
+     "quote": "The National Restaurant Association says most restaurants operate on pre-tax profit margins of 3-5%",
+     "verified": true,
+     "material": false,
+     "why": "The research has NRA citing 3-5% margins, but describing its framing as cost pressure 'absorbed' is the narrator's interpretation."
+    },
+    {
+     "claim": "food costs up 35%",
+     "status": "supported",
+     "fact": "F62",
+     "quote": "in the last 5 years, food and labor costs for the average restaurant each rose 35%",
+     "verified": true,
+     "material": false,
+     "why": "NRA reported a 35% food cost rise over five years."
+    },
+    {
+     "claim": "labor costs up 35%",
+     "status": "supported",
+     "fact": "F62",
+     "quote": "in the last 5 years, food and labor costs for the average restaurant each rose 35%",
+     "verified": true,
+     "material": false,
+     "why": "NRA reported a 35% labor cost rise over five years."
+    },
+    {
+     "claim": "average menu prices up 31% between February 2020 and April 2025",
+     "status": "supported",
+     "fact": "F61",
+     "quote": "average menu prices increased 31% between February 2020 and April 2025",
+     "verified": true,
+     "material": false,
+     "why": "Matches the NRA figure and date range."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 85,
+   "sentence": "On the surface, that framing positions operators as victims of a cost environment they barely kept pace with, not beneficiaries of it.",
+   "claims": [
+    {
+     "claim": "a cost environment they barely kept pace with",
+     "status": "supported",
+     "fact": "F62",
+     "quote": "in the last 5 years, food and labor costs for the average restaurant each rose 35%, while average menu prices increased 31% between February 2020 and April 2025",
+     "verified": true,
+     "material": false,
+     "why": "Menu prices (31%) rising slightly less than costs (35%) matches 'barely kept pace'; the 'victims, not beneficiaries' line describes the framing."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 86,
+   "sentence": "But Numerator's tracking of quick-service restaurant prices since January 2018 puts the cumulative increase at 53.9% — against a 33.2% rise in the overall consumer basket over the same stretch.",
+   "claims": [
+    {
+     "claim": "Numerator's tracking of quick-service restaurant prices since January 2018 puts the cumulative increase at 53.9%",
+     "status": "supported",
+     "fact": "F29",
+     "quote": "Numerator said quick-service restaurant prices have increased 53.9% since January 2018",
+     "verified": true,
+     "material": false,
+     "why": "Matches the Numerator figure and start date."
+    },
+    {
+     "claim": "against a 33.2% rise in the overall consumer basket over the same stretch",
+     "status": "supported",
+     "fact": "F29",
+     "quote": "well above the 33.2% rise in the overall consumer basket",
+     "verified": true,
+     "material": false,
+     "why": "Matches the Numerator comparison figure."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 87,
+   "sentence": "That is not a small premium over general inflation.",
+   "claims": [
+    {
+     "claim": "That is not a small premium over general inflation.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research shows quick-service prices outpacing overall CPI (e.g., F35), but calling the gap 'not small' is the narrator's own judgment."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 88,
+   "sentence": "A gap of more than twenty percentage points, sustained across years, and it does not resolve neatly into the cost-pressure story.",
+   "claims": [
+    {
+     "claim": "A gap of more than twenty percentage points",
+     "status": "derived",
+     "fact": "F29",
+     "quote": "quick-service restaurant prices have increased 53.9% since January 2018, well above the 33.2% rise in the overall consumer basket",
+     "verified": true,
+     "material": false,
+     "why": "53.9% minus 33.2% is 20.7 points, which is more than twenty."
+    },
+    {
+     "claim": "sustained across years",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research gives only a cumulative figure since 2018, not a gap that persisted year by year; this is the narrator's characterization."
+    },
+    {
+     "claim": "it does not resolve neatly into the cost-pressure story",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "This is the narrator's interpretation; no research fact states that the gap is unexplained by cost pressure."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 89,
+   "sentence": "The franchise structure adds another layer the aggregate numbers obscure: prices can vary systematically between franchised restaurants and corporate-owned units, and franchisors cannot control franchisee pricing with the same precision they apply to company-owned locations.",
+   "claims": [
+    {
+     "claim": "The franchise structure adds another layer the aggregate numbers obscure",
+     "status": "supported",
+     "fact": "F181",
+     "quote": "the gathered sources do not separate corporate chains from franchisee-operated locations to test pricing autonomy",
+     "verified": true,
+     "material": false,
+     "why": "The research notes that aggregate BLS data do not separate franchised from corporate locations."
+    },
+    {
+     "claim": "prices can vary systematically between franchised restaurants and corporate-owned units",
+     "status": "supported",
+     "fact": "F193",
+     "quote": "prices were systematically lower in corporate restaurants than in franchised restaurants",
+     "verified": true,
+     "material": false,
+     "why": "A 1995 NBER paper found systematic price differences between corporate and franchised units."
+    },
+    {
+     "claim": "franchisors cannot control franchisee pricing with the same precision they apply to company-owned locations",
+     "status": "supported",
+     "fact": "F193",
+     "quote": "franchisors could not control franchisee prices as tightly as company-owned unit prices",
+     "verified": true,
+     "material": false,
+     "why": "This is a direct paraphrase of the same paper's finding."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 90,
+   "sentence": "Franchisees set their own prices within that latitude — which means the national average conceals a wide distribution, and the higher end of that distribution is where much of the consumer experience actually lives.",
+   "claims": [
+    {
+     "claim": "Franchisees set their own prices within that latitude",
+     "status": "supported",
+     "fact": "F193",
+     "quote": "franchisors could not control franchisee prices as tightly as company-owned unit prices",
+     "verified": true,
+     "material": false,
+     "why": "Research records that franchisees have pricing latitude beyond franchisor control."
+    },
+    {
+     "claim": "the national average conceals a wide distribution",
+     "status": "unsupported",
+     "fact": "F181",
+     "quote": "the gathered sources do not separate corporate chains from franchisee-operated locations to test pricing autonomy",
+     "verified": true,
+     "material": false,
+     "why": "No price-dispersion data in the research; this is the narrator's inference."
+    },
+    {
+     "claim": "the higher end of that distribution is where much of the consumer experience actually lives",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The narrator's interpretive framing; no research measures where consumers fall in the distribution."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 91,
+   "sentence": "Then consider the behavioral evidence from operators themselves.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 92,
+   "sentence": "A 2026 restaurant inflation analysis found that 82% of operators raised menu prices in 2023, and 61% planned to raise them again in 2024.",
+   "claims": [
+    {
+     "claim": "A 2026 restaurant inflation analysis found that 82% of operators raised menu prices in 2023",
+     "status": "supported",
+     "fact": "F64",
+     "quote": "A 2026 restaurant inflation analysis reported that 82% of operators increased menu prices in 2023",
+     "verified": true,
+     "material": false,
+     "why": "Matches research directly."
+    },
+    {
+     "claim": "61% planned to raise them again in 2024",
+     "status": "supported",
+     "fact": "F64",
+     "quote": "61% planned to do so again in 2024",
+     "verified": true,
+     "material": false,
+     "why": "Matches research directly."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 93,
+   "sentence": "Not a one-time response to a one-time shock.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 94,
+   "sentence": "Sequential repricing, in consecutive years, at a moment when commodity costs were already pulling back from their 2022–2023 peaks.",
+   "claims": [
+    {
+     "claim": "Sequential repricing, in consecutive years",
+     "status": "overstated",
+     "fact": "F64",
+     "quote": "82% of operators increased menu prices in 2023 and 61% planned to do so again in 2024",
+     "verified": true,
+     "material": true,
+     "why": "Research records 2023 increases but only plans for 2024, not repricing that actually happened in consecutive years."
+    },
+    {
+     "claim": "commodity costs were already pulling back",
+     "status": "contradicted",
+     "fact": "F135",
+     "quote": "the beef and veal slaughter index rising sharply in 2024–2025, reflecting a key input-cost pressure for restaurants",
+     "verified": true,
+     "material": true,
+     "why": "Research records beef input costs rising sharply in 2024–2025 and records no pullback in commodity costs."
+    },
+    {
+     "claim": "their 2022–2023 peaks",
+     "status": "unsupported",
+     "fact": "F22",
+     "quote": "A 2021–2023 producer-price run-up lifted key restaurant inputs sharply, with beef, chicken, and cooking-oil costs each peaking at double-digit percentage increases",
+     "verified": true,
+     "material": true,
+     "why": "Research describes a 2021–2023 run-up but does not date the peaks to 2022–2023."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 95,
+   "sentence": "The Association's own 3–5% pre-tax margin figure is doing a lot of work in that narrative.",
+   "claims": [
+    {
+     "claim": "The Association's own 3–5% pre-tax margin figure",
+     "status": "supported",
+     "fact": "F215",
+     "quote": "The National Restaurant Association says most restaurants operate on pre-tax profit margins of 3-5%",
+     "verified": true,
+     "material": false,
+     "why": "The research attributes the 3-5% pre-tax margin figure to the National Restaurant Association."
+    },
+    {
+     "claim": "is doing a lot of work in that narrative",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "This is the narrator's interpretation of the figure's rhetorical role, not a stated fact."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 96,
+   "sentence": "Margins that thin would suggest operators had no room to absorb anything.",
+   "claims": [
+    {
+     "claim": "Margins that thin would suggest operators had no room to absorb anything",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research notes thin 3-5% margins but never says operators had no room to absorb costs; this is the narrator's hedged interpretation."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 97,
+   "sentence": "The cost pressure was real.",
+   "claims": [
+    {
+     "claim": "The cost pressure was real.",
+     "status": "supported",
+     "fact": "F62",
+     "quote": "in the last 5 years, food and labor costs for the average restaurant each rose 35%",
+     "verified": true,
+     "material": false,
+     "why": "Research documents large rises in restaurant food and labor costs."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 98,
+   "sentence": "The question the data leaves open is whether it was the ceiling on pricing decisions, or simply the floor.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 99,
+   "sentence": "Forty-seven percent of U.S. adults told the Harris Poll that a fair price for a full quick-service meal runs somewhere between five and ten dollars.",
+   "claims": [
+    {
+     "claim": "Forty-seven percent of U.S. adults told the Harris Poll",
+     "status": "supported",
+     "fact": "F208",
+     "quote": "The Harris Poll reported that 47% of U.S. adults said",
+     "verified": true,
+     "material": false,
+     "why": "The research attributes the 47% figure to the Harris Poll and to U.S. adults."
+    },
+    {
+     "claim": "a fair price for a full quick-service meal runs somewhere between five and ten dollars",
+     "status": "supported",
+     "fact": "F208",
+     "quote": "a fair price for a full QSR meal is $5-$9.99",
+     "verified": true,
+     "material": false,
+     "why": "\"Between five and ten dollars\" is a fair rounding of the $5-$9.99 range for a full QSR meal."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 100,
+   "sentence": "That is the number that pulls the threads together.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 101,
+   "sentence": "Because the combos are past it.",
+   "claims": [
+    {
+     "claim": "the combos are past it",
+     "status": "overstated",
+     "fact": "F3",
+     "quote": "McDonald’s Quarter Pounder with cheese meal rose from $5.39 in 2014 to $11.99 in 2024",
+     "verified": true,
+     "material": true,
+     "why": "Only one combo meal is shown above the $5-$9.99 fair-price range; the research gives no price level showing combos in general exceed it."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 102,
+   "sentence": "The value meals are past it.",
+   "claims": [
+    {
+     "claim": "The value meals are past it.",
+     "status": "overstated",
+     "fact": "F3",
+     "quote": "McDonald’s Quarter Pounder with cheese meal rose from $5.39 in 2014 to $11.99 in 2024",
+     "verified": true,
+     "material": true,
+     "why": "Research shows one specific meal at $11.99, above the $5-$9.99 fair-price range in F4; it says nothing about 'value meals' as a category exceeding that threshold."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 103,
+   "sentence": "The basic order at the counter — the one that used to be the affordable option — is past it.",
+   "claims": [
+    {
+     "claim": "the one that used to be the affordable option",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research shows fast-food prices rising faster than groceries but never says the basic order was once the affordable option; this is narrator framing."
+    },
+    {
+     "claim": "The basic order at the counter ... is past it",
+     "status": "overstated",
+     "fact": "F3",
+     "quote": "McDonald’s Quarter Pounder with cheese meal rose from $5.39 in 2014 to $11.99 in 2024",
+     "verified": true,
+     "material": false,
+     "why": "Only one meal is documented above the $5-$9.99 fair-price range (F4); calling it 'the basic order' generally is the narrator's characterization."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 104,
+   "sentence": "What the industry built its identity on was the premise that it could live inside that price range — affordable by design, accessible by default.",
+   "claims": [
+    {
+     "claim": "What the industry built its identity on was the premise that it could live inside that price range — affordable by design, accessible by default.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research does not describe the industry's founding identity or premise; this is the narrator's interpretation."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 105,
+   "sentence": "The survey responses put a human face on the arithmetic.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 106,
+   "sentence": "Seventy-eight percent of respondents in LendingTree-related polling said fast food had become a luxury.",
+   "claims": [
+    {
+     "claim": "Seventy-eight percent of respondents said fast food had become a luxury",
+     "status": "supported",
+     "fact": "F33",
+     "quote": "78% said fast food had become a luxury",
+     "verified": true,
+     "material": false,
+     "why": "F33 states the 78% figure for the luxury response."
+    },
+    {
+     "claim": "in LendingTree-related polling",
+     "status": "supported",
+     "fact": "F33",
+     "quote": "LendingTree-related reporting found 62% of respondents",
+     "verified": true,
+     "material": false,
+     "why": "F33 attributes the respondent figures to LendingTree-related reporting."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 107,
+   "sentence": "Sixty-two percent said they were eating it less because of what it costs.",
+   "claims": [
+    {
+     "claim": "Sixty-two percent said they were eating it less because of what it costs.",
+     "status": "supported",
+     "fact": "F33",
+     "quote": "62% of respondents said they were eating less fast food because it cost more",
+     "verified": true,
+     "material": false,
+     "why": "Research reports 62% eating less fast food because of its cost."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 108,
+   "sentence": "Seventy-five percent said cooking at home was the more economical choice — which is not a statement people make when a drive-through run still feels manageable.",
+   "claims": [
+    {
+     "claim": "Seventy-five percent said cooking at home was the more economical choice",
+     "status": "supported",
+     "fact": "F58",
+     "quote": "75% said cooking at home was more economical",
+     "verified": true,
+     "material": false,
+     "why": "Matches the USA Today-reported survey figure."
+    },
+    {
+     "claim": "which is not a statement people make when a drive-through run still feels manageable",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "This is the narrator's interpretation of consumer sentiment and is not in the research."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 109,
+   "sentence": "The Farmdoc Daily consumer survey found that about half of respondents said fast-food prices were causing them to go less often.",
+   "claims": [
+    {
+     "claim": "The Farmdoc Daily consumer survey found",
+     "status": "supported",
+     "fact": "F206",
+     "quote": "Farmdoc Daily reported that 53.1% of consumers said fast-food restaurant prices were unfair",
+     "verified": true,
+     "material": false,
+     "why": "Research attributes these consumer responses to Farmdoc Daily."
+    },
+    {
+     "claim": "about half of respondents said fast-food prices were causing them to go less often",
+     "status": "supported",
+     "fact": "F206",
+     "quote": "over half said those prices were causing them to reduce the frequency of their visits",
+     "verified": true,
+     "material": false,
+     "why": "'Over half' reducing visit frequency fairly paraphrases as about half going less often."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 110,
+   "sentence": "Not a fringe reaction.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 111,
+   "sentence": "The median American consumer pulling back from a category specifically designed to catch them when other options cost more.",
+   "claims": [
+    {
+     "claim": "The median American consumer pulling back from a category",
+     "status": "overstated",
+     "fact": "F33",
+     "quote": "62% of respondents said they were eating less fast food because it cost more",
+     "verified": true,
+     "material": false,
+     "why": "Survey shares of respondents cutting back are generalized to 'the median American consumer'; this is narrator framing of a majority finding."
+    },
+    {
+     "claim": "a category specifically designed to catch them when other options cost more",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "No research fact describes fast food's design or purpose as a fallback when other options cost more; this is narrator interpretation."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 112,
+   "sentence": "Fast food was not invented for people with options.",
+   "claims": [
+    {
+     "claim": "Fast food was not invented for people with options.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "No research fact covers fast food's origins or its intended customers; this is the narrator's framing."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 113,
+   "sentence": "It was invented for the shift worker, the family on a budget, the person who needed something hot and filling for under ten dollars and had twenty minutes to get it.",
+   "claims": [
+    {
+     "claim": "It was invented for the shift worker, the family on a budget",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research has nothing on fast food's origins or intended customers; this is narrative framing."
+    },
+    {
+     "claim": "the person who needed something hot and filling for under ten dollars",
+     "status": "unsupported",
+     "fact": "F4",
+     "quote": "47% of U.S. adults said $5-$9.99 is a fair price for a full QSR meal",
+     "verified": true,
+     "material": false,
+     "why": "F4 is a present-day fair-price survey, not a fact about who fast food was invented for; used here as rhetorical color."
+    },
+    {
+     "claim": "and had twenty minutes to get it",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "No time figure appears in the research; this is illustrative color."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 114,
+   "sentence": "The pricing logic of the industry rested on that customer showing up reliably — because fast food had positioned itself as the floor, the option of last resort before cooking at home.",
+   "claims": [
+    {
+     "claim": "The pricing logic of the industry rested on that customer showing up reliably",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The narrator's interpretation of industry pricing strategy; no research fact describes the industry's pricing logic this way."
+    },
+    {
+     "claim": "fast food had positioned itself as the floor, the option of last resort before cooking at home",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "An interpretive characterization of market positioning; the research addresses price trends, not how the industry positioned itself."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 115,
+   "sentence": "Now 75% of them say the grocery store is cheaper.",
+   "claims": [
+    {
+     "claim": "75% of them say the grocery store is cheaper",
+     "status": "supported",
+     "fact": "F58",
+     "quote": "75% said cooking at home was more economical",
+     "verified": true,
+     "material": false,
+     "why": "F58 reports that 75% of respondents said cooking at home was more economical, which this line paraphrases."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 116,
+   "sentence": "The category has drifted upmarket in price while staying exactly where it was in perception — and the customers caught in that gap are not dining somewhere nicer.",
+   "claims": [
+    {
+     "claim": "The category has drifted upmarket in price",
+     "status": "supported",
+     "fact": "F54",
+     "quote": "limited service meals and snacks were up 47% since 2014",
+     "verified": true,
+     "material": false,
+     "why": "Research documents large fast-food price increases; 'upmarket' is the narrator's framing of that rise."
+    },
+    {
+     "claim": "while staying exactly where it was in perception",
+     "status": "contradicted",
+     "fact": "F33",
+     "quote": "78% said fast food had become a luxury",
+     "verified": true,
+     "material": false,
+     "why": "Surveys show perception shifted toward seeing fast food as a luxury; the line is interpretive framing, not a sourced finding."
+    },
+    {
+     "claim": "the customers caught in that gap are not dining somewhere nicer",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Rhetorical interpretation not established by the research."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 117,
+   "sentence": "They are cooking more, going less, or going without.",
+   "claims": [
+    {
+     "claim": "They are cooking more",
+     "status": "overstated",
+     "fact": "F58",
+     "quote": "75% said cooking at home was more economical",
+     "verified": true,
+     "material": true,
+     "why": "The survey says respondents found home cooking more economical, not that they are cooking more."
+    },
+    {
+     "claim": "going less",
+     "status": "supported",
+     "fact": "F33",
+     "quote": "62% of respondents said they were eating less fast food because it cost more",
+     "verified": true,
+     "material": false,
+     "why": "The research directly reports reduced fast-food consumption because of cost."
+    },
+    {
+     "claim": "or going without",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "No research records consumers giving up fast food entirely; reads as rhetorical framing."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 118,
+   "sentence": "And it lands you right back where this video started: a drive-through window, a total on the screen, and the moment you do the math and realize the five-dollar bill you used to hand over wouldn't cover the tax.",
+   "claims": [
+    {
+     "claim": "the five-dollar bill you used to hand over",
+     "status": "derived",
+     "fact": "F3",
+     "quote": "McDonald’s Quarter Pounder with cheese meal rose from $5.39 in 2014",
+     "verified": true,
+     "material": false,
+     "why": "Rounding the research's $5.39 for a 2014 combo meal gives roughly five dollars."
+    },
+    {
+     "claim": "wouldn't cover the tax",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research says nothing about sales tax on meals; this reads as rhetorical hyperbole rather than a stated figure."
+    }
+   ],
+   "error": true,
+   "material": false
+  }
+ ],
+ "gateLog": [],
+ "gateOriginals": [],
+ "v1Errors": [
+  {
+   "i": 9,
+   "sentence": "By 2024, the same order cost $11.99 at the same chain, a $6.60 climb on a single item at a single restaurant.",
+   "script_quote": "the same order cost $11.99 at the same chain, a $6.60 climb on a single item",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research states the increase was 'about $6.50' (WSJ) or from $5.39 to $11.99 (FinanceBuzz/TheStreet), which is a $6.60 difference arithmetically, but the WSJ source cited for the $6.50 figure is a cross-chain comparison, not a single-item figure. The script attributes '$6.60' as the climb but th",
+   "first_seen": "section_1",
+   "seen_in": [
+    "section_1",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 27,
+   "sentence": "That four-point shift sounds small until you apply it across billions of dollars in annual sales.",
+   "script_quote": "That four-point shift sounds small",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research states the shift is from roughly 28% to 31.7%, which is approximately a 3.7-point shift, not a four-point shift. The script rounds up in a way that misstates the documented figure.",
+   "first_seen": "section_2",
+   "seen_in": [
+    "section_2",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 38,
+   "sentence": "Industry analysis puts the typical lag between a commodity shock and a menu-price adjustment at two to four months, a delay built into how contracts are structured and how operators decide when a shift is durable enough to justify reprinting the board.",
+   "script_quote": "Industry analysis puts the typical lag between a commodity shock and a menu-price adjustment at two to four months",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research states 'cost increases often appearing in menu prices within 2 to 4 months after commodity shocks' but attributes this to 'Industry analysis' from the National Restaurant Association research page, which the script reproduces accurately in substance; however the research also includes a",
+   "first_seen": "section_3",
+   "seen_in": [
+    "section_3",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  }
+ ]
+}

@@ -1,0 +1,3768 @@
+{
+ "set": "baseline",
+ "file": "ltcm-run1.json",
+ "case": "ltcm",
+ "words": 2453,
+ "judged": [
+  {
+   "i": 0,
+   "sentence": "Most people assume that the smartest minds in any room are the ones who make a system safer.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 1,
+   "sentence": "The economists running Long-Term Capital Management had quantitative models they treated as ironclad and the financing of nearly every major bank on Wall Street, and by 1998 they had borrowed more than $125 billion against roughly $5 billion in equity on trades their own models said were nearly impossible to lose.",
+   "claims": [
+    {
+     "claim": "The economists running Long-Term Capital Management",
+     "status": "supported",
+     "fact": "F23",
+     "quote": "recruited star academics to run it",
+     "verified": true,
+     "material": false,
+     "why": "Research says star academics were recruited to run LTCM."
+    },
+    {
+     "claim": "had quantitative models they treated as ironclad",
+     "status": "overstated",
+     "fact": "F15",
+     "quote": "John Meriwether relied heavily on Myron Scholes and Robert C. Merton’s quantitative models",
+     "verified": true,
+     "material": false,
+     "why": "Research says they relied heavily on the models; 'treated as ironclad' is the narrator's interpretation."
+    },
+    {
+     "claim": "and the financing of nearly every major bank on Wall Street",
+     "status": "overstated",
+     "fact": "F4",
+     "quote": "major Wall Street dealers and counterparties such as Goldman Sachs, Merrill Lynch, J.P. Morgan, and UBS extending financing and trading credit",
+     "verified": true,
+     "material": true,
+     "why": "Research names several major dealers, not nearly every major bank."
+    },
+    {
+     "claim": "by 1998 they had borrowed more than $125 billion against roughly $5 billion in equity",
+     "status": "supported",
+     "fact": "F4",
+     "quote": "by early 1998 had more than $125 billion borrowed against about $5 billion in equity",
+     "verified": true,
+     "material": false,
+     "why": "Matches the research figures and timing."
+    },
+    {
+     "claim": "on trades their own models said were nearly impossible to lose",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "Research does not record what the models predicted about the odds of loss."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 2,
+   "sentence": "So why did the Federal Reserve have to step in and organize a private rescue just to keep their fund from taking down the broader financial system?",
+   "claims": [
+    {
+     "claim": "the Federal Reserve ... organize a private rescue",
+     "status": "supported",
+     "fact": "F5",
+     "quote": "the Federal Reserve Bank of New York organized a $3.625 billion private rescue by 14 banks and securities firms",
+     "verified": true,
+     "material": false,
+     "why": "Research says the New York Fed organized the private rescue."
+    },
+    {
+     "claim": "have to step in",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Saying the Fed was compelled to act is the narrator's interpretation, not a recorded fact."
+    },
+    {
+     "claim": "just to keep their fund from taking down the broader financial system",
+     "status": "overstated",
+     "fact": "F19",
+     "quote": "the discussions centered on preventing a disorderly liquidation that could destabilize markets",
+     "verified": true,
+     "material": false,
+     "why": "Research says the risk was market destabilization or disruption, not the fund taking down the financial system. This is the narrator's rhetorical framing."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 3,
+   "sentence": "Most people assume that the smartest minds in any room are the ones who make a system safer.",
+   "claims": [
+    {
+     "claim": "Most people assume that the smartest minds in any room are the ones who make a system safer.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Rhetorical framing about popular belief; the research says nothing about it."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 4,
+   "sentence": "The economists running Long-Term Capital Management had quantitative models they treated as ironclad and the financing of nearly every major bank on Wall Street, and by 1998 they had borrowed more than $125 billion against roughly $5 billion in equity on trades their own models said were nearly impossible to lose.",
+   "claims": [
+    {
+     "claim": "The economists running Long-Term Capital Management",
+     "status": "supported",
+     "fact": "F23",
+     "quote": "recruited star academics to run it",
+     "verified": true,
+     "material": false,
+     "why": "Research says star academics were recruited to run LTCM."
+    },
+    {
+     "claim": "had quantitative models they treated as ironclad",
+     "status": "overstated",
+     "fact": "F15",
+     "quote": "relied heavily on Myron Scholes and Robert C. Merton’s quantitative models",
+     "verified": true,
+     "material": false,
+     "why": "Research says they relied heavily on the models; 'treated as ironclad' is the narrator's characterization."
+    },
+    {
+     "claim": "and the financing of nearly every major bank on Wall Street",
+     "status": "overstated",
+     "fact": "F4",
+     "quote": "major Wall Street dealers and counterparties such as Goldman Sachs, Merrill Lynch, J.P. Morgan, and UBS extending financing and trading credit",
+     "verified": true,
+     "material": true,
+     "why": "Research names several major dealers, not nearly every major bank."
+    },
+    {
+     "claim": "by 1998 they had borrowed more than $125 billion against roughly $5 billion in equity",
+     "status": "supported",
+     "fact": "F4",
+     "quote": "by early 1998 had more than $125 billion borrowed against about $5 billion in equity",
+     "verified": true,
+     "material": false,
+     "why": "Matches the research figures and timing."
+    },
+    {
+     "claim": "on trades their own models said were nearly impossible to lose",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "Research does not record what the models said about the odds of losing."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 5,
+   "sentence": "So why did the Federal Reserve have to step in and organize a private rescue just to keep their fund from taking down the broader financial system?",
+   "claims": [
+    {
+     "claim": "the Federal Reserve ... organize a private rescue",
+     "status": "supported",
+     "fact": "F5",
+     "quote": "the Federal Reserve Bank of New York organized a $3.625 billion private rescue by 14 banks and securities firms",
+     "verified": true,
+     "material": false,
+     "why": "Research says the New York Fed organized a private rescue."
+    },
+    {
+     "claim": "have to step in",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The necessity of intervention is the narrator's framing; the research records only that the Fed acted."
+    },
+    {
+     "claim": "to keep their fund from taking down the broader financial system",
+     "status": "overstated",
+     "fact": "F19",
+     "quote": "preventing a disorderly liquidation that could destabilize markets",
+     "verified": true,
+     "material": false,
+     "why": "Research says liquidation 'could destabilize markets' or cause 'widespread disruption', not take down the whole financial system; this is narrator framing of the stakes."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 6,
+   "sentence": "September 23, 1998.",
+   "claims": [
+    {
+     "claim": "September 23, 1998.",
+     "status": "supported",
+     "fact": "F8",
+     "quote": "On September 23, 1998, the private sector parties arrived at an agreement providing a capital infusion of about $3-1/2 billion.",
+     "verified": true,
+     "material": false,
+     "why": "The research records September 23, 1998 as the date of the private-sector rescue agreement."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 7,
+   "sentence": "The boardroom of the Federal Reserve Bank of New York.",
+   "claims": [
+    {
+     "claim": "Federal Reserve Bank of New York",
+     "status": "supported",
+     "fact": "F14",
+     "quote": "At the September 1998 New York Fed rescue meeting, McDonough convened 14 major Wall Street firms",
+     "verified": true,
+     "material": false,
+     "why": "The research records the rescue meeting at the New York Fed."
+    },
+    {
+     "claim": "The boardroom",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research places the meeting at the New York Fed but never says it was held in the boardroom, so this adds a specific place."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 8,
+   "sentence": "William McDonough had called in fourteen major financial institutions — Goldman Sachs, Merrill Lynch, J.P. Morgan, and the rest — not to discuss a client, not to negotiate a deal, but to prevent a collapse that none of them had publicly admitted was coming.",
+   "claims": [
+    {
+     "claim": "William McDonough had called in fourteen major financial institutions",
+     "status": "supported",
+     "fact": "F14",
+     "quote": "McDonough convened 14 major Wall Street firms and pressed them to form a private rescue consortium",
+     "verified": true,
+     "material": false,
+     "why": "Research states McDonough convened 14 major firms."
+    },
+    {
+     "claim": "Goldman Sachs, Merrill Lynch, J.P. Morgan, and the rest",
+     "status": "misattached",
+     "fact": "F4",
+     "quote": "major Wall Street dealers and counterparties such as Goldman Sachs, Merrill Lynch, J.P. Morgan, and UBS extending financing and trading credit",
+     "verified": true,
+     "material": true,
+     "why": "These firms are named as LTCM's financing counterparties, not as the institutions McDonough convened."
+    },
+    {
+     "claim": "to prevent a collapse",
+     "status": "supported",
+     "fact": "F19",
+     "quote": "the discussions centered on preventing a disorderly liquidation that could destabilize markets",
+     "verified": true,
+     "material": false,
+     "why": "Research says the meeting aimed to prevent a disorderly liquidation."
+    },
+    {
+     "claim": "that none of them had publicly admitted was coming",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "Research does not record what the banks had or had not said publicly about the coming collapse."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 9,
+   "sentence": "McDonough's warning to the room was precise: if Long-Term Capital Management failed and its positions were liquidated in a rush, the resulting fire sale would create a severe liquidity problem across global markets, causing widespread disruption that no single firm could contain.",
+   "claims": [
+    {
+     "claim": "McDonough's warning to the room",
+     "status": "supported",
+     "fact": "F14",
+     "quote": "McDonough convened 14 major Wall Street firms and pressed them to form a private rescue consortium, warning that disorderly liquidation could destabilize markets",
+     "verified": true,
+     "material": false,
+     "why": "The research records McDonough warning the firms at the rescue meeting."
+    },
+    {
+     "claim": "if Long-Term Capital Management failed and its positions were liquidated in a rush, the resulting fire sale",
+     "status": "supported",
+     "fact": "F2",
+     "quote": "the Fed’s goal was to avoid a \"fire sale\" of positions",
+     "verified": true,
+     "material": false,
+     "why": "The research records McDonough using the fire sale framing."
+    },
+    {
+     "claim": "would create a severe liquidity problem",
+     "status": "supported",
+     "fact": "F2",
+     "quote": "LTCM’s failure would have created a \"severe liquidity problem\"",
+     "verified": true,
+     "material": false,
+     "why": "This is a direct match to McDonough's quoted words."
+    },
+    {
+     "claim": "across global markets",
+     "status": "unsupported",
+     "fact": "F2",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research says only \"financial markets\"; \"global\" is the narrator's added scope."
+    },
+    {
+     "claim": "causing widespread disruption",
+     "status": "supported",
+     "fact": "F2",
+     "quote": "could \"cause widespread disruption\" in financial markets",
+     "verified": true,
+     "material": false,
+     "why": "This matches McDonough's quoted words."
+    },
+    {
+     "claim": "that no single firm could contain",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "It puts words in McDonough's mouth that the research never records him saying."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 10,
+   "sentence": "The fund owed so much to so many, in so many overlapping instruments, that an uncontrolled unwind would send prices cascading through markets these same banks were still operating in.",
+   "claims": [
+    {
+     "claim": "The fund owed so much to so many",
+     "status": "supported",
+     "fact": "F4",
+     "quote": "more than $125 billion borrowed against about $5 billion in equity, with major Wall Street dealers and counterparties such as Goldman Sachs, Merrill Lynch, J.P. Morgan, and UBS extending financing and trading credit",
+     "verified": true,
+     "material": false,
+     "why": "Research records heavy borrowing from many major counterparties."
+    },
+    {
+     "claim": "in so many overlapping instruments",
+     "status": "supported",
+     "fact": "F13",
+     "quote": "LTCM obtained extraordinary leverage by using securities repurchase agreements and derivatives",
+     "verified": true,
+     "material": false,
+     "why": "Research names multiple instrument types (repos and derivatives); 'overlapping' is narrative color."
+    },
+    {
+     "claim": "an uncontrolled unwind would send prices cascading through markets",
+     "status": "supported",
+     "fact": "F2",
+     "quote": "avoid a \"fire sale\" of positions that could \"cause widespread disruption\" in financial markets",
+     "verified": true,
+     "material": false,
+     "why": "Paraphrases McDonough's warning about a fire sale disrupting markets."
+    },
+    {
+     "claim": "markets these same banks were still operating in",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Narrator's interpretation of the banks' self-interest, not stated in research."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 11,
+   "sentence": "So McDonough pressed them to do something almost without precedent, pool their own money, $3.625 billion in total, to recapitalize a competitor that had borrowed from them, traded against them, and kept its books hidden from them, a separate figure entirely from the fund's $125 billion in borrowed positions, which measured what LTCM owed across its trading book.",
+   "claims": [
+    {
+     "claim": "McDonough pressed them",
+     "status": "supported",
+     "fact": "F14",
+     "quote": "McDonough convened 14 major Wall Street firms and pressed them to form a private rescue consortium",
+     "verified": true,
+     "material": false,
+     "why": "Research states McDonough pressed the firms to form a rescue."
+    },
+    {
+     "claim": "to do something almost without precedent",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The narrator's judgment of significance; the research does not assess precedent."
+    },
+    {
+     "claim": "pool their own money, $3.625 billion in total, to recapitalize",
+     "status": "supported",
+     "fact": "F0",
+     "quote": "the private rescue was a $3.625 billion capital injection by a consortium of banks",
+     "verified": true,
+     "material": false,
+     "why": "The amount and the consortium injection match."
+    },
+    {
+     "claim": "a competitor",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research never describes LTCM as the banks' competitor; this is the narrator's characterization."
+    },
+    {
+     "claim": "that had borrowed from them",
+     "status": "supported",
+     "fact": "F4",
+     "quote": "major Wall Street dealers and counterparties such as Goldman Sachs, Merrill Lynch, J.P. Morgan, and UBS extending financing and trading credit",
+     "verified": true,
+     "material": false,
+     "why": "Research states the banks financed LTCM."
+    },
+    {
+     "claim": "traded against them",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "Research describes the banks extending trading credit, not LTCM trading against them."
+    },
+    {
+     "claim": "kept its books hidden from them",
+     "status": "unsupported",
+     "fact": "F16",
+     "quote": "The full extent of LTCM’s counterparties’ exposures and some internal records remain disputed or not publicly disclosed",
+     "verified": true,
+     "material": true,
+     "why": "The research says records are not publicly disclosed today, not that LTCM hid its books from the banks."
+    },
+    {
+     "claim": "the fund's $125 billion in borrowed positions",
+     "status": "supported",
+     "fact": "F4",
+     "quote": "by early 1998 had more than $125 billion borrowed against about $5 billion in equity",
+     "verified": true,
+     "material": false,
+     "why": "The borrowing figure matches the research."
+    },
+    {
+     "claim": "a separate figure entirely from",
+     "status": "supported",
+     "fact": "F4",
+     "quote": "more than $125 billion borrowed against about $5 billion in equity",
+     "verified": true,
+     "material": false,
+     "why": "The borrowing figure is distinct from the rescue amount in the research."
+    },
+    {
+     "claim": "which measured what LTCM owed across its trading book",
+     "status": "unsupported",
+     "fact": "F4",
+     "quote": "more than $125 billion borrowed",
+     "verified": true,
+     "material": false,
+     "why": "'Across its trading book' adds description beyond 'borrowed'; this is interpretive framing."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 12,
+   "sentence": "The banks that agreed took a controlling equity stake in the fund in return.",
+   "claims": [
+    {
+     "claim": "The banks that agreed took a controlling equity stake in the fund",
+     "status": "supported",
+     "fact": "F3",
+     "quote": "on terms that gave creditors control of the fund",
+     "verified": true,
+     "material": false,
+     "why": "Research states the recapitalization terms gave the creditor banks control of the fund."
+    },
+    {
+     "claim": "took a controlling equity stake in the fund in return",
+     "status": "supported",
+     "fact": "F9",
+     "quote": "The $3-1/2 billion capital infusion was made in return for substantially diluting existing shareholders' stake in LTCM.",
+     "verified": true,
+     "material": false,
+     "why": "Research states the equity infusion was made in return for a diluted shareholder stake."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 13,
+   "sentence": "The ones that hesitated heard the same argument again.",
+   "claims": [
+    {
+     "claim": "The ones that hesitated",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research does not record any firms hesitating at the rescue meeting."
+    },
+    {
+     "claim": "heard the same argument again",
+     "status": "unsupported",
+     "fact": "F14",
+     "quote": "pressed them to form a private rescue consortium, warning that disorderly liquidation could destabilize markets",
+     "verified": true,
+     "material": true,
+     "why": "The research says McDonough pressed the firms but does not record the argument being repeated to holdouts."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 14,
+   "sentence": "This is where the story of Long-Term Capital Management ends.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 15,
+   "sentence": "What we need to understand is how the most credentialed fund in Wall Street history arrived in that room.",
+   "claims": [
+    {
+     "claim": "the most credentialed fund in Wall Street history",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research mentions star academics but never ranks LTCM's credentials against other funds; this is the narrator's characterization."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 16,
+   "sentence": "John Meriwether did not start fresh when he founded Long-Term Capital Management in 1994.",
+   "claims": [
+    {
+     "claim": "John Meriwether ... founded Long-Term Capital Management",
+     "status": "supported",
+     "fact": "F24",
+     "quote": "John Meriwether later founded another hedge fund, JWM Partners",
+     "verified": true,
+     "material": false,
+     "why": "Saying he founded 'another' hedge fund after LTCM implies he founded LTCM."
+    },
+    {
+     "claim": "in 1994",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research lists returns from 1994 but never states the founding year."
+    },
+    {
+     "claim": "did not start fresh",
+     "status": "supported",
+     "fact": "F23",
+     "quote": "John Meriwether’s Salomon Brothers background shaped LTCM’s culture",
+     "verified": true,
+     "material": false,
+     "why": "The research says his Salomon background shaped the fund."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 17,
+   "sentence": "He rebuilt something — a specific culture, a specific kind of person, a specific belief about what trading could be if you stripped the guesswork out of it.",
+   "claims": [
+    {
+     "claim": "He rebuilt something — a specific culture",
+     "status": "supported",
+     "fact": "F23",
+     "quote": "John Meriwether’s Salomon Brothers background shaped LTCM’s culture: he imported a tight, elite trading partnership model",
+     "verified": true,
+     "material": false,
+     "why": "Research says he imported his Salomon trading-partnership culture into LTCM."
+    },
+    {
+     "claim": "a specific kind of person",
+     "status": "supported",
+     "fact": "F23",
+     "quote": "recruited star academics to run it",
+     "verified": true,
+     "material": false,
+     "why": "Research says he recruited a particular type of person: star academics."
+    },
+    {
+     "claim": "a specific belief about what trading could be if you stripped the guesswork out of it",
+     "status": "unsupported",
+     "fact": "F23",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Research notes quantitative risk-taking, but this framing of the belief is the narrator's interpretation."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 18,
+   "sentence": "At Salomon Brothers, he had built the fixed-income arbitrage desk into the most profitable operation on Wall Street, and he had done it by hiring academics alongside traders, by treating mathematics as a competitive weapon rather than a theoretical exercise.",
+   "claims": [
+    {
+     "claim": "At Salomon Brothers, he had built the fixed-income arbitrage desk",
+     "status": "overstated",
+     "fact": "F18",
+     "quote": "former Salomon Brothers vice chairman and head of fixed-income arbitrage",
+     "verified": true,
+     "material": true,
+     "why": "The research says he headed fixed-income arbitrage; it does not say he built the desk."
+    },
+    {
+     "claim": "into the most profitable operation on Wall Street",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research makes no profitability superlative for the Salomon desk."
+    },
+    {
+     "claim": "he had done it by hiring academics alongside traders",
+     "status": "misattached",
+     "fact": "F23",
+     "quote": "recruited star academics to run it",
+     "verified": true,
+     "material": true,
+     "why": "Recruiting academics is described for LTCM's partnership, not his Salomon desk."
+    },
+    {
+     "claim": "by treating mathematics as a competitive weapon rather than a theoretical exercise",
+     "status": "unsupported",
+     "fact": "F23",
+     "quote": "built around quantitative risk-taking",
+     "verified": true,
+     "material": false,
+     "why": "This is the narrator's characterization; the research mentions a quantitative culture only for LTCM."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 19,
+   "sentence": "When the Treasury-bond scandal forced him out of Salomon, he took that culture with him and sharpened it.",
+   "claims": [
+    {
+     "claim": "the Treasury-bond scandal forced him out of Salomon",
+     "status": "supported",
+     "fact": "F11",
+     "quote": "a desk scandal that ended his Salomon career",
+     "verified": true,
+     "material": false,
+     "why": "F11 says the scandal ended his Salomon career, and F18 confirms it was the Treasury-bond trading scandal."
+    },
+    {
+     "claim": "he took that culture with him",
+     "status": "supported",
+     "fact": "F23",
+     "quote": "he imported a tight, elite trading partnership model",
+     "verified": true,
+     "material": false,
+     "why": "F23 says his Salomon background shaped LTCM's culture, which he imported."
+    },
+    {
+     "claim": "and sharpened it",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research does not say he sharpened the culture; this is the narrator's interpretation."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 20,
+   "sentence": "The partners he assembled read like a faculty roster that had somehow also managed money.",
+   "claims": [
+    {
+     "claim": "The partners he assembled read like a faculty roster",
+     "status": "supported",
+     "fact": "F23",
+     "quote": "recruited star academics to run it",
+     "verified": true,
+     "material": false,
+     "why": "Research says Meriwether recruited star academics to run LTCM; the faculty-roster image is a paraphrase of that."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 21,
+   "sentence": "Myron Scholes and Robert C. Merton were not consultants brought in to add credibility to a brochure.",
+   "claims": [
+    {
+     "claim": "Myron Scholes and Robert C. Merton were not consultants brought in to add credibility to a brochure",
+     "status": "supported",
+     "fact": "F15",
+     "quote": "John Meriwether relied heavily on Myron Scholes and Robert C. Merton’s quantitative models for LTCM’s relative-value trades",
+     "verified": true,
+     "material": false,
+     "why": "The research describes their models as central to LTCM's trades, which fits the claim that they had more than a decorative role."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 22,
+   "sentence": "They were principals, their quantitative models the actual intellectual engine of the fund's trading decisions.",
+   "claims": [
+    {
+     "claim": "They were principals",
+     "status": "unsupported",
+     "fact": "F24",
+     "quote": "the collapse did not produce criminal convictions for the principals",
+     "verified": true,
+     "material": true,
+     "why": "The research names Merton and Scholes near 'the principals' but never states their role at LTCM."
+    },
+    {
+     "claim": "their quantitative models the actual intellectual engine of the fund's trading decisions",
+     "status": "overstated",
+     "fact": "F15",
+     "quote": "John Meriwether relied heavily on Myron Scholes and Robert C. Merton’s quantitative models for LTCM’s relative-value trades",
+     "verified": true,
+     "material": false,
+     "why": "The research says the models were heavily relied on; calling them 'the actual intellectual engine' is the narrator's stronger characterization."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 23,
+   "sentence": "When Scholes and Merton shared a major prize in 1997 for their work on pricing derivatives, LTCM did not issue a press release claiming credit.",
+   "claims": [
+    {
+     "claim": "Scholes and Merton shared a major prize in 1997",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research never mentions any prize awarded to Scholes and Merton, in 1997 or otherwise."
+    },
+    {
+     "claim": "for their work on pricing derivatives",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research mentions their quantitative models but never says any prize was for derivatives-pricing work."
+    },
+    {
+     "claim": "LTCM did not issue a press release claiming credit",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research records nothing about LTCM press releases or any response to a prize."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 24,
+   "sentence": "It didn't need to.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 25,
+   "sentence": "The market already understood what it meant: the people running this fund had been recognized for the very mathematics they were deploying on live positions, in real markets, every day.",
+   "claims": [
+    {
+     "claim": "The market already understood what it meant",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "This is narrator interpretation of market perception, which no fact records."
+    },
+    {
+     "claim": "the people running this fund had been recognized for the very mathematics",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research names Scholes and Merton as model builders but records no recognition or award for their mathematics."
+    },
+    {
+     "claim": "they were deploying on live positions, in real markets",
+     "status": "supported",
+     "fact": "F15",
+     "quote": "John Meriwether relied heavily on Myron Scholes and Robert C. Merton’s quantitative models for LTCM’s relative-value trades",
+     "verified": true,
+     "material": false,
+     "why": "The research says the models were used for the fund's actual trades."
+    },
+    {
+     "claim": "every day",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research does not state how often the models were used; this is color."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 26,
+   "sentence": "The strategy itself was built around a deceptively calm premise.",
+   "claims": [
+    {
+     "claim": "The strategy itself was built around a deceptively calm premise",
+     "status": "unsupported",
+     "fact": "F10",
+     "quote": "LTCM used a \"market-neutral\" relative-value/convergence strategy",
+     "verified": true,
+     "material": false,
+     "why": "The research describes a market-neutral convergence strategy; calling its premise 'deceptively calm' is the narrator's interpretation."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 27,
+   "sentence": "Buy the underpriced security, short the overpriced one, wait for the gap to close, collect the spread.",
+   "claims": [
+    {
+     "claim": "Buy the underpriced security, short the overpriced one",
+     "status": "supported",
+     "fact": "F22",
+     "quote": "buying underpriced securities and shorting related overpriced ones",
+     "verified": true,
+     "material": false,
+     "why": "Research describes LTCM's convergence trades exactly this way."
+    },
+    {
+     "claim": "wait for the gap to close, collect the spread",
+     "status": "supported",
+     "fact": "F10",
+     "quote": "exploiting temporary price differences between similar securities with long and offsetting short positions",
+     "verified": true,
+     "material": false,
+     "why": "Profiting as temporary price differences converge is the convergence strategy the research describes."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 28,
+   "sentence": "The positions were designed to offset each other, keeping the fund neutral to broad market moves.",
+   "claims": [
+    {
+     "claim": "The positions were designed to offset each other",
+     "status": "supported",
+     "fact": "F10",
+     "quote": "exploiting temporary price differences between similar securities with long and offsetting short positions",
+     "verified": true,
+     "material": false,
+     "why": "Research describes long and offsetting short positions."
+    },
+    {
+     "claim": "keeping the fund neutral to broad market moves",
+     "status": "supported",
+     "fact": "F10",
+     "quote": "LTCM used a \"market-neutral\" relative-value/convergence strategy",
+     "verified": true,
+     "material": false,
+     "why": "Market-neutral strategy is stated in research."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 29,
+   "sentence": "By their documented figures, it worked: net returns of 19.9% in 1994, 42.8% in 1995, 40.8% in 1996, and 17.1% in 1997.",
+   "claims": [
+    {
+     "claim": "net returns of 19.9% in 1994",
+     "status": "supported",
+     "fact": "F10",
+     "quote": "its documented net returns were 19.9% in 1994",
+     "verified": true,
+     "material": false,
+     "why": "Research states the documented 1994 net return of 19.9%."
+    },
+    {
+     "claim": "42.8% in 1995",
+     "status": "supported",
+     "fact": "F10",
+     "quote": "42.8% in 1995",
+     "verified": true,
+     "material": false,
+     "why": "Research states the documented 1995 net return of 42.8%."
+    },
+    {
+     "claim": "40.8% in 1996",
+     "status": "supported",
+     "fact": "F10",
+     "quote": "40.8% in 1996",
+     "verified": true,
+     "material": false,
+     "why": "Research states the documented 1996 net return of 40.8%."
+    },
+    {
+     "claim": "17.1% in 1997",
+     "status": "supported",
+     "fact": "F10",
+     "quote": "17.1% in 1997",
+     "verified": true,
+     "material": false,
+     "why": "Research states the documented 1997 net return of 17.1%."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 30,
+   "sentence": "Four consecutive years of performance that looked, from the outside, less like trading and more like a machine converting small, certain inefficiencies into money.",
+   "claims": [
+    {
+     "claim": "Four consecutive years of performance",
+     "status": "supported",
+     "fact": "F10",
+     "quote": "its documented net returns were 19.9% in 1994, 42.8% in 1995, 40.8% in 1996, and 17.1% in 1997",
+     "verified": true,
+     "material": false,
+     "why": "Research gives strong returns for four consecutive years, 1994 through 1997."
+    },
+    {
+     "claim": "converting small ... inefficiencies into money",
+     "status": "supported",
+     "fact": "F17",
+     "quote": "relied on sophisticated mathematical models to exploit small pricing anomalies",
+     "verified": true,
+     "material": false,
+     "why": "This paraphrases exploiting small pricing anomalies for profit."
+    },
+    {
+     "claim": "certain inefficiencies",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Calling the inefficiencies 'certain' is the narrator's characterization, which the research does not state."
+    },
+    {
+     "claim": "looked, from the outside, less like trading and more like a machine",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "This describes outside perception as interpretive framing, which the research does not establish."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 31,
+   "sentence": "That aura was the product of more than returns.",
+   "claims": [
+    {
+     "claim": "That aura was the product of more than returns.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research does not describe LTCM's 'aura' or its causes; this is the narrator's interpretation."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 32,
+   "sentence": "Meriwether had imported from Salomon the model of a tight partnership — a closed group of exceptional people operating with enormous autonomy, trusting the models over intuition, keeping the inner workings proprietary.",
+   "claims": [
+    {
+     "claim": "Meriwether had imported from Salomon the model of a tight partnership",
+     "status": "supported",
+     "fact": "F23",
+     "quote": "he imported a tight, elite trading partnership model",
+     "verified": true,
+     "material": false,
+     "why": "F23 directly states he imported a tight partnership model from his Salomon background."
+    },
+    {
+     "claim": "a closed group of exceptional people",
+     "status": "supported",
+     "fact": "F23",
+     "quote": "a tight, elite trading partnership model built around quantitative risk-taking and recruited star academics to run it",
+     "verified": true,
+     "material": false,
+     "why": "'Elite' and 'star academics' support 'exceptional'; 'tight' broadly supports 'closed'."
+    },
+    {
+     "claim": "operating with enormous autonomy",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "No research fact mentions autonomy; this is the narrator's characterization of the culture."
+    },
+    {
+     "claim": "trusting the models over intuition",
+     "status": "overstated",
+     "fact": "F15",
+     "quote": "John Meriwether relied heavily on Myron Scholes and Robert C. Merton’s quantitative models",
+     "verified": true,
+     "material": false,
+     "why": "The research says he relied heavily on the models, not that the firm preferred them over intuition; this is interpretive framing."
+    },
+    {
+     "claim": "keeping the inner workings proprietary",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "No fact describes a policy of secrecy as part of the imported model; this is cultural characterization."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 33,
+   "sentence": "It was a culture that understood itself as different in kind from the rest of Wall Street, not just in degree.",
+   "claims": [
+    {
+     "claim": "It was a culture that understood itself as different in kind from the rest of Wall Street, not just in degree.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research describes an elite partnership model (F23) but not how the firm saw itself next to Wall Street; this is the narrator's characterization."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 34,
+   "sentence": "The prize confirmed what the partners already believed: that they had replaced uncertainty with rigor, that risk could be measured precisely enough to be managed precisely enough that catastrophic loss was, by the math, essentially off the table, a belief the fund's collapse would put in sharp dispute.",
+   "claims": [
+    {
+     "claim": "The prize confirmed",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research never mentions any prize awarded to the partners or their models."
+    },
+    {
+     "claim": "what the partners already believed: that they had replaced uncertainty with rigor, that risk could be measured precisely enough to be managed precisely enough that catastrophic loss was, by the math, essentially off the table",
+     "status": "unsupported",
+     "fact": "F15",
+     "quote": "John Meriwether relied heavily on Myron Scholes and Robert C. Merton’s quantitative models for LTCM’s relative-value trades",
+     "verified": true,
+     "material": false,
+     "why": "Research shows reliance on the models, not the partners' belief that catastrophic loss was ruled out; this is the narrator's characterization."
+    },
+    {
+     "claim": "a belief the fund's collapse would put in sharp dispute",
+     "status": "supported",
+     "fact": "F15",
+     "quote": "the fund’s collapse exposed sharp disagreement over whether the models adequately captured rare market stress",
+     "verified": true,
+     "material": false,
+     "why": "Research says the collapse exposed sharp disagreement over whether the models captured rare stress."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 35,
+   "sentence": "What the math had not been built to survive was the scenario where positions that were supposed to offset each other moved against each other simultaneously.",
+   "claims": [
+    {
+     "claim": "What the math had not been built to survive was the scenario",
+     "status": "overstated",
+     "fact": "F15",
+     "quote": "the fund's collapse exposed sharp disagreement over whether the models adequately captured rare market stress",
+     "verified": true,
+     "material": false,
+     "why": "The research says model adequacy is disputed; the script states the models' inadequacy as settled, which is narrator interpretation."
+    },
+    {
+     "claim": "positions that were supposed to offset each other",
+     "status": "supported",
+     "fact": "F10",
+     "quote": "exploiting temporary price differences between similar securities with long and offsetting short positions",
+     "verified": true,
+     "material": false,
+     "why": "The research describes LTCM's offsetting long and short positions."
+    },
+    {
+     "claim": "moved against each other simultaneously",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research does not record that the offsetting positions moved against LTCM at the same time; this is a market event presented as having happened."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 36,
+   "sentence": "But that question belonged to 1998.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 37,
+   "sentence": "In 1994, the fund was open for business, and Wall Street was lining up to get in.",
+   "claims": [
+    {
+     "claim": "In 1994, the fund was open for business",
+     "status": "supported",
+     "fact": "F10",
+     "quote": "its documented net returns were 19.9% in 1994",
+     "verified": true,
+     "material": false,
+     "why": "Documented 1994 returns show the fund was operating in 1994."
+    },
+    {
+     "claim": "Wall Street was lining up to get in",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research records no 1994 rush of Wall Street investors. It notes only financing from dealers and a later 1997 UBS deal to gain exposure."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 38,
+   "sentence": "The spread on any single convergence trade was tiny — fractions of a percentage point.",
+   "claims": [
+    {
+     "claim": "The spread on any single convergence trade was tiny",
+     "status": "supported",
+     "fact": "F17",
+     "quote": "relied on sophisticated mathematical models to exploit small pricing anomalies",
+     "verified": true,
+     "material": false,
+     "why": "Research describes the convergence trades as exploiting small pricing anomalies."
+    },
+    {
+     "claim": "fractions of a percentage point",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research gives no size for the spreads, so this specific magnitude is not established."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 39,
+   "sentence": "To turn a fraction into forty-three percent, you needed volume, and to get volume, you needed borrowed money.",
+   "claims": [
+    {
+     "claim": "a fraction",
+     "status": "supported",
+     "fact": "F17",
+     "quote": "relied on sophisticated mathematical models to exploit small pricing anomalies",
+     "verified": true,
+     "material": false,
+     "why": "The research describes small pricing anomalies as the source of profit."
+    },
+    {
+     "claim": "forty-three percent",
+     "status": "supported",
+     "fact": "F17",
+     "quote": "about 21% in 1994, 43% in 1995",
+     "verified": true,
+     "material": false,
+     "why": "LTCM's 1995 return is given as about 43%."
+    },
+    {
+     "claim": "you needed volume, and to get volume, you needed borrowed money",
+     "status": "unsupported",
+     "fact": "F4",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research documents heavy leverage but never says leverage was needed to reach these returns; this is narrator analysis of the mechanism."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 40,
+   "sentence": "Leverage was not a side feature of the strategy.",
+   "claims": [
+    {
+     "claim": "Leverage was not a side feature of the strategy.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research documents LTCM's heavy leverage (F4, F13) but never says it was central to the strategy; this is the narrator's interpretation."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 41,
+   "sentence": "It was the strategy's oxygen.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 42,
+   "sentence": "Without it, the convergence trades generated returns that would have impressed no one.",
+   "claims": [
+    {
+     "claim": "Without it, the convergence trades generated returns that would have impressed no one.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research gives only LTCM's reported returns, not unlevered returns; calling them unimpressive is the narrator's counterfactual judgment."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 43,
+   "sentence": "With it, those same fractional gains scaled into something that looked, from the outside, like a machine that had learned to manufacture certainty.",
+   "claims": [
+    {
+     "claim": "With it, those same fractional gains scaled into something",
+     "status": "unsupported",
+     "fact": "F17",
+     "quote": "relied on sophisticated mathematical models to exploit small pricing anomalies",
+     "verified": true,
+     "material": false,
+     "why": "The research records small pricing anomalies, heavy leverage and high returns, but never states that leverage scaled the gains; that link is the narrator's analysis of how the strategy worked."
+    },
+    {
+     "claim": "looked, from the outside, like a machine that had learned to manufacture certainty",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "This is the narrator's interpretive framing of outside perception, which no research fact documents."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 44,
+   "sentence": "And for three consecutive years, the math was right.",
+   "claims": [
+    {
+     "claim": "for three consecutive years",
+     "status": "supported",
+     "fact": "F22",
+     "quote": "it reported annualized net returns of about 21% in 1994, 43% in 1995, and 41% in 1996",
+     "verified": true,
+     "material": false,
+     "why": "The research documents strong returns for three consecutive years, 1994 to 1996."
+    },
+    {
+     "claim": "the math was right",
+     "status": "unsupported",
+     "fact": "F22",
+     "quote": "using quantitative models to exploit price deviations",
+     "verified": true,
+     "material": false,
+     "why": "Saying the models were 'right' is the narrator's reading of the returns; F15 notes the models' adequacy was disputed."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 45,
+   "sentence": "That ratio — somewhere above 25-to-1 — was not a secret kept from the banks on the other side of those loans.",
+   "claims": [
+    {
+     "claim": "That ratio — somewhere above 25-to-1",
+     "status": "derived",
+     "fact": "F4",
+     "quote": "more than $125 billion borrowed against about $5 billion in equity",
+     "verified": true,
+     "material": false,
+     "why": "More than $125B divided by about $5B gives a ratio above 25 to 1."
+    },
+    {
+     "claim": "was not a secret kept from the banks on the other side of those loans",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research says banks extended financing but never says they knew LTCM's overall leverage ratio, and F16 notes counterparty exposures remain disputed."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 46,
+   "sentence": "Goldman Sachs, Merrill Lynch, J.P. Morgan, UBS: they extended the financing.",
+   "claims": [
+    {
+     "claim": "Goldman Sachs, Merrill Lynch, J.P. Morgan, UBS: they extended the financing.",
+     "status": "supported",
+     "fact": "F4",
+     "quote": "major Wall Street dealers and counterparties such as Goldman Sachs, Merrill Lynch, J.P. Morgan, and UBS extending financing and trading credit",
+     "verified": true,
+     "material": false,
+     "why": "Research names these four firms as extending financing to LTCM."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 47,
+   "sentence": "In many cases, according to Federal Reserve testimony, they did it on favorable terms, sometimes requiring little or no initial margin.",
+   "claims": [
+    {
+     "claim": "according to Federal Reserve testimony",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research does not attribute the financing details to any Federal Reserve testimony; the added source is unestablished."
+    },
+    {
+     "claim": "In many cases, they did it on favorable terms",
+     "status": "supported",
+     "fact": "F13",
+     "quote": "major banks extending financing on very favorable terms",
+     "verified": true,
+     "material": false,
+     "why": "The research states banks extended financing on very favorable terms."
+    },
+    {
+     "claim": "sometimes requiring little or no initial margin",
+     "status": "supported",
+     "fact": "F13",
+     "quote": "in some cases, little or no initial margin",
+     "verified": true,
+     "material": false,
+     "why": "This matches the research directly."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 48,
+   "sentence": "The fund's track record and the academic imprimatur of its principals made the credit easy to justify.",
+   "claims": [
+    {
+     "claim": "The fund's track record",
+     "status": "supported",
+     "fact": "F10",
+     "quote": "its documented net returns were 19.9% in 1994, 42.8% in 1995, 40.8% in 1996, and 17.1% in 1997",
+     "verified": true,
+     "material": false,
+     "why": "The research documents LTCM's strong returns before the collapse."
+    },
+    {
+     "claim": "the academic imprimatur of its principals",
+     "status": "supported",
+     "fact": "F23",
+     "quote": "recruited star academics to run it",
+     "verified": true,
+     "material": false,
+     "why": "Star academics were among the fund's principals."
+    },
+    {
+     "claim": "the credit",
+     "status": "supported",
+     "fact": "F13",
+     "quote": "major banks extending financing on very favorable terms and, in some cases, little or no initial margin",
+     "verified": true,
+     "material": false,
+     "why": "Banks extended credit on favorable terms."
+    },
+    {
+     "claim": "made the credit easy to justify",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research never says why lenders extended credit, so this causal link is the narrator's interpretation."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 49,
+   "sentence": "Each bank saw its own slice of the exposure.",
+   "claims": [
+    {
+     "claim": "Each bank saw its own slice of the exposure.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research says counterparties' full exposures remain disputed or undisclosed, but nothing says each bank saw only its own portion."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 50,
+   "sentence": "None of them had a complete view of how many other slices existed.",
+   "claims": [
+    {
+     "claim": "None of them had a complete view of how many other slices existed.",
+     "status": "unsupported",
+     "fact": "F16",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "F16 says counterparty exposures remain disputed or undisclosed publicly, not that the lenders lacked a full view of the others' exposure at the time."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 51,
+   "sentence": "The mechanics were straightforward enough.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 52,
+   "sentence": "LTCM borrowed securities, sold them under repurchase agreements, and used the proceeds to fund new positions.",
+   "claims": [
+    {
+     "claim": "LTCM borrowed securities",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "Research says LTCM used repos and derivatives but never says it borrowed securities to sell."
+    },
+    {
+     "claim": "sold them under repurchase agreements",
+     "status": "supported",
+     "fact": "F4",
+     "quote": "LTCM built leverage through securities repurchase agreements and derivatives",
+     "verified": true,
+     "material": false,
+     "why": "Research confirms LTCM used securities repurchase agreements."
+    },
+    {
+     "claim": "used the proceeds to fund new positions",
+     "status": "supported",
+     "fact": "F13",
+     "quote": "LTCM obtained extraordinary leverage by using securities repurchase agreements and derivatives, with major banks extending financing",
+     "verified": true,
+     "material": false,
+     "why": "Repos as a source of financing for leverage is stated."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 53,
+   "sentence": "It layered derivatives on top.",
+   "claims": [
+    {
+     "claim": "It layered derivatives on top.",
+     "status": "supported",
+     "fact": "F4",
+     "quote": "LTCM built leverage through securities repurchase agreements and derivatives",
+     "verified": true,
+     "material": false,
+     "why": "Research states LTCM used derivatives in addition to repo borrowing to build leverage."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 54,
+   "sentence": "Each individual transaction looked manageable.",
+   "claims": [
+    {
+     "claim": "Each individual transaction looked manageable.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research never says how individual transactions appeared; this is the narrator's interpretation, not a recorded fact."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 55,
+   "sentence": "Stack enough of them and the total borrowing crossed $125 billion, a figure measuring the fund's trading-book debt, distinct from the $3.625 billion rescue capital, and set against roughly $5 billion in equity, it meant that a move of roughly four cents on the dollar across the portfolio would wipe the fund out entirely.",
+   "claims": [
+    {
+     "claim": "the total borrowing crossed $125 billion",
+     "status": "supported",
+     "fact": "F4",
+     "quote": "by early 1998 had more than $125 billion borrowed",
+     "verified": true,
+     "material": false,
+     "why": "Research states more than $125 billion borrowed."
+    },
+    {
+     "claim": "a figure measuring the fund's trading-book debt",
+     "status": "unsupported",
+     "fact": "F4",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Research says the money was borrowed via repos and derivatives but never uses a 'trading-book' label; this is the narrator's characterization."
+    },
+    {
+     "claim": "distinct from the $3.625 billion rescue capital",
+     "status": "supported",
+     "fact": "F5",
+     "quote": "organized a $3.625 billion private rescue by 14 banks and securities firms",
+     "verified": true,
+     "material": false,
+     "why": "The rescue figure is $3.625 billion, a separate amount from the borrowing."
+    },
+    {
+     "claim": "set against roughly $5 billion in equity",
+     "status": "supported",
+     "fact": "F4",
+     "quote": "against about $5 billion in equity",
+     "verified": true,
+     "material": false,
+     "why": "Research states about $5 billion in equity."
+    },
+    {
+     "claim": "a move of roughly four cents on the dollar across the portfolio would wipe the fund out entirely",
+     "status": "derived",
+     "fact": "F4",
+     "quote": "more than $125 billion borrowed against about $5 billion in equity",
+     "verified": true,
+     "material": false,
+     "why": "$5 billion against $125–130 billion in positions is about 4%, so a loss of that size erases the equity."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 56,
+   "sentence": "Then, at the end of 1997, the partners made a decision that tightened that margin further: they returned $2.75 billion of capital to investors.",
+   "claims": [
+    {
+     "claim": "at the end of 1997, the partners made a decision",
+     "status": "supported",
+     "fact": "F7",
+     "quote": "At the end of 1997, LTCM returned $2-3/4 billion of capital to investors.",
+     "verified": true,
+     "material": false,
+     "why": "Research dates the capital return to the end of 1997."
+    },
+    {
+     "claim": "they returned $2.75 billion of capital to investors",
+     "status": "supported",
+     "fact": "F7",
+     "quote": "LTCM returned $2-3/4 billion of capital to investors",
+     "verified": true,
+     "material": false,
+     "why": "$2-3/4 billion equals $2.75 billion."
+    },
+    {
+     "claim": "a decision that tightened that margin further",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Research does not link the capital return to reduced margin or higher leverage; this is narrator analysis."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 57,
+   "sentence": "The equity base shrank.",
+   "claims": [
+    {
+     "claim": "The equity base shrank.",
+     "status": "supported",
+     "fact": "F3",
+     "quote": "LTCM had lost about $4.6 billion of its $4.7 billion capital base",
+     "verified": true,
+     "material": false,
+     "why": "Research records LTCM losing nearly all of its capital base in 1998."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 58,
+   "sentence": "The leverage ratio climbed higher.",
+   "claims": [
+    {
+     "claim": "The leverage ratio climbed higher.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "Research gives a single snapshot of borrowing against equity (F4), not a rise in the leverage ratio over time."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 59,
+   "sentence": "The stated reason was that the fund had grown too large to deploy capital efficiently — the trades were crowding themselves.",
+   "claims": [
+    {
+     "claim": "The stated reason was that the fund had grown too large to deploy capital efficiently",
+     "status": "unsupported",
+     "fact": "F7",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "Research records the end-1997 capital return but gives no stated reason for it."
+    },
+    {
+     "claim": "the trades were crowding themselves",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "This is the narrator's explanation of the mechanism, and the research does not establish it."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 60,
+   "sentence": "Which was true.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 61,
+   "sentence": "But the consequence was a structure where the borrowed mountain had grown relative to the foundation holding it up, at the precise moment the fund was moving into larger, less liquid positions to find the returns the models still promised.",
+   "claims": [
+    {
+     "claim": "the consequence was a structure where the borrowed mountain had grown relative to the foundation holding it up",
+     "status": "unsupported",
+     "fact": "F4",
+     "quote": "by early 1998 had more than $125 billion borrowed against about $5 billion in equity",
+     "verified": true,
+     "material": false,
+     "why": "Research gives a leverage level and a capital return (F7) but never says leverage grew relative to equity; that is the narrator's inference."
+    },
+    {
+     "claim": "at the precise moment the fund was moving into larger, less liquid positions",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "No research fact says LTCM moved into larger or less liquid positions at that time."
+    },
+    {
+     "claim": "to find the returns the models still promised",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "This is the narrator's interpretation of motive and of what the models implied; the research does not state it."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 62,
+   "sentence": "The models had been right for three years.",
+   "claims": [
+    {
+     "claim": "The models had been right for three years.",
+     "status": "unsupported",
+     "fact": "F22",
+     "quote": "reported annualized net returns of about 21% in 1994, 43% in 1995, and 41% in 1996",
+     "verified": true,
+     "material": false,
+     "why": "The research records strong returns (F22 lists three years; F10/F17 list four, 1994–1997) but never says the models were 'right'. That judgement is the narrator's interpretation."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 63,
+   "sentence": "The question that 1998 would answer was what happens when the borrowing outlasts the certainty.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 64,
+   "sentence": "On September 2, 1998, John Meriwether sent a letter to his investors.",
+   "claims": [
+    {
+     "claim": "John Meriwether sent a letter to his investors",
+     "status": "supported",
+     "fact": "F1",
+     "quote": "Meriwether’s September 2, 1998 investor letter",
+     "verified": true,
+     "material": false,
+     "why": "The research records Meriwether's investor letter."
+    },
+    {
+     "claim": "On September 2, 1998",
+     "status": "supported",
+     "fact": "F1",
+     "quote": "Meriwether’s September 2, 1998 investor letter",
+     "verified": true,
+     "material": false,
+     "why": "The research gives the letter's date as September 2, 1998."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 65,
+   "sentence": "The language was not the measured, technical prose of a fund that believed its models were temporarily stressed.",
+   "claims": [
+    {
+     "claim": "The language was not the measured, technical prose",
+     "status": "supported",
+     "fact": "F20",
+     "quote": "using unusually blunt language",
+     "verified": true,
+     "material": false,
+     "why": "Research describes the letter's language as unusually blunt, which matches 'not measured.'"
+    },
+    {
+     "claim": "of a fund that believed its models were temporarily stressed",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The narrator's interpretation of what the fund believed; the research does not record this, but it is analysis, not a stated fact."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 66,
+   "sentence": "He wrote that LTCM had suffered \"a one-month loss of 44 percent\" and that the fund had been \"severely impacted\" by the market turmoil.",
+   "claims": [
+    {
+     "claim": "He wrote that LTCM had suffered \"a one-month loss of 44 percent\"",
+     "status": "supported",
+     "fact": "F1",
+     "quote": "the fund had suffered \"a one-month loss of 44 percent\"",
+     "verified": true,
+     "material": false,
+     "why": "F1 records this exact quote from Meriwether's written investor letter."
+    },
+    {
+     "claim": "the fund had been \"severely impacted\" by the market turmoil",
+     "status": "supported",
+     "fact": "F1",
+     "quote": "disclosed that LTCM had been \"severely impacted\" by the market turmoil",
+     "verified": true,
+     "material": false,
+     "why": "F1 records this exact quote from the same letter."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 67,
+   "sentence": "He disclosed that the firm was seeking a capital infusion.",
+   "claims": [
+    {
+     "claim": "He disclosed that the firm was seeking a capital infusion.",
+     "status": "supported",
+     "fact": "F20",
+     "quote": "said the fund was seeking a capital infusion",
+     "verified": true,
+     "material": false,
+     "why": "F20 says Meriwether's September 1998 investor letter said the fund was seeking a capital infusion."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 68,
+   "sentence": "A man who had spent his career replacing emotion with mathematics was now writing, in plain terms, that the mathematics had failed to protect them.",
+   "claims": [
+    {
+     "claim": "A man who had spent his career replacing emotion with mathematics",
+     "status": "unsupported",
+     "fact": "F23",
+     "quote": "built around quantitative risk-taking and recruited star academics to run it",
+     "verified": true,
+     "material": false,
+     "why": "The research notes a quantitative culture, but 'replacing emotion with mathematics' is the narrator's characterization."
+    },
+    {
+     "claim": "was now writing, in plain terms",
+     "status": "supported",
+     "fact": "F20",
+     "quote": "using unusually blunt language",
+     "verified": true,
+     "material": false,
+     "why": "The research says the September 1998 letter used unusually blunt language."
+    },
+    {
+     "claim": "that the mathematics had failed to protect them",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research says the letter reported losses and being 'severely impacted', not that it said the models had failed."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 69,
+   "sentence": "The summer of 1998 broke something the models had not fully accounted for.",
+   "claims": [
+    {
+     "claim": "The summer of 1998 broke something",
+     "status": "derived",
+     "fact": "F1",
+     "quote": "Meriwether’s September 2, 1998 investor letter said the fund had suffered \"a one-month loss of 44 percent\"",
+     "verified": true,
+     "material": false,
+     "why": "A one-month loss reported on September 2, 1998 places the damage in late summer 1998."
+    },
+    {
+     "claim": "the models had not fully accounted for",
+     "status": "overstated",
+     "fact": "F15",
+     "quote": "the fund’s collapse exposed sharp disagreement over whether the models adequately captured rare market stress",
+     "verified": true,
+     "material": false,
+     "why": "The research describes a dispute over the models' adequacy, not a settled finding; this is the narrator's interpretation."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 70,
+   "sentence": "Russia defaulted on its sovereign debt, and investors who had been spread across dozens of instruments with varying risk profiles did something the models had not weighted heavily: they fled toward safety simultaneously, abandoning the spread trades that LTCM had built its positions around.",
+   "claims": [
+    {
+     "claim": "Russia defaulted on its sovereign debt",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research never mentions Russia or a sovereign default."
+    },
+    {
+     "claim": "investors who had been spread across dozens of instruments with varying risk profiles",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "A general characterization of investors that the research does not establish."
+    },
+    {
+     "claim": "did something the models had not weighted heavily",
+     "status": "overstated",
+     "fact": "F15",
+     "quote": "the fund's collapse exposed sharp disagreement over whether the models adequately captured rare market stress",
+     "verified": true,
+     "material": true,
+     "why": "The research says this was disputed; the sentence states as fact that the models underweighted it."
+    },
+    {
+     "claim": "they fled toward safety simultaneously",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research does not record a simultaneous flight to safety by investors."
+    },
+    {
+     "claim": "abandoning the spread trades",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research does not record investors abandoning spread trades."
+    },
+    {
+     "claim": "the spread trades that LTCM had built its positions around",
+     "status": "supported",
+     "fact": "F10",
+     "quote": "LTCM used a \"market-neutral\" relative-value/convergence strategy, exploiting temporary price differences between similar securities with long and offsetting short positions",
+     "verified": true,
+     "material": false,
+     "why": "LTCM's strategy was built on convergence/spread trades."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 71,
+   "sentence": "The cheap security got cheaper.",
+   "claims": [
+    {
+     "claim": "The cheap security got cheaper.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research documents convergence trades (F22) and large losses (F3, F5), but never says the underpriced securities fell further; this is the narrator's explanation of how the trades failed."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 72,
+   "sentence": "The expensive one got more expensive.",
+   "claims": [
+    {
+     "claim": "The expensive one got more expensive.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research describes the convergence strategy and LTCM's losses, but never says the overpriced securities rose further. This reads as the narrator's illustrative explanation of how the trade failed, so it is not material."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 73,
+   "sentence": "The gap that was supposed to close instead widened — across fixed income, across equity volatility, across global markets — all at once.",
+   "claims": [
+    {
+     "claim": "The gap that was supposed to close instead widened",
+     "status": "unsupported",
+     "fact": "F10",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research describes the convergence strategy, but it never records the price gaps widening instead of closing."
+    },
+    {
+     "claim": "across fixed income, across equity volatility, across global markets",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research never names the markets or asset classes where LTCM's trades moved against it."
+    },
+    {
+     "claim": "all at once",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research does not establish that the losses across markets happened simultaneously."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 74,
+   "sentence": "The models were calibrated on historical correlations.",
+   "claims": [
+    {
+     "claim": "The models were calibrated on historical correlations.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research mentions quantitative models and disputes over rare stress, but it never says how the models were calibrated or that they relied on historical correlations."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 75,
+   "sentence": "But when panic moves through markets, correlations collapse toward one.",
+   "claims": [
+    {
+     "claim": "when panic moves through markets, correlations collapse toward one",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "A general statement about market behavior that the research never makes; F15 notes only disagreement over the models and rare stress."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 76,
+   "sentence": "Everything falls together.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 77,
+   "sentence": "The offsets that were supposed to make the portfolio neutral became, in that environment, simply a larger collection of losing trades.",
+   "claims": [
+    {
+     "claim": "The offsets that were supposed to make the portfolio neutral",
+     "status": "supported",
+     "fact": "F10",
+     "quote": "LTCM used a \"market-neutral\" relative-value/convergence strategy, exploiting temporary price differences between similar securities with long and offsetting short positions",
+     "verified": true,
+     "material": false,
+     "why": "Research describes offsetting short positions in a market-neutral strategy."
+    },
+    {
+     "claim": "became, in that environment, simply a larger collection of losing trades",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research records the losses but not that the offsetting positions themselves lost; this is the narrator's analysis of why the strategy failed."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 78,
+   "sentence": "Forty-four percent in a single month was not a model performing badly.",
+   "claims": [
+    {
+     "claim": "Forty-four percent in a single month",
+     "status": "supported",
+     "fact": "F1",
+     "quote": "a one-month loss of 44 percent",
+     "verified": true,
+     "material": false,
+     "why": "Meriwether's letter reported a one-month loss of 44 percent."
+    },
+    {
+     "claim": "was not a model performing badly",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "This is the narrator's interpretation of the loss, which the research does not establish."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 79,
+   "sentence": "It was a model encountering the one condition it had no architecture to survive.",
+   "claims": [
+    {
+     "claim": "It was a model encountering the one condition it had no architecture to survive.",
+     "status": "overstated",
+     "fact": "F15",
+     "quote": "the fund's collapse exposed sharp disagreement over whether the models adequately captured rare market stress",
+     "verified": true,
+     "material": false,
+     "why": "The research presents model inadequacy as disputed; the sentence states it as settled. This is the narrator's interpretive framing."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 80,
+   "sentence": "The collapse was total and it was fast.",
+   "claims": [
+    {
+     "claim": "The collapse was total",
+     "status": "overstated",
+     "fact": "F3",
+     "quote": "LTCM had lost about $4.6 billion of its $4.7 billion capital base",
+     "verified": true,
+     "material": false,
+     "why": "Research records a loss of nearly all capital and a recapitalization rather than a complete wipeout; 'total' is the narrator's rhetorical framing."
+    },
+    {
+     "claim": "it was fast",
+     "status": "supported",
+     "fact": "F1",
+     "quote": "a one-month loss of 44 percent",
+     "verified": true,
+     "material": false,
+     "why": "A 44% loss in one month and about 90% gone by late September establish a rapid collapse."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 81,
+   "sentence": "The math that had looked like precision for four years revealed itself, under those conditions, as a multiplier that worked in both directions without preference.",
+   "claims": [
+    {
+     "claim": "The math that had looked like precision for four years",
+     "status": "derived",
+     "fact": "F10",
+     "quote": "its documented net returns were 19.9% in 1994, 42.8% in 1995, 40.8% in 1996, and 17.1% in 1997",
+     "verified": true,
+     "material": false,
+     "why": "Four years of documented returns (1994–1997) follow from counting the years listed."
+    },
+    {
+     "claim": "revealed itself, under those conditions, as a multiplier that worked in both directions without preference",
+     "status": "unsupported",
+     "fact": "F15",
+     "quote": "the fund's collapse exposed sharp disagreement over whether the models adequately captured rare market stress",
+     "verified": true,
+     "material": false,
+     "why": "The research never says the leverage or models amplified gains and losses symmetrically; this is narrator interpretation."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 82,
+   "sentence": "The damage was not evenly distributed across the fund's counterparties.",
+   "claims": [
+    {
+     "claim": "The damage was not evenly distributed across the fund's counterparties.",
+     "status": "unsupported",
+     "fact": "F16",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research gives only UBS's $680M write-off and says counterparties' full exposures remain disputed or undisclosed, so it never compares losses across counterparties; this is the narrator's characterization."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 83,
+   "sentence": "UBS, which had struck a special deal in 1997 to gain direct exposure to LTCM's returns, eventually wrote off $680 million from that arrangement alone.",
+   "claims": [
+    {
+     "claim": "UBS, which had struck a special deal in 1997",
+     "status": "supported",
+     "fact": "F6",
+     "quote": "a special 1997 deal with LTCM",
+     "verified": true,
+     "material": false,
+     "why": "The research records UBS's special 1997 deal with LTCM."
+    },
+    {
+     "claim": "to gain direct exposure to LTCM's returns",
+     "status": "unsupported",
+     "fact": "F6",
+     "quote": "to gain exposure",
+     "verified": true,
+     "material": false,
+     "why": "The research says only 'to gain exposure'; 'direct' and 'to LTCM's returns' are added characterization."
+    },
+    {
+     "claim": "eventually wrote off $680 million",
+     "status": "supported",
+     "fact": "F6",
+     "quote": "UBS later wrote off $680 million",
+     "verified": true,
+     "material": false,
+     "why": "The research states the $680 million write-off."
+    },
+    {
+     "claim": "from that arrangement alone",
+     "status": "overstated",
+     "fact": "F6",
+     "quote": "wrote off $680 million after a special 1997 deal with LTCM",
+     "verified": true,
+     "material": true,
+     "why": "The research says the write-off came after the deal, not that it came solely from that arrangement."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 84,
+   "sentence": "That figure — a single institution's loss on a single structured relationship — captures what the web of counterparty exposure actually meant in practice: the losses did not stay inside LTCM's books.",
+   "claims": [
+    {
+     "claim": "a single institution's loss on a single structured relationship",
+     "status": "supported",
+     "fact": "F6",
+     "quote": "UBS later wrote off $680 million after a special 1997 deal with LTCM to gain exposure",
+     "verified": true,
+     "material": false,
+     "why": "The research records UBS's write-off tied to one special deal with LTCM."
+    },
+    {
+     "claim": "the losses did not stay inside LTCM's books",
+     "status": "supported",
+     "fact": "F6",
+     "quote": "UBS later wrote off $680 million after a special 1997 deal with LTCM",
+     "verified": true,
+     "material": false,
+     "why": "A counterparty taking its own write-off shows the losses reached beyond LTCM."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 85,
+   "sentence": "They radiated outward along the lines of credit, the derivative contracts, the repo agreements that had made the leverage possible.",
+   "claims": [
+    {
+     "claim": "the lines of credit, the derivative contracts, the repo agreements that had made the leverage possible",
+     "status": "supported",
+     "fact": "F4",
+     "quote": "LTCM built leverage through securities repurchase agreements and derivatives",
+     "verified": true,
+     "material": false,
+     "why": "Research says leverage came from repo, derivatives and bank financing and trading credit."
+    },
+    {
+     "claim": "They radiated outward along the lines of credit, the derivative contracts, the repo agreements",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research does not describe losses spreading through these channels, though this is metaphorical narration of contagion."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 86,
+   "sentence": "That radiation was precisely what concerned the Federal Reserve Bank of New York.",
+   "claims": [
+    {
+     "claim": "That radiation was precisely what concerned the Federal Reserve Bank of New York.",
+     "status": "supported",
+     "fact": "F19",
+     "quote": "the discussions centered on preventing a disorderly liquidation that could destabilize markets",
+     "verified": true,
+     "material": false,
+     "why": "Research records the New York Fed's concern that a disorderly liquidation could spread and destabilize markets."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 87,
+   "sentence": "A fund carrying more than $125 billion in borrowed positions across dozens of instruments, now nearly insolvent, could not quietly wind down.",
+   "claims": [
+    {
+     "claim": "A fund carrying more than $125 billion in borrowed positions",
+     "status": "misattached",
+     "fact": "F4",
+     "quote": "by early 1998 had more than $125 billion borrowed against about $5 billion in equity",
+     "verified": true,
+     "material": true,
+     "why": "The research dates the $125 billion borrowing to early 1998, but the sentence presents it as the fund's position when it was nearly insolvent."
+    },
+    {
+     "claim": "across dozens of instruments",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research gives no count of the instruments involved."
+    },
+    {
+     "claim": "now nearly insolvent",
+     "status": "supported",
+     "fact": "F3",
+     "quote": "LTCM had lost about $4.6 billion of its $4.7 billion capital base",
+     "verified": true,
+     "material": false,
+     "why": "Losing nearly all of its capital supports 'nearly insolvent'."
+    },
+    {
+     "claim": "could not quietly wind down",
+     "status": "unsupported",
+     "fact": "F5",
+     "quote": "to keep the fund from disorderly liquidation",
+     "verified": true,
+     "material": false,
+     "why": "This is the narrator's interpretation; the research describes the concern about disorderly liquidation but does not say a quiet wind-down was impossible."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 88,
+   "sentence": "Any forced liquidation — selling the long positions, covering the shorts, unwinding the derivatives — would push prices in the markets where those positions lived.",
+   "claims": [
+    {
+     "claim": "selling the long positions, covering the shorts, unwinding the derivatives",
+     "status": "supported",
+     "fact": "F10",
+     "quote": "with long and offsetting short positions",
+     "verified": true,
+     "material": false,
+     "why": "Research records LTCM's long and short positions (F10) and its use of derivatives (F4)."
+    },
+    {
+     "claim": "Any forced liquidation ... would push prices in the markets where those positions lived",
+     "status": "unsupported",
+     "fact": "F2",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research warns only that a fire sale could 'cause widespread disruption'; the price-impact mechanism is the narrator's general explanation."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 89,
+   "sentence": "And the fourteen banks that had extended the financing were also active in those same markets.",
+   "claims": [
+    {
+     "claim": "the fourteen banks that had extended the financing",
+     "status": "misattached",
+     "fact": "F3",
+     "quote": "a $3.6 billion private-sector recapitalization by 14 banks",
+     "verified": true,
+     "material": true,
+     "why": "The research counts 14 banks in the rescue consortium, not 14 banks that had extended LTCM's financing."
+    },
+    {
+     "claim": "were also active in those same markets",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research does not say the lending banks traded in the same markets as LTCM."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 90,
+   "sentence": "A fire sale by LTCM would move prices against portfolios they held on their own accounts.",
+   "claims": [
+    {
+     "claim": "A fire sale by LTCM would move prices",
+     "status": "overstated",
+     "fact": "F2",
+     "quote": "the Fed’s goal was to avoid a \"fire sale\" of positions that could \"cause widespread disruption\" in financial markets",
+     "verified": true,
+     "material": false,
+     "why": "Research says a fire sale could cause widespread disruption; the specific price-moving mechanism is the narrator's interpretation."
+    },
+    {
+     "claim": "against portfolios they held on their own accounts",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "Research does not record that the banks or counterparties held similar portfolios on their own accounts that would be hurt."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 91,
+   "sentence": "The Fed's conclusion was that the fund's failure would create a severe liquidity problem across global markets — not because LTCM was systemically important in the way a deposit-taking bank might be, but because its positions were so large and so tangled with the balance sheets of institutions that were.",
+   "claims": [
+    {
+     "claim": "The Fed's conclusion was that the fund's failure would create a severe liquidity problem",
+     "status": "supported",
+     "fact": "F2",
+     "quote": "William J. McDonough said LTCM’s failure would have created a \"severe liquidity problem\"",
+     "verified": true,
+     "material": false,
+     "why": "McDonough, speaking for the New York Fed rescue, said this."
+    },
+    {
+     "claim": "across global markets",
+     "status": "unsupported",
+     "fact": "F2",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research cites disruption \"in financial markets\" and never says global; the added scope strengthens what McDonough said."
+    },
+    {
+     "claim": "not because LTCM was systemically important in the way a deposit-taking bank might be",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "This contrast with deposit-taking banks is the narrator's own analysis, not in the research."
+    },
+    {
+     "claim": "its positions were so large",
+     "status": "supported",
+     "fact": "F4",
+     "quote": "by early 1998 had more than $125 billion borrowed against about $5 billion in equity",
+     "verified": true,
+     "material": false,
+     "why": "The research documents very large leveraged positions."
+    },
+    {
+     "claim": "so tangled with the balance sheets of institutions that were",
+     "status": "supported",
+     "fact": "F4",
+     "quote": "with major Wall Street dealers and counterparties such as Goldman Sachs, Merrill Lynch, J.P. Morgan, and UBS extending financing and trading credit",
+     "verified": true,
+     "material": false,
+     "why": "Major institutions were exposed through financing and trading credit."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 92,
+   "sentence": "The creditors took control of the fund in exchange.",
+   "claims": [
+    {
+     "claim": "The creditors took control of the fund in exchange.",
+     "status": "supported",
+     "fact": "F3",
+     "quote": "a $3.6 billion private-sector recapitalization by 14 banks on terms that gave creditors control of the fund",
+     "verified": true,
+     "material": false,
+     "why": "Research states the recapitalization terms gave creditors control of the fund."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 93,
+   "sentence": "The borrowed mountain had outlasted the certainty, exactly as the question had always implied it might.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 94,
+   "sentence": "What McDonough called a private-sector solution to a private-sector problem was, on its face, accurate.",
+   "claims": [
+    {
+     "claim": "What McDonough called a private-sector solution to a private-sector problem",
+     "status": "supported",
+     "fact": "F21",
+     "quote": "William McDonough publicly justified the rescue as a private-sector solution to a private-sector problem",
+     "verified": true,
+     "material": false,
+     "why": "The research records McDonough using this framing."
+    },
+    {
+     "claim": "was, on its face, accurate",
+     "status": "unsupported",
+     "fact": "F3",
+     "quote": "a $3.6 billion private-sector recapitalization by 14 banks",
+     "verified": true,
+     "material": false,
+     "why": "This is the narrator's evaluation. The research describes a private recapitalization but does not judge whether the label was accurate."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 95,
+   "sentence": "No public funds moved.",
+   "claims": [
+    {
+     "claim": "No public funds moved.",
+     "status": "supported",
+     "fact": "F3",
+     "quote": "the rescue organized by the Federal Reserve Bank of New York was a $3.6 billion private-sector recapitalization by 14 banks",
+     "verified": true,
+     "material": false,
+     "why": "The research describes the rescue as a private-sector recapitalization funded by banks and organized, not funded, by the New York Fed."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 96,
+   "sentence": "The Treasury did not write a check.",
+   "claims": [
+    {
+     "claim": "The Treasury did not write a check.",
+     "status": "supported",
+     "fact": "F3",
+     "quote": "a $3.6 billion private-sector recapitalization by 14 banks",
+     "verified": true,
+     "material": false,
+     "why": "The research describes the rescue as funded by a private bank consortium, so no public money was involved. The research does not name the Treasury, but the claim follows directly from the private funding."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 97,
+   "sentence": "The Federal Reserve did not take a position.",
+   "claims": [
+    {
+     "claim": "The Federal Reserve did not take a position.",
+     "status": "contradicted",
+     "fact": "F14",
+     "quote": "McDonough convened 14 major Wall Street firms and pressed them to form a private rescue consortium, warning that disorderly liquidation could destabilize markets",
+     "verified": true,
+     "material": true,
+     "why": "The research shows the New York Fed organized the rescue and pressed firms to act, and McDonough publicly justified it. That is a clear position."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 98,
+   "sentence": "Fourteen banks and securities firms sat in that room, did the arithmetic, and agreed to put in roughly $3.625 billion of their own capital, the recapitalization figure announced by McDonough, to keep the fund from unwinding in the open market.",
+   "claims": [
+    {
+     "claim": "Fourteen banks and securities firms",
+     "status": "supported",
+     "fact": "F5",
+     "quote": "a $3.625 billion private rescue by 14 banks and securities firms",
+     "verified": true,
+     "material": false,
+     "why": "Research gives the 14 banks and securities firms."
+    },
+    {
+     "claim": "sat in that room",
+     "status": "supported",
+     "fact": "F14",
+     "quote": "At the September 1998 New York Fed rescue meeting, McDonough convened 14 major Wall Street firms",
+     "verified": true,
+     "material": false,
+     "why": "The 14 firms were convened at the rescue meeting."
+    },
+    {
+     "claim": "agreed to put in roughly $3.625 billion",
+     "status": "supported",
+     "fact": "F5",
+     "quote": "a $3.625 billion private rescue by 14 banks and securities firms",
+     "verified": true,
+     "material": false,
+     "why": "The amount matches the research."
+    },
+    {
+     "claim": "of their own capital",
+     "status": "supported",
+     "fact": "F3",
+     "quote": "a $3.6 billion private-sector recapitalization by 14 banks",
+     "verified": true,
+     "material": false,
+     "why": "A private-sector recapitalization by the banks themselves."
+    },
+    {
+     "claim": "the recapitalization figure announced by McDonough",
+     "status": "supported",
+     "fact": "F0",
+     "quote": "a $3.625 billion capital injection by a consortium of banks arranged under the Federal Reserve Bank of New York, announced in a statement by William J. McDonough",
+     "verified": true,
+     "material": false,
+     "why": "McDonough's statement announced the figure."
+    },
+    {
+     "claim": "to keep the fund from unwinding in the open market",
+     "status": "supported",
+     "fact": "F5",
+     "quote": "to keep the fund from disorderly liquidation",
+     "verified": true,
+     "material": false,
+     "why": "Paraphrases the stated purpose of avoiding disorderly liquidation."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 99,
+   "sentence": "The agreement was reached on September 23, 1998.",
+   "claims": [
+    {
+     "claim": "The agreement was reached on September 23, 1998.",
+     "status": "supported",
+     "fact": "F8",
+     "quote": "On September 23, 1998, the private sector parties arrived at an agreement",
+     "verified": true,
+     "material": false,
+     "why": "F8 states the agreement was reached on that date."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 100,
+   "sentence": "The existing shareholders — the partners who had built the fund, run the models, and collected the returns — had their stake substantially diluted in exchange.",
+   "claims": [
+    {
+     "claim": "The existing shareholders ... had their stake substantially diluted in exchange",
+     "status": "supported",
+     "fact": "F9",
+     "quote": "The $3-1/2 billion capital infusion was made in return for substantially diluting existing shareholders' stake in LTCM.",
+     "verified": true,
+     "material": false,
+     "why": "Research states the dilution in exchange for the infusion."
+    },
+    {
+     "claim": "the partners who had built the fund, run the models, and collected the returns",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "Research never says who the existing shareholders were, so equating them with the partners who ran the fund is unestablished."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 101,
+   "sentence": "They were not wiped out entirely, but they were no longer in control of what they had built.",
+   "claims": [
+    {
+     "claim": "They were not wiped out entirely",
+     "status": "supported",
+     "fact": "F9",
+     "quote": "in return for substantially diluting existing shareholders' stake in LTCM",
+     "verified": true,
+     "material": false,
+     "why": "Dilution means existing shareholders kept a reduced stake rather than losing it all."
+    },
+    {
+     "claim": "they were no longer in control of what they had built",
+     "status": "supported",
+     "fact": "F3",
+     "quote": "on terms that gave creditors control of the fund",
+     "verified": true,
+     "material": false,
+     "why": "The rescue terms handed control of the fund to the creditors."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 102,
+   "sentence": "The creditors were.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 103,
+   "sentence": "That framing — private sector, private problem, private fix — was McDonough's careful answer to the obvious question: why was the Federal Reserve in the room at all?",
+   "claims": [
+    {
+     "claim": "That framing — private sector, private problem, private fix — was McDonough's",
+     "status": "supported",
+     "fact": "F21",
+     "quote": "William McDonough publicly justified the rescue as a private-sector solution to a private-sector problem",
+     "verified": true,
+     "material": false,
+     "why": "The research attributes this private-sector framing to McDonough."
+    },
+    {
+     "claim": "the Federal Reserve in the room",
+     "status": "supported",
+     "fact": "F14",
+     "quote": "At the September 1998 New York Fed rescue meeting, McDonough convened 14 major Wall Street firms",
+     "verified": true,
+     "material": false,
+     "why": "The research records the New York Fed hosting and convening the rescue meeting."
+    },
+    {
+     "claim": "was McDonough's careful answer to the obvious question: why was the Federal Reserve in the room at all?",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research does not say the framing was meant to answer this question; this is the narrator's interpretation of motive."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 104,
+   "sentence": "If no public money changed hands, if the banks chose freely to recapitalize a competitor that had borrowed from them and traded against them, then the Fed was merely a convenor, a neutral space where adults could talk.",
+   "claims": [
+    {
+     "claim": "the banks chose freely to recapitalize",
+     "status": "supported",
+     "fact": "F3",
+     "quote": "a $3.6 billion private-sector recapitalization by 14 banks",
+     "verified": true,
+     "material": false,
+     "why": "Bank recapitalization is in the research; 'chose freely' sits inside the rhetorical conditional and is not asserted."
+    },
+    {
+     "claim": "a competitor",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Research never calls LTCM the banks' competitor; this is narrator characterization."
+    },
+    {
+     "claim": "that had borrowed from them",
+     "status": "supported",
+     "fact": "F6",
+     "quote": "LTCM built leverage by borrowing heavily from major banks",
+     "verified": true,
+     "material": false,
+     "why": "Research states LTCM borrowed heavily from major banks."
+    },
+    {
+     "claim": "and traded against them",
+     "status": "supported",
+     "fact": "F4",
+     "quote": "major Wall Street dealers and counterparties such as Goldman Sachs, Merrill Lynch, J.P. Morgan, and UBS extending financing and trading credit",
+     "verified": true,
+     "material": false,
+     "why": "The banks were LTCM's trading counterparties, the other side of its trades."
+    },
+    {
+     "claim": "then the Fed was merely a convenor, a neutral space where adults could talk",
+     "status": "unsupported",
+     "fact": "F14",
+     "quote": "McDonough convened 14 major Wall Street firms and pressed them to form a private rescue consortium",
+     "verified": true,
+     "material": false,
+     "why": "Conditional interpretation by the narrator; research says the Fed convened the banks but also pressed them, so it does not establish a merely neutral role."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 105,
+   "sentence": "That is the version McDonough offered in his public testimony.",
+   "claims": [
+    {
+     "claim": "That is the version McDonough offered",
+     "status": "supported",
+     "fact": "F21",
+     "quote": "William McDonough publicly justified the rescue as a private-sector solution to a private-sector problem",
+     "verified": true,
+     "material": false,
+     "why": "Research records McDonough publicly giving his account of the rescue."
+    },
+    {
+     "claim": "in his public testimony",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "Research records a statement and public justification, not testimony before any body."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 106,
+   "sentence": "But the architecture of that argument contains its own answer.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 107,
+   "sentence": "The banks did not gather voluntarily because they believed in LTCM's future.",
+   "claims": [
+    {
+     "claim": "The banks did not gather voluntarily",
+     "status": "supported",
+     "fact": "F14",
+     "quote": "McDonough convened 14 major Wall Street firms and pressed them to form a private rescue consortium",
+     "verified": true,
+     "material": false,
+     "why": "The research says the Fed convened the banks and pressed them, which matches not gathering voluntarily."
+    },
+    {
+     "claim": "because they believed in LTCM's future",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research records no bank beliefs about LTCM's future; this is the narrator's reading of their motives."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 108,
+   "sentence": "The incentive to participate was not goodwill.",
+   "claims": [
+    {
+     "claim": "The incentive to participate was not goodwill.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research never states the banks' motives for joining the rescue; this is the narrator's interpretation."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 109,
+   "sentence": "It was self-preservation, made legible by a Federal Reserve official who had done the math on what happened next if they declined.",
+   "claims": [
+    {
+     "claim": "It was self-preservation",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The narrator's reading of the banks' motive; the research does not characterize it this way."
+    },
+    {
+     "claim": "made legible by a Federal Reserve official",
+     "status": "supported",
+     "fact": "F14",
+     "quote": "McDonough convened 14 major Wall Street firms and pressed them to form a private rescue consortium, warning that disorderly liquidation could destabilize markets",
+     "verified": true,
+     "material": false,
+     "why": "McDonough of the New York Fed laid out the stakes to the firms."
+    },
+    {
+     "claim": "who had done the math on what happened next if they declined",
+     "status": "unsupported",
+     "fact": "F14",
+     "quote": "warning that disorderly liquidation could destabilize markets",
+     "verified": true,
+     "material": false,
+     "why": "The research records a warning, not any calculation; the phrase is figurative framing."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 110,
+   "sentence": "The rescue was private.",
+   "claims": [
+    {
+     "claim": "The rescue was private.",
+     "status": "supported",
+     "fact": "F5",
+     "quote": "organized a $3.625 billion private rescue by 14 banks and securities firms",
+     "verified": true,
+     "material": false,
+     "why": "Research describes the rescue as private, organized by the New York Fed but funded by banks."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 111,
+   "sentence": "The pressure that produced it was not.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 112,
+   "sentence": "And the deeper exposure the rescue revealed was this: every institution that had made that credit judgment — treating the fund's models and track record as sufficient — had done so without seeing the full stack of overlapping claims.",
+   "claims": [
+    {
+     "claim": "every institution that had made that credit judgment — treating the fund's models and track record as sufficient",
+     "status": "unsupported",
+     "fact": "F13",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "F13 records favorable financing terms and little or no margin, but not that lenders relied on the models and track record. This is the narrator's interpretation of their reasoning."
+    },
+    {
+     "claim": "had done so without seeing the full stack of overlapping claims",
+     "status": "unsupported",
+     "fact": "F16",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "F16 says counterparties' exposures remain disputed or undisclosed today. It does not establish that lenders lacked visibility into LTCM's overlapping obligations when they extended credit."
+    },
+    {
+     "claim": "the deeper exposure the rescue revealed",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "No research fact says the rescue revealed lenders' lack of visibility. This is interpretive framing."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 113,
+   "sentence": "The prize-winning credentials and the audited returns were not just marketing; they were the actual reasoning inside credit departments at Goldman Sachs, at Merrill Lynch, at J.P. Morgan.",
+   "claims": [
+    {
+     "claim": "The prize-winning credentials",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research never mentions any prize won by LTCM's principals."
+    },
+    {
+     "claim": "the audited returns",
+     "status": "unsupported",
+     "fact": "F10",
+     "quote": "its documented net returns were 19.9% in 1994, 42.8% in 1995, 40.8% in 1996, and 17.1% in 1997",
+     "verified": true,
+     "material": true,
+     "why": "The research calls the returns documented or reported, not audited."
+    },
+    {
+     "claim": "credit departments at Goldman Sachs, at Merrill Lynch, at J.P. Morgan",
+     "status": "supported",
+     "fact": "F4",
+     "quote": "major Wall Street dealers and counterparties such as Goldman Sachs, Merrill Lynch, J.P. Morgan, and UBS extending financing and trading credit",
+     "verified": true,
+     "material": false,
+     "why": "These firms are named as extending financing and trading credit to LTCM."
+    },
+    {
+     "claim": "they were the actual reasoning inside credit departments",
+     "status": "unsupported",
+     "fact": "F13",
+     "quote": "major banks extending financing on very favorable terms and, in some cases, little or no initial margin",
+     "verified": true,
+     "material": false,
+     "why": "The research does not say why the banks extended credit; this is the narrator's interpretation of what lenders were weighing."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 114,
+   "sentence": "The credential did the work that collateral normally does.",
+   "claims": [
+    {
+     "claim": "The credential did the work that collateral normally does.",
+     "status": "unsupported",
+     "fact": "F13",
+     "quote": "major banks extending financing on very favorable terms and, in some cases, little or no initial margin",
+     "verified": true,
+     "material": false,
+     "why": "The research records little or no initial margin, but it never says LTCM's credentials or reputation were why. That causal link is the narrator's interpretation."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 115,
+   "sentence": "That is what too smart to fail looks like from the inside: not recklessness, but a distributed decision by sophisticated institutions to treat intellectual reputation as a substitute for transparency.",
+   "claims": [
+    {
+     "claim": "not recklessness, but a distributed decision by sophisticated institutions to treat intellectual reputation as a substitute for transparency",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research shows banks gave LTCM favorable financing, but nothing on their motive. This is the narrator's interpretation of why they did it."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 116,
+   "sentence": "The fund's books were not open to its lenders.",
+   "claims": [
+    {
+     "claim": "The fund's books were not open to its lenders.",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "Research never says LTCM withheld its books from lenders; F16 concerns records not publicly disclosed today, not lenders' access at the time."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 117,
+   "sentence": "The full picture of how many counterparties held overlapping claims on the same positions was not available to any single one of them.",
+   "claims": [
+    {
+     "claim": "how many counterparties held overlapping claims on the same positions",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": true,
+     "why": "The research names counterparties but never says they held overlapping claims on the same positions."
+    },
+    {
+     "claim": "The full picture ... was not available to any single one of them",
+     "status": "unsupported",
+     "fact": "F16",
+     "quote": "The full extent of LTCM’s counterparties’ exposures and some internal records remain disputed or not publicly disclosed",
+     "verified": true,
+     "material": true,
+     "why": "The research says exposures remain disputed or undisclosed to the public, not that no individual counterparty could see the full picture at the time."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 118,
+   "sentence": "What was available was the track record, the names on the letterhead, and the logic of the models.",
+   "claims": [
+    {
+     "claim": "What was available was the track record",
+     "status": "supported",
+     "fact": "F10",
+     "quote": "its documented net returns were 19.9% in 1994, 42.8% in 1995, 40.8% in 1996, and 17.1% in 1997",
+     "verified": true,
+     "material": false,
+     "why": "The research documents LTCM's return history. Framing it as what was 'available' to outsiders is narrative."
+    },
+    {
+     "claim": "the names on the letterhead",
+     "status": "unsupported",
+     "fact": "F23",
+     "quote": "recruited star academics to run it",
+     "verified": true,
+     "material": false,
+     "why": "The research mentions star academics, but not that their names were the basis for trust. This is the narrator's interpretation."
+    },
+    {
+     "claim": "the logic of the models",
+     "status": "supported",
+     "fact": "F17",
+     "quote": "relied on sophisticated mathematical models to exploit small pricing anomalies",
+     "verified": true,
+     "material": false,
+     "why": "The research confirms the fund relied on quantitative models."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 119,
+   "sentence": "And that was enough — until it wasn't.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 120,
+   "sentence": "The $3.625 billion infusion did not restore what was lost.",
+   "claims": [
+    {
+     "claim": "The $3.625 billion infusion",
+     "status": "supported",
+     "fact": "F0",
+     "quote": "the private rescue was a $3.625 billion capital injection by a consortium of banks",
+     "verified": true,
+     "material": false,
+     "why": "Research gives the rescue injection as $3.625 billion."
+    },
+    {
+     "claim": "did not restore what was lost",
+     "status": "derived",
+     "fact": "F0",
+     "quote": "LTCM ultimately lost $4.6 billion in 1998",
+     "verified": true,
+     "material": false,
+     "why": "A $3.625 billion injection is less than the $4.6 billion lost, by plain arithmetic."
+    }
+   ],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 121,
+   "sentence": "It prevented the remaining positions from being dumped into markets that were already stressed, bought time for an orderly wind-down, and kept the fire sale from radiating outward along the repo agreements and derivative contracts that connected the fund to the institutions that had made it possible.",
+   "claims": [
+    {
+     "claim": "It prevented the remaining positions from being dumped into markets that were already stressed",
+     "status": "overstated",
+     "fact": "F5",
+     "quote": "organized a $3.625 billion private rescue by 14 banks and securities firms to keep the fund from disorderly liquidation",
+     "verified": true,
+     "material": false,
+     "why": "Research gives the rescue's aim, not a confirmed outcome; this is the narrator's assessment of its effect."
+    },
+    {
+     "claim": "bought time for an orderly wind-down",
+     "status": "unsupported",
+     "fact": "F16",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "Research mentions eventual wind-down terms but not that the rescue bought time; this is interpretive framing."
+    },
+    {
+     "claim": "kept the fire sale from radiating outward along the repo agreements and derivative contracts",
+     "status": "overstated",
+     "fact": "F2",
+     "quote": "the Fed’s goal was to avoid a \"fire sale\" of positions that could \"cause widespread disruption\" in financial markets",
+     "verified": true,
+     "material": false,
+     "why": "Research states the goal of avoiding a fire sale; the contagion channel through repo and derivatives is the narrator's analysis."
+    },
+    {
+     "claim": "the repo agreements and derivative contracts that connected the fund to the institutions that had made it possible",
+     "status": "supported",
+     "fact": "F4",
+     "quote": "LTCM built leverage through securities repurchase agreements and derivatives, and by early 1998 had more than $125 billion borrowed against about $5 billion in equity, with major Wall Street dealers and counterparties such as Goldman Sachs, Merrill Lynch, J.P. Morgan, and UBS extending financing and",
+     "verified": true,
+     "material": false,
+     "why": "Research ties LTCM's leverage to repo and derivatives with major dealers extending financing."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 122,
+   "sentence": "The room at the New York Fed on September 23rd was the point where many of those connections became visible at once — to the banks, to the regulator, to anyone paying attention.",
+   "claims": [
+    {
+     "claim": "The room at the New York Fed",
+     "status": "supported",
+     "fact": "F19",
+     "quote": "At the New York Fed rescue meetings in September 1998, William McDonough convened major banks and Wall Street firms",
+     "verified": true,
+     "material": false,
+     "why": "The research records rescue meetings held at the New York Fed in September 1998."
+    },
+    {
+     "claim": "on September 23rd",
+     "status": "supported",
+     "fact": "F8",
+     "quote": "On September 23, 1998, the private sector parties arrived at an agreement providing a capital infusion of about $3-1/2 billion.",
+     "verified": true,
+     "material": false,
+     "why": "The research dates the private-sector rescue agreement to September 23, 1998."
+    },
+    {
+     "claim": "was the point where many of those connections became visible at once — to the banks, to the regulator, to anyone paying attention",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "This is the narrator's interpretation of the meeting's significance, not a recorded fact."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 123,
+   "sentence": "Fourteen institutions that had each extended credit in isolation now sat together and discovered the aggregate.",
+   "claims": [
+    {
+     "claim": "Fourteen institutions",
+     "status": "supported",
+     "fact": "F14",
+     "quote": "McDonough convened 14 major Wall Street firms",
+     "verified": true,
+     "material": false,
+     "why": "Research gives 14 firms at the rescue meeting."
+    },
+    {
+     "claim": "that had each extended credit",
+     "status": "supported",
+     "fact": "F3",
+     "quote": "a $3.6 billion private-sector recapitalization by 14 banks on terms that gave creditors control of the fund",
+     "verified": true,
+     "material": false,
+     "why": "The 14 banks are described as creditors, and banks are noted as extending financing."
+    },
+    {
+     "claim": "in isolation",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research does not say each lender acted without knowledge of the others; this is narrative characterization."
+    },
+    {
+     "claim": "now sat together",
+     "status": "supported",
+     "fact": "F14",
+     "quote": "At the September 1998 New York Fed rescue meeting, McDonough convened 14 major Wall Street firms",
+     "verified": true,
+     "material": false,
+     "why": "The firms were convened together at the meeting."
+    },
+    {
+     "claim": "discovered the aggregate",
+     "status": "unsupported",
+     "fact": "F16",
+     "quote": "The full extent of LTCM’s counterparties’ exposures and some internal records remain disputed or not publicly disclosed",
+     "verified": true,
+     "material": true,
+     "why": "The research does not record that the meeting revealed total exposure, and it says the full extent remains disputed."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 124,
+   "sentence": "The borrowed mountain they had collectively built, one favorable loan at a time, was now their shared problem.",
+   "claims": [
+    {
+     "claim": "The borrowed mountain they had collectively built, one favorable loan at a time",
+     "status": "supported",
+     "fact": "F13",
+     "quote": "major banks extending financing on very favorable terms",
+     "verified": true,
+     "material": false,
+     "why": "Research says the major banks extended LTCM financing on very favorable terms, which is how the fund built its leverage."
+    },
+    {
+     "claim": "was now their shared problem",
+     "status": "unsupported",
+     "fact": "F5",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "This is the narrator's interpretive framing of the banks' collective exposure; the research records the 14-firm rescue but not this characterization."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 125,
+   "sentence": "The credential that had made each loan feel reasonable had not made the total sum any safer.",
+   "claims": [
+    {
+     "claim": "The credential that had made each loan feel reasonable",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "The research records heavy borrowing on favorable terms but never says credentials made lenders see each loan as reasonable; this is narrator interpretation."
+    },
+    {
+     "claim": "had not made the total sum any safer",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "This is the narrator's analytical judgment about aggregate risk; no research fact states it."
+    }
+   ],
+   "error": true,
+   "material": false
+  },
+  {
+   "i": 126,
+   "sentence": "It had made it easier to ignore.",
+   "claims": [],
+   "error": false,
+   "material": false
+  },
+  {
+   "i": 127,
+   "sentence": "Not a criminal proceeding.",
+   "claims": [
+    {
+     "claim": "Not a criminal proceeding.",
+     "status": "overstated",
+     "fact": "F24",
+     "quote": "the collapse did not produce criminal convictions for the principals",
+     "verified": true,
+     "material": true,
+     "why": "The research says only that there were no criminal convictions; it does not establish that there was no criminal proceeding, and it never describes the SEC settlement as non-criminal."
+    }
+   ],
+   "error": true,
+   "material": true
+  },
+  {
+   "i": 128,
+   "sentence": "A private negotiation in a Federal Reserve building, where the most credentialed fund of its era sat across from the banks that had financed it, and everyone in the room understood, without anyone having to say it plainly, that the positions they had all enabled had required each of them to look past the same accumulating risk at the same time.",
+   "claims": [
+    {
+     "claim": "A private negotiation in a Federal Reserve building",
+     "status": "supported",
+     "fact": "F14",
+     "quote": "At the September 1998 New York Fed rescue meeting, McDonough convened 14 major Wall Street firms and pressed them to form a private rescue consortium",
+     "verified": true,
+     "material": false,
+     "why": "Research records a private rescue meeting at the New York Fed."
+    },
+    {
+     "claim": "the most credentialed fund of its era",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "This superlative is the narrator's characterization; no research ranks the fund's credentials."
+    },
+    {
+     "claim": "sat across from the banks",
+     "status": "unsupported",
+     "fact": "F14",
+     "quote": "McDonough convened 14 major Wall Street firms",
+     "verified": true,
+     "material": true,
+     "why": "Research does not record LTCM itself being in the room with the banks."
+    },
+    {
+     "claim": "the banks that had financed it",
+     "status": "supported",
+     "fact": "F13",
+     "quote": "major banks extending financing on very favorable terms",
+     "verified": true,
+     "material": false,
+     "why": "Research states that banks financed LTCM."
+    },
+    {
+     "claim": "everyone in the room understood, without anyone having to say it plainly, that the positions they had all enabled had required each of them to look past the same accumulating risk at the same time",
+     "status": "unsupported",
+     "fact": "",
+     "quote": "",
+     "verified": false,
+     "material": false,
+     "why": "This is interpretive framing of the participants' shared understanding; the research does not record it."
+    }
+   ],
+   "error": true,
+   "material": true
+  }
+ ],
+ "gateLog": [],
+ "gateOriginals": [],
+ "v1Errors": [
+  {
+   "i": 9,
+   "sentence": "McDonough's warning to the room was precise: if Long-Term Capital Management failed and its positions were liquidated in a rush, the resulting fire sale would create a severe liquidity problem across global markets, causing widespread disruption that no single firm could contain.",
+   "script_quote": "the resulting fire sale would create a severe liquidity problem across global markets, causing widespread disruption that no single firm could contain",
+   "category": "evidence_inflation",
+   "verdict": "error",
+   "research_quote": "LTCM's failure would have created a \"severe liquidity problem\" and that the Fed's goal was to avoid a \"fire sale\" of positions that could \"cause widespread disruption\" in financial markets",
+   "why": "The research attributes these as McDonough's stated concerns/goals, not as a precise warning delivered 'to the room' on that date; the script presents it as a direct, precise statement made in the meeting.",
+   "first_seen": "section_1",
+   "seen_in": [
+    "section_1",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 23,
+   "sentence": "When Scholes and Merton shared a major prize in 1997 for their work on pricing derivatives, LTCM did not issue a press release claiming credit.",
+   "script_quote": "When Scholes and Merton shared a major prize in 1997 for their work on pricing derivatives",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research does not name or describe the prize; calling it 'a major prize' with the year 1997 is supported, but 'for their work on pricing derivatives' is a characterization not found in the research.",
+   "first_seen": "section_2",
+   "seen_in": [
+    "section_2",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 29,
+   "sentence": "By their documented figures, it worked: net returns of 19.9% in 1994, 42.8% in 1995, 40.8% in 1996, and 17.1% in 1997.",
+   "script_quote": "net returns of 19.9% in 1994, 42.8% in 1995, 40.8% in 1996, and 17.1% in 1997",
+   "category": "contradiction",
+   "verdict": "error",
+   "research_quote": "LTCM used convergence trading in similar securities, relied on sophisticated mathematical models to exploit small pricing anomalies, and posted annualized returns of about 21% in 1994, 43% in 1995, 41% in 1996, and 17% in 1997",
+   "why": "One research source gives rounded figures (21%, 43%, 41%, 17%) while another gives the precise figures used in the script (19.9%, 42.8%, 40.8%, 17.1%); the script attributes these as 'documented figures' which is supported by the Perold source, so this is not a contradiction but the figures do appea",
+   "first_seen": "section_2",
+   "seen_in": [
+    "section_2",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 34,
+   "sentence": "The prize confirmed what the partners already believed: that they had replaced uncertainty with rigor, that risk could be measured precisely enough to be managed precisely enough that catastrophic loss was, by the math, essentially off the table, a belief the fund's collapse would put in sharp dispute.",
+   "script_quote": "a belief the fund's collapse would put in sharp dispute",
+   "category": "evidence_inflation",
+   "verdict": "error",
+   "research_quote": "the fund's collapse exposed sharp disagreement over whether the models adequately captured rare market stress",
+   "why": "The research says the collapse exposed disagreement over the models; the script says it put the belief 'in sharp dispute,' which slightly inflates by implying the dispute was about the core belief rather than specifically about model adequacy under stress — close but the script's framing is supporte",
+   "first_seen": "finalize_out",
+   "seen_in": [
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 45,
+   "sentence": "That ratio — somewhere above 25-to-1 — was not a secret kept from the banks on the other side of those loans.",
+   "script_quote": "somewhere above 25-to-1",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research states more than $125 billion borrowed against about $5 billion in equity, implying roughly 25-to-1, but the research never states a ratio 'above 25-to-1'; the script presents a specific ratio the research does not give.",
+   "first_seen": "section_4",
+   "seen_in": [
+    "section_4",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 56,
+   "sentence": "Then, at the end of 1997, the partners made a decision that tightened that margin further: they returned $2.75 billion of capital to investors.",
+   "script_quote": "they returned $2.75 billion of capital to investors",
+   "category": "contradiction",
+   "verdict": "error",
+   "research_quote": "At the end of 1997, LTCM returned $2-3/4 billion of capital to investors.",
+   "why": "$2-3/4 billion equals $2.75 billion, so this is actually consistent; however the script states it as a precise dollar figure while the research uses a fractional form — this is a correct paraphrase, not a contradiction. Withdrawing flag.",
+   "first_seen": "section_4",
+   "seen_in": [
+    "section_4",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 70,
+   "sentence": "Russia defaulted on its sovereign debt, and investors who had been spread across dozens of instruments with varying risk profiles did something the models had not weighted heavily: they fled toward safety simultaneously, abandoning the spread trades that LTCM had built its positions around.",
+   "script_quote": "Russia defaulted on its sovereign debt",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research does not mention Russia or a Russian sovereign debt default; this specific causal event is not supported by any research provided.",
+   "first_seen": "section_5",
+   "seen_in": [
+    "section_5",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 70,
+   "sentence": "Russia defaulted on its sovereign debt, and investors who had been spread across dozens of instruments with varying risk profiles did something the models had not weighted heavily: they fled toward safety simultaneously, abandoning the spread trades that LTCM had built its positions around.",
+   "script_quote": "investors who had been spread across dozens of instruments with varying risk profiles did something the models had not weighted heavily: they fled toward safety simultaneously",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research does not describe investor behavior, flight to safety, or what the models failed to weight; these specific characterizations are not found in the research.",
+   "first_seen": "section_5",
+   "seen_in": [
+    "section_5",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 91,
+   "sentence": "The Fed's conclusion was that the fund's failure would create a severe liquidity problem across global markets — not because LTCM was systemically important in the way a deposit-taking bank might be, but because its positions were so large and so tangled with the balance sheets of institutions that were.",
+   "script_quote": "the fund's failure would create a severe liquidity problem across global markets",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "research_quote": "LTCM's failure would have created a \"severe liquidity problem\"",
+   "why": "The research says McDonough warned of a 'severe liquidity problem' but does not specify 'across global markets'; that geographic scope is added by the script.",
+   "first_seen": "section_1",
+   "seen_in": [
+    "section_1",
+    "section_6",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 113,
+   "sentence": "The prize-winning credentials and the audited returns were not just marketing; they were the actual reasoning inside credit departments at Goldman Sachs, at Merrill Lynch, at J.P. Morgan.",
+   "script_quote": "they were the actual reasoning inside credit departments at Goldman Sachs, at Merrill Lynch, at J.P. Morgan",
+   "category": "unsupported_attribution",
+   "verdict": "error",
+   "why": "The research names Goldman Sachs, Merrill Lynch, and J.P. Morgan as counterparties extending financing, but does not state that credentials or track records were the reasoning inside their credit departments.",
+   "first_seen": "section_7",
+   "seen_in": [
+    "section_7",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 122,
+   "sentence": "The room at the New York Fed on September 23rd was the point where many of those connections became visible at once — to the banks, to the regulator, to anyone paying attention.",
+   "script_quote": "The room at the New York Fed on September 23rd",
+   "category": "unsupported_specificity",
+   "verdict": "error",
+   "why": "The research states the agreement was reached on September 23, 1998, but does not specify that the meeting room gathering occurred on that specific date; the research describes meetings in September 1998 without pinning the room gathering to September 23rd specifically.",
+   "first_seen": "section_7",
+   "seen_in": [
+    "section_7",
+    "finalize_in",
+    "before_refine",
+    "after_refine",
+    "before_refill",
+    "after_refill",
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  },
+  {
+   "i": 128,
+   "sentence": "A private negotiation in a Federal Reserve building, where the most credentialed fund of its era sat across from the banks that had financed it, and everyone in the room understood, without anyone having to say it plainly, that the positions they had all enabled had required each of them to look past the same accumulating risk at the same time.",
+   "script_quote": "everyone in the room understood, without anyone having to say it plainly, that the positions they had all enabled had required each of them to look past the same accumulating risk",
+   "category": "unsupported_attribution",
+   "verdict": "error",
+   "why": "The research does not state what anyone in the room understood, felt, or knew; attributing a shared unspoken understanding to all participants is an unsupported attribution of mental states.",
+   "first_seen": "finalize_out",
+   "seen_in": [
+    "finalize_out",
+    "review",
+    "final_check"
+   ],
+   "in_final": true
+  }
+ ]
+}
