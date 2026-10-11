@@ -10,18 +10,18 @@ const T = {
 export const metadata: Metadata = {
   title: "Subscribr Alternative: Skripr vs Subscribr (2026)",
   description:
-    "Looking for a Subscribr alternative? Skripr is flat monthly, gives you whole scripts instead of credits, and is free to try. See how Skripr compares to Subscribr.",
+    "Looking for a Subscribr alternative? Skripr starts at $19 a month for 20 whole scripts, and your first 2 are free. See how Skripr compares to Subscribr.",
   openGraph: {
     title: "Subscribr Alternative: Skripr vs Subscribr (2026)",
     description:
-      "Flat monthly, whole scripts instead of credits, free to try. See how Skripr compares to Subscribr.",
+      "$19 a month for 20 whole scripts, first 2 free. See how Skripr compares to Subscribr.",
     type: "website",
     url: "https://skripr.app/subscribr-alternative",
   },
   twitter: {
     card: "summary_large_image",
     title: "Subscribr Alternative: Skripr vs Subscribr (2026)",
-    description: "Flat monthly, whole scripts instead of credits, free to try.",
+    description: "$19 a month for 20 whole scripts, first 2 free.",
   },
   alternates: { canonical: "https://skripr.app/subscribr-alternative" },
 };
@@ -29,15 +29,15 @@ export const metadata: Metadata = {
 const faqs = [
   {
     q: "Is Skripr a good alternative to Subscribr?",
-    a: "Yes, especially if you want flexible monthly billing instead of a yearly commitment, whole scripts instead of a credit balance you have to ration, and a free way to try it before you pay. Skripr also includes Niche Bend, which cross-pollinates a proven video into new niches, and a demonetization check before you publish.",
+    a: "Yes, if the script is what you need. Subscribr has grown into an all-in-one studio that also makes thumbnails and finished videos, starting at $99 a month. Skripr focuses on the script: $19 a month for 20 whole scripts, with Niche Bend to carry a proven video into a new niche and a demonetization check before you publish.",
   },
   {
     q: "Does Skripr use credits like Subscribr?",
     a: "No. Skripr gives you whole scripts, not credits. The Starter plan is 20 scripts a month for a flat $19. You never have to do credit math to figure out how many scripts you can actually make.",
   },
   {
-    q: "Do I have to pay for a full year?",
-    a: "No. Skripr is billed monthly and you can cancel anytime. There is no annual lock-in, and your first 2 scripts are free with no card required.",
+    q: "Is there a free plan?",
+    a: "Both have one. Skripr's free plan includes 2 full scripts with no card required. Subscribr's free plan covers ideas and niche research, but scripts start on its paid plans. Skripr is billed monthly and you can cancel anytime.",
   },
   {
     q: "Can Skripr write in my voice or another creator's?",
@@ -56,24 +56,25 @@ const jsonLd = {
 };
 
 const rows: [string, string, string][] = [
-  ["Billing", "Monthly, cancel anytime", "Annual only"],
-  ["What you get", "Whole scripts (20/mo on Starter)", "Credits you spend per script"],
-  ["Free to try", "Yes, 2 scripts, no card", "Paid trial only"],
-  ["Starting price", "$19/mo, flat", "Premium, billed yearly"],
+  ["Starting price", "$19/mo for 20 scripts", "$99/mo (Growth)"],
+  ["Scripts on the entry plan", "20 whole scripts", "60 credits, about 12 ten-minute scripts"],
+  ["Free plan", "Includes 2 full scripts", "Ideas and research, no scripts"],
+  ["Billing", "Monthly, cancel anytime", "Monthly or annual"],
+  ["Thumbnails and finished videos", "No, script focused", "Yes"],
   ["Write in any creator's voice", "Yes (Voice Match)", "Yes"],
-  ["Cross-niche idea engine", "Yes (Niche Bend)", "No"],
-  ["Demonetization check", "Yes (Compliance)", "No"],
-  ["Research with citations", "Yes", "Research assistant"],
+  ["Cross-niche idea engine", "Yes (Niche Bend)", "Not listed"],
+  ["Demonetization check", "Yes (Compliance)", "Not listed"],
+  ["Research", "Yes, with cited sources", "Live niche research"],
 ];
 
 const beliefs = [
   {
     t: "Whole scripts beat credits you have to ration.",
-    d: "Credit systems make you stop and do math before every script, and the cheaper tiers run dry fast. Skripr gives you whole scripts on a flat monthly plan, so you write when you have the idea instead of checking a balance first.",
+    d: "With credits, a longer script costs more and unused credits do not roll over, so you end up doing math before every video. Skripr counts whole scripts on a flat monthly plan, so you write when you have the idea instead of checking a balance first.",
   },
   {
-    t: "No yearly handcuffs.",
-    d: "A year is a long time to commit to a tool you have not really used yet. Skripr is monthly, cancel anytime, with your first 2 scripts free and no card required. You earn the upgrade by seeing the output for yourself.",
+    t: "Pay for the part you use.",
+    d: "If you already edit your own videos and make your own thumbnails, an all-in-one studio means paying for work you do yourself. Skripr is just the script, at $19 a month. Your first 2 scripts are free with no card, so you see the output before you pay anything.",
   },
   {
     t: "Scripts that do not sound the same every time.",
@@ -98,10 +99,10 @@ export default function SubscribrAlternative() {
         <section style={{ maxWidth: 780, margin: "0 auto", padding: "72px 24px 48px", textAlign: "center" }}>
           <div style={{ fontSize: 10, fontWeight: 500, letterSpacing: "0.16em", textTransform: "uppercase", color: T.dim, marginBottom: 16 }}>Skripr vs Subscribr</div>
           <h1 style={{ fontSize: 40, fontWeight: 700, letterSpacing: "-1.2px", lineHeight: 1.08, marginBottom: 20 }}>
-            The Subscribr alternative that won't lock you into a year of credits.
+            The Subscribr alternative that starts at $19, not $99.
           </h1>
           <p style={{ fontSize: 18, color: T.muted, lineHeight: 1.6, maxWidth: 620, margin: "0 auto 28px" }}>
-            Subscribr bills annually and meters you with credits that run dry mid-script. Skripr is flat monthly, gives you whole scripts instead of credits, and lets you try it free. Same goal, none of the handcuffs.
+            Subscribr has grown into an all-in-one studio: ideas, scripts, thumbnails, even finished videos, starting at $99 a month. If what you need is the script, Skripr does that one job for $19 a month, with whole scripts instead of credits and 2 free to start.
           </p>
           <Link href="/sign-up" style={{ display: "inline-block", fontSize: 15, fontWeight: 700, padding: "13px 30px", borderRadius: 10, background: T.accent, color: T.bg, textDecoration: "none" }}>Start free, 2 scripts</Link>
         </section>
@@ -123,7 +124,7 @@ export default function SubscribrAlternative() {
             ))}
           </div>
           <p style={{ fontSize: 12, color: T.dim, marginTop: 14, textAlign: "center" }}>
-            Comparison based on publicly available information as of 2026. Check subscribr.ai for their current details.
+            Based on subscribr.ai's public pricing and features as of October 2026. Script estimate uses Subscribr's own figure of about 5 credits per ten-minute script. Check subscribr.ai for current details.
           </p>
         </section>
 
@@ -142,7 +143,7 @@ export default function SubscribrAlternative() {
         {/* Honest line */}
         <section style={{ maxWidth: 700, margin: "0 auto", padding: "0 24px 64px", textAlign: "center" }}>
           <p style={{ fontSize: 16, color: T.muted, lineHeight: 1.7 }}>
-            Subscribr is a solid, broad tool with a big idea library and built-in thumbnails. If you want all of that bundled and you do not mind annual billing, it is worth a look. If you want whole scripts, monthly flexibility, and a free way to try it first, that is Skripr.
+            Subscribr is a strong all-in-one tool. If you want ideas, scripts, thumbnails, and finished videos in one place, and the budget for it, it is worth a look. If you want the script done well, for a fifth of the price, with 2 free to try first, that is Skripr.
           </p>
         </section>
 
@@ -165,7 +166,7 @@ export default function SubscribrAlternative() {
             Try it before you commit to anything.
           </h2>
           <p style={{ fontSize: 16, color: T.muted, lineHeight: 1.7, marginBottom: 26 }}>
-            Two full scripts free, no card, no yearly plan. See the output for yourself, then decide.
+            Two full scripts free, no card. See the output for yourself, then decide.
           </p>
           <Link href="/sign-up" style={{ display: "inline-block", fontSize: 15, fontWeight: 700, padding: "14px 34px", borderRadius: 10, background: T.accent, color: T.bg, textDecoration: "none" }}>Start free, 2 scripts</Link>
         </section>

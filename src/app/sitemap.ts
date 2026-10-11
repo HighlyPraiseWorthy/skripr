@@ -40,7 +40,7 @@ const PAGE_UPDATED: Record<string, string> = {
 
   // Comparison / thesis
   "/compare": "2026-07-10", // Retti added
-  "/subscribr-alternative": "2026-06-29",
+  "/subscribr-alternative": "2026-10-11", // Subscribr pricing facts updated
   "/tubeai-alternative": "2026-06-29",
   "/skripr-vs-claude": "2026-06-29",
   "/will-ai-replace-youtubers": "2026-06-29",
