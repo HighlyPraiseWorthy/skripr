@@ -6,7 +6,7 @@ const C = {
   accentDim: "#4db8ff", textBright: "#e8edf5", textDim: "#a6c0d8", green: "#34d399",
 };
 
-type Voice = { id: string; name: string; source: string; styleGuide: string; isActive: boolean; updatedAt: string; canReanalyze?: boolean; adjustments?: string[]; targets?: { label: string; value: string }[] };
+type Voice = { id: string; name: string; source: string; styleGuide: string; isActive: boolean; updatedAt: string; canReanalyze?: boolean; adjustments?: string[]; targets?: { label: string; value: string }[]; builtFrom?: number | null };
 
 export default function VoicesPage() {
   const [voices, setVoices] = useState<Voice[]>([]);
@@ -177,6 +177,9 @@ export default function VoicesPage() {
                         {v.source === "channel" ? "FROM CHANNEL" : "FROM SCRIPTS"}
                       </span>
                     </div>
+                    {v.builtFrom === 1 && (
+                      <div style={{ fontSize: 11, color: C.textDim, marginTop: 3 }}>Built from 1 {v.source === "channel" ? "video" : "script"}. Add more{v.source === "channel" ? " (re-analyze once more videos have captions)" : ", separated by ---,"} to capture signature phrases.</div>
+                    )}
                     <button onClick={() => setExpanded(expanded === v.id ? null : v.id)} style={{ background: "none", border: "none", padding: 0, fontSize: 11.5, color: C.accentDim, cursor: "pointer", marginTop: 3 }}>
                       {expanded === v.id ? "Hide voice profile ▲" : "View voice profile ▼"}
                     </button>
@@ -272,7 +275,7 @@ export default function VoicesPage() {
               <textarea
                 value={samples}
                 onChange={e => setSamples(e.target.value)}
-                placeholder={"Paste 2-3 scripts or video transcripts in this voice...\n\nThe more representative the samples, the better the match."}
+                placeholder={"Paste 2-5 scripts or video transcripts in this voice.\n\nPut a line with just --- between each one, so Skripr can tell which phrases this creator repeats across videos.\n\n---\n\nThe more representative the samples, the better the match."}
                 style={{ width: "100%", minHeight: 150, borderRadius: 10, border: `1px solid ${C.border}`, background: "rgba(0,0,0,0.25)", color: C.textBright, padding: "12px 14px", fontSize: 13, lineHeight: 1.6, outline: "none", resize: "vertical", fontFamily: "inherit", boxSizing: "border-box", marginBottom: 10 }}
               />
             ) : (

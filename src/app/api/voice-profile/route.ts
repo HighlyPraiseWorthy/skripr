@@ -37,6 +37,8 @@ const toClient = (p: any) => {
     canReanalyze: !!p.source_ref,
     // Step 4: the creator's plain-language adjustments, and the rhythm targets they currently produce.
     adjustments: [...new Set(((vf?.tweakOps || []) as any[]).map((o) => String(o.instruction || "")).filter(Boolean))],
+    // Voice rules v2: how many videos/scripts the rules came from (signature phrases need 2+). null = built before v2.
+    builtFrom: typeof vf?.structure?.sampleCount === "number" ? vf.structure.sampleCount : null,
     targets: fp ? Object.entries(METRICS).map(([k, m]) => ({ label: m.label, value: k === "fragmentRate" ? `${Math.round(Number(fp[k]) * 100)}%` : `${fp[k]}${m.unit ? ` ${m.unit}` : ""}` })) : [],
   };
 };
@@ -48,25 +50,28 @@ export async function GET() {
   return NextResponse.json({ profiles: profiles.map(toClient), max: MAX_PROFILES });
 }
 
+// Voice rules v2 (2026-10-11): the channel's top 5 long-form videos (was 3), fetched in parallel (route budget).
+// Signature phrases must recur across 2+ videos, so more videos = real signatures; 1 usable video still builds a voice.
+export const VOICE_SAMPLE_VIDEOS = 5;
+// The analysis prompt holds 24,000 characters: give each video/script an equal share so all of them are read
+// (with 5 videos, a plain slice only reached the first two or three).
+function promptSamples(text: string, budget = 24000): string {
+  const parts = text.split(/\n+\s*-{3,}\s*\n+/).map((x) => x.trim()).filter(Boolean);
+  if (parts.length <= 1) return text.slice(0, budget);
+  const share = Math.floor(budget / parts.length);
+  return parts.map((p) => p.slice(0, share)).join("\n\n---\n\n");
+}
 async function samplesFromChannel(channelInput: string): Promise<{ samples: string; channelTitle: string; videos: { videoId: string; transcript: string; title: string; views: number }[] }> {
   const scan = await fetchChannelLongform(channelInput);
   // The channel's most-viewed long-form videos carry the most representative voice
-  const top = [...scan.videos].sort((a, b) => b.views - a.views).slice(0, 3);
+  const top = [...scan.videos].sort((a, b) => b.views - a.views).slice(0, VOICE_SAMPLE_VIDEOS);
   if (top.length === 0) throw new Error("No long-form videos found on this channel");
-  const transcripts: string[] = [];
-  const videos: { videoId: string; transcript: string; title: string; views: number }[] = [];
-  for (const v of top) {
-    try {
-      const t = await getTranscriptRobust(v.videoId);
-      if (t?.trim()) {
-        transcripts.push(t.slice(0, 9000));
-        videos.push({ videoId: v.videoId, transcript: t, title: v.title, views: v.views });
-      }
-    } catch (e: any) {
-      console.error(`[voice-profile] transcript failed for ${v.videoId}:`, e?.message);
-    }
-  }
-  const joined = transcripts.join("\n\n---\n\n");
+  const fetched = await Promise.all(top.map(async (v) => {
+    try { const t = await getTranscriptRobust(v.videoId); return t?.trim() ? { videoId: v.videoId, transcript: t, title: v.title, views: v.views } : null; }
+    catch (e: any) { console.error(`[voice-profile] transcript failed for ${v.videoId}:`, e?.message); return null; }
+  }));
+  const videos = fetched.filter(Boolean) as { videoId: string; transcript: string; title: string; views: number }[];
+  const joined = videos.map((v) => v.transcript.slice(0, 9000)).join("\n\n---\n\n");
   if (joined.length < 400) {
     throw new Error("Couldn't fetch transcripts from this channel's videos — try pasting scripts instead");
   }
@@ -109,7 +114,7 @@ export async function POST(req: Request) {
     if (!resolvedName) resolvedName = "My Voice";
 
     // Structured profile runs in parallel with the prose analysis (route budget), verified against the samples.
-    const structurePromise = extractVoiceStructure(text).catch(() => null);
+    const structurePromise = extractVoiceStructure(text, { titles: channelVideos.map((v) => v.title) }).catch(() => null);
     const msg = await getClient().messages.create({
       model: "claude-sonnet-4-6",
       max_tokens: 2200,
@@ -120,7 +125,7 @@ export async function POST(req: Request) {
 
 SAMPLES:
 """
-${text.slice(0, 24000)}
+${promptSamples(text)}
 """
 
 Write a compact profile (max 480 words) covering, in this order:
