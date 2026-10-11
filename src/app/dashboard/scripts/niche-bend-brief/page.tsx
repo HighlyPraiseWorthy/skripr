@@ -166,7 +166,7 @@ export default function NicheBendBriefPage() {
         setError(data?.error || "The connection dropped while generating. Please try again."); setPhase("angles"); return;
       }
       // FINAL CHECK against the research (shared with every script page). Never blocks the result.
-      data = await applyFinalCheck(data, { sourceMaterial: sourceMaterial || undefined });
+      data = await applyFinalCheck(data, { sourceMaterial: sourceMaterial || undefined, voiceProfileId: voiceId });
       setScript(data); setSavedId(data.savedId ?? null); setPhase("result");
     } catch (e: any) { setError(e?.message || "Failed to generate script"); setPhase("angles"); }
   }

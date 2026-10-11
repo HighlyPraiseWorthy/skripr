@@ -335,7 +335,7 @@ export default function NewScriptPage() {
       let data = await res.json().catch(() => null);
       if (!res.ok || !data) throw new Error(data?.error || "The connection dropped while generating. Please try again.");
       // FINAL CHECK against the research (shared with every script page). Never blocks the result.
-      data = await applyFinalCheck(data, { sourceMaterial: [buildUpstreamSourceMaterial(), sourceMaterial].filter(Boolean).join("\n\n") || undefined });
+      data = await applyFinalCheck(data, { sourceMaterial: [buildUpstreamSourceMaterial(), sourceMaterial].filter(Boolean).join("\n\n") || undefined, voiceProfileId: voiceId, noCta });
       setGeneratedScript({
         title: data.title, content: data.fullScript || data.content, hook: data.hook,
         structurePattern: data.sections?.length ? `${data.sections.length}-section` : undefined,

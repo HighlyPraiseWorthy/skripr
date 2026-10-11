@@ -418,7 +418,7 @@ export default function ScriptBriefPage() {
       }
       // FINAL CHECK: a whole-script read against the research, as its own request (shared helper).
       setFinalChecking(true);
-      data = await applyFinalCheck(data, { sourceMaterial: payload.sourceMaterial, blueprint: plan?.blueprint, topic: payload.topic });
+      data = await applyFinalCheck(data, { sourceMaterial: payload.sourceMaterial, blueprint: plan?.blueprint, topic: payload.topic, voiceProfileId: voiceId, noCta });
       setFinalChecking(false);
       setScript(data); setSavedId(data.savedId ?? null); setPhase("result"); setGenProgress(null);
     } catch (e: any) { setError(e?.message || "Failed to generate script"); setPhase("finish"); setGenProgress(null); }

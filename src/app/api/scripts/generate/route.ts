@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { withoutCtaGuidance } from "@/lib/cta-guard";
+import { finalVoiceCheck } from "@/lib/voice-check";
 import { auth } from "@clerk/nextjs/server";
 import { generateScript, buildSectionPlan, buildTopicBlueprint, generateHookFirst, writeSection, assembleFinalizeScript, reconcileTitle, dropOpeningEchoes, sceneFactsOwnedElsewhere, type SectionSpec } from "@/lib/ai/claude";
 import { checkScriptLimit, incrementGenerationCount, refundGenerationCount } from "@/lib/usage";
@@ -45,7 +46,7 @@ function withSceneFacts(material: string | undefined, plan: any[] | undefined): 
 
 async function handlePolishMode(userId: string, raw: any) {
   try {
-    const { hook, body, title, sourceMaterial, blueprint, savedId, topic } = raw || {};
+    const { hook, body, title, sourceMaterial, blueprint, savedId, topic, voiceProfileId, noCta } = raw || {};
     if (typeof body !== "string" || !body.trim()) return NextResponse.json({ error: "Nothing to check." }, { status: 400 });
     const facts = withSceneFacts(typeof sourceMaterial === "string" && sourceMaterial.trim() ? sourceMaterial.trim() : undefined, Array.isArray(blueprint) ? blueprint : undefined) || "";
     // The page's body already OPENS with the hook paragraph. Check the rest as the body and the hook as
@@ -56,17 +57,37 @@ async function handlePolishMode(userId: string, raw: any) {
     const paras = body.split(/\n\n+/);
     const opensWithHook = !!hookText && paras.length > 1 && norm(paras[0]).startsWith(norm(hookText).split(" ").slice(0, 8).join(" "));
     const rest = opensWithHook ? paras.slice(1).join("\n\n") : body;
-    const checked = await finalCheck({ hook: hookText, body: rest, title: typeof title === "string" ? title : undefined, facts, subject: typeof topic === "string" ? topic : "" });
-    const res = { ...checked, body: opensWithHook ? `${checked.hook}\n\n${checked.body}` : checked.body };
+    // No research: nothing to fact-check, but the voice check below still runs.
+    const checked = facts.trim()
+      ? await finalCheck({ hook: hookText, body: rest, title: typeof title === "string" ? title : undefined, facts, subject: typeof topic === "string" ? topic : "" })
+      : { status: "ok" as const, hook: hookText, body: rest, changes: [] as any[] };
+    // FINAL VOICE CHECK (Voice Match step 3): after EVERY other pass, measure the script against the creator's voice and
+    // fix only the drifting sentences (facts guarded). Needs a Voice Match profile with a measured fingerprint.
+    let voiceMatch: { before: number; after: number; edits: number; measures: any[] } | null = null;
+    let checkedBody = checked.status === "ok" ? checked.body : rest;
+    if (voiceProfileId !== "default") {
+      const meta = voiceProfileId ? await getVoiceMetaById(userId, String(voiceProfileId)).catch(() => null) : await getActiveVoiceMeta(userId).catch(() => null);
+      if (meta?.fingerprint && meta.fingerprint.words >= 300) {
+        const vc = await finalVoiceCheck(checkedBody, { fingerprint: meta.fingerprint, structure: meta.structure, voiceName: meta.name, facts, noCta: !!noCta }).catch(() => null);
+        if (vc) {
+          checkedBody = vc.body;
+          voiceMatch = { before: vc.before.score, after: vc.after.score, edits: vc.changes.length, measures: vc.after.measures.map((m) => ({ name: m.name, target: m.target, actual: m.actual, ok: m.direction === "ok" })) };
+          console.log(`[voice-check] ${meta.name}: ${vc.before.score} -> ${vc.after.score} (${vc.changes.length} edits, ${vc.refused} refused${vc.reverted ? ", reverted" : ""})`);
+        }
+      }
+    }
+    // A failed final check leaves the hook and body as they were; only voice edits (if any) apply.
+    const res = { ...checked, hook: checked.status === "ok" ? checked.hook : hookText, status: "ok" as const, body: opensWithHook ? `${checked.hook}\n\n${checkedBody}` : checkedBody,
+      changes: [...(checked.status === "ok" ? checked.changes : []), ...(voiceMatch?.edits ? [{ kind: "voice", count: voiceMatch.edits }] : [])] };
     // Keep the saved copy in step with what the creator sees.
-    if (res.status === "ok" && res.changes.length && supabaseAdmin && typeof savedId === "string" && savedId) {
+    if (res.changes.length && supabaseAdmin && typeof savedId === "string" && savedId) {
       const content = opensWithHook ? res.body : joinHookBody(res.hook, res.body);
       const { error } = await supabaseAdmin.from("scripts")
         .update({ content, word_count: content.split(/\s+/).filter(Boolean).length })
         .eq("id", savedId).eq("user_id", userId);
       if (error) console.error("[final-check] save failed:", error.message);
     }
-    return NextResponse.json({ hook: res.hook, body: res.body, changes: res.changes, status: res.status });
+    return NextResponse.json({ hook: res.hook, body: res.body, changes: res.changes, status: res.status, voiceMatch });
   } catch (e: any) {
     console.error("[final-check] route error:", e?.message || e);
     return NextResponse.json({ error: "Final check failed." }, { status: 500 });

@@ -517,7 +517,7 @@ export default function ViralBriefPage() {
         setError(data?.error || "The connection dropped while generating. Please try again."); setPhase("angles"); setGenProgress(null); return;
       }
       // FINAL CHECK against the research (shared with every script page). Never blocks the result.
-      data = await applyFinalCheck(data, { sourceMaterial: payload.sourceMaterial, topic: payload.topic });
+      data = await applyFinalCheck(data, { sourceMaterial: payload.sourceMaterial, topic: payload.topic, voiceProfileId: voiceId });
       setScript(data); setSavedId(data.savedId ?? null); setPhase("result"); setGenProgress(null);
     } catch (e: any) { setError(e?.message || "Failed to generate script"); setPhase("angles"); setGenProgress(null); }
   }
