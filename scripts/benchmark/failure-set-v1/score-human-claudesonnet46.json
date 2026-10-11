@@ -1,0 +1,198 @@
+[
+ {
+  "C002": {
+   "any": false,
+   "material": false
+  },
+  "C084": {
+   "any": true,
+   "material": true
+  },
+  "C087": {
+   "any": false,
+   "material": false
+  },
+  "C088": {
+   "any": false,
+   "material": false
+  },
+  "C089": {
+   "any": true,
+   "material": true
+  },
+  "C010": {
+   "any": false,
+   "material": false
+  },
+  "C023": {
+   "any": true,
+   "material": true
+  },
+  "C024": {
+   "any": false,
+   "material": false
+  },
+  "C031": {
+   "any": false,
+   "material": false
+  },
+  "C029": {
+   "any": true,
+   "material": true
+  },
+  "C061": {
+   "any": false,
+   "material": false
+  },
+  "C098": {
+   "any": false,
+   "material": false
+  },
+  "C112": {
+   "any": true,
+   "material": true
+  },
+  "C030": {
+   "any": true,
+   "material": false
+  },
+  "C091": {
+   "any": true,
+   "material": true
+  },
+  "C094": {
+   "any": true,
+   "material": true
+  },
+  "C040": {
+   "any": true,
+   "material": false
+  },
+  "C044": {
+   "any": false,
+   "material": false
+  },
+  "C099": {
+   "any": false,
+   "material": false
+  },
+  "C104": {
+   "any": false,
+   "material": false
+  },
+  "C042": {
+   "any": true,
+   "material": true
+  },
+  "C105": {
+   "any": false,
+   "material": false
+  },
+  "C107": {
+   "any": false,
+   "material": false
+  },
+  "C109": {
+   "any": false,
+   "material": false
+  }
+ },
+ {
+  "C002": {
+   "any": false,
+   "material": false
+  },
+  "C084": {
+   "any": true,
+   "material": true
+  },
+  "C087": {
+   "any": false,
+   "material": false
+  },
+  "C088": {
+   "any": false,
+   "material": false
+  },
+  "C089": {
+   "any": true,
+   "material": true
+  },
+  "C010": {
+   "any": false,
+   "material": false
+  },
+  "C023": {
+   "any": true,
+   "material": true
+  },
+  "C024": {
+   "any": false,
+   "material": false
+  },
+  "C031": {
+   "any": false,
+   "material": false
+  },
+  "C029": {
+   "any": true,
+   "material": true
+  },
+  "C061": {
+   "any": false,
+   "material": false
+  },
+  "C098": {
+   "any": false,
+   "material": false
+  },
+  "C112": {
+   "any": true,
+   "material": true
+  },
+  "C030": {
+   "any": true,
+   "material": false
+  },
+  "C091": {
+   "any": true,
+   "material": true
+  },
+  "C094": {
+   "any": true,
+   "material": true
+  },
+  "C040": {
+   "any": true,
+   "material": false
+  },
+  "C044": {
+   "any": false,
+   "material": false
+  },
+  "C099": {
+   "any": false,
+   "material": false
+  },
+  "C104": {
+   "any": false,
+   "material": false
+  },
+  "C042": {
+   "any": true,
+   "material": true
+  },
+  "C105": {
+   "any": false,
+   "material": false
+  },
+  "C107": {
+   "any": false,
+   "material": false
+  },
+  "C109": {
+   "any": false,
+   "material": false
+  }
+ }
+]
