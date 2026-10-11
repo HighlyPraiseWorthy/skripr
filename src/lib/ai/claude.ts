@@ -8,6 +8,7 @@ import { getNicheOutlierPatterns } from "@/lib/viral-frameworks";
 import { gateSection, type GateFlag } from "@/lib/evidence-gate";
 import { guardRewrite, type InvariantViolation } from "@/lib/no-new-specifics";
 import { writeSectionEvidenceFirst, type EvidenceFirstLog } from "@/lib/evidence-first";
+import { stripCtaAsks } from "@/lib/cta-guard";
 
 let _anthropic: Anthropic | null = null;
 function getAnthropic(): Anthropic {
@@ -2311,6 +2312,16 @@ export async function finalizeScript(
   }
 
   __invariant("pre_hook_sync"); // last body edit is above; check it before the hook is re-derived from the body
+  // NO-CTA GUARANTEE: the prompts and self-review are model-based; this deterministic sweep removes any viewer ask
+  // (subscribe/like/comment/notifications/next video/description) that slipped through, and empties the cta field.
+  if (input.noCta) {
+    const ctaKey = ["fullScript", "script", "body", "content"].find((k) => typeof (script as any)[k] === "string" && (script as any)[k].trim());
+    if (ctaKey) {
+      const swept = stripCtaAsks(String((script as any)[ctaKey]));
+      if (swept.cut.length) { console.log(`[no-cta] removed ${swept.cut.length} viewer ask(s): ${swept.cut.map((c) => `"${c.slice(0, 60)}"`).join(" | ")}`); for (const k of ["fullScript", "script", "body", "content"]) if (typeof (script as any)[k] === "string") (script as any)[k] = swept.text; }
+    }
+    if (typeof (script as any).cta === "string") (script as any).cta = "";
+  }
   // FINAL HOOK SYNC — the displayed hook MUST equal what actually opens the script. The hook is
   // stamped early, but the body-editing passes (de-rep, soften, refill) run afterward and can reshape
   // the opening, so the stored hook can drift from the real first line (the "the shown hook isn't the

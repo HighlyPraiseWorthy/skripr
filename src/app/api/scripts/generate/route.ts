@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { withoutCtaGuidance } from "@/lib/cta-guard";
 import { auth } from "@clerk/nextjs/server";
 import { generateScript, buildSectionPlan, buildTopicBlueprint, generateHookFirst, writeSection, assembleFinalizeScript, reconcileTitle, dropOpeningEchoes, sceneFactsOwnedElsewhere, type SectionSpec } from "@/lib/ai/claude";
 import { checkScriptLimit, incrementGenerationCount, refundGenerationCount } from "@/lib/usage";
@@ -107,6 +108,8 @@ async function handleSectionMode(userId: string, raw: any) {
     // No custom Voice Match profile → use the Skripr HOUSE voice, not a generic narrator, so a
     // default-voice script still has a recognizable Skripr identity.
     if (!voiceProfile) voiceProfile = SKRIPR_HOUSE_VOICE;
+    // CTA off: the voice must not carry the creator's CTA habits into the section writer (it never sees noCta).
+    if (raw?.noCta) voiceProfile = withoutCtaGuidance(voiceProfile);
 
     const facts = withSceneFacts(typeof sourceMaterial === "string" && sourceMaterial.trim() ? sourceMaterial.trim() : undefined, Array.isArray(blueprint) ? blueprint : undefined);
     const context = {
@@ -335,6 +338,8 @@ export async function POST(req: Request) {
     // No custom Voice Match profile → fall to the Skripr HOUSE voice (a deliberate signature), not a
     // generic narrator, so "Skripr Default" still sounds like Skripr.
     if (!voiceProfile) { voiceProfile = SKRIPR_HOUSE_VOICE; voiceName = "Skripr House"; }
+    // CTA off: strip the creator's CTA habits from the voice so no writer is told to place one.
+    if (noCta && voiceProfile) voiceProfile = withoutCtaGuidance(voiceProfile);
     if (voiceProfile) console.log(`[voice] profile injected: ${voiceName} (${voiceProfile.length} chars)`);
 
     // Learning loop: if this is a remix of a real YouTube video (New Script URL),
