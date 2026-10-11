@@ -1,5 +1,13 @@
 import { supabaseAdmin } from "@/lib/db/supabase";
 import { measureVoice, type VoiceFingerprint } from "@/lib/voice-metrics";
+import { renderVoiceStructure, type VoiceStructure } from "@/lib/voice-structure";
+
+// voice_fingerprint (JSONB) holds the measured fingerprint AND the structured profile (key "structure"), so the
+// structured profile needs no schema change. A fingerprint with too few words (or none) is stored as words: 0.
+export function voiceJson(fp: VoiceFingerprint | null | undefined, structure: VoiceStructure | null | undefined): Record<string, unknown> | null {
+  if (!fp && !structure) return null;
+  return { ...(fp || { words: 0 }), ...(structure ? { structure } : {}) };
+}
 
 // Voice Match: up to MAX_PROFILES named voice profiles per user, extracted
 // from the creator's scripts or a YouTube channel's transcripts. One profile
@@ -78,7 +86,8 @@ export async function createVoiceProfile(
   styleGuide: string,
   sampleExcerpt: string,
   sourceRef?: string | null,
-  fingerprint?: VoiceFingerprint | null
+  fingerprint?: VoiceFingerprint | null,
+  structure?: VoiceStructure | null
 ): Promise<VoiceProfileRow> {
   if (!supabaseAdmin) throw new Error("Database not configured");
   const existing = await listVoiceProfiles(userId);
@@ -94,7 +103,7 @@ export async function createVoiceProfile(
       style_guide: styleGuide,
       sample_excerpt: sampleExcerpt,
       source_ref: sourceRef || null,
-      ...(fingerprint ? { voice_fingerprint: fingerprint } : {}),
+      ...(voiceJson(fingerprint, structure) ? { voice_fingerprint: voiceJson(fingerprint, structure) } : {}),
       is_active: existing.length === 0, // first voice becomes active automatically
     })
     .select("id, name, source, style_guide, is_active, updated_at, source_ref")
@@ -111,11 +120,12 @@ export async function updateVoiceProfileStyle(
   styleGuide: string,
   sampleExcerpt: string,
   sourceRef?: string | null,
-  fingerprint?: VoiceFingerprint | null
+  fingerprint?: VoiceFingerprint | null,
+  structure?: VoiceStructure | null
 ): Promise<VoiceProfileRow> {
   if (!supabaseAdmin) throw new Error("Database not configured");
   const patch: Record<string, unknown> = { style_guide: styleGuide, sample_excerpt: sampleExcerpt, updated_at: new Date().toISOString() };
-  if (fingerprint) patch.voice_fingerprint = fingerprint;
+  const vj = voiceJson(fingerprint, structure); if (vj) patch.voice_fingerprint = vj;
   if (sourceRef) patch.source_ref = sourceRef;
   const { data, error } = await supabaseAdmin
     .from("voice_profiles")
@@ -181,15 +191,19 @@ export async function getVoiceProfileById(userId: string, profileId: string): Pr
 // (Bug fixed 2026-10-11: it used to be re-measured from sample_excerpt, the first 600 characters, about 100
 // words, which gave noise: "you" 211 per 1,000 words on a 600-char slice vs 66 on the full transcript.)
 // Profiles analyzed before the fix have no stored fingerprint and fall back to the excerpt until re-analyzed.
-export type VoiceMeta = { styleGuide: string; name: string; fingerprint?: VoiceFingerprint };
+export type VoiceMeta = { styleGuide: string; name: string; fingerprint?: VoiceFingerprint; structure?: VoiceStructure };
 const MIN_FINGERPRINT_WORDS = 300;
 function toVoiceMeta(data: any): VoiceMeta {
   const stored = data.voice_fingerprint && typeof data.voice_fingerprint === "object" && Number(data.voice_fingerprint.words) >= MIN_FINGERPRINT_WORDS
     ? (data.voice_fingerprint as VoiceFingerprint) : undefined;
+  // Structured profile (step 2): rendered as checkable rules and appended to the prose profile in the same prompt slot.
+  const structure = data.voice_fingerprint?.structure && typeof data.voice_fingerprint.structure === "object" ? (data.voice_fingerprint.structure as VoiceStructure) : undefined;
+  const rules = renderVoiceStructure(structure);
   return {
-    styleGuide: data.style_guide,
+    styleGuide: rules ? `${data.style_guide}\n\n${rules}` : data.style_guide,
     name: data.name,
     fingerprint: stored ?? (typeof data.sample_excerpt === "string" && data.sample_excerpt.trim() ? measureVoice(data.sample_excerpt) : undefined),
+    structure,
   };
 }
 export async function getActiveVoiceMeta(userId: string): Promise<VoiceMeta | null> {

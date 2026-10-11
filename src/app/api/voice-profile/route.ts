@@ -14,6 +14,7 @@ import { fetchChannelLongform } from "@/lib/youtube-channel";
 import { getTranscriptRobust } from "@/lib/youtube-transcript";
 import { captureFrameworkInBackground } from "@/lib/framework-capture";
 import { measureVoiceFromSamples } from "@/lib/voice-metrics";
+import { extractVoiceStructure } from "@/lib/voice-structure";
 
 export const maxDuration = 120;
 
@@ -97,6 +98,8 @@ export async function POST(req: Request) {
     }
     if (!resolvedName) resolvedName = "My Voice";
 
+    // Structured profile runs in parallel with the prose analysis (route budget), verified against the samples.
+    const structurePromise = extractVoiceStructure(text).catch(() => null);
     const msg = await getClient().messages.create({
       model: "claude-sonnet-4-6",
       max_tokens: 2200,
@@ -137,9 +140,11 @@ Be specific and concrete. No generic filler like "engaging" or "conversational" 
 
     // Measure the fingerprint from ALL the samples now, while we have them (sample_excerpt keeps only 600 chars).
     const fingerprint = measureVoiceFromSamples(text.split(/\n+-{3,}\n+/));
+    // Structured profile (checkable fields, each verified against the samples). Failure keeps the prose profile.
+    const structure = await structurePromise;
     const profile = reanalyzeId
-      ? await updateVoiceProfileStyle(userId, String(reanalyzeId), styleGuide, text.slice(0, 600), sourceRef, fingerprint)
-      : await createVoiceProfile(userId, resolvedName, source, styleGuide, text.slice(0, 600), sourceRef, fingerprint);
+      ? await updateVoiceProfileStyle(userId, String(reanalyzeId), styleGuide, text.slice(0, 600), sourceRef, fingerprint, structure)
+      : await createVoiceProfile(userId, resolvedName, source, styleGuide, text.slice(0, 600), sourceRef, fingerprint, structure);
 
     // Learning loop: bank frameworks from the channel's videos we already pulled
     // transcripts for. Parallel + skip-if-already-captured, so it's bounded.
