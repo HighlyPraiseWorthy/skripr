@@ -116,7 +116,7 @@ export function renderVoiceStructure(s: VoiceStructure | null | undefined): stri
   if (s.avoided?.length) lines.push(`- Never say (this creator never does): ${s.avoided.map((a) => `"${a.phrase}"${a.replacement ? ` (say "${a.replacement}")` : ""}`).join("; ")}.`);
   if (s.cta && s.cta.placement !== "unknown") lines.push(s.cta.placement === "none" ? "- Calls to action: this creator does not ask viewers to subscribe or comment." : `- Calls to action go in the ${s.cta.placement}${s.cta.example ? `, in their words: "${s.cta.example}"` : ""}.`);
   if (s.neverDoes?.length) lines.push(`- Never does: ${s.neverDoes.join("; ")}.`);
-  if (s.tweaks?.length) lines.push(`- Creator's adjustments (these win over the measurements above): ${s.tweaks.join("; ")}.`);
+  if (s.tweaks?.length) lines.push(`- Creator's adjustments (these win over the measurements above): ${s.tweaks.map((t) => t.replace(/[.\s]+$/, "")).join("; ")}.`);
   lines.push("- These voice rules shape HOW things are said. They never override the evidence rules: certainty, attribution and every fact follow the research.");
   return lines.join("\n");
 }

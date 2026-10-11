@@ -1,6 +1,7 @@
 import { supabaseAdmin } from "@/lib/db/supabase";
 import { measureVoice, type VoiceFingerprint } from "@/lib/voice-metrics";
 import { renderVoiceStructure, type VoiceStructure } from "@/lib/voice-structure";
+import { composeVoiceJson, type VoiceJson } from "@/lib/voice-tweak";
 
 // voice_fingerprint (JSONB) holds the measured fingerprint AND the structured profile (key "structure"), so the
 // structured profile needs no schema change. A fingerprint with too few words (or none) is stored as words: 0.
@@ -41,6 +42,7 @@ export interface VoiceProfileRow {
   is_active: boolean;
   updated_at: string;
   source_ref?: string | null;
+  voice_fingerprint?: VoiceJson | null;
 }
 
 // The active profile's style guide — what generation injects
@@ -66,7 +68,7 @@ export async function listVoiceProfiles(userId: string): Promise<VoiceProfileRow
   // the voices page never breaks while the migration is pending.
   const withRef = await supabaseAdmin
     .from("voice_profiles")
-    .select("id, name, source, style_guide, is_active, updated_at, source_ref")
+    .select("id, name, source, style_guide, is_active, updated_at, source_ref, voice_fingerprint")
     .eq("user_id", userId)
     .order("created_at", { ascending: true });
   if (!withRef.error) return (withRef.data ?? []) as VoiceProfileRow[];
@@ -125,7 +127,10 @@ export async function updateVoiceProfileStyle(
 ): Promise<VoiceProfileRow> {
   if (!supabaseAdmin) throw new Error("Database not configured");
   const patch: Record<string, unknown> = { style_guide: styleGuide, sample_excerpt: sampleExcerpt, updated_at: new Date().toISOString() };
-  const vj = voiceJson(fingerprint, structure); if (vj) patch.voice_fingerprint = vj;
+  // Re-analysis keeps the creator's adjustments (step 4): the stored tweak ops are re-applied to the fresh measurement.
+  const prior = await getVoiceJson(userId, profileId).catch(() => null);
+  const vj = prior?.tweakOps?.length ? composeVoiceJson({ fp: fingerprint ?? null, structure: structure ?? null }, prior.tweakOps).json : voiceJson(fingerprint, structure);
+  if (vj) patch.voice_fingerprint = vj;
   if (sourceRef) patch.source_ref = sourceRef;
   const { data, error } = await supabaseAdmin
     .from("voice_profiles")
@@ -235,4 +240,20 @@ export async function getVoiceMetaById(userId: string, profileId: string): Promi
   } catch {
     return null;
   }
+}
+
+// Raw voice JSON (fingerprint + structure + tweak data) for one profile, ownership-checked.
+export async function getVoiceJson(userId: string, profileId: string): Promise<VoiceJson | null> {
+  if (!supabaseAdmin) return null;
+  const { data } = await supabaseAdmin.from("voice_profiles").select("voice_fingerprint").eq("user_id", userId).eq("id", profileId).maybeSingle();
+  return (data?.voice_fingerprint as VoiceJson) || null;
+}
+export async function setVoiceJson(userId: string, profileId: string, json: VoiceJson): Promise<VoiceProfileRow> {
+  if (!supabaseAdmin) throw new Error("Database not configured");
+  const { data, error } = await supabaseAdmin.from("voice_profiles")
+    .update({ voice_fingerprint: json, updated_at: new Date().toISOString() })
+    .eq("user_id", userId).eq("id", profileId)
+    .select("id, name, source, style_guide, is_active, updated_at, source_ref, voice_fingerprint").single();
+  if (error) throw new Error(error.message);
+  return data as VoiceProfileRow;
 }

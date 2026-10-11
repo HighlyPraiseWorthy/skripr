@@ -6,7 +6,7 @@ const C = {
   accentDim: "#4db8ff", textBright: "#e8edf5", textDim: "#a6c0d8", green: "#34d399",
 };
 
-type Voice = { id: string; name: string; source: string; styleGuide: string; isActive: boolean; updatedAt: string; canReanalyze?: boolean };
+type Voice = { id: string; name: string; source: string; styleGuide: string; isActive: boolean; updatedAt: string; canReanalyze?: boolean; adjustments?: string[]; targets?: { label: string; value: string }[] };
 
 export default function VoicesPage() {
   const [voices, setVoices] = useState<Voice[]>([]);
@@ -25,6 +25,11 @@ export default function VoicesPage() {
   const [building, setBuilding] = useState(false);
   const [reanalyzeTarget, setReanalyzeTarget] = useState<string | null>(null);
   const [reanalyzingId, setReanalyzingId] = useState<string | null>(null);
+  // Step 4: plain-language adjustments ("use shorter sentences") per voice.
+  const [adjustingId, setAdjustingId] = useState<string | null>(null);
+  const [adjustText, setAdjustText] = useState<Record<string, string>>({});
+  const [adjustBusy, setAdjustBusy] = useState<string | null>(null);
+  const [adjustResult, setAdjustResult] = useState<Record<string, string[]>>({});
 
   async function refresh() {
     try {
@@ -75,6 +80,24 @@ export default function VoicesPage() {
       body: JSON.stringify({ id }),
     }).catch(() => {});
     await refresh();
+  }
+
+  async function adjust(v: Voice, action: "tweak" | "reset") {
+    const instruction = (adjustText[v.id] || "").trim();
+    if (action === "tweak" && !instruction) return;
+    setError(null); setAdjustBusy(v.id);
+    try {
+      const res = await fetch("/api/voice-profile", {
+        method: "PATCH", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: v.id, action, instruction }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Couldn't adjust this voice");
+      setAdjustResult((r) => ({ ...r, [v.id]: data.changes || [] }));
+      if (action === "tweak") setAdjustText((t) => ({ ...t, [v.id]: "" }));
+      await refresh();
+    } catch (e: any) { setError(e.message); }
+    finally { setAdjustBusy(null); }
   }
 
   async function reanalyze(v: Voice) {
@@ -173,6 +196,47 @@ export default function VoicesPage() {
                 {expanded === v.id && (
                   <div style={{ marginTop: 12, background: "rgba(0,0,0,0.25)", border: `1px solid ${C.border}`, borderRadius: 10, padding: "12px 14px", maxHeight: 220, overflowY: "auto" }}>
                     <div style={{ fontSize: 12.5, color: C.textDim, lineHeight: 1.65, whiteSpace: "pre-wrap" }}>{v.styleGuide}</div>
+                  </div>
+                )}
+                <button onClick={() => setAdjustingId(adjustingId === v.id ? null : v.id)} style={{ background: "none", border: "none", padding: 0, fontSize: 11.5, color: C.accentDim, cursor: "pointer", marginTop: 8 }}>
+                  {adjustingId === v.id ? "Hide adjustments ▲" : `Adjust this voice${v.adjustments?.length ? ` (${v.adjustments.length} applied)` : ""} ▼`}
+                </button>
+                {adjustingId === v.id && (
+                  <div style={{ marginTop: 10, background: "rgba(0,0,0,0.25)", border: `1px solid ${C.border}`, borderRadius: 10, padding: "12px 14px", display: "flex", flexDirection: "column", gap: 10 }}>
+                    {!!v.targets?.length && (
+                      <div style={{ fontSize: 12, color: C.textDim, lineHeight: 1.6 }}>
+                        <div style={{ fontWeight: 700, color: C.textBright, marginBottom: 4 }}>Current rhythm targets</div>
+                        {v.targets.map((t) => <div key={t.label}>{t.label}: <span style={{ color: C.textBright }}>{t.value}</span></div>)}
+                      </div>
+                    )}
+                    {!!v.adjustments?.length && (
+                      <div style={{ fontSize: 12, color: C.textDim, lineHeight: 1.6 }}>
+                        <div style={{ fontWeight: 700, color: C.textBright, marginBottom: 4 }}>Your adjustments</div>
+                        {v.adjustments.map((a, k) => <div key={k}>• {a}</div>)}
+                      </div>
+                    )}
+                    <div style={{ display: "flex", gap: 8 }}>
+                      <input
+                        value={adjustText[v.id] || ""}
+                        onChange={(e) => setAdjustText((t) => ({ ...t, [v.id]: e.target.value }))}
+                        onKeyDown={(e) => { if (e.key === "Enter") adjust(v, "tweak"); }}
+                        placeholder='e.g. "use shorter sentences" or "never say folks"'
+                        maxLength={400}
+                        style={{ flex: 1, minWidth: 0, padding: "9px 12px", borderRadius: 8, fontSize: 12.5, color: C.textBright, background: "rgba(255,255,255,0.04)", border: `1px solid ${C.border}`, outline: "none" }}
+                      />
+                      <button onClick={() => adjust(v, "tweak")} disabled={adjustBusy === v.id || !(adjustText[v.id] || "").trim()} style={{ padding: "8px 14px", borderRadius: 8, fontSize: 12, fontWeight: 700, color: "#fff", border: "none", background: "linear-gradient(135deg, #0e6499 0%, #1a8fd1 100%)", cursor: adjustBusy === v.id ? "wait" : "pointer", opacity: adjustBusy === v.id || !(adjustText[v.id] || "").trim() ? 0.6 : 1, flexShrink: 0 }}>
+                        {adjustBusy === v.id ? "Applying…" : "Apply"}
+                      </button>
+                    </div>
+                    {!!adjustResult[v.id]?.length && (
+                      <div style={{ fontSize: 12, color: C.green, lineHeight: 1.6 }}>{adjustResult[v.id].map((c, k) => <div key={k}>✓ {c}</div>)}</div>
+                    )}
+                    {!!v.adjustments?.length && (
+                      <button onClick={() => adjust(v, "reset")} disabled={adjustBusy === v.id} style={{ alignSelf: "flex-start", background: "none", border: "none", padding: 0, fontSize: 11.5, color: C.textDim, cursor: "pointer", textDecoration: "underline" }}>
+                        Undo all adjustments
+                      </button>
+                    )}
+                    <div style={{ fontSize: 11, color: C.textDim, lineHeight: 1.5 }}>Adjustments change how the voice sounds, never the facts. Re-analyzing keeps them.</div>
                   </div>
                 )}
               </div>

@@ -125,7 +125,7 @@ export function fingerprintToBrief(fp: VoiceFingerprint, name?: string): string 
   const rhythm = fp.sentenceVariance >= 8 ? "highly varied (mix very short punches with long sentences)"
     : fp.sentenceVariance >= 5 ? "moderately varied" : "fairly even";
   return [
-    `MEASURED VOICE TARGETS${name ? ` for ${name}` : ""} — match these numerically, they were measured from this creator's own videos:`,
+    `MEASURED VOICE TARGETS${name ? ` for ${name}` : ""} — match these numerically, they were measured from this creator's own videos${(fp as any).adjusted ? ", with the creator's own adjustments applied" : ""}:`,
     `- Average sentence length: about ${fp.avgSentenceWords} words. Rhythm: ${rhythm} (stdev ~${fp.sentenceVariance}).`,
     `- Direct address: about ${fp.secondPersonRate} uses of "you" per 1,000 words.`,
     `- Contractions: about ${fp.contractionRate} per 1,000 words — ${fp.contractionRate > 25 ? "this creator speaks casually, use contractions freely" : "this creator is more formal, use contractions sparingly"}.`,

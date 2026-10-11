@@ -8,8 +8,11 @@ import {
   getVoiceProfileSourceRef,
   setActiveVoiceProfile,
   deleteVoiceProfileById,
+  getVoiceJson,
+  setVoiceJson,
   MAX_PROFILES,
 } from "@/lib/voice-profile";
+import { parseTweak, composeVoiceJson, baseOf, METRICS } from "@/lib/voice-tweak";
 import { fetchChannelLongform } from "@/lib/youtube-channel";
 import { getTranscriptRobust } from "@/lib/youtube-transcript";
 import { captureFrameworkInBackground } from "@/lib/framework-capture";
@@ -24,12 +27,19 @@ function getClient(): Anthropic {
   return _client;
 }
 
-const toClient = (p: any) => ({
-  id: p.id, name: p.name, source: p.source, styleGuide: p.style_guide,
-  isActive: p.is_active, updatedAt: p.updated_at,
-  // canReanalyze: a channel handle is stored, so the profile can be refreshed in one click
-  canReanalyze: !!p.source_ref,
-});
+const toClient = (p: any) => {
+  const vf = p.voice_fingerprint || null;
+  const fp = vf && Number(vf.words) >= 300 ? vf : null;
+  return {
+    id: p.id, name: p.name, source: p.source, styleGuide: p.style_guide,
+    isActive: p.is_active, updatedAt: p.updated_at,
+    // canReanalyze: a channel handle is stored, so the profile can be refreshed in one click
+    canReanalyze: !!p.source_ref,
+    // Step 4: the creator's plain-language adjustments, and the rhythm targets they currently produce.
+    adjustments: [...new Set(((vf?.tweakOps || []) as any[]).map((o) => String(o.instruction || "")).filter(Boolean))],
+    targets: fp ? Object.entries(METRICS).map(([k, m]) => ({ label: m.label, value: k === "fragmentRate" ? `${Math.round(Number(fp[k]) * 100)}%` : `${fp[k]}${m.unit ? ` ${m.unit}` : ""}` })) : [],
+  };
+};
 
 export async function GET() {
   const { userId } = await auth();
@@ -165,7 +175,23 @@ export async function PATCH(req: Request) {
   const { userId } = await auth();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   try {
-    const { id } = await req.json(); // id: profile to activate, or null to use the default Skripr voice
+    const { id, action, instruction } = await req.json();
+    // Step 4: plain-language adjustment ("use shorter sentences") -> checkable fields, no re-analysis.
+    if (action === "tweak" || action === "reset") {
+      if (!id) return NextResponse.json({ error: "Profile id required" }, { status: 400 });
+      const current = await getVoiceJson(userId, String(id));
+      const base = baseOf(current);
+      if (!base.fp && !base.structure) return NextResponse.json({ error: "Re-analyze this voice once before adjusting it." }, { status: 400 });
+      const oldOps = action === "reset" ? [] : (current?.tweakOps || []);
+      const before = composeVoiceJson(base, oldOps);
+      const effectiveFp = Number(before.json.words) >= 300 ? (before.json as any) : null;
+      const newOps = action === "tweak" ? await parseTweak(String(instruction || ""), effectiveFp) : [];
+      if (action === "tweak" && !newOps.length) return NextResponse.json({ error: "Type what you'd like to change." }, { status: 400 });
+      const after = composeVoiceJson(base, [...oldOps, ...newOps]);
+      const saved = await setVoiceJson(userId, String(id), after.json);
+      return NextResponse.json({ profile: toClient(saved), changes: action === "reset" ? ["All adjustments undone"] : after.summary.slice(before.summary.length) });
+    }
+    // id: profile to activate, or null to use the default Skripr voice
     await setActiveVoiceProfile(userId, id ?? null);
     return NextResponse.json({ ok: true });
   } catch (e: any) {
