@@ -117,7 +117,9 @@ export function fingerprintToBrief(fp: VoiceFingerprint, name?: string): string 
     `- Contractions: about ${fp.contractionRate} per 1,000 words — ${fp.contractionRate > 25 ? "this creator speaks casually, use contractions freely" : "this creator is more formal, use contractions sparingly"}.`,
     `- Rhetorical questions: about ${fp.questionRate} per 1,000 words.`,
     `- Short punches: about ${Math.round(fp.fragmentRate * 100)}% of sentences run under 5 words.`,
-    `- Paragraphs: about ${fp.avgParagraphSentences} sentences each.`,
+    // Transcripts carry no paragraph breaks, so a measured "253 sentences per paragraph" is meaningless: only
+    // state a paragraph target when it looks like real written paragraphs.
+    ...(fp.avgParagraphSentences > 0 && fp.avgParagraphSentences <= 10 ? [`- Paragraphs: about ${fp.avgParagraphSentences} sentences each.`] : []),
   ].join("\n");
 }
 

@@ -77,7 +77,8 @@ export async function createVoiceProfile(
   source: string,
   styleGuide: string,
   sampleExcerpt: string,
-  sourceRef?: string | null
+  sourceRef?: string | null,
+  fingerprint?: VoiceFingerprint | null
 ): Promise<VoiceProfileRow> {
   if (!supabaseAdmin) throw new Error("Database not configured");
   const existing = await listVoiceProfiles(userId);
@@ -93,6 +94,7 @@ export async function createVoiceProfile(
       style_guide: styleGuide,
       sample_excerpt: sampleExcerpt,
       source_ref: sourceRef || null,
+      ...(fingerprint ? { voice_fingerprint: fingerprint } : {}),
       is_active: existing.length === 0, // first voice becomes active automatically
     })
     .select("id, name, source, style_guide, is_active, updated_at, source_ref")
@@ -108,10 +110,12 @@ export async function updateVoiceProfileStyle(
   profileId: string,
   styleGuide: string,
   sampleExcerpt: string,
-  sourceRef?: string | null
+  sourceRef?: string | null,
+  fingerprint?: VoiceFingerprint | null
 ): Promise<VoiceProfileRow> {
   if (!supabaseAdmin) throw new Error("Database not configured");
   const patch: Record<string, unknown> = { style_guide: styleGuide, sample_excerpt: sampleExcerpt, updated_at: new Date().toISOString() };
+  if (fingerprint) patch.voice_fingerprint = fingerprint;
   if (sourceRef) patch.source_ref = sourceRef;
   const { data, error } = await supabaseAdmin
     .from("voice_profiles")
@@ -172,17 +176,20 @@ export async function getVoiceProfileById(userId: string, profileId: string): Pr
 
 // Variants that also return the voice name, so generation can record which
 // voice produced each script (shown in My Scripts).
-// The voice FINGERPRINT (sentence rhythm, fragment use, diction) is computed from the profile's
-// stored sample_excerpt via measureVoice — the generation voice pass targets it. This completes a
-// half-committed feature: generate/route.ts already reads meta.fingerprint, but these getters never
-// returned it (the type was {styleGuide,name}), which broke `next build`. Measured, not stored, so
-// no schema change; null/absent sample -> undefined -> generation falls back to the generic brief.
+// The voice FINGERPRINT (sentence rhythm, fragment use, diction) that the generation voice pass targets.
+// It is measured from the creator's FULL samples when the voice is analyzed and stored in voice_fingerprint.
+// (Bug fixed 2026-10-11: it used to be re-measured from sample_excerpt, the first 600 characters, about 100
+// words, which gave noise: "you" 211 per 1,000 words on a 600-char slice vs 66 on the full transcript.)
+// Profiles analyzed before the fix have no stored fingerprint and fall back to the excerpt until re-analyzed.
 export type VoiceMeta = { styleGuide: string; name: string; fingerprint?: VoiceFingerprint };
+const MIN_FINGERPRINT_WORDS = 300;
 function toVoiceMeta(data: any): VoiceMeta {
+  const stored = data.voice_fingerprint && typeof data.voice_fingerprint === "object" && Number(data.voice_fingerprint.words) >= MIN_FINGERPRINT_WORDS
+    ? (data.voice_fingerprint as VoiceFingerprint) : undefined;
   return {
     styleGuide: data.style_guide,
     name: data.name,
-    fingerprint: typeof data.sample_excerpt === "string" && data.sample_excerpt.trim() ? measureVoice(data.sample_excerpt) : undefined,
+    fingerprint: stored ?? (typeof data.sample_excerpt === "string" && data.sample_excerpt.trim() ? measureVoice(data.sample_excerpt) : undefined),
   };
 }
 export async function getActiveVoiceMeta(userId: string): Promise<VoiceMeta | null> {
@@ -190,7 +197,7 @@ export async function getActiveVoiceMeta(userId: string): Promise<VoiceMeta | nu
   try {
     const { data } = await supabaseAdmin
       .from("voice_profiles")
-      .select("style_guide, name, sample_excerpt")
+      .select("style_guide, name, sample_excerpt, voice_fingerprint")
       .eq("user_id", userId)
       .eq("is_active", true)
       .limit(1)
@@ -206,7 +213,7 @@ export async function getVoiceMetaById(userId: string, profileId: string): Promi
   try {
     const { data } = await supabaseAdmin
       .from("voice_profiles")
-      .select("style_guide, name, sample_excerpt")
+      .select("style_guide, name, sample_excerpt, voice_fingerprint")
       .eq("user_id", userId)
       .eq("id", profileId)
       .maybeSingle();
