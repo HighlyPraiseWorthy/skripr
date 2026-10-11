@@ -13,7 +13,7 @@ import {
 import { fetchChannelLongform } from "@/lib/youtube-channel";
 import { getTranscriptRobust } from "@/lib/youtube-transcript";
 import { captureFrameworkInBackground } from "@/lib/framework-capture";
-import { measureVoice } from "@/lib/voice-metrics";
+import { measureVoiceFromSamples } from "@/lib/voice-metrics";
 
 export const maxDuration = 120;
 
@@ -136,7 +136,7 @@ Be specific and concrete. No generic filler like "engaging" or "conversational" 
     if (!styleGuide) throw new Error("Style analysis came back empty — please try again");
 
     // Measure the fingerprint from ALL the samples now, while we have them (sample_excerpt keeps only 600 chars).
-    const fingerprint = measureVoice(text.replace(/\n+-{3,}\n+/g, "\n\n"));
+    const fingerprint = measureVoiceFromSamples(text.split(/\n+-{3,}\n+/));
     const profile = reanalyzeId
       ? await updateVoiceProfileStyle(userId, String(reanalyzeId), styleGuide, text.slice(0, 600), sourceRef, fingerprint)
       : await createVoiceProfile(userId, resolvedName, source, styleGuide, text.slice(0, 600), sourceRef, fingerprint);

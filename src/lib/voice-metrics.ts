@@ -68,6 +68,20 @@ export function measureVoice(text: string): VoiceFingerprint {
   };
 }
 
+// Fingerprint from several samples (one per video or script). Auto-captions sometimes arrive with little or no
+// punctuation, which reads as a few 300-word "sentences" (seen: avg 45.6 words, stdev 322). A sample with fewer
+// than 3 sentence endings per 100 words is left out; if none is measurable, there is no fingerprint (null) and
+// generation falls back to the prose profile.
+export function measureVoiceFromSamples(samples: string[]): VoiceFingerprint | null {
+  const punctuated = samples.map((s) => (s || "").trim()).filter((s) => {
+    const w = s.split(/\s+/).filter(Boolean).length;
+    return w >= 100 && ((s.match(/[.!?]/g) || []).length / w) * 100 >= 3;
+  });
+  if (!punctuated.length) return null;
+  const fp = measureVoice(punctuated.join("\n\n"));
+  return fp.words >= 300 ? fp : null;
+}
+
 // Which house tics are present, so they can be named rather than vaguely flagged.
 export function findHouseTics(text: string): string[] {
   return HOUSE_TICS.filter((t) => t.pattern.test(text || "")).map((t) => t.label);
