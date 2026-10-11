@@ -63,3 +63,12 @@ fyre-overlay.html
 skripr-colour-mockup.html
 public/fonts/
 scripts/benchmark/results/
+
+# Agent notes from Matt Pocock skills: kept local, repo is public
+CONTEXT.md
+CONTEXT-MAP.md
+GLOSSARY.md
+GLOSSARY-MAP.md
+docs/adr/
+docs/agents/
+.scratch/
